@@ -1,11 +1,13 @@
 
 import React from 'react';
+import { Link } from 'react-router-dom';
 import Header from '../components/Header';
 import StatsGrid from '../components/StatsGrid';
 import NetworkStatus from '../components/NetworkStatus';
 import TransactionPanel from '../components/TransactionPanel';
 import AgentManagement from '../components/AgentManagement';
 import QuickActions from '../components/QuickActions';
+import { Button } from '@/components/ui/button';
 
 const Index = () => {
   return (
@@ -14,12 +16,21 @@ const Index = () => {
       
       <main className="container mx-auto px-6 py-8">
         <div className="mb-8">
-          <h2 className="text-3xl font-bold text-gray-900 mb-2">
-            Welcome to Air Pay Dashboard
-          </h2>
-          <p className="text-gray-600">
-            Manage your airtime distribution network with AI-powered insights and real-time processing
-          </p>
+          <div className="flex justify-between items-center mb-4">
+            <div>
+              <h2 className="text-3xl font-bold text-gray-900 mb-2">
+                Welcome to Air Pay Dashboard
+              </h2>
+              <p className="text-gray-600">
+                Manage your airtime distribution network with AI-powered insights and real-time processing
+              </p>
+            </div>
+            <Link to="/portal">
+              <Button className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700">
+                🚀 Access Customer Portal
+              </Button>
+            </Link>
+          </div>
         </div>
 
         <StatsGrid />
