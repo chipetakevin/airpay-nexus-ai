@@ -8,9 +8,34 @@ import { useToast } from '@/hooks/use-toast';
 import BankAutocomplete from './BankAutocomplete';
 import LocationDetector from './LocationDetector';
 
+interface FormData {
+  firstName: string;
+  lastName: string;
+  email: string;
+  phoneNumber: string;
+  countryCode: string;
+  bankName: string;
+  accountNumber: string;
+  routingNumber: string;
+  branchCode: string;
+  rememberPassword: boolean;
+  agreeTerms: boolean;
+  marketingConsent: boolean;
+}
+
+interface FormErrors {
+  firstName?: string;
+  lastName?: string;
+  email?: string;
+  phoneNumber?: string;
+  bankName?: string;
+  accountNumber?: string;
+  agreeTerms?: string;
+}
+
 const CustomerRegistration = () => {
   const { toast } = useToast();
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<FormData>({
     firstName: '',
     lastName: '',
     email: '',
@@ -25,7 +50,7 @@ const CustomerRegistration = () => {
     marketingConsent: false
   });
 
-  const [errors, setErrors] = useState({});
+  const [errors, setErrors] = useState<FormErrors>({});
   const [location, setLocation] = useState('Detecting location...');
 
   const validateEmail = (email: string) => {
@@ -37,11 +62,11 @@ const CustomerRegistration = () => {
     return accountNumber.length >= 8 && accountNumber.length <= 12 && /^\d+$/.test(accountNumber);
   };
 
-  const handleInputChange = (field: string, value: any) => {
+  const handleInputChange = (field: keyof FormData, value: any) => {
     setFormData(prev => ({ ...prev, [field]: value }));
     
     // Clear errors when user starts typing
-    if (errors[field]) {
+    if (errors[field as keyof FormErrors]) {
       setErrors(prev => ({ ...prev, [field]: '' }));
     }
 
@@ -63,7 +88,7 @@ const CustomerRegistration = () => {
     e.preventDefault();
     
     // Validation
-    const newErrors = {};
+    const newErrors: FormErrors = {};
     if (!formData.firstName) newErrors.firstName = 'First name is required';
     if (!formData.lastName) newErrors.lastName = 'Last name is required';
     if (!formData.email) newErrors.email = 'Email is required';
