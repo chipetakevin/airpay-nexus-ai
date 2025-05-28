@@ -1,37 +1,15 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
-import BankAutocomplete from './BankAutocomplete';
 import LocationDetector from './LocationDetector';
-
-interface FormData {
-  firstName: string;
-  lastName: string;
-  email: string;
-  phoneNumber: string;
-  countryCode: string;
-  bankName: string;
-  accountNumber: string;
-  routingNumber: string;
-  branchCode: string;
-  rememberPassword: boolean;
-  agreeTerms: boolean;
-  marketingConsent: boolean;
-}
-
-interface FormErrors {
-  firstName?: string;
-  lastName?: string;
-  email?: string;
-  phoneNumber?: string;
-  bankName?: string;
-  accountNumber?: string;
-  agreeTerms?: string;
-}
+import PersonalInfoSection from './registration/PersonalInfoSection';
+import PhoneSection from './registration/PhoneSection';
+import BankingSection from './registration/BankingSection';
+import ConsentSection from './registration/ConsentSection';
+import { FormData, FormErrors } from '@/types/customerRegistration';
+import { validateEmail, validateAccountNumber } from '@/utils/formValidation';
 
 const CustomerRegistration = () => {
   const { toast } = useToast();
@@ -52,15 +30,6 @@ const CustomerRegistration = () => {
 
   const [errors, setErrors] = useState<FormErrors>({});
   const [location, setLocation] = useState('Detecting location...');
-
-  const validateEmail = (email: string) => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
-  };
-
-  const validateAccountNumber = (accountNumber: string) => {
-    return accountNumber.length >= 8 && accountNumber.length <= 12 && /^\d+$/.test(accountNumber);
-  };
 
   const handleInputChange = (field: keyof FormData, value: any) => {
     setFormData(prev => ({ ...prev, [field]: value }));
@@ -139,132 +108,29 @@ const CustomerRegistration = () => {
       <LocationDetector onLocationUpdate={setLocation} />
 
       <form onSubmit={handleSubmit} className="space-y-6">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="space-y-2">
-            <Label htmlFor="firstName">First Name *</Label>
-            <Input
-              id="firstName"
-              value={formData.firstName}
-              onChange={(e) => handleInputChange('firstName', e.target.value)}
-              className={errors.firstName ? 'border-red-500' : ''}
-            />
-            {errors.firstName && <p className="text-red-500 text-sm">{errors.firstName}</p>}
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="lastName">Last Name *</Label>
-            <Input
-              id="lastName"
-              value={formData.lastName}
-              onChange={(e) => handleInputChange('lastName', e.target.value)}
-              className={errors.lastName ? 'border-red-500' : ''}
-            />
-            {errors.lastName && <p className="text-red-500 text-sm">{errors.lastName}</p>}
-          </div>
-        </div>
-
-        <div className="space-y-2">
-          <Label htmlFor="email">Email Address *</Label>
-          <Input
-            id="email"
-            type="email"
-            value={formData.email}
-            onChange={(e) => handleInputChange('email', e.target.value)}
-            className={errors.email ? 'border-red-500' : ''}
-          />
-          {errors.email && <p className="text-red-500 text-sm">{errors.email}</p>}
-        </div>
-
-        <div className="space-y-2">
-          <Label>Phone Number *</Label>
-          <div className="flex gap-2">
-            <select 
-              value={formData.countryCode}
-              onChange={(e) => handleInputChange('countryCode', e.target.value)}
-              className="px-3 py-2 border border-gray-300 rounded-md w-32"
-            >
-              <option value="+27">🇿🇦 +27</option>
-              <option value="+1">🇺🇸 +1</option>
-              <option value="+44">🇬🇧 +44</option>
-              <option value="+91">🇮🇳 +91</option>
-              <option value="+234">🇳🇬 +234</option>
-            </select>
-            <Input
-              placeholder="Enter phone number"
-              value={formData.phoneNumber}
-              onChange={(e) => handleInputChange('phoneNumber', e.target.value)}
-              className={`flex-1 ${errors.phoneNumber ? 'border-red-500' : ''}`}
-            />
-          </div>
-          {errors.phoneNumber && <p className="text-red-500 text-sm">{errors.phoneNumber}</p>}
-        </div>
-
-        <BankAutocomplete 
-          onBankSelect={(bank, routing) => {
-            handleInputChange('bankName', bank);
-            handleInputChange('routingNumber', routing);
-          }}
-          error={errors.bankName}
+        <PersonalInfoSection 
+          formData={formData}
+          errors={errors}
+          onInputChange={handleInputChange}
         />
 
-        <div className="space-y-2">
-          <Label htmlFor="accountNumber">Account Number *</Label>
-          <Input
-            id="accountNumber"
-            value={formData.accountNumber}
-            onChange={(e) => handleInputChange('accountNumber', e.target.value)}
-            placeholder="Enter account number"
-            className={errors.accountNumber ? 'border-red-500' : ''}
-          />
-          {errors.accountNumber && <p className="text-red-500 text-sm">{errors.accountNumber}</p>}
-          {formData.accountNumber && validateAccountNumber(formData.accountNumber) && (
-            <p className="text-green-600 text-sm">✓ Valid account number format</p>
-          )}
-        </div>
+        <PhoneSection 
+          formData={formData}
+          errors={errors}
+          onInputChange={handleInputChange}
+        />
 
-        <div className="space-y-2">
-          <Label htmlFor="routingNumber">Routing Number</Label>
-          <Input
-            id="routingNumber"
-            value={formData.routingNumber}
-            placeholder="Auto-filled based on bank selection"
-            readOnly
-            className="bg-gray-50"
-          />
-        </div>
+        <BankingSection 
+          formData={formData}
+          errors={errors}
+          onInputChange={handleInputChange}
+        />
 
-        <div className="space-y-3">
-          <div className="flex items-center space-x-2">
-            <input
-              type="checkbox"
-              id="rememberPassword"
-              checked={formData.rememberPassword}
-              onChange={(e) => handleInputChange('rememberPassword', e.target.checked)}
-            />
-            <Label htmlFor="rememberPassword">Remember my login details</Label>
-          </div>
-
-          <div className="flex items-center space-x-2">
-            <input
-              type="checkbox"
-              id="agreeTerms"
-              checked={formData.agreeTerms}
-              onChange={(e) => handleInputChange('agreeTerms', e.target.checked)}
-            />
-            <Label htmlFor="agreeTerms">I agree to the Terms & Conditions and Privacy Policy *</Label>
-          </div>
-          {errors.agreeTerms && <p className="text-red-500 text-sm">{errors.agreeTerms}</p>}
-
-          <div className="flex items-center space-x-2">
-            <input
-              type="checkbox"
-              id="marketingConsent"
-              checked={formData.marketingConsent}
-              onChange={(e) => handleInputChange('marketingConsent', e.target.checked)}
-            />
-            <Label htmlFor="marketingConsent">I consent to receive marketing communications</Label>
-          </div>
-        </div>
+        <ConsentSection 
+          formData={formData}
+          errors={errors}
+          onInputChange={handleInputChange}
+        />
 
         <Button type="submit" className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700">
           Register & Create OneCard
