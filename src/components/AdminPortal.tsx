@@ -4,29 +4,48 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useToast } from '@/hooks/use-toast';
+import AdminDashboard from './admin/AdminDashboard';
+import NetworkRevenue from './admin/NetworkRevenue';
+import OrderManagement from './admin/OrderManagement';
+import RevenueReporting from './admin/RevenueReporting';
 
 const AdminPortal = () => {
   const { toast } = useToast();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [loginData, setLoginData] = useState({
-    email: '',
+    email: 'chi****ke***@gmail.com',
     password: '',
     twoFactorCode: ''
   });
+
+  const ADMIN_EMAIL = 'chipetakevin@gmail.com';
+  const ADMIN_CARD_NUMBER = 'ADM1N2024GOLD';
+  const ADMIN_NAME = 'Kevin Chipeta';
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
     
     if (loginData.twoFactorCode.length === 6 && /^\d+$/.test(loginData.twoFactorCode)) {
       setIsLoggedIn(true);
+      
+      // Store admin data
+      localStorage.setItem('adminUser', JSON.stringify({
+        email: ADMIN_EMAIL,
+        name: ADMIN_NAME,
+        cardNumber: ADMIN_CARD_NUMBER,
+        isAdmin: true,
+        accessLevel: 'FULL'
+      }));
+
       toast({
         title: "Admin Access Granted",
-        description: "Welcome to the AirPay administration portal",
+        description: `Welcome ${ADMIN_NAME} - OneCard Gold: ****${ADMIN_CARD_NUMBER.slice(-4)}`,
       });
     } else {
       toast({
-        title: "Authentication Failed",
+        title: "Authentication Failed", 
         description: "Please enter a valid 6-digit 2FA code",
         variant: "destructive"
       });
@@ -35,17 +54,11 @@ const AdminPortal = () => {
 
   const handleLogout = () => {
     setIsLoggedIn(false);
-    setLoginData({ email: '', password: '', twoFactorCode: '' });
+    setLoginData({ email: 'chi****ke***@gmail.com', password: '', twoFactorCode: '' });
+    localStorage.removeItem('adminUser');
     toast({
       title: "Logged Out",
       description: "Admin session ended successfully",
-    });
-  };
-
-  const redirectToSection = (section: string) => {
-    toast({
-      title: `Redirecting to ${section}`,
-      description: `This would typically redirect to the ${section} management section`,
     });
   };
 
@@ -60,7 +73,7 @@ const AdminPortal = () => {
         <Card className="bg-yellow-50 border-yellow-200">
           <CardContent className="p-4">
             <p className="text-sm text-yellow-800">
-              ⚠️ <strong>Two-Factor Authentication Required:</strong> Admin access requires Google Authenticator setup for enhanced security.
+              🔐 <strong>Authorized Admin Only:</strong> This portal requires pre-authorized admin credentials with Google Authenticator setup.
             </p>
           </CardContent>
         </Card>
@@ -72,9 +85,11 @@ const AdminPortal = () => {
               id="adminEmail"
               type="email"
               value={loginData.email}
-              onChange={(e) => setLoginData(prev => ({ ...prev, email: e.target.value }))}
-              required
+              readOnly
+              className="bg-gray-100"
+              title="Authorized admin email only"
             />
+            <p className="text-xs text-gray-500">Pre-authorized admin access only</p>
           </div>
 
           <div className="space-y-2">
@@ -100,10 +115,19 @@ const AdminPortal = () => {
             />
           </div>
 
-          <Button type="submit" className="w-full">
+          <Button type="submit" className="w-full bg-gradient-to-r from-yellow-500 to-yellow-600">
             Access Admin Portal
           </Button>
         </form>
+
+        <Card className="bg-gradient-to-r from-yellow-400 to-yellow-500 text-black">
+          <CardContent className="p-4">
+            <div className="text-center">
+              <div className="text-lg font-bold mb-2">OneCard Gold - Admin Access</div>
+              <div className="text-sm opacity-80">Full System Administrator</div>
+            </div>
+          </CardContent>
+        </Card>
       </div>
     );
   }
@@ -113,128 +137,37 @@ const AdminPortal = () => {
       <div className="flex justify-between items-center">
         <div>
           <h2 className="text-2xl font-bold mb-2">Administrative Dashboard</h2>
-          <p className="text-gray-600">Welcome to the AirPay portal management system</p>
+          <p className="text-gray-600">Welcome {ADMIN_NAME} - OneCard Gold Administrator</p>
         </div>
         <Button variant="destructive" onClick={handleLogout}>
           Logout
         </Button>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <Card className="hover:shadow-lg transition-shadow cursor-pointer">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              🏦 Customer Management
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-gray-600 mb-4">
-              Manage customer accounts, view balances, and handle support tickets
-            </p>
-            <Button 
-              className="w-full" 
-              onClick={() => redirectToSection('Customer Management')}
-            >
-              Manage Customers
-            </Button>
-          </CardContent>
-        </Card>
+      <Tabs defaultValue="dashboard" className="w-full">
+        <TabsList className="grid w-full grid-cols-4">
+          <TabsTrigger value="dashboard">Dashboard</TabsTrigger>
+          <TabsTrigger value="revenue">Revenue</TabsTrigger>
+          <TabsTrigger value="networks">Networks</TabsTrigger>
+          <TabsTrigger value="orders">Orders</TabsTrigger>
+        </TabsList>
 
-        <Card className="hover:shadow-lg transition-shadow cursor-pointer">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              💳 OneCard Administration
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-gray-600 mb-4">
-              Monitor cashback allocations, card status, and reward distributions
-            </p>
-            <Button 
-              className="w-full" 
-              onClick={() => redirectToSection('OneCard Administration')}
-            >
-              Manage OneCards
-            </Button>
-          </CardContent>
-        </Card>
+        <TabsContent value="dashboard">
+          <AdminDashboard />
+        </TabsContent>
 
-        <Card className="hover:shadow-lg transition-shadow cursor-pointer">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              📊 Analytics & Reports
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-gray-600 mb-4">
-              View system analytics, transaction reports, and performance metrics
-            </p>
-            <Button 
-              className="w-full" 
-              onClick={() => redirectToSection('Analytics & Reports')}
-            >
-              View Reports
-            </Button>
-          </CardContent>
-        </Card>
+        <TabsContent value="revenue">
+          <RevenueReporting />
+        </TabsContent>
 
-        <Card className="hover:shadow-lg transition-shadow cursor-pointer">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              ⚙️ System Configuration
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-gray-600 mb-4">
-              Configure USSD settings, cashback rates, and system parameters
-            </p>
-            <Button 
-              className="w-full" 
-              onClick={() => redirectToSection('System Configuration')}
-            >
-              System Settings
-            </Button>
-          </CardContent>
-        </Card>
+        <TabsContent value="networks">
+          <NetworkRevenue />
+        </TabsContent>
 
-        <Card className="hover:shadow-lg transition-shadow cursor-pointer">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              🔐 Security Management
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-gray-600 mb-4">
-              Manage admin users, audit logs, and security policies
-            </p>
-            <Button 
-              className="w-full" 
-              onClick={() => redirectToSection('Security Management')}
-            >
-              Security Settings
-            </Button>
-          </CardContent>
-        </Card>
-
-        <Card className="hover:shadow-lg transition-shadow cursor-pointer">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              📱 USSD Management
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-gray-600 mb-4">
-              Configure USSD codes, menu structures, and service availability
-            </p>
-            <Button 
-              className="w-full" 
-              onClick={() => redirectToSection('USSD Management')}
-            >
-              Manage USSD
-            </Button>
-          </CardContent>
-        </Card>
-      </div>
+        <TabsContent value="orders">
+          <OrderManagement />
+        </TabsContent>
+      </Tabs>
     </div>
   );
 };
