@@ -10,6 +10,7 @@ import AdminDashboard from './admin/AdminDashboard';
 import RevenueReporting from './admin/RevenueReporting';
 import NetworkRevenue from './admin/NetworkRevenue';
 import OrderManagement from './admin/OrderManagement';
+import DashboardManager from './admin/DashboardManager';
 
 interface AdminPortalProps {
   onAuthSuccess?: () => void;
@@ -21,14 +22,12 @@ const AdminPortal: React.FC<AdminPortalProps> = ({ onAuthSuccess }) => {
   const [authCode, setAuthCode] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
-  // Hardcoded admin email (partially hidden)
   const adminEmail = 'chi***akevin@gmail.com';
   const fullAdminEmail = 'chipetakevin@gmail.com';
 
   const handleSendCode = () => {
     setIsLoading(true);
     
-    // Simulate sending authentication code
     setTimeout(() => {
       const code = Math.random().toString(36).substr(2, 6).toUpperCase();
       setIsLoading(false);
@@ -38,7 +37,6 @@ const AdminPortal: React.FC<AdminPortalProps> = ({ onAuthSuccess }) => {
         description: `Code sent to ${adminEmail}. Code: ${code} (Demo)`,
       });
       
-      // Store the code for validation (in real app, this would be server-side)
       localStorage.setItem('adminAuthCode', code);
     }, 1500);
   };
@@ -50,14 +48,13 @@ const AdminPortal: React.FC<AdminPortalProps> = ({ onAuthSuccess }) => {
       setIsAuthenticated(true);
       localStorage.setItem('adminAuthenticated', 'true');
       
-      // Generate admin OneCard details
       const adminCardNumber = 'ADM' + Math.random().toString(36).substr(2, 8).toUpperCase();
       const adminData = {
         firstName: 'Kevin',
         lastName: 'Chipeta',
         email: fullAdminEmail,
         cardNumber: adminCardNumber,
-        cardType: 'OneCard Gold',
+        cardType: 'OneCard Platinum',
         privileges: 'Full System Access',
         cashbackBalance: 3145.75,
         totalEarned: 15739.50,
@@ -68,7 +65,7 @@ const AdminPortal: React.FC<AdminPortalProps> = ({ onAuthSuccess }) => {
       
       toast({
         title: "Admin Access Granted 🔑",
-        description: `Welcome Kevin! OneCard Gold: ****${adminCardNumber.slice(-4)}`,
+        description: `Welcome Kevin! OneCard Platinum: ****${adminCardNumber.slice(-4)}`,
       });
       
       onAuthSuccess?.();
@@ -150,13 +147,18 @@ const AdminPortal: React.FC<AdminPortalProps> = ({ onAuthSuccess }) => {
         <p className="text-gray-600">Complete system administration and oversight</p>
       </div>
 
-      <Tabs defaultValue="dashboard" className="w-full">
-        <TabsList className="grid w-full grid-cols-4 bg-gray-100">
+      <Tabs defaultValue="balances" className="w-full">
+        <TabsList className="grid w-full grid-cols-5 bg-gray-100">
+          <TabsTrigger value="balances">Balances</TabsTrigger>
           <TabsTrigger value="dashboard">Dashboard</TabsTrigger>
           <TabsTrigger value="revenue">Revenue</TabsTrigger>
           <TabsTrigger value="networks">Networks</TabsTrigger>
           <TabsTrigger value="orders">Orders</TabsTrigger>
         </TabsList>
+
+        <TabsContent value="balances" className="space-y-6">
+          <DashboardManager />
+        </TabsContent>
 
         <TabsContent value="dashboard" className="space-y-6">
           <AdminDashboard />
