@@ -12,6 +12,8 @@ export interface Deal {
   bonus?: string;
   expires_at?: string;
   verified: boolean;
+  network_price?: number; // Hidden network cost
+  markup_amount?: number; // Hidden markup profit pool
 }
 
 export interface CartItem {
@@ -24,4 +26,14 @@ export interface CartItem {
   vendor: string;
   dealType: 'airtime';
   bonus?: string;
+  networkPrice?: number; // Hidden network cost
+  markupAmount?: number; // Hidden markup profit pool
+}
+
+export interface ProfitAllocation {
+  customerCashback?: number;
+  vendorProfit?: number;
+  adminProfit?: number;
+  registeredCustomerReward?: number;
+  unregisteredRecipientReward?: number;
 }

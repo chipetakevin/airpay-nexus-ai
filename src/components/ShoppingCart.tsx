@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -7,6 +6,7 @@ import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
+import { calculateProfitSharing } from '@/services/dealsService';
 import { 
   ShoppingCart as CartIcon, 
   User, 
@@ -28,6 +28,8 @@ interface CartItem {
   vendor: string;
   dealType: 'airtime' | 'data';
   bonus?: string;
+  networkPrice?: number;
+  markupAmount?: number;
 }
 
 interface ShoppingCartProps {
@@ -50,13 +52,25 @@ const ShoppingCart = ({ initialDeal, onClose }: ShoppingCartProps) => {
   const [validationError, setValidationError] = useState('');
   const [isProcessing, setIsProcessing] = useState(false);
   const [currentUser, setCurrentUser] = useState(null);
+  const [isVendor, setIsVendor] = useState(false);
 
   useEffect(() => {
-    // Get current user and load their data
     const getCurrentUser = async () => {
       const { data: { user } } = await supabase.auth.getUser();
       if (user) {
         setCurrentUser(user);
+        
+        // Check if user is a vendor
+        const { data: vendorData } = await supabase
+          .from('vendors')
+          .select('*')
+          .eq('email', user.email)
+          .single();
+        
+        if (vendorData) {
+          setIsVendor(true);
+        }
+        
         // Try to load customer data from database
         const { data: customerData } = await supabase
           .from('customers')
@@ -78,7 +92,6 @@ const ShoppingCart = ({ initialDeal, onClose }: ShoppingCartProps) => {
     setValidationError('');
     
     try {
-      // Check RICA validation in database
       const { data: ricaData, error } = await supabase
         .from('rica_validations')
         .select('*')
@@ -96,7 +109,6 @@ const ShoppingCart = ({ initialDeal, onClose }: ShoppingCartProps) => {
         networkFromPrefix = ricaData.network_provider;
         setDetectedNetwork(networkFromPrefix);
       } else {
-        // Fallback to prefix detection
         networkFromPrefix = detectNetworkFromPrefix(phoneNumber);
         setDetectedNetwork(networkFromPrefix);
         
@@ -105,7 +117,6 @@ const ShoppingCart = ({ initialDeal, onClose }: ShoppingCartProps) => {
         }
       }
       
-      // Check if network matches cart items
       const networkMismatch = cartItems.some(item => 
         item.network.toLowerCase() !== networkFromPrefix.toLowerCase()
       );
@@ -150,12 +161,28 @@ const ShoppingCart = ({ initialDeal, onClose }: ShoppingCartProps) => {
   };
 
   const calculateTotals = () => {
-    const subtotal = cartItems.reduce((sum, item) => sum + item.discountedPrice, 0);
-    const cashback = subtotal * 0.025; // 2.5% cashback
-    const adminFee = subtotal * 0.025; // 2.5% admin markup
-    const total = subtotal;
+    const networkCost = cartItems.reduce((sum, item) => sum + (item.networkPrice || 0), 0);
+    const totalMarkup = cartItems.reduce((sum, item) => sum + (item.markupAmount || 0), 0);
+    const customerPrice = cartItems.reduce((sum, item) => sum + item.discountedPrice, 0);
     
-    return { subtotal, cashback, adminFee, total };
+    // Calculate profit sharing based on purchase type and user type
+    let profitSharing;
+    
+    if (isVendor) {
+      profitSharing = calculateProfitSharing(totalMarkup, 'vendor', true);
+    } else if (purchaseMode === 'self') {
+      profitSharing = calculateProfitSharing(totalMarkup, 'self', false);
+    } else {
+      profitSharing = calculateProfitSharing(totalMarkup, 'third_party', false);
+    }
+    
+    return { 
+      networkCost, 
+      customerPrice, 
+      totalMarkup, 
+      profitSharing,
+      total: customerPrice 
+    };
   };
 
   const processPurchase = async () => {
@@ -180,28 +207,28 @@ const ShoppingCart = ({ initialDeal, onClose }: ShoppingCartProps) => {
     setIsProcessing(true);
     
     try {
-      const { total, cashback } = calculateTotals();
+      const { networkCost, customerPrice, totalMarkup, profitSharing } = calculateTotals();
       const recipientPhone = purchaseMode === 'self' ? customerPhone : recipientData.phone;
       const recipientName = purchaseMode === 'self' ? 'Self' : recipientData.name;
       
-      // Create transaction in database
+      // Create transaction with detailed profit allocation
       const { data: transactionData, error: transactionError } = await supabase
         .from('transactions')
         .insert({
           customer_id: currentUser.id,
-          vendor_id: 'sample-vendor-id', // This would come from the deal
+          vendor_id: 'platform-vendor-id',
           deal_id: cartItems[0]?.id,
           recipient_phone: recipientPhone,
           recipient_name: recipientName,
           recipient_relationship: purchaseMode === 'other' ? recipientData.relationship : null,
-          amount: total,
-          original_price: cartItems[0]?.originalPrice || 0,
-          discounted_price: cartItems[0]?.discountedPrice || 0,
+          amount: customerPrice,
+          original_price: networkCost,
+          discounted_price: customerPrice,
           network: cartItems[0]?.network || detectedNetwork,
-          transaction_type: purchaseMode === 'self' ? 'self_purchase' : 'third_party_purchase',
-          cashback_earned: cashback,
-          admin_fee: 0,
-          vendor_commission: 0,
+          transaction_type: isVendor ? 'vendor_purchase' : (purchaseMode === 'self' ? 'self_purchase' : 'third_party_purchase'),
+          cashback_earned: profitSharing.customerCashback || profitSharing.registeredCustomerReward || 0,
+          admin_fee: profitSharing.adminProfit || 0,
+          vendor_commission: profitSharing.vendorProfit || 0,
           status: 'completed'
         })
         .select()
@@ -212,36 +239,59 @@ const ShoppingCart = ({ initialDeal, onClose }: ShoppingCartProps) => {
         throw new Error('Failed to create transaction');
       }
 
-      // Update customer cashback balance - using direct update since RPC doesn't exist
-      const { data: currentCustomer } = await supabase
-        .from('customers')
-        .select('onecard_balance, total_cashback')
-        .eq('id', currentUser.id)
-        .single();
+      // Update user balances based on profit sharing
+      if (isVendor && profitSharing.vendorProfit) {
+        const { data: vendorData } = await supabase
+          .from('vendors')
+          .select('onecard_balance')
+          .eq('email', currentUser.email)
+          .single();
 
-      if (currentCustomer) {
-        const newOnecardBalance = (currentCustomer.onecard_balance || 0) + cashback;
-        const newTotalCashback = (currentCustomer.total_cashback || 0) + cashback;
-        
-        const { error: updateError } = await supabase
+        if (vendorData) {
+          await supabase
+            .from('vendors')
+            .update({ 
+              onecard_balance: (vendorData.onecard_balance || 0) + profitSharing.vendorProfit
+            })
+            .eq('email', currentUser.email);
+        }
+      } else {
+        // Update customer balances
+        const { data: currentCustomer } = await supabase
           .from('customers')
-          .update({ 
-            onecard_balance: newOnecardBalance,
-            total_cashback: newTotalCashback
-          })
-          .eq('id', currentUser.id);
+          .select('onecard_balance, total_cashback')
+          .eq('id', currentUser.id)
+          .single();
 
-        if (updateError) {
-          console.error('Update error:', updateError);
+        if (currentCustomer) {
+          const cashbackEarned = profitSharing.customerCashback || profitSharing.registeredCustomerReward || 0;
+          const newOnecardBalance = (currentCustomer.onecard_balance || 0) + cashbackEarned;
+          const newTotalCashback = (currentCustomer.total_cashback || 0) + cashbackEarned;
+          
+          await supabase
+            .from('customers')
+            .update({ 
+              onecard_balance: newOnecardBalance,
+              total_cashback: newTotalCashback
+            })
+            .eq('id', currentUser.id);
         }
       }
 
+      let successMessage = "Purchase Successful! 🎉";
+      if (isVendor) {
+        successMessage = `Vendor purchase completed! R${profitSharing.vendorProfit?.toFixed(2)} profit earned!`;
+      } else if (purchaseMode === 'other') {
+        successMessage = `Gift purchase completed! Both you and recipient earn R${profitSharing.registeredCustomerReward?.toFixed(2)} each!`;
+      } else {
+        successMessage = `Purchase completed! R${profitSharing.customerCashback?.toFixed(2)} cashback earned!`;
+      }
+
       toast({
-        title: "Purchase Successful! 🎉",
-        description: `Airtime purchased successfully. R${cashback.toFixed(2)} cashback earned!`
+        title: successMessage,
+        description: "Airtime loaded successfully."
       });
 
-      // Reset cart and close
       setCartItems([]);
       onClose();
       
@@ -257,7 +307,7 @@ const ShoppingCart = ({ initialDeal, onClose }: ShoppingCartProps) => {
     }
   };
 
-  const { subtotal, cashback, total } = calculateTotals();
+  const { networkCost, customerPrice, totalMarkup, profitSharing, total } = calculateTotals();
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
@@ -287,10 +337,9 @@ const ShoppingCart = ({ initialDeal, onClose }: ShoppingCartProps) => {
                       <span className="text-sm font-medium">R{item.amount} Airtime</span>
                     </div>
                     <div className="text-xs text-gray-600">
-                      from {item.vendor} • -{item.discount}% off
+                      from {item.vendor}
                     </div>
                     <div className="flex items-center gap-2 mt-1">
-                      <span className="line-through text-gray-500 text-xs">R{item.originalPrice}</span>
                       <span className="font-bold text-green-600">R{item.discountedPrice.toFixed(2)}</span>
                     </div>
                   </div>
@@ -301,6 +350,18 @@ const ShoppingCart = ({ initialDeal, onClose }: ShoppingCartProps) => {
               </Card>
             ))}
           </div>
+
+          {/* User Type Indicator */}
+          {isVendor && (
+            <Card className="bg-yellow-50 border-yellow-200">
+              <CardContent className="p-4">
+                <div className="flex items-center gap-2 text-yellow-700">
+                  <Badge className="bg-yellow-100 text-yellow-800">Vendor Purchase</Badge>
+                  <span className="text-sm font-medium">75% Profit Share</span>
+                </div>
+              </CardContent>
+            </Card>
+          )}
 
           {/* Authentication Check */}
           {!currentUser && (
@@ -419,20 +480,44 @@ const ShoppingCart = ({ initialDeal, onClose }: ShoppingCartProps) => {
             </div>
           </div>
 
-          {/* Order Summary */}
+          {/* Enhanced Order Summary with Profit Sharing */}
           <Card className="bg-gray-50">
             <CardContent className="p-4 space-y-2">
               <h3 className="font-semibold text-sm mb-3">Order Summary</h3>
               <div className="flex justify-between text-sm">
-                <span>Subtotal:</span>
-                <span>R{subtotal.toFixed(2)}</span>
-              </div>
-              <div className="flex justify-between text-sm text-green-600">
-                <span>OneCard Cashback (2.5%):</span>
-                <span>+R{cashback.toFixed(2)}</span>
-              </div>
-              <div className="border-t pt-2 flex justify-between font-bold">
                 <span>Total:</span>
+                <span>R{total.toFixed(2)}</span>
+              </div>
+              
+              {isVendor && profitSharing.vendorProfit && (
+                <div className="flex justify-between text-sm text-yellow-600">
+                  <span>Vendor Profit (75%):</span>
+                  <span>+R{profitSharing.vendorProfit.toFixed(2)}</span>
+                </div>
+              )}
+              
+              {!isVendor && purchaseMode === 'self' && profitSharing.customerCashback && (
+                <div className="flex justify-between text-sm text-green-600">
+                  <span>Your Cashback (50%):</span>
+                  <span>+R{profitSharing.customerCashback.toFixed(2)}</span>
+                </div>
+              )}
+              
+              {!isVendor && purchaseMode === 'other' && profitSharing.registeredCustomerReward && (
+                <>
+                  <div className="flex justify-between text-sm text-blue-600">
+                    <span>Your Reward (50%):</span>
+                    <span>+R{profitSharing.registeredCustomerReward.toFixed(2)}</span>
+                  </div>
+                  <div className="flex justify-between text-sm text-purple-600">
+                    <span>Recipient Reward (50%):</span>
+                    <span>+R{profitSharing.unregisteredRecipientReward?.toFixed(2)}</span>
+                  </div>
+                </>
+              )}
+              
+              <div className="border-t pt-2 flex justify-between font-bold">
+                <span>You Pay:</span>
                 <span>R{total.toFixed(2)}</span>
               </div>
             </CardContent>
@@ -458,7 +543,7 @@ const ShoppingCart = ({ initialDeal, onClose }: ShoppingCartProps) => {
           </Button>
 
           <div className="text-xs text-gray-500 text-center">
-            🔒 Secured by OneCard • Bank-level encryption
+            🔒 Secured by OneCard • Protected Pricing • All Parties Profit
           </div>
         </CardContent>
       </Card>

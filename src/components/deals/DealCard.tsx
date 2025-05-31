@@ -53,7 +53,9 @@ const DealCard = ({ deal, onGrabDeal }: DealCardProps) => {
       discount: deal.discount_percentage,
       vendor: deal.vendor_name,
       dealType: 'airtime',
-      bonus: deal.bonus
+      bonus: deal.bonus,
+      networkPrice: deal.network_price,
+      markupAmount: deal.markup_amount
     };
     
     onGrabDeal(cartItem);
@@ -72,16 +74,15 @@ const DealCard = ({ deal, onGrabDeal }: DealCardProps) => {
             )}
           </div>
           <div className="text-right">
-            <div className="text-lg font-bold text-green-600">
-              -{deal.discount_percentage}%
-            </div>
+            <Badge className="bg-blue-100 text-blue-800">
+              Platform Price
+            </Badge>
           </div>
         </div>
 
         <div className="mb-3">
           <div className="text-xl font-bold">R{deal.amount} Airtime</div>
           <div className="flex items-center gap-2">
-            <span className="line-through text-gray-500">R{deal.original_price}</span>
             <span className="text-lg font-bold text-green-600">
               R{deal.discounted_price.toFixed(2)}
             </span>
@@ -119,7 +120,7 @@ const DealCard = ({ deal, onGrabDeal }: DealCardProps) => {
           disabled={deal.availability === 'out_of_stock'}
         >
           <CartIcon className="w-4 h-4 mr-2" />
-          {deal.availability === 'out_of_stock' ? 'Out of Stock' : 'Grab This Deal'}
+          {deal.availability === 'out_of_stock' ? 'Out of Stock' : 'Get This Deal'}
         </Button>
       </CardContent>
     </Card>

@@ -2,58 +2,111 @@
 import { supabase } from '@/integrations/supabase/client';
 import { Deal } from '@/types/deals';
 
-export const getSampleDeals = (): Deal[] => [
-  {
-    id: '1',
-    network: 'MTN',
-    amount: 50,
-    original_price: 50,
-    discounted_price: 42.50,
-    discount_percentage: 15,
-    vendor_name: 'Makro',
-    availability: 'available',
-    demand_level: 'normal',
-    bonus: 'Free 100MB',
-    verified: true
+// Markup configuration - 10% markup on all network deals
+const MARKUP_PERCENTAGE = 10;
+
+// Profit allocation percentages
+const PROFIT_ALLOCATION = {
+  vendor_purchase: {
+    vendor: 75,
+    admin: 12.5,
+    customer_cashback: 12.5
   },
-  {
-    id: '2',
-    network: 'Vodacom',
-    amount: 100,
-    original_price: 100,
-    discounted_price: 89.00,
-    discount_percentage: 11,
-    vendor_name: 'Pick n Pay',
-    availability: 'limited',
-    demand_level: 'high',
-    verified: true
+  customer_self_purchase: {
+    customer: 50,
+    admin: 25,
+    vendor: 25
   },
-  {
-    id: '3',
-    network: 'Cell C',
-    amount: 25,
-    original_price: 25,
-    discounted_price: 20.75,
-    discount_percentage: 17,
-    vendor_name: 'Capitec Bank',
-    availability: 'available',
-    demand_level: 'normal',
-    bonus: 'Free 50SMS',
-    verified: true
-  },
-  {
-    id: '4',
-    network: 'Telkom',
-    amount: 200,
-    original_price: 200,
-    discounted_price: 174.00,
-    discount_percentage: 13,
-    vendor_name: 'Takealot',
-    availability: 'available',
-    demand_level: 'very_high',
-    verified: true
+  customer_third_party_purchase: {
+    registered_customer: 50,
+    unregistered_recipient: 50,
+    admin: 0,
+    vendor: 0
   }
-];
+};
+
+const calculateMarkupPrice = (networkPrice: number): number => {
+  return networkPrice * (1 + MARKUP_PERCENTAGE / 100);
+};
+
+const calculateProfitSharing = (markupAmount: number, purchaseType: string, isVendor: boolean = false) => {
+  if (isVendor) {
+    return {
+      vendorProfit: markupAmount * (PROFIT_ALLOCATION.vendor_purchase.vendor / 100),
+      adminProfit: markupAmount * (PROFIT_ALLOCATION.vendor_purchase.admin / 100),
+      customerCashback: markupAmount * (PROFIT_ALLOCATION.vendor_purchase.customer_cashback / 100)
+    };
+  }
+
+  if (purchaseType === 'self') {
+    return {
+      customerCashback: markupAmount * (PROFIT_ALLOCATION.customer_self_purchase.customer / 100),
+      adminProfit: markupAmount * (PROFIT_ALLOCATION.customer_self_purchase.admin / 100),
+      vendorProfit: markupAmount * (PROFIT_ALLOCATION.customer_self_purchase.vendor / 100)
+    };
+  }
+
+  // Third party purchase
+  return {
+    registeredCustomerReward: markupAmount * (PROFIT_ALLOCATION.customer_third_party_purchase.registered_customer / 100),
+    unregisteredRecipientReward: markupAmount * (PROFIT_ALLOCATION.customer_third_party_purchase.unregistered_recipient / 100),
+    adminProfit: 0,
+    vendorProfit: 0
+  };
+};
+
+export const getSampleDeals = (): Deal[] => {
+  const networkDeals = [
+    {
+      id: '1',
+      network: 'MTN',
+      amount: 50,
+      network_price: 50, // Original network price
+      verified: true
+    },
+    {
+      id: '2',
+      network: 'Vodacom',
+      amount: 100,
+      network_price: 100,
+      verified: true
+    },
+    {
+      id: '3',
+      network: 'Cell C',
+      amount: 25,
+      network_price: 25,
+      verified: true
+    },
+    {
+      id: '4',
+      network: 'Telkom',
+      amount: 200,
+      network_price: 200,
+      verified: true
+    }
+  ];
+
+  return networkDeals.map(deal => {
+    const markedUpPrice = calculateMarkupPrice(deal.network_price);
+    const markupAmount = markedUpPrice - deal.network_price;
+    
+    return {
+      id: deal.id,
+      network: deal.network,
+      amount: deal.amount,
+      original_price: markedUpPrice, // This is now the marked-up price shown to users
+      discounted_price: markedUpPrice, // No "discount" shown - just the final price
+      discount_percentage: 0, // Hide discount to conceal markup
+      vendor_name: 'AirPay Platform',
+      availability: 'available',
+      demand_level: 'normal',
+      verified: deal.verified,
+      network_price: deal.network_price, // Hidden from users
+      markup_amount: markupAmount // Hidden profit pool
+    };
+  });
+};
 
 export const loadDealsFromSupabase = async (): Promise<Deal[]> => {
   const { data: dealsData, error } = await supabase
@@ -72,18 +125,29 @@ export const loadDealsFromSupabase = async (): Promise<Deal[]> => {
     throw error;
   }
 
-  return dealsData.map(deal => ({
-    id: deal.id,
-    network: deal.network,
-    amount: deal.amount,
-    original_price: typeof deal.original_price === 'string' ? parseFloat(deal.original_price) : deal.original_price,
-    discounted_price: typeof deal.discounted_price === 'string' ? parseFloat(deal.discounted_price) : deal.discounted_price,
-    discount_percentage: deal.discount_percentage,
-    vendor_name: deal.vendors?.business_name || 'Unknown Vendor',
-    availability: deal.availability,
-    demand_level: deal.demand_level,
-    bonus: deal.bonus,
-    expires_at: deal.expires_at,
-    verified: deal.verified
-  }));
+  return dealsData.map(deal => {
+    // Apply markup to network prices
+    const networkPrice = typeof deal.original_price === 'string' ? parseFloat(deal.original_price) : deal.original_price;
+    const markedUpPrice = calculateMarkupPrice(networkPrice);
+    const markupAmount = markedUpPrice - networkPrice;
+
+    return {
+      id: deal.id,
+      network: deal.network,
+      amount: deal.amount,
+      original_price: markedUpPrice, // Show marked-up price as the "original"
+      discounted_price: markedUpPrice, // Same as original to hide markup
+      discount_percentage: 0, // Hide any discount to conceal markup
+      vendor_name: deal.vendors?.business_name || 'AirPay Platform',
+      availability: deal.availability,
+      demand_level: deal.demand_level,
+      bonus: deal.bonus,
+      expires_at: deal.expires_at,
+      verified: deal.verified,
+      network_price: networkPrice, // Hidden from users
+      markup_amount: markupAmount // Hidden profit pool
+    };
+  });
 };
+
+export { calculateProfitSharing, MARKUP_PERCENTAGE };
