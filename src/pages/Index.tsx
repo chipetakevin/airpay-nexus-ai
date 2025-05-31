@@ -1,6 +1,7 @@
 
 import React, { useState } from 'react';
 import Header from '../components/Header';
+import CategoryNavigation from '../components/CategoryNavigation';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Link } from 'react-router-dom';
@@ -20,6 +21,13 @@ import {
 const Index = () => {
   const [adminClickCount, setAdminClickCount] = useState(0);
   const [showAdminLink, setShowAdminLink] = useState(false);
+  const [isAdminAuthenticated, setIsAdminAuthenticated] = useState(false);
+
+  React.useEffect(() => {
+    // Check if admin is authenticated
+    const adminAuth = localStorage.getItem('adminAuthenticated');
+    setIsAdminAuthenticated(adminAuth === 'true');
+  }, []);
 
   const handleLogoClick = () => {
     const newCount = adminClickCount + 1;
@@ -88,7 +96,8 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-white">
-      <Header onLogoClick={handleLogoClick} showAdminLink={showAdminLink} />
+      <Header onLogoClick={handleLogoClick} showAdminLink={showAdminLink || isAdminAuthenticated} />
+      <CategoryNavigation isAdminAuthenticated={isAdminAuthenticated} />
       
       {/* Hero Section */}
       <section className="relative bg-gradient-to-br from-blue-600 via-purple-600 to-teal-500 text-white overflow-hidden">

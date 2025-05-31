@@ -5,6 +5,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ArrowLeft } from 'lucide-react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
+import { useToast } from '@/hooks/use-toast';
 import CustomerRegistration from '../components/CustomerRegistration';
 import VendorRegistration from '../components/VendorRegistration';
 import AdminRegistration from '../components/AdminRegistration';
@@ -15,6 +16,7 @@ const Portal = () => {
   const [searchParams] = useSearchParams();
   const [activeTab, setActiveTab] = useState('registration');
   const [isAdminAuthenticated, setIsAdminAuthenticated] = useState(false);
+  const { toast } = useToast();
 
   useEffect(() => {
     const adminAuth = localStorage.getItem('adminAuthenticated');
@@ -29,6 +31,33 @@ const Portal = () => {
   }, [searchParams]);
 
   const showAdminTab = isAdminAuthenticated || searchParams.get('tab') === 'admin';
+
+  const handleTabChange = (value: string) => {
+    // Check if user has access to admin portal
+    if (value === 'admin' && !isAdminAuthenticated) {
+      toast({
+        title: "Access Denied",
+        description: "Please complete admin registration to access the admin portal.",
+        variant: "destructive"
+      });
+      return;
+    }
+    setActiveTab(value);
+  };
+
+  const getTabClassName = (tabValue: string) => {
+    let baseClass = "text-xs sm:text-sm py-3 sm:py-4 px-1 sm:px-4";
+    
+    switch (tabValue) {
+      case 'vendor':
+        return `${baseClass} text-yellow-600`;
+      case 'admin-reg':
+      case 'admin':
+        return `${baseClass} text-red-600 ${tabValue === 'admin' ? 'font-bold' : ''}`;
+      default:
+        return baseClass;
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-600 via-purple-600 to-teal-500">
@@ -52,32 +81,32 @@ const Portal = () => {
         </div>
 
         <Card className="max-w-6xl mx-auto bg-white/95 backdrop-blur-sm shadow-2xl">
-          <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+          <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full">
             <TabsList className={`grid w-full ${showAdminTab ? 'grid-cols-5' : 'grid-cols-4'} bg-gray-100 h-auto`}>
               <TabsTrigger 
                 value="registration" 
-                className="text-xs sm:text-sm py-3 sm:py-4 px-1 sm:px-4"
+                className={getTabClassName('registration')}
               >
                 <span className="hidden sm:inline">Customer Registration</span>
                 <span className="sm:hidden">Customer</span>
               </TabsTrigger>
               <TabsTrigger 
                 value="vendor" 
-                className="text-xs sm:text-sm py-3 sm:py-4 px-1 sm:px-4 text-yellow-600"
+                className={getTabClassName('vendor')}
               >
                 <span className="hidden sm:inline">Become a Vendor</span>
                 <span className="sm:hidden">Vendor</span>
               </TabsTrigger>
               <TabsTrigger 
                 value="onecard" 
-                className="text-xs sm:text-sm py-3 sm:py-4 px-1 sm:px-4"
+                className={getTabClassName('onecard')}
               >
                 <span className="hidden sm:inline">OneCard Rewards</span>
                 <span className="sm:hidden">OneCard</span>
               </TabsTrigger>
               <TabsTrigger 
                 value="admin-reg" 
-                className="text-xs sm:text-sm py-3 sm:py-4 px-1 sm:px-4 text-red-600"
+                className={getTabClassName('admin-reg')}
               >
                 <span className="hidden sm:inline">Admin Registration</span>
                 <span className="sm:hidden">Admin Reg</span>
@@ -85,7 +114,7 @@ const Portal = () => {
               {showAdminTab && (
                 <TabsTrigger 
                   value="admin" 
-                  className="text-xs sm:text-sm py-3 sm:py-4 px-1 sm:px-4 text-red-600 font-bold"
+                  className={getTabClassName('admin')}
                 >
                   <span className="hidden sm:inline">Admin Portal</span>
                   <span className="sm:hidden">Portal</span>
