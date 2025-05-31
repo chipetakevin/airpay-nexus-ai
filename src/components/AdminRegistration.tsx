@@ -172,13 +172,11 @@ const AdminRegistration = () => {
 
       toast({
         title: "Admin Registration Successful! 🔑",
-        description: `OneCard Platinum created: ****${adminId.slice(-4)}. Redirecting to Smart Deals with admin privileges!`,
+        description: `OneCard Platinum created: ****${adminId.slice(-4)}. Redirecting to Smart Deals now!`,
       });
 
-      // Redirect to Smart Deals section after 1.5 seconds
-      setTimeout(() => {
-        navigate('/?tab=deals');
-      }, 1500);
+      // IMMEDIATE redirect to Smart Deals section
+      navigate('/?tab=deals');
     }
   };
 
@@ -200,7 +198,7 @@ const AdminRegistration = () => {
       <Card className="bg-blue-50 border-blue-200">
         <CardContent className="p-4">
           <p className="text-sm text-blue-800">
-            🚀 <strong>Admin Fast Track:</strong> After registration, you'll be redirected to the admin portal to start managing the system immediately!
+            🚀 <strong>Instant Admin Access:</strong> After registration, you'll be immediately redirected to the admin portal to start managing the system!
           </p>
         </CardContent>
       </Card>

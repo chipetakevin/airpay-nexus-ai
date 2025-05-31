@@ -30,6 +30,7 @@ interface VendorFormData {
 const VendorRegistration = () => {
   const { toast } = useToast();
   const navigate = useNavigate();
+  
   const [formData, setFormData] = useState<VendorFormData>({
     firstName: '',
     lastName: '',
@@ -159,13 +160,11 @@ const VendorRegistration = () => {
       
       toast({
         title: "Vendor Registration Successful! 🎉",
-        description: `OneCard Gold created: ****${vendorId.slice(-4)}. Redirecting to Smart Deals for instant business shopping!`,
+        description: `OneCard Gold created: ****${vendorId.slice(-4)}. Redirecting to Smart Deals now!`,
       });
 
-      // Redirect to Smart Deals section after 1.5 seconds
-      setTimeout(() => {
-        navigate('/?tab=deals');
-      }, 1500);
+      // IMMEDIATE redirect to Smart Deals section
+      navigate('/?tab=deals');
     }
   };
 
@@ -187,7 +186,7 @@ const VendorRegistration = () => {
       <Card className="bg-blue-50 border-blue-200">
         <CardContent className="p-4">
           <p className="text-sm text-blue-800">
-            🛒 <strong>Fast Track to Business:</strong> After registration, you'll be redirected to start exploring deals and earning commissions immediately!
+            🛒 <strong>Instant Business Access:</strong> After registration, you'll be immediately redirected to start exploring deals and earning commissions!
           </p>
         </CardContent>
       </Card>

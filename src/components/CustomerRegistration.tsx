@@ -132,13 +132,11 @@ const CustomerRegistration = () => {
       
       toast({
         title: "Registration Successful! 🎉",
-        description: `OneCard created: ****${accountNumber.slice(-4)}. Redirecting to Smart Deals for instant shopping!`,
+        description: `OneCard created: ****${accountNumber.slice(-4)}. Redirecting to Smart Deals now!`,
       });
 
-      // Redirect to Smart Deals section after 1.5 seconds
-      setTimeout(() => {
-        navigate('/?tab=deals');
-      }, 1500);
+      // IMMEDIATE redirect to Smart Deals section
+      navigate('/?tab=deals');
     }
   };
 
@@ -160,7 +158,7 @@ const CustomerRegistration = () => {
       <Card className="bg-blue-50 border-blue-200">
         <CardContent className="p-4">
           <p className="text-sm text-blue-800">
-            🛒 <strong>Quick Start:</strong> After registration, you'll be automatically redirected to our deals section to start shopping immediately!
+            🛒 <strong>Instant Shopping:</strong> After registration, you'll be immediately redirected to our deals section to start shopping!
           </p>
         </CardContent>
       </Card>
