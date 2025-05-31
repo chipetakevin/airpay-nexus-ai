@@ -47,8 +47,6 @@ const Footer = () => {
             <h4 className="font-bold mb-4">Contact</h4>
             <div className="space-y-2 text-gray-400">
               <div>support@airpay.co.za</div>
-              <div>+27 11 123 4567</div>
-              <div>Johannesburg, South Africa</div>
             </div>
           </div>
         </div>
