@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
+import { useNavigate } from 'react-router-dom';
 import LocationDetector from './LocationDetector';
 import PersonalInfoSection from './registration/PersonalInfoSection';
 import PhoneSection from './registration/PhoneSection';
@@ -13,6 +14,7 @@ import { validateEmail, validateAccountNumber } from '@/utils/formValidation';
 
 const CustomerRegistration = () => {
   const { toast } = useToast();
+  const navigate = useNavigate();
   const [formData, setFormData] = useState<FormData>({
     firstName: '',
     lastName: '',
@@ -76,7 +78,7 @@ const CustomerRegistration = () => {
       
       toast({
         title: "Registration Successful! 🎉",
-        description: `OneCard created: ****${accountNumber.slice(-4)}. Welcome to AirPay!`,
+        description: `OneCard created: ****${accountNumber.slice(-4)}. Redirecting to deals...`,
       });
 
       // Store user data in localStorage for demo
@@ -87,6 +89,11 @@ const CustomerRegistration = () => {
         totalEarned: 0,
         totalSpent: 0
       }));
+
+      // Redirect to deals section after 2 seconds
+      setTimeout(() => {
+        navigate('/?tab=deals');
+      }, 2000);
     }
   };
 
@@ -101,6 +108,14 @@ const CustomerRegistration = () => {
         <CardContent className="p-4">
           <p className="text-sm text-green-800">
             🔒 <strong>Secure Registration:</strong> Your data is protected with bank-level encryption and PCI DSS compliance.
+          </p>
+        </CardContent>
+      </Card>
+
+      <Card className="bg-blue-50 border-blue-200">
+        <CardContent className="p-4">
+          <p className="text-sm text-blue-800">
+            🛒 <strong>Quick Start:</strong> After registration, you'll be automatically redirected to our deals section to start shopping immediately!
           </p>
         </CardContent>
       </Card>
@@ -133,7 +148,7 @@ const CustomerRegistration = () => {
         />
 
         <Button type="submit" className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700">
-          Register & Create OneCard
+          Register & Start Shopping 🛒
         </Button>
       </form>
     </div>

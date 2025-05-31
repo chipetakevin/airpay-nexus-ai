@@ -1,10 +1,10 @@
-
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
+import { useNavigate } from 'react-router-dom';
 import LocationDetector from './LocationDetector';
 import BankAutocomplete from './BankAutocomplete';
 import { validateEmail, validateAccountNumber } from '@/utils/formValidation';
@@ -29,6 +29,7 @@ interface VendorFormData {
 
 const VendorRegistration = () => {
   const { toast } = useToast();
+  const navigate = useNavigate();
   const [formData, setFormData] = useState<VendorFormData>({
     firstName: '',
     lastName: '',
@@ -101,7 +102,7 @@ const VendorRegistration = () => {
       
       toast({
         title: "Vendor Registration Successful! 🎉",
-        description: `OneCard Gold created: ****${vendorId.slice(-4)}. Welcome to AirPay Business!`,
+        description: `OneCard Gold created: ****${vendorId.slice(-4)}. Redirecting to deals...`,
       });
 
       localStorage.setItem('onecardVendor', JSON.stringify({
@@ -113,6 +114,11 @@ const VendorRegistration = () => {
         totalSpent: 0,
         commissionRate: 10.00
       }));
+
+      // Redirect to deals section after 2 seconds
+      setTimeout(() => {
+        navigate('/?tab=deals');
+      }, 2000);
     }
   };
 
@@ -127,6 +133,14 @@ const VendorRegistration = () => {
         <CardContent className="p-4">
           <p className="text-sm text-yellow-800">
             🏆 <strong>OneCard Gold Benefits:</strong> Higher commission rates, priority support, and exclusive business rewards.
+          </p>
+        </CardContent>
+      </Card>
+
+      <Card className="bg-blue-50 border-blue-200">
+        <CardContent className="p-4">
+          <p className="text-sm text-blue-800">
+            🛒 <strong>Fast Track to Business:</strong> After registration, you'll be redirected to start exploring deals and earning commissions immediately!
           </p>
         </CardContent>
       </Card>
@@ -311,7 +325,7 @@ const VendorRegistration = () => {
         </div>
 
         <Button type="submit" className="w-full bg-gradient-to-r from-yellow-600 to-yellow-700 hover:from-yellow-700 hover:to-yellow-800">
-          Register & Create OneCard Gold
+          Register & Start Earning 🛒
         </Button>
       </form>
     </div>

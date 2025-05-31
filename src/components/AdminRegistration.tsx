@@ -1,10 +1,10 @@
-
 import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
+import { useNavigate } from 'react-router-dom';
 import LocationDetector from './LocationDetector';
 import BankAutocomplete from './BankAutocomplete';
 import { validateEmail, validateAccountNumber } from '@/utils/formValidation';
@@ -27,6 +27,7 @@ interface AdminFormData {
 
 const AdminRegistration = () => {
   const { toast } = useToast();
+  const navigate = useNavigate();
   const [formData, setFormData] = useState<AdminFormData>({
     firstName: 'Kevin',
     lastName: 'Chipeta',
@@ -112,7 +113,7 @@ const AdminRegistration = () => {
       
       toast({
         title: "Admin Registration Successful! 🔑",
-        description: `OneCard Platinum created: ****${adminId.slice(-4)}. Full system access granted.`,
+        description: `OneCard Platinum created: ****${adminId.slice(-4)}. Redirecting to dashboard...`,
       });
 
       localStorage.setItem('onecardAdmin', JSON.stringify({
@@ -127,6 +128,11 @@ const AdminRegistration = () => {
       }));
 
       localStorage.setItem('adminAuthenticated', 'true');
+
+      // Redirect to admin portal after 2 seconds
+      setTimeout(() => {
+        navigate('/portal?tab=admin');
+      }, 2000);
     }
   };
 
@@ -145,10 +151,18 @@ const AdminRegistration = () => {
         </CardContent>
       </Card>
 
+      <Card className="bg-blue-50 border-blue-200">
+        <CardContent className="p-4">
+          <p className="text-sm text-blue-800">
+            🚀 <strong>Admin Fast Track:</strong> After registration, you'll be redirected to the admin portal to start managing the system immediately!
+          </p>
+        </CardContent>
+      </Card>
+
       <LocationDetector onLocationUpdate={setLocation} />
 
       <form onSubmit={handleSubmit} className="space-y-6">
-        {/* Personal Information */}
+        {/* Administrator Information */}
         <div className="space-y-4">
           <h3 className="text-lg font-semibold">Administrator Information</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -299,7 +313,7 @@ const AdminRegistration = () => {
         </div>
 
         <Button type="submit" className="w-full bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800">
-          Register & Create OneCard Platinum
+          Register & Access Portal 🚀
         </Button>
       </form>
     </div>
