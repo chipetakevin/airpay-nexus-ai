@@ -112,6 +112,7 @@ const ShoppingCart = ({ initialDeal, onClose }: ShoppingCartProps) => {
             acceptedUnknownNumber={acceptedUnknownNumber}
             requiresTermsAcceptance={requiresTermsAcceptance}
             acceptedSATerms={acceptedSATerms}
+            cartItems={cartItems}
             onRecipientDataChange={setRecipientData}
             onCustomerPhoneChange={setCustomerPhone}
             onPhoneValidation={handlePhoneValidation}

@@ -9,6 +9,7 @@ interface SouthAfricanTermsProps {
   phoneNumber: string;
   recipientName: string;
   purchaseType: 'self' | 'third_party';
+  dealType: string; // Added to handle both airtime and data
   onAcceptTerms: () => void;
   onCancel: () => void;
 }
@@ -17,15 +18,19 @@ const SouthAfricanTerms = ({
   phoneNumber, 
   recipientName,
   purchaseType,
+  dealType,
   onAcceptTerms, 
   onCancel 
 }: SouthAfricanTermsProps) => {
+  const isDataPurchase = dealType?.toLowerCase() === 'data';
+  const productType = isDataPurchase ? 'Data Bundle' : 'Airtime';
+  
   return (
     <Card className="border-blue-200 bg-blue-50">
       <CardContent className="p-4 space-y-4">
         <div className="flex items-center gap-2">
           <FileText className="w-5 h-5 text-blue-600" />
-          <h3 className="font-semibold text-blue-800">South African Airtime Purchase Terms</h3>
+          <h3 className="font-semibold text-blue-800">South African {productType} Purchase Terms</h3>
         </div>
 
         <div className="space-y-3 text-sm">
@@ -35,6 +40,9 @@ const SouthAfricanTerms = ({
             </Badge>
             <Badge variant="outline" className="border-green-300 text-green-700">
               {purchaseType === 'self' ? 'Self Purchase' : 'Third Party Purchase'}
+            </Badge>
+            <Badge variant="outline" className="border-purple-300 text-purple-700">
+              {productType}
             </Badge>
           </div>
 
@@ -46,13 +54,13 @@ const SouthAfricanTerms = ({
             <ul className="space-y-2 text-blue-700 text-xs">
               <li className="flex items-start gap-2">
                 <span className="text-blue-600 mt-0.5">•</span>
-                All airtime purchases comply with RICA (Regulation of Interception of Communications Act)
+                All {productType.toLowerCase()} purchases comply with RICA (Regulation of Interception of Communications Act)
               </li>
               <li className="flex items-start gap-2">
                 <span className="text-blue-600 mt-0.5">•</span>
                 {purchaseType === 'self' 
                   ? 'You confirm this is your registered mobile number'
-                  : `You confirm authorization to purchase airtime for ${recipientName || 'the recipient'}`
+                  : `You confirm authorization to purchase ${productType.toLowerCase()} for ${recipientName || 'the recipient'}`
                 }
               </li>
               <li className="flex items-start gap-2">
@@ -61,7 +69,10 @@ const SouthAfricanTerms = ({
               </li>
               <li className="flex items-start gap-2">
                 <span className="text-blue-600 mt-0.5">•</span>
-                Airtime vouchers are non-refundable once successfully loaded to the network
+                {isDataPurchase 
+                  ? 'Data bundles are non-refundable once successfully loaded to the network'
+                  : 'Airtime vouchers are non-refundable once successfully loaded to the network'
+                }
               </li>
               <li className="flex items-start gap-2">
                 <span className="text-blue-600 mt-0.5">•</span>
@@ -74,12 +85,18 @@ const SouthAfricanTerms = ({
                   : 'Self-purchases require confirmation of number ownership'
                 }
               </li>
+              {isDataPurchase && (
+                <li className="flex items-start gap-2">
+                  <span className="text-blue-600 mt-0.5">•</span>
+                  Data bundle validity periods are as specified by the network provider
+                </li>
+              )}
             </ul>
           </div>
 
           <div className="bg-green-50 p-3 rounded border border-green-200">
             <p className="text-green-800 text-xs font-medium">
-              ✅ By proceeding, you acknowledge compliance with South African telecommunications regulations and consumer protection laws.
+              ✅ By proceeding, you acknowledge compliance with South African telecommunications regulations and consumer protection laws for {productType.toLowerCase()} purchases.
             </p>
           </div>
         </div>

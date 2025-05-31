@@ -22,6 +22,7 @@ interface RecipientDetailsProps {
   acceptedUnknownNumber?: boolean;
   requiresTermsAcceptance?: boolean;
   acceptedSATerms?: boolean;
+  cartItems?: any[]; // Added to determine deal type
   onRecipientDataChange: (data: any) => void;
   onCustomerPhoneChange: (phone: string) => void;
   onPhoneValidation: (phone: string) => void;
@@ -40,6 +41,7 @@ const RecipientDetails = ({
   acceptedUnknownNumber,
   requiresTermsAcceptance,
   acceptedSATerms,
+  cartItems = [],
   onRecipientDataChange,
   onCustomerPhoneChange,
   onPhoneValidation,
@@ -49,6 +51,9 @@ const RecipientDetails = ({
   const targetPhone = purchaseMode === 'self' ? customerPhone : recipientData.phone;
   const showUnknownTerms = validationError && !acceptedUnknownNumber && onAcceptUnknownTerms;
   const showSATerms = requiresTermsAcceptance && !acceptedSATerms && onAcceptSATerms;
+  
+  // Determine deal type from cart items
+  const dealType = cartItems.length > 0 ? cartItems[0].dealType : 'airtime';
 
   return (
     <div className="space-y-4">
@@ -90,6 +95,7 @@ const RecipientDetails = ({
                 phoneNumber={customerPhone}
                 recipientName="Self"
                 purchaseType="self"
+                dealType={dealType}
                 onAcceptTerms={onAcceptSATerms}
                 onCancel={() => onCustomerPhoneChange('')}
               />
@@ -157,6 +163,7 @@ const RecipientDetails = ({
                 phoneNumber={recipientData.phone}
                 recipientName={recipientData.name}
                 purchaseType="third_party"
+                dealType={dealType}
                 onAcceptTerms={onAcceptSATerms}
                 onCancel={() => onRecipientDataChange({ ...recipientData, phone: '' })}
               />
