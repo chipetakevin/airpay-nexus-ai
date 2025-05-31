@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Card } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -186,8 +185,8 @@ const Portal = () => {
                 className={getTabClassName('admin-reg')}
                 disabled={!isTabAllowed('admin-reg')}
               >
-                <span className="hidden sm:inline">Admin Registration</span>
-                <span className="sm:hidden">Admin Reg</span>
+                <span className="hidden sm:inline">Admin</span>
+                <span className="sm:hidden">Admin</span>
               </TabsTrigger>
               {showAdminTab && (
                 <TabsTrigger 
