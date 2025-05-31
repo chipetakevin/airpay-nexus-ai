@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -89,63 +88,6 @@ const AirtimeDealsSystem = () => {
     }
   };
 
-  const getSampleDeals = (): Deal[] => [
-    {
-      id: '1',
-      network: 'MTN',
-      amount: 50,
-      original_price: 50,
-      discounted_price: 42.50,
-      discount_percentage: 15,
-      vendor_name: 'Makro',
-      availability: 'available',
-      demand_level: 'normal',
-      bonus: 'Free 100MB',
-      verified: true
-    },
-    {
-      id: '2',
-      network: 'Vodacom',
-      amount: 100,
-      original_price: 100,
-      discounted_price: 89.00,
-      discount_percentage: 11,
-      vendor_name: 'Pick n Pay',
-      availability: 'limited',
-      demand_level: 'high',
-      verified: true
-    },
-    {
-      id: '3',
-      network: 'Cell C',
-      amount: 25,
-      original_price: 25,
-      discounted_price: 20.75,
-      discount_percentage: 17,
-      vendor_name: 'Capitec Bank',
-      availability: 'available',
-      demand_level: 'normal',
-      bonus: 'Free 50SMS',
-      verified: true
-    },
-    {
-      id: '4',
-      network: 'Telkom',
-      amount: 200,
-      original_price: 200,
-      discounted_price: 174.00,
-      discount_percentage: 13,
-      vendor_name: 'Takealot',
-      availability: 'available',
-      demand_level: 'very_high',
-      verified: true
-    }
-  ];
-
-  useEffect(() => {
-    loadDeals();
-  }, []);
-
   const filteredDeals = deals.filter(deal => {
     const networkMatch = selectedNetwork === 'all' || deal.network.toLowerCase() === selectedNetwork;
     const amountMatch = selectedAmount === 'all' || deal.amount.toString() === selectedAmount;
@@ -203,6 +145,63 @@ const AirtimeDealsSystem = () => {
     setSelectedDeal(cartItem);
     setShowCart(true);
   };
+
+  const getSampleDeals = (): Deal[] => [
+    {
+      id: '1',
+      network: 'MTN',
+      amount: 50,
+      original_price: 50,
+      discounted_price: 42.50,
+      discount_percentage: 15,
+      vendor_name: 'Makro',
+      availability: 'available',
+      demand_level: 'normal',
+      bonus: 'Free 100MB',
+      verified: true
+    },
+    {
+      id: '2',
+      network: 'Vodacom',
+      amount: 100,
+      original_price: 100,
+      discounted_price: 89.00,
+      discount_percentage: 11,
+      vendor_name: 'Pick n Pay',
+      availability: 'limited',
+      demand_level: 'high',
+      verified: true
+    },
+    {
+      id: '3',
+      network: 'Cell C',
+      amount: 25,
+      original_price: 25,
+      discounted_price: 20.75,
+      discount_percentage: 17,
+      vendor_name: 'Capitec Bank',
+      availability: 'available',
+      demand_level: 'normal',
+      bonus: 'Free 50SMS',
+      verified: true
+    },
+    {
+      id: '4',
+      network: 'Telkom',
+      amount: 200,
+      original_price: 200,
+      discounted_price: 174.00,
+      discount_percentage: 13,
+      vendor_name: 'Takealot',
+      availability: 'available',
+      demand_level: 'very_high',
+      verified: true
+    }
+  ];
+
+  useEffect(() => {
+    loadDeals();
+  }, []);
 
   return (
     <div className="space-y-6">

@@ -212,17 +212,36 @@ const ShoppingCart = ({ initialDeal, onClose }: ShoppingCartProps) => {
         throw new Error('Failed to create transaction');
       }
 
-      // Update customer cashback balance
-      const { error: updateError } = await supabase
-        .from('customers')
-        .update({ 
-          onecard_balance: supabase.sql`onecard_balance + ${cashback}`,
-          total_cashback: supabase.sql`total_cashback + ${cashback}`
-        })
-        .eq('id', currentUser.id);
+      // Update customer cashback balance using RPC or raw SQL
+      const { error: updateError } = await supabase.rpc('increment_customer_balance', {
+        customer_id: currentUser.id,
+        cashback_amount: cashback
+      });
 
       if (updateError) {
         console.error('Update error:', updateError);
+        // If RPC doesn't exist, we'll use a regular update for now
+        const { error: fallbackError } = await supabase
+          .from('customers')
+          .update({ 
+            onecard_balance: (await supabase
+              .from('customers')
+              .select('onecard_balance')
+              .eq('id', currentUser.id)
+              .single()
+            ).data?.onecard_balance + cashback,
+            total_cashback: (await supabase
+              .from('customers')
+              .select('total_cashback')
+              .eq('id', currentUser.id)
+              .single()
+            ).data?.total_cashback + cashback
+          })
+          .eq('id', currentUser.id);
+
+        if (fallbackError) {
+          console.error('Fallback update error:', fallbackError);
+        }
       }
 
       toast({
