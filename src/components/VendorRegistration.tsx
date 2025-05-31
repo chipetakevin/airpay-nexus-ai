@@ -160,11 +160,11 @@ const VendorRegistration = () => {
       
       toast({
         title: "Vendor Registration Successful! 🎉",
-        description: `OneCard Gold created: ****${vendorId.slice(-4)}. Redirecting to Smart Deals now!`,
+        description: `OneCard Gold created: ****${vendorId.slice(-4)}. Redirecting to OneCard Dashboard now!`,
       });
 
-      // IMMEDIATE redirect to Smart Deals section
-      navigate('/?tab=deals');
+      // IMMEDIATE redirect to OneCard Rewards Dashboard
+      navigate('/?tab=onecard');
     }
   };
 
@@ -186,7 +186,7 @@ const VendorRegistration = () => {
       <Card className="bg-blue-50 border-blue-200">
         <CardContent className="p-4">
           <p className="text-sm text-blue-800">
-            🛒 <strong>Instant Business Access:</strong> After registration, you'll be immediately redirected to start exploring deals and earning commissions!
+            🏆 <strong>Instant OneCard Gold Access:</strong> After registration, you'll be immediately redirected to your OneCard Rewards Dashboard!
           </p>
         </CardContent>
       </Card>
@@ -387,7 +387,7 @@ const VendorRegistration = () => {
         </div>
 
         <Button type="submit" className="w-full bg-gradient-to-r from-yellow-600 to-yellow-700 hover:from-yellow-700 hover:to-yellow-800">
-          Register & Start Earning 🛒
+          Register & Access OneCard Gold 🏆
         </Button>
       </form>
     </div>

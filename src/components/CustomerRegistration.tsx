@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -132,11 +133,11 @@ const CustomerRegistration = () => {
       
       toast({
         title: "Registration Successful! 🎉",
-        description: `OneCard created: ****${accountNumber.slice(-4)}. Redirecting to Smart Deals now!`,
+        description: `OneCard created: ****${accountNumber.slice(-4)}. Redirecting to OneCard Dashboard now!`,
       });
 
-      // IMMEDIATE redirect to Smart Deals section
-      navigate('/?tab=deals');
+      // IMMEDIATE redirect to OneCard Rewards Dashboard
+      navigate('/?tab=onecard');
     }
   };
 
@@ -158,7 +159,7 @@ const CustomerRegistration = () => {
       <Card className="bg-blue-50 border-blue-200">
         <CardContent className="p-4">
           <p className="text-sm text-blue-800">
-            🛒 <strong>Instant Shopping:</strong> After registration, you'll be immediately redirected to our deals section to start shopping!
+            🏆 <strong>Instant OneCard Access:</strong> After registration, you'll be immediately redirected to your OneCard Rewards Dashboard!
           </p>
         </CardContent>
       </Card>
@@ -191,7 +192,7 @@ const CustomerRegistration = () => {
         />
 
         <Button type="submit" className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700">
-          Register & Start Shopping 🛒
+          Register & Access OneCard 🏆
         </Button>
       </form>
     </div>
