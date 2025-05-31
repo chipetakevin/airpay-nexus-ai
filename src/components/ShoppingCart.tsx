@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { CartItem } from '@/types/deals';
@@ -78,7 +79,11 @@ const ShoppingCart = ({ initialDeal, onClose }: ShoppingCartProps) => {
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-3 z-50">
       <Card className="w-full max-w-md max-h-[95vh] overflow-y-auto bg-white">
-        <CartHeader onClose={onClose} />
+        <CartHeader 
+          onClose={onClose} 
+          currentUser={currentUser}
+          isVendor={isVendor}
+        />
 
         <CardContent className="space-y-4 p-4">
           <CartItems 

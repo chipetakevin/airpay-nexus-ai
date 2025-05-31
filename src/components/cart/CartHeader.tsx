@@ -2,13 +2,59 @@
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { CardHeader, CardTitle } from '@/components/ui/card';
-import { ShoppingCart as CartIcon, X } from 'lucide-react';
+import { ShoppingCart as CartIcon, X, Store, User } from 'lucide-react';
 
 interface CartHeaderProps {
   onClose: () => void;
+  currentUser?: any;
+  isVendor?: boolean;
 }
 
-const CartHeader = ({ onClose }: CartHeaderProps) => {
+const CartHeader = ({ onClose, currentUser, isVendor }: CartHeaderProps) => {
+  const getWelcomeMessage = () => {
+    if (!currentUser) return null;
+
+    if (isVendor) {
+      // Get vendor business name from localStorage
+      const vendorData = localStorage.getItem('onecardVendor');
+      if (vendorData) {
+        try {
+          const vendor = JSON.parse(vendorData);
+          const businessName = vendor.businessName || vendor.companyName || 'Vendor';
+          return (
+            <div className="flex items-center gap-2 text-sm text-blue-700 bg-blue-50 px-3 py-1.5 rounded-lg">
+              <Store className="w-4 h-4" />
+              <span className="font-medium">Welcome, {businessName}</span>
+            </div>
+          );
+        } catch (error) {
+          console.error('Error parsing vendor data:', error);
+        }
+      }
+    } else {
+      // Get customer name from localStorage
+      const customerData = localStorage.getItem('onecardUser');
+      if (customerData) {
+        try {
+          const customer = JSON.parse(customerData);
+          const fullName = `${customer.firstName || ''} ${customer.lastName || ''}`.trim();
+          if (fullName) {
+            return (
+              <div className="flex items-center gap-2 text-sm text-green-700 bg-green-50 px-3 py-1.5 rounded-lg">
+                <User className="w-4 h-4" />
+                <span className="font-medium">Welcome, {fullName}</span>
+              </div>
+            );
+          }
+        } catch (error) {
+          console.error('Error parsing customer data:', error);
+        }
+      }
+    }
+
+    return null;
+  };
+
   return (
     <CardHeader className="pb-3 bg-gradient-to-r from-blue-50 to-green-50 border-b">
       <div className="flex items-center justify-between">
@@ -29,6 +75,11 @@ const CartHeader = ({ onClose }: CartHeaderProps) => {
         >
           <X className="w-4 h-4" />
         </Button>
+      </div>
+      
+      {/* Welcome message section */}
+      <div className="mt-3">
+        {getWelcomeMessage()}
       </div>
     </CardHeader>
   );
