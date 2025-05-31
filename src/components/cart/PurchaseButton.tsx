@@ -9,6 +9,7 @@ interface PurchaseButtonProps {
   cartItemsCount: number;
   currentUser: any;
   total: number;
+  hasAcceptedTerms: boolean;
   onPurchase: () => void;
 }
 
@@ -17,16 +18,32 @@ const PurchaseButton = ({
   validationError,
   cartItemsCount,
   total,
+  hasAcceptedTerms,
   onPurchase
 }: PurchaseButtonProps) => {
   const isDisabled = isProcessing || !!validationError || cartItemsCount === 0;
+  
+  // Dynamic styling based on terms acceptance
+  const getButtonStyles = () => {
+    if (hasAcceptedTerms) {
+      return "w-full bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 h-12 text-base font-semibold shadow-lg transition-all duration-500 ease-in-out";
+    }
+    return "w-full bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 h-12 text-base font-semibold shadow-lg transition-all duration-500 ease-in-out";
+  };
+
+  const getButtonText = () => {
+    if (!hasAcceptedTerms) {
+      return "Accept Terms to Continue";
+    }
+    return `Pay R${total.toFixed(2)}`;
+  };
 
   return (
     <div className="space-y-3 pt-2">
       <Button
         onClick={onPurchase}
-        disabled={isDisabled}
-        className="w-full bg-gradient-to-r from-green-600 to-blue-600 hover:from-green-700 hover:to-blue-700 h-12 text-base font-semibold shadow-lg"
+        disabled={isDisabled || !hasAcceptedTerms}
+        className={getButtonStyles()}
       >
         {isProcessing ? (
           <div className="flex items-center gap-2">
@@ -36,7 +53,7 @@ const PurchaseButton = ({
         ) : (
           <div className="flex items-center gap-2">
             <CreditCard className="w-5 h-5" />
-            <span>Pay R{total.toFixed(2)}</span>
+            <span>{getButtonText()}</span>
           </div>
         )}
       </Button>

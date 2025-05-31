@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { CartItem } from '@/types/deals';
@@ -126,6 +125,7 @@ const ShoppingCart = ({ initialDeal, onClose }: ShoppingCartProps) => {
             cartItemsCount={cartItems.length}
             currentUser={currentUser}
             total={total}
+            hasAcceptedTerms={acceptedSATerms}
             onPurchase={handlePurchase}
           />
         </CardContent>
