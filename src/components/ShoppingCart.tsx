@@ -212,35 +212,27 @@ const ShoppingCart = ({ initialDeal, onClose }: ShoppingCartProps) => {
         throw new Error('Failed to create transaction');
       }
 
-      // Update customer cashback balance using RPC or raw SQL
-      const { error: updateError } = await supabase.rpc('increment_customer_balance', {
-        customer_id: currentUser.id,
-        cashback_amount: cashback
-      });
+      // Update customer cashback balance - using direct update since RPC doesn't exist
+      const { data: currentCustomer } = await supabase
+        .from('customers')
+        .select('onecard_balance, total_cashback')
+        .eq('id', currentUser.id)
+        .single();
 
-      if (updateError) {
-        console.error('Update error:', updateError);
-        // If RPC doesn't exist, we'll use a regular update for now
-        const { error: fallbackError } = await supabase
+      if (currentCustomer) {
+        const newOnecardBalance = (currentCustomer.onecard_balance || 0) + cashback;
+        const newTotalCashback = (currentCustomer.total_cashback || 0) + cashback;
+        
+        const { error: updateError } = await supabase
           .from('customers')
           .update({ 
-            onecard_balance: (await supabase
-              .from('customers')
-              .select('onecard_balance')
-              .eq('id', currentUser.id)
-              .single()
-            ).data?.onecard_balance + cashback,
-            total_cashback: (await supabase
-              .from('customers')
-              .select('total_cashback')
-              .eq('id', currentUser.id)
-              .single()
-            ).data?.total_cashback + cashback
+            onecard_balance: newOnecardBalance,
+            total_cashback: newTotalCashback
           })
           .eq('id', currentUser.id);
 
-        if (fallbackError) {
-          console.error('Fallback update error:', fallbackError);
+        if (updateError) {
+          console.error('Update error:', updateError);
         }
       }
 

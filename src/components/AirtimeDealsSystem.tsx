@@ -89,7 +89,7 @@ const AirtimeDealsSystem = () => {
   };
 
   const filteredDeals = deals.filter(deal => {
-    const networkMatch = selectedNetwork === 'all' || deal.network.toLowerCase() === selectedNetwork;
+    const networkMatch = selectedNetwork === 'all' || deal.network.toLowerCase() === selectedNetwork.toLowerCase();
     const amountMatch = selectedAmount === 'all' || deal.amount.toString() === selectedAmount;
     return networkMatch && amountMatch;
   });
