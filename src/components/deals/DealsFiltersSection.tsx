@@ -33,10 +33,12 @@ const DealsFiltersSection = ({
           <option value="all">All Types</option>
           <option value="airtime">Airtime</option>
           <option value="data">Data</option>
+          <option value="sms">SMS</option>
+          <option value="voice">Voice</option>
         </select>
       </div>
       <div>
-        <label className="block text-sm font-medium mb-2">Network & Retailers</label>
+        <label className="block text-sm font-medium mb-2">Networks & Retailers</label>
         <select
           value={selectedNetwork}
           onChange={(e) => onNetworkChange(e.target.value)}
@@ -44,17 +46,33 @@ const DealsFiltersSection = ({
         >
           <option value="all">All Networks & Retailers</option>
           
-          {/* Network Providers */}
-          <optgroup label="Network Providers">
-            <option value="mtn">MTN</option>
+          {/* Primary Network Providers */}
+          <optgroup label="🏢 Primary Networks">
             <option value="vodacom">Vodacom</option>
+            <option value="mtn">MTN</option>
             <option value="cell c">Cell C</option>
             <option value="telkom">Telkom</option>
+          </optgroup>
+          
+          {/* Alternative Networks */}
+          <optgroup label="📱 Alternative Networks">
+            <option value="lyca mobile">Lyca Mobile</option>
+            <option value="virgin mobile">Virgin Mobile</option>
+            <option value="sentech">Sentech</option>
             <option value="rain">Rain</option>
           </optgroup>
           
+          {/* Specialized Airtime Retailers */}
+          <optgroup label="🎯 Airtime Specialists">
+            <option value="smartcall">SmartCall</option>
+            <option value="myairtime">MyAirtime</option>
+            <option value="surveila">Surveila</option>
+            <option value="rebtel">Rebtel</option>
+            <option value="doctorsim">DoctorSIM</option>
+          </optgroup>
+          
           {/* Major Retailers */}
-          <optgroup label="Major Retailers">
+          <optgroup label="🛒 Major Retailers">
             <option value="takealot">Takealot</option>
             <option value="game">Game</option>
             <option value="makro">Makro</option>
@@ -68,7 +86,7 @@ const DealsFiltersSection = ({
           </optgroup>
           
           {/* Online Marketplaces */}
-          <optgroup label="Online Marketplaces">
+          <optgroup label="🌐 Online Marketplaces">
             <option value="bidorbuy">BidorBuy</option>
             <option value="loot">Loot.co.za</option>
             <option value="wantitall">WantItAll</option>
@@ -76,7 +94,7 @@ const DealsFiltersSection = ({
           </optgroup>
           
           {/* Network Stores */}
-          <optgroup label="Network Stores">
+          <optgroup label="🏪 Network Stores">
             <option value="vodacom store">Vodacom Store</option>
             <option value="mtn store">MTN Store</option>
             <option value="cell c store">Cell C Store</option>
@@ -84,7 +102,7 @@ const DealsFiltersSection = ({
           </optgroup>
           
           {/* Specialty Retailers */}
-          <optgroup label="Specialty Retailers">
+          <optgroup label="🔧 Specialty Retailers">
             <option value="incredible connection">Incredible Connection</option>
             <option value="hifi corp">HiFi Corp</option>
             <option value="cash crusaders">Cash Crusaders</option>
@@ -94,7 +112,7 @@ const DealsFiltersSection = ({
           </optgroup>
           
           {/* Petrol Stations */}
-          <optgroup label="Petrol Stations & Convenience">
+          <optgroup label="⛽ Petrol Stations & Convenience">
             <option value="sasol">Sasol</option>
             <option value="shell">Shell</option>
             <option value="bp">BP</option>
@@ -116,7 +134,9 @@ const DealsFiltersSection = ({
           <option value="25">R25</option>
           <option value="50">R50</option>
           <option value="100">R100</option>
+          <option value="200">R200</option>
           <option value="500">R500</option>
+          <option value="1000">R1000</option>
         </select>
       </div>
       <div className="flex items-end">

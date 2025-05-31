@@ -21,6 +21,7 @@ interface ScrapedDeal {
 }
 
 const SA_RETAILERS = [
+  // Major Online Retailers
   {
     name: 'Takealot',
     url: 'https://www.takealot.com/airtime-data',
@@ -42,7 +43,19 @@ const SA_RETAILERS = [
     }
   },
   {
-    name: 'Vodacom Online',
+    name: 'Makro',
+    url: 'https://www.makro.co.za/electronics/mobile-phones-tablets/airtime-data',
+    selectors: {
+      deals: '.product-tile',
+      title: '.product-name',
+      price: '.price',
+      originalPrice: '.was-price'
+    }
+  },
+  
+  // Network Providers Direct
+  {
+    name: 'Vodacom Store',
     url: 'https://shop.vodacom.co.za/shop/en/vodacomshop/products/airtime',
     selectors: {
       deals: '.product-tile',
@@ -58,6 +71,110 @@ const SA_RETAILERS = [
       deals: '.deal-card',
       title: '.deal-title',
       price: '.current-price',
+      originalPrice: '.original-price'
+    }
+  },
+  {
+    name: 'Cell C Store',
+    url: 'https://www.cellc.co.za/cellc/get-airtime',
+    selectors: {
+      deals: '.product-card',
+      title: '.product-title',
+      price: '.price',
+      originalPrice: '.original-price'
+    }
+  },
+  {
+    name: 'Telkom Store',
+    url: 'https://www.telkom.co.za/prepaid-services',
+    selectors: {
+      deals: '.package-card',
+      title: '.package-title',
+      price: '.price',
+      originalPrice: '.was-price'
+    }
+  },
+  
+  // Specialized Airtime Retailers
+  {
+    name: 'SmartCall',
+    url: 'https://store.smartcall.co.za/index.php?route=recharge%2Frecharge',
+    selectors: {
+      deals: '.product-item',
+      title: '.product-name',
+      price: '.price',
+      originalPrice: '.old-price'
+    }
+  },
+  {
+    name: 'MyAirtime',
+    url: 'https://myairtime.co.za/',
+    selectors: {
+      deals: '.deal-card',
+      title: '.deal-title',
+      price: '.current-price',
+      originalPrice: '.old-price'
+    }
+  },
+  {
+    name: 'Surveila',
+    url: 'https://surveila.co.za/product/justworx-sms-bundles-and-top-up-data/',
+    selectors: {
+      deals: '.product-card',
+      title: '.product-title',
+      price: '.price',
+      originalPrice: '.regular-price'
+    }
+  },
+  {
+    name: 'Rebtel',
+    url: 'https://www.rebtel.com/en/campaign/cms/mtu-generic/',
+    selectors: {
+      deals: '.offer-card',
+      title: '.offer-title',
+      price: '.offer-price',
+      originalPrice: '.original-price'
+    }
+  },
+  {
+    name: 'DoctorSIM',
+    url: 'https://www.doctorsim.com/us-en/topup-phone/',
+    selectors: {
+      deals: '.topup-option',
+      title: '.option-title',
+      price: '.price',
+      originalPrice: '.original-price'
+    }
+  },
+  
+  // Additional Networks from Image
+  {
+    name: 'Lyca Mobile',
+    url: 'https://www.lycamobile.co.za/en/top-up',
+    selectors: {
+      deals: '.topup-card',
+      title: '.card-title',
+      price: '.price',
+      originalPrice: '.old-price'
+    }
+  },
+  {
+    name: 'Virgin Mobile',
+    url: 'https://virginmobile.co.za/recharge',
+    selectors: {
+      deals: '.recharge-option',
+      title: '.option-title',
+      price: '.price',
+      originalPrice: '.was-price'
+    }
+  },
+  {
+    name: 'Sentech',
+    url: 'https://www.sentech.co.za/data-bundles',
+    selectors: {
+      deals: '.bundle-card',
+      title: '.bundle-title',
+      price: '.price',
       originalPrice: '.original-price'
     }
   }
@@ -112,34 +229,47 @@ function parseDealsFromContent(content: string, retailer: any): ScrapedDeal[] {
     
     // Look for airtime/data keywords
     if (line.includes('airtime') || line.includes('data') || line.includes('prepaid') || 
-        line.includes('voucher') || line.includes('recharge')) {
+        line.includes('voucher') || line.includes('recharge') || line.includes('top up') ||
+        line.includes('bundle') || line.includes('sms') || line.includes('minutes')) {
       
       // Extract price information using regex
       const priceMatches = line.match(/r(\d+(?:\.\d{2})?)/g);
-      const amountMatches = line.match(/(\d+)\s*(gb|mb|r)/g);
+      const amountMatches = line.match(/(\d+)\s*(gb|mb|r|min)/g);
       
       if (priceMatches && amountMatches) {
         const prices = priceMatches.map(p => parseFloat(p.replace('r', '')));
         const amounts = amountMatches.map(a => {
           const num = parseInt(a.match(/\d+/)?.[0] || '0');
-          return a.includes('r') ? num : num; // Handle both R amounts and data amounts
+          return a.includes('r') ? num : num;
         });
         
         if (prices.length >= 1 && amounts.length >= 1) {
           const discountedPrice = Math.min(...prices);
-          const originalPrice = prices.length > 1 ? Math.max(...prices) : discountedPrice * 1.2;
+          const originalPrice = prices.length > 1 ? Math.max(...prices) : discountedPrice * 1.15;
           const amount = amounts[0];
           
-          // Determine network from content
-          let network = 'Unknown';
-          if (line.includes('vodacom')) network = 'Vodacom';
-          else if (line.includes('mtn')) network = 'MTN';
-          else if (line.includes('cell c')) network = 'Cell C';
-          else if (line.includes('telkom')) network = 'Telkom';
+          // Determine network from content or retailer
+          let network = 'Universal';
+          if (line.includes('vodacom') || retailer.name.includes('Vodacom')) network = 'Vodacom';
+          else if (line.includes('mtn') || retailer.name.includes('MTN')) network = 'MTN';
+          else if (line.includes('cell c') || retailer.name.includes('Cell C')) network = 'Cell C';
+          else if (line.includes('telkom') || retailer.name.includes('Telkom')) network = 'Telkom';
           else if (line.includes('rain')) network = 'Rain';
+          else if (line.includes('lyca') || retailer.name.includes('Lyca')) network = 'Lyca Mobile';
+          else if (line.includes('virgin') || retailer.name.includes('Virgin')) network = 'Virgin Mobile';
+          else if (line.includes('sentech') || retailer.name.includes('Sentech')) network = 'Sentech';
           
           // Determine deal type
-          const dealType = line.includes('data') || line.includes('gb') || line.includes('mb') ? 'data' : 'airtime';
+          let dealType = 'airtime';
+          if (line.includes('data') || line.includes('gb') || line.includes('mb')) dealType = 'data';
+          else if (line.includes('sms')) dealType = 'sms';
+          else if (line.includes('minutes') || line.includes('min')) dealType = 'voice';
+          
+          // Check for bonuses
+          let bonus = undefined;
+          if (line.includes('bonus')) bonus = 'Bonus included';
+          else if (line.includes('free')) bonus = 'Free extras included';
+          else if (line.includes('unlimited')) bonus = 'Unlimited features';
           
           deals.push({
             network,
@@ -150,7 +280,7 @@ function parseDealsFromContent(content: string, retailer: any): ScrapedDeal[] {
             vendorName: retailer.name,
             availability: 'available',
             dealType,
-            bonus: line.includes('bonus') ? 'Bonus included' : undefined,
+            bonus,
             sourceUrl: retailer.url
           });
         }
@@ -158,7 +288,7 @@ function parseDealsFromContent(content: string, retailer: any): ScrapedDeal[] {
     }
   }
   
-  return deals.slice(0, 5); // Limit to 5 deals per retailer
+  return deals.slice(0, 8); // Increased limit to capture more deals per retailer
 }
 
 async function saveDealsToDatabase(deals: ScrapedDeal[], supabase: any) {
@@ -209,7 +339,7 @@ async function saveDealsToDatabase(deals: ScrapedDeal[], supabase: any) {
           deal_type: deal.dealType,
           bonus: deal.bonus,
           verified: true,
-          expires_at: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(), // 24 hours from now
+          expires_at: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(),
           demand_level: 'high'
         }, {
           onConflict: 'network,amount,vendor_id',
@@ -243,20 +373,26 @@ serve(async (req) => {
     const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
-    console.log('Starting autonomous deal scraping...');
+    console.log('Starting comprehensive autonomous deal scraping...');
     
     const allDeals: ScrapedDeal[] = [];
     
-    // Scrape deals from all retailers
+    // Scrape deals from all retailers with improved error handling
     for (const retailer of SA_RETAILERS) {
-      const deals = await scrapeRetailerDeals(retailer, firecrawlApiKey);
-      allDeals.push(...deals);
-      
-      // Add delay between retailers to be respectful
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      try {
+        const deals = await scrapeRetailerDeals(retailer, firecrawlApiKey);
+        allDeals.push(...deals);
+        console.log(`Found ${deals.length} deals from ${retailer.name}`);
+        
+        // Add delay between retailers to be respectful
+        await new Promise(resolve => setTimeout(resolve, 2000));
+      } catch (error) {
+        console.error(`Failed to scrape ${retailer.name}:`, error);
+        // Continue with next retailer instead of failing entirely
+      }
     }
     
-    console.log(`Found ${allDeals.length} total deals`);
+    console.log(`Found ${allDeals.length} total deals across all retailers`);
     
     // Save deals to database
     if (allDeals.length > 0) {
@@ -269,6 +405,7 @@ serve(async (req) => {
         message: `Successfully scraped and saved ${allDeals.length} deals`,
         dealsFound: allDeals.length,
         retailers: SA_RETAILERS.map(r => r.name),
+        networks: ['Vodacom', 'MTN', 'Cell C', 'Telkom', 'Lyca Mobile', 'Virgin Mobile', 'Sentech', 'Rain'],
         timestamp: new Date().toISOString()
       }),
       {
