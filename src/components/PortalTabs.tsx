@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import CustomerRegistration from './CustomerRegistration';
@@ -23,7 +24,7 @@ const PortalTabs = ({
 }: PortalTabsProps) => {
   
   const getTabClassName = (tabValue: string) => {
-    let baseClass = "text-xs sm:text-sm py-3 sm:py-4 px-1 sm:px-4 transition-all duration-200";
+    let baseClass = "text-xs sm:text-sm py-3 sm:py-4 px-1 sm:px-4 transition-all duration-200 relative";
     
     // Check if tab is allowed
     const allowed = isTabAllowed(tabValue);
@@ -34,6 +35,19 @@ const PortalTabs = ({
       switch (tabValue) {
         case 'vendor':
           baseClass += " text-yellow-600 hover:bg-yellow-50";
+          break;
+        case 'onecard':
+          // Smart Deals tab with maximum attention animation
+          baseClass += ` text-blue-600 hover:bg-blue-50 
+            animate-pulse 
+            before:absolute before:inset-0 before:rounded-lg before:bg-gradient-to-r before:from-blue-400 before:via-purple-500 before:to-green-400 before:p-[2px] before:animate-pulse before:-z-10
+            after:absolute after:inset-[2px] after:rounded-lg after:bg-white after:-z-10
+            shadow-lg shadow-blue-500/50 animate-[pulse_1.5s_ease-in-out_infinite]
+            font-semibold
+            bg-gradient-to-r from-blue-50 to-purple-50
+            border-2 border-transparent bg-clip-padding
+            hover:shadow-xl hover:shadow-blue-600/60
+            transform hover:scale-105`;
           break;
         case 'admin-reg':
         case 'admin':
@@ -72,7 +86,7 @@ const PortalTabs = ({
       );
     }
 
-    // Normal tab content for allowed tabs
+    // Normal tab content for allowed tabs with special styling for Smart Deals
     switch (tabValue) {
       case 'registration':
         return (
@@ -90,10 +104,14 @@ const PortalTabs = ({
         );
       case 'onecard':
         return (
-          <>
-            <span className="hidden sm:inline">OneCard Rewards</span>
-            <span className="sm:hidden">OneCard</span>
-          </>
+          <div className="flex items-center gap-1 sm:gap-2">
+            <span className="animate-bounce text-lg">🔥</span>
+            <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent font-bold">
+              <span className="hidden sm:inline">Smart Deals</span>
+              <span className="sm:hidden">Deals</span>
+            </span>
+            <span className="animate-pulse">✨</span>
+          </div>
         );
       case 'admin-reg':
         return (
