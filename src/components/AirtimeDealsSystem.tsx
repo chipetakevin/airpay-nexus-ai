@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -8,6 +9,7 @@ import {
 } from 'lucide-react';
 import { Deal, CartItem } from '@/types/deals';
 import { loadDealsFromSupabase, getSampleDeals } from '@/services/dealsService';
+import { supabase } from '@/integrations/supabase/client';
 import DealsFilters from './deals/DealsFilters';
 import DealCard from './deals/DealCard';
 import SystemInfo from './deals/SystemInfo';
