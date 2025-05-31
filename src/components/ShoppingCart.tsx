@@ -7,6 +7,7 @@ import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import { calculateProfitSharing } from '@/services/dealsService';
+import { CartItem } from '@/types/deals'; // Import the global CartItem interface
 import { 
   ShoppingCart as CartIcon, 
   User, 
@@ -17,20 +18,6 @@ import {
   Gift,
   ArrowLeft
 } from 'lucide-react';
-
-interface CartItem {
-  id: string;
-  network: string;
-  amount: number;
-  originalPrice: number;
-  discountedPrice: number;
-  discount: number;
-  vendor: string;
-  dealType: 'airtime' | 'data';
-  bonus?: string;
-  networkPrice?: number;
-  markupAmount?: number;
-}
 
 interface ShoppingCartProps {
   initialDeal?: CartItem;
@@ -334,7 +321,7 @@ const ShoppingCart = ({ initialDeal, onClose }: ShoppingCartProps) => {
                   <div>
                     <div className="flex items-center gap-2 mb-1">
                       <Badge variant="outline">{item.network}</Badge>
-                      <span className="text-sm font-medium">R{item.amount} Airtime</span>
+                      <span className="text-sm font-medium">R{item.amount} {item.dealType}</span>
                     </div>
                     <div className="text-xs text-gray-600">
                       from {item.vendor}
