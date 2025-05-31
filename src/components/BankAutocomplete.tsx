@@ -6,7 +6,6 @@ import { Input } from '@/components/ui/input';
 interface Bank {
   name: string;
   code: string;
-  routing: string;
   branchCode: string;
   branches: Array<{
     name: string;
@@ -19,7 +18,6 @@ const bankData: Bank[] = [
   { 
     name: "Standard Bank", 
     code: "051001", 
-    routing: "051001123",
     branchCode: "051001",
     branches: [
       { name: "Johannesburg CBD", code: "051001", location: "Johannesburg, Gauteng" },
@@ -30,7 +28,6 @@ const bankData: Bank[] = [
   { 
     name: "ABSA Bank", 
     code: "632005", 
-    routing: "632005456",
     branchCode: "632005",
     branches: [
       { name: "Pretoria Central", code: "632005", location: "Pretoria, Gauteng" },
@@ -41,7 +38,6 @@ const bankData: Bank[] = [
   { 
     name: "First National Bank (FNB)", 
     code: "250655", 
-    routing: "250655789",
     branchCode: "250655",
     branches: [
       { name: "Rosebank", code: "250655", location: "Rosebank, Gauteng" },
@@ -52,7 +48,6 @@ const bankData: Bank[] = [
   { 
     name: "Nedbank", 
     code: "198765", 
-    routing: "198765012",
     branchCode: "198765",
     branches: [
       { name: "Centurion Mall", code: "198765", location: "Centurion, Gauteng" },
@@ -63,7 +58,6 @@ const bankData: Bank[] = [
   { 
     name: "Capitec Bank", 
     code: "470010", 
-    routing: "470010345",
     branchCode: "470010",
     branches: [
       { name: "Stellenbosch", code: "470010", location: "Stellenbosch, Western Cape" },
@@ -96,13 +90,13 @@ const BankAutocomplete: React.FC<BankAutocompleteProps> = ({ onBankSelect, error
     // Auto-select main branch by default
     const mainBranch = bank.branches[0];
     setSelectedBranch(mainBranch);
-    onBankSelect(bank.name, bank.routing, mainBranch.code);
+    onBankSelect(bank.name, '', mainBranch.code); // No routing number, only branch code
   };
 
   const handleBranchSelect = (branch: any) => {
     setSelectedBranch(branch);
     if (selectedBank) {
-      onBankSelect(selectedBank.name, selectedBank.routing, branch.code);
+      onBankSelect(selectedBank.name, '', branch.code); // No routing number, only branch code
     }
   };
 
@@ -151,7 +145,7 @@ const BankAutocomplete: React.FC<BankAutocompleteProps> = ({ onBankSelect, error
 
       {selectedBank && (
         <div className="space-y-2">
-          <Label htmlFor="branchSelect">Select Branch (Auto-detected)</Label>
+          <Label htmlFor="branchSelect">Select Branch</Label>
           <select
             id="branchSelect"
             value={selectedBranch?.code || ''}
@@ -163,7 +157,7 @@ const BankAutocomplete: React.FC<BankAutocompleteProps> = ({ onBankSelect, error
           >
             {selectedBank.branches.map((branch) => (
               <option key={branch.code} value={branch.code}>
-                {branch.name} - {branch.location} (Code: {branch.code})
+                {branch.name} - {branch.location} (Branch Code: {branch.code})
               </option>
             ))}
           </select>
@@ -174,7 +168,9 @@ const BankAutocomplete: React.FC<BankAutocompleteProps> = ({ onBankSelect, error
               <p>✓ Branch: {selectedBranch.name}</p>
               <p>✓ Location: {selectedBranch.location}</p>
               <p>✓ Branch Code: {selectedBranch.code}</p>
-              <p>✓ Routing Number: {selectedBank.routing}</p>
+              <p className="text-xs text-gray-500 mt-1">
+                ℹ️ South African banks use branch codes, not routing numbers
+              </p>
             </div>
           )}
         </div>

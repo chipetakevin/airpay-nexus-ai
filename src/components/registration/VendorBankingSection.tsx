@@ -39,29 +39,18 @@ const VendorBankingSection: React.FC<VendorBankingProps> = ({
         {errors.accountNumber && <p className="text-red-500 text-sm">{errors.accountNumber}</p>}
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div className="space-y-2">
-          <Label htmlFor="routingNumber">Routing Number</Label>
-          <Input
-            id="routingNumber"
-            value={formData.routingNumber}
-            placeholder="Auto-filled based on bank selection"
-            readOnly
-            className="bg-gray-50"
-          />
-        </div>
-
-        <div className="space-y-2">
-          <Label htmlFor="branchCode">Branch Code</Label>
-          <Input
-            id="branchCode"
-            value={formData.branchCode}
-            placeholder="Auto-detected branch code"
-            readOnly
-            className="bg-gray-50"
-          />
-          <p className="text-sm text-gray-600">✓ Automatically detected from selected bank</p>
-        </div>
+      <div className="space-y-2">
+        <Label htmlFor="branchCode">Branch Code</Label>
+        <Input
+          id="branchCode"
+          value={formData.branchCode}
+          placeholder="Auto-detected branch code"
+          readOnly
+          className="bg-gray-50"
+        />
+        <p className="text-xs text-gray-600">
+          ℹ️ South African banks use branch codes for transactions
+        </p>
       </div>
     </div>
   );

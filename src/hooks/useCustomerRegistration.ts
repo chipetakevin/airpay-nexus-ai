@@ -95,7 +95,7 @@ export const useCustomerRegistration = () => {
     setErrors(newErrors);
 
     if (Object.keys(newErrors).length === 0) {
-      // Generate unique OneCard account number (NOT phone number)
+      // Generate unique OneCard account number
       const accountNumber = 'OC' + Math.random().toString(36).substr(2, 8).toUpperCase();
       
       const userData = {
@@ -108,10 +108,10 @@ export const useCustomerRegistration = () => {
         rememberPassword: true
       };
 
-      // Store user data with enhanced autofill
+      // Store user data
       localStorage.setItem('onecardUser', JSON.stringify(userData));
       
-      // Store credentials for autofill
+      // Store credentials for authentication
       localStorage.setItem('userCredentials', JSON.stringify({
         email: formData.email,
         phone: `${formData.countryCode}${formData.phoneNumber}`,
@@ -119,10 +119,8 @@ export const useCustomerRegistration = () => {
         userType: 'customer'
       }));
 
-      // Set authentication flag for Smart Deals
+      // Set authentication flags
       localStorage.setItem('userAuthenticated', 'true');
-
-      // Clear draft after successful registration
       localStorage.removeItem('customerRegistrationDraft');
       
       toast({
@@ -130,8 +128,11 @@ export const useCustomerRegistration = () => {
         description: `OneCard created: ****${accountNumber.slice(-4)}. Redirecting to Smart Deals now!`,
       });
 
-      // IMMEDIATE redirect to Smart Deals for shopping
-      navigate('/?tab=deals');
+      // Force redirect to deals tab with timeout to ensure state updates
+      setTimeout(() => {
+        navigate('/?tab=deals', { replace: true });
+        window.location.reload(); // Force refresh to ensure cart displays
+      }, 1500);
     }
   };
 

@@ -149,7 +149,11 @@ export const useAdminRegistration = () => {
         description: `OneCard Platinum created: ****${adminId.slice(-4)}. Redirecting to Smart Deals now!`,
       });
 
-      navigate('/?tab=deals');
+      // Force redirect to deals tab with timeout to ensure state updates
+      setTimeout(() => {
+        navigate('/?tab=deals', { replace: true });
+        window.location.reload(); // Force refresh to ensure cart displays
+      }, 1500);
     }
   };
 

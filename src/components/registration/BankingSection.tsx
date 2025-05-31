@@ -20,9 +20,9 @@ const BankingSection: React.FC<BankingSectionProps> = ({
   return (
     <>
       <BankAutocomplete 
-        onBankSelect={(bank, routing) => {
+        onBankSelect={(bank, routing, branchCode) => {
           onInputChange('bankName', bank);
-          onInputChange('routingNumber', routing);
+          onInputChange('branchCode', branchCode);
         }}
         error={errors.bankName}
       />
@@ -45,14 +45,17 @@ const BankingSection: React.FC<BankingSectionProps> = ({
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="routingNumber">Routing Number</Label>
+        <Label htmlFor="branchCode">Branch Code</Label>
         <Input
-          id="routingNumber"
-          value={formData.routingNumber}
+          id="branchCode"
+          value={formData.branchCode}
           placeholder="Auto-filled based on bank selection"
           readOnly
           className="bg-gray-50"
         />
+        <p className="text-xs text-gray-600">
+          ℹ️ South African banks use branch codes for transactions
+        </p>
       </div>
     </>
   );
