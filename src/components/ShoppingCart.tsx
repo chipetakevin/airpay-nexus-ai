@@ -8,7 +8,7 @@ import CartHeader from '@/components/cart/CartHeader';
 import CartItems from '@/components/cart/CartItems';
 import UserTypeIndicator from '@/components/cart/UserTypeIndicator';
 import PurchaseModeSelector from '@/components/cart/PurchaseModeSelector';
-import RecipientDetails from '@/components/cart/RecipientDetails';
+import StreamlinedRecipientDetails from '@/components/cart/StreamlinedRecipientDetails';
 import OrderSummary from '@/components/cart/OrderSummary';
 import PurchaseButton from '@/components/cart/PurchaseButton';
 
@@ -50,12 +50,10 @@ const ShoppingCart = ({ initialDeal, onClose }: ShoppingCartProps) => {
   const { total, profitSharing } = calculateTotals();
 
   const handlePurchase = async () => {
-    // Check if SA terms are accepted when required
-    if (requiresTermsAcceptance && !acceptedSATerms) {
-      return; // Don't proceed if terms not accepted
+    if (!acceptedSATerms) {
+      return;
     }
 
-    // Allow purchase if terms are accepted for unknown numbers
     const effectiveValidationError = acceptedUnknownNumber ? '' : validationError;
     const success = await processPurchase(effectiveValidationError, detectedNetwork);
     if (success) {
@@ -69,26 +67,26 @@ const ShoppingCart = ({ initialDeal, onClose }: ShoppingCartProps) => {
 
   const handleAcceptSATerms = () => {
     setAcceptedSATerms(true);
+    if (validationError && !acceptedUnknownNumber) {
+      acceptUnknownNumberTerms();
+    }
   };
 
-  // Determine if purchase should be disabled
   const isPurchaseDisabled = isProcessing || 
-    (validationError && !acceptedUnknownNumber) || 
-    (requiresTermsAcceptance && !acceptedSATerms) ||
+    !acceptedSATerms ||
     cartItems.length === 0;
 
   return (
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-2 sm:p-4 z-50">
-      <Card className="w-full max-w-lg max-h-[95vh] sm:max-h-[90vh] overflow-y-auto">
+    <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-3 z-50">
+      <Card className="w-full max-w-md max-h-[95vh] overflow-y-auto bg-white">
         <CartHeader onClose={onClose} />
 
-        <CardContent className="space-y-4 sm:space-y-6 p-3 sm:p-6">
+        <CardContent className="space-y-4 p-4">
           <CartItems 
             cartItems={cartItems} 
             onClearCart={() => setCartItems([])} 
           />
 
-          {/* Only show user type indicator for vendors, not authentication warnings */}
           {isVendor && (
             <UserTypeIndicator 
               isVendor={isVendor} 
@@ -101,22 +99,17 @@ const ShoppingCart = ({ initialDeal, onClose }: ShoppingCartProps) => {
             onModeChange={setPurchaseMode} 
           />
 
-          <RecipientDetails
+          <StreamlinedRecipientDetails
             purchaseMode={purchaseMode}
             recipientData={recipientData}
             customerPhone={customerPhone}
-            currentUser={currentUser}
             detectedNetwork={detectedNetwork}
-            isValidating={isValidating}
             validationError={validationError}
-            acceptedUnknownNumber={acceptedUnknownNumber}
-            requiresTermsAcceptance={requiresTermsAcceptance}
             acceptedSATerms={acceptedSATerms}
             cartItems={cartItems}
             onRecipientDataChange={setRecipientData}
             onCustomerPhoneChange={setCustomerPhone}
             onPhoneValidation={handlePhoneValidation}
-            onAcceptUnknownTerms={acceptUnknownNumberTerms}
             onAcceptSATerms={handleAcceptSATerms}
           />
 
@@ -129,7 +122,7 @@ const ShoppingCart = ({ initialDeal, onClose }: ShoppingCartProps) => {
 
           <PurchaseButton
             isProcessing={isProcessing}
-            validationError={isPurchaseDisabled ? 'Terms must be accepted' : ''}
+            validationError={isPurchaseDisabled ? '' : ''}
             cartItemsCount={cartItems.length}
             currentUser={currentUser}
             total={total}
