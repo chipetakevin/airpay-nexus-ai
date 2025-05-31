@@ -12,7 +12,12 @@ import {
   NavigationMenuTrigger,
 } from "@/components/ui/navigation-menu";
 
-const Header = () => {
+interface HeaderProps {
+  onLogoClick?: () => void;
+  showAdminLink?: boolean;
+}
+
+const Header: React.FC<HeaderProps> = ({ onLogoClick, showAdminLink = false }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false);
 
   return (
@@ -20,7 +25,10 @@ const Header = () => {
       <div className="container mx-auto px-4 sm:px-6 py-4">
         <div className="flex items-center justify-between">
           {/* Logo Section */}
-          <Link to="/" className="flex items-center space-x-3">
+          <div 
+            onClick={onLogoClick} 
+            className="flex items-center space-x-3 cursor-pointer"
+          >
             <div className="relative">
               <div className="w-10 h-10 bg-white bg-opacity-20 rounded-lg flex items-center justify-center">
                 <Signal className="w-6 h-6 text-white" />
@@ -31,12 +39,39 @@ const Header = () => {
               <h1 className="text-xl sm:text-2xl font-bold">Air Pay</h1>
               <p className="text-xs sm:text-sm text-blue-100 hidden sm:block">AI-Driven Airtime Management</p>
             </div>
-          </Link>
+          </div>
           
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-6">
             <NavigationMenu>
               <NavigationMenuList>
+                <NavigationMenuItem>
+                  <NavigationMenuTrigger className="bg-transparent text-white hover:bg-white/20">
+                    Quick Access
+                  </NavigationMenuTrigger>
+                  <NavigationMenuContent className="bg-white text-gray-900 p-4 min-w-[200px]">
+                    <div className="space-y-2">
+                      <Link to="/portal">
+                        <NavigationMenuLink className="block px-3 py-2 rounded hover:bg-gray-100">
+                          Customer Registration
+                        </NavigationMenuLink>
+                      </Link>
+                      <Link to="/portal">
+                        <NavigationMenuLink className="block px-3 py-2 rounded hover:bg-gray-100">
+                          Vendor Portal
+                        </NavigationMenuLink>
+                      </Link>
+                      {showAdminLink && (
+                        <Link to="/portal?tab=admin">
+                          <NavigationMenuLink className="block px-3 py-2 rounded hover:bg-gray-100 text-red-600 font-bold">
+                            Admin Portal
+                          </NavigationMenuLink>
+                        </Link>
+                      )}
+                    </div>
+                  </NavigationMenuContent>
+                </NavigationMenuItem>
+                
                 <NavigationMenuItem>
                   <Link to="/portal">
                     <Button className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white px-4 py-2">
@@ -84,9 +119,31 @@ const Header = () => {
                 className="w-full"
               >
                 <Button className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white w-full">
-                  🚀 Customer Portal
+                  🚀 Customer Registration
                 </Button>
               </Link>
+              
+              <Link 
+                to="/portal" 
+                onClick={() => setMobileMenuOpen(false)}
+                className="w-full"
+              >
+                <Button variant="outline" className="border-white text-white hover:bg-white hover:text-blue-600 w-full">
+                  Vendor Portal
+                </Button>
+              </Link>
+
+              {showAdminLink && (
+                <Link 
+                  to="/portal?tab=admin" 
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="w-full"
+                >
+                  <Button className="bg-red-600 hover:bg-red-700 text-white w-full">
+                    Admin Portal
+                  </Button>
+                </Link>
+              )}
               
               {/* Mobile System Status */}
               <div className="bg-white/10 rounded-lg p-3">
