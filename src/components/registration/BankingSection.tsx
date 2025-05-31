@@ -31,6 +31,8 @@ const BankingSection: React.FC<BankingSectionProps> = ({
         <Label htmlFor="accountNumber">Account Number *</Label>
         <Input
           id="accountNumber"
+          name="accountNumber"
+          autoComplete="off"
           value={formData.accountNumber}
           onChange={(e) => onInputChange('accountNumber', e.target.value)}
           placeholder="Enter account number"

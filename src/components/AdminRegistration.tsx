@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -39,13 +40,39 @@ const AdminRegistration = () => {
     accountNumber: '',
     routingNumber: '',
     branchCode: '',
-    rememberPassword: true,
+    rememberPassword: true, // Enforced to true
     agreeTerms: false,
     twoFactorAuth: true
   });
 
   const [errors, setErrors] = useState<any>({});
   const [location, setLocation] = useState('Detecting location...');
+
+  // Auto-save functionality
+  useEffect(() => {
+    const savedData = localStorage.getItem('adminRegistrationDraft');
+    if (savedData) {
+      try {
+        const parsedData = JSON.parse(savedData);
+        setFormData(prev => ({
+          ...prev,
+          ...parsedData,
+          rememberPassword: true // Always enforce remember password
+        }));
+      } catch (error) {
+        console.log('Failed to load saved registration data');
+      }
+    }
+  }, []);
+
+  // Auto-save on form changes
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      localStorage.setItem('adminRegistrationDraft', JSON.stringify(formData));
+    }, 1000); // Save after 1 second of inactivity
+
+    return () => clearTimeout(timeoutId);
+  }, [formData]);
 
   // Auto-fill functionality
   useEffect(() => {
@@ -72,7 +99,11 @@ const AdminRegistration = () => {
   }, []);
 
   const handleInputChange = (field: keyof AdminFormData, value: any) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
+    setFormData(prev => ({ 
+      ...prev, 
+      [field]: value,
+      rememberPassword: true // Always enforce remember password
+    }));
     
     if (errors[field]) {
       setErrors((prev: any) => ({ ...prev, [field]: '' }));
@@ -111,12 +142,7 @@ const AdminRegistration = () => {
     if (Object.keys(newErrors).length === 0) {
       const adminId = 'ADM' + Math.random().toString(36).substr(2, 8).toUpperCase();
       
-      toast({
-        title: "Admin Registration Successful! 🔑",
-        description: `OneCard Platinum created: ****${adminId.slice(-4)}. Redirecting to dashboard...`,
-      });
-
-      localStorage.setItem('onecardAdmin', JSON.stringify({
+      const adminData = {
         ...formData,
         adminId,
         cardType: 'OneCard Platinum',
@@ -124,10 +150,29 @@ const AdminRegistration = () => {
         cashbackBalance: 0,
         totalCustomers: 0,
         totalVendors: 0,
-        systemCommission: 5.00
+        systemCommission: 5.00,
+        rememberPassword: true // Enforce remember password
+      };
+
+      // Store admin data with enhanced autofill
+      localStorage.setItem('onecardAdmin', JSON.stringify(adminData));
+      
+      // Store credentials for autofill
+      localStorage.setItem('userCredentials', JSON.stringify({
+        email: formData.email,
+        rememberPassword: true,
+        userType: 'admin'
       }));
 
       localStorage.setItem('adminAuthenticated', 'true');
+
+      // Clear draft after successful registration
+      localStorage.removeItem('adminRegistrationDraft');
+
+      toast({
+        title: "Admin Registration Successful! 🔑",
+        description: `OneCard Platinum created: ****${adminId.slice(-4)}. Auto-login enabled for admin access!`,
+      });
 
       // Redirect to admin portal after 2 seconds
       setTimeout(() => {
@@ -146,7 +191,7 @@ const AdminRegistration = () => {
       <Card className="bg-red-50 border-red-200">
         <CardContent className="p-4">
           <p className="text-sm text-red-800">
-            ⚠️ <strong>Security Notice:</strong> This registration is limited to authorized personnel with pre-approved email addresses.
+            🔐 <strong>Secure Admin Registration:</strong> Auto-save enabled and credentials remembered for seamless admin access.
           </p>
         </CardContent>
       </Card>
@@ -161,7 +206,7 @@ const AdminRegistration = () => {
 
       <LocationDetector onLocationUpdate={setLocation} />
 
-      <form onSubmit={handleSubmit} className="space-y-6">
+      <form onSubmit={handleSubmit} className="space-y-6" autoComplete="on">
         {/* Administrator Information */}
         <div className="space-y-4">
           <h3 className="text-lg font-semibold">Administrator Information</h3>
@@ -170,6 +215,8 @@ const AdminRegistration = () => {
               <Label htmlFor="firstName">First Name *</Label>
               <Input
                 id="firstName"
+                name="firstName"
+                autoComplete="given-name"
                 value={formData.firstName}
                 onChange={(e) => handleInputChange('firstName', e.target.value)}
                 className={errors.firstName ? 'border-red-500' : ''}
@@ -181,6 +228,8 @@ const AdminRegistration = () => {
               <Label htmlFor="lastName">Last Name *</Label>
               <Input
                 id="lastName"
+                name="lastName"
+                autoComplete="family-name"
                 value={formData.lastName}
                 onChange={(e) => handleInputChange('lastName', e.target.value)}
                 className={errors.lastName ? 'border-red-500' : ''}
@@ -193,7 +242,9 @@ const AdminRegistration = () => {
             <Label htmlFor="email">Authorized Admin Email *</Label>
             <Input
               id="email"
+              name="email"
               type="email"
+              autoComplete="email"
               value={formData.email}
               onChange={(e) => handleInputChange('email', e.target.value)}
               className={`font-mono ${errors.email ? 'border-red-500' : 'bg-gray-50'}`}
@@ -213,6 +264,8 @@ const AdminRegistration = () => {
               />
               <Input
                 id="phoneNumber"
+                name="phoneNumber"
+                autoComplete="tel"
                 value={formData.phoneNumber}
                 onChange={(e) => handleInputChange('phoneNumber', e.target.value)}
                 placeholder="Auto-filled"
@@ -245,6 +298,8 @@ const AdminRegistration = () => {
             <Label htmlFor="accountNumber">Administrator Account Number *</Label>
             <Input
               id="accountNumber"
+              name="accountNumber"
+              autoComplete="off"
               value={formData.accountNumber}
               onChange={(e) => handleInputChange('accountNumber', e.target.value)}
               placeholder="Enter account number"
@@ -286,8 +341,11 @@ const AdminRegistration = () => {
               id="rememberPassword"
               checked={formData.rememberPassword}
               onChange={(e) => handleInputChange('rememberPassword', e.target.checked)}
+              disabled // Disabled because it's enforced
             />
-            <Label htmlFor="rememberPassword">Remember my admin credentials</Label>
+            <Label htmlFor="rememberPassword" className="text-gray-600">
+              ✓ Remember my admin credentials (Enforced for security)
+            </Label>
           </div>
 
           <div className="flex items-center space-x-2">

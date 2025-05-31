@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+
+import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -43,7 +44,7 @@ const VendorRegistration = () => {
     routingNumber: '',
     branchCode: '',
     promoCode: 'ONECARD2024',
-    rememberPassword: false,
+    rememberPassword: true, // Enforced to true
     agreeTerms: false,
     marketingConsent: false
   });
@@ -51,8 +52,38 @@ const VendorRegistration = () => {
   const [errors, setErrors] = useState<any>({});
   const [location, setLocation] = useState('Detecting location...');
 
+  // Auto-save functionality
+  useEffect(() => {
+    const savedData = localStorage.getItem('vendorRegistrationDraft');
+    if (savedData) {
+      try {
+        const parsedData = JSON.parse(savedData);
+        setFormData(prev => ({
+          ...prev,
+          ...parsedData,
+          rememberPassword: true // Always enforce remember password
+        }));
+      } catch (error) {
+        console.log('Failed to load saved registration data');
+      }
+    }
+  }, []);
+
+  // Auto-save on form changes
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      localStorage.setItem('vendorRegistrationDraft', JSON.stringify(formData));
+    }, 1000); // Save after 1 second of inactivity
+
+    return () => clearTimeout(timeoutId);
+  }, [formData]);
+
   const handleInputChange = (field: keyof VendorFormData, value: any) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
+    setFormData(prev => ({ 
+      ...prev, 
+      [field]: value,
+      rememberPassword: true // Always enforce remember password
+    }));
     
     if (errors[field]) {
       setErrors((prev: any) => ({ ...prev, [field]: '' }));
@@ -100,20 +131,34 @@ const VendorRegistration = () => {
     if (Object.keys(newErrors).length === 0) {
       const vendorId = 'VND' + Math.random().toString(36).substr(2, 8).toUpperCase();
       
-      toast({
-        title: "Vendor Registration Successful! 🎉",
-        description: `OneCard Gold created: ****${vendorId.slice(-4)}. Redirecting to deals...`,
-      });
-
-      localStorage.setItem('onecardVendor', JSON.stringify({
+      const vendorData = {
         ...formData,
         vendorId,
         cardType: 'OneCard Gold',
         cashbackBalance: 0,
         totalEarned: 0,
         totalSpent: 0,
-        commissionRate: 10.00
+        commissionRate: 10.00,
+        rememberPassword: true // Enforce remember password
+      };
+
+      // Store vendor data with enhanced autofill
+      localStorage.setItem('onecardVendor', JSON.stringify(vendorData));
+      
+      // Store credentials for autofill
+      localStorage.setItem('userCredentials', JSON.stringify({
+        email: formData.email,
+        rememberPassword: true,
+        userType: 'vendor'
       }));
+
+      // Clear draft after successful registration
+      localStorage.removeItem('vendorRegistrationDraft');
+      
+      toast({
+        title: "Vendor Registration Successful! 🎉",
+        description: `OneCard Gold created: ****${vendorId.slice(-4)}. Auto-login enabled for faster business operations!`,
+      });
 
       // Redirect to deals section after 2 seconds
       setTimeout(() => {
@@ -132,7 +177,7 @@ const VendorRegistration = () => {
       <Card className="bg-yellow-50 border-yellow-200">
         <CardContent className="p-4">
           <p className="text-sm text-yellow-800">
-            🏆 <strong>OneCard Gold Benefits:</strong> Higher commission rates, priority support, and exclusive business rewards.
+            🏆 <strong>Smart Business Registration:</strong> Auto-save enabled and credentials remembered for faster future access.
           </p>
         </CardContent>
       </Card>
@@ -147,7 +192,7 @@ const VendorRegistration = () => {
 
       <LocationDetector onLocationUpdate={setLocation} />
 
-      <form onSubmit={handleSubmit} className="space-y-6">
+      <form onSubmit={handleSubmit} className="space-y-6" autoComplete="on">
         {/* Personal Information */}
         <div className="space-y-4">
           <h3 className="text-lg font-semibold">Personal Information</h3>
@@ -156,6 +201,8 @@ const VendorRegistration = () => {
               <Label htmlFor="firstName">First Name *</Label>
               <Input
                 id="firstName"
+                name="firstName"
+                autoComplete="given-name"
                 value={formData.firstName}
                 onChange={(e) => handleInputChange('firstName', e.target.value)}
                 className={errors.firstName ? 'border-red-500' : ''}
@@ -167,6 +214,8 @@ const VendorRegistration = () => {
               <Label htmlFor="lastName">Last Name *</Label>
               <Input
                 id="lastName"
+                name="lastName"
+                autoComplete="family-name"
                 value={formData.lastName}
                 onChange={(e) => handleInputChange('lastName', e.target.value)}
                 className={errors.lastName ? 'border-red-500' : ''}
@@ -179,7 +228,9 @@ const VendorRegistration = () => {
             <Label htmlFor="email">Email Address *</Label>
             <Input
               id="email"
+              name="email"
               type="email"
+              autoComplete="email"
               value={formData.email}
               onChange={(e) => handleInputChange('email', e.target.value)}
               className={errors.email ? 'border-red-500' : ''}
@@ -197,6 +248,8 @@ const VendorRegistration = () => {
               />
               <Input
                 id="phoneNumber"
+                name="phoneNumber"
+                autoComplete="tel"
                 value={formData.phoneNumber}
                 onChange={(e) => handleInputChange('phoneNumber', e.target.value)}
                 placeholder="Enter phone number"
@@ -214,6 +267,8 @@ const VendorRegistration = () => {
             <Label htmlFor="companyName">Company Name * (Will appear on OneCard Gold)</Label>
             <Input
               id="companyName"
+              name="companyName"
+              autoComplete="organization"
               value={formData.companyName}
               onChange={(e) => handleInputChange('companyName', e.target.value)}
               placeholder="Enter your business name"
@@ -226,6 +281,7 @@ const VendorRegistration = () => {
             <Label htmlFor="businessType">Business Type</Label>
             <Input
               id="businessType"
+              name="businessType"
               value={formData.businessType}
               onChange={(e) => handleInputChange('businessType', e.target.value)}
               placeholder="e.g., Retail, Restaurant, Service Provider"
@@ -256,6 +312,8 @@ const VendorRegistration = () => {
             <Label htmlFor="accountNumber">Business Account Number *</Label>
             <Input
               id="accountNumber"
+              name="accountNumber"
+              autoComplete="off"
               value={formData.accountNumber}
               onChange={(e) => handleInputChange('accountNumber', e.target.value)}
               placeholder="Enter business account number"
@@ -298,8 +356,11 @@ const VendorRegistration = () => {
               id="rememberPassword"
               checked={formData.rememberPassword}
               onChange={(e) => handleInputChange('rememberPassword', e.target.checked)}
+              disabled // Disabled because it's enforced
             />
-            <Label htmlFor="rememberPassword">Remember my login details</Label>
+            <Label htmlFor="rememberPassword" className="text-gray-600">
+              ✓ Remember my login details (Enabled for faster shopping)
+            </Label>
           </div>
 
           <div className="flex items-center space-x-2">

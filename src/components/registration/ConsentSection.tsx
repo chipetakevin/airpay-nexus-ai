@@ -22,8 +22,11 @@ const ConsentSection: React.FC<ConsentSectionProps> = ({
           id="rememberPassword"
           checked={formData.rememberPassword}
           onChange={(e) => onInputChange('rememberPassword', e.target.checked)}
+          disabled // Disabled because it's enforced
         />
-        <Label htmlFor="rememberPassword">Remember my login details</Label>
+        <Label htmlFor="rememberPassword" className="text-gray-600">
+          ✓ Remember my login details (Enabled for faster shopping)
+        </Label>
       </div>
 
       <div className="flex items-center space-x-2">

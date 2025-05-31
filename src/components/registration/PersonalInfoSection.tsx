@@ -22,6 +22,8 @@ const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
           <Label htmlFor="firstName">First Name *</Label>
           <Input
             id="firstName"
+            name="firstName"
+            autoComplete="given-name"
             value={formData.firstName}
             onChange={(e) => onInputChange('firstName', e.target.value)}
             className={errors.firstName ? 'border-red-500' : ''}
@@ -33,6 +35,8 @@ const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
           <Label htmlFor="lastName">Last Name *</Label>
           <Input
             id="lastName"
+            name="lastName"
+            autoComplete="family-name"
             value={formData.lastName}
             onChange={(e) => onInputChange('lastName', e.target.value)}
             className={errors.lastName ? 'border-red-500' : ''}
@@ -45,7 +49,9 @@ const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
         <Label htmlFor="email">Email Address *</Label>
         <Input
           id="email"
+          name="email"
           type="email"
+          autoComplete="email"
           value={formData.email}
           onChange={(e) => onInputChange('email', e.target.value)}
           className={errors.email ? 'border-red-500' : ''}

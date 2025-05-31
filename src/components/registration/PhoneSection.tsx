@@ -31,6 +31,8 @@ const PhoneSection: React.FC<PhoneSectionProps> = ({
           <option value="+234">🇳🇬 +234</option>
         </select>
         <Input
+          name="phoneNumber"
+          autoComplete="tel"
           placeholder="Enter phone number"
           value={formData.phoneNumber}
           onChange={(e) => onInputChange('phoneNumber', e.target.value)}

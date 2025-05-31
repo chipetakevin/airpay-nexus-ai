@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
@@ -25,7 +25,7 @@ const CustomerRegistration = () => {
     accountNumber: '',
     routingNumber: '',
     branchCode: '',
-    rememberPassword: false,
+    rememberPassword: true, // Enforced to true
     agreeTerms: false,
     marketingConsent: false
   });
@@ -33,8 +33,38 @@ const CustomerRegistration = () => {
   const [errors, setErrors] = useState<FormErrors>({});
   const [location, setLocation] = useState('Detecting location...');
 
+  // Auto-save functionality
+  useEffect(() => {
+    const savedData = localStorage.getItem('customerRegistrationDraft');
+    if (savedData) {
+      try {
+        const parsedData = JSON.parse(savedData);
+        setFormData(prev => ({
+          ...prev,
+          ...parsedData,
+          rememberPassword: true // Always enforce remember password
+        }));
+      } catch (error) {
+        console.log('Failed to load saved registration data');
+      }
+    }
+  }, []);
+
+  // Auto-save on form changes
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      localStorage.setItem('customerRegistrationDraft', JSON.stringify(formData));
+    }, 1000); // Save after 1 second of inactivity
+
+    return () => clearTimeout(timeoutId);
+  }, [formData]);
+
   const handleInputChange = (field: keyof FormData, value: any) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
+    setFormData(prev => ({ 
+      ...prev, 
+      [field]: value,
+      rememberPassword: true // Always enforce remember password
+    }));
     
     // Clear errors when user starts typing
     if (errors[field as keyof FormErrors]) {
@@ -76,19 +106,32 @@ const CustomerRegistration = () => {
       // Generate unique OneCard account number
       const accountNumber = 'OC' + Math.random().toString(36).substr(2, 8).toUpperCase();
       
-      toast({
-        title: "Registration Successful! 🎉",
-        description: `OneCard created: ****${accountNumber.slice(-4)}. Redirecting to deals...`,
-      });
-
-      // Store user data in localStorage for demo
-      localStorage.setItem('onecardUser', JSON.stringify({
+      const userData = {
         ...formData,
         cardNumber: accountNumber,
         cashbackBalance: 0,
         totalEarned: 0,
-        totalSpent: 0
+        totalSpent: 0,
+        rememberPassword: true // Enforce remember password
+      };
+
+      // Store user data with enhanced autofill
+      localStorage.setItem('onecardUser', JSON.stringify(userData));
+      
+      // Store credentials for autofill
+      localStorage.setItem('userCredentials', JSON.stringify({
+        email: formData.email,
+        rememberPassword: true,
+        userType: 'customer'
       }));
+
+      // Clear draft after successful registration
+      localStorage.removeItem('customerRegistrationDraft');
+      
+      toast({
+        title: "Registration Successful! 🎉",
+        description: `OneCard created: ****${accountNumber.slice(-4)}. Auto-login enabled for faster shopping!`,
+      });
 
       // Redirect to deals section after 2 seconds
       setTimeout(() => {
@@ -107,7 +150,7 @@ const CustomerRegistration = () => {
       <Card className="bg-green-50 border-green-200">
         <CardContent className="p-4">
           <p className="text-sm text-green-800">
-            🔒 <strong>Secure Registration:</strong> Your data is protected with bank-level encryption and PCI DSS compliance.
+            🔒 <strong>Smart Registration:</strong> Your data is auto-saved and auto-login is enabled for faster future shopping experiences.
           </p>
         </CardContent>
       </Card>
@@ -122,7 +165,7 @@ const CustomerRegistration = () => {
 
       <LocationDetector onLocationUpdate={setLocation} />
 
-      <form onSubmit={handleSubmit} className="space-y-6">
+      <form onSubmit={handleSubmit} className="space-y-6" autoComplete="on">
         <PersonalInfoSection 
           formData={formData}
           errors={errors}
