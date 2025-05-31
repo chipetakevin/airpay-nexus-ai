@@ -14,10 +14,10 @@ const HeroSection = () => {
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold mb-6 leading-tight">
               South Africa's
               <span className="block text-yellow-300">Smartest Airtime</span>
-              <span className="block">Platform</span>
+              <span className="block">& Data Platform</span>
             </h1>
             <p className="text-lg sm:text-xl mb-8 opacity-90 max-w-2xl mx-auto lg:mx-0">
-              Join thousands of South Africans saving money on airtime while earning cashback rewards. 
+              Join thousands of South Africans saving money on airtime and data while earning cashback rewards. 
               Purchase from all major networks with unbeatable deals and instant delivery.
             </p>
             
