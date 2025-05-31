@@ -1,8 +1,10 @@
 
 import React from 'react';
-import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { CheckCircle, AlertTriangle } from 'lucide-react';
+import { Input } from '@/components/ui/input';
+import { Card, CardContent } from '@/components/ui/card';
+import NetworkDetector from '../NetworkDetector';
+import UnknownNumberTerms from './UnknownNumberTerms';
 
 interface RecipientDetailsProps {
   purchaseMode: 'self' | 'other';
@@ -16,9 +18,11 @@ interface RecipientDetailsProps {
   detectedNetwork: string;
   isValidating: boolean;
   validationError: string;
-  onRecipientDataChange: (data: { name: string; phone: string; relationship: string }) => void;
+  acceptedUnknownNumber?: boolean;
+  onRecipientDataChange: (data: any) => void;
   onCustomerPhoneChange: (phone: string) => void;
   onPhoneValidation: (phone: string) => void;
+  onAcceptUnknownTerms?: () => void;
 }
 
 const RecipientDetails = ({
@@ -29,86 +33,119 @@ const RecipientDetails = ({
   detectedNetwork,
   isValidating,
   validationError,
+  acceptedUnknownNumber,
   onRecipientDataChange,
   onCustomerPhoneChange,
-  onPhoneValidation
+  onPhoneValidation,
+  onAcceptUnknownTerms
 }: RecipientDetailsProps) => {
-  const handlePhoneChange = (phone: string) => {
-    if (purchaseMode === 'self') {
-      onCustomerPhoneChange(phone);
-    } else {
-      onRecipientDataChange({ ...recipientData, phone });
-    }
-    if (phone.length >= 10) {
-      onPhoneValidation(phone);
-    }
-  };
+  const targetPhone = purchaseMode === 'self' ? customerPhone : recipientData.phone;
+  const showUnknownTerms = validationError && !acceptedUnknownNumber && onAcceptUnknownTerms;
 
   return (
-    <div className="space-y-3">
-      <h3 className="font-semibold text-sm">
-        {purchaseMode === 'self' ? 'Your Details' : 'Recipient Details'}
-      </h3>
-      
-      {purchaseMode === 'other' && (
-        <>
-          <div>
-            <Label htmlFor="recipientName" className="text-xs">Recipient Name</Label>
-            <Input
-              id="recipientName"
-              value={recipientData.name}
-              onChange={(e) => onRecipientDataChange({ ...recipientData, name: e.target.value })}
-              placeholder="Enter recipient name"
-              className="h-9"
-            />
-          </div>
-          <div>
-            <Label htmlFor="relationship" className="text-xs">Relationship</Label>
-            <Input
-              id="relationship"
-              value={recipientData.relationship}
-              onChange={(e) => onRecipientDataChange({ ...recipientData, relationship: e.target.value })}
-              placeholder="e.g., Family, Friend, Colleague"
-              className="h-9"
-            />
-          </div>
-        </>
-      )}
-
-      <div>
-        <Label htmlFor="phone" className="text-xs">
-          {purchaseMode === 'self' ? 'Your Phone Number' : 'Recipient Phone Number'}
-        </Label>
-        <div className="relative">
-          <Input
-            id="phone"
-            value={purchaseMode === 'self' ? customerPhone : recipientData.phone}
-            onChange={(e) => handlePhoneChange(e.target.value)}
-            placeholder="+27 XX XXX XXXX"
-            className="h-9"
-            disabled={purchaseMode === 'self' && !currentUser}
-          />
-          {isValidating && (
-            <div className="absolute right-2 top-2">
-              <div className="w-5 h-5 border-2 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
+    <div className="space-y-4">
+      {purchaseMode === 'self' ? (
+        <Card>
+          <CardContent className="p-4 space-y-4">
+            <h3 className="font-semibold text-sm">Your Details</h3>
+            
+            <div className="space-y-2">
+              <Label htmlFor="customerPhone">Your Phone Number</Label>
+              <Input
+                id="customerPhone"
+                value={customerPhone}
+                onChange={(e) => {
+                  onCustomerPhoneChange(e.target.value);
+                  onPhoneValidation(e.target.value);
+                }}
+                placeholder="Enter your phone number"
+                className={validationError && !acceptedUnknownNumber ? 'border-red-500' : ''}
+              />
+              
+              <NetworkDetector
+                phoneNumber={customerPhone}
+                onNetworkDetected={() => {}}
+              />
             </div>
-          )}
-        </div>
-        
-        {detectedNetwork && (
-          <div className="flex items-center gap-2 mt-1">
-            <CheckCircle className="w-4 h-4 text-green-600" />
-            <span className="text-xs text-green-600">Detected: {detectedNetwork}</span>
-          </div>
-        )}
-        
-        {validationError && (
-          <div className="flex items-center gap-2 mt-1">
-            <AlertTriangle className="w-4 h-4 text-red-600" />
-            <span className="text-xs text-red-600">{validationError}</span>
-          </div>
-        )}
-      </div>
+
+            {showUnknownTerms && (
+              <UnknownNumberTerms
+                phoneNumber={customerPhone}
+                detectedNetwork={detectedNetwork}
+                onAcceptTerms={onAcceptUnknownTerms}
+                onCancel={() => onCustomerPhoneChange('')}
+              />
+            )}
+
+            {validationError && acceptedUnknownNumber && (
+              <div className="text-xs text-orange-600 bg-orange-50 p-2 rounded">
+                ⚠️ Proceeding with unknown number - terms accepted
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      ) : (
+        <Card>
+          <CardContent className="p-4 space-y-4">
+            <h3 className="font-semibold text-sm">Recipient Details</h3>
+            
+            <div className="space-y-2">
+              <Label htmlFor="recipientName">Recipient Name</Label>
+              <Input
+                id="recipientName"
+                value={recipientData.name}
+                onChange={(e) => onRecipientDataChange({ ...recipientData, name: e.target.value })}
+                placeholder="Enter recipient's name"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="recipientPhone">Recipient Phone Number</Label>
+              <Input
+                id="recipientPhone"
+                value={recipientData.phone}
+                onChange={(e) => {
+                  const newPhone = e.target.value;
+                  onRecipientDataChange({ ...recipientData, phone: newPhone });
+                  onPhoneValidation(newPhone);
+                }}
+                placeholder="Enter recipient's phone number"
+                className={validationError && !acceptedUnknownNumber ? 'border-red-500' : ''}
+              />
+              
+              <NetworkDetector
+                phoneNumber={recipientData.phone}
+                onNetworkDetected={() => {}}
+              />
+            </div>
+
+            {showUnknownTerms && (
+              <UnknownNumberTerms
+                phoneNumber={recipientData.phone}
+                detectedNetwork={detectedNetwork}
+                onAcceptTerms={onAcceptUnknownTerms}
+                onCancel={() => onRecipientDataChange({ ...recipientData, phone: '' })}
+              />
+            )}
+
+            {validationError && acceptedUnknownNumber && (
+              <div className="text-xs text-orange-600 bg-orange-50 p-2 rounded">
+                ⚠️ Proceeding with unknown number - terms accepted
+              </div>
+            )}
+
+            <div className="space-y-2">
+              <Label htmlFor="relationship">Relationship</Label>
+              <Input
+                id="relationship"
+                value={recipientData.relationship}
+                onChange={(e) => onRecipientDataChange({ ...recipientData, relationship: e.target.value })}
+                placeholder="e.g., Family, Friend, Colleague"
+              />
+            </div>
+          </CardContent>
+        </Card>
+      )}
     </div>
   );
 };

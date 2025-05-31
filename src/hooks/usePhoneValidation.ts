@@ -6,6 +6,7 @@ export const usePhoneValidation = () => {
   const [detectedNetwork, setDetectedNetwork] = useState('');
   const [isValidating, setIsValidating] = useState(false);
   const [validationError, setValidationError] = useState('');
+  const [acceptedUnknownNumber, setAcceptedUnknownNumber] = useState(false);
 
   const detectNetworkFromPrefix = (phone: string): string => {
     const cleanPhone = phone.replace(/\D/g, '');
@@ -67,7 +68,7 @@ export const usePhoneValidation = () => {
         item.network.toLowerCase() !== networkFromPrefix.toLowerCase()
       );
       
-      if (networkMismatch && cartItems.length > 0) {
+      if (networkMismatch && cartItems.length > 0 && !acceptedUnknownNumber) {
         setValidationError(
           `This number belongs to ${networkFromPrefix}. Please select a ${networkFromPrefix} deal or use a different number.`
         );
@@ -80,11 +81,18 @@ export const usePhoneValidation = () => {
     }
   };
 
+  const acceptUnknownNumberTerms = () => {
+    setAcceptedUnknownNumber(true);
+    setValidationError('');
+  };
+
   return {
     detectedNetwork,
     isValidating,
     validationError,
+    acceptedUnknownNumber,
     validatePhoneNumber,
+    acceptUnknownNumberTerms,
     setValidationError
   };
 };

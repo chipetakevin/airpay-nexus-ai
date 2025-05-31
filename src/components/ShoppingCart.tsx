@@ -38,13 +38,17 @@ const ShoppingCart = ({ initialDeal, onClose }: ShoppingCartProps) => {
     detectedNetwork,
     isValidating,
     validationError,
-    validatePhoneNumber
+    acceptedUnknownNumber,
+    validatePhoneNumber,
+    acceptUnknownNumberTerms
   } = usePhoneValidation();
 
   const { total, profitSharing } = calculateTotals();
 
   const handlePurchase = async () => {
-    const success = await processPurchase(validationError, detectedNetwork);
+    // Allow purchase if terms are accepted for unknown numbers
+    const effectiveValidationError = acceptedUnknownNumber ? '' : validationError;
+    const success = await processPurchase(effectiveValidationError, detectedNetwork);
     if (success) {
       onClose();
     }
@@ -83,9 +87,11 @@ const ShoppingCart = ({ initialDeal, onClose }: ShoppingCartProps) => {
             detectedNetwork={detectedNetwork}
             isValidating={isValidating}
             validationError={validationError}
+            acceptedUnknownNumber={acceptedUnknownNumber}
             onRecipientDataChange={setRecipientData}
             onCustomerPhoneChange={setCustomerPhone}
             onPhoneValidation={handlePhoneValidation}
+            onAcceptUnknownTerms={acceptUnknownNumberTerms}
           />
 
           <OrderSummary
@@ -97,7 +103,7 @@ const ShoppingCart = ({ initialDeal, onClose }: ShoppingCartProps) => {
 
           <PurchaseButton
             isProcessing={isProcessing}
-            validationError={validationError}
+            validationError={acceptedUnknownNumber ? '' : validationError}
             cartItemsCount={cartItems.length}
             currentUser={currentUser}
             total={total}
