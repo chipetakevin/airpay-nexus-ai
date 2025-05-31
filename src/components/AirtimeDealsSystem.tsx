@@ -10,14 +10,18 @@ import {
   Zap,
   Filter,
   RefreshCw,
-  Bell
+  Bell,
+  ShoppingCart
 } from 'lucide-react';
+import ShoppingCart from './ShoppingCart';
 
 const AirtimeDealsSystem = () => {
   const [deals, setDeals] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [selectedNetwork, setSelectedNetwork] = useState('all');
   const [selectedAmount, setSelectedAmount] = useState('all');
+  const [showCart, setShowCart] = useState(false);
+  const [selectedDeal, setSelectedDeal] = useState(null);
 
   const mockDeals = [
     {
@@ -104,6 +108,23 @@ const AirtimeDealsSystem = () => {
       setDeals(updatedDeals);
       setIsLoading(false);
     }, 1000);
+  };
+
+  const handleGrabDeal = (deal) => {
+    const cartItem = {
+      id: deal.id.toString(),
+      network: deal.network,
+      amount: deal.amount,
+      originalPrice: deal.originalPrice,
+      discountedPrice: deal.discountedPrice,
+      discount: deal.discount,
+      vendor: deal.vendor,
+      dealType: 'airtime' as const,
+      bonus: deal.bonus
+    };
+    
+    setSelectedDeal(cartItem);
+    setShowCart(true);
   };
 
   return (
@@ -239,10 +260,11 @@ const AirtimeDealsSystem = () => {
                 )}
 
                 <Button 
+                  onClick={() => handleGrabDeal(deal)}
                   className="w-full bg-gradient-to-r from-green-600 to-blue-600 hover:from-green-700 hover:to-blue-700"
                   size="sm"
                 >
-                  <TrendingDown className="w-4 h-4 mr-2" />
+                  <ShoppingCart className="w-4 h-4 mr-2" />
                   Grab This Deal
                 </Button>
               </CardContent>
@@ -274,6 +296,17 @@ const AirtimeDealsSystem = () => {
           </p>
         </CardContent>
       </Card>
+
+      {/* Shopping Cart Modal */}
+      {showCart && (
+        <ShoppingCart 
+          initialDeal={selectedDeal}
+          onClose={() => {
+            setShowCart(false);
+            setSelectedDeal(null);
+          }}
+        />
+      )}
     </div>
   );
 };
