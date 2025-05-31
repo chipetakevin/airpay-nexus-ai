@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -152,18 +151,21 @@ const VendorRegistration = () => {
         userType: 'vendor'
       }));
 
+      // Set authentication flag for Smart Deals
+      localStorage.setItem('userAuthenticated', 'true');
+
       // Clear draft after successful registration
       localStorage.removeItem('vendorRegistrationDraft');
       
       toast({
         title: "Vendor Registration Successful! 🎉",
-        description: `OneCard Gold created: ****${vendorId.slice(-4)}. Auto-login enabled for faster business operations!`,
+        description: `OneCard Gold created: ****${vendorId.slice(-4)}. Redirecting to Smart Deals for instant business shopping!`,
       });
 
-      // Redirect to deals section after 2 seconds
+      // Redirect to Smart Deals section after 1.5 seconds
       setTimeout(() => {
         navigate('/?tab=deals');
-      }, 2000);
+      }, 1500);
     }
   };
 

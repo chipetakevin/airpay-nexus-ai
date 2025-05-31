@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -125,18 +124,21 @@ const CustomerRegistration = () => {
         userType: 'customer'
       }));
 
+      // Set authentication flag for Smart Deals
+      localStorage.setItem('userAuthenticated', 'true');
+
       // Clear draft after successful registration
       localStorage.removeItem('customerRegistrationDraft');
       
       toast({
         title: "Registration Successful! 🎉",
-        description: `OneCard created: ****${accountNumber.slice(-4)}. Auto-login enabled for faster shopping!`,
+        description: `OneCard created: ****${accountNumber.slice(-4)}. Redirecting to Smart Deals for instant shopping!`,
       });
 
-      // Redirect to deals section after 2 seconds
+      // Redirect to Smart Deals section after 1.5 seconds
       setTimeout(() => {
         navigate('/?tab=deals');
-      }, 2000);
+      }, 1500);
     }
   };
 

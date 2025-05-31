@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -164,6 +163,8 @@ const AdminRegistration = () => {
         userType: 'admin'
       }));
 
+      // Set authentication flag for Smart Deals
+      localStorage.setItem('userAuthenticated', 'true');
       localStorage.setItem('adminAuthenticated', 'true');
 
       // Clear draft after successful registration
@@ -171,13 +172,13 @@ const AdminRegistration = () => {
 
       toast({
         title: "Admin Registration Successful! 🔑",
-        description: `OneCard Platinum created: ****${adminId.slice(-4)}. Auto-login enabled for admin access!`,
+        description: `OneCard Platinum created: ****${adminId.slice(-4)}. Redirecting to Smart Deals with admin privileges!`,
       });
 
-      // Redirect to admin portal after 2 seconds
+      // Redirect to Smart Deals section after 1.5 seconds
       setTimeout(() => {
-        navigate('/portal?tab=admin');
-      }, 2000);
+        navigate('/?tab=deals');
+      }, 1500);
     }
   };
 

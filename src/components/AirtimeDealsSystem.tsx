@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -13,6 +12,7 @@ import DealsFilters from './deals/DealsFilters';
 import DealCard from './deals/DealCard';
 import SystemInfo from './deals/SystemInfo';
 import ShoppingCart from './ShoppingCart';
+import AuthenticationIndicator from './deals/AuthenticationIndicator';
 
 const AirtimeDealsSystem = () => {
   const { toast } = useToast();
@@ -62,6 +62,10 @@ const AirtimeDealsSystem = () => {
 
   return (
     <div className="space-y-6">
+      {/* Authentication Indicator */}
+      <AuthenticationIndicator />
+
+      {/* Header Section */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
           <h3 className="text-xl font-bold mb-2">🔍 Smart Airtime & Data Deals</h3>
