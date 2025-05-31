@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import CustomerRegistration from './CustomerRegistration';
@@ -38,7 +37,12 @@ const PortalTabs = ({
           break;
         case 'admin-reg':
         case 'admin':
-          baseClass += ` text-red-600 hover:bg-red-50 ${tabValue === 'admin' ? 'font-bold' : ''}`;
+          // Gray out admin tabs for non-admin users
+          if (!isTabAllowed('admin-reg') && !isTabAllowed('admin')) {
+            baseClass += " opacity-20 cursor-not-allowed bg-gray-200 text-gray-300 pointer-events-none";
+          } else {
+            baseClass += ` text-red-600 hover:bg-red-50 ${tabValue === 'admin' ? 'font-bold' : ''}`;
+          }
           break;
         default:
           baseClass += " hover:bg-blue-50";
@@ -46,6 +50,68 @@ const PortalTabs = ({
     }
     
     return baseClass;
+  };
+
+  const getTabContent = (tabValue: string) => {
+    // For admin tabs, show grayed out unreadable text for non-admin users
+    if ((tabValue === 'admin-reg' || tabValue === 'admin') && !isTabAllowed(tabValue)) {
+      return (
+        <span className="opacity-30 text-gray-400 select-none pointer-events-none blur-sm">
+          {tabValue === 'admin-reg' ? (
+            <>
+              <span className="hidden sm:inline">■■■■■</span>
+              <span className="sm:hidden">■■■</span>
+            </>
+          ) : (
+            <>
+              <span className="hidden sm:inline">■■■■■ ■■■■■■</span>
+              <span className="sm:hidden">■■■■■■</span>
+            </>
+          )}
+        </span>
+      );
+    }
+
+    // Normal tab content for allowed tabs
+    switch (tabValue) {
+      case 'registration':
+        return (
+          <>
+            <span className="hidden sm:inline">Customer Registration</span>
+            <span className="sm:hidden">Customer</span>
+          </>
+        );
+      case 'vendor':
+        return (
+          <>
+            <span className="hidden sm:inline">Become a Vendor</span>
+            <span className="sm:hidden">Vendor</span>
+          </>
+        );
+      case 'onecard':
+        return (
+          <>
+            <span className="hidden sm:inline">OneCard Rewards</span>
+            <span className="sm:hidden">OneCard</span>
+          </>
+        );
+      case 'admin-reg':
+        return (
+          <>
+            <span className="hidden sm:inline">Admin</span>
+            <span className="sm:hidden">Admin</span>
+          </>
+        );
+      case 'admin':
+        return (
+          <>
+            <span className="hidden sm:inline">Admin Portal</span>
+            <span className="sm:hidden">Portal</span>
+          </>
+        );
+      default:
+        return tabValue;
+    }
   };
 
   return (
@@ -56,32 +122,28 @@ const PortalTabs = ({
           className={getTabClassName('registration')}
           disabled={!isTabAllowed('registration')}
         >
-          <span className="hidden sm:inline">Customer Registration</span>
-          <span className="sm:hidden">Customer</span>
+          {getTabContent('registration')}
         </TabsTrigger>
         <TabsTrigger 
           value="vendor" 
           className={getTabClassName('vendor')}
           disabled={!isTabAllowed('vendor')}
         >
-          <span className="hidden sm:inline">Become a Vendor</span>
-          <span className="sm:hidden">Vendor</span>
+          {getTabContent('vendor')}
         </TabsTrigger>
         <TabsTrigger 
           value="onecard" 
           className={getTabClassName('onecard')}
           disabled={!isTabAllowed('onecard')}
         >
-          <span className="hidden sm:inline">OneCard Rewards</span>
-          <span className="sm:hidden">OneCard</span>
+          {getTabContent('onecard')}
         </TabsTrigger>
         <TabsTrigger 
           value="admin-reg" 
           className={getTabClassName('admin-reg')}
           disabled={!isTabAllowed('admin-reg')}
         >
-          <span className="hidden sm:inline">Admin</span>
-          <span className="sm:hidden">Admin</span>
+          {getTabContent('admin-reg')}
         </TabsTrigger>
         {showAdminTab && (
           <TabsTrigger 
@@ -89,8 +151,7 @@ const PortalTabs = ({
             className={getTabClassName('admin')}
             disabled={!isTabAllowed('admin')}
           >
-            <span className="hidden sm:inline">Admin Portal</span>
-            <span className="sm:hidden">Portal</span>
+            {getTabContent('admin')}
           </TabsTrigger>
         )}
       </TabsList>
