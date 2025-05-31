@@ -1,7 +1,6 @@
 
 import React, { useState } from 'react';
 import Header from '../components/Header';
-import CategoryNavigation from '../components/CategoryNavigation';
 import HeroSection from '../components/HeroSection';
 import AnimatedStats from '../components/AnimatedStats';
 import FeaturesSection from '../components/FeaturesSection';
@@ -42,7 +41,6 @@ const Index = () => {
       <SmoothScrollNav />
       
       <Header onLogoClick={handleLogoClick} showAdminLink={showAdminLink || isAdminAuthenticated} />
-      <CategoryNavigation isAdminAuthenticated={isAdminAuthenticated} />
       
       <div id="hero">
         <HeroSection />
