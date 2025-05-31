@@ -6,6 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
+import { supabase } from '@/integrations/supabase/client';
 import { 
   ShoppingCart as CartIcon, 
   User, 
@@ -16,9 +17,6 @@ import {
   Gift,
   ArrowLeft
 } from 'lucide-react';
-import NetworkDetector from './NetworkDetector';
-import PurchaseProcessor from './PurchaseProcessor';
-import RicaValidator from './RicaValidator';
 
 interface CartItem {
   id: string;
@@ -51,14 +49,28 @@ const ShoppingCart = ({ initialDeal, onClose }: ShoppingCartProps) => {
   const [isValidating, setIsValidating] = useState(false);
   const [validationError, setValidationError] = useState('');
   const [isProcessing, setIsProcessing] = useState(false);
+  const [currentUser, setCurrentUser] = useState(null);
 
   useEffect(() => {
-    // Load customer data from localStorage
-    const storedUser = localStorage.getItem('onecardUser');
-    if (storedUser) {
-      const userData = JSON.parse(storedUser);
-      setCustomerPhone(userData.phoneNumber || '');
-    }
+    // Get current user and load their data
+    const getCurrentUser = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        setCurrentUser(user);
+        // Try to load customer data from database
+        const { data: customerData } = await supabase
+          .from('customers')
+          .select('*')
+          .eq('id', user.id)
+          .single();
+        
+        if (customerData) {
+          setCustomerPhone(customerData.phone || '');
+        }
+      }
+    };
+    
+    getCurrentUser();
   }, []);
 
   const validatePhoneNumber = async (phoneNumber: string) => {
@@ -66,11 +78,32 @@ const ShoppingCart = ({ initialDeal, onClose }: ShoppingCartProps) => {
     setValidationError('');
     
     try {
-      // Simulate RICA validation and network detection
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      // Check RICA validation in database
+      const { data: ricaData, error } = await supabase
+        .from('rica_validations')
+        .select('*')
+        .eq('phone_number', phoneNumber)
+        .eq('status', 'verified')
+        .single();
+
+      if (error && error.code !== 'PGRST116') {
+        console.error('RICA validation error:', error);
+      }
+
+      let networkFromPrefix = 'Unknown';
       
-      const networkFromPrefix = detectNetworkFromPrefix(phoneNumber);
-      setDetectedNetwork(networkFromPrefix);
+      if (ricaData) {
+        networkFromPrefix = ricaData.network_provider;
+        setDetectedNetwork(networkFromPrefix);
+      } else {
+        // Fallback to prefix detection
+        networkFromPrefix = detectNetworkFromPrefix(phoneNumber);
+        setDetectedNetwork(networkFromPrefix);
+        
+        if (networkFromPrefix === 'Unknown') {
+          setValidationError('Phone number not found in RICA database or invalid format.');
+        }
+      }
       
       // Check if network matches cart items
       const networkMismatch = cartItems.some(item => 
@@ -83,6 +116,7 @@ const ShoppingCart = ({ initialDeal, onClose }: ShoppingCartProps) => {
         );
       }
     } catch (error) {
+      console.error('Validation error:', error);
       setValidationError('Unable to validate number. Please try again.');
     } finally {
       setIsValidating(false);
@@ -91,14 +125,28 @@ const ShoppingCart = ({ initialDeal, onClose }: ShoppingCartProps) => {
 
   const detectNetworkFromPrefix = (phone: string): string => {
     const cleanPhone = phone.replace(/\D/g, '');
+    let prefix = '';
+    
     if (cleanPhone.startsWith('27')) {
-      const prefix = cleanPhone.substring(2, 5);
-      if (['083', '084', '073', '074'].includes(prefix)) return 'MTN';
-      if (['082', '071', '072', '060', '061', '062', '063', '064', '065', '066', '067', '068', '069'].includes(prefix)) return 'Vodacom';
-      if (['084', '076'].includes(prefix)) return 'Cell C';
-      if (['081', '079'].includes(prefix)) return 'Telkom';
+      prefix = cleanPhone.substring(2, 5);
+    } else if (cleanPhone.startsWith('0')) {
+      prefix = cleanPhone.substring(0, 3);
+    } else {
+      prefix = cleanPhone.substring(0, 3);
     }
-    return 'Unknown';
+    
+    const networkMap: { [key: string]: string } = {
+      '083': 'MTN', '084': 'MTN', '073': 'MTN', '074': 'MTN',
+      '082': 'Vodacom', '071': 'Vodacom', '072': 'Vodacom',
+      '060': 'Vodacom', '061': 'Vodacom', '062': 'Vodacom',
+      '063': 'Vodacom', '064': 'Vodacom', '065': 'Vodacom',
+      '066': 'Vodacom', '067': 'Vodacom', '068': 'Vodacom', '069': 'Vodacom',
+      '076': 'Cell C',
+      '081': 'Telkom', '079': 'Telkom',
+      '087': 'Rain'
+    };
+
+    return networkMap[prefix] || 'Unknown';
   };
 
   const calculateTotals = () => {
@@ -120,32 +168,61 @@ const ShoppingCart = ({ initialDeal, onClose }: ShoppingCartProps) => {
       return;
     }
 
+    if (!currentUser) {
+      toast({
+        title: "Authentication Required",
+        description: "Please log in to complete your purchase.",
+        variant: "destructive"
+      });
+      return;
+    }
+
     setIsProcessing(true);
     
     try {
-      // Simulate purchase processing
-      await new Promise(resolve => setTimeout(resolve, 3000));
-      
       const { total, cashback } = calculateTotals();
-      const purchaseData = {
-        items: cartItems,
-        recipient: purchaseMode === 'other' ? recipientData : { 
-          name: 'Self', 
-          phone: customerPhone 
-        },
-        total,
-        cashback,
-        timestamp: new Date().toISOString()
-      };
+      const recipientPhone = purchaseMode === 'self' ? customerPhone : recipientData.phone;
+      const recipientName = purchaseMode === 'self' ? 'Self' : recipientData.name;
+      
+      // Create transaction in database
+      const { data: transactionData, error: transactionError } = await supabase
+        .from('transactions')
+        .insert({
+          customer_id: currentUser.id,
+          vendor_id: 'sample-vendor-id', // This would come from the deal
+          deal_id: cartItems[0]?.id,
+          recipient_phone: recipientPhone,
+          recipient_name: recipientName,
+          recipient_relationship: purchaseMode === 'other' ? recipientData.relationship : null,
+          amount: total,
+          original_price: cartItems[0]?.originalPrice || 0,
+          discounted_price: cartItems[0]?.discountedPrice || 0,
+          network: cartItems[0]?.network || detectedNetwork,
+          transaction_type: purchaseMode === 'self' ? 'self_purchase' : 'third_party_purchase',
+          cashback_earned: cashback,
+          admin_fee: 0,
+          vendor_commission: 0,
+          status: 'completed'
+        })
+        .select()
+        .single();
 
-      // Update user's cashback balance
-      const storedUser = localStorage.getItem('onecardUser');
-      if (storedUser) {
-        const userData = JSON.parse(storedUser);
-        userData.cashbackBalance = (userData.cashbackBalance || 0) + cashback;
-        userData.totalSpent = (userData.totalSpent || 0) + total;
-        userData.totalEarned = (userData.totalEarned || 0) + cashback;
-        localStorage.setItem('onecardUser', JSON.stringify(userData));
+      if (transactionError) {
+        console.error('Transaction error:', transactionError);
+        throw new Error('Failed to create transaction');
+      }
+
+      // Update customer cashback balance
+      const { error: updateError } = await supabase
+        .from('customers')
+        .update({ 
+          onecard_balance: supabase.sql`onecard_balance + ${cashback}`,
+          total_cashback: supabase.sql`total_cashback + ${cashback}`
+        })
+        .eq('id', currentUser.id);
+
+      if (updateError) {
+        console.error('Update error:', updateError);
       }
 
       toast({
@@ -158,6 +235,7 @@ const ShoppingCart = ({ initialDeal, onClose }: ShoppingCartProps) => {
       onClose();
       
     } catch (error) {
+      console.error('Purchase error:', error);
       toast({
         title: "Purchase Failed",
         description: "Unable to process purchase. Please try again.",
@@ -212,6 +290,21 @@ const ShoppingCart = ({ initialDeal, onClose }: ShoppingCartProps) => {
               </Card>
             ))}
           </div>
+
+          {/* Authentication Check */}
+          {!currentUser && (
+            <Card className="bg-yellow-50 border-yellow-200">
+              <CardContent className="p-4">
+                <div className="flex items-center gap-2 text-yellow-700">
+                  <AlertTriangle className="w-4 h-4" />
+                  <span className="text-sm font-medium">Authentication Required</span>
+                </div>
+                <p className="text-sm text-yellow-600 mt-1">
+                  Please log in to complete your purchase and earn OneCard rewards.
+                </p>
+              </CardContent>
+            </Card>
+          )}
 
           {/* Purchase Mode Selection */}
           <div className="space-y-3">
@@ -290,7 +383,7 @@ const ShoppingCart = ({ initialDeal, onClose }: ShoppingCartProps) => {
                   }}
                   placeholder="+27 XX XXX XXXX"
                   className="h-9"
-                  disabled={purchaseMode === 'self'}
+                  disabled={purchaseMode === 'self' && !currentUser}
                 />
                 {isValidating && (
                   <div className="absolute right-2 top-2">
@@ -337,7 +430,7 @@ const ShoppingCart = ({ initialDeal, onClose }: ShoppingCartProps) => {
           {/* Purchase Button */}
           <Button
             onClick={processPurchase}
-            disabled={isProcessing || !!validationError || cartItems.length === 0}
+            disabled={isProcessing || !!validationError || cartItems.length === 0 || !currentUser}
             className="w-full bg-gradient-to-r from-green-600 to-blue-600 hover:from-green-700 hover:to-blue-700"
           >
             {isProcessing ? (

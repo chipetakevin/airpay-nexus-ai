@@ -1,7 +1,10 @@
+
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { useToast } from '@/hooks/use-toast';
+import { supabase } from '@/integrations/supabase/client';
 import { 
   TrendingDown, 
   Clock, 
@@ -14,79 +17,133 @@ import {
 } from 'lucide-react';
 import ShoppingCart from './ShoppingCart';
 
+interface Deal {
+  id: string;
+  network: string;
+  amount: number;
+  original_price: number;
+  discounted_price: number;
+  discount_percentage: number;
+  vendor_name: string;
+  availability: string;
+  demand_level: string;
+  bonus?: string;
+  expires_at?: string;
+  verified: boolean;
+}
+
 const AirtimeDealsSystem = () => {
-  const [deals, setDeals] = useState([]);
+  const { toast } = useToast();
+  const [deals, setDeals] = useState<Deal[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [selectedNetwork, setSelectedNetwork] = useState('all');
   const [selectedAmount, setSelectedAmount] = useState('all');
   const [showCart, setShowCart] = useState(false);
   const [selectedDeal, setSelectedDeal] = useState(null);
 
-  const mockDeals = [
+  const loadDeals = async () => {
+    setIsLoading(true);
+    try {
+      const { data: dealsData, error } = await supabase
+        .from('deals')
+        .select(`
+          *,
+          vendors (
+            business_name
+          )
+        `)
+        .eq('active', true)
+        .order('created_at', { ascending: false });
+
+      if (error) {
+        console.error('Error loading deals:', error);
+        toast({
+          title: "Error Loading Deals",
+          description: "Unable to load deals. Using sample data.",
+          variant: "destructive"
+        });
+        // Fallback to sample data
+        setDeals(getSampleDeals());
+      } else {
+        const formattedDeals = dealsData.map(deal => ({
+          id: deal.id,
+          network: deal.network,
+          amount: deal.amount,
+          original_price: parseFloat(deal.original_price),
+          discounted_price: parseFloat(deal.discounted_price),
+          discount_percentage: deal.discount_percentage,
+          vendor_name: deal.vendors?.business_name || 'Unknown Vendor',
+          availability: deal.availability,
+          demand_level: deal.demand_level,
+          bonus: deal.bonus,
+          expires_at: deal.expires_at,
+          verified: deal.verified
+        }));
+        setDeals(formattedDeals);
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      setDeals(getSampleDeals());
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const getSampleDeals = (): Deal[] => [
     {
-      id: 1,
+      id: '1',
       network: 'MTN',
       amount: 50,
-      originalPrice: 50,
-      discountedPrice: 42.50,
-      discount: 15,
-      vendor: 'Makro',
-      expiresIn: '2h 45m',
-      location: 'Nationwide',
-      stock: 'Available',
+      original_price: 50,
+      discounted_price: 42.50,
+      discount_percentage: 15,
+      vendor_name: 'Makro',
+      availability: 'available',
+      demand_level: 'normal',
       bonus: 'Free 100MB',
       verified: true
     },
     {
-      id: 2,
+      id: '2',
       network: 'Vodacom',
       amount: 100,
-      originalPrice: 100,
-      discountedPrice: 89.00,
-      discount: 11,
-      vendor: 'Pick n Pay',
-      expiresIn: '1h 20m',
-      location: 'Gauteng',
-      stock: 'Limited',
-      bonus: null,
+      original_price: 100,
+      discounted_price: 89.00,
+      discount_percentage: 11,
+      vendor_name: 'Pick n Pay',
+      availability: 'limited',
+      demand_level: 'high',
       verified: true
     },
     {
-      id: 3,
+      id: '3',
       network: 'Cell C',
       amount: 25,
-      originalPrice: 25,
-      discountedPrice: 20.75,
-      discount: 17,
-      vendor: 'Capitec Bank',
-      expiresIn: '4h 15m',
-      location: 'Western Cape',
-      stock: 'Available',
+      original_price: 25,
+      discounted_price: 20.75,
+      discount_percentage: 17,
+      vendor_name: 'Capitec Bank',
+      availability: 'available',
+      demand_level: 'normal',
       bonus: 'Free 50SMS',
       verified: true
     },
     {
-      id: 4,
+      id: '4',
       network: 'Telkom',
       amount: 200,
-      originalPrice: 200,
-      discountedPrice: 174.00,
-      discount: 13,
-      vendor: 'Takealot',
-      expiresIn: '30m',
-      location: 'Nationwide',
-      stock: 'High Demand',
-      bonus: null,
+      original_price: 200,
+      discounted_price: 174.00,
+      discount_percentage: 13,
+      vendor_name: 'Takealot',
+      availability: 'available',
+      demand_level: 'very_high',
       verified: true
     }
   ];
 
   useEffect(() => {
-    // Simulate loading deals
-    setTimeout(() => {
-      setDeals(mockDeals);
-      setIsLoading(false);
-    }, 1500);
+    loadDeals();
   }, []);
 
   const filteredDeals = deals.filter(deal => {
@@ -95,29 +152,50 @@ const AirtimeDealsSystem = () => {
     return networkMatch && amountMatch;
   });
 
-  const refreshDeals = () => {
-    setIsLoading(true);
-    setTimeout(() => {
-      // Simulate new deals with slight price changes
-      const updatedDeals = mockDeals.map(deal => ({
-        ...deal,
-        discountedPrice: deal.discountedPrice + (Math.random() - 0.5) * 2,
-        discount: Math.round(((deal.originalPrice - deal.discountedPrice) / deal.originalPrice) * 100)
-      }));
-      setDeals(updatedDeals);
-      setIsLoading(false);
-    }, 1000);
+  const getAvailabilityBadge = (availability: string) => {
+    switch (availability) {
+      case 'limited': return 'Limited';
+      case 'out_of_stock': return 'Out of Stock';
+      default: return 'Available';
+    }
   };
 
-  const handleGrabDeal = (deal) => {
+  const getDemandBadge = (demand: string) => {
+    switch (demand) {
+      case 'high': return 'High Demand';
+      case 'very_high': return 'Very High Demand';
+      case 'low': return 'Low Demand';
+      default: return 'Normal Demand';
+    }
+  };
+
+  const getTimeRemaining = (expiresAt: string | undefined) => {
+    if (!expiresAt) return 'No expiry';
+    
+    const now = new Date();
+    const expiry = new Date(expiresAt);
+    const diff = expiry.getTime() - now.getTime();
+    
+    if (diff <= 0) return 'Expired';
+    
+    const hours = Math.floor(diff / (1000 * 60 * 60));
+    const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+    
+    if (hours > 0) {
+      return `${hours}h ${minutes}m`;
+    }
+    return `${minutes}m`;
+  };
+
+  const handleGrabDeal = (deal: Deal) => {
     const cartItem = {
-      id: deal.id.toString(),
+      id: deal.id,
       network: deal.network,
       amount: deal.amount,
-      originalPrice: deal.originalPrice,
-      discountedPrice: deal.discountedPrice,
-      discount: deal.discount,
-      vendor: deal.vendor,
+      originalPrice: deal.original_price,
+      discountedPrice: deal.discounted_price,
+      discount: deal.discount_percentage,
+      vendor: deal.vendor_name,
       dealType: 'airtime' as const,
       bonus: deal.bonus
     };
@@ -138,7 +216,7 @@ const AirtimeDealsSystem = () => {
           <Button
             variant="outline"
             size="sm"
-            onClick={refreshDeals}
+            onClick={loadDeals}
             disabled={isLoading}
             className="flex items-center gap-2"
           >
@@ -169,6 +247,7 @@ const AirtimeDealsSystem = () => {
                 <option value="vodacom">Vodacom</option>
                 <option value="cell c">Cell C</option>
                 <option value="telkom">Telkom</option>
+                <option value="rain">Rain</option>
               </select>
             </div>
             
@@ -219,7 +298,7 @@ const AirtimeDealsSystem = () => {
                   </div>
                   <div className="text-right">
                     <div className="text-lg font-bold text-green-600">
-                      -{deal.discount}%
+                      -{deal.discount_percentage}%
                     </div>
                   </div>
                 </div>
@@ -227,26 +306,26 @@ const AirtimeDealsSystem = () => {
                 <div className="mb-3">
                   <div className="text-xl font-bold">R{deal.amount} Airtime</div>
                   <div className="flex items-center gap-2">
-                    <span className="line-through text-gray-500">R{deal.originalPrice}</span>
+                    <span className="line-through text-gray-500">R{deal.original_price}</span>
                     <span className="text-lg font-bold text-green-600">
-                      R{deal.discountedPrice.toFixed(2)}
+                      R{deal.discounted_price.toFixed(2)}
                     </span>
                   </div>
-                  <div className="text-sm text-gray-600">from {deal.vendor}</div>
+                  <div className="text-sm text-gray-600">from {deal.vendor_name}</div>
                 </div>
 
                 <div className="flex flex-wrap gap-2 mb-3 text-xs">
                   <div className="flex items-center gap-1">
                     <Clock className="w-3 h-3" />
-                    <span>{deal.expiresIn}</span>
+                    <span>{getTimeRemaining(deal.expires_at)}</span>
                   </div>
                   <div className="flex items-center gap-1">
                     <MapPin className="w-3 h-3" />
-                    <span>{deal.location}</span>
+                    <span>Nationwide</span>
                   </div>
                   <div className="flex items-center gap-1">
                     <Zap className="w-3 h-3" />
-                    <span>{deal.stock}</span>
+                    <span>{getAvailabilityBadge(deal.availability)}</span>
                   </div>
                 </div>
 
@@ -262,9 +341,10 @@ const AirtimeDealsSystem = () => {
                   onClick={() => handleGrabDeal(deal)}
                   className="w-full bg-gradient-to-r from-green-600 to-blue-600 hover:from-green-700 hover:to-blue-700"
                   size="sm"
+                  disabled={deal.availability === 'out_of_stock'}
                 >
                   <CartIcon className="w-4 h-4 mr-2" />
-                  Grab This Deal
+                  {deal.availability === 'out_of_stock' ? 'Out of Stock' : 'Grab This Deal'}
                 </Button>
               </CardContent>
             </Card>
