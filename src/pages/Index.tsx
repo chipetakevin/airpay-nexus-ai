@@ -3,10 +3,16 @@ import React, { useState } from 'react';
 import Header from '../components/Header';
 import CategoryNavigation from '../components/CategoryNavigation';
 import HeroSection from '../components/HeroSection';
+import AnimatedStats from '../components/AnimatedStats';
 import FeaturesSection from '../components/FeaturesSection';
+import TestimonialsCarousel from '../components/TestimonialsCarousel';
 import BenefitsSection from '../components/BenefitsSection';
+import FAQSection from '../components/FAQSection';
+import NewsletterSignup from '../components/NewsletterSignup';
 import CTASection from '../components/CTASection';
 import Footer from '../components/Footer';
+import ParticleEffects from '../components/ParticleEffects';
+import SmoothScrollNav from '../components/SmoothScrollNav';
 
 const Index = () => {
   const [adminClickCount, setAdminClickCount] = useState(0);
@@ -31,12 +37,34 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-white relative">
+      <ParticleEffects />
+      <SmoothScrollNav />
+      
       <Header onLogoClick={handleLogoClick} showAdminLink={showAdminLink || isAdminAuthenticated} />
       <CategoryNavigation isAdminAuthenticated={isAdminAuthenticated} />
-      <HeroSection />
-      <FeaturesSection />
+      
+      <div id="hero">
+        <HeroSection />
+      </div>
+      
+      <AnimatedStats />
+      
+      <div id="features">
+        <FeaturesSection />
+      </div>
+      
+      <div id="testimonials">
+        <TestimonialsCarousel />
+      </div>
+      
       <BenefitsSection />
+      
+      <div id="faq">
+        <FAQSection />
+      </div>
+      
+      <NewsletterSignup />
       <CTASection />
       <Footer />
     </div>
