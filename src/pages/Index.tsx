@@ -117,7 +117,7 @@ const Index = () => {
                   <Button 
                     size="lg" 
                     variant="outline" 
-                    className="w-full sm:w-auto border-white text-white hover:bg-white hover:text-blue-600 px-8 py-4 text-lg"
+                    className="w-full sm:w-auto border-white bg-white text-blue-600 hover:bg-gray-100 hover:text-blue-700 px-8 py-4 text-lg font-semibold"
                   >
                     Become a Vendor
                   </Button>
@@ -245,7 +245,7 @@ const Index = () => {
               </Button>
             </Link>
             <Link to="/portal" className="flex-1">
-              <Button size="lg" variant="outline" className="w-full border-white text-white hover:bg-white hover:text-blue-600">
+              <Button size="lg" className="w-full bg-white text-blue-600 hover:bg-gray-100 hover:text-blue-700 font-semibold border-none">
                 Learn More
               </Button>
             </Link>
