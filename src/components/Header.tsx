@@ -20,6 +20,18 @@ interface HeaderProps {
 const Header: React.FC<HeaderProps> = ({ onLogoClick, showAdminLink = false }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false);
 
+  // Check authentication status for smart redirects
+  const isAuthenticated = localStorage.getItem('userAuthenticated') === 'true';
+
+  const getRegistrationLink = (type: string) => {
+    if (isAuthenticated) {
+      // Redirect authenticated users to smart deals
+      return '/portal?tab=onecard';
+    }
+    // Redirect non-authenticated users to registration
+    return `/portal?tab=${type}`;
+  };
+
   return (
     <header className="bg-gradient-to-r from-blue-600 via-purple-600 to-teal-500 text-white shadow-lg sticky top-0 z-50">
       <div className="container mx-auto px-4 sm:px-6 py-4">
@@ -54,17 +66,17 @@ const Header: React.FC<HeaderProps> = ({ onLogoClick, showAdminLink = false }) =
               </DropdownMenuTrigger>
               <DropdownMenuContent className="bg-white text-gray-900 min-w-[200px] z-50">
                 <DropdownMenuLabel>Registration</DropdownMenuLabel>
-                <Link to="/portal?tab=registration">
+                <Link to={getRegistrationLink('registration')}>
                   <DropdownMenuItem className="cursor-pointer hover:bg-gray-100">
                     Customer Registration
                   </DropdownMenuItem>
                 </Link>
-                <Link to="/portal?tab=vendor">
+                <Link to={getRegistrationLink('vendor')}>
                   <DropdownMenuItem className="cursor-pointer hover:bg-gray-100 text-yellow-600">
                     Vendor Registration
                   </DropdownMenuItem>
                 </Link>
-                <Link to="/portal?tab=admin-reg">
+                <Link to={getRegistrationLink('admin-reg')}>
                   <DropdownMenuItem className="cursor-pointer hover:bg-gray-100 text-red-600">
                     Admin Registration
                   </DropdownMenuItem>
@@ -102,9 +114,9 @@ const Header: React.FC<HeaderProps> = ({ onLogoClick, showAdminLink = false }) =
               </DropdownMenuContent>
             </DropdownMenu>
             
-            <Link to="/portal">
+            <Link to={isAuthenticated ? "/portal?tab=onecard" : "/portal"}>
               <Button className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white px-4 py-2">
-                🚀 Get Started
+                🚀 {isAuthenticated ? 'Smart Deals' : 'Get Started'}
               </Button>
             </Link>
             
@@ -143,21 +155,21 @@ const Header: React.FC<HeaderProps> = ({ onLogoClick, showAdminLink = false }) =
               <div className="space-y-2">
                 <p className="text-sm font-semibold text-blue-100">Registration</p>
                 <Link 
-                  to="/portal?tab=registration" 
+                  to={getRegistrationLink('registration')} 
                   onClick={() => setMobileMenuOpen(false)}
                   className="block pl-4 py-2 text-sm hover:bg-white/10 rounded"
                 >
                   Customer Registration
                 </Link>
                 <Link 
-                  to="/portal?tab=vendor" 
+                  to={getRegistrationLink('vendor')} 
                   onClick={() => setMobileMenuOpen(false)}
                   className="block pl-4 py-2 text-sm text-yellow-300 hover:bg-white/10 rounded"
                 >
                   Vendor Registration
                 </Link>
                 <Link 
-                  to="/portal?tab=admin-reg" 
+                  to={getRegistrationLink('admin-reg')} 
                   onClick={() => setMobileMenuOpen(false)}
                   className="block pl-4 py-2 text-sm text-red-300 hover:bg-white/10 rounded"
                 >
