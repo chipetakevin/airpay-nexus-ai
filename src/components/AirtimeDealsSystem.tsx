@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -11,7 +10,7 @@ import {
   Filter,
   RefreshCw,
   Bell,
-  ShoppingCart
+  ShoppingCart as CartIcon
 } from 'lucide-react';
 import ShoppingCart from './ShoppingCart';
 
@@ -264,7 +263,7 @@ const AirtimeDealsSystem = () => {
                   className="w-full bg-gradient-to-r from-green-600 to-blue-600 hover:from-green-700 hover:to-blue-700"
                   size="sm"
                 >
-                  <ShoppingCart className="w-4 h-4 mr-2" />
+                  <CartIcon className="w-4 h-4 mr-2" />
                   Grab This Deal
                 </Button>
               </CardContent>
