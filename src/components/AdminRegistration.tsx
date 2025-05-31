@@ -143,7 +143,8 @@ const AdminRegistration = () => {
       
       const adminData = {
         ...formData,
-        adminId,
+        adminId, // This is the admin card number, not phone
+        registeredPhone: `${formData.countryCode}${formData.phoneNumber}`, // Store the actual phone number
         cardType: 'OneCard Platinum',
         accessLevel: 'Full System Access',
         cashbackBalance: 0,
@@ -159,6 +160,7 @@ const AdminRegistration = () => {
       // Store credentials for autofill
       localStorage.setItem('userCredentials', JSON.stringify({
         email: formData.email,
+        phone: `${formData.countryCode}${formData.phoneNumber}`, // Store phone for shopping cart autofill
         rememberPassword: true,
         userType: 'admin'
       }));
@@ -172,11 +174,11 @@ const AdminRegistration = () => {
 
       toast({
         title: "Admin Registration Successful! 🔑",
-        description: `OneCard Platinum created: ****${adminId.slice(-4)}. Redirecting to OneCard Dashboard now!`,
+        description: `OneCard Platinum created: ****${adminId.slice(-4)}. Redirecting to Smart Deals now!`,
       });
 
-      // IMMEDIATE redirect to OneCard Rewards Dashboard
-      navigate('/?tab=onecard');
+      // IMMEDIATE redirect to Smart Deals for shopping
+      navigate('/?tab=deals');
     }
   };
 
@@ -198,7 +200,7 @@ const AdminRegistration = () => {
       <Card className="bg-blue-50 border-blue-200">
         <CardContent className="p-4">
           <p className="text-sm text-blue-800">
-            🏆 <strong>Instant OneCard Platinum Access:</strong> After registration, you'll be immediately redirected to your OneCard Rewards Dashboard!
+            🛒 <strong>Instant Shopping Access:</strong> After registration, you'll be immediately redirected to Smart Deals to start shopping!
           </p>
         </CardContent>
       </Card>
@@ -370,7 +372,7 @@ const AdminRegistration = () => {
         </div>
 
         <Button type="submit" className="w-full bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800">
-          Register & Access OneCard Platinum 🏆
+          Register & Start Shopping 🛒
         </Button>
       </form>
     </div>

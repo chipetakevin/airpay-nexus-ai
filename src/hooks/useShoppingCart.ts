@@ -24,10 +24,17 @@ export const useShoppingCart = (initialDeal?: CartItem) => {
     // Set vendor status based on user type
     setIsVendor(userType === 'vendor');
     
-    // Set customer phone if available
-    if (currentUser) {
-      const phone = currentUser.cardNumber || currentUser.vendorId || currentUser.adminId || '';
-      setCustomerPhone(phone);
+    // Set customer phone from stored credentials (the actual registered phone number)
+    const credentials = localStorage.getItem('userCredentials');
+    if (credentials) {
+      try {
+        const parsedCredentials = JSON.parse(credentials);
+        if (parsedCredentials.phone) {
+          setCustomerPhone(parsedCredentials.phone); // Use the registered phone number
+        }
+      } catch (error) {
+        console.error('Error parsing credentials:', error);
+      }
     }
   }, [currentUser, userType]);
 

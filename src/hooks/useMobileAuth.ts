@@ -10,6 +10,7 @@ export interface AuthUser {
   cardNumber?: string;
   vendorId?: string;
   adminId?: string;
+  registeredPhone?: string; // Add registered phone to the interface
 }
 
 export const useMobileAuth = () => {
@@ -45,7 +46,8 @@ export const useMobileAuth = () => {
               userType: userCreds.userType,
               cardNumber: parsedData.cardNumber,
               vendorId: parsedData.vendorId,
-              adminId: parsedData.adminId
+              adminId: parsedData.adminId,
+              registeredPhone: parsedData.registeredPhone || userCreds.phone // Use registered phone
             });
             setIsAuthenticated(true);
           }

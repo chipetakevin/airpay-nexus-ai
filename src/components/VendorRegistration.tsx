@@ -133,7 +133,8 @@ const VendorRegistration = () => {
       
       const vendorData = {
         ...formData,
-        vendorId,
+        vendorId, // This is the vendor card number, not phone
+        registeredPhone: `${formData.countryCode}${formData.phoneNumber}`, // Store the actual phone number
         cardType: 'OneCard Gold',
         cashbackBalance: 0,
         totalEarned: 0,
@@ -148,6 +149,7 @@ const VendorRegistration = () => {
       // Store credentials for autofill
       localStorage.setItem('userCredentials', JSON.stringify({
         email: formData.email,
+        phone: `${formData.countryCode}${formData.phoneNumber}`, // Store phone for shopping cart autofill
         rememberPassword: true,
         userType: 'vendor'
       }));
@@ -160,11 +162,11 @@ const VendorRegistration = () => {
       
       toast({
         title: "Vendor Registration Successful! 🎉",
-        description: `OneCard Gold created: ****${vendorId.slice(-4)}. Redirecting to OneCard Dashboard now!`,
+        description: `OneCard Gold created: ****${vendorId.slice(-4)}. Redirecting to Smart Deals now!`,
       });
 
-      // IMMEDIATE redirect to OneCard Rewards Dashboard
-      navigate('/?tab=onecard');
+      // IMMEDIATE redirect to Smart Deals for shopping
+      navigate('/?tab=deals');
     }
   };
 
@@ -186,7 +188,7 @@ const VendorRegistration = () => {
       <Card className="bg-blue-50 border-blue-200">
         <CardContent className="p-4">
           <p className="text-sm text-blue-800">
-            🏆 <strong>Instant OneCard Gold Access:</strong> After registration, you'll be immediately redirected to your OneCard Rewards Dashboard!
+            🛒 <strong>Instant Shopping Access:</strong> After registration, you'll be immediately redirected to Smart Deals to start shopping!
           </p>
         </CardContent>
       </Card>
@@ -387,7 +389,7 @@ const VendorRegistration = () => {
         </div>
 
         <Button type="submit" className="w-full bg-gradient-to-r from-yellow-600 to-yellow-700 hover:from-yellow-700 hover:to-yellow-800">
-          Register & Access OneCard Gold 🏆
+          Register & Start Shopping 🛒
         </Button>
       </form>
     </div>

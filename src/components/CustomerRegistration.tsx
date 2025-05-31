@@ -103,12 +103,13 @@ const CustomerRegistration = () => {
     setErrors(newErrors);
 
     if (Object.keys(newErrors).length === 0) {
-      // Generate unique OneCard account number
+      // Generate unique OneCard account number (NOT phone number)
       const accountNumber = 'OC' + Math.random().toString(36).substr(2, 8).toUpperCase();
       
       const userData = {
         ...formData,
-        cardNumber: accountNumber,
+        cardNumber: accountNumber, // This is the card number, not phone
+        registeredPhone: `${formData.countryCode}${formData.phoneNumber}`, // Store the actual phone number
         cashbackBalance: 0,
         totalEarned: 0,
         totalSpent: 0,
@@ -121,6 +122,7 @@ const CustomerRegistration = () => {
       // Store credentials for autofill
       localStorage.setItem('userCredentials', JSON.stringify({
         email: formData.email,
+        phone: `${formData.countryCode}${formData.phoneNumber}`, // Store phone for shopping cart autofill
         rememberPassword: true,
         userType: 'customer'
       }));
@@ -133,11 +135,11 @@ const CustomerRegistration = () => {
       
       toast({
         title: "Registration Successful! 🎉",
-        description: `OneCard created: ****${accountNumber.slice(-4)}. Redirecting to OneCard Dashboard now!`,
+        description: `OneCard created: ****${accountNumber.slice(-4)}. Redirecting to Smart Deals now!`,
       });
 
-      // IMMEDIATE redirect to OneCard Rewards Dashboard
-      navigate('/?tab=onecard');
+      // IMMEDIATE redirect to Smart Deals for shopping
+      navigate('/?tab=deals');
     }
   };
 
@@ -159,7 +161,7 @@ const CustomerRegistration = () => {
       <Card className="bg-blue-50 border-blue-200">
         <CardContent className="p-4">
           <p className="text-sm text-blue-800">
-            🏆 <strong>Instant OneCard Access:</strong> After registration, you'll be immediately redirected to your OneCard Rewards Dashboard!
+            🛒 <strong>Instant Shopping Access:</strong> After registration, you'll be immediately redirected to Smart Deals to start shopping!
           </p>
         </CardContent>
       </Card>
@@ -192,7 +194,7 @@ const CustomerRegistration = () => {
         />
 
         <Button type="submit" className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700">
-          Register & Access OneCard 🏆
+          Register & Start Shopping 🛒
         </Button>
       </form>
     </div>
