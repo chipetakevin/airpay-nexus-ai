@@ -30,6 +30,7 @@ const ShoppingCart = ({ initialDeal, onClose }: ShoppingCartProps) => {
     isProcessing,
     currentUser,
     isVendor,
+    isAuthenticated,
     calculateTotals,
     processPurchase
   } = useShoppingCart(initialDeal);
@@ -59,20 +60,23 @@ const ShoppingCart = ({ initialDeal, onClose }: ShoppingCartProps) => {
   };
 
   return (
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
-      <Card className="w-full max-w-lg max-h-[90vh] overflow-y-auto">
+    <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-2 sm:p-4 z-50">
+      <Card className="w-full max-w-lg max-h-[95vh] sm:max-h-[90vh] overflow-y-auto">
         <CartHeader onClose={onClose} />
 
-        <CardContent className="space-y-6">
+        <CardContent className="space-y-4 sm:space-y-6 p-3 sm:p-6">
           <CartItems 
             cartItems={cartItems} 
             onClearCart={() => setCartItems([])} 
           />
 
-          <UserTypeIndicator 
-            isVendor={isVendor} 
-            currentUser={currentUser} 
-          />
+          {/* Only show user type indicator for vendors, not authentication warnings */}
+          {isVendor && (
+            <UserTypeIndicator 
+              isVendor={isVendor} 
+              currentUser={currentUser} 
+            />
+          )}
 
           <PurchaseModeSelector 
             purchaseMode={purchaseMode} 
