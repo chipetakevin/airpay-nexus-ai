@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -23,21 +24,33 @@ const AirtimeDealsSystem = () => {
   const [selectedDealType, setSelectedDealType] = useState('all');
   const [showCart, setShowCart] = useState(false);
   const [selectedDeal, setSelectedDeal] = useState<CartItem | null>(null);
+  const [lastRefresh, setLastRefresh] = useState<Date>(new Date());
 
-  const loadDeals = async () => {
+  const loadDeals = async (showToast = false) => {
     setIsLoading(true);
     try {
       const dealsData = await loadDealsFromSupabase();
       // Ensure we have both airtime and data deals
       const enhancedDeals = dealsData.length > 0 ? dealsData : getSampleDeals();
       setDeals(enhancedDeals);
+      setLastRefresh(new Date());
+      
+      if (showToast) {
+        toast({
+          title: "Deals Updated",
+          description: "Latest deals have been loaded successfully.",
+          duration: 2000
+        });
+      }
     } catch (error) {
       console.error('Error loading deals:', error);
-      toast({
-        title: "Error Loading Deals",
-        description: "Unable to load deals. Using sample data.",
-        variant: "destructive"
-      });
+      if (showToast) {
+        toast({
+          title: "Error Loading Deals",
+          description: "Unable to load deals. Using sample data.",
+          variant: "destructive"
+        });
+      }
       setDeals(getSampleDeals());
     } finally {
       setIsLoading(false);
@@ -56,9 +69,38 @@ const AirtimeDealsSystem = () => {
     setShowCart(true);
   };
 
+  const handleManualRefresh = () => {
+    loadDeals(true);
+  };
+
+  // Auto-refresh effect
   useEffect(() => {
+    // Initial load
     loadDeals();
+
+    // Set up auto-refresh interval (60 seconds)
+    const autoRefreshInterval = setInterval(() => {
+      console.log('Auto-refreshing deals...');
+      loadDeals();
+    }, 60000); // 60 seconds
+
+    // Cleanup interval on component unmount
+    return () => {
+      clearInterval(autoRefreshInterval);
+    };
   }, []);
+
+  const formatLastRefresh = (date: Date) => {
+    const now = new Date();
+    const diffInSeconds = Math.floor((now.getTime() - date.getTime()) / 1000);
+    
+    if (diffInSeconds < 60) {
+      return `${diffInSeconds}s ago`;
+    } else {
+      const diffInMinutes = Math.floor(diffInSeconds / 60);
+      return `${diffInMinutes}m ago`;
+    }
+  };
 
   return (
     <div className="space-y-6">
@@ -70,13 +112,20 @@ const AirtimeDealsSystem = () => {
         <div>
           <h3 className="text-xl font-bold mb-2">🔍 Smart Airtime & Data Deals</h3>
           <p className="text-gray-600 text-sm">AI-powered deal discovery from top SA vendors</p>
+          <div className="flex items-center gap-2 mt-1">
+            <span className="text-xs text-gray-500">Last updated: {formatLastRefresh(lastRefresh)}</span>
+            <div className="flex items-center gap-1">
+              <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+              <span className="text-xs text-green-600">Auto-refresh: 60s</span>
+            </div>
+          </div>
         </div>
         
         <div className="flex gap-2">
           <Button
             variant="outline"
             size="sm"
-            onClick={loadDeals}
+            onClick={handleManualRefresh}
             disabled={isLoading}
             className="flex items-center gap-2"
           >
