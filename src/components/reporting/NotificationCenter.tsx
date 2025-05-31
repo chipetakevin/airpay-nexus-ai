@@ -225,7 +225,7 @@ const NotificationCenter = () => {
               <CardContent className="space-y-3">
                 <div className="text-xs bg-gray-50 p-3 rounded">
                   <div className="font-semibold">Transaction Receipt</div>
-                  <div className="mt-1">Hi {{name}}, your R{{amount}} {{network}} purchase is complete. Profit earned: R{{profit}}. Thank you!</div>
+                  <div className="mt-1">Hi [NAME], your R[AMOUNT] [NETWORK] purchase is complete. Profit earned: R[PROFIT]. Thank you!</div>
                 </div>
                 <Button size="sm" variant="outline">Edit Template</Button>
               </CardContent>
@@ -238,7 +238,7 @@ const NotificationCenter = () => {
               <CardContent className="space-y-3">
                 <div className="text-xs bg-gray-50 p-3 rounded">
                   <div className="font-semibold">Weekly Profit Summary</div>
-                  <div className="mt-1">Your AirPay profits: R{{total_profit}}. Transactions: {{count}}. Keep growing!</div>
+                  <div className="mt-1">Your AirPay profits: R[TOTAL_PROFIT]. Transactions: [COUNT]. Keep growing!</div>
                 </div>
                 <Button size="sm" variant="outline">Edit Template</Button>
               </CardContent>
