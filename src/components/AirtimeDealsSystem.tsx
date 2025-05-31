@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -25,6 +24,39 @@ const AirtimeDealsSystem = () => {
   const [showCart, setShowCart] = useState(false);
   const [selectedDeal, setSelectedDeal] = useState<CartItem | null>(null);
   const [lastRefresh, setLastRefresh] = useState<Date>(new Date());
+  const [scrapingStatus, setScrapingStatus] = useState<'idle' | 'scraping' | 'completed'>('idle');
+
+  const triggerAutonomousScraping = async () => {
+    try {
+      setScrapingStatus('scraping');
+      console.log('Triggering autonomous deal scraping...');
+      
+      const { data, error } = await supabase.functions.invoke('autonomous-deal-scraper', {
+        body: { trigger: 'manual' }
+      });
+      
+      if (error) {
+        console.error('Error triggering scraper:', error);
+        toast({
+          title: "Scraping Error",
+          description: "Failed to trigger autonomous deal scraping",
+          variant: "destructive"
+        });
+      } else {
+        console.log('Scraping completed:', data);
+        setScrapingStatus('completed');
+        
+        // Wait a moment then reload deals
+        setTimeout(() => {
+          loadDeals(false);
+          setScrapingStatus('idle');
+        }, 2000);
+      }
+    } catch (error) {
+      console.error('Scraping error:', error);
+      setScrapingStatus('idle');
+    }
+  };
 
   const loadDeals = async (showToast = false) => {
     setIsLoading(true);
@@ -69,19 +101,22 @@ const AirtimeDealsSystem = () => {
     setShowCart(true);
   };
 
-  const handleManualRefresh = () => {
+  const handleManualRefresh = async () => {
+    // Trigger autonomous scraping first
+    await triggerAutonomousScraping();
+    // Then load deals with toast
     loadDeals(true);
   };
 
-  // Auto-refresh effect
+  // Auto-refresh effect with autonomous scraping
   useEffect(() => {
     // Initial load
     loadDeals();
 
-    // Set up auto-refresh interval (60 seconds)
-    const autoRefreshInterval = setInterval(() => {
-      console.log('Auto-refreshing deals...');
-      loadDeals();
+    // Set up auto-refresh interval (60 seconds) with autonomous scraping
+    const autoRefreshInterval = setInterval(async () => {
+      console.log('Auto-refreshing deals with autonomous scraping...');
+      await triggerAutonomousScraping();
     }, 60000); // 60 seconds
 
     // Cleanup interval on component unmount
@@ -102,6 +137,32 @@ const AirtimeDealsSystem = () => {
     }
   };
 
+  const getScrapingStatusIndicator = () => {
+    switch (scrapingStatus) {
+      case 'scraping':
+        return (
+          <div className="flex items-center gap-1">
+            <div className="w-2 h-2 bg-orange-500 rounded-full animate-pulse"></div>
+            <span className="text-xs text-orange-600">Scraping retailers...</span>
+          </div>
+        );
+      case 'completed':
+        return (
+          <div className="flex items-center gap-1">
+            <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+            <span className="text-xs text-blue-600">Fresh deals loaded</span>
+          </div>
+        );
+      default:
+        return (
+          <div className="flex items-center gap-1">
+            <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+            <span className="text-xs text-green-600">Auto-scraping: 60s</span>
+          </div>
+        );
+    }
+  };
+
   return (
     <div className="space-y-6">
       {/* Authentication Indicator */}
@@ -111,13 +172,13 @@ const AirtimeDealsSystem = () => {
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
           <h3 className="text-xl font-bold mb-2">🔍 Smart Airtime & Data Deals</h3>
-          <p className="text-gray-600 text-sm">AI-powered deal discovery from top SA vendors</p>
-          <div className="flex items-center gap-2 mt-1">
+          <p className="text-gray-600 text-sm">AI-powered deal discovery from top SA retailers</p>
+          <div className="flex flex-col sm:flex-row gap-2 mt-1">
             <span className="text-xs text-gray-500">Last updated: {formatLastRefresh(lastRefresh)}</span>
-            <div className="flex items-center gap-1">
-              <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-              <span className="text-xs text-green-600">Auto-refresh: 60s</span>
-            </div>
+            {getScrapingStatusIndicator()}
+          </div>
+          <div className="text-xs text-gray-400 mt-1">
+            Scanning: Takealot, Game, Vodacom, MTN, Cell C & more
           </div>
         </div>
         
@@ -126,11 +187,11 @@ const AirtimeDealsSystem = () => {
             variant="outline"
             size="sm"
             onClick={handleManualRefresh}
-            disabled={isLoading}
+            disabled={isLoading || scrapingStatus === 'scraping'}
             className="flex items-center gap-2"
           >
-            <RefreshCw className={`w-4 h-4 ${isLoading ? 'animate-spin' : ''}`} />
-            Refresh
+            <RefreshCw className={`w-4 h-4 ${isLoading || scrapingStatus === 'scraping' ? 'animate-spin' : ''}`} />
+            {scrapingStatus === 'scraping' ? 'Scraping...' : 'Refresh'}
           </Button>
           <Button size="sm" variant="outline" className="flex items-center gap-2">
             <Bell className="w-4 h-4" />
