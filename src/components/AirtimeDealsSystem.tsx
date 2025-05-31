@@ -20,6 +20,7 @@ const AirtimeDealsSystem = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [selectedNetwork, setSelectedNetwork] = useState('all');
   const [selectedAmount, setSelectedAmount] = useState('all');
+  const [selectedDealType, setSelectedDealType] = useState('all');
   const [showCart, setShowCart] = useState(false);
   const [selectedDeal, setSelectedDeal] = useState<CartItem | null>(null);
 
@@ -27,7 +28,9 @@ const AirtimeDealsSystem = () => {
     setIsLoading(true);
     try {
       const dealsData = await loadDealsFromSupabase();
-      setDeals(dealsData);
+      // Ensure we have both airtime and data deals
+      const enhancedDeals = dealsData.length > 0 ? dealsData : getSampleDeals();
+      setDeals(enhancedDeals);
     } catch (error) {
       console.error('Error loading deals:', error);
       toast({
@@ -44,7 +47,8 @@ const AirtimeDealsSystem = () => {
   const filteredDeals = deals.filter(deal => {
     const networkMatch = selectedNetwork === 'all' || deal.network.toLowerCase() === selectedNetwork.toLowerCase();
     const amountMatch = selectedAmount === 'all' || deal.amount === parseInt(selectedAmount);
-    return networkMatch && amountMatch;
+    const dealTypeMatch = selectedDealType === 'all' || deal.deal_type === selectedDealType;
+    return networkMatch && amountMatch && dealTypeMatch;
   });
 
   const handleGrabDeal = (cartItem: CartItem) => {
@@ -60,7 +64,7 @@ const AirtimeDealsSystem = () => {
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h3 className="text-xl font-bold mb-2">🔍 Smart Airtime Deals</h3>
+          <h3 className="text-xl font-bold mb-2">🔍 Smart Airtime & Data Deals</h3>
           <p className="text-gray-600 text-sm">AI-powered deal discovery from top SA vendors</p>
         </div>
         
@@ -82,12 +86,64 @@ const AirtimeDealsSystem = () => {
         </div>
       </div>
 
-      <DealsFilters
-        selectedNetwork={selectedNetwork}
-        selectedAmount={selectedAmount}
-        onNetworkChange={setSelectedNetwork}
-        onAmountChange={setSelectedAmount}
-      />
+      {/* Enhanced Filters */}
+      <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
+        <div>
+          <label className="block text-sm font-medium mb-2">Deal Type</label>
+          <select
+            value={selectedDealType}
+            onChange={(e) => setSelectedDealType(e.target.value)}
+            className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          >
+            <option value="all">All Types</option>
+            <option value="airtime">Airtime</option>
+            <option value="data">Data</option>
+          </select>
+        </div>
+        <div>
+          <label className="block text-sm font-medium mb-2">Network</label>
+          <select
+            value={selectedNetwork}
+            onChange={(e) => setSelectedNetwork(e.target.value)}
+            className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          >
+            <option value="all">All Networks</option>
+            <option value="mtn">MTN</option>
+            <option value="vodacom">Vodacom</option>
+            <option value="cell c">Cell C</option>
+            <option value="telkom">Telkom</option>
+            <option value="rain">Rain</option>
+          </select>
+        </div>
+        <div>
+          <label className="block text-sm font-medium mb-2">Amount</label>
+          <select
+            value={selectedAmount}
+            onChange={(e) => setSelectedAmount(e.target.value)}
+            className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          >
+            <option value="all">All Amounts</option>
+            <option value="10">R10</option>
+            <option value="25">R25</option>
+            <option value="50">R50</option>
+            <option value="100">R100</option>
+            <option value="500">R500</option>
+          </select>
+        </div>
+        <div className="flex items-end">
+          <Button
+            variant="outline"
+            onClick={() => {
+              setSelectedNetwork('all');
+              setSelectedAmount('all');
+              setSelectedDealType('all');
+            }}
+            className="w-full"
+          >
+            Clear Filters
+          </Button>
+        </div>
+      </div>
 
       {/* Deals Grid */}
       {isLoading ? (
