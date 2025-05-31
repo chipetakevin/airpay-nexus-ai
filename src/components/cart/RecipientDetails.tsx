@@ -5,6 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '@/components/ui/card';
 import NetworkDetector from '../NetworkDetector';
 import UnknownNumberTerms from './UnknownNumberTerms';
+import SouthAfricanTerms from './SouthAfricanTerms';
 
 interface RecipientDetailsProps {
   purchaseMode: 'self' | 'other';
@@ -19,10 +20,13 @@ interface RecipientDetailsProps {
   isValidating: boolean;
   validationError: string;
   acceptedUnknownNumber?: boolean;
+  requiresTermsAcceptance?: boolean;
+  acceptedSATerms?: boolean;
   onRecipientDataChange: (data: any) => void;
   onCustomerPhoneChange: (phone: string) => void;
   onPhoneValidation: (phone: string) => void;
   onAcceptUnknownTerms?: () => void;
+  onAcceptSATerms?: () => void;
 }
 
 const RecipientDetails = ({
@@ -34,13 +38,17 @@ const RecipientDetails = ({
   isValidating,
   validationError,
   acceptedUnknownNumber,
+  requiresTermsAcceptance,
+  acceptedSATerms,
   onRecipientDataChange,
   onCustomerPhoneChange,
   onPhoneValidation,
-  onAcceptUnknownTerms
+  onAcceptUnknownTerms,
+  onAcceptSATerms
 }: RecipientDetailsProps) => {
   const targetPhone = purchaseMode === 'self' ? customerPhone : recipientData.phone;
   const showUnknownTerms = validationError && !acceptedUnknownNumber && onAcceptUnknownTerms;
+  const showSATerms = requiresTermsAcceptance && !acceptedSATerms && onAcceptSATerms;
 
   return (
     <div className="space-y-4">
@@ -77,9 +85,25 @@ const RecipientDetails = ({
               />
             )}
 
+            {showSATerms && (
+              <SouthAfricanTerms
+                phoneNumber={customerPhone}
+                recipientName="Self"
+                purchaseType="self"
+                onAcceptTerms={onAcceptSATerms}
+                onCancel={() => onCustomerPhoneChange('')}
+              />
+            )}
+
             {validationError && acceptedUnknownNumber && (
               <div className="text-xs text-orange-600 bg-orange-50 p-2 rounded">
                 ⚠️ Proceeding with unknown number - terms accepted
+              </div>
+            )}
+
+            {acceptedSATerms && (
+              <div className="text-xs text-green-600 bg-green-50 p-2 rounded">
+                ✅ South African purchase terms accepted
               </div>
             )}
           </CardContent>
@@ -128,9 +152,25 @@ const RecipientDetails = ({
               />
             )}
 
+            {showSATerms && (
+              <SouthAfricanTerms
+                phoneNumber={recipientData.phone}
+                recipientName={recipientData.name}
+                purchaseType="third_party"
+                onAcceptTerms={onAcceptSATerms}
+                onCancel={() => onRecipientDataChange({ ...recipientData, phone: '' })}
+              />
+            )}
+
             {validationError && acceptedUnknownNumber && (
               <div className="text-xs text-orange-600 bg-orange-50 p-2 rounded">
                 ⚠️ Proceeding with unknown number - terms accepted
+              </div>
+            )}
+
+            {acceptedSATerms && (
+              <div className="text-xs text-green-600 bg-green-50 p-2 rounded">
+                ✅ South African purchase terms accepted
               </div>
             )}
 

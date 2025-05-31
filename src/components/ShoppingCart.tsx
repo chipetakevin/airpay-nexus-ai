@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { CartItem } from '@/types/deals';
 import { useShoppingCart } from '@/hooks/useShoppingCart';
@@ -18,6 +18,8 @@ interface ShoppingCartProps {
 }
 
 const ShoppingCart = ({ initialDeal, onClose }: ShoppingCartProps) => {
+  const [acceptedSATerms, setAcceptedSATerms] = useState(false);
+
   const {
     cartItems,
     setCartItems,
@@ -40,6 +42,7 @@ const ShoppingCart = ({ initialDeal, onClose }: ShoppingCartProps) => {
     isValidating,
     validationError,
     acceptedUnknownNumber,
+    requiresTermsAcceptance,
     validatePhoneNumber,
     acceptUnknownNumberTerms
   } = usePhoneValidation();
@@ -47,6 +50,11 @@ const ShoppingCart = ({ initialDeal, onClose }: ShoppingCartProps) => {
   const { total, profitSharing } = calculateTotals();
 
   const handlePurchase = async () => {
+    // Check if SA terms are accepted when required
+    if (requiresTermsAcceptance && !acceptedSATerms) {
+      return; // Don't proceed if terms not accepted
+    }
+
     // Allow purchase if terms are accepted for unknown numbers
     const effectiveValidationError = acceptedUnknownNumber ? '' : validationError;
     const success = await processPurchase(effectiveValidationError, detectedNetwork);
@@ -58,6 +66,16 @@ const ShoppingCart = ({ initialDeal, onClose }: ShoppingCartProps) => {
   const handlePhoneValidation = (phone: string) => {
     validatePhoneNumber(phone, cartItems);
   };
+
+  const handleAcceptSATerms = () => {
+    setAcceptedSATerms(true);
+  };
+
+  // Determine if purchase should be disabled
+  const isPurchaseDisabled = isProcessing || 
+    (validationError && !acceptedUnknownNumber) || 
+    (requiresTermsAcceptance && !acceptedSATerms) ||
+    cartItems.length === 0;
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-2 sm:p-4 z-50">
@@ -92,10 +110,13 @@ const ShoppingCart = ({ initialDeal, onClose }: ShoppingCartProps) => {
             isValidating={isValidating}
             validationError={validationError}
             acceptedUnknownNumber={acceptedUnknownNumber}
+            requiresTermsAcceptance={requiresTermsAcceptance}
+            acceptedSATerms={acceptedSATerms}
             onRecipientDataChange={setRecipientData}
             onCustomerPhoneChange={setCustomerPhone}
             onPhoneValidation={handlePhoneValidation}
             onAcceptUnknownTerms={acceptUnknownNumberTerms}
+            onAcceptSATerms={handleAcceptSATerms}
           />
 
           <OrderSummary
@@ -107,7 +128,7 @@ const ShoppingCart = ({ initialDeal, onClose }: ShoppingCartProps) => {
 
           <PurchaseButton
             isProcessing={isProcessing}
-            validationError={acceptedUnknownNumber ? '' : validationError}
+            validationError={isPurchaseDisabled ? 'Terms must be accepted' : ''}
             cartItemsCount={cartItems.length}
             currentUser={currentUser}
             total={total}
