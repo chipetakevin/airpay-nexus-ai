@@ -1,250 +1,233 @@
 
-import React from 'react';
-import { Link } from 'react-router-dom';
-import { Signal, Menu, X, ChevronDown } from 'lucide-react';
+import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+import { ChevronDown, Menu, X, Zap, MessageSquare, Star, Settings, Users } from 'lucide-react';
+import { useMobileAuth } from '@/hooks/useMobileAuth';
+import { useToast } from '@/hooks/use-toast';
 
-interface HeaderProps {
-  onLogoClick?: () => void;
-  showAdminLink?: boolean;
-}
+const Header = () => {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isServicesOpen, setIsServicesOpen] = useState(false);
+  const { currentUser, isAuthenticated } = useMobileAuth();
+  const navigate = useNavigate();
+  const { toast } = useToast();
 
-const Header: React.FC<HeaderProps> = ({ onLogoClick, showAdminLink = false }) => {
-  const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false);
-
-  // Check authentication status for smart redirects
-  const isAuthenticated = localStorage.getItem('userAuthenticated') === 'true';
-
-  const getRegistrationLink = (type: string) => {
-    if (isAuthenticated) {
-      // Redirect authenticated users to smart deals
-      return '/portal?tab=onecard';
-    }
-    // Redirect non-authenticated users to registration
-    return `/portal?tab=${type}`;
+  const handleLogout = () => {
+    localStorage.removeItem('userAuthenticated');
+    localStorage.removeItem('userCredentials');
+    localStorage.removeItem('onecardUser');
+    localStorage.removeItem('onecardVendor');
+    localStorage.removeItem('onecardAdmin');
+    
+    toast({
+      title: "Logged out successfully",
+      description: "You have been logged out of your account."
+    });
+    
+    navigate('/');
+    window.location.reload();
   };
 
+  const servicesMenuItems = [
+    {
+      title: "Smart Deals",
+      description: "AI-powered airtime & data deals",
+      icon: <Zap className="w-5 h-5" />,
+      href: "/portal?tab=deals"
+    },
+    {
+      title: "Spaza AI",
+      description: "Intelligent business assistant",
+      icon: <MessageSquare className="w-5 h-5" />,
+      href: "/spaza-ai"
+    },
+    {
+      title: "OneCard System",
+      description: "Digital wallet & payments",
+      icon: <Star className="w-5 h-5" />,
+      href: "/portal?tab=onecard"
+    }
+  ];
+
   return (
-    <header className="bg-gradient-to-r from-blue-600 via-purple-600 to-teal-500 text-white shadow-lg sticky top-0 z-50">
-      <div className="container mx-auto px-4 sm:px-6 py-4">
-        <div className="flex items-center justify-between">
-          {/* Logo Section */}
-          <div 
-            onClick={onLogoClick} 
-            className="flex items-center space-x-3 cursor-pointer"
-          >
-            <div className="relative">
-              <div className="w-10 h-10 bg-white bg-opacity-20 rounded-lg flex items-center justify-center">
-                <Signal className="w-6 h-6 text-white" />
-              </div>
-              <div className="absolute -top-1 -right-1 w-3 h-3 bg-green-400 rounded-full animate-pulse"></div>
+    <header className="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-50">
+      <div className="container mx-auto px-4 sm:px-6">
+        <div className="flex justify-between items-center h-16">
+          {/* Logo */}
+          <Link to="/" className="flex items-center space-x-2">
+            <div className="bg-gradient-to-r from-green-600 to-blue-600 p-2 rounded-lg">
+              <Zap className="w-6 h-6 text-white" />
             </div>
-            <div>
-              <h1 className="text-xl sm:text-2xl font-bold">Air Pay</h1>
-              <p className="text-xs sm:text-sm text-blue-100 hidden sm:block">AI-Driven Airtime & Data Management</p>
-            </div>
-          </div>
-          
+            <span className="text-xl font-bold bg-gradient-to-r from-green-600 to-blue-600 bg-clip-text text-transparent">
+              AirPay
+            </span>
+          </Link>
+
           {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center space-x-6">
-            {/* Categories Dropdown */}
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="bg-transparent text-white hover:bg-white/20 flex items-center gap-2">
-                  <Menu className="w-4 h-4" />
-                  Categories
-                  <ChevronDown className="w-4 h-4" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent className="bg-white text-gray-900 min-w-[200px] z-50">
-                <DropdownMenuLabel>Registration</DropdownMenuLabel>
-                <Link to={getRegistrationLink('registration')}>
-                  <DropdownMenuItem className="cursor-pointer hover:bg-gray-100">
-                    Customer Registration
-                  </DropdownMenuItem>
-                </Link>
-                <Link to={getRegistrationLink('vendor')}>
-                  <DropdownMenuItem className="cursor-pointer hover:bg-gray-100 text-yellow-600">
-                    Vendor Registration
-                  </DropdownMenuItem>
-                </Link>
-                <Link to={getRegistrationLink('admin-reg')}>
-                  <DropdownMenuItem className="cursor-pointer hover:bg-gray-100 text-red-600">
-                    Admin Registration
-                  </DropdownMenuItem>
-                </Link>
-                
-                <DropdownMenuSeparator />
-                <DropdownMenuLabel>Services</DropdownMenuLabel>
-                <Link to="/portal?tab=onecard">
-                  <DropdownMenuItem className="cursor-pointer hover:bg-gray-100 text-blue-600">
-                    Airtime Deals
-                  </DropdownMenuItem>
-                </Link>
-                <Link to="/portal?tab=onecard">
-                  <DropdownMenuItem className="cursor-pointer hover:bg-gray-100 text-purple-600">
-                    Data Deals
-                  </DropdownMenuItem>
-                </Link>
-                <Link to="/portal?tab=onecard">
-                  <DropdownMenuItem className="cursor-pointer hover:bg-gray-100 text-green-600">
-                    OneCard Rewards
-                  </DropdownMenuItem>
-                </Link>
-                
-                {showAdminLink && (
-                  <>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuLabel>Admin</DropdownMenuLabel>
-                    <Link to="/portal?tab=admin">
-                      <DropdownMenuItem className="cursor-pointer hover:bg-gray-100 text-red-600 font-bold">
-                        Admin Portal
-                      </DropdownMenuItem>
-                    </Link>
-                  </>
-                )}
-              </DropdownMenuContent>
-            </DropdownMenu>
-            
-            <Link to={isAuthenticated ? "/portal?tab=onecard" : "/portal"}>
-              <Button className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white px-4 py-2">
-                🚀 {isAuthenticated ? 'Smart Deals' : 'Get Started'}
-              </Button>
+          <nav className="hidden md:flex items-center space-x-8">
+            <Link to="/" className="text-gray-700 hover:text-blue-600 font-medium transition-colors">
+              Home
             </Link>
             
-            {/* System Status */}
-            <div className="flex items-center space-x-4">
-              <div className="text-right hidden lg:block">
-                <p className="text-sm text-blue-100">System Status</p>
-                <div className="flex items-center space-x-1">
-                  <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-                  <span className="text-sm font-medium">99.99% Uptime</span>
-                </div>
-              </div>
+            {/* Services Dropdown */}
+            <div className="relative">
+              <button
+                onClick={() => setIsServicesOpen(!isServicesOpen)}
+                className="flex items-center space-x-1 text-gray-700 hover:text-blue-600 font-medium transition-colors"
+              >
+                <span>Services</span>
+                <ChevronDown className={`w-4 h-4 transition-transform ${isServicesOpen ? 'rotate-180' : ''}`} />
+              </button>
               
-              <div className="text-right">
-                <p className="text-sm text-blue-100 hidden sm:block">Active Transactions</p>
-                <p className="text-lg font-bold">2,847</p>
-              </div>
+              {isServicesOpen && (
+                <div className="absolute top-full left-0 mt-2 w-80 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-50">
+                  {servicesMenuItems.map((item, index) => (
+                    <Link
+                      key={index}
+                      to={item.href}
+                      onClick={() => setIsServicesOpen(false)}
+                      className="flex items-start space-x-3 px-4 py-3 hover:bg-gray-50 transition-colors"
+                    >
+                      <div className="text-blue-600 mt-1">
+                        {item.icon}
+                      </div>
+                      <div>
+                        <div className="font-medium text-gray-900">{item.title}</div>
+                        <div className="text-sm text-gray-500">{item.description}</div>
+                      </div>
+                    </Link>
+                  ))}
+                </div>
+              )}
             </div>
+
+            <Link to="/portal" className="text-gray-700 hover:text-blue-600 font-medium transition-colors">
+              Portal
+            </Link>
+          </nav>
+
+          {/* Auth Section */}
+          <div className="hidden md:flex items-center space-x-4">
+            {isAuthenticated ? (
+              <div className="flex items-center space-x-3">
+                <div className="flex items-center space-x-2">
+                  <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center">
+                    <span className="text-white text-sm font-medium">
+                      {currentUser?.firstName?.[0] || 'U'}
+                    </span>
+                  </div>
+                  <span className="text-sm text-gray-700">
+                    {currentUser?.firstName || 'User'}
+                  </span>
+                </div>
+                <Button variant="outline" size="sm" onClick={handleLogout}>
+                  Logout
+                </Button>
+              </div>
+            ) : (
+              <div className="flex items-center space-x-2">
+                <Button variant="outline" size="sm" asChild>
+                  <Link to="/portal">Login</Link>
+                </Button>
+                <Button size="sm" asChild>
+                  <Link to="/portal?tab=registration">Sign Up</Link>
+                </Button>
+              </div>
+            )}
           </div>
 
           {/* Mobile Menu Button */}
           <button
-            className="md:hidden p-2"
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            aria-label="Toggle mobile menu"
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+            className="md:hidden p-2 rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-100"
           >
-            {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+            {isMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
           </button>
         </div>
 
-        {/* Mobile Navigation */}
-        {mobileMenuOpen && (
-          <div className="md:hidden mt-4 pb-4 border-t border-white/20">
-            <div className="flex flex-col space-y-3 mt-4">
-              {/* Mobile Categories */}
-              <div className="space-y-2">
-                <p className="text-sm font-semibold text-blue-100">Registration</p>
-                <Link 
-                  to={getRegistrationLink('registration')} 
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="block pl-4 py-2 text-sm hover:bg-white/10 rounded"
-                >
-                  Customer Registration
-                </Link>
-                <Link 
-                  to={getRegistrationLink('vendor')} 
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="block pl-4 py-2 text-sm text-yellow-300 hover:bg-white/10 rounded"
-                >
-                  Vendor Registration
-                </Link>
-                <Link 
-                  to={getRegistrationLink('admin-reg')} 
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="block pl-4 py-2 text-sm text-red-300 hover:bg-white/10 rounded"
-                >
-                  Admin Registration
-                </Link>
-              </div>
-              
-              <div className="space-y-2">
-                <p className="text-sm font-semibold text-blue-100">Services</p>
-                <Link 
-                  to="/portal?tab=onecard" 
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="block pl-4 py-2 text-sm text-blue-300 hover:bg-white/10 rounded"
-                >
-                  Airtime Deals
-                </Link>
-                <Link 
-                  to="/portal?tab=onecard" 
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="block pl-4 py-2 text-sm text-purple-300 hover:bg-white/10 rounded"
-                >
-                  Data Deals
-                </Link>
-                <Link 
-                  to="/portal?tab=onecard" 
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="block pl-4 py-2 text-sm text-green-300 hover:bg-white/10 rounded"
-                >
-                  OneCard Rewards
-                </Link>
-              </div>
-
-              {showAdminLink && (
-                <div className="space-y-2">
-                  <p className="text-sm font-semibold text-blue-100">Admin</p>
-                  <Link 
-                    to="/portal?tab=admin" 
-                    onClick={() => setMobileMenuOpen(false)}
-                    className="block pl-4 py-2 text-sm text-red-300 font-bold hover:bg-white/10 rounded"
-                  >
-                    Admin Portal
-                  </Link>
-                </div>
-              )}
-              
-              <Link 
-                to="/portal" 
-                onClick={() => setMobileMenuOpen(false)}
-                className="w-full mt-4"
+        {/* Mobile Menu */}
+        {isMenuOpen && (
+          <div className="md:hidden py-4 border-t border-gray-200">
+            <div className="space-y-3">
+              <Link
+                to="/"
+                className="block px-3 py-2 text-gray-700 hover:text-blue-600 font-medium"
+                onClick={() => setIsMenuOpen(false)}
               >
-                <Button className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white w-full">
-                  🚀 Get Started
-                </Button>
+                Home
               </Link>
               
-              {/* Mobile System Status */}
-              <div className="bg-white/10 rounded-lg p-3 mt-4">
-                <div className="flex justify-between items-center">
-                  <div>
-                    <p className="text-sm text-blue-100">System Status</p>
-                    <div className="flex items-center space-x-1">
-                      <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-                      <span className="text-sm font-medium">99.99% Uptime</span>
+              {/* Mobile Services */}
+              <div className="space-y-2">
+                <div className="px-3 py-2 text-gray-900 font-medium">Services</div>
+                {servicesMenuItems.map((item, index) => (
+                  <Link
+                    key={index}
+                    to={item.href}
+                    onClick={() => setIsMenuOpen(false)}
+                    className="flex items-center space-x-3 px-6 py-2 text-gray-600 hover:text-blue-600"
+                  >
+                    {item.icon}
+                    <span>{item.title}</span>
+                  </Link>
+                ))}
+              </div>
+              
+              <Link
+                to="/portal"
+                className="block px-3 py-2 text-gray-700 hover:text-blue-600 font-medium"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Portal
+              </Link>
+
+              {/* Mobile Auth */}
+              <div className="pt-3 border-t border-gray-200">
+                {isAuthenticated ? (
+                  <div className="space-y-3">
+                    <div className="px-3 text-sm text-gray-600">
+                      Welcome, {currentUser?.firstName || 'User'}
                     </div>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => {
+                        setIsMenuOpen(false);
+                        handleLogout();
+                      }}
+                      className="mx-3"
+                    >
+                      Logout
+                    </Button>
                   </div>
-                  <div className="text-right">
-                    <p className="text-sm text-blue-100">Active Transactions</p>
-                    <p className="text-lg font-bold">2,847</p>
+                ) : (
+                  <div className="flex space-x-2 px-3">
+                    <Button variant="outline" size="sm" asChild>
+                      <Link to="/portal" onClick={() => setIsMenuOpen(false)}>
+                        Login
+                      </Link>
+                    </Button>
+                    <Button size="sm" asChild>
+                      <Link to="/portal?tab=registration" onClick={() => setIsMenuOpen(false)}>
+                        Sign Up
+                      </Link>
+                    </Button>
                   </div>
-                </div>
+                )}
               </div>
             </div>
           </div>
         )}
       </div>
+
+      {/* Backdrop for dropdown */}
+      {isServicesOpen && (
+        <div
+          className="fixed inset-0 z-40"
+          onClick={() => setIsServicesOpen(false)}
+        />
+      )}
     </header>
   );
 };
