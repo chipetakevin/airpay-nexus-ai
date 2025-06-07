@@ -142,6 +142,16 @@ export const useAdminRegistration = () => {
 
       localStorage.setItem('userAuthenticated', 'true');
       localStorage.setItem('adminAuthenticated', 'true');
+      sessionStorage.setItem('userAuth', JSON.stringify({
+        userId: adminId,
+        cardNumber: adminId,
+        userName: `${formData.firstName} ${formData.lastName}`,
+        accountType: 'Administrator',
+        accessLevel: 'Full System Access',
+        authVerified: true,
+        timestamp: new Date().toISOString()
+      }));
+      
       localStorage.removeItem('adminRegistrationDraft');
 
       toast({
@@ -149,10 +159,8 @@ export const useAdminRegistration = () => {
         description: `OneCard Platinum created: ****${adminId.slice(-4)}. Redirecting to Smart Deals now!`,
       });
 
-      // Immediate redirect to Smart Deals for faster shopping experience
-      setTimeout(() => {
-        navigate('/portal?tab=onecard', { replace: true });
-      }, 800);
+      // Direct redirect to Smart Deals tab - fastest shopping experience
+      window.location.replace('/portal?tab=onecard&verified=true');
     }
   };
 

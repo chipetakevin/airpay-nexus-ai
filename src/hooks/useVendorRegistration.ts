@@ -147,6 +147,16 @@ export const useVendorRegistration = () => {
       }));
 
       localStorage.setItem('userAuthenticated', 'true');
+      sessionStorage.setItem('userAuth', JSON.stringify({
+        userId: vendorId,
+        cardNumber: vendorId,
+        userName: `${formData.firstName} ${formData.lastName}`,
+        accountType: 'Vendor',
+        companyName: formData.companyName,
+        authVerified: true,
+        timestamp: new Date().toISOString()
+      }));
+      
       localStorage.removeItem('vendorRegistrationDraft');
       
       toast({
@@ -154,10 +164,8 @@ export const useVendorRegistration = () => {
         description: `OneCard Gold created: ****${vendorId.slice(-4)}. Redirecting to Smart Deals now!`,
       });
 
-      // Immediate redirect to Smart Deals for faster shopping experience
-      setTimeout(() => {
-        navigate('/portal?tab=onecard', { replace: true });
-      }, 800);
+      // Direct redirect to Smart Deals tab - fastest shopping experience
+      window.location.replace('/portal?tab=onecard&verified=true');
     }
   };
 

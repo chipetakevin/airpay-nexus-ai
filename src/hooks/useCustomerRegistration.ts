@@ -119,8 +119,17 @@ export const useCustomerRegistration = () => {
         userType: 'customer'
       }));
 
-      // Set authentication flags
+      // Set authentication flags and user session
       localStorage.setItem('userAuthenticated', 'true');
+      sessionStorage.setItem('userAuth', JSON.stringify({
+        userId: accountNumber,
+        cardNumber: accountNumber,
+        userName: `${formData.firstName} ${formData.lastName}`,
+        accountType: 'Customer',
+        authVerified: true,
+        timestamp: new Date().toISOString()
+      }));
+      
       localStorage.removeItem('customerRegistrationDraft');
       
       toast({
@@ -128,10 +137,8 @@ export const useCustomerRegistration = () => {
         description: `OneCard created: ****${accountNumber.slice(-4)}. Redirecting to Smart Deals now!`,
       });
 
-      // Immediate redirect to Smart Deals for faster shopping experience
-      setTimeout(() => {
-        navigate('/portal?tab=onecard', { replace: true });
-      }, 800);
+      // Direct redirect to Smart Deals tab - fastest shopping experience
+      window.location.replace('/portal?tab=onecard&verified=true');
     }
   };
 
