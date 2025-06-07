@@ -6,24 +6,24 @@ import FeaturesSection from '@/components/FeaturesSection';
 import BenefitsSection from '@/components/BenefitsSection';
 import TestimonialsCarousel from '@/components/TestimonialsCarousel';
 import StatsGrid from '@/components/StatsGrid';
-import NewsletterSignup from '@/components/NewsletterSignup';
 import FAQSection from '@/components/FAQSection';
 import CTASection from '@/components/CTASection';
 import Footer from '@/components/Footer';
+import WhatsAppFloatingButton from '@/components/WhatsAppFloatingButton';
 
 const Index = () => {
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-white">
       <Header />
       <HeroSection />
       <FeaturesSection />
       <BenefitsSection />
       <TestimonialsCarousel />
       <StatsGrid />
-      <NewsletterSignup />
       <FAQSection />
       <CTASection />
       <Footer />
+      <WhatsAppFloatingButton />
     </div>
   );
 };
