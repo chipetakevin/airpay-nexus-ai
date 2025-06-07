@@ -11,6 +11,7 @@ import PlatformDashboard from "./pages/PlatformDashboard";
 import BaaSPlatform from "./pages/BaaSPlatform";
 import SpazaAI from "./pages/SpazaAI";
 import WhatsAppAssistant from "./pages/WhatsAppAssistant";
+import USSDSystem from "./pages/USSDSystem";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();

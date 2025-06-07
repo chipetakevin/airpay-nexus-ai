@@ -81,6 +81,16 @@ const Header = () => {
                       <div className="text-xs text-gray-500">AI-powered chat</div>
                     </div>
                   </Link>
+                  <Link 
+                    to="/ussd-system" 
+                    className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
+                  >
+                    <Smartphone className="w-4 h-4 mr-3 text-orange-600" />
+                    <div>
+                      <div className="font-medium">USSD System</div>
+                      <div className="text-xs text-gray-500">Universal access</div>
+                    </div>
+                  </Link>
                 </div>
               )}
             </div>
@@ -142,6 +152,13 @@ const Header = () => {
                 onClick={() => setIsMenuOpen(false)}
               >
                 WhatsApp Assistant
+              </Link>
+              <Link 
+                to="/ussd-system" 
+                className="text-gray-700 hover:text-blue-600 transition-colors"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                USSD System
               </Link>
               <Link 
                 to="/spaza-ai" 
