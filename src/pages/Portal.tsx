@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useSearchParams, useNavigate, Link } from 'react-router-dom';
 import { X } from 'lucide-react';
@@ -104,8 +103,8 @@ const Portal = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Exit to Homepage Button */}
-      <div className="fixed top-20 right-4 z-50">
+      {/* Exit to Homepage Button - Moved to top-left to avoid admin tab interference */}
+      <div className="fixed top-4 left-4 z-50">
         <Link 
           to="/" 
           className="bg-white hover:bg-gray-50 text-gray-600 hover:text-gray-800 p-2 rounded-full shadow-lg border border-gray-200 transition-all duration-200 hover:scale-110"
