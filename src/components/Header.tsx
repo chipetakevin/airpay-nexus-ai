@@ -1,289 +1,171 @@
 
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { ChevronDown, Menu, X, Zap, MessageSquare, Star, Settings, Users, Database, Network, Smartphone, BarChart3 } from 'lucide-react';
-import { useMobileAuth } from '@/hooks/useMobileAuth';
-import { useToast } from '@/hooks/use-toast';
+import { 
+  Smartphone, 
+  Menu, 
+  X, 
+  ChevronDown,
+  MessageCircle,
+  Zap,
+  Users
+} from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isServicesOpen, setIsServicesOpen] = useState(false);
-  const { currentUser, isAuthenticated } = useMobileAuth();
-  const navigate = useNavigate();
-  const { toast } = useToast();
+  const [isPlatformDropdownOpen, setIsPlatformDropdownOpen] = useState(false);
 
-  const handleLogout = () => {
-    localStorage.removeItem('userAuthenticated');
-    localStorage.removeItem('userCredentials');
-    localStorage.removeItem('onecardUser');
-    localStorage.removeItem('onecardVendor');
-    localStorage.removeItem('onecardAdmin');
-    
-    toast({
-      title: "Logged out successfully",
-      description: "You have been logged out of your account."
-    });
-    
-    navigate('/');
-    window.location.reload();
-  };
-
-  const servicesMenuItems = [
-    // Devine Mobile AI Category
-    {
-      category: "Devine Mobile AI",
-      items: [
-        {
-          title: "Devine Mobile AI Assistant",
-          description: "Intelligent business assistant",
-          icon: <MessageSquare className="w-5 h-5" />,
-          href: "/spaza-ai"
-        }
-      ]
-    },
-    // Devine Mobile Platform Category
-    {
-      category: "Devine Mobile Platform",
-      items: [
-        {
-          title: "Enterprise Dashboard",
-          description: "Advanced distribution management",
-          icon: <Database className="w-5 h-5" />,
-          href: "/platform/dashboard"
-        },
-        {
-          title: "Agent Network",
-          description: "Multi-tier agent management",
-          icon: <Network className="w-5 h-5" />,
-          href: "/platform/agents"
-        },
-        {
-          title: "Bulk Operations",
-          description: "Mass airtime & data distribution",
-          icon: <Smartphone className="w-5 h-5" />,
-          href: "/platform/bulk"
-        },
-        {
-          title: "Analytics Suite",
-          description: "Enterprise reporting & insights",
-          icon: <BarChart3 className="w-5 h-5" />,
-          href: "/platform/analytics"
-        }
-      ]
-    },
-    // Original Services Category
-    {
-      category: "Core Services",
-      items: [
-        {
-          title: "Smart Deals",
-          description: "AI-powered airtime & data deals",
-          icon: <Zap className="w-5 h-5" />,
-          href: "/portal?tab=deals"
-        },
-        {
-          title: "OneCard System",
-          description: "Digital wallet & payments",
-          icon: <Star className="w-5 h-5" />,
-          href: "/portal?tab=onecard"
-        }
-      ]
-    }
-  ];
+  const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
 
   return (
-    <header className="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-50">
-      <div className="container mx-auto px-4 sm:px-6">
-        <div className="flex justify-between items-center h-16">
+    <header className="bg-white shadow-sm border-b sticky top-0 z-50">
+      <div className="container mx-auto px-4">
+        <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <Link to="/" className="flex items-center space-x-2">
-            <div className="bg-gradient-to-r from-green-600 to-blue-600 p-2 rounded-lg">
-              <Zap className="w-6 h-6 text-white" />
+            <div className="w-8 h-8 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
+              <Smartphone className="w-5 h-5 text-white" />
             </div>
-            <span className="text-xl font-bold bg-gradient-to-r from-green-600 to-blue-600 bg-clip-text text-transparent">
-              AirPay
+            <span className="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+              Devine Mobile
             </span>
           </Link>
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-8">
-            <Link to="/" className="text-gray-700 hover:text-blue-600 font-medium transition-colors">
+            <Link to="/" className="text-gray-700 hover:text-blue-600 transition-colors">
               Home
             </Link>
             
-            {/* Services Dropdown */}
-            <div className="relative">
-              <button
-                onClick={() => setIsServicesOpen(!isServicesOpen)}
-                className="flex items-center space-x-1 text-gray-700 hover:text-blue-600 font-medium transition-colors"
-              >
-                <span>Services</span>
-                <ChevronDown className={`w-4 h-4 transition-transform ${isServicesOpen ? 'rotate-180' : ''}`} />
+            {/* Platform Dropdown */}
+            <div 
+              className="relative"
+              onMouseEnter={() => setIsPlatformDropdownOpen(true)}
+              onMouseLeave={() => setIsPlatformDropdownOpen(false)}
+            >
+              <button className="flex items-center text-gray-700 hover:text-blue-600 transition-colors">
+                Platform
+                <ChevronDown className="w-4 h-4 ml-1" />
               </button>
               
-              {isServicesOpen && (
-                <div className="absolute top-full left-0 mt-2 w-96 bg-white rounded-lg shadow-lg border border-gray-200 py-4 z-50 max-h-96 overflow-y-auto">
-                  {servicesMenuItems.map((category, categoryIndex) => (
-                    <div key={categoryIndex} className="mb-4 last:mb-0">
-                      <div className="px-4 py-2 text-xs font-semibold text-gray-500 uppercase tracking-wider border-b border-gray-100 mb-2">
-                        {category.category}
-                      </div>
-                      {category.items.map((item, itemIndex) => (
-                        <Link
-                          key={itemIndex}
-                          to={item.href}
-                          onClick={() => setIsServicesOpen(false)}
-                          className="flex items-start space-x-3 px-4 py-3 hover:bg-gray-50 transition-colors"
-                        >
-                          <div className="text-blue-600 mt-1">
-                            {item.icon}
-                          </div>
-                          <div>
-                            <div className="font-medium text-gray-900">{item.title}</div>
-                            <div className="text-sm text-gray-500">{item.description}</div>
-                          </div>
-                        </Link>
-                      ))}
+              {isPlatformDropdownOpen && (
+                <div className="absolute top-full left-0 mt-2 w-64 bg-white rounded-lg shadow-lg border py-2 z-50">
+                  <Link 
+                    to="/platform" 
+                    className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
+                  >
+                    <Zap className="w-4 h-4 mr-3 text-blue-600" />
+                    <div>
+                      <div className="font-medium">Enterprise Platform</div>
+                      <div className="text-xs text-gray-500">Business solutions</div>
                     </div>
-                  ))}
+                  </Link>
+                  <Link 
+                    to="/platform/baas" 
+                    className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
+                  >
+                    <Users className="w-4 h-4 mr-3 text-purple-600" />
+                    <div>
+                      <div className="font-medium">BaaS Platform</div>
+                      <div className="text-xs text-gray-500">Backend services</div>
+                    </div>
+                  </Link>
+                  <Link 
+                    to="/whatsapp-assistant" 
+                    className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
+                  >
+                    <MessageCircle className="w-4 h-4 mr-3 text-green-600" />
+                    <div>
+                      <div className="font-medium">WhatsApp Assistant</div>
+                      <div className="text-xs text-gray-500">AI-powered chat</div>
+                    </div>
+                  </Link>
                 </div>
               )}
             </div>
 
-            <Link to="/portal" className="text-gray-700 hover:text-blue-600 font-medium transition-colors">
+            <Link to="/spaza-ai" className="text-gray-700 hover:text-blue-600 transition-colors">
+              Spaza AI
+            </Link>
+            <Link to="/portal" className="text-gray-700 hover:text-blue-600 transition-colors">
               Portal
             </Link>
           </nav>
 
-          {/* Auth Section */}
-          <div className="hidden md:flex items-center space-x-4">
-            {isAuthenticated ? (
-              <div className="flex items-center space-x-3">
-                <div className="flex items-center space-x-2">
-                  <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center">
-                    <span className="text-white text-sm font-medium">
-                      {currentUser?.firstName?.[0] || 'U'}
-                    </span>
-                  </div>
-                  <span className="text-sm text-gray-700">
-                    {currentUser?.firstName || 'User'}
-                  </span>
-                </div>
-                <Button variant="outline" size="sm" onClick={handleLogout}>
-                  Logout
-                </Button>
-              </div>
-            ) : (
-              <div className="flex items-center space-x-2">
-                <Button variant="outline" size="sm" asChild>
-                  <Link to="/portal">Login</Link>
-                </Button>
-                <Button size="sm" asChild>
-                  <Link to="/portal?tab=registration">Sign Up</Link>
-                </Button>
-              </div>
-            )}
+          {/* Desktop CTA Button */}
+          <div className="hidden md:block">
+            <Link to="/portal">
+              <Button className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700">
+                Get Started
+              </Button>
+            </Link>
           </div>
 
-          {/* Mobile Menu Button */}
-          <button
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="md:hidden p-2 rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-100"
+          {/* Mobile menu button */}
+          <button 
+            onClick={toggleMenu}
+            className="md:hidden p-2 rounded-lg hover:bg-gray-100"
           >
             {isMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
           </button>
         </div>
 
-        {/* Mobile Menu */}
+        {/* Mobile Navigation */}
         {isMenuOpen && (
-          <div className="md:hidden py-4 border-t border-gray-200">
-            <div className="space-y-3">
-              <Link
-                to="/"
-                className="block px-3 py-2 text-gray-700 hover:text-blue-600 font-medium"
+          <div className="md:hidden py-4 border-t">
+            <nav className="flex flex-col space-y-4">
+              <Link 
+                to="/" 
+                className="text-gray-700 hover:text-blue-600 transition-colors"
                 onClick={() => setIsMenuOpen(false)}
               >
                 Home
               </Link>
-              
-              {/* Mobile Services */}
-              <div className="space-y-2">
-                <div className="px-3 py-2 text-gray-900 font-medium">Services</div>
-                {servicesMenuItems.map((category, categoryIndex) => (
-                  <div key={categoryIndex} className="mb-4">
-                    <div className="px-6 py-1 text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                      {category.category}
-                    </div>
-                    {category.items.map((item, itemIndex) => (
-                      <Link
-                        key={itemIndex}
-                        to={item.href}
-                        onClick={() => setIsMenuOpen(false)}
-                        className="flex items-center space-x-3 px-8 py-2 text-gray-600 hover:text-blue-600"
-                      >
-                        {item.icon}
-                        <span>{item.title}</span>
-                      </Link>
-                    ))}
-                  </div>
-                ))}
-              </div>
-              
-              <Link
-                to="/portal"
-                className="block px-3 py-2 text-gray-700 hover:text-blue-600 font-medium"
+              <Link 
+                to="/platform" 
+                className="text-gray-700 hover:text-blue-600 transition-colors"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Enterprise Platform
+              </Link>
+              <Link 
+                to="/platform/baas" 
+                className="text-gray-700 hover:text-blue-600 transition-colors"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                BaaS Platform
+              </Link>
+              <Link 
+                to="/whatsapp-assistant" 
+                className="text-gray-700 hover:text-blue-600 transition-colors"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                WhatsApp Assistant
+              </Link>
+              <Link 
+                to="/spaza-ai" 
+                className="text-gray-700 hover:text-blue-600 transition-colors"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Spaza AI
+              </Link>
+              <Link 
+                to="/portal" 
+                className="text-gray-700 hover:text-blue-600 transition-colors"
                 onClick={() => setIsMenuOpen(false)}
               >
                 Portal
               </Link>
-
-              {/* Mobile Auth */}
-              <div className="pt-3 border-t border-gray-200">
-                {isAuthenticated ? (
-                  <div className="space-y-3">
-                    <div className="px-3 text-sm text-gray-600">
-                      Welcome, {currentUser?.firstName || 'User'}
-                    </div>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => {
-                        setIsMenuOpen(false);
-                        handleLogout();
-                      }}
-                      className="mx-3"
-                    >
-                      Logout
-                    </Button>
-                  </div>
-                ) : (
-                  <div className="flex space-x-2 px-3">
-                    <Button variant="outline" size="sm" asChild>
-                      <Link to="/portal" onClick={() => setIsMenuOpen(false)}>
-                        Login
-                      </Link>
-                    </Button>
-                    <Button size="sm" asChild>
-                      <Link to="/portal?tab=registration" onClick={() => setIsMenuOpen(false)}>
-                        Sign Up
-                      </Link>
-                    </Button>
-                  </div>
-                )}
-              </div>
-            </div>
+              <Link to="/portal" onClick={() => setIsMenuOpen(false)}>
+                <Button className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700">
+                  Get Started
+                </Button>
+              </Link>
+            </nav>
           </div>
         )}
       </div>
-
-      {/* Backdrop for dropdown */}
-      {isServicesOpen && (
-        <div
-          className="fixed inset-0 z-40"
-          onClick={() => setIsServicesOpen(false)}
-        />
-      )}
     </header>
   );
 };
