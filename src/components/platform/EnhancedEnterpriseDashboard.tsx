@@ -131,13 +131,13 @@ const EnhancedEnterpriseDashboard = () => {
           </div>
         </div>
 
-        {/* Enhanced Mobile-First Service Categories Tabs */}
-        <Tabs defaultValue="prepaid" className="w-full">
-          <div className="mb-4 md:mb-6">
+        {/* Enhanced Vertical Tabs Layout */}
+        <Tabs defaultValue="prepaid" className="w-full" orientation={isMobile ? "horizontal" : "vertical"}>
+          <div className={`${isMobile ? 'mb-4' : 'flex gap-6'}`}>
             <TabsList className={`
               ${isMobile 
                 ? 'flex w-full bg-white shadow-sm border rounded-lg p-1 overflow-x-auto' 
-                : 'grid w-full grid-cols-4 bg-white shadow-sm'
+                : 'flex flex-col h-fit w-64 bg-white shadow-sm border rounded-lg p-2 space-y-1'
               }
             `}>
               {tabItems.map((tab) => (
@@ -147,162 +147,163 @@ const EnhancedEnterpriseDashboard = () => {
                   className={`
                     ${isMobile 
                       ? 'flex-shrink-0 min-w-[120px] text-xs py-3 px-2 data-[state=active]:bg-blue-50 data-[state=active]:text-blue-600 data-[state=active]:border-b-2 data-[state=active]:border-blue-600' 
-                      : 'text-sm py-3 px-4 data-[state=active]:bg-blue-50 data-[state=active]:text-blue-600'
+                      : 'w-full justify-start text-left text-sm py-4 px-4 h-auto data-[state=active]:bg-blue-50 data-[state=active]:text-blue-600 data-[state=active]:border-l-2 data-[state=active]:border-blue-600'
                     }
-                    transition-all duration-200 hover:bg-gray-50 flex items-center gap-2 justify-center
+                    transition-all duration-200 hover:bg-gray-50 flex items-center gap-3
                   `}
                 >
-                  {tab.icon}
-                  <span className={isMobile ? 'text-xs' : 'text-sm'}>
-                    {isMobile ? tab.shortLabel : tab.label}
-                  </span>
+                  <div className="flex items-center gap-2">
+                    {tab.icon}
+                    <div className={`${isMobile ? 'text-center' : 'text-left'}`}>
+                      <div className={`font-medium ${isMobile ? 'text-xs' : 'text-sm'}`}>
+                        {isMobile ? tab.shortLabel : tab.label}
+                      </div>
+                      {!isMobile && (
+                        <div className="text-xs text-gray-500 mt-1">
+                          {tab.description}
+                        </div>
+                      )}
+                    </div>
+                  </div>
                 </TabsTrigger>
               ))}
             </TabsList>
             
-            {/* Mobile: Show active tab description */}
-            {isMobile && (
-              <div className="mt-2 px-2">
-                {tabItems.map((tab) => (
-                  <div key={`${tab.value}-desc`} className="text-xs text-gray-600 hidden data-[state=active]:block">
-                    {tab.description}
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
+            {/* Tab Content Container */}
+            <div className={`${isMobile ? 'w-full' : 'flex-1'}`}>
+              <TabsContent value="prepaid" className="space-y-4 md:space-y-6 mt-0">
+                <PrepaidServicesPanel />
+              </TabsContent>
 
-          <TabsContent value="prepaid" className="space-y-4 md:space-y-6">
-            <PrepaidServicesPanel />
-          </TabsContent>
+              <TabsContent value="insurance" className="space-y-4 md:space-y-6 mt-0">
+                <InsuranceServicesPanel />
+              </TabsContent>
 
-          <TabsContent value="insurance" className="space-y-4 md:space-y-6">
-            <InsuranceServicesPanel />
-          </TabsContent>
+              <TabsContent value="virtual" className="space-y-4 md:space-y-6 mt-0">
+                <VirtualServicesPanel />
+              </TabsContent>
 
-          <TabsContent value="virtual" className="space-y-4 md:space-y-6">
-            <VirtualServicesPanel />
-          </TabsContent>
-
-          <TabsContent value="analytics" className="space-y-4 md:space-y-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
-              <Card>
-                <CardContent className="p-4 md:p-6">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-sm text-gray-600">API Calls</p>
-                      <p className="text-xl md:text-2xl font-bold text-gray-900">{enterpriseData.apiCalls}</p>
-                      <p className="text-sm text-blue-600">Last 24 hours</p>
-                    </div>
-                    <Network className="w-6 md:w-8 h-6 md:h-8 text-green-500" />
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardContent className="p-4 md:p-6">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-sm text-gray-600">Daily Transactions</p>
-                      <p className="text-xl md:text-2xl font-bold text-gray-900">{enterpriseData.dailyTransactions.toLocaleString()}</p>
-                      <p className="text-sm text-green-600">↑ 18% from yesterday</p>
-                    </div>
-                    <Activity className="w-6 md:w-8 h-6 md:h-8 text-blue-500" />
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardContent className="p-4 md:p-6">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-sm text-gray-600">System Alerts</p>
-                      <p className="text-xl md:text-2xl font-bold text-orange-600">{enterpriseData.systemAlerts}</p>
-                      <p className="text-sm text-orange-600">Requires attention</p>
-                    </div>
-                    <AlertTriangle className="w-6 md:w-8 h-6 md:h-8 text-orange-500" />
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardContent className="p-4 md:p-6">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-sm text-gray-600">Network Uptime</p>
-                      <p className="text-xl md:text-2xl font-bold text-green-600">{enterpriseData.networkUptime}</p>
-                      <p className="text-sm text-green-600">Excellent performance</p>
-                    </div>
-                    <CheckCircle className="w-6 md:w-8 h-6 md:h-8 text-green-500" />
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
-
-            {/* Performance Summary */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-lg md:text-xl">Platform Performance Summary</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
-                  <div>
-                    <h4 className="font-medium text-gray-900 mb-2">Service Availability</h4>
-                    <div className="space-y-2">
-                      <div className="flex justify-between">
-                        <span className="text-sm text-gray-600">Prepaid Services</span>
-                        <span className="text-sm font-medium text-green-600">99.8%</span>
+              <TabsContent value="analytics" className="space-y-4 md:space-y-6 mt-0">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
+                  <Card>
+                    <CardContent className="p-4 md:p-6">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <p className="text-sm text-gray-600">API Calls</p>
+                          <p className="text-xl md:text-2xl font-bold text-gray-900">{enterpriseData.apiCalls}</p>
+                          <p className="text-sm text-blue-600">Last 24 hours</p>
+                        </div>
+                        <Network className="w-6 md:w-8 h-6 md:h-8 text-green-500" />
                       </div>
-                      <div className="flex justify-between">
-                        <span className="text-sm text-gray-600">Insurance Platform</span>
-                        <span className="text-sm font-medium text-green-600">99.5%</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-sm text-gray-600">Virtual Services</span>
-                        <span className="text-sm font-medium text-green-600">99.9%</span>
-                      </div>
-                    </div>
-                  </div>
+                    </CardContent>
+                  </Card>
 
-                  <div>
-                    <h4 className="font-medium text-gray-900 mb-2">Transaction Success</h4>
-                    <div className="space-y-2">
-                      <div className="flex justify-between">
-                        <span className="text-sm text-gray-600">Airtime/Data</span>
-                        <span className="text-sm font-medium text-green-600">98.7%</span>
+                  <Card>
+                    <CardContent className="p-4 md:p-6">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <p className="text-sm text-gray-600">Daily Transactions</p>
+                          <p className="text-xl md:text-2xl font-bold text-gray-900">{enterpriseData.dailyTransactions.toLocaleString()}</p>
+                          <p className="text-sm text-green-600">↑ 18% from yesterday</p>
+                        </div>
+                        <Activity className="w-6 md:w-8 h-6 md:h-8 text-blue-500" />
                       </div>
-                      <div className="flex justify-between">
-                        <span className="text-sm text-gray-600">Insurance Claims</span>
-                        <span className="text-sm font-medium text-blue-600">96.2%</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-sm text-gray-600">Bill Payments</span>
-                        <span className="text-sm font-medium text-green-600">99.1%</span>
-                      </div>
-                    </div>
-                  </div>
+                    </CardContent>
+                  </Card>
 
-                  <div>
-                    <h4 className="font-medium text-gray-900 mb-2">Customer Metrics</h4>
-                    <div className="space-y-2">
-                      <div className="flex justify-between">
-                        <span className="text-sm text-gray-600">Satisfaction Score</span>
-                        <span className="text-sm font-medium text-purple-600">94.2%</span>
+                  <Card>
+                    <CardContent className="p-4 md:p-6">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <p className="text-sm text-gray-600">System Alerts</p>
+                          <p className="text-xl md:text-2xl font-bold text-orange-600">{enterpriseData.systemAlerts}</p>
+                          <p className="text-sm text-orange-600">Requires attention</p>
+                        </div>
+                        <AlertTriangle className="w-6 md:w-8 h-6 md:h-8 text-orange-500" />
                       </div>
-                      <div className="flex justify-between">
-                        <span className="text-sm text-gray-600">Retention Rate</span>
-                        <span className="text-sm font-medium text-blue-600">87.5%</span>
+                    </CardContent>
+                  </Card>
+
+                  <Card>
+                    <CardContent className="p-4 md:p-6">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <p className="text-sm text-gray-600">Network Uptime</p>
+                          <p className="text-xl md:text-2xl font-bold text-green-600">{enterpriseData.networkUptime}</p>
+                          <p className="text-sm text-green-600">Excellent performance</p>
+                        </div>
+                        <CheckCircle className="w-6 md:w-8 h-6 md:h-8 text-green-500" />
                       </div>
-                      <div className="flex justify-between">
-                        <span className="text-sm text-gray-600">Support Resolution</span>
-                        <span className="text-sm font-medium text-green-600">92.8%</span>
-                      </div>
-                    </div>
-                  </div>
+                    </CardContent>
+                  </Card>
                 </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
+
+                {/* Performance Summary Card */}
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="text-lg md:text-xl">Platform Performance Summary</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
+                      <div>
+                        <h4 className="font-medium text-gray-900 mb-2">Service Availability</h4>
+                        <div className="space-y-2">
+                          <div className="flex justify-between">
+                            <span className="text-sm text-gray-600">Prepaid Services</span>
+                            <span className="text-sm font-medium text-green-600">99.8%</span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span className="text-sm text-gray-600">Insurance Platform</span>
+                            <span className="text-sm font-medium text-green-600">99.5%</span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span className="text-sm text-gray-600">Virtual Services</span>
+                            <span className="text-sm font-medium text-green-600">99.9%</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div>
+                        <h4 className="font-medium text-gray-900 mb-2">Transaction Success</h4>
+                        <div className="space-y-2">
+                          <div className="flex justify-between">
+                            <span className="text-sm text-gray-600">Airtime/Data</span>
+                            <span className="text-sm font-medium text-green-600">98.7%</span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span className="text-sm text-gray-600">Insurance Claims</span>
+                            <span className="text-sm font-medium text-blue-600">96.2%</span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span className="text-sm text-gray-600">Bill Payments</span>
+                            <span className="text-sm font-medium text-green-600">99.1%</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div>
+                        <h4 className="font-medium text-gray-900 mb-2">Customer Metrics</h4>
+                        <div className="space-y-2">
+                          <div className="flex justify-between">
+                            <span className="text-sm text-gray-600">Satisfaction Score</span>
+                            <span className="text-sm font-medium text-purple-600">94.2%</span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span className="text-sm text-gray-600">Retention Rate</span>
+                            <span className="text-sm font-medium text-blue-600">87.5%</span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span className="text-sm text-gray-600">Support Resolution</span>
+                            <span className="text-sm font-medium text-green-600">92.8%</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </TabsContent>
+            </div>
+          </div>
         </Tabs>
       </div>
     </div>
