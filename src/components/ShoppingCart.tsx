@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { CartItem } from '@/types/deals';
@@ -61,14 +62,31 @@ const ShoppingCart = ({ initialDeal, onClose }: ShoppingCartProps) => {
       '.header-home-link'
     ];
 
+    // Add more specific selectors for background images and overlays
+    const backgroundElementsToHide = [
+      '.background-overlay',
+      '.hero-background', 
+      '.page-background',
+      '[style*="background-image"]',
+      '.bg-gradient-to-br',
+      '.absolute.inset-0',
+      '[class*="bg-"]img',
+      'img[src*="background"]',
+      'img[src*="hero"]',
+      '.hero-section img',
+      '.background-image',
+      '.overlay-image',
+      'div[style*="background"]'
+    ];
+
     const hiddenElements: HTMLElement[] = [];
 
+    // Hide navigation and footer elements
     elementsToHide.forEach(selector => {
       const elements = document.querySelectorAll(selector);
       elements.forEach(element => {
         const htmlElement = element as HTMLElement;
         if (htmlElement && htmlElement.style.display !== 'none') {
-          // Store original display value
           htmlElement.dataset.originalDisplay = htmlElement.style.display || 'block';
           htmlElement.style.display = 'none';
           htmlElement.style.transition = 'opacity 0.3s ease-out';
@@ -77,13 +95,41 @@ const ShoppingCart = ({ initialDeal, onClose }: ShoppingCartProps) => {
       });
     });
 
-    // Hide any background overlays or images that might interfere
-    const backgroundElements = document.querySelectorAll('.background-overlay, .hero-background, .page-background');
-    backgroundElements.forEach(element => {
-      const htmlElement = element as HTMLElement;
-      if (htmlElement) {
-        htmlElement.dataset.originalOpacity = htmlElement.style.opacity || '1';
-        htmlElement.style.opacity = '0.1';
+    // Completely hide background images and overlays
+    backgroundElementsToHide.forEach(selector => {
+      const elements = document.querySelectorAll(selector);
+      elements.forEach(element => {
+        const htmlElement = element as HTMLElement;
+        if (htmlElement) {
+          // Store original values
+          htmlElement.dataset.originalDisplay = htmlElement.style.display || 'block';
+          htmlElement.dataset.originalVisibility = htmlElement.style.visibility || 'visible';
+          
+          // Completely hide the element
+          htmlElement.style.display = 'none';
+          htmlElement.style.visibility = 'hidden';
+          htmlElement.style.opacity = '0';
+          htmlElement.style.transition = 'opacity 0.3s ease-out';
+          hiddenElements.push(htmlElement);
+        }
+      });
+    });
+
+    // Also hide any img tags that might be background images
+    const allImages = document.querySelectorAll('img');
+    allImages.forEach(img => {
+      const htmlElement = img as HTMLElement;
+      // Check if image is positioned absolutely or has background-like classes
+      const computedStyle = window.getComputedStyle(htmlElement);
+      const isBackgroundImage = computedStyle.position === 'absolute' || 
+                               computedStyle.position === 'fixed' ||
+                               htmlElement.className.includes('background') ||
+                               htmlElement.className.includes('hero') ||
+                               htmlElement.className.includes('overlay');
+      
+      if (isBackgroundImage) {
+        htmlElement.dataset.originalDisplay = htmlElement.style.display || 'block';
+        htmlElement.style.display = 'none';
         htmlElement.style.transition = 'opacity 0.3s ease-out';
         hiddenElements.push(htmlElement);
       }
@@ -99,10 +145,14 @@ const ShoppingCart = ({ initialDeal, onClose }: ShoppingCartProps) => {
           element.style.display = 'block';
         }
         
-        if (element.dataset.originalOpacity) {
-          element.style.opacity = element.dataset.originalOpacity;
-          delete element.dataset.originalOpacity;
+        if (element.dataset.originalVisibility) {
+          element.style.visibility = element.dataset.originalVisibility;
+          delete element.dataset.originalVisibility;
+        } else {
+          element.style.visibility = 'visible';
         }
+        
+        element.style.opacity = '';
       });
     };
   }, []);
