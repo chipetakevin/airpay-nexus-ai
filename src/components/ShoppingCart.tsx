@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { CartItem } from '@/types/deals';
@@ -47,18 +46,64 @@ const ShoppingCart = ({ initialDeal, onClose }: ShoppingCartProps) => {
     acceptUnknownNumberTerms
   } = usePhoneValidation();
 
-  // Hide footer when cart is open
+  // Hide footer and navigation elements when cart is open for maximum shopping visibility
   useEffect(() => {
-    const footer = document.querySelector('footer');
-    if (footer) {
-      footer.style.display = 'none';
-    }
+    const elementsToHide = [
+      'footer',
+      '.homepage-button',
+      '.return-home-button',
+      '.back-to-home',
+      '.navigation-home',
+      '[data-testid="home-button"]',
+      '[aria-label*="home"]',
+      '[aria-label*="Homepage"]',
+      'nav .home-link',
+      '.header-home-link'
+    ];
 
-    // Show footer again when cart is closed
-    return () => {
-      if (footer) {
-        footer.style.display = 'block';
+    const hiddenElements: HTMLElement[] = [];
+
+    elementsToHide.forEach(selector => {
+      const elements = document.querySelectorAll(selector);
+      elements.forEach(element => {
+        const htmlElement = element as HTMLElement;
+        if (htmlElement && htmlElement.style.display !== 'none') {
+          // Store original display value
+          htmlElement.dataset.originalDisplay = htmlElement.style.display || 'block';
+          htmlElement.style.display = 'none';
+          htmlElement.style.transition = 'opacity 0.3s ease-out';
+          hiddenElements.push(htmlElement);
+        }
+      });
+    });
+
+    // Hide any background overlays or images that might interfere
+    const backgroundElements = document.querySelectorAll('.background-overlay, .hero-background, .page-background');
+    backgroundElements.forEach(element => {
+      const htmlElement = element as HTMLElement;
+      if (htmlElement) {
+        htmlElement.dataset.originalOpacity = htmlElement.style.opacity || '1';
+        htmlElement.style.opacity = '0.1';
+        htmlElement.style.transition = 'opacity 0.3s ease-out';
+        hiddenElements.push(htmlElement);
       }
+    });
+
+    // Cleanup function to restore elements when cart closes
+    return () => {
+      hiddenElements.forEach(element => {
+        if (element.dataset.originalDisplay) {
+          element.style.display = element.dataset.originalDisplay;
+          delete element.dataset.originalDisplay;
+        } else {
+          element.style.display = 'block';
+        }
+        
+        if (element.dataset.originalOpacity) {
+          element.style.opacity = element.dataset.originalOpacity;
+          delete element.dataset.originalOpacity;
+        }
+      });
     };
   }, []);
 
@@ -92,8 +137,8 @@ const ShoppingCart = ({ initialDeal, onClose }: ShoppingCartProps) => {
     cartItems.length === 0;
 
   return (
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-3 z-50">
-      <Card className="w-full max-w-md max-h-[95vh] overflow-y-auto bg-white">
+    <div className="fixed inset-0 bg-black/60 flex items-center justify-center p-3 z-50 backdrop-blur-sm">
+      <Card className="w-full max-w-md max-h-[95vh] overflow-y-auto bg-white shadow-2xl">
         <CartHeader 
           onClose={onClose} 
           currentUser={currentUser}
