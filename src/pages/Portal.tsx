@@ -106,7 +106,7 @@ const Portal = () => {
     <div className="min-h-screen bg-gray-50 pb-20">
       <PortalHeader userType={userType} resetUserType={resetUserType} />
       
-      <main className="container mx-auto px-4 py-2">
+      <main className="container mx-auto px-4 py-0">
         <PortalTabs 
           activeTab={activeTab}
           showAdminTab={showAdminTab}
