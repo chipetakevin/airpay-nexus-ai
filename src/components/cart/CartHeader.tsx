@@ -2,7 +2,8 @@
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { CardHeader, CardTitle } from '@/components/ui/card';
-import { ShoppingCart as CartIcon, X, Store, User } from 'lucide-react';
+import { ShoppingCart as CartIcon, X, Store, User, Smartphone } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 interface CartHeaderProps {
   onClose: () => void;
@@ -59,22 +60,37 @@ const CartHeader = ({ onClose, currentUser, isVendor }: CartHeaderProps) => {
     <CardHeader className="pb-3 bg-gradient-to-r from-blue-50 to-green-50 border-b">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <div className="p-2 bg-blue-600 rounded-lg">
-            <CartIcon className="w-4 h-4 text-white" />
-          </div>
-          <div>
-            <CardTitle className="text-lg font-bold text-gray-800">Smart Cart</CardTitle>
-            <div className="text-xs text-gray-600">Quick & Secure Checkout</div>
-          </div>
+          {/* Clickable Logo to Exit */}
+          <Link to="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
+            <div className="w-8 h-8 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
+              <Smartphone className="w-5 h-5 text-white" />
+            </div>
+            <span className="text-lg font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+              Devine Mobile
+            </span>
+          </Link>
         </div>
-        <Button 
-          variant="ghost" 
-          size="sm" 
-          onClick={onClose}
-          className="h-8 w-8 p-0 hover:bg-gray-200 rounded-full"
-        >
-          <X className="w-4 h-4" />
-        </Button>
+        
+        <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2">
+            <div className="p-2 bg-blue-600 rounded-lg">
+              <CartIcon className="w-4 h-4 text-white" />
+            </div>
+            <div>
+              <CardTitle className="text-lg font-bold text-gray-800">Smart Cart</CardTitle>
+              <div className="text-xs text-gray-600">Quick & Secure Checkout</div>
+            </div>
+          </div>
+          
+          <Button 
+            variant="ghost" 
+            size="sm" 
+            onClick={onClose}
+            className="h-8 w-8 p-0 hover:bg-gray-200 rounded-full ml-2"
+          >
+            <X className="w-4 h-4" />
+          </Button>
+        </div>
       </div>
       
       {/* Welcome message section */}

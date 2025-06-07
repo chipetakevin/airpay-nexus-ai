@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { CartItem } from '@/types/deals';
 import { useShoppingCart } from '@/hooks/useShoppingCart';
@@ -46,6 +46,21 @@ const ShoppingCart = ({ initialDeal, onClose }: ShoppingCartProps) => {
     validatePhoneNumber,
     acceptUnknownNumberTerms
   } = usePhoneValidation();
+
+  // Hide footer when cart is open
+  useEffect(() => {
+    const footer = document.querySelector('footer');
+    if (footer) {
+      footer.style.display = 'none';
+    }
+
+    // Show footer again when cart is closed
+    return () => {
+      if (footer) {
+        footer.style.display = 'block';
+      }
+    };
+  }, []);
 
   const { total, profitSharing } = calculateTotals();
 
