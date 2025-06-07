@@ -1,6 +1,7 @@
 
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
+import { ScrollArea } from '@/components/ui/scroll-area';
 import { 
   Smartphone, 
   Menu, 
@@ -13,7 +14,9 @@ import {
   ScanText,
   Building2,
   ArrowRight,
-  Star
+  Star,
+  Sparkles,
+  TrendingUp
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
@@ -32,7 +35,9 @@ const Header = () => {
       badge: 'Enterprise',
       stats: '500+ Companies',
       features: ['Multi-tenant', 'API Gateway', 'Analytics'],
-      gradient: 'from-blue-500 to-blue-600'
+      gradient: 'from-blue-500 to-blue-600',
+      bgGradient: 'from-blue-50 to-blue-100',
+      popularity: 'high'
     },
     {
       title: 'BaaS Platform',
@@ -42,7 +47,9 @@ const Header = () => {
       badge: 'Developer',
       stats: '10K+ APIs',
       features: ['Real-time DB', 'Auth', 'Storage'],
-      gradient: 'from-purple-500 to-purple-600'
+      gradient: 'from-purple-500 to-purple-600',
+      bgGradient: 'from-purple-50 to-purple-100',
+      popularity: 'trending'
     },
     {
       title: 'Scan-to-Text AI',
@@ -52,7 +59,9 @@ const Header = () => {
       badge: 'AI Powered',
       stats: '99.2% Accuracy',
       features: ['OCR', 'ML Processing', 'Enterprise'],
-      gradient: 'from-emerald-500 to-emerald-600'
+      gradient: 'from-emerald-500 to-emerald-600',
+      bgGradient: 'from-emerald-50 to-emerald-100',
+      popularity: 'new'
     },
     {
       title: 'WhatsApp Assistant',
@@ -62,7 +71,9 @@ const Header = () => {
       badge: 'Popular',
       stats: '24/7 Support',
       features: ['Auto Reply', 'AI Chat', 'Integration'],
-      gradient: 'from-green-500 to-green-600'
+      gradient: 'from-green-500 to-green-600',
+      bgGradient: 'from-green-50 to-green-100',
+      popularity: 'popular'
     },
     {
       title: 'USSD System',
@@ -72,9 +83,20 @@ const Header = () => {
       badge: 'Universal',
       stats: '100% Coverage',
       features: ['USSD Codes', 'No Internet', 'Instant'],
-      gradient: 'from-orange-500 to-orange-600'
+      gradient: 'from-orange-500 to-orange-600',
+      bgGradient: 'from-orange-50 to-orange-100',
+      popularity: 'stable'
     }
   ];
+
+  const getPopularityIcon = (popularity: string) => {
+    switch (popularity) {
+      case 'trending': return <TrendingUp className="w-3 h-3 text-purple-500" />;
+      case 'new': return <Sparkles className="w-3 h-3 text-emerald-500" />;
+      case 'popular': return <Star className="w-3 h-3 text-yellow-500 fill-current" />;
+      default: return null;
+    }
+  };
 
   return (
     <header className="bg-white shadow-sm border-b sticky top-0 z-50">
@@ -96,7 +118,7 @@ const Header = () => {
               Home
             </Link>
             
-            {/* Top Up Tab - Enhanced Design */}
+            {/* Enhanced Top Up Tab */}
             <Link 
               to="/portal?tab=onecard" 
               className="group relative flex items-center space-x-2 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105"
@@ -104,10 +126,9 @@ const Header = () => {
               <CreditCard className="w-4 h-4" />
               <span>Top Up</span>
               <div className="absolute -top-1 -right-1 w-3 h-3 bg-yellow-400 rounded-full animate-pulse"></div>
-              <div className="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-2 border-r-2 border-t-2 border-transparent border-t-white opacity-0 group-hover:opacity-100 transition-opacity"></div>
             </Link>
             
-            {/* Enhanced Platform Dropdown */}
+            {/* Enhanced Platform Dropdown with Improved Scrolling */}
             <div 
               className="relative"
               onMouseEnter={() => setIsPlatformDropdownOpen(true)}
@@ -115,61 +136,81 @@ const Header = () => {
             >
               <button className="flex items-center text-gray-700 hover:text-blue-600 transition-colors py-2">
                 Platform
-                <ChevronDown className="w-4 h-4 ml-1" />
+                <ChevronDown className={`w-4 h-4 ml-1 transition-transform duration-200 ${isPlatformDropdownOpen ? 'rotate-180' : ''}`} />
               </button>
               
               {isPlatformDropdownOpen && (
-                <div className="absolute top-full left-0 mt-2 w-80 bg-white rounded-xl shadow-2xl border border-gray-100 py-4 z-50 transform opacity-100 scale-100 transition-all duration-200">
-                  <div className="px-4 pb-3 border-b border-gray-100">
-                    <h3 className="font-semibold text-gray-900 text-sm">Platform Services</h3>
-                    <p className="text-xs text-gray-500 mt-1">Choose the right solution for your needs</p>
+                <div className="absolute top-full left-0 mt-3 w-96 bg-white rounded-2xl shadow-2xl border border-gray-100 z-50 transform opacity-100 scale-100 transition-all duration-300 ease-out animate-fade-in">
+                  {/* Header Section */}
+                  <div className="px-6 py-4 border-b border-gray-100 bg-gradient-to-r from-blue-50 to-purple-50 rounded-t-2xl">
+                    <h3 className="font-bold text-gray-900 text-lg">Platform Services</h3>
+                    <p className="text-sm text-gray-600 mt-1">Choose the perfect solution for your business needs</p>
                   </div>
                   
-                  <div className="py-2 max-h-96 overflow-y-auto">
-                    {platformServices.map((service, index) => (
-                      <Link 
-                        key={index}
-                        to={service.href} 
-                        className="group flex items-start px-4 py-3 hover:bg-gray-50 transition-colors"
-                      >
-                        <div className={`p-2 rounded-lg bg-gradient-to-r ${service.gradient} bg-opacity-10 mr-3 group-hover:scale-110 transition-transform`}>
-                          {service.icon}
-                        </div>
-                        <div className="flex-1 min-w-0">
-                          <div className="flex items-center gap-2 mb-1">
-                            <h4 className="font-medium text-sm text-gray-900 group-hover:text-blue-600 transition-colors">
-                              {service.title}
-                            </h4>
-                            <span className={`text-xs px-2 py-0.5 rounded-full bg-gradient-to-r ${service.gradient} text-white`}>
-                              {service.badge}
-                            </span>
+                  {/* Scrollable Content with Enhanced UX */}
+                  <ScrollArea className="h-80">
+                    <div className="py-2">
+                      {platformServices.map((service, index) => (
+                        <Link 
+                          key={index}
+                          to={service.href} 
+                          className="group flex items-start px-6 py-4 hover:bg-gradient-to-r hover:from-gray-50 hover:to-gray-100 transition-all duration-200 border-b border-gray-50 last:border-b-0"
+                        >
+                          {/* Icon Container with Animated Background */}
+                          <div className={`relative p-3 rounded-xl bg-gradient-to-r ${service.bgGradient} mr-4 group-hover:scale-110 transition-all duration-300 shadow-sm group-hover:shadow-md`}>
+                            {service.icon}
+                            {/* Floating Animation Effect */}
+                            <div className="absolute inset-0 rounded-xl bg-white opacity-0 group-hover:opacity-20 transition-opacity duration-300"></div>
                           </div>
-                          <p className="text-xs text-gray-600 mb-2 line-clamp-1">{service.description}</p>
-                          <div className="flex items-center gap-3 mb-2">
-                            <div className="flex items-center gap-1">
-                              <Star className="w-3 h-3 text-yellow-500" />
-                              <span className="text-xs font-medium text-gray-700">{service.stats}</span>
-                            </div>
-                            <ArrowRight className="w-3 h-3 text-gray-400 group-hover:text-blue-500 group-hover:translate-x-1 transition-all" />
-                          </div>
-                          <div className="flex flex-wrap gap-1">
-                            {service.features.map((feature, idx) => (
-                              <span key={idx} className="text-xs bg-gray-100 text-gray-600 px-2 py-0.5 rounded">
-                                {feature}
+                          
+                          <div className="flex-1 min-w-0">
+                            {/* Title Row with Badge and Popularity Indicator */}
+                            <div className="flex items-center gap-2 mb-2">
+                              <h4 className="font-semibold text-gray-900 group-hover:text-blue-600 transition-colors text-base">
+                                {service.title}
+                              </h4>
+                              <span className={`text-xs px-2 py-1 rounded-full bg-gradient-to-r ${service.gradient} text-white font-medium shadow-sm`}>
+                                {service.badge}
                               </span>
-                            ))}
+                              {getPopularityIcon(service.popularity)}
+                            </div>
+                            
+                            {/* Description */}
+                            <p className="text-sm text-gray-600 mb-3 leading-relaxed">{service.description}</p>
+                            
+                            {/* Stats and Arrow Row */}
+                            <div className="flex items-center justify-between mb-3">
+                              <div className="flex items-center gap-2">
+                                <Star className="w-3 h-3 text-yellow-500 fill-current" />
+                                <span className="text-sm font-medium text-gray-700">{service.stats}</span>
+                              </div>
+                              <ArrowRight className="w-4 h-4 text-gray-400 group-hover:text-blue-500 group-hover:translate-x-1 transition-all duration-200" />
+                            </div>
+                            
+                            {/* Feature Tags */}
+                            <div className="flex flex-wrap gap-1">
+                              {service.features.map((feature, idx) => (
+                                <span 
+                                  key={idx} 
+                                  className="text-xs bg-gray-100 group-hover:bg-white text-gray-600 px-2 py-1 rounded-md transition-colors duration-200 border"
+                                >
+                                  {feature}
+                                </span>
+                              ))}
+                            </div>
                           </div>
-                        </div>
-                      </Link>
-                    ))}
-                  </div>
+                        </Link>
+                      ))}
+                    </div>
+                  </ScrollArea>
                   
-                  <div className="px-4 pt-3 border-t border-gray-100">
+                  {/* Enhanced Footer CTA */}
+                  <div className="px-6 py-4 border-t border-gray-100 bg-gradient-to-r from-gray-50 to-blue-50 rounded-b-2xl">
                     <Link 
                       to="/platform" 
-                      className="flex items-center justify-center w-full py-2 px-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white text-sm font-medium rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all"
+                      className="flex items-center justify-center w-full py-3 px-4 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white text-sm font-semibold rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-[1.02]"
                     >
-                      View All Services
+                      <span>Explore All Services</span>
                       <ArrowRight className="w-4 h-4 ml-2" />
                     </Link>
                   </div>
@@ -203,85 +244,90 @@ const Header = () => {
           </button>
         </div>
 
-        {/* Enhanced Mobile Navigation */}
+        {/* Enhanced Mobile Navigation with Improved Scrolling */}
         {isMenuOpen && (
-          <div className="lg:hidden py-4 border-t bg-white">
-            <nav className="flex flex-col space-y-1">
-              <Link 
-                to="/" 
-                className="px-4 py-3 text-gray-700 hover:bg-gray-50 hover:text-blue-600 transition-colors rounded-lg mx-2"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                Home
-              </Link>
-              
-              {/* Mobile Top Up - Enhanced */}
-              <Link 
-                to="/portal?tab=onecard" 
-                className="mx-2 my-2 flex items-center justify-center space-x-2 bg-gradient-to-r from-green-500 to-emerald-600 text-white px-4 py-3 rounded-lg font-medium shadow-lg"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                <CreditCard className="w-5 h-5" />
-                <span>Top Up Now</span>
-                <div className="w-2 h-2 bg-yellow-400 rounded-full animate-pulse"></div>
-              </Link>
-
-              {/* Mobile Platform Services */}
-              <div className="px-2 py-2">
-                <h3 className="px-2 py-1 text-sm font-semibold text-gray-500 uppercase tracking-wide">Platform Services</h3>
-                <div className="space-y-1">
-                  {platformServices.map((service, index) => (
-                    <Link 
-                      key={index}
-                      to={service.href} 
-                      className="flex items-center px-3 py-3 hover:bg-gray-50 rounded-lg transition-colors"
-                      onClick={() => setIsMenuOpen(false)}
-                    >
-                      <div className={`p-2 rounded-lg bg-gradient-to-r ${service.gradient} bg-opacity-10 mr-3`}>
-                        {service.icon}
-                      </div>
-                      <div className="flex-1">
-                        <div className="flex items-center gap-2 mb-1">
-                          <h4 className="font-medium text-sm text-gray-900">{service.title}</h4>
-                          <span className={`text-xs px-2 py-0.5 rounded-full bg-gradient-to-r ${service.gradient} text-white`}>
-                            {service.badge}
-                          </span>
-                        </div>
-                        <p className="text-xs text-gray-600">{service.description}</p>
-                        <div className="flex items-center gap-1 mt-1">
-                          <Star className="w-3 h-3 text-yellow-500" />
-                          <span className="text-xs text-gray-700">{service.stats}</span>
-                        </div>
-                      </div>
-                      <ArrowRight className="w-4 h-4 text-gray-400" />
-                    </Link>
-                  ))}
-                </div>
-              </div>
-
-              <Link 
-                to="/spaza-ai" 
-                className="px-4 py-3 text-gray-700 hover:bg-gray-50 hover:text-blue-600 transition-colors rounded-lg mx-2"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                Spaza AI
-              </Link>
-              <Link 
-                to="/portal" 
-                className="px-4 py-3 text-gray-700 hover:bg-gray-50 hover:text-blue-600 transition-colors rounded-lg mx-2"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                Portal
-              </Link>
-              
-              <div className="px-2 pt-4">
-                <Link to="/portal" onClick={() => setIsMenuOpen(false)}>
-                  <Button className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 shadow-lg">
-                    Get Started
-                  </Button>
+          <div className="lg:hidden border-t bg-white">
+            <ScrollArea className="h-96">
+              <nav className="flex flex-col py-4">
+                <Link 
+                  to="/" 
+                  className="px-4 py-3 text-gray-700 hover:bg-gray-50 hover:text-blue-600 transition-colors rounded-lg mx-2"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  Home
                 </Link>
-              </div>
-            </nav>
+                
+                {/* Mobile Top Up - Enhanced */}
+                <Link 
+                  to="/portal?tab=onecard" 
+                  className="mx-2 my-2 flex items-center justify-center space-x-2 bg-gradient-to-r from-green-500 to-emerald-600 text-white px-4 py-3 rounded-xl font-medium shadow-lg"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  <CreditCard className="w-5 h-5" />
+                  <span>Top Up Now</span>
+                  <div className="w-2 h-2 bg-yellow-400 rounded-full animate-pulse"></div>
+                </Link>
+
+                {/* Mobile Platform Services with Enhanced Scrolling */}
+                <div className="px-2 py-3">
+                  <h3 className="px-2 py-2 text-sm font-bold text-gray-500 uppercase tracking-wide">Platform Services</h3>
+                  <div className="space-y-2">
+                    {platformServices.map((service, index) => (
+                      <Link 
+                        key={index}
+                        to={service.href} 
+                        className="flex items-center px-4 py-4 hover:bg-gradient-to-r hover:from-gray-50 hover:to-blue-50 rounded-xl transition-all duration-200 border border-gray-100 hover:border-blue-200 hover:shadow-sm"
+                        onClick={() => setIsMenuOpen(false)}
+                      >
+                        <div className={`p-3 rounded-lg bg-gradient-to-r ${service.bgGradient} mr-4 shadow-sm`}>
+                          {service.icon}
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center gap-2 mb-2">
+                            <h4 className="font-semibold text-gray-900 text-sm">{service.title}</h4>
+                            <span className={`text-xs px-2 py-1 rounded-full bg-gradient-to-r ${service.gradient} text-white`}>
+                              {service.badge}
+                            </span>
+                            {getPopularityIcon(service.popularity)}
+                          </div>
+                          <p className="text-xs text-gray-600 mb-2 leading-relaxed">{service.description}</p>
+                          <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-1">
+                              <Star className="w-3 h-3 text-yellow-500 fill-current" />
+                              <span className="text-xs text-gray-700 font-medium">{service.stats}</span>
+                            </div>
+                            <ArrowRight className="w-4 h-4 text-gray-400" />
+                          </div>
+                        </div>
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+
+                <Link 
+                  to="/spaza-ai" 
+                  className="px-4 py-3 text-gray-700 hover:bg-gray-50 hover:text-blue-600 transition-colors rounded-lg mx-2"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  Spaza AI
+                </Link>
+                <Link 
+                  to="/portal" 
+                  className="px-4 py-3 text-gray-700 hover:bg-gray-50 hover:text-blue-600 transition-colors rounded-lg mx-2"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  Portal
+                </Link>
+                
+                <div className="px-2 pt-4">
+                  <Link to="/portal" onClick={() => setIsMenuOpen(false)}>
+                    <Button className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 shadow-lg">
+                      Get Started
+                    </Button>
+                  </Link>
+                </div>
+              </nav>
+            </ScrollArea>
           </div>
         )}
       </div>
