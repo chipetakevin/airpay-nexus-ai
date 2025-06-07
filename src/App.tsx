@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -8,6 +7,7 @@ import Index from "./pages/Index";
 import Portal from "./pages/Portal";
 import SpazaAI from "./pages/SpazaAI";
 import PlatformDashboard from "./pages/PlatformDashboard";
+import BaaSPlatform from "./pages/BaaSPlatform";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -26,6 +26,7 @@ const App = () => (
           <Route path="/platform/agents" element={<PlatformDashboard />} />
           <Route path="/platform/bulk" element={<PlatformDashboard />} />
           <Route path="/platform/analytics" element={<PlatformDashboard />} />
+          <Route path="/platform/baas" element={<BaaSPlatform />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
