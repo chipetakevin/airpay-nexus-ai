@@ -23,7 +23,7 @@ export const useElementVisibilityControl = () => {
       '[style*="background-image"]',
       '.bg-gradient-to-br',
       '.absolute.inset-0',
-      '[class*="bg-"]img',
+      'img[class*="bg-"]',
       'img[src*="background"]',
       'img[src*="hero"]',
       '.hero-section img',
