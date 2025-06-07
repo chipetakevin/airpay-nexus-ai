@@ -1,3 +1,4 @@
+
 import React from 'react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
@@ -8,21 +9,18 @@ import WhatsAppFloatingButton from '@/components/WhatsAppFloatingButton';
 
 const USSDSystem = () => {
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50 to-purple-50">
       <Header />
       
       <div className="container mx-auto px-4 py-8">
-        {/* Hero Section */}
+        {/* Hero Section - Redesigned */}
         <div className="text-center mb-12">
           <div className="flex justify-center mb-6">
-            <div className="bg-gradient-to-r from-orange-500 to-red-500 p-4 rounded-2xl">
+            <div className="bg-gradient-to-r from-blue-600 to-purple-600 p-4 rounded-2xl shadow-lg">
               <Smartphone className="w-12 h-12 text-white" />
             </div>
           </div>
-          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
-            USSD System Management
-          </h1>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+          <p className="text-xl text-gray-600 max-w-3xl mx-auto font-medium">
             Universal access to mobile services through USSD codes across all networks
           </p>
         </div>
