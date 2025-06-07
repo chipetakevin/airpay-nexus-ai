@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -17,7 +16,7 @@ const USSDManagement = () => {
   const networkStats = [
     { operator: 'MTN', connections: 1205, status: 'operational', responseTime: '1.2s' },
     { operator: 'Vodacom', connections: 892, status: 'operational', responseTime: '1.5s' },
-    { operator: 'Cell C', connections: 456, status: 'degraded', responseTime: '2.8s' },
+    { operator: 'Devine Mobile', connections: 456, status: 'degraded', responseTime: '2.8s' },
     { operator: 'Telkom', connections: 294, status: 'operational', responseTime: '1.8s' }
   ];
 
@@ -34,7 +33,7 @@ const USSDManagement = () => {
     { id: 'TXN001', service: 'Airtime R50', status: 'completed', time: '14:32', network: 'MTN' },
     { id: 'TXN002', service: 'Data 1GB', status: 'completed', time: '14:30', network: 'Vodacom' },
     { id: 'TXN003', service: 'Balance Check', status: 'completed', time: '14:28', network: 'MTN' },
-    { id: 'TXN004', service: 'Bill Payment', status: 'failed', time: '14:25', network: 'Cell C' },
+    { id: 'TXN004', service: 'Bill Payment', status: 'failed', time: '14:25', network: 'Devine Mobile' },
     { id: 'TXN005', service: 'Airtime R20', status: 'processing', time: '14:23', network: 'Telkom' }
   ];
 
@@ -130,13 +129,14 @@ const USSDManagement = () => {
         </Card>
       </div>
 
+      {/* Mobile-First Tabs */}
       <Tabs defaultValue="overview" className="space-y-6">
-        <TabsList className="grid w-full grid-cols-5">
-          <TabsTrigger value="overview">Overview</TabsTrigger>
-          <TabsTrigger value="networks">Networks</TabsTrigger>
-          <TabsTrigger value="analytics">Analytics</TabsTrigger>
-          <TabsTrigger value="transactions">Transactions</TabsTrigger>
-          <TabsTrigger value="settings">Settings</TabsTrigger>
+        <TabsList className="grid w-full grid-cols-2 md:grid-cols-5 gap-1 h-auto p-1 bg-white border">
+          <TabsTrigger value="overview" className="py-2 px-3 text-xs md:text-sm data-[state=active]:bg-blue-50 data-[state=active]:text-blue-600">Overview</TabsTrigger>
+          <TabsTrigger value="networks" className="py-2 px-3 text-xs md:text-sm data-[state=active]:bg-purple-50 data-[state=active]:text-purple-600">Networks</TabsTrigger>
+          <TabsTrigger value="analytics" className="py-2 px-3 text-xs md:text-sm data-[state=active]:bg-green-50 data-[state=active]:text-green-600">Analytics</TabsTrigger>
+          <TabsTrigger value="transactions" className="py-2 px-3 text-xs md:text-sm data-[state=active]:bg-orange-50 data-[state=active]:text-orange-600">Transactions</TabsTrigger>
+          <TabsTrigger value="settings" className="py-2 px-3 text-xs md:text-sm data-[state=active]:bg-red-50 data-[state=active]:text-red-600">Settings</TabsTrigger>
         </TabsList>
 
         <TabsContent value="overview" className="space-y-6">

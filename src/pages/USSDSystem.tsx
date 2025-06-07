@@ -89,13 +89,37 @@ const USSDSystem = () => {
             </div>
           </div>
 
-          {/* Main Tabs */}
+          {/* Mobile-First Tabs */}
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
             <div className="flex justify-center mb-8">
-              <TabsList className="grid w-full max-w-md grid-cols-3">
-                <TabsTrigger value="overview">Overview</TabsTrigger>
-                <TabsTrigger value="simulator">Try USSD</TabsTrigger>
-                <TabsTrigger value="management">Management</TabsTrigger>
+              <TabsList className="grid w-full max-w-4xl grid-cols-1 md:grid-cols-3 gap-2 bg-white border h-auto p-2">
+                <TabsTrigger 
+                  value="overview" 
+                  className="flex-1 py-3 px-4 data-[state=active]:bg-blue-50 data-[state=active]:text-blue-600 data-[state=active]:border-blue-200 rounded-lg transition-all"
+                >
+                  <div className="flex flex-col items-center gap-1">
+                    <Monitor className="w-4 h-4" />
+                    <span className="text-sm font-medium">Overview</span>
+                  </div>
+                </TabsTrigger>
+                <TabsTrigger 
+                  value="simulator" 
+                  className="flex-1 py-3 px-4 data-[state=active]:bg-purple-50 data-[state=active]:text-purple-600 data-[state=active]:border-purple-200 rounded-lg transition-all"
+                >
+                  <div className="flex flex-col items-center gap-1">
+                    <Phone className="w-4 h-4" />
+                    <span className="text-sm font-medium">Try USSD</span>
+                  </div>
+                </TabsTrigger>
+                <TabsTrigger 
+                  value="management" 
+                  className="flex-1 py-3 px-4 data-[state=active]:bg-green-50 data-[state=active]:text-green-600 data-[state=active]:border-green-200 rounded-lg transition-all"
+                >
+                  <div className="flex flex-col items-center gap-1">
+                    <Users className="w-4 h-4" />
+                    <span className="text-sm font-medium">Management</span>
+                  </div>
+                </TabsTrigger>
               </TabsList>
             </div>
 
@@ -164,7 +188,7 @@ const USSDSystem = () => {
                     </div>
                     <div className="flex justify-between">
                       <span>Network Support:</span>
-                      <span className="font-medium">MTN, Vodacom, Cell C, Telkom</span>
+                      <span className="font-medium">MTN, Vodacom, Devine Mobile, Telkom</span>
                     </div>
                     <div className="flex justify-between">
                       <span>Languages:</span>
