@@ -53,7 +53,7 @@ const PrepaidServicesPanel = () => {
   const networkStats = [
     { network: 'MTN', uptime: '99.8%', transactions: 5847 },
     { network: 'Vodacom', uptime: '99.5%', transactions: 4923 },
-    { network: 'Cell C', uptime: '98.9%', transactions: 2847 },
+    { network: 'Devine Mobile', uptime: '98.9%', transactions: 2847 },
     { network: 'Telkom', uptime: '99.1%', transactions: 1847 }
   ];
 

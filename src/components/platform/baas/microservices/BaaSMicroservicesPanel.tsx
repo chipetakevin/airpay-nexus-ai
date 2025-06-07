@@ -1,128 +1,102 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
 import { 
-  Network, Container, Layers, Settings, 
-  Activity, CheckCircle, AlertTriangle, Clock,
-  Cpu, Memory, HardDrive, Zap, Users, Database
+  Network, Server, Container, Cpu, HardDrive, 
+  GitBranch, Settings, Activity, CheckCircle, AlertTriangle,
+  Play, Square, RotateCcw, Scale
 } from 'lucide-react';
 
 const BaaSMicroservicesPanel = () => {
-  const [selectedService, setSelectedService] = useState('auth');
+  const [selectedService, setSelectedService] = useState('auth-service');
 
   const microservices = [
     {
-      id: 'auth',
+      id: 'auth-service',
       name: 'Authentication Service',
-      status: 'healthy',
+      status: 'running',
+      version: 'v2.1.4',
+      instances: 3,
+      cpu: '12%',
+      memory: '245MB',
+      icon: <Network className="w-5 h-5" />,
+      description: 'Handles user authentication and JWT token management',
+      endpoints: 8,
+      requests: '125K/min'
+    },
+    {
+      id: 'payment-service',
+      name: 'Payment Processing',
+      status: 'running',
+      version: 'v1.8.2',
+      instances: 5,
+      cpu: '28%',
+      memory: '512MB',
+      icon: <Server className="w-5 h-5" />,
+      description: 'Processes airtime and data payments',
+      endpoints: 12,
+      requests: '89K/min'
+    },
+    {
+      id: 'notification-service',
+      name: 'Notification Hub',
+      status: 'running',
+      version: 'v1.5.1',
+      instances: 2,
+      cpu: '8%',
+      memory: '156MB',
+      icon: <Container className="w-5 h-5" />,
+      description: 'Handles SMS, email and push notifications',
+      endpoints: 6,
+      requests: '67K/min'
+    },
+    {
+      id: 'analytics-service',
+      name: 'Analytics Engine',
+      status: 'warning',
+      version: 'v2.0.3',
       instances: 4,
       cpu: '45%',
-      memory: '2.1GB',
-      requests: '24.5K/min',
-      uptime: '99.98%',
-      version: 'v2.1.3',
-      icon: <Users className="w-5 h-5" />
-    },
-    {
-      id: 'transaction',
-      name: 'Transaction Service',
-      status: 'healthy',
-      instances: 8,
-      cpu: '67%',
-      memory: '4.8GB',
-      requests: '45.2K/min',
-      uptime: '99.97%',
-      version: 'v1.8.2',
-      icon: <Activity className="w-5 h-5" />
-    },
-    {
-      id: 'payment',
-      name: 'Payment Gateway',
-      status: 'warning',
-      instances: 6,
-      cpu: '82%',
-      memory: '3.4GB',
-      requests: '18.7K/min',
-      uptime: '99.94%',
-      version: 'v2.0.1',
-      icon: <Database className="w-5 h-5" />
-    },
-    {
-      id: 'notification',
-      name: 'Notification Service',
-      status: 'healthy',
-      instances: 3,
-      cpu: '28%',
-      memory: '1.2GB',
-      requests: '12.8K/min',
-      uptime: '99.99%',
-      version: 'v1.5.4',
-      icon: <Zap className="w-5 h-5" />
-    },
-    {
-      id: 'analytics',
-      name: 'Analytics Service',
-      status: 'healthy',
-      instances: 5,
-      cpu: '56%',
-      memory: '6.2GB',
-      requests: '8.4K/min',
-      uptime: '99.96%',
-      version: 'v1.3.1',
-      icon: <Activity className="w-5 h-5" />
-    },
-    {
-      id: 'user',
-      name: 'User Management',
-      status: 'healthy',
-      instances: 4,
-      cpu: '39%',
-      memory: '2.8GB',
-      requests: '15.6K/min',
-      uptime: '99.98%',
-      version: 'v2.2.0',
-      icon: <Users className="w-5 h-5" />
+      memory: '892MB',
+      icon: <Activity className="w-5 h-5" />,
+      description: 'Real-time data processing and insights',
+      endpoints: 15,
+      requests: '156K/min'
     }
   ];
 
-  const containerMetrics = [
-    { label: 'Running Containers', value: '127', change: '+3', icon: <Container className="w-4 h-4" /> },
-    { label: 'Service Mesh', value: '18 services', change: '+2', icon: <Network className="w-4 h-4" /> },
-    { label: 'Load Balancers', value: '12 active', change: '0', icon: <Layers className="w-4 h-4" /> },
-    { label: 'Auto-scaling', value: '8 groups', change: '+1', icon: <Settings className="w-4 h-4" /> }
-  ];
-
-  const deploymentHistory = [
-    { service: 'Authentication Service', version: 'v2.1.3', time: '2 hours ago', status: 'success' },
-    { service: 'Transaction Service', version: 'v1.8.2', time: '6 hours ago', status: 'success' },
-    { service: 'Payment Gateway', version: 'v2.0.1', time: '1 day ago', status: 'rollback' },
-    { service: 'Notification Service', version: 'v1.5.4', time: '2 days ago', status: 'success' },
-    { service: 'Analytics Service', version: 'v1.3.1', time: '3 days ago', status: 'success' }
+  const serviceMetrics = [
+    { label: 'Total Services', value: '12', change: '+2', icon: <Container className="w-4 h-4" /> },
+    { label: 'Running Instances', value: '34', change: '+6', icon: <Server className="w-4 h-4" /> },
+    { label: 'CPU Usage', value: '23%', change: '-5%', icon: <Cpu className="w-4 h-4" /> },
+    { label: 'Memory Usage', value: '1.8GB', change: '+12%', icon: <HardDrive className="w-4 h-4" /> }
   ];
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'healthy': return 'text-green-600 bg-green-50';
-      case 'warning': return 'text-orange-600 bg-orange-50';
-      case 'critical': return 'text-red-600 bg-red-50';
-      default: return 'text-gray-600 bg-gray-50';
+      case 'running': return 'bg-green-100 text-green-800';
+      case 'warning': return 'bg-orange-100 text-orange-800';
+      case 'error': return 'bg-red-100 text-red-800';
+      case 'stopped': return 'bg-gray-100 text-gray-800';
+      default: return 'bg-gray-100 text-gray-800';
     }
   };
 
   const getStatusIcon = (status: string) => {
     switch (status) {
-      case 'healthy': return <CheckCircle className="w-4 h-4" />;
+      case 'running': return <CheckCircle className="w-4 h-4" />;
       case 'warning': return <AlertTriangle className="w-4 h-4" />;
-      case 'critical': return <AlertTriangle className="w-4 h-4" />;
-      default: return <Clock className="w-4 h-4" />;
+      case 'error': return <AlertTriangle className="w-4 h-4" />;
+      case 'stopped': return <Square className="w-4 h-4" />;
+      default: return <CheckCircle className="w-4 h-4" />;
     }
   };
 
   return (
     <div className="space-y-6">
-      {/* Container Overview Metrics */}
+      {/* Service Metrics Overview */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        {containerMetrics.map((metric, index) => (
+        {serviceMetrics.map((metric, index) => (
           <Card key={index}>
             <CardContent className="p-4">
               <div className="flex items-center justify-between">
@@ -136,10 +110,9 @@ const BaaSMicroservicesPanel = () => {
                   </div>
                 </div>
                 <span className={`text-xs px-2 py-1 rounded ${
-                  metric.change.startsWith('+') ? 'bg-green-100 text-green-600' : 
-                  metric.change === '0' ? 'bg-gray-100 text-gray-600' : 'bg-red-100 text-red-600'
+                  metric.change.startsWith('+') ? 'bg-green-100 text-green-600' : 'bg-red-100 text-red-600'
                 }`}>
-                  {metric.change === '0' ? 'Stable' : metric.change}
+                  {metric.change}
                 </span>
               </div>
             </CardContent>
@@ -148,7 +121,7 @@ const BaaSMicroservicesPanel = () => {
       </div>
 
       {/* Microservices Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {microservices.map((service) => (
           <Card 
             key={service.id}
@@ -164,52 +137,60 @@ const BaaSMicroservicesPanel = () => {
                     {service.icon}
                   </div>
                   <div>
-                    <CardTitle className="text-base">{service.name}</CardTitle>
-                    <div className="flex items-center gap-2 text-xs text-gray-600">
-                      <span>{service.version}</span>
-                      <span>•</span>
-                      <span>{service.instances} instances</span>
+                    <CardTitle className="text-lg">{service.name}</CardTitle>
+                    <p className="text-sm text-gray-600">{service.description}</p>
+                    <div className="flex items-center gap-2 mt-2">
+                      <Badge className={getStatusColor(service.status)}>
+                        {getStatusIcon(service.status)}
+                        <span className="ml-1 capitalize">{service.status}</span>
+                      </Badge>
+                      <Badge variant="outline">{service.version}</Badge>
                     </div>
                   </div>
                 </div>
-                <div className={`flex items-center gap-1 text-xs px-2 py-1 rounded-full ${getStatusColor(service.status)}`}>
-                  {getStatusIcon(service.status)}
-                  <span className="capitalize">{service.status}</span>
-                </div>
+                <Settings className="w-4 h-4 text-gray-400" />
               </div>
             </CardHeader>
             <CardContent className="pt-0">
               <div className="space-y-3">
-                {/* Resource Usage */}
-                <div className="grid grid-cols-2 gap-4">
+                {/* Key Metrics */}
+                <div className="grid grid-cols-3 gap-4">
                   <div>
-                    <div className="flex items-center gap-1 mb-1">
-                      <Cpu className="w-3 h-3 text-gray-400" />
-                      <span className="text-xs text-gray-600">CPU</span>
-                    </div>
+                    <p className="text-xs text-gray-600">Instances</p>
+                    <p className="text-sm font-semibold">{service.instances}</p>
+                  </div>
+                  <div>
+                    <p className="text-xs text-gray-600">CPU</p>
                     <p className="text-sm font-semibold">{service.cpu}</p>
                   </div>
                   <div>
-                    <div className="flex items-center gap-1 mb-1">
-                      <Memory className="w-3 h-3 text-gray-400" />
-                      <span className="text-xs text-gray-600">Memory</span>
-                    </div>
+                    <p className="text-xs text-gray-600">Memory</p>
                     <p className="text-sm font-semibold">{service.memory}</p>
                   </div>
                 </div>
 
-                {/* Performance Metrics */}
+                {/* Additional Metrics */}
                 <div className="pt-2 border-t border-gray-100">
-                  <div className="grid grid-cols-1 gap-1">
-                    <div className="flex justify-between text-xs">
-                      <span className="text-gray-600">Requests/min</span>
-                      <span className="font-medium">{service.requests}</span>
-                    </div>
-                    <div className="flex justify-between text-xs">
-                      <span className="text-gray-600">Uptime</span>
-                      <span className="font-medium text-green-600">{service.uptime}</span>
-                    </div>
+                  <div className="flex justify-between text-xs">
+                    <span className="text-gray-600">Endpoints</span>
+                    <span className="font-medium">{service.endpoints}</span>
                   </div>
+                  <div className="flex justify-between text-xs mt-1">
+                    <span className="text-gray-600">Requests/min</span>
+                    <span className="font-medium">{service.requests}</span>
+                  </div>
+                </div>
+
+                {/* Action Buttons */}
+                <div className="flex gap-2 pt-2">
+                  <button className="flex-1 px-3 py-1 text-xs bg-green-50 text-green-700 rounded hover:bg-green-100 transition-colors">
+                    <Play className="w-3 h-3 inline mr-1" />
+                    Restart
+                  </button>
+                  <button className="flex-1 px-3 py-1 text-xs bg-blue-50 text-blue-700 rounded hover:bg-blue-100 transition-colors">
+                    <Scale className="w-3 h-3 inline mr-1" />
+                    Scale
+                  </button>
                 </div>
               </div>
             </CardContent>
@@ -217,83 +198,65 @@ const BaaSMicroservicesPanel = () => {
         ))}
       </div>
 
-      {/* Service Management Dashboard */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      {/* Service Management Panel */}
+      {selectedService && (
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              <Clock className="w-5 h-5" />
-              Recent Deployments
+              <GitBranch className="w-5 h-5" />
+              Service Management - {microservices.find(s => s.id === selectedService)?.name}
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="space-y-3">
-              {deploymentHistory.map((deployment, index) => (
-                <div key={index} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                  <div className="flex-1">
-                    <p className="text-sm font-medium text-gray-900">{deployment.service}</p>
-                    <div className="flex items-center gap-4 mt-1">
-                      <span className="text-xs text-gray-600">{deployment.version}</span>
-                      <span className="text-xs text-gray-600">{deployment.time}</span>
-                    </div>
-                  </div>
-                  <div className={`px-2 py-1 rounded text-xs ${
-                    deployment.status === 'success' ? 'bg-green-100 text-green-700' :
-                    deployment.status === 'rollback' ? 'bg-orange-100 text-orange-700' : 'bg-gray-100 text-gray-700'
-                  }`}>
-                    {deployment.status}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Settings className="w-5 h-5" />
-              Service Operations
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <div>
-                <h4 className="font-medium text-gray-900 mb-3">Container Management</h4>
-                <div className="grid grid-cols-2 gap-2">
-                  <button className="w-full text-left px-3 py-2 text-sm bg-indigo-50 hover:bg-indigo-100 text-indigo-700 rounded-lg transition-colors">
-                    Scale Services
+                <h4 className="font-medium text-gray-900 mb-3">Deployment</h4>
+                <div className="space-y-2">
+                  <button className="w-full text-left px-3 py-2 text-sm bg-gray-50 hover:bg-gray-100 rounded-lg transition-colors">
+                    Rolling Update
                   </button>
-                  <button className="w-full text-left px-3 py-2 text-sm bg-green-50 hover:bg-green-100 text-green-700 rounded-lg transition-colors">
-                    Deploy Update
+                  <button className="w-full text-left px-3 py-2 text-sm bg-gray-50 hover:bg-gray-100 rounded-lg transition-colors">
+                    Blue-Green Deploy
                   </button>
-                  <button className="w-full text-left px-3 py-2 text-sm bg-orange-50 hover:bg-orange-100 text-orange-700 rounded-lg transition-colors">
-                    Restart Service
-                  </button>
-                  <button className="w-full text-left px-3 py-2 text-sm bg-red-50 hover:bg-red-100 text-red-700 rounded-lg transition-colors">
-                    Rollback
+                  <button className="w-full text-left px-3 py-2 text-sm bg-gray-50 hover:bg-gray-100 rounded-lg transition-colors">
+                    Canary Release
                   </button>
                 </div>
               </div>
 
               <div>
-                <h4 className="font-medium text-gray-900 mb-3">Monitoring & Logs</h4>
+                <h4 className="font-medium text-gray-900 mb-3">Monitoring</h4>
                 <div className="space-y-2">
                   <button className="w-full text-left px-3 py-2 text-sm bg-gray-50 hover:bg-gray-100 rounded-lg transition-colors">
-                    View Service Logs
-                  </button>
-                  <button className="w-full text-left px-3 py-2 text-sm bg-gray-50 hover:bg-gray-100 rounded-lg transition-colors">
-                    Performance Metrics
+                    Service Metrics
                   </button>
                   <button className="w-full text-left px-3 py-2 text-sm bg-gray-50 hover:bg-gray-100 rounded-lg transition-colors">
                     Health Checks
                   </button>
+                  <button className="w-full text-left px-3 py-2 text-sm bg-gray-50 hover:bg-gray-100 rounded-lg transition-colors">
+                    Distributed Tracing
+                  </button>
+                </div>
+              </div>
+
+              <div>
+                <h4 className="font-medium text-gray-900 mb-3">Operations</h4>
+                <div className="space-y-2">
+                  <button className="w-full text-left px-3 py-2 text-sm bg-indigo-50 hover:bg-indigo-100 text-indigo-700 rounded-lg transition-colors">
+                    Auto Scale
+                  </button>
+                  <button className="w-full text-left px-3 py-2 text-sm bg-green-50 hover:bg-green-100 text-green-700 rounded-lg transition-colors">
+                    Circuit Breaker
+                  </button>
+                  <button className="w-full text-left px-3 py-2 text-sm bg-orange-50 hover:bg-orange-100 text-orange-700 rounded-lg transition-colors">
+                    Load Balancing
+                  </button>
                 </div>
               </div>
             </div>
           </CardContent>
         </Card>
-      </div>
+      )}
     </div>
   );
 };

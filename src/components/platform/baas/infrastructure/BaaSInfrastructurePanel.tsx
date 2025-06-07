@@ -1,8 +1,7 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { 
-  Database, HardDrive, Cpu, Memory, Network, 
+  Database, HardDrive, Cpu, Ram, Network, 
   Cloud, Server, Monitor, Settings, CheckCircle,
   AlertTriangle, TrendingUp, Zap
 } from 'lucide-react';
