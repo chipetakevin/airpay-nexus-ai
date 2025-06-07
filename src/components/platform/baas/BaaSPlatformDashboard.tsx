@@ -22,6 +22,82 @@ import TransactionProcessorPanel from './core/TransactionProcessorPanel';
 const BaaSPlatformDashboard = () => {
   const [activeTab, setActiveTab] = useState('overview');
 
+  // Enhanced tab configuration with mobile-first design
+  const tabConfig = [
+    {
+      value: 'overview',
+      label: 'Overview',
+      mobileLabel: 'Overview',
+      icon: <BarChart className="w-4 h-4" />,
+      gradient: 'from-blue-500 to-blue-600',
+      bgGradient: 'from-blue-50 to-blue-100',
+      description: 'System overview and metrics'
+    },
+    {
+      value: 'transactions',
+      label: 'Transactions',
+      mobileLabel: 'Transactions',
+      icon: <Activity className="w-4 h-4" />,
+      gradient: 'from-green-500 to-green-600',
+      bgGradient: 'from-green-50 to-green-100',
+      description: 'Transaction processing'
+    },
+    {
+      value: 'infrastructure',
+      label: 'Infrastructure',
+      mobileLabel: 'Infrastructure',
+      icon: <Server className="w-4 h-4" />,
+      gradient: 'from-purple-500 to-purple-600',
+      bgGradient: 'from-purple-50 to-purple-100',
+      description: 'Server and resource management'
+    },
+    {
+      value: 'security',
+      label: 'Security',
+      mobileLabel: 'Security',
+      icon: <Shield className="w-4 h-4" />,
+      gradient: 'from-red-500 to-red-600',
+      bgGradient: 'from-red-50 to-red-100',
+      description: 'Security and compliance'
+    },
+    {
+      value: 'api',
+      label: 'API',
+      mobileLabel: 'API',
+      icon: <Globe className="w-4 h-4" />,
+      gradient: 'from-indigo-500 to-indigo-600',
+      bgGradient: 'from-indigo-50 to-indigo-100',
+      description: 'API management'
+    },
+    {
+      value: 'supabase',
+      label: 'Supabase',
+      mobileLabel: 'Supabase',
+      icon: <Database className="w-4 h-4" />,
+      gradient: 'from-emerald-500 to-emerald-600',
+      bgGradient: 'from-emerald-50 to-emerald-100',
+      description: 'Supabase configuration'
+    },
+    {
+      value: 'analytics',
+      label: 'Analytics',
+      mobileLabel: 'Analytics',
+      icon: <TrendingUp className="w-4 h-4" />,
+      gradient: 'from-orange-500 to-orange-600',
+      bgGradient: 'from-orange-50 to-orange-100',
+      description: 'Analytics and insights'
+    },
+    {
+      value: 'realtime',
+      label: 'Real-time',
+      mobileLabel: 'Real-time',
+      icon: <Zap className="w-4 h-4" />,
+      gradient: 'from-yellow-500 to-yellow-600',
+      bgGradient: 'from-yellow-50 to-yellow-100',
+      description: 'Real-time features'
+    }
+  ];
+
   const platformMetrics = [
     {
       label: 'Total API Calls',
@@ -70,6 +146,25 @@ const BaaSPlatformDashboard = () => {
     }
   };
 
+  const getTabClassName = (tabValue: string) => {
+    const config = tabConfig.find(tab => tab.value === tabValue);
+    const isActive = activeTab === tabValue;
+    
+    return `
+      relative group flex flex-col items-center justify-center
+      px-2 py-3 sm:px-4 sm:py-4 min-h-[80px] sm:min-h-[100px]
+      text-xs sm:text-sm font-medium rounded-xl
+      transition-all duration-300 ease-out
+      border-2 shadow-sm hover:shadow-lg
+      ${isActive 
+        ? `bg-gradient-to-br ${config?.bgGradient} border-transparent shadow-lg scale-105 z-10` 
+        : 'bg-white border-gray-200 hover:border-gray-300 hover:bg-gray-50'
+      }
+      transform hover:scale-105 hover:-translate-y-1
+      focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2
+    `;
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 p-4 md:p-6">
       <div className="max-w-7xl mx-auto space-y-6">
@@ -107,18 +202,50 @@ const BaaSPlatformDashboard = () => {
           ))}
         </div>
 
-        {/* Main Platform Tabs */}
+        {/* Enhanced Main Platform Tabs with Mobile-First Design */}
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <div className="flex justify-center mb-6">
-            <TabsList className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-8 w-full max-w-4xl">
-              <TabsTrigger value="overview" className="text-xs">Overview</TabsTrigger>
-              <TabsTrigger value="supabase" className="text-xs">Supabase</TabsTrigger>
-              <TabsTrigger value="transactions" className="text-xs">Transactions</TabsTrigger>
-              <TabsTrigger value="infrastructure" className="text-xs">Infrastructure</TabsTrigger>
-              <TabsTrigger value="security" className="text-xs">Security</TabsTrigger>
-              <TabsTrigger value="api" className="text-xs">API</TabsTrigger>
-              <TabsTrigger value="analytics" className="text-xs">Analytics</TabsTrigger>
-              <TabsTrigger value="realtime" className="text-xs">Real-time</TabsTrigger>
+          {/* Mobile-First Tab Navigation */}
+          <div className="mb-6 overflow-x-auto">
+            <TabsList className="grid grid-cols-4 sm:grid-cols-4 lg:grid-cols-8 gap-2 sm:gap-3 bg-transparent p-2 h-auto min-w-max lg:min-w-full">
+              {tabConfig.map((tab) => (
+                <TabsTrigger
+                  key={tab.value}
+                  value={tab.value}
+                  className={getTabClassName(tab.value)}
+                  onClick={() => setActiveTab(tab.value)}
+                >
+                  <div className="flex flex-col items-center gap-1 sm:gap-2">
+                    {/* Icon with enhanced styling */}
+                    <div className={`
+                      p-2 sm:p-3 rounded-lg transition-all duration-300
+                      ${activeTab === tab.value 
+                        ? `bg-gradient-to-r ${tab.gradient} text-white shadow-lg` 
+                        : 'bg-gray-100 text-gray-600 group-hover:bg-gray-200'
+                      }
+                    `}>
+                      {tab.icon}
+                    </div>
+                    
+                    {/* Label with responsive text */}
+                    <div className="text-center">
+                      <span className="block font-semibold leading-tight">
+                        {tab.mobileLabel}
+                      </span>
+                      <span className="hidden sm:block text-xs text-gray-500 mt-1 leading-tight">
+                        {tab.description}
+                      </span>
+                    </div>
+                    
+                    {/* Active indicator */}
+                    {activeTab === tab.value && (
+                      <div className={`
+                        w-8 h-1 rounded-full bg-gradient-to-r ${tab.gradient}
+                        animate-fade-in
+                      `} />
+                    )}
+                  </div>
+                </TabsTrigger>
+              ))}
             </TabsList>
           </div>
 
