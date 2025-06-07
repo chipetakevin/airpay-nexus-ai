@@ -154,9 +154,9 @@ export const useVendorRegistration = () => {
         description: `OneCard Gold created: ****${vendorId.slice(-4)}. Redirecting to Smart Deals now!`,
       });
 
-      // Redirect to homepage with deals tab
+      // Redirect to portal page with deals tab
       setTimeout(() => {
-        navigate('/?tab=deals', { replace: true });
+        navigate('/portal?tab=onecard', { replace: true });
       }, 1500);
     }
   };

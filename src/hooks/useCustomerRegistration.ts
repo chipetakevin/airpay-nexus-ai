@@ -130,7 +130,7 @@ export const useCustomerRegistration = () => {
 
       // Redirect to portal page with deals tab
       setTimeout(() => {
-        navigate('/?tab=deals', { replace: true });
+        navigate('/portal?tab=onecard', { replace: true });
       }, 1500);
     }
   };
