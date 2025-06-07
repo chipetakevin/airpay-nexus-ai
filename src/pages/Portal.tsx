@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useSearchParams, useNavigate, Link } from 'react-router-dom';
 import { Home, ArrowLeft } from 'lucide-react';
@@ -103,10 +102,12 @@ const Portal = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 pb-20">
-      <PortalHeader userType={userType} resetUserType={resetUserType} />
+    <div className="min-h-screen bg-gray-50 pb-20 pt-0">
+      <div className="pt-2">
+        <PortalHeader userType={userType} resetUserType={resetUserType} />
+      </div>
       
-      <main className="container mx-auto px-4 py-0">
+      <main className="container mx-auto px-4 pt-2">
         <PortalTabs 
           activeTab={activeTab}
           showAdminTab={showAdminTab}
