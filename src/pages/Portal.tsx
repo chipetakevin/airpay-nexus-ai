@@ -10,10 +10,12 @@ import OneCardDashboard from '@/components/OneCardDashboard';
 import { useToast } from "@/components/ui/use-toast"
 import WhatsAppFloatingButton from '@/components/WhatsAppFloatingButton';
 
+type UserType = 'customer' | 'vendor' | 'admin' | null;
+
 const Portal = () => {
   const [searchParams] = useSearchParams();
   const [activeTab, setActiveTab] = useState(searchParams.get('tab') || 'onecard');
-  const [userType, setUserType] = useState<string | null>(null);
+  const [userType, setUserType] = useState<UserType>(null);
   const navigate = useNavigate();
   const { toast } = useToast()
 

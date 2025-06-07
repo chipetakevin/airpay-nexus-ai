@@ -12,6 +12,7 @@ import BaaSPlatform from "./pages/BaaSPlatform";
 import SpazaAI from "./pages/SpazaAI";
 import WhatsAppAssistant from "./pages/WhatsAppAssistant";
 import USSDSystem from "./pages/USSDSystem";
+import ScanToTextAI from "./pages/ScanToTextAI";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -31,6 +32,7 @@ const App = () => (
           <Route path="/spaza-ai" element={<SpazaAI />} />
           <Route path="/whatsapp-assistant" element={<WhatsAppAssistant />} />
           <Route path="/ussd-system" element={<USSDSystem />} />
+          <Route path="/scan-to-text" element={<ScanToTextAI />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>

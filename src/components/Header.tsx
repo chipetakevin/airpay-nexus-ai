@@ -9,7 +9,8 @@ import {
   MessageCircle,
   Zap,
   Users,
-  CreditCard
+  CreditCard,
+  ScanText
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
@@ -80,6 +81,16 @@ const Header = () => {
                     <div>
                       <div className="font-medium">BaaS Platform</div>
                       <div className="text-xs text-gray-500">Backend services</div>
+                    </div>
+                  </Link>
+                  <Link 
+                    to="/scan-to-text" 
+                    className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
+                  >
+                    <ScanText className="w-4 h-4 mr-3 text-emerald-600" />
+                    <div>
+                      <div className="font-medium">Scan-to-Text AI</div>
+                      <div className="text-xs text-gray-500">Document processing</div>
                     </div>
                   </Link>
                   <Link 
@@ -165,6 +176,13 @@ const Header = () => {
                 onClick={() => setIsMenuOpen(false)}
               >
                 BaaS Platform
+              </Link>
+              <Link 
+                to="/scan-to-text" 
+                className="text-gray-700 hover:text-blue-600 transition-colors"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Scan-to-Text AI
               </Link>
               <Link 
                 to="/whatsapp-assistant" 
