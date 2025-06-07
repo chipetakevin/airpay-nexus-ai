@@ -156,7 +156,7 @@ const USSDSystem = () => {
                     </div>
                     <div className="flex justify-between">
                       <span>Response Time:</span>
-                      <span className="font-medium">< 3 seconds</span>
+                      <span className="font-medium">&lt; 3 seconds</span>
                     </div>
                     <div className="flex justify-between">
                       <span>Concurrent Sessions:</span>
