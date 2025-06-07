@@ -14,7 +14,7 @@ const HeroSection = () => {
     const isAuthenticated = localStorage.getItem('userAuthenticated') === 'true';
     
     if (isAuthenticated) {
-      // Redirect to smart deals (onecard tab)
+      // Redirect to deals (onecard tab)
       navigate('/portal?tab=onecard');
     } else {
       // Redirect to customer registration
@@ -29,7 +29,7 @@ const HeroSection = () => {
       JSON.parse(localStorage.getItem('userCredentials') || '{}').userType : null;
     
     if (isAuthenticated && (userType === 'vendor' || userType === 'admin')) {
-      // Redirect to smart deals (onecard tab)
+      // Redirect to deals (onecard tab)
       navigate('/portal?tab=onecard');
     } else {
       // Redirect to vendor registration
@@ -53,7 +53,7 @@ const HeroSection = () => {
         <div className="max-w-4xl mx-auto text-center text-white">
           {/* Main headline */}
           <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold mb-6 leading-tight">
-            Smart Airtime & Data
+            Airtime & Data
             <span className="block bg-gradient-to-r from-yellow-400 to-orange-400 bg-clip-text text-transparent">
               AI-Powered Deals
             </span>
@@ -62,7 +62,7 @@ const HeroSection = () => {
           {/* Subheadline */}
           <p className="text-xl sm:text-2xl mb-8 text-blue-100 max-w-3xl mx-auto">
             Discover the best airtime and data deals with our AI-driven platform. 
-            Earn OneCard rewards on every purchase and save more with smart recommendations.
+            Earn OneCard rewards on every purchase and save more with recommendations.
           </p>
           
           {/* Key benefits */}

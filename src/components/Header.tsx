@@ -8,7 +8,8 @@ import {
   ChevronDown,
   MessageCircle,
   Zap,
-  Users
+  Users,
+  CreditCard
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
@@ -36,6 +37,16 @@ const Header = () => {
           <nav className="hidden md:flex items-center space-x-8">
             <Link to="/" className="text-gray-700 hover:text-blue-600 transition-colors">
               Home
+            </Link>
+            
+            {/* Top Up Tab - New appealing design */}
+            <Link 
+              to="/portal?tab=onecard" 
+              className="group relative flex items-center space-x-2 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105"
+            >
+              <CreditCard className="w-4 h-4" />
+              <span>Top Up</span>
+              <div className="absolute -top-1 -right-1 w-3 h-3 bg-yellow-400 rounded-full animate-pulse"></div>
             </Link>
             
             {/* Platform Dropdown */}
@@ -131,6 +142,15 @@ const Header = () => {
                 onClick={() => setIsMenuOpen(false)}
               >
                 Home
+              </Link>
+              {/* Mobile Top Up */}
+              <Link 
+                to="/portal?tab=onecard" 
+                className="flex items-center space-x-2 bg-gradient-to-r from-green-500 to-emerald-600 text-white px-4 py-3 rounded-lg font-medium w-fit"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                <CreditCard className="w-4 h-4" />
+                <span>Top Up Now</span>
               </Link>
               <Link 
                 to="/platform" 
