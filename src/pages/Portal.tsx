@@ -1,10 +1,12 @@
+
 import React, { useState, useEffect } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import PortalHeader from '@/components/PortalHeader';
 import PortalTabs from '@/components/PortalTabs';
-import RegistrationTab from '@/components/portal/RegistrationTab';
-import VendorRegistrationTab from '@/components/portal/VendorRegistrationTab';
-import OneCardTab from '@/components/portal/OneCardTab';
+import CustomerRegistration from '@/components/CustomerRegistration';
+import VendorRegistration from '@/components/VendorRegistration';
+import AdminRegistration from '@/components/AdminRegistration';
+import OneCardDashboard from '@/components/OneCardDashboard';
 import { useToast } from "@/components/ui/use-toast"
 import WhatsAppFloatingButton from '@/components/WhatsAppFloatingButton';
 
@@ -35,27 +37,34 @@ const Portal = () => {
     navigate(`?tab=${activeTab}`, { replace: true });
   }, [activeTab, navigate]);
 
+  const resetUserType = () => {
+    setUserType(null);
+    setActiveTab('registration');
+  };
+
   const renderTabContent = () => {
     switch (activeTab) {
       case 'registration':
-        return <RegistrationTab />;
+        return <CustomerRegistration />;
       case 'vendor':
-        return <VendorRegistrationTab />;
+        return <VendorRegistration />;
+      case 'admin':
+        return <AdminRegistration />;
       case 'onecard':
-        return <OneCardTab />;
+        return <OneCardDashboard />;
       default:
-        return <OneCardTab />;
+        return <OneCardDashboard />;
     }
   };
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <PortalHeader />
+      <PortalHeader userType={userType} resetUserType={resetUserType} />
       
       <main className="container mx-auto px-4 py-8">
         <PortalTabs 
           activeTab={activeTab} 
-          onTabChange={setActiveTab} 
+          setActiveTab={setActiveTab}
           userType={userType}
         />
         
