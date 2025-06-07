@@ -27,89 +27,73 @@ const BaaSPlatformDashboard = () => {
     {
       value: 'overview',
       label: 'Overview',
-      mobileLabel: 'Overview',
       icon: <BarChart className="w-5 h-5" />,
       gradient: 'from-blue-500 via-blue-600 to-indigo-700',
       bgGradient: 'from-blue-50 via-blue-100 to-indigo-100',
       shadowColor: 'shadow-blue-500/30',
-      hoverShadow: 'hover:shadow-blue-500/40',
       description: 'System overview and metrics'
     },
     {
       value: 'transactions',
       label: 'Transactions',
-      mobileLabel: 'Transactions',
       icon: <Activity className="w-5 h-5" />,
       gradient: 'from-emerald-500 via-green-600 to-teal-700',
       bgGradient: 'from-emerald-50 via-green-100 to-teal-100',
       shadowColor: 'shadow-emerald-500/30',
-      hoverShadow: 'hover:shadow-emerald-500/40',
       description: 'Transaction processing'
     },
     {
       value: 'infrastructure',
       label: 'Infrastructure',
-      mobileLabel: 'Infrastructure',
       icon: <Server className="w-5 h-5" />,
       gradient: 'from-purple-500 via-violet-600 to-purple-700',
       bgGradient: 'from-purple-50 via-violet-100 to-purple-100',
       shadowColor: 'shadow-purple-500/30',
-      hoverShadow: 'hover:shadow-purple-500/40',
       description: 'Server and resource management'
     },
     {
       value: 'security',
       label: 'Security',
-      mobileLabel: 'Security',
       icon: <Shield className="w-5 h-5" />,
       gradient: 'from-red-500 via-rose-600 to-pink-700',
       bgGradient: 'from-red-50 via-rose-100 to-pink-100',
       shadowColor: 'shadow-red-500/30',
-      hoverShadow: 'hover:shadow-red-500/40',
       description: 'Security and compliance'
     },
     {
       value: 'api',
       label: 'API',
-      mobileLabel: 'API',
       icon: <Globe className="w-5 h-5" />,
       gradient: 'from-indigo-500 via-blue-600 to-cyan-700',
       bgGradient: 'from-indigo-50 via-blue-100 to-cyan-100',
       shadowColor: 'shadow-indigo-500/30',
-      hoverShadow: 'hover:shadow-indigo-500/40',
       description: 'API management'
     },
     {
       value: 'supabase',
       label: 'Supabase',
-      mobileLabel: 'Supabase',
       icon: <Database className="w-5 h-5" />,
       gradient: 'from-green-500 via-emerald-600 to-teal-700',
       bgGradient: 'from-green-50 via-emerald-100 to-teal-100',
       shadowColor: 'shadow-green-500/30',
-      hoverShadow: 'hover:shadow-green-500/40',
       description: 'Supabase configuration'
     },
     {
       value: 'analytics',
       label: 'Analytics',
-      mobileLabel: 'Analytics',
       icon: <TrendingUp className="w-5 h-5" />,
       gradient: 'from-orange-500 via-amber-600 to-yellow-700',
       bgGradient: 'from-orange-50 via-amber-100 to-yellow-100',
       shadowColor: 'shadow-orange-500/30',
-      hoverShadow: 'hover:shadow-orange-500/40',
       description: 'Analytics and insights'
     },
     {
       value: 'realtime',
       label: 'Real-time',
-      mobileLabel: 'Real-time',
       icon: <Zap className="w-5 h-5" />,
       gradient: 'from-yellow-500 via-orange-600 to-red-700',
       bgGradient: 'from-yellow-50 via-orange-100 to-red-100',
       shadowColor: 'shadow-yellow-500/30',
-      hoverShadow: 'hover:shadow-yellow-500/40',
       description: 'Real-time features'
     }
   ];
@@ -162,28 +146,6 @@ const BaaSPlatformDashboard = () => {
     }
   };
 
-  const getTabClassName = (tabValue: string) => {
-    const config = tabConfig.find(tab => tab.value === tabValue);
-    const isActive = activeTab === tabValue;
-    
-    return `
-      relative group flex flex-col items-center justify-center
-      px-3 py-4 sm:px-6 sm:py-6 min-h-[100px] sm:min-h-[120px]
-      text-xs sm:text-sm font-medium rounded-2xl
-      transition-all duration-500 ease-out
-      border-2 shadow-lg ${config?.shadowColor}
-      ${isActive 
-        ? `bg-gradient-to-br ${config?.bgGradient} border-transparent ${config?.shadowColor} shadow-2xl scale-105 z-10 ring-2 ring-white/50` 
-        : `bg-white/80 backdrop-blur-sm border-gray-200/50 hover:border-gray-300/70 hover:bg-white/90 ${config?.hoverShadow}`
-      }
-      transform hover:scale-105 hover:-translate-y-2
-      focus:outline-none focus:ring-4 focus:ring-blue-500/20 focus:ring-offset-2
-      overflow-hidden
-      before:absolute before:inset-0 before:bg-gradient-to-br before:${config?.gradient} before:opacity-0 before:transition-opacity before:duration-500
-      ${isActive ? 'before:opacity-10' : 'hover:before:opacity-5'}
-    `;
-  };
-
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-purple-50/30 p-4 md:p-6">
       <div className="max-w-7xl mx-auto space-y-8">
@@ -222,168 +184,185 @@ const BaaSPlatformDashboard = () => {
           ))}
         </div>
 
-        {/* Enhanced Main Platform Tabs with Vertical Appeal */}
+        {/* Main Platform Tabs with Vertical Design */}
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          {/* Mobile-First Tab Navigation with Enhanced Vertical Design */}
-          <div className="mb-8 overflow-x-auto">
-            <TabsList className="grid grid-cols-4 sm:grid-cols-4 lg:grid-cols-8 gap-3 sm:gap-4 bg-transparent p-3 h-auto min-w-max lg:min-w-full">
-              {tabConfig.map((tab) => (
-                <TabsTrigger
-                  key={tab.value}
-                  value={tab.value}
-                  className={getTabClassName(tab.value)}
-                  onClick={() => setActiveTab(tab.value)}
-                >
-                  <div className="flex flex-col items-center gap-2 sm:gap-3 relative z-10">
-                    {/* Enhanced Icon with better styling */}
+          <div className="flex flex-col lg:flex-row gap-6">
+            {/* Vertical Tab Navigation */}
+            <div className="lg:w-80 space-y-3">
+              <TabsList className="h-auto w-full bg-transparent p-0 flex flex-col space-y-2">
+                {tabConfig.map((tab) => (
+                  <TabsTrigger
+                    key={tab.value}
+                    value={tab.value}
+                    className={`
+                      w-full h-auto p-0 bg-transparent data-[state=active]:bg-transparent
+                      border-0 shadow-none
+                    `}
+                    onClick={() => setActiveTab(tab.value)}
+                  >
                     <div className={`
-                      p-3 sm:p-4 rounded-xl transition-all duration-500 shadow-lg
+                      w-full p-4 rounded-xl transition-all duration-300 group cursor-pointer
+                      border-2 shadow-lg ${tab.shadowColor}
                       ${activeTab === tab.value 
-                        ? `bg-gradient-to-br ${tab.gradient} text-white shadow-xl scale-110` 
-                        : 'bg-gradient-to-br from-gray-100 to-gray-200 text-gray-600 group-hover:from-gray-200 group-hover:to-gray-300'
+                        ? `bg-gradient-to-br ${tab.bgGradient} border-transparent shadow-2xl scale-105 ring-2 ring-white/50` 
+                        : `bg-white/80 backdrop-blur-sm border-gray-200/50 hover:border-gray-300/70 hover:bg-white/90 hover:shadow-xl hover:scale-102`
                       }
+                      hover:-translate-y-1
                     `}>
-                      {tab.icon}
-                    </div>
-                    
-                    {/* Enhanced Label with better typography */}
-                    <div className="text-center">
-                      <span className={`block font-bold leading-tight text-sm sm:text-base ${
-                        activeTab === tab.value ? 'text-gray-800' : 'text-gray-600 group-hover:text-gray-800'
-                      }`}>
-                        {tab.mobileLabel}
-                      </span>
-                      <span className={`hidden sm:block text-xs leading-tight mt-1 transition-colors duration-300 ${
-                        activeTab === tab.value ? 'text-gray-600' : 'text-gray-500 group-hover:text-gray-600'
-                      }`}>
-                        {tab.description}
-                      </span>
-                    </div>
-                    
-                    {/* Enhanced Active indicator */}
-                    {activeTab === tab.value && (
-                      <div className={`
-                        w-12 h-1.5 rounded-full bg-gradient-to-r ${tab.gradient}
-                        animate-fade-in shadow-lg
-                      `} />
-                    )}
-
-                    {/* Subtle glow effect for active tab */}
-                    {activeTab === tab.value && (
-                      <div className={`
-                        absolute inset-0 rounded-2xl bg-gradient-to-br ${tab.gradient} opacity-10 blur-xl -z-10
-                        animate-pulse
-                      `} />
-                    )}
-                  </div>
-                </TabsTrigger>
-              ))}
-            </TabsList>
-          </div>
-
-          <TabsContent value="overview" className="space-y-6">
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-              {/* Service Status */}
-              <Card className="lg:col-span-2 shadow-xl border-0">
-                <CardHeader className="bg-gradient-to-r from-blue-50 to-purple-50">
-                  <CardTitle className="flex items-center gap-3 text-xl">
-                    <Server className="w-6 h-6 text-blue-600" />
-                    Service Status
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="p-6">
-                  <div className="space-y-4">
-                    {serviceStatus.map((service, index) => (
-                      <div key={index} className="flex items-center justify-between p-4 bg-gradient-to-r from-gray-50 to-gray-100 rounded-xl hover:shadow-md transition-all duration-300">
-                        <div className="flex items-center gap-4">
-                          <div className={`w-4 h-4 rounded-full shadow-lg ${
-                            service.status === 'operational' ? 'bg-green-500 animate-pulse' : 'bg-red-500'
-                          }`}></div>
-                          <span className="font-semibold text-gray-800">{service.name}</span>
+                      <div className="flex items-center gap-4">
+                        {/* Icon */}
+                        <div className={`
+                          p-3 rounded-lg transition-all duration-300 shadow-md
+                          ${activeTab === tab.value 
+                            ? `bg-gradient-to-br ${tab.gradient} text-white shadow-xl` 
+                            : 'bg-gradient-to-br from-gray-100 to-gray-200 text-gray-600 group-hover:from-gray-200 group-hover:to-gray-300'
+                          }
+                        `}>
+                          {tab.icon}
                         </div>
-                        <div className="flex items-center gap-4">
-                          <span className="text-sm text-gray-600 font-medium">{service.uptime}</span>
-                          <Badge className={`${getStatusColor(service.status)} font-medium px-3 py-1`}>
-                            {service.status}
-                          </Badge>
+                        
+                        {/* Content */}
+                        <div className="flex-1 text-left">
+                          <div className={`font-bold text-base leading-tight ${
+                            activeTab === tab.value ? 'text-gray-800' : 'text-gray-600 group-hover:text-gray-800'
+                          }`}>
+                            {tab.label}
+                          </div>
+                          <div className={`text-sm leading-tight mt-1 transition-colors duration-300 ${
+                            activeTab === tab.value ? 'text-gray-600' : 'text-gray-500 group-hover:text-gray-600'
+                          }`}>
+                            {tab.description}
+                          </div>
                         </div>
+
+                        {/* Active indicator */}
+                        {activeTab === tab.value && (
+                          <div className={`
+                            w-1 h-12 rounded-full bg-gradient-to-b ${tab.gradient} shadow-lg
+                          `} />
+                        )}
                       </div>
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
 
-              {/* Enhanced Quick Actions */}
-              <Card className="shadow-xl border-0">
-                <CardHeader className="bg-gradient-to-r from-purple-50 to-blue-50">
-                  <CardTitle className="flex items-center gap-3 text-xl">
-                    <Settings className="w-6 h-6 text-purple-600" />
-                    Quick Actions
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="p-6">
-                  <div className="space-y-4">
-                    <button 
-                      onClick={() => setActiveTab('supabase')}
-                      className="w-full text-left p-4 bg-gradient-to-r from-blue-50 to-blue-100 hover:from-blue-100 hover:to-blue-200 text-blue-700 rounded-xl transition-all duration-300 hover:shadow-lg transform hover:-translate-y-1"
-                    >
-                      <Database className="w-5 h-5 inline mr-3" />
-                      <span className="font-semibold">Configure Supabase</span>
-                    </button>
-                    <button 
-                      onClick={() => setActiveTab('transactions')}
-                      className="w-full text-left p-4 bg-gradient-to-r from-green-50 to-green-100 hover:from-green-100 hover:to-green-200 text-green-700 rounded-xl transition-all duration-300 hover:shadow-lg transform hover:-translate-y-1"
-                    >
-                      <Activity className="w-5 h-5 inline mr-3" />
-                      <span className="font-semibold">Transaction Monitor</span>
-                    </button>
-                    <button 
-                      onClick={() => setActiveTab('security')}
-                      className="w-full text-left p-4 bg-gradient-to-r from-red-50 to-red-100 hover:from-red-100 hover:to-red-200 text-red-700 rounded-xl transition-all duration-300 hover:shadow-lg transform hover:-translate-y-1"
-                    >
-                      <Shield className="w-5 h-5 inline mr-3" />
-                      <span className="font-semibold">Security Center</span>
-                    </button>
-                    <button 
-                      onClick={() => setActiveTab('analytics')}
-                      className="w-full text-left p-4 bg-gradient-to-r from-purple-50 to-purple-100 hover:from-purple-100 hover:to-purple-200 text-purple-700 rounded-xl transition-all duration-300 hover:shadow-lg transform hover:-translate-y-1"
-                    >
-                      <BarChart className="w-5 h-5 inline mr-3" />
-                      <span className="font-semibold">View Analytics</span>
-                    </button>
-                  </div>
-                </CardContent>
-              </Card>
+                      {/* Bottom indicator for active tab */}
+                      {activeTab === tab.value && (
+                        <div className={`
+                          w-16 h-1 rounded-full bg-gradient-to-r ${tab.gradient} mt-3 mx-auto
+                          shadow-lg animate-fade-in
+                        `} />
+                      )}
+                    </div>
+                  </TabsTrigger>
+                ))}
+              </TabsList>
             </div>
-          </TabsContent>
 
-          <TabsContent value="supabase">
-            <SupabaseConfigPanel />
-          </TabsContent>
+            {/* Tab Content */}
+            <div className="flex-1 min-w-0">
+              <TabsContent value="overview" className="mt-0 space-y-6">
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                  {/* Service Status */}
+                  <Card className="lg:col-span-2 shadow-xl border-0">
+                    <CardHeader className="bg-gradient-to-r from-blue-50 to-purple-50">
+                      <CardTitle className="flex items-center gap-3 text-xl">
+                        <Server className="w-6 h-6 text-blue-600" />
+                        Service Status
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent className="p-6">
+                      <div className="space-y-4">
+                        {serviceStatus.map((service, index) => (
+                          <div key={index} className="flex items-center justify-between p-4 bg-gradient-to-r from-gray-50 to-gray-100 rounded-xl hover:shadow-md transition-all duration-300">
+                            <div className="flex items-center gap-4">
+                              <div className={`w-4 h-4 rounded-full shadow-lg ${
+                                service.status === 'operational' ? 'bg-green-500 animate-pulse' : 'bg-red-500'
+                              }`}></div>
+                              <span className="font-semibold text-gray-800">{service.name}</span>
+                            </div>
+                            <div className="flex items-center gap-4">
+                              <span className="text-sm text-gray-600 font-medium">{service.uptime}</span>
+                              <Badge className={`${getStatusColor(service.status)} font-medium px-3 py-1`}>
+                                {service.status}
+                              </Badge>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </CardContent>
+                  </Card>
 
-          <TabsContent value="transactions">
-            <TransactionProcessorPanel />
-          </TabsContent>
+                  {/* Enhanced Quick Actions */}
+                  <Card className="shadow-xl border-0">
+                    <CardHeader className="bg-gradient-to-r from-purple-50 to-blue-50">
+                      <CardTitle className="flex items-center gap-3 text-xl">
+                        <Settings className="w-6 h-6 text-purple-600" />
+                        Quick Actions
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent className="p-6">
+                      <div className="space-y-4">
+                        <button 
+                          onClick={() => setActiveTab('supabase')}
+                          className="w-full text-left p-4 bg-gradient-to-r from-blue-50 to-blue-100 hover:from-blue-100 hover:to-blue-200 text-blue-700 rounded-xl transition-all duration-300 hover:shadow-lg transform hover:-translate-y-1"
+                        >
+                          <Database className="w-5 h-5 inline mr-3" />
+                          <span className="font-semibold">Configure Supabase</span>
+                        </button>
+                        <button 
+                          onClick={() => setActiveTab('transactions')}
+                          className="w-full text-left p-4 bg-gradient-to-r from-green-50 to-green-100 hover:from-green-100 hover:to-green-200 text-green-700 rounded-xl transition-all duration-300 hover:shadow-lg transform hover:-translate-y-1"
+                        >
+                          <Activity className="w-5 h-5 inline mr-3" />
+                          <span className="font-semibold">Transaction Monitor</span>
+                        </button>
+                        <button 
+                          onClick={() => setActiveTab('security')}
+                          className="w-full text-left p-4 bg-gradient-to-r from-red-50 to-red-100 hover:from-red-100 hover:to-red-200 text-red-700 rounded-xl transition-all duration-300 hover:shadow-lg transform hover:-translate-y-1"
+                        >
+                          <Shield className="w-5 h-5 inline mr-3" />
+                          <span className="font-semibold">Security Center</span>
+                        </button>
+                        <button 
+                          onClick={() => setActiveTab('analytics')}
+                          className="w-full text-left p-4 bg-gradient-to-r from-purple-50 to-purple-100 hover:from-purple-100 hover:to-purple-200 text-purple-700 rounded-xl transition-all duration-300 hover:shadow-lg transform hover:-translate-y-1"
+                        >
+                          <BarChart className="w-5 h-5 inline mr-3" />
+                          <span className="font-semibold">View Analytics</span>
+                        </button>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </div>
+              </TabsContent>
 
-          <TabsContent value="infrastructure">
-            <BaaSInfrastructurePanel />
-          </TabsContent>
+              <TabsContent value="supabase" className="mt-0">
+                <SupabaseConfigPanel />
+              </TabsContent>
 
-          <TabsContent value="security">
-            <BaaSSecurityPanel />
-          </TabsContent>
+              <TabsContent value="transactions" className="mt-0">
+                <TransactionProcessorPanel />
+              </TabsContent>
 
-          <TabsContent value="api">
-            <BaaSAPIManagement />
-          </TabsContent>
+              <TabsContent value="infrastructure" className="mt-0">
+                <BaaSInfrastructurePanel />
+              </TabsContent>
 
-          <TabsContent value="analytics">
-            <BaaSAnalyticsDashboard />
-          </TabsContent>
+              <TabsContent value="security" className="mt-0">
+                <BaaSSecurityPanel />
+              </TabsContent>
 
-          <TabsContent value="realtime">
-            <BaaSRealtimePanel />
-          </TabsContent>
+              <TabsContent value="api" className="mt-0">
+                <BaaSAPIManagement />
+              </TabsContent>
+
+              <TabsContent value="analytics" className="mt-0">
+                <BaaSAnalyticsDashboard />
+              </TabsContent>
+
+              <TabsContent value="realtime" className="mt-0">
+                <BaaSRealtimePanel />
+              </TabsContent>
+            </div>
+          </div>
         </Tabs>
       </div>
     </div>
