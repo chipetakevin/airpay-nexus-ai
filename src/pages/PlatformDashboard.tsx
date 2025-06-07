@@ -2,13 +2,13 @@
 import React from 'react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
-import EnterpriseDashboard from '@/components/platform/EnterpriseDashboard';
+import EnhancedEnterpriseDashboard from '@/components/platform/EnhancedEnterpriseDashboard';
 
 const PlatformDashboard = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       <Header />
-      <EnterpriseDashboard />
+      <EnhancedEnterpriseDashboard />
       <Footer />
     </div>
   );
