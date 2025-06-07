@@ -30,6 +30,7 @@ const App = () => (
           <Route path="/platform/baas" element={<BaaSPlatform />} />
           <Route path="/spaza-ai" element={<SpazaAI />} />
           <Route path="/whatsapp-assistant" element={<WhatsAppAssistant />} />
+          <Route path="/ussd-system" element={<USSDSystem />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
