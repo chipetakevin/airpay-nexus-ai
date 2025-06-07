@@ -15,28 +15,27 @@ const PortalHeader = ({ userType, resetUserType }: PortalHeaderProps) => {
   return (
     <div className="flex items-center justify-between">
       <Link to="/">
-        <Button variant="ghost" className="text-white hover:bg-white/20 p-2">
-          <ArrowLeft className="w-5 h-5 mr-2" />
-          <span className="hidden sm:inline">Back to Dashboard</span>
-          <span className="sm:hidden">Back</span>
+        <Button variant="ghost" className="text-white hover:bg-white/20 p-1 text-xs">
+          <ArrowLeft className="w-4 h-4 mr-1" />
+          <span className="hidden sm:inline text-xs">Back</span>
         </Button>
       </Link>
       
       <div className="text-center text-white">
-        <h1 className="text-2xl sm:text-4xl font-bold text-shadow">AirPay Portal</h1>
-        <p className="text-sm sm:text-xl opacity-90 hidden sm:block">Digital Airtime & Data Platform with OneCard Rewards</p>
+        <h1 className="text-lg sm:text-2xl font-bold text-shadow">AirPay Portal</h1>
+        <p className="text-xs sm:text-sm opacity-90 hidden sm:block">OneCard Rewards Platform</p>
         {userType && userType !== 'admin' && (
           <Button 
             onClick={resetUserType}
             variant="ghost" 
-            className="mt-2 text-white hover:bg-white/20 text-xs"
+            className="mt-1 text-white hover:bg-white/20 text-xs p-1"
           >
-            Change Registration Type
+            Change Type
           </Button>
         )}
       </div>
       
-      <div className="w-20"></div>
+      <div className="w-16"></div>
     </div>
   );
 };

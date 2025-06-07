@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { useSearchParams, useNavigate, Link } from 'react-router-dom';
 import { Home, ArrowLeft } from 'lucide-react';
@@ -103,9 +104,11 @@ const Portal = () => {
 
   return (
     <div className="min-h-screen bg-gray-50 pb-20">
-      <PortalHeader userType={userType} resetUserType={resetUserType} />
+      <div className="bg-gradient-to-r from-blue-600 to-purple-600 p-2">
+        <PortalHeader userType={userType} resetUserType={resetUserType} />
+      </div>
       
-      <main className="container mx-auto px-4">
+      <main className="container mx-auto px-4 -mt-1">
         <PortalTabs 
           activeTab={activeTab}
           showAdminTab={showAdminTab}
