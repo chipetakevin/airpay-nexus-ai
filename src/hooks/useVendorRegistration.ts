@@ -151,12 +151,12 @@ export const useVendorRegistration = () => {
       
       toast({
         title: "Vendor Registration Successful! 🎉",
-        description: `OneCard Gold created: ****${vendorId.slice(-4)}. Redirecting to OneCard Dashboard now!`,
+        description: `OneCard Gold created: ****${vendorId.slice(-4)}. Redirecting to Smart Deals now!`,
       });
 
-      // Redirect to portal page with onecard tab
+      // Redirect to homepage with deals tab
       setTimeout(() => {
-        navigate('/portal?tab=onecard', { replace: true });
+        navigate('/?tab=deals', { replace: true });
       }, 1500);
     }
   };

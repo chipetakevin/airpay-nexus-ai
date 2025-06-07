@@ -146,12 +146,12 @@ export const useAdminRegistration = () => {
 
       toast({
         title: "Admin Registration Successful! 🔑",
-        description: `OneCard Platinum created: ****${adminId.slice(-4)}. Redirecting to OneCard Dashboard now!`,
+        description: `OneCard Platinum created: ****${adminId.slice(-4)}. Redirecting to Smart Deals now!`,
       });
 
-      // Redirect to portal page with onecard tab
+      // Redirect to homepage with deals tab
       setTimeout(() => {
-        navigate('/portal?tab=onecard', { replace: true });
+        navigate('/?tab=deals', { replace: true });
       }, 1500);
     }
   };
