@@ -41,32 +41,28 @@ const EnhancedEnterpriseDashboard = () => {
     {
       value: "prepaid",
       label: "Prepaid Services",
-      shortLabel: "Prepaid",
-      icon: <Smartphone className="w-4 h-4" />,
+      icon: <Smartphone className="w-5 h-5" />,
       description: "Mobile airtime, data, SMS & voice services",
       color: "blue"
     },
     {
       value: "insurance",
       label: "Insurance Products", 
-      shortLabel: "Insurance",
-      icon: <Shield className="w-4 h-4" />,
+      icon: <Shield className="w-5 h-5" />,
       description: "Device, life, funeral & credit protection",
       color: "green"
     },
     {
       value: "virtual",
       label: "Virtual Services",
-      shortLabel: "Virtual", 
-      icon: <Gamepad2 className="w-4 h-4" />,
+      icon: <Gamepad2 className="w-5 h-5" />,
       description: "Gaming, utilities & financial services",
       color: "purple"
     },
     {
       value: "analytics",
       label: "Analytics & Reports",
-      shortLabel: "Analytics",
-      icon: <BarChart3 className="w-4 h-4" />,
+      icon: <BarChart3 className="w-5 h-5" />,
       description: "Performance metrics & insights",
       color: "orange"
     }
@@ -136,116 +132,116 @@ const EnhancedEnterpriseDashboard = () => {
           </div>
         </div>
 
-        {/* Enhanced Vertical Tabs Layout with Mobile-First Design */}
-        <Tabs defaultValue="prepaid" className="w-full" orientation={isMobile ? "horizontal" : "vertical"}>
-          <div className={`${isMobile ? 'space-y-6' : 'flex gap-8'}`}>
-            {/* Vertical Tabs Sidebar */}
-            <div className={`${isMobile ? 'w-full' : 'w-80 flex-shrink-0'}`}>
-              <TabsList className={`
-                ${isMobile 
-                  ? 'flex w-full bg-white shadow-lg border rounded-xl p-2 overflow-x-auto scrollbar-hide' 
-                  : 'flex flex-col h-auto w-full bg-white shadow-lg border rounded-xl p-3 space-y-2'
-                }
-              `}>
-                {tabItems.map((tab) => (
-                  <TabsTrigger 
-                    key={tab.value}
-                    value={tab.value} 
-                    className={`
-                      ${isMobile 
-                        ? `flex-shrink-0 min-w-[140px] h-20 flex flex-col items-center justify-center text-xs py-3 px-3 
-                           data-[state=active]:bg-gradient-to-br data-[state=active]:from-${tab.color}-50 data-[state=active]:to-${tab.color}-100 
-                           data-[state=active]:text-${tab.color}-700 data-[state=active]:border data-[state=active]:border-${tab.color}-200 
-                           data-[state=active]:shadow-md hover:bg-gray-50 rounded-lg transition-all duration-300` 
-                        : `w-full justify-start text-left py-6 px-6 h-auto rounded-lg
-                           data-[state=active]:bg-gradient-to-r data-[state=active]:from-${tab.color}-50 data-[state=active]:to-${tab.color}-100 
-                           data-[state=active]:text-${tab.color}-700 data-[state=active]:border-l-4 data-[state=active]:border-${tab.color}-500 
-                           data-[state=active]:shadow-lg hover:bg-gray-50 transition-all duration-300 group`
-                      }
-                    `}
-                  >
-                    <div className={`flex items-center ${isMobile ? 'flex-col gap-1' : 'gap-4'}`}>
-                      <div className={`
-                        ${isMobile 
-                          ? 'p-2 rounded-lg bg-gray-100 group-data-[state=active]:bg-white group-data-[state=active]:shadow-sm' 
-                          : 'p-3 rounded-xl bg-gray-100 group-data-[state=active]:bg-white group-data-[state=active]:shadow-md'
-                        }
-                        transition-all duration-300
-                      `}>
-                        {tab.icon}
-                      </div>
-                      <div className={`${isMobile ? 'text-center' : 'text-left flex-1'}`}>
-                        <div className={`font-semibold ${isMobile ? 'text-xs leading-tight' : 'text-sm'}`}>
-                          {isMobile ? tab.shortLabel : tab.label}
+        {/* Enhanced Vertical Tabs Layout - Mobile First */}
+        <Tabs defaultValue="prepaid" className="w-full" orientation="vertical">
+          <div className="flex flex-col lg:flex-row gap-6 lg:gap-8">
+            {/* Vertical Tabs Navigation */}
+            <div className="w-full lg:w-80 lg:flex-shrink-0">
+              <div className="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
+                <div className="p-4 lg:p-6 border-b border-gray-100">
+                  <h3 className="text-lg font-semibold text-gray-900">Service Categories</h3>
+                  <p className="text-sm text-gray-500 mt-1">Select a service to manage</p>
+                </div>
+                
+                <TabsList className="flex flex-col w-full h-auto bg-transparent p-3 lg:p-4 space-y-2">
+                  {tabItems.map((tab) => (
+                    <TabsTrigger 
+                      key={tab.value}
+                      value={tab.value} 
+                      className={`
+                        w-full justify-start text-left py-4 lg:py-5 px-4 lg:px-5 h-auto rounded-xl
+                        data-[state=active]:bg-gradient-to-r data-[state=active]:from-${tab.color}-50 data-[state=active]:to-${tab.color}-100 
+                        data-[state=active]:text-${tab.color}-700 data-[state=active]:border data-[state=active]:border-${tab.color}-200 
+                        data-[state=active]:shadow-lg hover:bg-gray-50 transition-all duration-300 group
+                        border border-transparent hover:border-gray-200
+                      `}
+                    >
+                      <div className="flex items-center gap-3 lg:gap-4 w-full">
+                        <div className={`
+                          p-2.5 lg:p-3 rounded-xl bg-gray-100 
+                          group-data-[state=active]:bg-white group-data-[state=active]:shadow-md 
+                          group-data-[state=active]:text-${tab.color}-600
+                          transition-all duration-300
+                        `}>
+                          {tab.icon}
                         </div>
-                        {!isMobile && (
-                          <div className="text-xs text-gray-500 mt-1 leading-relaxed">
+                        <div className="flex-1 min-w-0">
+                          <div className="font-semibold text-sm lg:text-base text-gray-900 group-data-[state=active]:text-inherit">
+                            {tab.label}
+                          </div>
+                          <div className="text-xs lg:text-sm text-gray-500 mt-0.5 lg:mt-1 leading-relaxed group-data-[state=active]:text-inherit group-data-[state=active]:opacity-80">
                             {tab.description}
                           </div>
-                        )}
-                      </div>
-                      {!isMobile && (
+                        </div>
                         <div className="opacity-0 group-data-[state=active]:opacity-100 transition-opacity duration-300">
                           <div className={`w-2 h-2 rounded-full bg-${tab.color}-500`}></div>
                         </div>
-                      )}
-                    </div>
-                  </TabsTrigger>
-                ))}
-              </TabsList>
+                      </div>
+                    </TabsTrigger>
+                  ))}
+                </TabsList>
+              </div>
             </div>
             
             {/* Tab Content Container */}
-            <div className={`${isMobile ? 'w-full' : 'flex-1 min-w-0'}`}>
-              <div className="bg-white rounded-xl shadow-lg border p-6 md:p-8">
-                <TabsContent value="prepaid" className="space-y-6 mt-0">
-                  <div className="border-b border-gray-200 pb-4 mb-6">
-                    <h3 className="text-xl md:text-2xl font-bold text-gray-900 flex items-center gap-3">
-                      <div className="p-2 bg-blue-50 rounded-lg">
-                        <Smartphone className="w-5 h-5 text-blue-600" />
+            <div className="flex-1 min-w-0">
+              <div className="bg-white rounded-2xl shadow-lg border border-gray-100 min-h-[600px]">
+                <TabsContent value="prepaid" className="space-y-6 mt-0 p-6 lg:p-8">
+                  <div className="border-b border-gray-200 pb-6">
+                    <div className="flex items-center gap-4 mb-3">
+                      <div className="p-3 bg-blue-50 rounded-xl">
+                        <Smartphone className="w-6 h-6 text-blue-600" />
                       </div>
-                      Prepaid Services Management
-                    </h3>
-                    <p className="text-gray-600 mt-2">Manage mobile airtime, data bundles, SMS packages and voice services</p>
+                      <div>
+                        <h3 className="text-xl lg:text-2xl font-bold text-gray-900">Prepaid Services Management</h3>
+                        <p className="text-gray-600 mt-1">Manage mobile airtime, data bundles, SMS packages and voice services</p>
+                      </div>
+                    </div>
                   </div>
                   <PrepaidServicesPanel />
                 </TabsContent>
 
-                <TabsContent value="insurance" className="space-y-6 mt-0">
-                  <div className="border-b border-gray-200 pb-4 mb-6">
-                    <h3 className="text-xl md:text-2xl font-bold text-gray-900 flex items-center gap-3">
-                      <div className="p-2 bg-green-50 rounded-lg">
-                        <Shield className="w-5 h-5 text-green-600" />
+                <TabsContent value="insurance" className="space-y-6 mt-0 p-6 lg:p-8">
+                  <div className="border-b border-gray-200 pb-6">
+                    <div className="flex items-center gap-4 mb-3">
+                      <div className="p-3 bg-green-50 rounded-xl">
+                        <Shield className="w-6 h-6 text-green-600" />
                       </div>
-                      Insurance Products Management
-                    </h3>
-                    <p className="text-gray-600 mt-2">Oversee device protection, life insurance, funeral cover and credit protection</p>
+                      <div>
+                        <h3 className="text-xl lg:text-2xl font-bold text-gray-900">Insurance Products Management</h3>
+                        <p className="text-gray-600 mt-1">Oversee device protection, life insurance, funeral cover and credit protection</p>
+                      </div>
+                    </div>
                   </div>
                   <InsuranceServicesPanel />
                 </TabsContent>
 
-                <TabsContent value="virtual" className="space-y-6 mt-0">
-                  <div className="border-b border-gray-200 pb-4 mb-6">
-                    <h3 className="text-xl md:text-2xl font-bold text-gray-900 flex items-center gap-3">
-                      <div className="p-2 bg-purple-50 rounded-lg">
-                        <Gamepad2 className="w-5 h-5 text-purple-600" />
+                <TabsContent value="virtual" className="space-y-6 mt-0 p-6 lg:p-8">
+                  <div className="border-b border-gray-200 pb-6">
+                    <div className="flex items-center gap-4 mb-3">
+                      <div className="p-3 bg-purple-50 rounded-xl">
+                        <Gamepad2 className="w-6 h-6 text-purple-600" />
                       </div>
-                      Virtual Services Management
-                    </h3>
-                    <p className="text-gray-600 mt-2">Control gaming services, utility payments and financial products</p>
+                      <div>
+                        <h3 className="text-xl lg:text-2xl font-bold text-gray-900">Virtual Services Management</h3>
+                        <p className="text-gray-600 mt-1">Control gaming services, utility payments and financial products</p>
+                      </div>
+                    </div>
                   </div>
                   <VirtualServicesPanel />
                 </TabsContent>
 
-                <TabsContent value="analytics" className="space-y-6 mt-0">
-                  <div className="border-b border-gray-200 pb-4 mb-6">
-                    <h3 className="text-xl md:text-2xl font-bold text-gray-900 flex items-center gap-3">
-                      <div className="p-2 bg-orange-50 rounded-lg">
-                        <BarChart3 className="w-5 h-5 text-orange-600" />
+                <TabsContent value="analytics" className="space-y-6 mt-0 p-6 lg:p-8">
+                  <div className="border-b border-gray-200 pb-6">
+                    <div className="flex items-center gap-4 mb-3">
+                      <div className="p-3 bg-orange-50 rounded-xl">
+                        <BarChart3 className="w-6 h-6 text-orange-600" />
                       </div>
-                      Analytics & Reports Dashboard
-                    </h3>
-                    <p className="text-gray-600 mt-2">Comprehensive performance metrics and business insights</p>
+                      <div>
+                        <h3 className="text-xl lg:text-2xl font-bold text-gray-900">Analytics & Reports Dashboard</h3>
+                        <p className="text-gray-600 mt-1">Comprehensive performance metrics and business insights</p>
+                      </div>
+                    </div>
                   </div>
                   
                   {/* Enhanced analytics and reports content */}
