@@ -176,7 +176,7 @@ const ScanToTextDashboard = () => {
                         <div className="flex items-center gap-2 md:gap-4 flex-shrink-0">
                           <span className="text-xs text-gray-600 hidden sm:block">Load: {agent.load}</span>
                           <span className="text-xs text-green-600">Acc: {agent.accuracy}</span>
-                          <Badge className={getStatusColor(agent.status)} size="sm">
+                          <Badge className={getStatusColor(agent.status)}>
                             {agent.status}
                           </Badge>
                         </div>

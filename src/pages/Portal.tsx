@@ -3,11 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import PortalHeader from '@/components/PortalHeader';
 import PortalTabs from '@/components/PortalTabs';
-import CustomerRegistration from '@/components/CustomerRegistration';
-import VendorRegistration from '@/components/VendorRegistration';
-import AdminRegistration from '@/components/AdminRegistration';
-import OneCardDashboard from '@/components/OneCardDashboard';
-import { useToast } from "@/components/ui/use-toast"
+import { useToast } from "@/hooks/use-toast"
 import WhatsAppFloatingButton from '@/components/WhatsAppFloatingButton';
 
 type UserType = 'customer' | 'vendor' | 'admin' | null;
@@ -16,6 +12,8 @@ const Portal = () => {
   const [searchParams] = useSearchParams();
   const [activeTab, setActiveTab] = useState(searchParams.get('tab') || 'onecard');
   const [userType, setUserType] = useState<UserType>(null);
+  const [showAdminTab, setShowAdminTab] = useState(false);
+  const [isAdminAuthenticated, setIsAdminAuthenticated] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast()
 
@@ -39,23 +37,67 @@ const Portal = () => {
     navigate(`?tab=${activeTab}`, { replace: true });
   }, [activeTab, navigate]);
 
+  useEffect(() => {
+    // Show admin tab based on authentication and user type
+    const isAuthenticated = localStorage.getItem('userAuthenticated') === 'true';
+    const storedCredentials = localStorage.getItem('userCredentials');
+    
+    if (isAuthenticated && storedCredentials) {
+      try {
+        const credentials = JSON.parse(storedCredentials);
+        if (credentials.userType === 'admin') {
+          setShowAdminTab(true);
+        }
+      } catch (error) {
+        console.error('Error parsing credentials:', error);
+      }
+    }
+  }, [userType]);
+
   const resetUserType = () => {
     setUserType(null);
     setActiveTab('registration');
   };
 
-  const renderTabContent = () => {
-    switch (activeTab) {
-      case 'registration':
-        return <CustomerRegistration />;
-      case 'vendor':
-        return <VendorRegistration />;
-      case 'admin':
-        return <AdminRegistration />;
-      case 'onecard':
-        return <OneCardDashboard />;
-      default:
-        return <OneCardDashboard />;
+  const isTabAllowed = (tabValue: string) => {
+    const isAuthenticated = localStorage.getItem('userAuthenticated') === 'true';
+    const storedCredentials = localStorage.getItem('userCredentials');
+    
+    if (!isAuthenticated) {
+      return ['registration', 'vendor', 'admin-reg'].includes(tabValue);
+    }
+
+    if (storedCredentials) {
+      try {
+        const credentials = JSON.parse(storedCredentials);
+        const currentUserType = credentials.userType;
+
+        switch (tabValue) {
+          case 'registration':
+            return currentUserType === 'customer';
+          case 'vendor':
+            return currentUserType === 'vendor';
+          case 'onecard':
+            return true; // Available to all authenticated users
+          case 'admin-reg':
+            return currentUserType === 'admin';
+          case 'admin':
+            return currentUserType === 'admin' && isAdminAuthenticated;
+          default:
+            return false;
+        }
+      } catch (error) {
+        console.error('Error parsing credentials:', error);
+        return false;
+      }
+    }
+
+    return false;
+  };
+
+  const handleTabChange = (value: string) => {
+    if (isTabAllowed(value)) {
+      setActiveTab(value);
     }
   };
 
@@ -65,14 +107,12 @@ const Portal = () => {
       
       <main className="container mx-auto px-4 py-8">
         <PortalTabs 
-          activeTab={activeTab} 
-          setActiveTab={setActiveTab}
-          userType={userType}
+          activeTab={activeTab}
+          showAdminTab={showAdminTab}
+          isTabAllowed={isTabAllowed}
+          handleTabChange={handleTabChange}
+          setIsAdminAuthenticated={setIsAdminAuthenticated}
         />
-        
-        <div className="mt-8">
-          {renderTabContent()}
-        </div>
       </main>
       
       <WhatsAppFloatingButton />
