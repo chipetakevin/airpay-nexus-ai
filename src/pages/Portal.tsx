@@ -1,7 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import { useSearchParams, useNavigate, Link } from 'react-router-dom';
-import { Home, ArrowLeft } from 'lucide-react';
+import { useSearchParams, useNavigate } from 'react-router-dom';
 import PortalHeader from '@/components/PortalHeader';
 import PortalTabs from '@/components/PortalTabs';
 import { useToast } from "@/hooks/use-toast"
@@ -103,7 +102,7 @@ const Portal = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 pb-20">
+    <div className="min-h-screen bg-gray-50">
       <div className="bg-gradient-to-r from-blue-600 to-purple-600 p-2">
         <PortalHeader userType={userType} resetUserType={resetUserType} />
       </div>
@@ -117,24 +116,6 @@ const Portal = () => {
           setIsAdminAuthenticated={setIsAdminAuthenticated}
         />
       </main>
-      
-      {/* Appealing Exit Tab at Bottom */}
-      <div className="fixed bottom-0 left-0 right-0 z-50">
-        <div className="bg-gradient-to-r from-gray-800 via-gray-900 to-gray-800 border-t border-gray-600 shadow-2xl">
-          <div className="container mx-auto px-4">
-            <Link 
-              to="/" 
-              className="group flex items-center justify-center space-x-3 py-4 text-white hover:text-blue-300 transition-all duration-300 transform hover:scale-105"
-            >
-              <div className="flex items-center space-x-2 bg-white/10 backdrop-blur-sm rounded-full px-6 py-3 group-hover:bg-white/20 transition-all duration-300 shadow-lg">
-                <ArrowLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform duration-300" />
-                <span className="font-medium text-lg">Return to Homepage</span>
-                <Home className="w-5 h-5 group-hover:scale-110 transition-transform duration-300" />
-              </div>
-            </Link>
-          </div>
-        </div>
-      </div>
       
       <WhatsAppFloatingButton />
     </div>
