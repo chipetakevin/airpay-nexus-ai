@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { ChevronDown, Menu, X, Zap, MessageSquare, Star, Settings, Users } from 'lucide-react';
+import { ChevronDown, Menu, X, Zap, MessageSquare, Star, Settings, Users, Database, Network, Smartphone, BarChart3 } from 'lucide-react';
 import { useMobileAuth } from '@/hooks/useMobileAuth';
 import { useToast } from '@/hooks/use-toast';
 
@@ -30,23 +30,65 @@ const Header = () => {
   };
 
   const servicesMenuItems = [
+    // Devine Mobile AI Category
     {
-      title: "Smart Deals",
-      description: "AI-powered airtime & data deals",
-      icon: <Zap className="w-5 h-5" />,
-      href: "/portal?tab=deals"
+      category: "Devine Mobile AI",
+      items: [
+        {
+          title: "Devine Mobile AI Assistant",
+          description: "Intelligent business assistant",
+          icon: <MessageSquare className="w-5 h-5" />,
+          href: "/spaza-ai"
+        }
+      ]
     },
+    // Devine Mobile Platform Category
     {
-      title: "Spaza AI",
-      description: "Intelligent business assistant",
-      icon: <MessageSquare className="w-5 h-5" />,
-      href: "/spaza-ai"
+      category: "Devine Mobile Platform",
+      items: [
+        {
+          title: "Enterprise Dashboard",
+          description: "Advanced distribution management",
+          icon: <Database className="w-5 h-5" />,
+          href: "/platform/dashboard"
+        },
+        {
+          title: "Agent Network",
+          description: "Multi-tier agent management",
+          icon: <Network className="w-5 h-5" />,
+          href: "/platform/agents"
+        },
+        {
+          title: "Bulk Operations",
+          description: "Mass airtime & data distribution",
+          icon: <Smartphone className="w-5 h-5" />,
+          href: "/platform/bulk"
+        },
+        {
+          title: "Analytics Suite",
+          description: "Enterprise reporting & insights",
+          icon: <BarChart3 className="w-5 h-5" />,
+          href: "/platform/analytics"
+        }
+      ]
     },
+    // Original Services Category
     {
-      title: "OneCard System",
-      description: "Digital wallet & payments",
-      icon: <Star className="w-5 h-5" />,
-      href: "/portal?tab=onecard"
+      category: "Core Services",
+      items: [
+        {
+          title: "Smart Deals",
+          description: "AI-powered airtime & data deals",
+          icon: <Zap className="w-5 h-5" />,
+          href: "/portal?tab=deals"
+        },
+        {
+          title: "OneCard System",
+          description: "Digital wallet & payments",
+          icon: <Star className="w-5 h-5" />,
+          href: "/portal?tab=onecard"
+        }
+      ]
     }
   ];
 
@@ -81,22 +123,29 @@ const Header = () => {
               </button>
               
               {isServicesOpen && (
-                <div className="absolute top-full left-0 mt-2 w-80 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-50">
-                  {servicesMenuItems.map((item, index) => (
-                    <Link
-                      key={index}
-                      to={item.href}
-                      onClick={() => setIsServicesOpen(false)}
-                      className="flex items-start space-x-3 px-4 py-3 hover:bg-gray-50 transition-colors"
-                    >
-                      <div className="text-blue-600 mt-1">
-                        {item.icon}
+                <div className="absolute top-full left-0 mt-2 w-96 bg-white rounded-lg shadow-lg border border-gray-200 py-4 z-50 max-h-96 overflow-y-auto">
+                  {servicesMenuItems.map((category, categoryIndex) => (
+                    <div key={categoryIndex} className="mb-4 last:mb-0">
+                      <div className="px-4 py-2 text-xs font-semibold text-gray-500 uppercase tracking-wider border-b border-gray-100 mb-2">
+                        {category.category}
                       </div>
-                      <div>
-                        <div className="font-medium text-gray-900">{item.title}</div>
-                        <div className="text-sm text-gray-500">{item.description}</div>
-                      </div>
-                    </Link>
+                      {category.items.map((item, itemIndex) => (
+                        <Link
+                          key={itemIndex}
+                          to={item.href}
+                          onClick={() => setIsServicesOpen(false)}
+                          className="flex items-start space-x-3 px-4 py-3 hover:bg-gray-50 transition-colors"
+                        >
+                          <div className="text-blue-600 mt-1">
+                            {item.icon}
+                          </div>
+                          <div>
+                            <div className="font-medium text-gray-900">{item.title}</div>
+                            <div className="text-sm text-gray-500">{item.description}</div>
+                          </div>
+                        </Link>
+                      ))}
+                    </div>
                   ))}
                 </div>
               )}
@@ -161,16 +210,23 @@ const Header = () => {
               {/* Mobile Services */}
               <div className="space-y-2">
                 <div className="px-3 py-2 text-gray-900 font-medium">Services</div>
-                {servicesMenuItems.map((item, index) => (
-                  <Link
-                    key={index}
-                    to={item.href}
-                    onClick={() => setIsMenuOpen(false)}
-                    className="flex items-center space-x-3 px-6 py-2 text-gray-600 hover:text-blue-600"
-                  >
-                    {item.icon}
-                    <span>{item.title}</span>
-                  </Link>
+                {servicesMenuItems.map((category, categoryIndex) => (
+                  <div key={categoryIndex} className="mb-4">
+                    <div className="px-6 py-1 text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                      {category.category}
+                    </div>
+                    {category.items.map((item, itemIndex) => (
+                      <Link
+                        key={itemIndex}
+                        to={item.href}
+                        onClick={() => setIsMenuOpen(false)}
+                        className="flex items-center space-x-3 px-8 py-2 text-gray-600 hover:text-blue-600"
+                      >
+                        {item.icon}
+                        <span>{item.title}</span>
+                      </Link>
+                    ))}
+                  </div>
                 ))}
               </div>
               
