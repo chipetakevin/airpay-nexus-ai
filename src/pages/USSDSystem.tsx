@@ -2,7 +2,7 @@
 import React from 'react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
-import { Smartphone, X } from 'lucide-react';
+import { X } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import NetworkStatus from '@/components/ussd/NetworkStatus';
 import USSDManagement from '@/components/ussd/USSDManagement';
@@ -25,13 +25,8 @@ const USSDSystem = () => {
       </div>
       
       <div className="container mx-auto px-4 py-8">
-        {/* Hero Section - Redesigned */}
+        {/* Hero Section - Redesigned without logo */}
         <div className="text-center mb-12">
-          <div className="flex justify-center mb-6">
-            <div className="bg-gradient-to-r from-blue-600 to-purple-600 p-4 rounded-2xl shadow-lg">
-              <Smartphone className="w-12 h-12 text-white" />
-            </div>
-          </div>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto font-medium">
             Universal access to mobile services through USSD codes across all networks
           </p>
