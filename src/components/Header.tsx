@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Smartphone, Menu, X, Crown, Zap, Brain, MessageCircle, Scan, ShoppingCart, Terminal, Settings, FileCheck } from 'lucide-react';
@@ -75,6 +74,15 @@ const Header = () => {
                         <div>
                           <div className="font-medium text-gray-900 group-hover:text-blue-600">Mobile Porting & RICA</div>
                           <div className="text-xs text-gray-500">SIM porting & RICA registration</div>
+                        </div>
+                      </Link>
+                      <Link to="/baas-platform" className="flex items-center gap-3 p-3 rounded-lg hover:bg-blue-50 transition-colors group">
+                        <div className="p-2 bg-purple-100 rounded-lg">
+                          <Brain className="w-4 h-4 text-purple-600" />
+                        </div>
+                        <div>
+                          <div className="font-medium text-gray-900 group-hover:text-blue-600">Mobile Devine BaaS Portal</div>
+                          <div className="text-xs text-gray-500">Advanced BaaS management portal</div>
                         </div>
                       </Link>
                     </div>
@@ -229,6 +237,10 @@ const Header = () => {
             <Link to="/devine-baas" className="flex items-center gap-3 p-3 rounded-lg hover:bg-blue-50 transition-colors ml-4" onClick={toggleMenu}>
               <FileCheck className="w-4 h-4 text-orange-600" />
               <span className="font-medium">Mobile Porting & RICA</span>
+            </Link>
+            <Link to="/baas-platform" className="flex items-center gap-3 p-3 rounded-lg hover:bg-blue-50 transition-colors ml-4" onClick={toggleMenu}>
+              <Brain className="w-4 h-4 text-purple-600" />
+              <span className="font-medium">Mobile Devine BaaS Portal</span>
             </Link>
             <Link to="/portal?tab=onecard" className="flex items-center gap-3 p-3 rounded-lg hover:bg-blue-50 transition-colors" onClick={toggleMenu}>
               <Zap className="w-4 h-4 text-blue-600" />
