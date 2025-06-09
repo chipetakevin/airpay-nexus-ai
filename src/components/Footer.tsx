@@ -77,15 +77,7 @@ const Footer = () => {
             <div className="space-y-2">
               <div className="flex items-center space-x-2 text-gray-400">
                 <Mail className="w-4 h-4" />
-                <span className="text-sm">support@devine-mobile.com</span>
-              </div>
-              <div className="flex items-center space-x-2 text-gray-400">
-                <Phone className="w-4 h-4" />
-                <span className="text-sm">+27 11 123 4567</span>
-              </div>
-              <div className="flex items-center space-x-2 text-gray-400">
-                <MapPin className="w-4 h-4" />
-                <span className="text-sm">Johannesburg, South Africa</span>
+                <span className="text-sm">OneCard@myonecard.ai</span>
               </div>
             </div>
           </div>
