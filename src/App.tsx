@@ -9,10 +9,11 @@ import Portal from "./pages/Portal";
 import MasterDashboard from "./pages/MasterDashboard";
 import PlatformDashboard from "./pages/PlatformDashboard";
 import BaaSPlatform from "./pages/BaaSPlatform";
-import SpazaAI from "./pages/SpazaAI";
+import DevineBaaS from "./pages/DevineBaaS";
 import WhatsAppAssistant from "./pages/WhatsAppAssistant";
-import USSDSystem from "./pages/USSDSystem";
 import ScanToTextAI from "./pages/ScanToTextAI";
+import SpazaAI from "./pages/SpazaAI";
+import USSDSystem from "./pages/USSDSystem";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -26,13 +27,14 @@ const App = () => (
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/portal" element={<Portal />} />
-          <Route path="/dashboard" element={<MasterDashboard />} />
-          <Route path="/platform" element={<PlatformDashboard />} />
-          <Route path="/platform/baas" element={<BaaSPlatform />} />
-          <Route path="/spaza-ai" element={<SpazaAI />} />
+          <Route path="/master-dashboard" element={<MasterDashboard />} />
+          <Route path="/platform-dashboard" element={<PlatformDashboard />} />
+          <Route path="/baas-platform" element={<BaaSPlatform />} />
+          <Route path="/devine-baas" element={<DevineBaaS />} />
           <Route path="/whatsapp-assistant" element={<WhatsAppAssistant />} />
+          <Route path="/scan-to-text-ai" element={<ScanToTextAI />} />
+          <Route path="/spaza-ai" element={<SpazaAI />} />
           <Route path="/ussd-system" element={<USSDSystem />} />
-          <Route path="/scan-to-text" element={<ScanToTextAI />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
