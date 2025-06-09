@@ -1,4 +1,3 @@
-
 import React, { useState, useMemo } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -28,6 +27,7 @@ const EnhancedDealsGrid: React.FC<EnhancedDealsGridProps> = ({
       {
         id: 'dm-001',
         vendor_id: 'devine-mobile',
+        vendor_name: 'Devine Mobile',
         network: 'Devine Mobile',
         deal_type: 'airtime',
         amount: 50,
@@ -46,6 +46,7 @@ const EnhancedDealsGrid: React.FC<EnhancedDealsGridProps> = ({
       {
         id: 'dm-002',
         vendor_id: 'devine-mobile',
+        vendor_name: 'Devine Mobile',
         network: 'Devine Mobile',
         deal_type: 'data',
         amount: 1000,
@@ -64,6 +65,7 @@ const EnhancedDealsGrid: React.FC<EnhancedDealsGridProps> = ({
       {
         id: 'dm-003',
         vendor_id: 'devine-mobile',
+        vendor_name: 'Devine Mobile',
         network: 'Devine Mobile',
         deal_type: 'data',
         amount: 5000,
