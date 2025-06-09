@@ -1,20 +1,55 @@
 
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Smartphone, Mail, Phone, MapPin, ExternalLink } from 'lucide-react';
+import { Mail, ExternalLink } from 'lucide-react';
 
 const Footer = () => {
+  // Futuristic Devine Mobile Logo Component
+  const DevineLogoIcon = () => (
+    <div className="relative w-8 h-8 flex items-center justify-center">
+      {/* Outer ring with gradient */}
+      <div className="absolute inset-0 rounded-full bg-gradient-to-br from-blue-600 via-purple-600 to-teal-500 p-0.5">
+        <div className="w-full h-full rounded-full bg-gray-900 flex items-center justify-center">
+          {/* Inner design - Signal waves and diamond */}
+          <div className="relative w-6 h-6">
+            {/* Central diamond */}
+            <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-2 h-2 bg-gradient-to-br from-blue-400 to-purple-400 rotate-45 rounded-sm"></div>
+            
+            {/* Signal waves */}
+            <div className="absolute top-1/2 left-1 transform -translate-y-1/2 w-1 h-1 bg-gradient-to-r from-blue-400 to-transparent rounded-full opacity-70"></div>
+            <div className="absolute top-1/2 left-0.5 transform -translate-y-1/2 w-0.5 h-2 bg-gradient-to-r from-blue-300 to-transparent rounded-full opacity-50"></div>
+            
+            <div className="absolute top-1/2 right-1 transform -translate-y-1/2 w-1 h-1 bg-gradient-to-l from-purple-400 to-transparent rounded-full opacity-70"></div>
+            <div className="absolute top-1/2 right-0.5 transform -translate-y-1/2 w-0.5 h-2 bg-gradient-to-l from-purple-300 to-transparent rounded-full opacity-50"></div>
+            
+            {/* Network nodes */}
+            <div className="absolute top-1 left-2 w-0.5 h-0.5 bg-teal-400 rounded-full"></div>
+            <div className="absolute bottom-1 right-2 w-0.5 h-0.5 bg-teal-400 rounded-full"></div>
+          </div>
+        </div>
+      </div>
+      
+      {/* Subtle glow effect */}
+      <div className="absolute inset-0 rounded-full bg-gradient-to-br from-blue-600/20 via-purple-600/20 to-teal-500/20 blur-sm scale-110"></div>
+    </div>
+  );
+
   return (
     <footer className="bg-gray-900 text-white">
       <div className="container mx-auto px-4 py-12">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* Logo and Description */}
           <div className="space-y-4">
-            <div className="flex items-center space-x-2">
-              <div className="w-8 h-8 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
-                <Smartphone className="w-5 h-5 text-white" />
+            <div className="flex items-center space-x-3">
+              <DevineLogoIcon />
+              <div className="flex flex-col">
+                <span className="text-xl font-bold bg-gradient-to-r from-blue-400 via-purple-400 to-teal-400 bg-clip-text text-transparent leading-tight">
+                  Devine
+                </span>
+                <span className="text-xs text-gray-400 font-medium tracking-wider uppercase -mt-1">
+                  Mobile
+                </span>
               </div>
-              <span className="text-xl font-bold">Devine Mobile</span>
             </div>
             <p className="text-gray-400 text-sm">
               Empowering South Africa with innovative mobile solutions, from airtime deals to enterprise platforms.

@@ -3,7 +3,6 @@ import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { 
-  Smartphone, 
   Menu, 
   X, 
   ChevronDown,
@@ -25,6 +24,36 @@ const Header = () => {
   const [isPlatformDropdownOpen, setIsPlatformDropdownOpen] = useState(false);
 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
+
+  // Futuristic Devine Mobile Logo Component
+  const DevineLogoIcon = () => (
+    <div className="relative w-8 h-8 flex items-center justify-center">
+      {/* Outer ring with gradient */}
+      <div className="absolute inset-0 rounded-full bg-gradient-to-br from-blue-600 via-purple-600 to-teal-500 p-0.5">
+        <div className="w-full h-full rounded-full bg-white flex items-center justify-center">
+          {/* Inner design - Signal waves and diamond */}
+          <div className="relative w-6 h-6">
+            {/* Central diamond */}
+            <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-2 h-2 bg-gradient-to-br from-blue-600 to-purple-600 rotate-45 rounded-sm"></div>
+            
+            {/* Signal waves */}
+            <div className="absolute top-1/2 left-1 transform -translate-y-1/2 w-1 h-1 bg-gradient-to-r from-blue-500 to-transparent rounded-full opacity-70"></div>
+            <div className="absolute top-1/2 left-0.5 transform -translate-y-1/2 w-0.5 h-2 bg-gradient-to-r from-blue-400 to-transparent rounded-full opacity-50"></div>
+            
+            <div className="absolute top-1/2 right-1 transform -translate-y-1/2 w-1 h-1 bg-gradient-to-l from-purple-500 to-transparent rounded-full opacity-70"></div>
+            <div className="absolute top-1/2 right-0.5 transform -translate-y-1/2 w-0.5 h-2 bg-gradient-to-l from-purple-400 to-transparent rounded-full opacity-50"></div>
+            
+            {/* Network nodes */}
+            <div className="absolute top-1 left-2 w-0.5 h-0.5 bg-teal-500 rounded-full"></div>
+            <div className="absolute bottom-1 right-2 w-0.5 h-0.5 bg-teal-500 rounded-full"></div>
+          </div>
+        </div>
+      </div>
+      
+      {/* Subtle glow effect */}
+      <div className="absolute inset-0 rounded-full bg-gradient-to-br from-blue-600/20 via-purple-600/20 to-teal-500/20 blur-sm scale-110"></div>
+    </div>
+  );
 
   const platformServices = [
     {
@@ -78,7 +107,12 @@ const Header = () => {
     {
       title: 'USSD System',
       description: 'Universal mobile access platform',
-      icon: <Smartphone className="w-5 h-5 text-orange-600" />,
+      icon: <div className="w-5 h-5 relative">
+        <div className="absolute inset-0 bg-gradient-to-br from-orange-500 to-orange-600 rounded opacity-20"></div>
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-2 h-2 bg-orange-600 rounded-full"></div>
+        <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-3 h-0.5 bg-orange-500 rounded-full"></div>
+        <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-3 h-0.5 bg-orange-500 rounded-full"></div>
+      </div>,
       href: '/ussd-system',
       badge: 'Universal',
       stats: '100% Coverage',
@@ -103,13 +137,16 @@ const Header = () => {
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
-          <Link to="/" className="flex items-center space-x-2">
-            <div className="w-8 h-8 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
-              <Smartphone className="w-5 h-5 text-white" />
+          <Link to="/" className="flex items-center space-x-3 group">
+            <DevineLogoIcon />
+            <div className="flex flex-col">
+              <span className="text-xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-teal-500 bg-clip-text text-transparent leading-tight">
+                Devine
+              </span>
+              <span className="text-xs text-gray-500 font-medium tracking-wider uppercase -mt-1">
+                Mobile
+              </span>
             </div>
-            <span className="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-              Devine Mobile
-            </span>
           </Link>
 
           {/* Desktop Navigation */}
