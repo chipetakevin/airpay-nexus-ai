@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Mail, ExternalLink } from 'lucide-react';
@@ -45,10 +44,10 @@ const Footer = () => {
             <div className="flex items-center space-x-3">
               <DevineLogoIcon />
               <div className="flex flex-col">
-                <span className="text-xl font-bold bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-600 bg-clip-text text-transparent leading-tight">
+                <span className="text-xl font-bold bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-600 bg-clip-text text-transparent leading-tight font-montserrat">
                   Devine
                 </span>
-                <span className="text-xs font-light tracking-[0.2em] uppercase -mt-1 bg-gradient-to-r from-gray-400 via-gray-500 to-gray-600 bg-clip-text text-transparent">
+                <span className="text-xs font-light tracking-[0.25em] uppercase -mt-1 bg-gradient-to-r from-gray-400 via-gray-500 to-gray-600 bg-clip-text text-transparent font-montserrat">
                   Mobile
                 </span>
               </div>
