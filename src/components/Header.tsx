@@ -25,33 +25,35 @@ const Header = () => {
 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
 
-  // Futuristic Devine Mobile Logo Component
+  // Enhanced Futuristic Devine Mobile Logo Component
   const DevineLogoIcon = () => (
     <div className="relative w-8 h-8 flex items-center justify-center">
-      {/* Outer ring with gradient */}
-      <div className="absolute inset-0 rounded-full bg-gradient-to-br from-blue-600 via-purple-600 to-teal-500 p-0.5">
+      {/* Outer ring with enhanced gradient */}
+      <div className="absolute inset-0 rounded-full bg-gradient-to-br from-cyan-400 via-blue-500 to-purple-600 p-0.5">
         <div className="w-full h-full rounded-full bg-white flex items-center justify-center">
-          {/* Inner design - Signal waves and diamond */}
+          {/* Inner design - Enhanced signal waves and core */}
           <div className="relative w-6 h-6">
-            {/* Central diamond */}
-            <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-2 h-2 bg-gradient-to-br from-blue-600 to-purple-600 rotate-45 rounded-sm"></div>
+            {/* Central core with pulsing effect */}
+            <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-2.5 h-2.5 bg-gradient-to-br from-cyan-400 via-blue-500 to-purple-600 rounded-full animate-pulse"></div>
             
-            {/* Signal waves */}
-            <div className="absolute top-1/2 left-1 transform -translate-y-1/2 w-1 h-1 bg-gradient-to-r from-blue-500 to-transparent rounded-full opacity-70"></div>
-            <div className="absolute top-1/2 left-0.5 transform -translate-y-1/2 w-0.5 h-2 bg-gradient-to-r from-blue-400 to-transparent rounded-full opacity-50"></div>
+            {/* Enhanced signal waves */}
+            <div className="absolute top-1/2 left-0.5 transform -translate-y-1/2 w-1.5 h-1.5 bg-gradient-to-r from-cyan-400 to-transparent rounded-full opacity-80"></div>
+            <div className="absolute top-1/2 left-0 transform -translate-y-1/2 w-1 h-3 bg-gradient-to-r from-cyan-300 to-transparent rounded-full opacity-60"></div>
             
-            <div className="absolute top-1/2 right-1 transform -translate-y-1/2 w-1 h-1 bg-gradient-to-l from-purple-500 to-transparent rounded-full opacity-70"></div>
-            <div className="absolute top-1/2 right-0.5 transform -translate-y-1/2 w-0.5 h-2 bg-gradient-to-l from-purple-400 to-transparent rounded-full opacity-50"></div>
+            <div className="absolute top-1/2 right-0.5 transform -translate-y-1/2 w-1.5 h-1.5 bg-gradient-to-l from-purple-500 to-transparent rounded-full opacity-80"></div>
+            <div className="absolute top-1/2 right-0 transform -translate-y-1/2 w-1 h-3 bg-gradient-to-l from-purple-400 to-transparent rounded-full opacity-60"></div>
             
-            {/* Network nodes */}
-            <div className="absolute top-1 left-2 w-0.5 h-0.5 bg-teal-500 rounded-full"></div>
-            <div className="absolute bottom-1 right-2 w-0.5 h-0.5 bg-teal-500 rounded-full"></div>
+            {/* Network connection nodes */}
+            <div className="absolute top-0.5 left-2 w-0.5 h-0.5 bg-blue-400 rounded-full animate-pulse"></div>
+            <div className="absolute bottom-0.5 right-2 w-0.5 h-0.5 bg-blue-400 rounded-full animate-pulse"></div>
+            <div className="absolute top-2 right-0.5 w-0.5 h-0.5 bg-purple-400 rounded-full animate-pulse"></div>
+            <div className="absolute bottom-2 left-0.5 w-0.5 h-0.5 bg-cyan-400 rounded-full animate-pulse"></div>
           </div>
         </div>
       </div>
       
-      {/* Subtle glow effect */}
-      <div className="absolute inset-0 rounded-full bg-gradient-to-br from-blue-600/20 via-purple-600/20 to-teal-500/20 blur-sm scale-110"></div>
+      {/* Enhanced glow effect */}
+      <div className="absolute inset-0 rounded-full bg-gradient-to-br from-cyan-400/30 via-blue-500/30 to-purple-600/30 blur-md scale-125"></div>
     </div>
   );
 
@@ -136,14 +138,14 @@ const Header = () => {
     <header className="bg-white shadow-sm border-b sticky top-0 z-50">
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16">
-          {/* Logo */}
+          {/* Enhanced Logo with modern Mobile styling */}
           <Link to="/" className="flex items-center space-x-3 group">
             <DevineLogoIcon />
             <div className="flex flex-col">
-              <span className="text-xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-teal-500 bg-clip-text text-transparent leading-tight">
+              <span className="text-xl font-bold bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-600 bg-clip-text text-transparent leading-tight">
                 Devine
               </span>
-              <span className="text-xs text-gray-500 font-medium tracking-wider uppercase -mt-1">
+              <span className="text-xs font-light tracking-[0.2em] uppercase -mt-1 bg-gradient-to-r from-slate-500 via-slate-600 to-slate-700 bg-clip-text text-transparent">
                 Mobile
               </span>
             </div>
