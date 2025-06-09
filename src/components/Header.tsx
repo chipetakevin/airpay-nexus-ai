@@ -17,10 +17,13 @@ import {
   TrendingUp
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import CustomerProfileDropdown from './CustomerProfileDropdown';
+import { useMobileAuth } from '@/hooks/useMobileAuth';
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isPlatformDropdownOpen, setIsPlatformDropdownOpen] = useState(false);
+  const { isAuthenticated } = useMobileAuth();
 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
 
@@ -156,6 +159,13 @@ const Header = () => {
               Home
             </Link>
             
+            {/* Customer Profile Dropdown (Desktop) */}
+            {isAuthenticated && (
+              <div className="relative">
+                <CustomerProfileDropdown />
+              </div>
+            )}
+            
             {/* Enhanced Top Up Tab */}
             <Link 
               to="/portal?tab=onecard" 
@@ -266,11 +276,20 @@ const Header = () => {
 
           {/* Desktop CTA Button */}
           <div className="hidden lg:block">
-            <Link to="/portal">
-              <Button className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 shadow-lg">
-                Get Started
-              </Button>
-            </Link>
+            {!isAuthenticated ? (
+              <Link to="/portal">
+                <Button className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 shadow-lg">
+                  Get Started
+                </Button>
+              </Link>
+            ) : (
+              <Link to="/whatsapp-assistant">
+                <Button className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 shadow-lg">
+                  <MessageCircle className="w-4 h-4 mr-2" />
+                  WhatsApp Shop
+                </Button>
+              </Link>
+            )}
           </div>
 
           {/* Mobile menu button */}
@@ -294,6 +313,13 @@ const Header = () => {
                 >
                   Home
                 </Link>
+                
+                {/* Mobile Customer Profile */}
+                {isAuthenticated && (
+                  <div className="mx-2 mb-4">
+                    <CustomerProfileDropdown />
+                  </div>
+                )}
                 
                 {/* Mobile Top Up - Enhanced */}
                 <Link 
@@ -358,11 +384,20 @@ const Header = () => {
                 </Link>
                 
                 <div className="px-2 pt-4">
-                  <Link to="/portal" onClick={() => setIsMenuOpen(false)}>
-                    <Button className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 shadow-lg">
-                      Get Started
-                    </Button>
-                  </Link>
+                  {!isAuthenticated ? (
+                    <Link to="/portal" onClick={() => setIsMenuOpen(false)}>
+                      <Button className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 shadow-lg">
+                        Get Started
+                      </Button>
+                    </Link>
+                  ) : (
+                    <Link to="/whatsapp-assistant" onClick={() => setIsMenuOpen(false)}>
+                      <Button className="w-full bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 shadow-lg">
+                        <MessageCircle className="w-4 h-4 mr-2" />
+                        WhatsApp Shop
+                      </Button>
+                    </Link>
+                  )}
                 </div>
               </nav>
             </ScrollArea>
