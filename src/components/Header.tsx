@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { Smartphone, Menu, X, Crown, Zap, Brain, MessageCircle, Scan, ShoppingCart, Terminal, Settings } from 'lucide-react';
+import { Smartphone, Menu, X, Crown, Zap, Brain, MessageCircle, Scan, ShoppingCart, Terminal, Settings, FileCheck } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import CustomerProfileDropdown from './CustomerProfileDropdown';
 import { useMobileAuth } from '@/hooks/useMobileAuth';
@@ -44,15 +44,42 @@ const Header = () => {
             </button>
             <div className="absolute top-full left-0 mt-2 w-64 bg-white rounded-lg shadow-xl border border-gray-200 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
               <div className="p-2">
-                <Link to="/devine-baas" className="flex items-center gap-3 p-3 rounded-lg hover:bg-blue-50 transition-colors group">
-                  <div className="p-2 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-lg">
-                    <Crown className="w-4 h-4 text-white" />
+                <div className="relative group/submenu">
+                  <div className="flex items-center gap-3 p-3 rounded-lg hover:bg-blue-50 transition-colors group cursor-pointer">
+                    <div className="p-2 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-lg">
+                      <Crown className="w-4 h-4 text-white" />
+                    </div>
+                    <div className="flex-1">
+                      <div className="font-medium text-gray-900 group-hover:text-blue-600">Devine BaaS Platform</div>
+                      <div className="text-xs text-gray-500">AI-Powered Backend Services</div>
+                    </div>
+                    <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                    </svg>
                   </div>
-                  <div>
-                    <div className="font-medium text-gray-900 group-hover:text-blue-600">Devine BaaS Platform</div>
-                    <div className="text-xs text-gray-500">AI-Powered SIM Porting & RICA</div>
+                  <div className="absolute top-0 left-full ml-2 w-64 bg-white rounded-lg shadow-xl border border-gray-200 opacity-0 invisible group-hover/submenu:opacity-100 group-hover/submenu:visible transition-all duration-200">
+                    <div className="p-2">
+                      <Link to="/devine-baas" className="flex items-center gap-3 p-3 rounded-lg hover:bg-blue-50 transition-colors group">
+                        <div className="p-2 bg-blue-100 rounded-lg">
+                          <Brain className="w-4 h-4 text-blue-600" />
+                        </div>
+                        <div>
+                          <div className="font-medium text-gray-900 group-hover:text-blue-600">Main Platform</div>
+                          <div className="text-xs text-gray-500">Full BaaS dashboard & services</div>
+                        </div>
+                      </Link>
+                      <Link to="/devine-baas" className="flex items-center gap-3 p-3 rounded-lg hover:bg-blue-50 transition-colors group">
+                        <div className="p-2 bg-orange-100 rounded-lg">
+                          <FileCheck className="w-4 h-4 text-orange-600" />
+                        </div>
+                        <div>
+                          <div className="font-medium text-gray-900 group-hover:text-blue-600">Mobile Porting & RICA</div>
+                          <div className="text-xs text-gray-500">SIM porting & RICA registration</div>
+                        </div>
+                      </Link>
+                    </div>
                   </div>
-                </Link>
+                </div>
                 <Link to="/portal?tab=onecard" className="flex items-center gap-3 p-3 rounded-lg hover:bg-blue-50 transition-colors group">
                   <div className="p-2 bg-blue-100 rounded-lg">
                     <Zap className="w-4 h-4 text-blue-600" />
@@ -198,6 +225,10 @@ const Header = () => {
             <Link to="/devine-baas" className="flex items-center gap-3 p-3 rounded-lg hover:bg-blue-50 transition-colors" onClick={toggleMenu}>
               <Crown className="w-4 h-4 text-yellow-600" />
               <span className="font-medium">Devine BaaS Platform</span>
+            </Link>
+            <Link to="/devine-baas" className="flex items-center gap-3 p-3 rounded-lg hover:bg-blue-50 transition-colors ml-4" onClick={toggleMenu}>
+              <FileCheck className="w-4 h-4 text-orange-600" />
+              <span className="font-medium">Mobile Porting & RICA</span>
             </Link>
             <Link to="/portal?tab=onecard" className="flex items-center gap-3 p-3 rounded-lg hover:bg-blue-50 transition-colors" onClick={toggleMenu}>
               <Zap className="w-4 h-4 text-blue-600" />
