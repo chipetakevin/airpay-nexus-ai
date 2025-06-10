@@ -14,7 +14,6 @@ import WhatsAppAssistant from "./pages/WhatsAppAssistant";
 import ScanToTextAI from "./pages/ScanToTextAI";
 import SpazaAI from "./pages/SpazaAI";
 import USSDSystem from "./pages/USSDSystem";
-import AirtimeDataDeals from "./pages/AirtimeDataDeals";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -36,7 +35,6 @@ const App = () => (
           <Route path="/scan-to-text-ai" element={<ScanToTextAI />} />
           <Route path="/spaza-ai" element={<SpazaAI />} />
           <Route path="/ussd-system" element={<USSDSystem />} />
-          <Route path="/airtime-data-deals" element={<AirtimeDataDeals />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>

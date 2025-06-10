@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Smartphone, Menu, X, Crown, Zap, Brain, MessageCircle, Scan, ShoppingCart, Terminal, Settings, FileCheck, LogOut } from 'lucide-react';
@@ -36,18 +35,13 @@ const Header = () => {
     window.location.reload();
   };
 
-  const handleLogoClick = () => {
-    // Force immediate redirect to airtime deals page
-    window.location.href = '/airtime-data-deals';
-  };
-
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/60">
       <div className="container mx-auto px-4 h-16 flex items-center justify-between">
-        {/* Enhanced Logo with forced redirect */}
-        <div onClick={handleLogoClick} className="flex items-center space-x-2 group cursor-pointer">
+        {/* Enhanced Logo with improved hover effects */}
+        <Link to="/" className="flex items-center space-x-2 group cursor-pointer">
           <div className="relative">
-            <div className="w-8 h-8 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg flex items-center justify-center group-hover:scale-105 transition-all duration-300 ease-out group-active:scale-95 group-hover:opacity-80">
+            <div className="w-8 h-8 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg flex items-center justify-center group-hover:scale-105 transition-all duration-300 ease-out group-active:scale-95">
               <Smartphone className="h-5 w-5 text-white" />
             </div>
             <div className="absolute -inset-1 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg blur opacity-25 group-hover:opacity-75 transition-all duration-300"></div>
@@ -58,7 +52,7 @@ const Header = () => {
               Mobile
             </span>
           </div>
-        </div>
+        </Link>
 
         {/* Desktop Navigation */}
         <nav className="hidden md:flex items-center space-x-6">
