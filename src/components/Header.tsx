@@ -1,16 +1,38 @@
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { Smartphone, Menu, X, Crown, Zap, Brain, MessageCircle, Scan, ShoppingCart, Terminal, Settings, FileCheck } from 'lucide-react';
+import { Smartphone, Menu, X, Crown, Zap, Brain, MessageCircle, Scan, ShoppingCart, Terminal, Settings, FileCheck, LogOut } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import CustomerProfileDropdown from './CustomerProfileDropdown';
 import { useMobileAuth } from '@/hooks/useMobileAuth';
+import { useToast } from '@/hooks/use-toast';
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { isAuthenticated } = useMobileAuth();
+  const { toast } = useToast();
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
+  };
+
+  const handleLogout = () => {
+    // Only clear authentication flags, keep user data for future registrations
+    localStorage.removeItem('userAuthenticated');
+    localStorage.removeItem('userCredentials');
+    
+    // Keep the following data for future registrations:
+    // - onecardUser (customer data)
+    // - onecardVendor (vendor data) 
+    // - onecardAdmin (admin data)
+    
+    toast({
+      title: "Logged Out Successfully",
+      description: "Your account information has been saved for future logins.",
+      duration: 3000,
+    });
+    
+    // Refresh the page to update auth state
+    window.location.reload();
   };
 
   return (
@@ -106,6 +128,24 @@ const Header = () => {
                     <div className="text-xs text-gray-500">AI-powered mobile shopping</div>
                   </div>
                 </Link>
+                {/* Logout Option - Only show if authenticated */}
+                {isAuthenticated && (
+                  <>
+                    <div className="border-t border-gray-200 my-2"></div>
+                    <button 
+                      onClick={handleLogout}
+                      className="flex items-center gap-3 p-3 rounded-lg hover:bg-red-50 transition-colors group w-full text-left"
+                    >
+                      <div className="p-2 bg-red-100 rounded-lg">
+                        <LogOut className="w-4 h-4 text-red-600" />
+                      </div>
+                      <div>
+                        <div className="font-medium text-gray-900 group-hover:text-red-600">Logout</div>
+                        <div className="text-xs text-gray-500">Sign out of your account</div>
+                      </div>
+                    </button>
+                  </>
+                )}
               </div>
             </div>
           </div>
@@ -262,6 +302,23 @@ const Header = () => {
               <Settings className="w-4 h-4 text-red-600" />
               <span className="font-medium">Master Dashboard</span>
             </Link>
+            
+            {/* Mobile Logout Option - Only show if authenticated */}
+            {isAuthenticated && (
+              <>
+                <div className="border-t border-gray-200 my-4"></div>
+                <button 
+                  onClick={() => {
+                    handleLogout();
+                    toggleMenu();
+                  }}
+                  className="flex items-center gap-3 p-3 rounded-lg hover:bg-red-50 transition-colors w-full text-left"
+                >
+                  <LogOut className="w-4 h-4 text-red-600" />
+                  <span className="font-medium text-red-600">Logout</span>
+                </button>
+              </>
+            )}
           </div>
         </div>
       )}
