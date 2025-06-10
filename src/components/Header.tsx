@@ -16,17 +16,17 @@ const Header = () => {
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/60">
       <div className="container mx-auto px-4 h-16 flex items-center justify-between">
-        {/* Logo */}
-        <Link to="/" className="flex items-center space-x-2 group">
+        {/* Enhanced Logo with improved hover effects */}
+        <Link to="/" className="flex items-center space-x-2 group cursor-pointer">
           <div className="relative">
-            <div className="w-8 h-8 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform duration-200">
+            <div className="w-8 h-8 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg flex items-center justify-center group-hover:scale-105 transition-all duration-300 ease-out group-active:scale-95">
               <Smartphone className="h-5 w-5 text-white" />
             </div>
-            <div className="absolute -inset-1 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg blur opacity-25 group-hover:opacity-75 transition duration-200"></div>
+            <div className="absolute -inset-1 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg blur opacity-25 group-hover:opacity-75 transition-all duration-300"></div>
           </div>
-          <div className="flex flex-col">
-            <span className="font-bold text-xl text-gray-900">Devine</span>
-            <span className="font-montserrat font-bold text-lg text-transparent bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text -mt-1">
+          <div className="flex flex-col group-hover:scale-105 transition-all duration-300 ease-out group-active:scale-95">
+            <span className="font-bold text-xl text-gray-900 group-hover:text-blue-600 transition-colors duration-300">Devine</span>
+            <span className="font-montserrat font-bold text-lg text-transparent bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text -mt-1 group-hover:from-blue-700 group-hover:to-purple-700 transition-all duration-300">
               Mobile
             </span>
           </div>
