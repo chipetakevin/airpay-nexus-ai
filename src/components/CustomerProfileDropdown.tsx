@@ -105,20 +105,39 @@ const CustomerProfileDropdown = () => {
         <div className="absolute top-full left-0 right-0 mt-2 z-50 animate-fade-in">
           <Card className="shadow-xl border border-gray-200 bg-white">
             <CardContent className="p-4 space-y-4">
-              {/* Account Details */}
+              {/* Account Details - Improved Layout */}
               <div className="border-b border-gray-200 pb-3">
-                <div className="flex items-center justify-between mb-2">
+                <div className="flex items-center justify-between mb-3">
                   <span className="text-sm font-medium text-gray-700">OneCard Account</span>
                   <Badge className="bg-emerald-100 text-emerald-800">Active</Badge>
                 </div>
-                <div className="space-y-1">
-                  <div className="flex items-center gap-2 text-xs text-gray-600">
-                    <CreditCard className="w-3 h-3" />
-                    <span>{currentUser.cardNumber}</span>
+                
+                {/* Improved Card Layout with Better Phone Number Display */}
+                <div className="grid grid-cols-1 gap-3">
+                  {/* OneCard Number Section */}
+                  <div className="bg-gray-50 rounded-lg p-3 border">
+                    <div className="flex items-center gap-2 mb-1">
+                      <CreditCard className="w-4 h-4 text-blue-600" />
+                      <span className="text-xs font-medium text-gray-700">OneCard Number</span>
+                    </div>
+                    <div className="text-sm font-mono font-semibold text-gray-900 tracking-wide">
+                      {currentUser.cardNumber}
+                    </div>
                   </div>
-                  <div className="flex items-center gap-2 text-xs text-gray-600">
-                    <Smartphone className="w-3 h-3" />
-                    <span>{currentUser.registeredPhone}</span>
+
+                  {/* Phone Number Section - Enhanced Display */}
+                  <div className="bg-gray-50 rounded-lg p-3 border">
+                    <div className="flex items-center gap-2 mb-1">
+                      <Smartphone className="w-4 h-4 text-green-600" />
+                      <span className="text-xs font-medium text-gray-700">Registered Phone</span>
+                    </div>
+                    <div className="text-sm font-mono font-semibold text-gray-900 tracking-wide">
+                      {currentUser.registeredPhone}
+                    </div>
+                    <div className="flex items-center gap-1 mt-1">
+                      <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                      <span className="text-xs text-green-600">RICA Verified</span>
+                    </div>
                   </div>
                 </div>
               </div>

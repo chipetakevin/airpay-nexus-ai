@@ -168,15 +168,6 @@ const Header = () => {
                     <div className="text-xs text-gray-500">Intelligent text extraction</div>
                   </div>
                 </Link>
-                <Link to="/spaza-ai" className="flex items-center gap-3 p-3 rounded-lg hover:bg-blue-50 transition-colors group">
-                  <div className="p-2 bg-indigo-100 rounded-lg">
-                    <ShoppingCart className="w-4 h-4 text-indigo-600" />
-                  </div>
-                  <div>
-                    <div className="font-medium text-gray-900 group-hover:text-blue-600">Spaza AI</div>
-                    <div className="text-xs text-gray-500">Smart retail assistant</div>
-                  </div>
-                </Link>
                 <Link to="/baas-platform" className="flex items-center gap-3 p-3 rounded-lg hover:bg-blue-50 transition-colors group">
                   <div className="p-2 bg-blue-100 rounded-lg">
                     <Brain className="w-4 h-4 text-blue-600" />
@@ -293,10 +284,6 @@ const Header = () => {
             <Link to="/scan-to-text-ai" className="flex items-center gap-3 p-3 rounded-lg hover:bg-blue-50 transition-colors" onClick={toggleMenu}>
               <Scan className="w-4 h-4 text-purple-600" />
               <span className="font-medium">AI Document Scanner</span>
-            </Link>
-            <Link to="/spaza-ai" className="flex items-center gap-3 p-3 rounded-lg hover:bg-blue-50 transition-colors" onClick={toggleMenu}>
-              <ShoppingCart className="w-4 h-4 text-indigo-600" />
-              <span className="font-medium">Spaza AI</span>
             </Link>
             <Link to="/master-dashboard" className="flex items-center gap-3 p-3 rounded-lg hover:bg-blue-50 transition-colors" onClick={toggleMenu}>
               <Settings className="w-4 h-4 text-red-600" />
