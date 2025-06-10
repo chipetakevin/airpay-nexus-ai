@@ -41,17 +41,11 @@ const CustomerProfileDropdown = () => {
       color: 'from-blue-500 to-purple-600'
     },
     {
-      label: 'Gift Credit',
+      label: 'OneCard Cash Back Rewards',
       icon: <Gift className="w-4 h-4" />,
       action: () => {
-        const phoneNumber = currentUser.registeredPhone?.replace('+', '') || '27832466539';
-        const message = encodeURIComponent(
-          `🎁 Gift Purchase Request:\n\n` +
-          `From: ${currentUser.firstName} ${currentUser.lastName}\n` +
-          `OneCard: ${currentUser.cardNumber}\n\n` +
-          `I'd like to gift airtime/data to someone. Please assist! 💝`
-        );
-        window.open(`https://wa.me/${phoneNumber}?text=${message}`, '_blank');
+        // Navigate to OneCard rewards page featuring AirPay gold card
+        window.location.href = '/portal?tab=onecard&section=rewards';
       },
       color: 'from-pink-500 to-rose-600'
     }
@@ -142,7 +136,7 @@ const CustomerProfileDropdown = () => {
                 </div>
               </div>
 
-              {/* Quick Actions */}
+              {/* Quick Actions - Enhanced Mobile Experience */}
               <div className="space-y-2">
                 <h4 className="text-sm font-medium text-gray-700 mb-2">Exclusive WhatsApp Shopping</h4>
                 <div className="grid grid-cols-1 gap-2">
@@ -150,12 +144,12 @@ const CustomerProfileDropdown = () => {
                     <button
                       key={index}
                       onClick={action.action}
-                      className={`flex items-center gap-3 p-3 rounded-lg bg-gradient-to-r ${action.color} text-white hover:shadow-lg transform hover:scale-[1.02] transition-all duration-200`}
+                      className={`flex items-center gap-3 p-3 rounded-lg bg-gradient-to-r ${action.color} text-white hover:shadow-lg transform hover:scale-[1.02] transition-all duration-300 min-h-[44px] active:scale-[0.98]`}
                     >
                       <div className="p-1 bg-white/20 rounded">
                         {action.icon}
                       </div>
-                      <span className="font-medium text-sm">{action.label}</span>
+                      <span className="font-medium text-sm flex-1 text-left">{action.label}</span>
                       <div className="ml-auto">
                         <div className="w-2 h-2 bg-white/80 rounded-full animate-pulse"></div>
                       </div>
@@ -167,7 +161,7 @@ const CustomerProfileDropdown = () => {
               {/* Portal Access */}
               <div className="border-t border-gray-200 pt-3">
                 <Link to="/portal?tab=onecard">
-                  <Button className="w-full bg-gradient-to-r from-gray-600 to-gray-700 hover:from-gray-700 hover:to-gray-800">
+                  <Button className="w-full bg-gradient-to-r from-gray-600 to-gray-700 hover:from-gray-700 hover:to-gray-800 min-h-[44px] transition-all duration-300">
                     <TrendingUp className="w-4 h-4 mr-2" />
                     View Full Dashboard
                   </Button>

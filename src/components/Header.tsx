@@ -31,8 +31,8 @@ const Header = () => {
       duration: 3000,
     });
     
-    // Refresh the page to update auth state
-    window.location.reload();
+    // Redirect to heroes section (main landing page)
+    window.location.href = '/';
   };
 
   return (
@@ -128,7 +128,7 @@ const Header = () => {
                     <div className="text-xs text-gray-500">AI-powered mobile shopping</div>
                   </div>
                 </Link>
-                {/* Logout Option - Only show if authenticated */}
+                {/* Logout Option - Only show if authenticated - Fixed Positioning */}
                 {isAuthenticated && (
                   <>
                     <div className="border-t border-gray-200 my-2"></div>
@@ -139,7 +139,7 @@ const Header = () => {
                       <div className="p-2 bg-red-100 rounded-lg">
                         <LogOut className="w-4 h-4 text-red-600" />
                       </div>
-                      <div>
+                      <div className="pt-1">
                         <div className="font-medium text-gray-900 group-hover:text-red-600">Logout</div>
                         <div className="text-xs text-gray-500">Sign out of your account</div>
                       </div>
@@ -250,7 +250,7 @@ const Header = () => {
         </div>
       </div>
 
-      {/* Mobile Navigation Menu */}
+      {/* Mobile Navigation Menu - Enhanced for better UX */}
       {isMenuOpen && (
         <div className="md:hidden border-t bg-white">
           <div className="container mx-auto px-4 py-4 space-y-2">
@@ -261,36 +261,37 @@ const Header = () => {
               </div>
             )}
 
-            <Link to="/devine-baas" className="flex items-center gap-3 p-3 rounded-lg hover:bg-blue-50 transition-colors" onClick={toggleMenu}>
+            {/* Mobile Navigation Links with 44px touch targets */}
+            <Link to="/devine-baas" className="flex items-center gap-3 p-3 rounded-lg hover:bg-blue-50 transition-colors min-h-[44px]" onClick={toggleMenu}>
               <Crown className="w-4 h-4 text-yellow-600" />
               <span className="font-medium">Devine BaaS Platform</span>
             </Link>
-            <Link to="/devine-baas" className="flex items-center gap-3 p-3 rounded-lg hover:bg-blue-50 transition-colors ml-4" onClick={toggleMenu}>
+            <Link to="/devine-baas" className="flex items-center gap-3 p-3 rounded-lg hover:bg-blue-50 transition-colors ml-4 min-h-[44px]" onClick={toggleMenu}>
               <FileCheck className="w-4 h-4 text-orange-600" />
               <span className="font-medium">Mobile Porting & RICA</span>
             </Link>
-            <Link to="/baas-platform" className="flex items-center gap-3 p-3 rounded-lg hover:bg-blue-50 transition-colors ml-4" onClick={toggleMenu}>
+            <Link to="/baas-platform" className="flex items-center gap-3 p-3 rounded-lg hover:bg-blue-50 transition-colors ml-4 min-h-[44px]" onClick={toggleMenu}>
               <Brain className="w-4 h-4 text-purple-600" />
               <span className="font-medium">Mobile Devine BaaS Portal</span>
             </Link>
-            <Link to="/portal?tab=onecard" className="flex items-center gap-3 p-3 rounded-lg hover:bg-blue-50 transition-colors" onClick={toggleMenu}>
+            <Link to="/portal?tab=onecard" className="flex items-center gap-3 p-3 rounded-lg hover:bg-blue-50 transition-colors min-h-[44px]" onClick={toggleMenu}>
               <Zap className="w-4 h-4 text-blue-600" />
               <span className="font-medium">Smart Deals Portal</span>
             </Link>
-            <Link to="/whatsapp-assistant" className="flex items-center gap-3 p-3 rounded-lg hover:bg-blue-50 transition-colors" onClick={toggleMenu}>
+            <Link to="/whatsapp-assistant" className="flex items-center gap-3 p-3 rounded-lg hover:bg-blue-50 transition-colors min-h-[44px]" onClick={toggleMenu}>
               <MessageCircle className="w-4 h-4 text-green-600" />
               <span className="font-medium">WhatsApp Assistant</span>
             </Link>
-            <Link to="/scan-to-text-ai" className="flex items-center gap-3 p-3 rounded-lg hover:bg-blue-50 transition-colors" onClick={toggleMenu}>
+            <Link to="/scan-to-text-ai" className="flex items-center gap-3 p-3 rounded-lg hover:bg-blue-50 transition-colors min-h-[44px]" onClick={toggleMenu}>
               <Scan className="w-4 h-4 text-purple-600" />
               <span className="font-medium">AI Document Scanner</span>
             </Link>
-            <Link to="/master-dashboard" className="flex items-center gap-3 p-3 rounded-lg hover:bg-blue-50 transition-colors" onClick={toggleMenu}>
+            <Link to="/master-dashboard" className="flex items-center gap-3 p-3 rounded-lg hover:bg-blue-50 transition-colors min-h-[44px]" onClick={toggleMenu}>
               <Settings className="w-4 h-4 text-red-600" />
               <span className="font-medium">Master Dashboard</span>
             </Link>
             
-            {/* Mobile Logout Option - Only show if authenticated */}
+            {/* Mobile Logout Option - Only show if authenticated - Fixed Positioning */}
             {isAuthenticated && (
               <>
                 <div className="border-t border-gray-200 my-4"></div>
@@ -299,10 +300,12 @@ const Header = () => {
                     handleLogout();
                     toggleMenu();
                   }}
-                  className="flex items-center gap-3 p-3 rounded-lg hover:bg-red-50 transition-colors w-full text-left"
+                  className="flex items-center gap-3 p-3 rounded-lg hover:bg-red-50 transition-colors w-full text-left min-h-[44px]"
                 >
                   <LogOut className="w-4 h-4 text-red-600" />
-                  <span className="font-medium text-red-600">Logout</span>
+                  <div className="pt-1">
+                    <span className="font-medium text-red-600">Logout</span>
+                  </div>
                 </button>
               </>
             )}
