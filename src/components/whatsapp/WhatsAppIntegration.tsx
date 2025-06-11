@@ -9,9 +9,10 @@ import WhatsAppMetrics from './WhatsAppMetrics';
 import RecentConversations from './RecentConversations';
 import WhatsAppAnalytics from './WhatsAppAnalytics';
 import WhatsAppSettings from './WhatsAppSettings';
+import WhatsAppShoppingTab from './WhatsAppShoppingTab';
 
 const WhatsAppIntegration = () => {
-  const [activeTab, setActiveTab] = useState('business');
+  const [activeTab, setActiveTab] = useState('shopping');
 
   return (
     <div className="space-y-6">
@@ -24,13 +25,18 @@ const WhatsAppIntegration = () => {
       {/* Main Content Tabs */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
         <div className="flex justify-center mb-6">
-          <TabsList className="grid grid-cols-4 w-full max-w-2xl">
+          <TabsList className="grid grid-cols-5 w-full max-w-3xl">
+            <TabsTrigger value="shopping">Shopping Experience</TabsTrigger>
             <TabsTrigger value="business">Business Platform</TabsTrigger>
             <TabsTrigger value="assistant">AI Assistant</TabsTrigger>
             <TabsTrigger value="analytics">Analytics</TabsTrigger>
             <TabsTrigger value="settings">Settings</TabsTrigger>
           </TabsList>
         </div>
+
+        <TabsContent value="shopping" className="space-y-6">
+          <WhatsAppShoppingTab />
+        </TabsContent>
 
         <TabsContent value="business" className="space-y-6">
           <WhatsAppBusinessPlatform />
