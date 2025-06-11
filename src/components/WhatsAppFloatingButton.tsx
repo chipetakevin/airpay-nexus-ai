@@ -15,7 +15,7 @@ const WhatsAppFloatingButton = () => {
     
     // Enhanced message for authenticated customers
     const message = isAuthenticated ? encodeURIComponent(
-      `🔥 Hi Devine Mobile AI! I'm ${currentUser?.firstName} ${currentUser?.lastName}\n\n` +
+      `🔥 Hi Divinely Mobile AI! I'm ${currentUser?.firstName} ${currentUser?.lastName}\n\n` +
       `🎯 OneCard: ${currentUser?.cardNumber}\n` +
       `📱 Account: ${currentUser?.registeredPhone}\n\n` +
       `I'd like exclusive access to:\n` +
@@ -25,7 +25,7 @@ const WhatsAppFloatingButton = () => {
       `• 🎁 Loyalty Rewards\n\n` +
       `Ready to shop! 🛒`
     ) : encodeURIComponent(
-      `Hi Devine Mobile AI! 🤖\n\nI'd like to get instant airtime & data deals. Please assist me with:\n\n• Best available deals\n• Account management\n• Top-up services\n• Balance inquiries\n\nThank you!`
+      `Hi Divinely Mobile AI! 🤖\n\nI'd like to get instant airtime & data deals. Please assist me with:\n\n• Best available deals\n• Account management\n• Top-up services\n• Balance inquiries\n\nThank you!`
     );
     
     // Open WhatsApp with the phone number and pre-filled message
@@ -54,7 +54,7 @@ const WhatsAppFloatingButton = () => {
             ? 'bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700' 
             : 'bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700'
         } text-white`}
-        aria-label="Chat with Devine Mobile AI on WhatsApp"
+        aria-label="Chat with Divinely Mobile AI on WhatsApp"
       >
         <div className="relative">
           <MessageCircle className="w-6 h-6" />
@@ -92,7 +92,7 @@ const WhatsAppFloatingButton = () => {
               </div>
             ) : (
               <div>
-                <div className="font-medium">Chat with Devine Mobile AI</div>
+                <div className="font-medium">Chat with Divinely Mobile AI</div>
                 <div className="text-xs opacity-75">
                   Test: +27832466539
                 </div>

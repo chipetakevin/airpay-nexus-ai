@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Smartphone, Menu, X, Crown, Zap, Brain, MessageCircle, Scan, ShoppingCart, Terminal, Settings, FileCheck, LogOut } from 'lucide-react';
@@ -47,7 +48,7 @@ const Header = () => {
             <div className="absolute -inset-1 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg blur opacity-25 group-hover:opacity-75 transition-all duration-300"></div>
           </div>
           <div className="flex flex-col group-hover:scale-105 transition-all duration-300 ease-out group-active:scale-95">
-            <span className="font-bold text-xl text-gray-900 group-hover:text-blue-600 transition-colors duration-300">Devine</span>
+            <span className="font-bold text-xl text-gray-900 group-hover:text-blue-600 transition-colors duration-300">Divinely</span>
             <span className="font-montserrat font-bold text-lg text-transparent bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text -mt-1 group-hover:from-blue-700 group-hover:to-purple-700 transition-all duration-300">
               Mobile
             </span>
@@ -71,7 +72,7 @@ const Header = () => {
                       <Crown className="w-4 h-4 text-white" />
                     </div>
                     <div className="flex-1">
-                      <div className="font-medium text-gray-900 group-hover:text-blue-600">Devine BaaS Platform</div>
+                      <div className="font-medium text-gray-900 group-hover:text-blue-600">Divinely BaaS Platform</div>
                       <div className="text-xs text-gray-500">AI-Powered Backend Services</div>
                     </div>
                     <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -103,7 +104,7 @@ const Header = () => {
                           <Brain className="w-4 h-4 text-purple-600" />
                         </div>
                         <div>
-                          <div className="font-medium text-gray-900 group-hover:text-blue-600">Mobile Devine BaaS Portal</div>
+                          <div className="font-medium text-gray-900 group-hover:text-blue-600">Mobile Divinely BaaS Portal</div>
                           <div className="text-xs text-gray-500">Advanced BaaS management portal</div>
                         </div>
                       </Link>
@@ -124,8 +125,8 @@ const Header = () => {
                     <MessageCircle className="w-4 h-4 text-green-600" />
                   </div>
                   <div>
-                    <div className="font-medium text-gray-900 group-hover:text-blue-600">WhatsApp Assistant</div>
-                    <div className="text-xs text-gray-500">AI-powered mobile shopping</div>
+                    <div className="font-medium text-gray-900 group-hover:text-blue-600">WhatsApp Business</div>
+                    <div className="text-xs text-gray-500">AI-powered business assistant</div>
                   </div>
                 </Link>
                 {/* Logout Option - Only show if authenticated - Fixed Positioning */}
@@ -264,7 +265,7 @@ const Header = () => {
             {/* Mobile Navigation Links with 44px touch targets */}
             <Link to="/devine-baas" className="flex items-center gap-3 p-3 rounded-lg hover:bg-blue-50 transition-colors min-h-[44px]" onClick={toggleMenu}>
               <Crown className="w-4 h-4 text-yellow-600" />
-              <span className="font-medium">Devine BaaS Platform</span>
+              <span className="font-medium">Divinely BaaS Platform</span>
             </Link>
             <Link to="/devine-baas" className="flex items-center gap-3 p-3 rounded-lg hover:bg-blue-50 transition-colors ml-4 min-h-[44px]" onClick={toggleMenu}>
               <FileCheck className="w-4 h-4 text-orange-600" />
@@ -272,7 +273,7 @@ const Header = () => {
             </Link>
             <Link to="/baas-platform" className="flex items-center gap-3 p-3 rounded-lg hover:bg-blue-50 transition-colors ml-4 min-h-[44px]" onClick={toggleMenu}>
               <Brain className="w-4 h-4 text-purple-600" />
-              <span className="font-medium">Mobile Devine BaaS Portal</span>
+              <span className="font-medium">Mobile Divinely BaaS Portal</span>
             </Link>
             <Link to="/portal?tab=onecard" className="flex items-center gap-3 p-3 rounded-lg hover:bg-blue-50 transition-colors min-h-[44px]" onClick={toggleMenu}>
               <Zap className="w-4 h-4 text-blue-600" />
@@ -280,7 +281,7 @@ const Header = () => {
             </Link>
             <Link to="/whatsapp-assistant" className="flex items-center gap-3 p-3 rounded-lg hover:bg-blue-50 transition-colors min-h-[44px]" onClick={toggleMenu}>
               <MessageCircle className="w-4 h-4 text-green-600" />
-              <span className="font-medium">WhatsApp Assistant</span>
+              <span className="font-medium">WhatsApp Business</span>
             </Link>
             <Link to="/scan-to-text-ai" className="flex items-center gap-3 p-3 rounded-lg hover:bg-blue-50 transition-colors min-h-[44px]" onClick={toggleMenu}>
               <Scan className="w-4 h-4 text-purple-600" />

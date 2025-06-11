@@ -10,9 +10,10 @@ import {
   BarChart, Globe, CheckCircle, Clock
 } from 'lucide-react';
 import WhatsAppAssistant from './WhatsAppAssistant';
+import WhatsAppBusinessPlatform from './WhatsAppBusinessPlatform';
 
 const WhatsAppIntegration = () => {
-  const [activeTab, setActiveTab] = useState('assistant');
+  const [activeTab, setActiveTab] = useState('business');
 
   const integrationMetrics = [
     {
@@ -43,26 +44,26 @@ const WhatsAppIntegration = () => {
 
   const whatsAppFeatures = [
     {
-      title: 'AI-Powered Conversations',
-      description: 'Natural language processing for seamless customer interactions',
+      title: 'AI-Powered Business Assistant',
+      description: 'Advanced natural language processing for seamless customer interactions',
       icon: <Zap className="w-5 h-5" />,
       status: 'Active'
     },
     {
       title: 'Secure Payment Processing',
-      description: 'Bank-grade encryption for all WhatsApp transactions',
+      description: 'Bank-grade encryption for all WhatsApp business transactions',
       icon: <Shield className="w-5 h-5" />,
       status: 'Active'
     },
     {
       title: 'Real-time Transaction Updates',
-      description: 'Instant confirmation and status updates via WhatsApp',
+      description: 'Instant confirmation and status updates via WhatsApp Business',
       icon: <Activity className="w-5 h-5" />,
       status: 'Active'
     },
     {
       title: 'Multi-language Support',
-      description: 'Support for English, Afrikaans, and local languages',
+      description: 'Support for English, Afrikaans, and local South African languages',
       icon: <Globe className="w-5 h-5" />,
       status: 'Coming Soon'
     }
@@ -111,10 +112,10 @@ const WhatsAppIntegration = () => {
       {/* Header */}
       <div className="text-center space-y-2">
         <h1 className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-green-600 to-blue-600 bg-clip-text text-transparent">
-          Devine Mobile WhatsApp Assistant
+          Divinely Mobile WhatsApp Business
         </h1>
         <p className="text-gray-600 max-w-2xl mx-auto">
-          AI-powered WhatsApp integration for seamless airtime and data purchases
+          AI-powered WhatsApp Business integration for seamless mobile services and customer engagement
         </p>
       </div>
 
@@ -148,12 +149,16 @@ const WhatsAppIntegration = () => {
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
         <div className="flex justify-center mb-6">
           <TabsList className="grid grid-cols-4 w-full max-w-2xl">
-            <TabsTrigger value="assistant">WhatsApp Chat</TabsTrigger>
+            <TabsTrigger value="business">Business Platform</TabsTrigger>
+            <TabsTrigger value="assistant">AI Assistant</TabsTrigger>
             <TabsTrigger value="analytics">Analytics</TabsTrigger>
-            <TabsTrigger value="features">Features</TabsTrigger>
             <TabsTrigger value="settings">Settings</TabsTrigger>
           </TabsList>
         </div>
+
+        <TabsContent value="business" className="space-y-6">
+          <WhatsAppBusinessPlatform />
+        </TabsContent>
 
         <TabsContent value="assistant" className="space-y-6">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -203,13 +208,13 @@ const WhatsAppIntegration = () => {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <BarChart className="w-5 h-5" />
-                  Conversation Analytics
+                  Business Analytics
                 </CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
                   <div className="flex justify-between items-center">
-                    <span className="text-sm">Total Conversations</span>
+                    <span className="text-sm">Total Business Conversations</span>
                     <span className="font-bold">8,432</span>
                   </div>
                   <div className="flex justify-between items-center">
@@ -259,37 +264,12 @@ const WhatsAppIntegration = () => {
           </div>
         </TabsContent>
 
-        <TabsContent value="features" className="space-y-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {whatsAppFeatures.map((feature, index) => (
-              <Card key={index}>
-                <CardContent className="p-6">
-                  <div className="flex items-start gap-4">
-                    <div className="p-3 bg-green-50 rounded-lg text-green-600">
-                      {feature.icon}
-                    </div>
-                    <div className="flex-1">
-                      <div className="flex items-center justify-between mb-2">
-                        <h3 className="font-semibold">{feature.title}</h3>
-                        <Badge className={getStatusColor(feature.status)}>
-                          {feature.status}
-                        </Badge>
-                      </div>
-                      <p className="text-sm text-gray-600">{feature.description}</p>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </TabsContent>
-
         <TabsContent value="settings" className="space-y-6">
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Settings className="w-5 h-5" />
-                WhatsApp Integration Settings
+                WhatsApp Business Settings
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
@@ -312,11 +292,11 @@ const WhatsAppIntegration = () => {
               </div>
 
               <div className="space-y-2">
-                <h4 className="font-medium">Automation Settings</h4>
+                <h4 className="font-medium">Business Tools</h4>
                 <div className="space-y-3">
                   <Button variant="outline" className="w-full justify-start">
                     <CheckCircle className="w-4 h-4 mr-2" />
-                    Auto-reply: Enabled
+                    Auto-replies: Enabled
                   </Button>
                   <Button variant="outline" className="w-full justify-start">
                     <Activity className="w-4 h-4 mr-2" />
@@ -324,7 +304,7 @@ const WhatsAppIntegration = () => {
                   </Button>
                   <Button variant="outline" className="w-full justify-start">
                     <Shield className="w-4 h-4 mr-2" />
-                    Fraud Alerts: Enabled
+                    Payment Security: Enhanced
                   </Button>
                 </div>
               </div>

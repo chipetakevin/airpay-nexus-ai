@@ -36,15 +36,15 @@ const CustomerProfileDropdown = () => {
 
   const quickActions = [
     {
-      label: 'WhatsApp Shop',
+      label: 'WhatsApp Business',
       icon: <MessageCircle className="w-4 h-4" />,
       action: () => {
         const phoneNumber = currentUser.registeredPhone?.replace('+', '') || '27832466539';
         const message = encodeURIComponent(
-          `🔥 Hi! Quick shopping request:\n\n` +
+          `🔥 Hi! Quick business request:\n\n` +
           `OneCard: ${currentUser.cardNumber}\n` +
           `Account: ${currentUser.registeredPhone}\n\n` +
-          `Please show me today's best deals! 🛒`
+          `Please help me with business services! 💼`
         );
         window.open(`https://wa.me/${phoneNumber}?text=${message}`, '_blank');
       },
@@ -92,9 +92,6 @@ const CustomerProfileDropdown = () => {
                     <Star className="w-3 h-3 mr-1" />
                     VIP Customer
                   </Badge>
-                  <span className="text-xs text-gray-600">
-                    ****{currentUser.cardNumber?.slice(-4)}
-                  </span>
                 </div>
               </div>
             </div>
@@ -117,7 +114,7 @@ const CustomerProfileDropdown = () => {
             <CardContent className="p-4 space-y-4">
               {/* Quick Actions - Enhanced Mobile Experience */}
               <div className="space-y-2">
-                <h4 className="text-sm font-medium text-gray-700 mb-2">Exclusive WhatsApp Shopping</h4>
+                <h4 className="text-sm font-medium text-gray-700 mb-2">Exclusive WhatsApp Business</h4>
                 <div className="grid grid-cols-1 gap-2">
                   {quickActions.map((action, index) => (
                     <button
@@ -171,3 +168,5 @@ const CustomerProfileDropdown = () => {
 };
 
 export default CustomerProfileDropdown;
+
+</initial_code>
