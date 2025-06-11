@@ -168,5 +168,3 @@ const CustomerProfileDropdown = () => {
 };
 
 export default CustomerProfileDropdown;
-
-</initial_code>
