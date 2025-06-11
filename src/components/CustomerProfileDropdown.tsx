@@ -1,22 +1,38 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { 
   User, CreditCard, Smartphone, ChevronDown, ChevronUp,
-  MessageCircle, Zap, Gift, TrendingUp, Star
+  MessageCircle, Zap, Gift, TrendingUp, Star, LogOut
 } from 'lucide-react';
 import { useMobileAuth } from '@/hooks/useMobileAuth';
 import { Link } from 'react-router-dom';
+import { useToast } from '@/hooks/use-toast';
 
 const CustomerProfileDropdown = () => {
   const { currentUser, isAuthenticated } = useMobileAuth();
   const [isExpanded, setIsExpanded] = useState(false);
+  const { toast } = useToast();
 
   if (!isAuthenticated || !currentUser) {
     return null;
   }
+
+  const handleLogout = () => {
+    // Only clear authentication flags, keep user data for future registrations
+    localStorage.removeItem('userAuthenticated');
+    localStorage.removeItem('userCredentials');
+    
+    toast({
+      title: "Logged Out Successfully",
+      description: "Your account information has been saved for future logins.",
+      duration: 3000,
+    });
+    
+    // Redirect to heroes section (main landing page)
+    window.location.href = '/';
+  };
 
   const quickActions = [
     {
@@ -99,43 +115,6 @@ const CustomerProfileDropdown = () => {
         <div className="absolute top-full left-0 right-0 mt-2 z-50 animate-fade-in">
           <Card className="shadow-xl border border-gray-200 bg-white">
             <CardContent className="p-4 space-y-4">
-              {/* Account Details - Improved Layout */}
-              <div className="border-b border-gray-200 pb-3">
-                <div className="flex items-center justify-between mb-3">
-                  <span className="text-sm font-medium text-gray-700">OneCard Account</span>
-                  <Badge className="bg-emerald-100 text-emerald-800">Active</Badge>
-                </div>
-                
-                {/* Improved Card Layout with Better Phone Number Display */}
-                <div className="grid grid-cols-1 gap-3">
-                  {/* OneCard Number Section */}
-                  <div className="bg-gray-50 rounded-lg p-3 border">
-                    <div className="flex items-center gap-2 mb-1">
-                      <CreditCard className="w-4 h-4 text-blue-600" />
-                      <span className="text-xs font-medium text-gray-700">OneCard Number</span>
-                    </div>
-                    <div className="text-sm font-mono font-semibold text-gray-900 tracking-wide">
-                      {currentUser.cardNumber}
-                    </div>
-                  </div>
-
-                  {/* Phone Number Section - Enhanced Display */}
-                  <div className="bg-gray-50 rounded-lg p-3 border">
-                    <div className="flex items-center gap-2 mb-1">
-                      <Smartphone className="w-4 h-4 text-green-600" />
-                      <span className="text-xs font-medium text-gray-700">Registered Phone</span>
-                    </div>
-                    <div className="text-sm font-mono font-semibold text-gray-900 tracking-wide">
-                      {currentUser.registeredPhone}
-                    </div>
-                    <div className="flex items-center gap-1 mt-1">
-                      <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                      <span className="text-xs text-green-600">RICA Verified</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
               {/* Quick Actions - Enhanced Mobile Experience */}
               <div className="space-y-2">
                 <h4 className="text-sm font-medium text-gray-700 mb-2">Exclusive WhatsApp Shopping</h4>
@@ -161,11 +140,27 @@ const CustomerProfileDropdown = () => {
               {/* Portal Access */}
               <div className="border-t border-gray-200 pt-3">
                 <Link to="/portal?tab=onecard">
-                  <Button className="w-full bg-gradient-to-r from-gray-600 to-gray-700 hover:from-gray-700 hover:to-gray-800 min-h-[44px] transition-all duration-300">
+                  <Button className="w-full bg-gradient-to-r from-gray-600 to-gray-700 hover:from-gray-700 hover:to-gray-800 min-h-[44px] transition-all duration-300 mb-3">
                     <TrendingUp className="w-4 h-4 mr-2" />
                     View Full Dashboard
                   </Button>
                 </Link>
+              </div>
+
+              {/* Logout Option - Properly positioned with clear spacing */}
+              <div className="border-t border-gray-200 pt-3">
+                <button 
+                  onClick={handleLogout}
+                  className="flex items-center gap-3 p-3 rounded-lg hover:bg-red-50 transition-colors group w-full text-left min-h-[44px] border border-red-200"
+                >
+                  <div className="p-2 bg-red-100 rounded-lg">
+                    <LogOut className="w-4 h-4 text-red-600" />
+                  </div>
+                  <div className="flex-1">
+                    <div className="font-medium text-gray-900 group-hover:text-red-600">Logout</div>
+                    <div className="text-xs text-gray-500">Sign out of your account</div>
+                  </div>
+                </button>
               </div>
             </CardContent>
           </Card>
