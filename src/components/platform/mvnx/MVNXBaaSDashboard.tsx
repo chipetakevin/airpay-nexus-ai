@@ -524,6 +524,7 @@ const MVNXBaaSDashboard = () => {
                 change="+7.5% vs last month"
                 changeType="positive"
                 icon={DollarSign}
+                trend="6.2%"
               />
               <KPICard
                 title="Gross Margin"
@@ -531,6 +532,7 @@ const MVNXBaaSDashboard = () => {
                 change="+2.1% improvement"
                 changeType="positive"
                 icon={TrendingUp}
+                trend="2.8%"
               />
               <KPICard
                 title="ARPU"
@@ -538,6 +540,7 @@ const MVNXBaaSDashboard = () => {
                 change="+R 15 vs last month"
                 changeType="positive"
                 icon={Users}
+                trend="5.5%"
               />
               <KPICard
                 title="Churn Rate"
@@ -545,6 +548,7 @@ const MVNXBaaSDashboard = () => {
                 change="-0.4% improvement"
                 changeType="positive"
                 icon={TrendingDown}
+                trend="0.4%"
               />
             </div>
 
