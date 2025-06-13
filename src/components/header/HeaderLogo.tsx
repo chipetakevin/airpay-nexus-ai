@@ -7,7 +7,7 @@ const HeaderLogo = () => {
   const location = useLocation();
   
   // Check if we're on a BaaS platform page that should exit to homepage
-  const isBaaSPage = ['/devine-baas', '/baas-platform', '/mvnx-baas'].includes(location.pathname);
+  const isBaaSPage = ['/devine-baas', '/baas-platform', '/mvnx-baas', '/master-dashboard', '/platform-dashboard', '/spaza-ai', '/scan-to-text-ai'].includes(location.pathname);
   
   return (
     <Link 
