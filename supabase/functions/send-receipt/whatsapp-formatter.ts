@@ -10,11 +10,14 @@ export const formatWhatsAppMessage = (data: ReceiptData): string => {
   const dateObj = new Date(data.timestamp);
   const formattedDate = `${dateObj.getFullYear()}/${String(dateObj.getMonth() + 1).padStart(2, '0')}/${String(dateObj.getDate()).padStart(2, '0')}, ${String(dateObj.getHours()).padStart(2, '0')}:${String(dateObj.getMinutes()).padStart(2, '0')}:${String(dateObj.getSeconds()).padStart(2, '0')}`;
 
+  // Capitalize first letter of customer name
+  const capitalizedCustomerName = data.customerName.charAt(0).toUpperCase() + data.customerName.slice(1);
+
   return `🟢 *DIVINELY MOBILE* 📱
 
 ✅ *DIGITAL RECEIPT*
 
-👤 *Customer:* ${data.customerName}
+👤 *Customer:* ${capitalizedCustomerName}
 📞 *Account:* ${data.customerPhone}
 🆔 *Transaction ID:* ${data.transactionId}
 ⏰ *Date:* ${formattedDate}
@@ -31,8 +34,7 @@ ${itemsList}
 ${data.purchaseType === 'self' ? 'Airtime loaded to your number' : `Airtime sent to ${data.recipientName}`}
 
 🌐 https://divinely-mobile.com
-💬 Support: +27 100 2827
+💬 +27 100 2827
 
-*Thank you for choosing Divinely Mobile!* 
-_Brought To You By OneCard Global Rewards Program_`;
+*Thank you for choosing Divinely Mobile!*`;
 };
