@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -116,56 +115,56 @@ const AirPayMasterDashboard = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-purple-50/30">
-      {/* Enhanced Header with better branding */}
+      {/* Compact Header with smaller, more appealing design */}
       <div className="bg-white/95 backdrop-blur-md border-b border-gray-200/50 shadow-lg">
         <div className="max-w-7xl mx-auto p-4 md:p-6">
-          {/* Header with improved branding */}
-          <div className="flex items-center justify-between mb-8">
-            <div className="flex items-center gap-4">
-              <div className="w-14 h-14 md:w-18 md:h-18 bg-gradient-to-br from-blue-600 via-purple-600 to-indigo-700 rounded-3xl flex items-center justify-center shadow-2xl ring-4 ring-white/50">
-                <Smartphone className="w-7 h-7 md:w-9 md:h-9 text-white" />
+          {/* Compact Header with improved branding */}
+          <div className="flex items-center justify-between mb-6">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 md:w-12 md:h-12 bg-gradient-to-br from-blue-600 via-purple-600 to-indigo-700 rounded-2xl flex items-center justify-center shadow-xl ring-2 ring-white/50">
+                <Smartphone className="w-5 h-5 md:w-6 md:h-6 text-white" />
               </div>
               <div>
-                <h1 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-700 bg-clip-text text-transparent">
+                <h1 className="text-xl md:text-2xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-700 bg-clip-text text-transparent">
                   Divinely Mobile
                 </h1>
-                <p className="text-base md:text-lg text-gray-600 font-medium">Customer Shopping Hub</p>
-                <p className="text-sm text-gray-500">Smart Deals • Instant Service • Cashback Rewards</p>
+                <p className="text-sm md:text-base text-gray-600 font-medium">Customer Shopping Hub</p>
+                <p className="text-xs text-gray-500">Smart Deals • Instant Service • Cashback Rewards</p>
               </div>
             </div>
             <div className="hidden md:flex items-center gap-3">
-              <Badge className="bg-green-100 text-green-700 text-sm px-4 py-2">
+              <Badge className="bg-green-100 text-green-700 text-sm px-3 py-1">
                 🟢 All Systems Operational
               </Badge>
               <Button 
                 variant="outline" 
-                className="bg-white/80 hover:bg-white/90 border-2 border-gray-200"
+                className="bg-white/80 hover:bg-white/90 border-2 border-gray-200 text-sm"
               >
                 Need Help?
               </Button>
             </div>
           </div>
 
-          {/* Enhanced Stats Grid with better visual hierarchy */}
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+          {/* Compact Stats Grid */}
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-6">
             {dashboardStats.map((stat, index) => (
-              <Card key={index} className={`relative overflow-hidden group hover:shadow-xl transition-all duration-300 border-2 ${stat.borderColor} shadow-lg hover:scale-105`}>
-                <CardContent className="p-4 md:p-6">
+              <Card key={index} className={`relative overflow-hidden group hover:shadow-lg transition-all duration-300 border-2 ${stat.borderColor} shadow-md hover:scale-105`}>
+                <CardContent className="p-3 md:p-4">
                   <div className={`absolute inset-0 ${stat.bgColor} opacity-50`}></div>
                   <div className="relative z-10">
-                    <div className="flex items-center justify-between mb-3">
-                      <div className={`p-3 rounded-xl ${stat.bgColor} ${stat.color} ring-2 ring-white shadow-md group-hover:scale-110 transition-transform duration-300`}>
+                    <div className="flex items-center justify-between mb-2">
+                      <div className={`p-2 rounded-lg ${stat.bgColor} ${stat.color} ring-1 ring-white shadow-sm group-hover:scale-110 transition-transform duration-300`}>
                         {stat.icon}
                       </div>
-                      <span className={`text-xs md:text-sm px-3 py-1 rounded-full font-bold ${
-                        stat.change.startsWith('+') ? 'bg-green-100 text-green-700 ring-2 ring-green-200' : 'bg-red-100 text-red-700 ring-2 ring-red-200'
+                      <span className={`text-xs px-2 py-1 rounded-full font-bold ${
+                        stat.change.startsWith('+') ? 'bg-green-100 text-green-700 ring-1 ring-green-200' : 'bg-red-100 text-red-700 ring-1 ring-red-200'
                       }`}>
                         {stat.change}
                       </span>
                     </div>
                     <div>
-                      <p className="text-xs md:text-sm text-gray-600 mb-2 font-semibold uppercase tracking-wide">{stat.label}</p>
-                      <p className="text-2xl md:text-3xl font-bold text-gray-900">{stat.value}</p>
+                      <p className="text-xs text-gray-600 mb-1 font-semibold uppercase tracking-wide">{stat.label}</p>
+                      <p className="text-lg md:text-xl font-bold text-gray-900">{stat.value}</p>
                     </div>
                   </div>
                 </CardContent>
@@ -178,44 +177,46 @@ const AirPayMasterDashboard = () => {
       {/* Main Content Area with Tabs */}
       <div className="max-w-7xl mx-auto p-4 md:p-6">
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          {/* Improved Navigation - Mobile Horizontal Scroll */}
-          <div className="mb-8">
-            {/* Mobile Navigation - Horizontal Scrollable */}
-            <div className="block lg:hidden mb-6">
+          {/* Centered Navigation */}
+          <div className="mb-8 flex justify-center">
+            {/* Mobile Navigation - Centered Horizontal Scroll */}
+            <div className="block lg:hidden mb-6 w-full max-w-4xl">
               <ScrollArea className="w-full whitespace-nowrap rounded-lg">
-                <div className="flex space-x-2 p-1 bg-white/90 backdrop-blur-md rounded-2xl shadow-xl border-2 border-gray-100">
-                  {navigationTabs.map((tab) => (
-                    <button
-                      key={tab.id}
-                      onClick={() => setActiveTab(tab.id)}
-                      className={`
-                        flex-shrink-0 p-3 rounded-xl transition-all duration-300 min-w-[120px]
-                        ${activeTab === tab.id 
-                          ? `bg-gradient-to-br ${tab.gradient} text-white shadow-lg` 
-                          : `bg-gradient-to-br ${tab.bgGradient} hover:bg-white text-gray-700 hover:shadow-md`
-                        }
-                      `}
-                    >
-                      <div className="flex flex-col items-center gap-2">
-                        <div className="text-2xl">{tab.emoji}</div>
-                        <div className="text-xs font-bold text-center">{tab.label}</div>
-                      </div>
-                    </button>
-                  ))}
+                <div className="flex justify-center">
+                  <div className="flex space-x-2 p-1 bg-white/90 backdrop-blur-md rounded-2xl shadow-xl border-2 border-gray-100">
+                    {navigationTabs.map((tab) => (
+                      <button
+                        key={tab.id}
+                        onClick={() => setActiveTab(tab.id)}
+                        className={`
+                          flex-shrink-0 p-3 rounded-xl transition-all duration-300 min-w-[100px]
+                          ${activeTab === tab.id 
+                            ? `bg-gradient-to-br ${tab.gradient} text-white shadow-lg` 
+                            : `bg-gradient-to-br ${tab.bgGradient} hover:bg-white text-gray-700 hover:shadow-md`
+                          }
+                        `}
+                      >
+                        <div className="flex flex-col items-center gap-1">
+                          <div className="text-xl">{tab.emoji}</div>
+                          <div className="text-xs font-bold text-center leading-tight">{tab.label}</div>
+                        </div>
+                      </button>
+                    ))}
+                  </div>
                 </div>
               </ScrollArea>
             </div>
 
-            {/* Desktop Navigation - Grid Layout */}
-            <div className="hidden lg:block">
+            {/* Desktop Navigation - Centered Grid Layout */}
+            <div className="hidden lg:block w-full max-w-6xl">
               <div className="bg-white/90 backdrop-blur-md rounded-3xl p-3 shadow-xl border-2 border-gray-100">
-                <div className="grid grid-cols-6 gap-3">
+                <div className="grid grid-cols-6 gap-3 justify-items-center">
                   {navigationTabs.map((tab) => (
                     <button
                       key={tab.id}
                       onClick={() => setActiveTab(tab.id)}
                       className={`
-                        relative group p-4 rounded-2xl transition-all duration-500 transform
+                        relative group p-4 rounded-2xl transition-all duration-500 transform w-full max-w-[180px]
                         ${activeTab === tab.id 
                           ? `bg-gradient-to-br ${tab.gradient} text-white shadow-2xl scale-105 ring-4 ring-white/30` 
                           : `bg-gradient-to-br ${tab.bgGradient} hover:bg-white text-gray-700 hover:shadow-xl hover:scale-105 border-2 border-gray-100`
@@ -223,7 +224,7 @@ const AirPayMasterDashboard = () => {
                       `}
                     >
                       <div className="flex flex-col items-center gap-3">
-                        <div className={`text-3xl ${activeTab === tab.id ? 'animate-bounce' : 'group-hover:animate-pulse'}`}>
+                        <div className={`text-2xl ${activeTab === tab.id ? 'animate-bounce' : 'group-hover:animate-pulse'}`}>
                           {tab.emoji}
                         </div>
                         <div className="text-center">
