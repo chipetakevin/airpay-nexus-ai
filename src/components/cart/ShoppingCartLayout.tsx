@@ -12,7 +12,7 @@ const ShoppingCartLayout = ({ children }: ShoppingCartLayoutProps) => {
 
   return (
     <div className="fixed inset-0 bg-black/60 flex items-center justify-center p-3 z-50 backdrop-blur-sm">
-      <Card className="w-full max-w-md max-h-[95vh] overflow-y-auto bg-white shadow-2xl border-0">
+      <Card className="w-full max-w-md max-h-[95vh] overflow-y-auto bg-white shadow-2xl border-none outline-none ring-0" style={{ border: 'none', outline: 'none' }}>
         {children}
       </Card>
     </div>
