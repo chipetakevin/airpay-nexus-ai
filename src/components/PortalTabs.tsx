@@ -24,9 +24,8 @@ const PortalTabs = ({
 }: PortalTabsProps) => {
   
   const getTabClassName = (tabValue: string) => {
-    let baseClass = "text-xs sm:text-sm py-3 sm:py-4 px-1 sm:px-4 transition-all duration-200 relative";
+    let baseClass = "flex flex-col items-center gap-2 p-4 rounded-lg transition-all duration-300 hover:bg-gray-50";
     
-    // Check if tab is allowed
     const allowed = isTabAllowed(tabValue);
     
     if (!allowed) {
@@ -34,32 +33,21 @@ const PortalTabs = ({
     } else {
       switch (tabValue) {
         case 'vendor':
-          baseClass += " text-yellow-600 hover:bg-yellow-50";
+          baseClass += " data-[state=active]:bg-gradient-to-r data-[state=active]:from-yellow-500 data-[state=active]:to-orange-500 data-[state=active]:text-white data-[state=active]:shadow-lg";
           break;
         case 'onecard':
-          // Smart Deals tab with maximum attention animation
-          baseClass += ` text-blue-600 hover:bg-blue-50 
-            animate-pulse 
-            before:absolute before:inset-0 before:rounded-lg before:bg-gradient-to-r before:from-blue-400 before:via-purple-500 before:to-green-400 before:p-[2px] before:animate-pulse before:-z-10
-            after:absolute after:inset-[2px] after:rounded-lg after:bg-white after:-z-10
-            shadow-lg shadow-blue-500/50 animate-[pulse_1.5s_ease-in-out_infinite]
-            font-semibold
-            bg-gradient-to-r from-blue-50 to-purple-50
-            border-2 border-transparent bg-clip-padding
-            hover:shadow-xl hover:shadow-blue-600/60
-            transform hover:scale-105`;
+          baseClass += " data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-500 data-[state=active]:to-purple-500 data-[state=active]:text-white data-[state=active]:shadow-lg animate-pulse";
           break;
         case 'admin-reg':
         case 'admin':
-          // Gray out admin tabs for non-admin users
           if (!isTabAllowed('admin-reg') && !isTabAllowed('admin')) {
             baseClass += " opacity-20 cursor-not-allowed bg-gray-200 text-gray-300 pointer-events-none";
           } else {
-            baseClass += ` text-red-600 hover:bg-red-50 ${tabValue === 'admin' ? 'font-bold' : ''}`;
+            baseClass += " data-[state=active]:bg-gradient-to-r data-[state=active]:from-red-500 data-[state=active]:to-pink-500 data-[state=active]:text-white data-[state=active]:shadow-lg";
           }
           break;
         default:
-          baseClass += " hover:bg-blue-50";
+          baseClass += " data-[state=active]:bg-gradient-to-r data-[state=active]:from-green-500 data-[state=active]:to-emerald-500 data-[state=active]:text-white data-[state=active]:shadow-lg";
       }
     }
     
@@ -67,65 +55,60 @@ const PortalTabs = ({
   };
 
   const getTabContent = (tabValue: string) => {
-    // For admin tabs, show grayed out unreadable text for non-admin users
     if ((tabValue === 'admin-reg' || tabValue === 'admin') && !isTabAllowed(tabValue)) {
       return (
-        <span className="opacity-30 text-gray-400 select-none pointer-events-none blur-sm">
-          {tabValue === 'admin-reg' ? (
-            <>
-              <span className="hidden sm:inline">■■■■■</span>
-              <span className="sm:hidden">■■■</span>
-            </>
-          ) : (
-            <>
-              <span className="hidden sm:inline">■■■■■ ■■■■■■</span>
-              <span className="sm:hidden">■■■■■■</span>
-            </>
-          )}
-        </span>
+        <div className="flex flex-col items-center gap-1">
+          <span className="text-lg opacity-30 blur-sm">🔒</span>
+          <span className="text-xs opacity-30 select-none pointer-events-none blur-sm">
+            {tabValue === 'admin-reg' ? 'Admin' : 'Portal'}
+          </span>
+        </div>
       );
     }
 
-    // Normal tab content for allowed tabs with special styling for Smart Deals
     switch (tabValue) {
       case 'registration':
         return (
-          <>
-            <span className="hidden sm:inline">Customer Registration</span>
-            <span className="sm:hidden">Customer</span>
-          </>
+          <div className="flex flex-col items-center gap-1">
+            <span className="text-lg">👤</span>
+            <span className="text-xs font-medium">Customer</span>
+            <span className="text-xs opacity-75">Registration</span>
+          </div>
         );
       case 'vendor':
         return (
-          <>
-            <span className="hidden sm:inline">Become a Vendor</span>
-            <span className="sm:hidden">Vendor</span>
-          </>
+          <div className="flex flex-col items-center gap-1">
+            <span className="text-lg">🏪</span>
+            <span className="text-xs font-medium">Vendor</span>
+            <span className="text-xs opacity-75">Partnership</span>
+          </div>
         );
       case 'onecard':
         return (
-          <div className="flex items-center gap-1 sm:gap-2">
-            <span className="animate-bounce text-lg">🔥</span>
-            <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent font-bold">
-              <span className="hidden sm:inline">Smart Deals</span>
-              <span className="sm:hidden">Deals</span>
-            </span>
-            <span className="animate-pulse">✨</span>
+          <div className="flex flex-col items-center gap-1">
+            <div className="flex items-center gap-1">
+              <span className="animate-bounce text-lg">🔥</span>
+              <span className="animate-pulse">✨</span>
+            </div>
+            <span className="text-xs font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">Smart Deals</span>
+            <span className="text-xs opacity-75">Rewards</span>
           </div>
         );
       case 'admin-reg':
         return (
-          <>
-            <span className="hidden sm:inline">Admin</span>
-            <span className="sm:hidden">Admin</span>
-          </>
+          <div className="flex flex-col items-center gap-1">
+            <span className="text-lg">🔐</span>
+            <span className="text-xs font-medium">Admin</span>
+            <span className="text-xs opacity-75">Access</span>
+          </div>
         );
       case 'admin':
         return (
-          <>
-            <span className="hidden sm:inline">Admin Portal</span>
-            <span className="sm:hidden">Portal</span>
-          </>
+          <div className="flex flex-col items-center gap-1">
+            <span className="text-lg">⚙️</span>
+            <span className="text-xs font-medium">Admin</span>
+            <span className="text-xs opacity-75">Portal</span>
+          </div>
         );
       default:
         return tabValue;
@@ -134,44 +117,50 @@ const PortalTabs = ({
 
   return (
     <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full">
-      <TabsList className={`grid w-full ${showAdminTab ? 'grid-cols-5' : 'grid-cols-4'} bg-gray-100 h-auto`}>
-        <TabsTrigger 
-          value="registration" 
-          className={getTabClassName('registration')}
-          disabled={!isTabAllowed('registration')}
-        >
-          {getTabContent('registration')}
-        </TabsTrigger>
-        <TabsTrigger 
-          value="vendor" 
-          className={getTabClassName('vendor')}
-          disabled={!isTabAllowed('vendor')}
-        >
-          {getTabContent('vendor')}
-        </TabsTrigger>
-        <TabsTrigger 
-          value="onecard" 
-          className={getTabClassName('onecard')}
-          disabled={!isTabAllowed('onecard')}
-        >
-          {getTabContent('onecard')}
-        </TabsTrigger>
-        <TabsTrigger 
-          value="admin-reg" 
-          className={getTabClassName('admin-reg')}
-          disabled={!isTabAllowed('admin-reg')}
-        >
-          {getTabContent('admin-reg')}
-        </TabsTrigger>
-        {showAdminTab && (
+      <TabsList className="w-full bg-white shadow-sm border rounded-xl p-2 mb-6">
+        <div className={`grid w-full gap-2 ${showAdminTab ? 'grid-cols-2 sm:grid-cols-3 lg:grid-cols-5' : 'grid-cols-2 sm:grid-cols-4'}`}>
           <TabsTrigger 
-            value="admin" 
-            className={getTabClassName('admin')}
-            disabled={!isTabAllowed('admin')}
+            value="registration" 
+            className={getTabClassName('registration')}
+            disabled={!isTabAllowed('registration')}
           >
-            {getTabContent('admin')}
+            {getTabContent('registration')}
           </TabsTrigger>
-        )}
+          
+          <TabsTrigger 
+            value="vendor" 
+            className={getTabClassName('vendor')}
+            disabled={!isTabAllowed('vendor')}
+          >
+            {getTabContent('vendor')}
+          </TabsTrigger>
+          
+          <TabsTrigger 
+            value="onecard" 
+            className={getTabClassName('onecard')}
+            disabled={!isTabAllowed('onecard')}
+          >
+            {getTabContent('onecard')}
+          </TabsTrigger>
+          
+          <TabsTrigger 
+            value="admin-reg" 
+            className={getTabClassName('admin-reg')}
+            disabled={!isTabAllowed('admin-reg')}
+          >
+            {getTabContent('admin-reg')}
+          </TabsTrigger>
+          
+          {showAdminTab && (
+            <TabsTrigger 
+              value="admin" 
+              className={getTabClassName('admin')}
+              disabled={!isTabAllowed('admin')}
+            >
+              {getTabContent('admin')}
+            </TabsTrigger>
+          )}
+        </div>
       </TabsList>
       
       <TabsContent value="registration" className="p-4 sm:p-6">
