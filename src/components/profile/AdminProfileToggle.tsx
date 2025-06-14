@@ -61,20 +61,18 @@ export const AdminProfileToggle = ({ isEnabled, onToggle }: AdminProfileTogglePr
 
   return (
     <>
-      <div className="flex items-center gap-3 p-4 bg-red-50 border border-red-200 rounded-lg">
-        <Shield className="w-5 h-5 text-red-600" />
-        <div className="flex-1">
-          <Label htmlFor="profile-toggle" className="text-sm font-medium text-red-800">
+      <div className="flex items-center gap-2 p-2.5 bg-red-50 border border-red-200 rounded-lg">
+        <Shield className="w-4 h-4 text-red-600 flex-shrink-0" />
+        <div className="flex-1 min-w-0">
+          <Label htmlFor="profile-toggle" className="text-xs font-medium text-red-800 leading-tight">
             Admin Profile Control
           </Label>
-          <p className="text-xs text-red-600 mt-1">
-            Toggle profile availability with admin password
-          </p>
         </div>
         <Switch
           id="profile-toggle"
           checked={isEnabled}
           onCheckedChange={handleToggleClick}
+          className="scale-75"
         />
       </div>
 
