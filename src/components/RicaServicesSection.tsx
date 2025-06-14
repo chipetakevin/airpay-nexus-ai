@@ -9,6 +9,14 @@ import {
 } from 'lucide-react';
 
 const RicaServicesSection = () => {
+  const handleStartRICA = () => {
+    window.location.href = '/portal?tab=onecard&network=divinely%20mobile&dealType=airtime&action=rica';
+  };
+
+  const handleStartPorting = () => {
+    window.location.href = '/portal?tab=onecard&network=divinely%20mobile&dealType=porting&action=port';
+  };
+
   const ricaServices = [
     {
       icon: <Zap className="w-10 h-10 text-white" />,
@@ -20,7 +28,7 @@ const RicaServicesSection = () => {
       borderColor: "border-blue-400",
       glow: "shadow-[0_0_30px_rgba(59,130,246,0.5)]",
       popular: true,
-      action: () => window.location.href = '/devine-baas'
+      action: handleStartPorting
     },
     {
       icon: <Shield className="w-10 h-10 text-white" />,
@@ -31,7 +39,7 @@ const RicaServicesSection = () => {
       gradient: "from-green-500 via-emerald-500 to-teal-600",
       borderColor: "border-green-400",
       glow: "shadow-[0_0_30px_rgba(34,197,94,0.5)]",
-      action: () => window.location.href = '/devine-baas'
+      action: handleStartRICA
     },
     {
       icon: <Globe className="w-10 h-10 text-white" />,
@@ -42,13 +50,9 @@ const RicaServicesSection = () => {
       gradient: "from-purple-500 via-violet-500 to-purple-600",
       borderColor: "border-purple-400",
       glow: "shadow-[0_0_30px_rgba(168,85,247,0.5)]",
-      action: () => window.location.href = '/devine-baas'
+      action: handleStartRICA
     }
   ];
-
-  const handleStartRICA = () => {
-    window.location.href = '/devine-baas';
-  };
 
   return (
     <section className="py-20 bg-gradient-to-br from-gray-50 via-blue-50 to-purple-50 relative overflow-hidden">
@@ -92,7 +96,7 @@ const RicaServicesSection = () => {
           <div className="mb-12">
             <Button 
               onClick={handleStartRICA}
-              className="bg-gradient-to-r from-red-500 via-orange-500 to-yellow-500 hover:from-red-600 hover:via-orange-600 hover:to-yellow-600 text-white px-12 py-8 text-2xl font-black rounded-2xl shadow-2xl transform hover:scale-110 transition-all duration-300 animate-pulse border-4 border-white"
+              className="bg-gradient-to-r from-red-500 via-orange-500 to-yellow-500 hover:from-red-600 hover:via-orange-600 hover:to-yellow-600 text-white px-12 py-8 text-2xl font-black rounded-2xl shadow-2xl transform hover:scale-110 transition-all duration-300 animate-pulse border-4 border-white cursor-pointer"
               style={{
                 boxShadow: '0 0 50px rgba(239, 68, 68, 0.8), 0 0 100px rgba(251, 146, 60, 0.6)',
                 textShadow: '2px 2px 4px rgba(0,0,0,0.5)'
@@ -159,28 +163,28 @@ const RicaServicesSection = () => {
             🔥 LIVE PERFORMANCE STATS 🔥
           </h3>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
-            <div className="group hover:scale-110 transition-transform duration-300">
+            <div className="group hover:scale-110 transition-transform duration-300 cursor-pointer" onClick={handleStartRICA}>
               <div className="flex justify-center mb-3">
                 <CheckCircle className="w-8 h-8 text-green-600 animate-pulse" />
               </div>
               <div className="text-4xl font-black text-gray-900 mb-2 animate-bounce">99.7%</div>
               <div className="text-sm text-gray-600 font-bold">Success Rate</div>
             </div>
-            <div className="group hover:scale-110 transition-transform duration-300">
+            <div className="group hover:scale-110 transition-transform duration-300 cursor-pointer" onClick={handleStartPorting}>
               <div className="flex justify-center mb-3">
                 <Clock className="w-8 h-8 text-blue-600 animate-spin" />
               </div>
               <div className="text-4xl font-black text-gray-900 mb-2 animate-pulse">5 Min</div>
               <div className="text-sm text-gray-600 font-bold">Avg Processing</div>
             </div>
-            <div className="group hover:scale-110 transition-transform duration-300">
+            <div className="group hover:scale-110 transition-transform duration-300 cursor-pointer" onClick={handleStartRICA}>
               <div className="flex justify-center mb-3">
                 <Users className="w-8 h-8 text-yellow-600 animate-bounce" />
               </div>
               <div className="text-4xl font-black text-gray-900 mb-2 animate-pulse">50K+</div>
               <div className="text-sm text-gray-600 font-bold">Happy Customers</div>
             </div>
-            <div className="group hover:scale-110 transition-transform duration-300">
+            <div className="group hover:scale-110 transition-transform duration-300 cursor-pointer" onClick={handleStartPorting}>
               <div className="flex justify-center mb-3">
                 <TrendingUp className="w-8 h-8 text-purple-600 animate-pulse" />
               </div>
@@ -191,7 +195,7 @@ const RicaServicesSection = () => {
         </div>
 
         {/* Final Flash CTA Section */}
-        <div className="text-center bg-gradient-to-r from-red-500 via-orange-500 to-yellow-500 rounded-3xl p-12 text-white relative overflow-hidden" style={{boxShadow: '0 0 100px rgba(239, 68, 68, 0.8)'}}>
+        <div className="text-center bg-gradient-to-r from-red-500 via-orange-500 to-yellow-500 rounded-3xl p-12 text-white relative overflow-hidden cursor-pointer" style={{boxShadow: '0 0 100px rgba(239, 68, 68, 0.8)'}} onClick={handleStartRICA}>
           <div className="absolute inset-0 bg-black/20"></div>
           <div className="relative z-10">
             <h3 className="text-4xl md:text-6xl font-black mb-6 animate-pulse drop-shadow-2xl">
@@ -202,7 +206,7 @@ const RicaServicesSection = () => {
             </p>
             <Button 
               onClick={handleStartRICA}
-              className="bg-white text-red-600 hover:bg-gray-100 px-16 py-8 text-3xl font-black rounded-2xl shadow-2xl transform hover:scale-110 transition-all duration-300 border-4 border-red-600"
+              className="bg-white text-red-600 hover:bg-gray-100 px-16 py-8 text-3xl font-black rounded-2xl shadow-2xl transform hover:scale-110 transition-all duration-300 border-4 border-red-600 cursor-pointer"
               style={{
                 boxShadow: '0 0 30px rgba(255, 255, 255, 0.8)',
                 textShadow: '2px 2px 4px rgba(0,0,0,0.3)'
