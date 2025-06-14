@@ -4,6 +4,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { ScrollArea } from '@/components/ui/scroll-area';
 import AirtimeDealsSystem from './AirtimeDealsSystem';
 import BillingDashboard from './billing/BillingDashboard';
 import SpazaMarketplace from './spaza/SpazaMarketplace';
@@ -114,9 +115,9 @@ const AirPayMasterDashboard = () => {
   ];
 
   return (
-    <div className="bg-gradient-to-br from-slate-50 via-blue-50/30 to-purple-50/30">
+    <div className="h-screen flex flex-col bg-gradient-to-br from-slate-50 via-blue-50/30 to-purple-50/30">
       {/* Enhanced Header with better branding */}
-      <div className="bg-white/95 backdrop-blur-md border-b border-gray-200/50 shadow-lg sticky top-0 z-50">
+      <div className="flex-shrink-0 bg-white/95 backdrop-blur-md border-b border-gray-200/50 shadow-lg">
         <div className="max-w-7xl mx-auto p-4 md:p-6">
           {/* Header with improved branding */}
           <div className="flex items-center justify-between mb-8">
@@ -218,144 +219,148 @@ const AirPayMasterDashboard = () => {
         </div>
       </div>
 
-      {/* Main Content with improved scrolling */}
-      <div className="max-w-7xl mx-auto p-4 md:p-6 pb-20">
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <div className="space-y-6">
-            <TabsContent value="deals" className="space-y-6 animate-fade-in">
-              <Card className="bg-white/90 backdrop-blur-sm border-0 shadow-2xl ring-1 ring-gray-200">
-                <CardHeader className="bg-gradient-to-r from-blue-50 via-purple-50 to-indigo-50 rounded-t-xl border-b border-gray-100">
-                  <CardTitle className="flex items-center gap-4 text-xl md:text-2xl">
-                    <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-2xl flex items-center justify-center shadow-lg">
-                      <span className="text-2xl">🔥</span>
-                    </div>
-                    <div>
-                      <div className="flex items-center gap-3">
-                        Smart Airtime & Data Deals
-                        <Badge className="bg-blue-600 text-white px-3 py-1 text-sm">Live AI</Badge>
-                        <Badge className="bg-green-600 text-white px-3 py-1 text-sm">Cashback</Badge>
-                      </div>
-                      <p className="text-gray-600 text-base font-normal mt-2">Discover the best deals from top SA retailers with AI-powered recommendations</p>
-                    </div>
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="p-6 md:p-8">
-                  <AirtimeDealsSystem />
-                </CardContent>
-              </Card>
-            </TabsContent>
+      {/* Main Content with proper scrolling */}
+      <div className="flex-1 overflow-hidden">
+        <ScrollArea className="h-full">
+          <div className="max-w-7xl mx-auto p-4 md:p-6 pb-20">
+            <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+              <div className="space-y-6">
+                <TabsContent value="deals" className="space-y-6 animate-fade-in">
+                  <Card className="bg-white/90 backdrop-blur-sm border-0 shadow-2xl ring-1 ring-gray-200">
+                    <CardHeader className="bg-gradient-to-r from-blue-50 via-purple-50 to-indigo-50 rounded-t-xl border-b border-gray-100">
+                      <CardTitle className="flex items-center gap-4 text-xl md:text-2xl">
+                        <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-2xl flex items-center justify-center shadow-lg">
+                          <span className="text-2xl">🔥</span>
+                        </div>
+                        <div>
+                          <div className="flex items-center gap-3">
+                            Smart Airtime & Data Deals
+                            <Badge className="bg-blue-600 text-white px-3 py-1 text-sm">Live AI</Badge>
+                            <Badge className="bg-green-600 text-white px-3 py-1 text-sm">Cashback</Badge>
+                          </div>
+                          <p className="text-gray-600 text-base font-normal mt-2">Discover the best deals from top SA retailers with AI-powered recommendations</p>
+                        </div>
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent className="p-6 md:p-8">
+                      <AirtimeDealsSystem />
+                    </CardContent>
+                  </Card>
+                </TabsContent>
 
-            <TabsContent value="billing" className="space-y-6 animate-fade-in">
-              <Card className="bg-white/90 backdrop-blur-sm border-0 shadow-2xl ring-1 ring-gray-200">
-                <CardHeader className="bg-gradient-to-r from-green-50 to-emerald-50 rounded-t-xl border-b border-gray-100">
-                  <CardTitle className="flex items-center gap-4 text-xl md:text-2xl">
-                    <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-emerald-600 rounded-2xl flex items-center justify-center shadow-lg">
-                      <span className="text-2xl">💳</span>
-                    </div>
-                    <div>
-                      <div className="flex items-center gap-3">
-                        Billing Dashboard
-                        <Badge className="bg-green-600 text-white px-3 py-1 text-sm">Secure</Badge>
-                      </div>
-                      <p className="text-gray-600 text-base font-normal mt-2">Manage payments, view transactions, and track your spending</p>
-                    </div>
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="p-6 md:p-8">
-                  <BillingDashboard />
-                </CardContent>
-              </Card>
-            </TabsContent>
+                <TabsContent value="billing" className="space-y-6 animate-fade-in">
+                  <Card className="bg-white/90 backdrop-blur-sm border-0 shadow-2xl ring-1 ring-gray-200">
+                    <CardHeader className="bg-gradient-to-r from-green-50 to-emerald-50 rounded-t-xl border-b border-gray-100">
+                      <CardTitle className="flex items-center gap-4 text-xl md:text-2xl">
+                        <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-emerald-600 rounded-2xl flex items-center justify-center shadow-lg">
+                          <span className="text-2xl">💳</span>
+                        </div>
+                        <div>
+                          <div className="flex items-center gap-3">
+                            Billing Dashboard
+                            <Badge className="bg-green-600 text-white px-3 py-1 text-sm">Secure</Badge>
+                          </div>
+                          <p className="text-gray-600 text-base font-normal mt-2">Manage payments, view transactions, and track your spending</p>
+                        </div>
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent className="p-6 md:p-8">
+                      <BillingDashboard />
+                    </CardContent>
+                  </Card>
+                </TabsContent>
 
-            <TabsContent value="spaza" className="space-y-6 animate-fade-in">
-              <Card className="bg-white/90 backdrop-blur-sm border-0 shadow-2xl ring-1 ring-gray-200">
-                <CardHeader className="bg-gradient-to-r from-orange-50 to-red-50 rounded-t-xl border-b border-gray-100">
-                  <CardTitle className="flex items-center gap-4 text-xl md:text-2xl">
-                    <div className="w-12 h-12 bg-gradient-to-br from-orange-500 to-red-600 rounded-2xl flex items-center justify-center shadow-lg">
-                      <span className="text-2xl">🏪</span>
-                    </div>
-                    <div>
-                      <div className="flex items-center gap-3">
-                        Spaza Marketplace
-                        <Badge className="bg-orange-600 text-white px-3 py-1 text-sm">24/7 Open</Badge>
-                      </div>
-                      <p className="text-gray-600 text-base font-normal mt-2">Your neighborhood digital marketplace - always open for business</p>
-                    </div>
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="p-6 md:p-8">
-                  <SpazaMarketplace />
-                </CardContent>
-              </Card>
-            </TabsContent>
+                <TabsContent value="spaza" className="space-y-6 animate-fade-in">
+                  <Card className="bg-white/90 backdrop-blur-sm border-0 shadow-2xl ring-1 ring-gray-200">
+                    <CardHeader className="bg-gradient-to-r from-orange-50 to-red-50 rounded-t-xl border-b border-gray-100">
+                      <CardTitle className="flex items-center gap-4 text-xl md:text-2xl">
+                        <div className="w-12 h-12 bg-gradient-to-br from-orange-500 to-red-600 rounded-2xl flex items-center justify-center shadow-lg">
+                          <span className="text-2xl">🏪</span>
+                        </div>
+                        <div>
+                          <div className="flex items-center gap-3">
+                            Spaza Marketplace
+                            <Badge className="bg-orange-600 text-white px-3 py-1 text-sm">24/7 Open</Badge>
+                          </div>
+                          <p className="text-gray-600 text-base font-normal mt-2">Your neighborhood digital marketplace - always open for business</p>
+                        </div>
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent className="p-6 md:p-8">
+                      <SpazaMarketplace />
+                    </CardContent>
+                  </Card>
+                </TabsContent>
 
-            <TabsContent value="alerts" className="space-y-6 animate-fade-in">
-              <Card className="bg-white/90 backdrop-blur-sm border-0 shadow-2xl ring-1 ring-gray-200">
-                <CardHeader className="bg-gradient-to-r from-yellow-50 to-orange-50 rounded-t-xl border-b border-gray-100">
-                  <CardTitle className="flex items-center gap-4 text-xl md:text-2xl">
-                    <div className="w-12 h-12 bg-gradient-to-br from-yellow-500 to-orange-600 rounded-2xl flex items-center justify-center shadow-lg">
-                      <span className="text-2xl">🔔</span>
-                    </div>
-                    <div>
-                      <div className="flex items-center gap-3">
-                        Deal Alert System
-                        <Badge className="bg-yellow-600 text-white px-3 py-1 text-sm">Live</Badge>
-                      </div>
-                      <p className="text-gray-600 text-base font-normal mt-2">Never miss a great deal with real-time notifications</p>
-                    </div>
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="p-6 md:p-8">
-                  <DealAlertSystem />
-                </CardContent>
-              </Card>
-            </TabsContent>
+                <TabsContent value="alerts" className="space-y-6 animate-fade-in">
+                  <Card className="bg-white/90 backdrop-blur-sm border-0 shadow-2xl ring-1 ring-gray-200">
+                    <CardHeader className="bg-gradient-to-r from-yellow-50 to-orange-50 rounded-t-xl border-b border-gray-100">
+                      <CardTitle className="flex items-center gap-4 text-xl md:text-2xl">
+                        <div className="w-12 h-12 bg-gradient-to-br from-yellow-500 to-orange-600 rounded-2xl flex items-center justify-center shadow-lg">
+                          <span className="text-2xl">🔔</span>
+                        </div>
+                        <div>
+                          <div className="flex items-center gap-3">
+                            Deal Alert System
+                            <Badge className="bg-yellow-600 text-white px-3 py-1 text-sm">Live</Badge>
+                          </div>
+                          <p className="text-gray-600 text-base font-normal mt-2">Never miss a great deal with real-time notifications</p>
+                        </div>
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent className="p-6 md:p-8">
+                      <DealAlertSystem />
+                    </CardContent>
+                  </Card>
+                </TabsContent>
 
-            <TabsContent value="notifications" className="space-y-6 animate-fade-in">
-              <Card className="bg-white/90 backdrop-blur-sm border-0 shadow-2xl ring-1 ring-gray-200">
-                <CardHeader className="bg-gradient-to-r from-cyan-50 to-blue-50 rounded-t-xl border-b border-gray-100">
-                  <CardTitle className="flex items-center gap-4 text-xl md:text-2xl">
-                    <div className="w-12 h-12 bg-gradient-to-br from-cyan-500 to-blue-600 rounded-2xl flex items-center justify-center shadow-lg">
-                      <span className="text-2xl">💬</span>
-                    </div>
-                    <div>
-                      <div className="flex items-center gap-3">
-                        Communications Center
-                        <Badge className="bg-cyan-600 text-white px-3 py-1 text-sm">Active</Badge>
-                      </div>
-                      <p className="text-gray-600 text-base font-normal mt-2">Stay connected with updates, support, and community</p>
-                    </div>
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="p-6 md:p-8">
-                  <NotificationCenter />
-                </CardContent>
-              </Card>
-            </TabsContent>
+                <TabsContent value="notifications" className="space-y-6 animate-fade-in">
+                  <Card className="bg-white/90 backdrop-blur-sm border-0 shadow-2xl ring-1 ring-gray-200">
+                    <CardHeader className="bg-gradient-to-r from-cyan-50 to-blue-50 rounded-t-xl border-b border-gray-100">
+                      <CardTitle className="flex items-center gap-4 text-xl md:text-2xl">
+                        <div className="w-12 h-12 bg-gradient-to-br from-cyan-500 to-blue-600 rounded-2xl flex items-center justify-center shadow-lg">
+                          <span className="text-2xl">💬</span>
+                        </div>
+                        <div>
+                          <div className="flex items-center gap-3">
+                            Communications Center
+                            <Badge className="bg-cyan-600 text-white px-3 py-1 text-sm">Active</Badge>
+                          </div>
+                          <p className="text-gray-600 text-base font-normal mt-2">Stay connected with updates, support, and community</p>
+                        </div>
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent className="p-6 md:p-8">
+                      <NotificationCenter />
+                    </CardContent>
+                  </Card>
+                </TabsContent>
 
-            <TabsContent value="admin" className="space-y-6 animate-fade-in">
-              <Card className="bg-white/90 backdrop-blur-sm border-0 shadow-2xl ring-1 ring-gray-200">
-                <CardHeader className="bg-gradient-to-r from-gray-50 to-slate-50 rounded-t-xl border-b border-gray-100">
-                  <CardTitle className="flex items-center gap-4 text-xl md:text-2xl">
-                    <div className="w-12 h-12 bg-gradient-to-br from-gray-500 to-slate-600 rounded-2xl flex items-center justify-center shadow-lg">
-                      <span className="text-2xl">⚙️</span>
-                    </div>
-                    <div>
-                      <div className="flex items-center gap-3">
-                        Admin Portal
-                        <Badge className="bg-gray-600 text-white px-3 py-1 text-sm">Secure</Badge>
-                      </div>
-                      <p className="text-gray-600 text-base font-normal mt-2">Advanced controls and system management</p>
-                    </div>
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="p-6 md:p-8">
-                  <AdminPortal />
-                </CardContent>
-              </Card>
-            </TabsContent>
+                <TabsContent value="admin" className="space-y-6 animate-fade-in">
+                  <Card className="bg-white/90 backdrop-blur-sm border-0 shadow-2xl ring-1 ring-gray-200">
+                    <CardHeader className="bg-gradient-to-r from-gray-50 to-slate-50 rounded-t-xl border-b border-gray-100">
+                      <CardTitle className="flex items-center gap-4 text-xl md:text-2xl">
+                        <div className="w-12 h-12 bg-gradient-to-br from-gray-500 to-slate-600 rounded-2xl flex items-center justify-center shadow-lg">
+                          <span className="text-2xl">⚙️</span>
+                        </div>
+                        <div>
+                          <div className="flex items-center gap-3">
+                            Admin Portal
+                            <Badge className="bg-gray-600 text-white px-3 py-1 text-sm">Secure</Badge>
+                          </div>
+                          <p className="text-gray-600 text-base font-normal mt-2">Advanced controls and system management</p>
+                        </div>
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent className="p-6 md:p-8">
+                      <AdminPortal />
+                    </CardContent>
+                  </Card>
+                </TabsContent>
+              </div>
+            </Tabs>
           </div>
-        </Tabs>
+        </ScrollArea>
       </div>
     </div>
   );
