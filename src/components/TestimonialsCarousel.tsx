@@ -18,14 +18,14 @@ const TestimonialsCarousel = () => {
       name: "Thabo Mthembu",
       location: "Johannesburg",
       rating: 5,
-      comment: "AirPay has completely changed how I buy airtime. The cashback rewards are amazing and the service is always reliable!",
+      comment: "OneCard has completely changed how I buy airtime. The cashback rewards are amazing and the service is always reliable! Happy to be a paid up member of this Agentic Movement with Divinely Mobile.",
       avatar: "TM"
     },
     {
       name: "Sarah Johnson",
       location: "Cape Town",
       rating: 5,
-      comment: "As a vendor, AirPay has increased my revenue by 40%. The platform is easy to use and my customers love it.",
+      comment: "As a vendor, OneCard has increased my revenue by 40%. The platform is easy to use and my customers love it.",
       avatar: "SJ"
     },
     {
@@ -39,7 +39,7 @@ const TestimonialsCarousel = () => {
       name: "Priya Patel",
       location: "Pretoria",
       rating: 5,
-      comment: "Lightning fast delivery and great deals on all networks. AirPay is my go-to for all airtime needs.",
+      comment: "Lightning fast delivery and great deals on all networks. OneCard is my go-to for all airtime needs.",
       avatar: "PP"
     }
   ];
