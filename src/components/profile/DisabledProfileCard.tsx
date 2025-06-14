@@ -58,7 +58,7 @@ export const DisabledProfileCard = ({ user, onEnable }: DisabledProfileCardProps
           
           {/* Click to enable text positioned at bottom */}
           <div className="mt-3 pt-2 border-t border-gray-200/50 opacity-0 group-hover:opacity-100 transition-opacity">
-            <div className="text-xs text-blue-600 font-medium text-center">
+            <div className="text-[10px] text-blue-600 font-medium text-center">
               Click to enable
             </div>
           </div>
