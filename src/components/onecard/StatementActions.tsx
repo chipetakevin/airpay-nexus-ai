@@ -6,7 +6,8 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
-import { Download, Mail, MessageCircle, Send } from 'lucide-react';
+import { Download, Mail, MessageCircle, Send, FileText } from 'lucide-react';
+import jsPDF from 'jspdf';
 
 interface Transaction {
   customer_id: string;
@@ -41,6 +42,127 @@ export const StatementActions = ({ transaction }: StatementActionsProps) => {
 
   const generateTransactionId = (timestamp: string) => {
     return 'AP' + timestamp.replace(/[^0-9]/g, '').slice(-8);
+  };
+
+  const generatePDFStatement = () => {
+    try {
+      // Get customer details from localStorage
+      const credentials = localStorage.getItem('userCredentials');
+      let customerName = 'Valued Customer';
+      let customerPhone = '';
+      
+      if (credentials) {
+        const parsedCredentials = JSON.parse(credentials);
+        customerName = `${parsedCredentials.firstName || ''} ${parsedCredentials.lastName || ''}`.trim();
+        customerPhone = parsedCredentials.phone || '';
+      }
+
+      const doc = new jsPDF();
+      const transactionId = generateTransactionId(transaction.timestamp);
+      const formattedDate = new Date(transaction.timestamp).toLocaleDateString('en-ZA', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+      });
+
+      // Header
+      doc.setFontSize(20);
+      doc.setTextColor(16, 185, 129); // Green color
+      doc.text('📱 Divinely Mobile', 20, 30);
+      
+      doc.setFontSize(14);
+      doc.setTextColor(0, 0, 0);
+      doc.text('Transaction Statement', 20, 45);
+
+      // Transaction Details Box
+      doc.setDrawColor(16, 185, 129);
+      doc.setLineWidth(1);
+      doc.rect(20, 55, 170, 40);
+      
+      doc.setFontSize(12);
+      doc.text('Transaction Details', 25, 65);
+      doc.setFontSize(10);
+      doc.text(`Customer: ${customerName}`, 25, 75);
+      doc.text(`Phone: ${customerPhone}`, 25, 82);
+      doc.text(`Transaction ID: ${transactionId}`, 25, 89);
+      doc.text(`Date: ${formattedDate}`, 120, 75);
+      doc.text(`Status: ${transaction.status}`, 120, 82);
+      doc.text(`Network: ${transaction.network}`, 120, 89);
+
+      // Purchase Details
+      doc.setFontSize(12);
+      doc.text('Purchase Details', 25, 110);
+      doc.setLineWidth(0.5);
+      doc.line(25, 115, 185, 115);
+      
+      doc.setFontSize(10);
+      doc.text('Item', 25, 125);
+      doc.text('Amount', 120, 125);
+      doc.text('Price', 160, 125);
+      doc.line(25, 128, 185, 128);
+      
+      doc.text(`${transaction.network} Airtime R${transaction.amount}`, 25, 138);
+      doc.text(`R${transaction.amount.toFixed(2)}`, 120, 138);
+      doc.text(`R${transaction.discounted_price.toFixed(2)}`, 160, 138);
+
+      // Recipient Details
+      doc.setFontSize(12);
+      doc.text('Recipient Details', 25, 155);
+      doc.setLineWidth(0.5);
+      doc.line(25, 160, 185, 160);
+      
+      doc.setFontSize(10);
+      doc.text(`Name: ${transaction.recipient_name}`, 25, 170);
+      doc.text(`Phone: ${transaction.recipient_phone}`, 25, 177);
+      if (transaction.recipient_relationship) {
+        doc.text(`Relationship: ${transaction.recipient_relationship}`, 25, 184);
+      }
+
+      // Payment Summary
+      doc.setDrawColor(16, 185, 129);
+      doc.setFillColor(240, 253, 244);
+      doc.rect(20, 195, 170, 35, 'FD');
+      
+      doc.setFontSize(12);
+      doc.setTextColor(16, 185, 129);
+      doc.text('Payment Summary', 25, 205);
+      
+      doc.setFontSize(10);
+      doc.setTextColor(0, 0, 0);
+      doc.text(`Total Paid: R${transaction.amount.toFixed(2)}`, 25, 215);
+      doc.text(`Cashback Earned: R${transaction.cashback_earned.toFixed(2)}`, 25, 222);
+      doc.text('✅ Transaction Successful!', 120, 215);
+      
+      const purchaseType = transaction.transaction_type === 'self_purchase' ? 
+        'Airtime loaded to your number' : `Airtime sent to ${transaction.recipient_name}`;
+      doc.text(purchaseType, 120, 222);
+
+      // Footer
+      doc.setFontSize(8);
+      doc.setTextColor(100, 100, 100);
+      doc.text('Continue shopping: https://divinely-mobile.com', 25, 250);
+      doc.text('Support: +27 100 2827', 25, 257);
+      doc.text('© 2024 Divinely Mobile. All rights reserved.', 25, 264);
+      doc.text('Brought To You By OneCard Global Rewards Program', 25, 271);
+
+      // Download the PDF
+      doc.save(`transaction-statement-${transactionId}.pdf`);
+      
+      toast({
+        title: "PDF Downloaded",
+        description: "Transaction statement downloaded successfully"
+      });
+      
+    } catch (error) {
+      console.error('Error generating PDF:', error);
+      toast({
+        title: "Download Failed",
+        description: "Could not generate PDF statement. Please try again.",
+        variant: "destructive"
+      });
+    }
   };
 
   const sendEmailStatement = async () => {
@@ -192,6 +314,12 @@ export const StatementActions = ({ transaction }: StatementActionsProps) => {
 
   return (
     <div className="flex gap-2">
+      {/* PDF Download Button */}
+      <Button size="sm" variant="outline" className="text-xs" onClick={generatePDFStatement}>
+        <FileText className="w-3 h-3 mr-1" />
+        PDF
+      </Button>
+
       {/* Email Statement Dialog */}
       <Dialog open={isEmailDialogOpen} onOpenChange={setIsEmailDialogOpen}>
         <DialogTrigger asChild>
