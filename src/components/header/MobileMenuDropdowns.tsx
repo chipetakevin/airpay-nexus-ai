@@ -23,7 +23,7 @@ const MobileMenuDropdowns = ({ toggleMenu }: MobileMenuDropdownsProps) => {
         >
           <div className="flex items-center gap-2">
             <CreditCard className="w-3 h-3 text-purple-600 flex-shrink-0" />
-            <span className="font-medium text-xs">Portal Services</span>
+            <span className="font-medium text-xs">Smart Deals - Airtime and Data</span>
           </div>
           {showPortalDropdown ? (
             <ChevronUp className="w-3 h-3 text-purple-600" />
