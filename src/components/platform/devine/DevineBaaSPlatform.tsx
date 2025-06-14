@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -44,13 +43,13 @@ const DivinelyBaaSPlatform = () => {
       <div className="bg-white/95 backdrop-blur-sm border-b border-gray-200/50 shadow-sm sticky top-0 z-50">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
-            {/* Logo and Title - Compact */}
+            {/* Logo and Title - Updated */}
             <div className="flex items-center gap-3">
               <div className="w-12 h-12 bg-gradient-to-br from-blue-600 to-purple-600 rounded-xl flex items-center justify-center shadow-md">
                 <Smartphone className="w-6 h-6 text-white" />
               </div>
               <div>
-                <h1 className="text-xl font-bold text-gray-900">Divinely Mobile BaaS</h1>
+                <h1 className="text-xl font-bold text-gray-900">Divinely BaaS Platform</h1>
                 <p className="text-sm text-gray-600">Intelligent Porting & RICA Platform</p>
               </div>
             </div>
