@@ -86,7 +86,7 @@ export const CashbackDisplay = ({ userData }: CashbackDisplayProps) => {
                 <p className="text-sm font-semibold text-yellow-700">Auto-Added</p>
               </div>
             </div>
-          </div>
+          </CardContent>
         </Card>
       )}
     </div>
