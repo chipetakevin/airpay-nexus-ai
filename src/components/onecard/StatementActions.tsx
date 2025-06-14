@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
@@ -67,6 +66,27 @@ export const StatementActions = ({ transaction }: StatementActionsProps) => {
     return displayName;
   };
 
+  const addLogoToPDF = (doc: jsPDF) => {
+    // Create a simple logo using shapes and text to represent the Divinely Mobile brand
+    // Circle with gradient effect
+    doc.setFillColor(16, 185, 129); // Green color from the brand
+    doc.circle(35, 25, 8, 'F');
+    
+    // Add a smaller inner circle for depth
+    doc.setFillColor(34, 197, 94); // Lighter green
+    doc.circle(35, 25, 5, 'F');
+    
+    // Add the "Ø=Ün" symbol style indicator
+    doc.setFontSize(10);
+    doc.setTextColor(255, 255, 255);
+    doc.text('Ø=Ün', 29, 28);
+    
+    // Add "Divinely Mobile" text next to the logo
+    doc.setFontSize(18);
+    doc.setTextColor(16, 185, 129);
+    doc.text('Divinely Mobile', 50, 30);
+  };
+
   const generatePDFStatement = () => {
     try {
       // Get customer details from localStorage
@@ -89,10 +109,8 @@ export const StatementActions = ({ transaction }: StatementActionsProps) => {
         minute: '2-digit'
       });
 
-      // Header
-      doc.setFontSize(20);
-      doc.setTextColor(16, 185, 129); // Green color
-      doc.text('📱 Divinely Mobile', 20, 30);
+      // Add logo instead of text header
+      addLogoToPDF(doc);
       
       doc.setFontSize(14);
       doc.setTextColor(0, 0, 0);
