@@ -2,12 +2,14 @@
 import { useToast } from '@/hooks/use-toast';
 import { useRecipientMemory } from './useRecipientMemory';
 import { useReceiptGeneration } from './useReceiptGeneration';
+import { useCashbackAutomation } from './useCashbackAutomation';
 import { CartItem } from '@/types/deals';
 
 export const useTransactionProcessing = () => {
   const { toast } = useToast();
   const { saveRecipient } = useRecipientMemory();
   const { autoGenerateAndSendReceipts } = useReceiptGeneration();
+  const { processAutomatedCashback } = useCashbackAutomation();
 
   const processTransaction = async (
     cartItems: CartItem[],
@@ -58,6 +60,16 @@ export const useTransactionProcessing = () => {
         await saveRecipient(recipientData, detectedNetwork);
       }
 
+      // AUTOMATED CASHBACK PROCESSING - NEW FEATURE
+      await processAutomatedCashback(
+        transactionData,
+        profitSharing,
+        currentUser,
+        isVendor,
+        purchaseMode,
+        recipientData
+      );
+
       // Auto-generate and send receipts to WhatsApp and email
       await autoGenerateAndSendReceipts(transactionData, profitSharing, cartItems, purchaseMode, customerPhone, recipientData);
 
@@ -72,7 +84,7 @@ export const useTransactionProcessing = () => {
 
       toast({
         title: successMessage,
-        description: "Receipts auto-sent to WhatsApp & Email. Redirecting to Smart Deals..."
+        description: "Receipts auto-sent to WhatsApp & Email. OneCard balances updated automatically."
       });
 
       // Redirect to portal with onecard tab and deals subtab after 3 seconds

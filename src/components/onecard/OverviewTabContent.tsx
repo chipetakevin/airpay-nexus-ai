@@ -4,7 +4,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { CreditCard } from 'lucide-react';
 import { AccountInfoCards } from './AccountInfoCards';
 import { OneCardVisualSection } from './OneCardVisualSection';
-import { QuickStatsSection } from './QuickStatsSection';
+import { CashbackDisplay } from './CashbackDisplay';
 
 interface OverviewTabContentProps {
   userData: any;
@@ -49,15 +49,15 @@ export const OverviewTabContent = ({
         {/* OneCard Visual and Rewards */}
         <OneCardVisualSection onAccessRewards={onAccessRewards} />
 
-        {/* Quick Stats */}
-        <QuickStatsSection userData={userData} />
+        {/* Enhanced Cashback Display */}
+        <CashbackDisplay userData={userData} />
       </div>
 
       {/* Security Notice */}
       <Card className="bg-blue-50 border-blue-200 mt-6">
         <CardContent className="p-3 sm:p-4">
           <p className="text-xs sm:text-sm text-blue-800">
-            🔐 <strong>Secure Rewards:</strong> Your AirPay OneCard rewards are securely maintained with enterprise-level encryption.
+            🔐 <strong>Automated Rewards:</strong> Your cashback and rewards are automatically calculated and added to your OneCard balance with each transaction.
           </p>
         </CardContent>
       </Card>
