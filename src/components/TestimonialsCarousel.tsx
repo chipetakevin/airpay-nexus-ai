@@ -18,28 +18,28 @@ const TestimonialsCarousel = () => {
       name: "Thabo Mthembu",
       location: "Johannesburg",
       rating: 5,
-      comment: "Divinely Mobile has completely changed how I buy airtime. Their onecard Cash-Back rewards are amazing and the service is always reliable! Happy to be a paid up member of this Agentic Movement.",
+      comment: "Divinely Mobile has completely changed how I buy airtime. Their OneCard Cash-Back rewards are amazing and the service is always reliable! Happy to be a paid up member of this Agentic Movement.",
       avatar: "TM"
     },
     {
       name: "Sarah Johnson",
       location: "Cape Town",
       rating: 5,
-      comment: "As a vendor, onecard has increased my revenue by 40%. The platform is easy to use and my customers love it.",
+      comment: "As a vendor, OneCard has increased my revenue by 40%. The platform is easy to use and my customers love it.",
       avatar: "SJ"
     },
     {
       name: "Mandla Khoza",
       location: "Durban",
       rating: 5,
-      comment: "The onecard system is brilliant. I've saved over R500 this month alone on airtime purchases!",
+      comment: "The OneCard system is brilliant. I've saved over R500 this month alone on airtime purchases!",
       avatar: "MK"
     },
     {
       name: "Priya Patel",
       location: "Pretoria",
       rating: 5,
-      comment: "Lightning fast delivery and great deals on all networks. onecard is my go-to for all airtime needs.",
+      comment: "Lightning fast delivery and great deals on all networks. OneCard is my go-to for all airtime needs.",
       avatar: "PP"
     }
   ];

@@ -95,7 +95,7 @@ export const useCustomerRegistration = () => {
     setErrors(newErrors);
 
     if (Object.keys(newErrors).length === 0) {
-      // Generate unique onecard@myonecard.ai account number
+      // Generate unique OneCard account number
       const accountNumber = 'OC' + Math.random().toString(36).substr(2, 8).toUpperCase();
       
       const userData = {
@@ -134,7 +134,7 @@ export const useCustomerRegistration = () => {
       
       toast({
         title: "Registration Successful! 🎉",
-        description: `onecard@myonecard.ai created: ****${accountNumber.slice(-4)}. Redirecting to Smart Deals now!`,
+        description: `OneCard created: ****${accountNumber.slice(-4)}. Redirecting to Smart Deals now!`,
       });
 
       // Direct redirect to Smart Deals tab - fastest shopping experience

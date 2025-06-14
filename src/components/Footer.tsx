@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Mail, ExternalLink, Smartphone, Shield, Zap, Globe, CheckCircle, ArrowRight, Star, Users, Clock, BarChart3, MessageCircle, CreditCard, Wifi, Phone } from 'lucide-react';
@@ -263,7 +264,7 @@ const Footer = () => {
             <div className="space-y-2">
               <div className="flex items-center space-x-2 text-gray-400">
                 <Mail className="w-4 h-4" />
-                <span className="text-sm">onecard@myonecard.ai</span>
+                <span className="text-sm">OneCard@myonecard.ai</span>
               </div>
             </div>
           </div>
