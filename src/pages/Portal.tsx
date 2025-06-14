@@ -10,7 +10,7 @@ type UserType = 'customer' | 'vendor' | 'admin' | null;
 
 const Portal = () => {
   const [searchParams] = useSearchParams();
-  const [activeTab, setActiveTab] = useState(searchParams.get('tab') || 'onecard');
+  const [activeTab, setActiveTab] = useState(searchParams.get('tab') || 'deals');
   const [userType, setUserType] = useState<UserType>(null);
   const [showAdminTab, setShowAdminTab] = useState(false);
   const [isAdminAuthenticated, setIsAdminAuthenticated] = useState(false);
@@ -78,6 +78,7 @@ const Portal = () => {
           case 'vendor':
             return currentUserType === 'vendor';
           case 'onecard':
+          case 'deals':
             return true; // Available to all authenticated users
           case 'admin-reg':
             return currentUserType === 'admin';

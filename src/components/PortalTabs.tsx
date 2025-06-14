@@ -41,6 +41,9 @@ const PortalTabs = ({
         case 'onecard':
           baseClass += " data-[state=active]:bg-gradient-to-br data-[state=active]:from-purple-500 data-[state=active]:to-pink-600 data-[state=active]:text-white data-[state=active]:shadow-md data-[state=active]:border-purple-400 bg-purple-50 border-purple-200 hover:border-purple-300 hover:bg-purple-100 hover:shadow-md";
           break;
+        case 'deals':
+          baseClass += " data-[state=active]:bg-gradient-to-br data-[state=active]:from-orange-500 data-[state=active]:to-red-600 data-[state=active]:text-white data-[state=active]:shadow-md data-[state=active]:border-orange-400 bg-orange-50 border-orange-200 hover:border-orange-300 hover:bg-orange-100 hover:shadow-md";
+          break;
         case 'admin-reg':
         case 'admin':
           if (!isTabAllowed('admin-reg') && !isTabAllowed('admin')) {
@@ -96,12 +99,25 @@ const PortalTabs = ({
         return (
           <div className="flex flex-col items-center gap-0.5">
             <div className="flex items-center gap-0.5">
+              <div className="text-sm">📊</div>
+              <div className="text-xs">📈</div>
+            </div>
+            <div className="text-center">
+              <div className="text-xs font-semibold">Overview</div>
+              <div className="text-xs opacity-75">Dashboard</div>
+            </div>
+          </div>
+        );
+      case 'deals':
+        return (
+          <div className="flex flex-col items-center gap-0.5">
+            <div className="flex items-center gap-0.5">
               <div className="text-sm">🔥</div>
               <div className="text-xs">✨</div>
             </div>
             <div className="text-center">
-              <div className="text-xs font-semibold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">Smart Deals</div>
-              <div className="text-xs opacity-75">Rewards</div>
+              <div className="text-xs font-semibold bg-gradient-to-r from-orange-600 to-red-600 bg-clip-text text-transparent">Smart Deals</div>
+              <div className="text-xs opacity-75">Shop Now</div>
             </div>
           </div>
         );
@@ -139,6 +155,22 @@ const PortalTabs = ({
             {/* Mobile: Horizontal Scroll */}
             <div className="flex lg:hidden w-full overflow-x-auto scrollbar-hide gap-1 pb-0.5">
               <TabsTrigger 
+                value="deals" 
+                className={getTabClassName('deals') + " flex-shrink-0 min-w-[70px]"}
+                disabled={!isTabAllowed('deals')}
+              >
+                {getTabContent('deals')}
+              </TabsTrigger>
+              
+              <TabsTrigger 
+                value="onecard" 
+                className={getTabClassName('onecard') + " flex-shrink-0 min-w-[70px]"}
+                disabled={!isTabAllowed('onecard')}
+              >
+                {getTabContent('onecard')}
+              </TabsTrigger>
+              
+              <TabsTrigger 
                 value="registration" 
                 className={getTabClassName('registration') + " flex-shrink-0 min-w-[70px]"}
                 disabled={!isTabAllowed('registration')}
@@ -152,14 +184,6 @@ const PortalTabs = ({
                 disabled={!isTabAllowed('vendor')}
               >
                 {getTabContent('vendor')}
-              </TabsTrigger>
-              
-              <TabsTrigger 
-                value="onecard" 
-                className={getTabClassName('onecard') + " flex-shrink-0 min-w-[70px]"}
-                disabled={!isTabAllowed('onecard')}
-              >
-                {getTabContent('onecard')}
               </TabsTrigger>
               
               <TabsTrigger 
@@ -182,7 +206,23 @@ const PortalTabs = ({
             </div>
 
             {/* Desktop: Grid Layout */}
-            <div className={`hidden lg:grid w-full gap-2 ${showAdminTab ? 'grid-cols-5' : 'grid-cols-4'}`}>
+            <div className={`hidden lg:grid w-full gap-2 ${showAdminTab ? 'grid-cols-6' : 'grid-cols-5'}`}>
+              <TabsTrigger 
+                value="deals" 
+                className={getTabClassName('deals')}
+                disabled={!isTabAllowed('deals')}
+              >
+                {getTabContent('deals')}
+              </TabsTrigger>
+              
+              <TabsTrigger 
+                value="onecard" 
+                className={getTabClassName('onecard')}
+                disabled={!isTabAllowed('onecard')}
+              >
+                {getTabContent('onecard')}
+              </TabsTrigger>
+              
               <TabsTrigger 
                 value="registration" 
                 className={getTabClassName('registration')}
@@ -197,14 +237,6 @@ const PortalTabs = ({
                 disabled={!isTabAllowed('vendor')}
               >
                 {getTabContent('vendor')}
-              </TabsTrigger>
-              
-              <TabsTrigger 
-                value="onecard" 
-                className={getTabClassName('onecard')}
-                disabled={!isTabAllowed('onecard')}
-              >
-                {getTabContent('onecard')}
               </TabsTrigger>
               
               <TabsTrigger 
@@ -230,16 +262,20 @@ const PortalTabs = ({
         
         {/* Tab Content */}
         <div className="w-full">
+          <TabsContent value="deals" className="p-3 sm:p-4 lg:p-6 animate-fade-in">
+            <OneCardDashboard />
+          </TabsContent>
+          
+          <TabsContent value="onecard" className="p-3 sm:p-4 lg:p-6 animate-fade-in">
+            <OneCardDashboard />
+          </TabsContent>
+          
           <TabsContent value="registration" className="p-3 sm:p-4 lg:p-6 animate-fade-in">
             <CustomerRegistration />
           </TabsContent>
           
           <TabsContent value="vendor" className="p-3 sm:p-4 lg:p-6 animate-fade-in">
             <VendorRegistration />
-          </TabsContent>
-          
-          <TabsContent value="onecard" className="p-3 sm:p-4 lg:p-6 animate-fade-in">
-            <OneCardDashboard />
           </TabsContent>
           
           <TabsContent value="admin-reg" className="p-3 sm:p-4 lg:p-6 animate-fade-in">

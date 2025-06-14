@@ -7,7 +7,7 @@ type UserType = 'customer' | 'vendor' | 'admin' | null;
 
 export const usePortalState = () => {
   const [searchParams] = useSearchParams();
-  const [activeTab, setActiveTab] = useState('registration');
+  const [activeTab, setActiveTab] = useState('deals');
   const [userType, setUserType] = useState<UserType>(null);
   const [isAdminAuthenticated, setIsAdminAuthenticated] = useState(false);
   const { toast } = useToast();
@@ -31,6 +31,12 @@ export const usePortalState = () => {
       } else if (tabParam === 'admin-reg' || tabParam === 'admin') {
         setUserType('admin');
       }
+    } else {
+      // Default to deals tab for authenticated customers
+      const isAuthenticated = localStorage.getItem('userAuthenticated') === 'true';
+      if (isAuthenticated) {
+        setActiveTab('deals');
+      }
     }
   }, [searchParams]);
 
@@ -40,7 +46,7 @@ export const usePortalState = () => {
     if (userType === 'admin') return true;
     
     if (userType === 'customer') {
-      return ['registration', 'onecard'].includes(tabValue);
+      return ['registration', 'onecard', 'deals'].includes(tabValue);
     }
     
     if (userType === 'vendor') {
