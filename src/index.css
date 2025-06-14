@@ -65,9 +65,15 @@
   * {
     @apply border-border;
   }
+  
+  html {
+    scroll-behavior: smooth;
+  }
+  
   body {
     @apply bg-background text-foreground;
     font-family: "Inter", sans-serif;
+    -webkit-overflow-scrolling: touch;
   }
 }
 
@@ -98,5 +104,16 @@
       opacity: 1;
       transform: translateY(0);
     }
+  }
+
+  /* Enhanced mobile scrolling */
+  .touch-manipulation {
+    touch-action: manipulation;
+  }
+
+  /* Smooth momentum scrolling for iOS */
+  .momentum-scroll {
+    -webkit-overflow-scrolling: touch;
+    overflow-scrolling: touch;
   }
 }

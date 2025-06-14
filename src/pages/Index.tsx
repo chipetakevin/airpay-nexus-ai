@@ -13,6 +13,7 @@ import NewsletterSignup from '@/components/NewsletterSignup';
 import WhatsAppFloatingButton from '@/components/WhatsAppFloatingButton';
 import MobileCustomerLanding from '@/components/MobileCustomerLanding';
 import WhatsAppShoppingSection from '@/components/WhatsAppShoppingSection';
+import SmoothScrollNav from '@/components/SmoothScrollNav';
 import { useMobileAuth } from '@/hooks/useMobileAuth';
 
 const Index = () => {
@@ -30,22 +31,31 @@ const Index = () => {
       )}
       
       <main>
-        <HeroSection />
+        <div id="hero">
+          <HeroSection />
+        </div>
         
         {/* WhatsApp Shopping Section - New addition */}
         <WhatsAppShoppingSection />
         
-        <FeaturesSection />
+        <div id="features">
+          <FeaturesSection />
+        </div>
         <BenefitsSection />
         <StatsGrid />
-        <TestimonialsCarousel />
+        <div id="testimonials">
+          <TestimonialsCarousel />
+        </div>
         <CTASection />
-        <FAQSection />
+        <div id="faq">
+          <FAQSection />
+        </div>
         <NewsletterSignup />
       </main>
       
       <Footer />
       <WhatsAppFloatingButton />
+      <SmoothScrollNav />
     </div>
   );
 };
