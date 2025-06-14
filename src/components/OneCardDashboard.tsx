@@ -44,60 +44,13 @@ const OneCardDashboard = () => {
         <TabsContent value="overview" className="space-y-4 sm:space-y-6">
           {/* Enhanced OneCard Display */}
           <div className="relative w-full max-w-md mx-auto">
-            {/* Professional Card Design */}
-            <div className="relative w-full h-64 bg-gradient-to-br from-yellow-400 via-yellow-500 to-yellow-600 rounded-2xl shadow-2xl overflow-hidden">
-              {/* Background Design Elements */}
-              <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -translate-y-16 translate-x-16"></div>
-              <div className="absolute bottom-0 left-0 w-24 h-24 bg-white/10 rounded-full translate-y-12 -translate-x-12"></div>
-              <div className="absolute top-1/2 left-1/2 w-40 h-40 bg-white/5 rounded-full -translate-x-1/2 -translate-y-1/2"></div>
-              
-              {/* Card Content */}
-              <div className="relative z-10 p-6 h-full flex flex-col justify-between text-black">
-                {/* Top Section - Logo and Card Type */}
-                <div className="flex justify-between items-start">
-                  <div className="flex items-center space-x-2">
-                    <div className="w-10 h-10 bg-black rounded-xl flex items-center justify-center shadow-lg">
-                      <span className="text-yellow-400 font-bold text-lg">A</span>
-                    </div>
-                    <div>
-                      <div className="text-xl font-bold text-black">AirPay</div>
-                      <div className="text-sm text-black/80 font-medium">Powered by OneCard</div>
-                    </div>
-                  </div>
-                  <div className="flex items-center space-x-2 bg-black/20 rounded-full px-3 py-1">
-                    <div className="w-6 h-6 bg-black rounded-full flex items-center justify-center">
-                      <span className="text-yellow-400 text-xs font-bold">1</span>
-                    </div>
-                    <span className="text-sm font-bold text-black">CARD</span>
-                  </div>
-                </div>
-
-                {/* Card Number */}
-                <div className="text-center my-4">
-                  <div className="text-2xl font-mono font-bold tracking-[0.3em] mb-2 text-black">
-                    {userData.cardNumber ? userData.cardNumber.replace(/(.{4})/g, '$1 ').trim() : 'OCRA 50TG WG'}
-                  </div>
-                </div>
-
-                {/* Bottom Section - Cardholder Info */}
-                <div className="flex justify-between items-end">
-                  <div>
-                    <div className="text-xs text-black/70 mb-1 font-medium">CARD HOLDER</div>
-                    <div className="text-lg font-bold tracking-wide text-black">
-                      {userData.firstName?.toUpperCase()} {userData.lastName?.toUpperCase() || 'KEVIN CHIPETA'}
-                    </div>
-                    <div className="text-xs text-black/70 mt-1 font-medium">
-                      Member Since 2025
-                    </div>
-                  </div>
-                  <div className="text-right">
-                    <div className="text-xs text-black/70 mb-1 font-medium">VALID THRU</div>
-                    <div className="text-lg font-bold text-black">
-                      06/28
-                    </div>
-                  </div>
-                </div>
-              </div>
+            {/* Gold OneCard Image */}
+            <div className="relative w-full">
+              <img 
+                src="/lovable-uploads/ba334c5a-5d5a-4c29-a99b-3961e7a7f11a.png" 
+                alt="AirPay OneCard Gold"
+                className="w-full h-auto rounded-2xl shadow-2xl"
+              />
             </div>
 
             {/* Rewards Tab at Bottom */}
