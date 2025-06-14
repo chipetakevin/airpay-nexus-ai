@@ -9,6 +9,12 @@ export const useReceiptGeneration = () => {
     return 'AP' + timestamp.replace(/[^0-9]/g, '').slice(-8);
   };
 
+  const capitalizeWords = (str: string) => {
+    return str.split(' ').map(word => 
+      word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
+    ).join(' ');
+  };
+
   const getCustomerDisplayName = () => {
     const credentials = localStorage.getItem('userCredentials');
     let displayName = 'Valued Customer';
@@ -18,14 +24,14 @@ export const useReceiptGeneration = () => {
       
       // Priority: nickname > full name > first name > email prefix
       if (parsedCredentials.nickname) {
-        displayName = parsedCredentials.nickname;
+        displayName = capitalizeWords(parsedCredentials.nickname);
       } else if (parsedCredentials.firstName && parsedCredentials.lastName) {
-        displayName = `${parsedCredentials.firstName} ${parsedCredentials.lastName}`;
+        displayName = `${capitalizeWords(parsedCredentials.firstName)} ${capitalizeWords(parsedCredentials.lastName)}`;
       } else if (parsedCredentials.firstName) {
-        displayName = parsedCredentials.firstName;
+        displayName = capitalizeWords(parsedCredentials.firstName);
       } else if (parsedCredentials.email) {
-        // Use email prefix as last resort
-        displayName = parsedCredentials.email.split('@')[0];
+        // Use email prefix as last resort and capitalize it
+        displayName = capitalizeWords(parsedCredentials.email.split('@')[0]);
       }
     }
     
@@ -49,7 +55,7 @@ export const useReceiptGeneration = () => {
         customerEmail: customerEmail,
         customerPhone: customerPhone,
         recipientPhone: purchaseMode === 'self' ? customerPhone : recipientData.phone,
-        recipientName: purchaseMode === 'self' ? 'Self' : recipientData.name,
+        recipientName: purchaseMode === 'self' ? 'Self' : capitalizeWords(recipientData.name),
         transactionId: generateTransactionId(transactionData.timestamp),
         items: cartItems.map(item => ({
           network: item.network,

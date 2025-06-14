@@ -31,7 +31,7 @@ ${itemsList}
 ${data.purchaseType === 'self' ? 'Airtime loaded to your number' : `Airtime sent to ${data.recipientName}`}
 
 🌐 https://divinely-mobile.com
-💬 Support: +27 100 2827
+💬 +27 100 2827
 
 *Thank you for choosing Divinely Mobile!* 
 _Brought To You By OneCard Global Rewards Program_`;
