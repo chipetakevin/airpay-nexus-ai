@@ -30,7 +30,7 @@ ${itemsList}
 ✅ *Transaction Successful!*
 ${data.purchaseType === 'self' ? 'Airtime loaded to your number' : `Airtime sent to ${data.recipientName}`}
 
-🌐 Continue shopping: https://divinely-mobile.com
+🌐 https://divinely-mobile.com
 💬 Support: +27 100 2827
 
 *Thank you for choosing Divinely Mobile!* 
