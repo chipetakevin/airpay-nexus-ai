@@ -21,6 +21,11 @@ const CustomerProfileDropdown = () => {
     localStorage.setItem('profileEnabled', 'true');
   };
 
+  const handleDisableProfile = () => {
+    setIsProfileEnabled(false);
+    localStorage.setItem('profileEnabled', 'false');
+  };
+
   if (!isAuthenticated || !currentUser) {
     return null;
   }
@@ -28,7 +33,7 @@ const CustomerProfileDropdown = () => {
   return (
     <div className="relative">
       {isProfileEnabled ? (
-        <EnabledProfileCard user={currentUser} />
+        <EnabledProfileCard user={currentUser} onDisable={handleDisableProfile} />
       ) : (
         <DisabledProfileCard user={currentUser} onEnable={handleEnableProfile} />
       )}
