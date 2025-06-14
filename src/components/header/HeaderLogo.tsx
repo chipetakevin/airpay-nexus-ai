@@ -20,21 +20,23 @@ const HeaderLogo = () => {
   return (
     <Link 
       to="/" 
-      className="flex items-center space-x-2 group cursor-pointer"
+      className="flex items-center space-x-3 group cursor-pointer"
       title={isBaaSPage ? "Return to Homepage" : "Divinely Mobile"}
     >
       <div className="relative">
-        <div className="w-8 h-8 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg flex items-center justify-center group-hover:scale-105 transition-all duration-300 ease-out group-active:scale-95">
+        <div className="w-10 h-10 bg-gradient-to-br from-blue-500 via-purple-600 to-blue-700 rounded-2xl flex items-center justify-center group-hover:scale-105 transition-all duration-300 ease-out group-active:scale-95 shadow-lg">
           <Smartphone className="h-5 w-5 text-white" />
         </div>
-        <div className="absolute -inset-1 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg blur opacity-25 group-hover:opacity-75 transition-all duration-300"></div>
+        <div className="absolute -inset-1 bg-gradient-to-br from-blue-500 via-purple-600 to-blue-700 rounded-2xl blur opacity-20 group-hover:opacity-40 transition-all duration-300"></div>
         {isBaaSPage && (
           <div className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full animate-pulse" />
         )}
       </div>
       <div className="flex flex-col group-hover:scale-105 transition-all duration-300 ease-out group-active:scale-95">
-        <span className="font-bold text-xl text-gray-900 group-hover:text-blue-600 transition-colors duration-300">Divinely</span>
-        <span className="font-montserrat font-bold text-lg text-transparent bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text -mt-1 group-hover:from-blue-700 group-hover:to-purple-700 transition-all duration-300">
+        <span className="font-bold text-2xl text-gray-900 group-hover:text-blue-600 transition-colors duration-300 leading-tight">
+          Divinely
+        </span>
+        <span className="font-bold text-lg text-transparent bg-gradient-to-r from-blue-500 to-purple-600 bg-clip-text -mt-1 group-hover:from-blue-600 group-hover:to-purple-700 transition-all duration-300 leading-tight">
           Mobile
         </span>
       </div>
