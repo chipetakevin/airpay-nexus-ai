@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import PortalHeader from '@/components/PortalHeader';
@@ -59,6 +60,7 @@ const Portal = () => {
         const credentials = JSON.parse(storedCredentials);
         if (credentials.userType === 'admin') {
           setShowAdminTab(true);
+          setIsAdminAuthenticated(true);
         }
       } catch (error) {
         console.error('Error parsing credentials:', error);
@@ -88,11 +90,16 @@ const Portal = () => {
         const credentials = JSON.parse(storedCredentials);
         const currentUserType = credentials.userType;
 
+        // If user is admin and authenticated, allow all tabs
+        if (currentUserType === 'admin' && isAdminAuthenticated) {
+          return true;
+        }
+
         switch (tabValue) {
           case 'registration':
-            return currentUserType === 'customer';
+            return currentUserType === 'customer' || currentUserType === 'admin';
           case 'vendor':
-            return currentUserType === 'vendor';
+            return currentUserType === 'vendor' || currentUserType === 'admin';
           case 'onecard':
             return true; // Available to all authenticated users
           case 'deals':
