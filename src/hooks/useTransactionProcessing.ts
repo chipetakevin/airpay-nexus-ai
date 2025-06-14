@@ -27,8 +27,8 @@ export const useTransactionProcessing = () => {
       const recipientPhone = purchaseMode === 'self' ? customerPhone : recipientData.phone;
       const recipientName = purchaseMode === 'self' ? 'Self' : recipientData.name;
       
-      // Simulate transaction processing
-      await new Promise(resolve => setTimeout(resolve, 1500));
+      // Simulate payment processing
+      await new Promise(resolve => setTimeout(resolve, 2000));
       
       // Create transaction record
       const transactionData = {
@@ -60,7 +60,7 @@ export const useTransactionProcessing = () => {
         await saveRecipient(recipientData, detectedNetwork);
       }
 
-      // AUTOMATED CASHBACK PROCESSING - Works for all purchase types
+      // AUTOMATED CASHBACK PROCESSING
       await processAutomatedCashback(
         transactionData,
         profitSharing,
@@ -70,8 +70,7 @@ export const useTransactionProcessing = () => {
         recipientData
       );
 
-      // AUTOMATED RECEIPT GENERATION - Works for all purchase types
-      // This will send receipts to both sender and recipient for third-party purchases
+      // AUTOMATED RECEIPT GENERATION WITH WHATSAPP & EMAIL
       await autoGenerateAndSendReceipts(
         transactionData, 
         profitSharing, 
@@ -81,21 +80,22 @@ export const useTransactionProcessing = () => {
         recipientData
       );
 
-      let successMessage = "Purchase Successful! 🎉";
+      let successMessage = "Payment Successful! 🎉";
       if (isVendor) {
         successMessage = `Vendor purchase completed! R${profitSharing.vendorProfit?.toFixed(2)} profit earned!`;
       } else if (purchaseMode === 'other') {
-        successMessage = `Gift purchase completed! Receipt sent to both you and ${recipientData.name}.`;
+        successMessage = `Gift purchase completed! Receipts sent to both you and ${recipientData.name} via WhatsApp & Email.`;
       } else {
-        successMessage = `Purchase completed! R${profitSharing.customerCashback?.toFixed(2)} cashback earned!`;
+        successMessage = `Payment completed! R${profitSharing.customerCashback?.toFixed(2)} cashback earned!`;
       }
 
       toast({
         title: successMessage,
-        description: "Receipts auto-sent to WhatsApp & Email. OneCard balances updated automatically."
+        description: "📱 WhatsApp receipt sent • 📧 Email receipt delivered • 🎁 OneCard balance updated",
+        duration: 5000
       });
 
-      // Redirect to portal with onecard tab and deals subtab after 3 seconds
+      // Auto-redirect after showing success
       setTimeout(() => {
         window.location.href = '/portal?tab=onecard#deals';
       }, 3000);
@@ -103,10 +103,10 @@ export const useTransactionProcessing = () => {
       return true;
       
     } catch (error) {
-      console.error('Purchase error:', error);
+      console.error('Payment processing error:', error);
       toast({
-        title: "Purchase Failed",
-        description: "Unable to process purchase. Please try again.",
+        title: "Payment Failed",
+        description: "Unable to process payment. Please try again or contact support.",
         variant: "destructive"
       });
       return false;

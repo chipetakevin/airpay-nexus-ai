@@ -30,7 +30,6 @@ export const useReceiptGeneration = () => {
       } else if (parsedCredentials.firstName) {
         displayName = capitalizeWords(parsedCredentials.firstName);
       } else if (parsedCredentials.email) {
-        // Use email prefix as last resort and capitalize it
         displayName = capitalizeWords(parsedCredentials.email.split('@')[0]);
       }
     }
@@ -50,86 +49,69 @@ export const useReceiptGeneration = () => {
 
       const customerName = getCustomerDisplayName();
 
-      // For third-party purchases, send receipt to BOTH sender and recipient
+      // Enhanced receipt data for both WhatsApp and Email
+      const baseReceiptData = {
+        customerName: customerName,
+        customerEmail: customerEmail,
+        customerPhone: customerPhone,
+        transactionId: generateTransactionId(transactionData.timestamp),
+        items: cartItems.map(item => ({
+          network: item.network,
+          amount: item.amount,
+          price: item.discountedPrice,
+          type: item.dealType || 'airtime'
+        })),
+        total: transactionData.amount,
+        timestamp: transactionData.timestamp
+      };
+
       if (purchaseMode === 'other') {
-        // Send receipt to SENDER (customer who made the purchase)
+        // Send receipt to SENDER
         const senderReceiptData = {
-          customerName: customerName,
-          customerEmail: customerEmail,
-          customerPhone: customerPhone,
+          ...baseReceiptData,
           recipientPhone: recipientData.phone,
           recipientName: capitalizeWords(recipientData.name),
-          transactionId: generateTransactionId(transactionData.timestamp),
-          items: cartItems.map(item => ({
-            network: item.network,
-            amount: item.amount,
-            price: item.discountedPrice,
-            type: item.dealType || 'airtime'
-          })),
-          total: transactionData.amount,
           cashbackEarned: profitSharing.registeredCustomerReward || 0,
-          timestamp: transactionData.timestamp,
-          purchaseType: 'sender' // Special type for sender's receipt
+          purchaseType: 'sender' as const
         };
 
         // Send receipt to RECIPIENT
         const recipientReceiptData = {
+          ...baseReceiptData,
           customerName: capitalizeWords(recipientData.name),
-          customerEmail: '', // Recipient email not available
           customerPhone: recipientData.phone,
           recipientPhone: recipientData.phone,
           recipientName: capitalizeWords(recipientData.name),
-          transactionId: generateTransactionId(transactionData.timestamp),
-          items: cartItems.map(item => ({
-            network: item.network,
-            amount: item.amount,
-            price: item.discountedPrice,
-            type: item.dealType || 'airtime'
-          })),
-          total: transactionData.amount,
           cashbackEarned: profitSharing.unregisteredRecipientReward || 0,
-          timestamp: transactionData.timestamp,
-          purchaseType: 'recipient' // Special type for recipient's receipt
+          purchaseType: 'recipient' as const
         };
 
-        // Send both receipts
+        // Send receipts to both parties
         await Promise.all([
           sendReceiptToCustomer(senderReceiptData, 'sender'),
           sendReceiptToCustomer(recipientReceiptData, 'recipient')
         ]);
 
         toast({
-          title: "📱 Receipts Sent",
-          description: `Receipts sent to both you and ${recipientData.name}`,
+          title: "📱 Dual Receipts Sent",
+          description: `WhatsApp & Email receipts delivered to both you and ${recipientData.name}`,
         });
 
       } else {
-        // Self-purchase - send receipt to customer only
+        // Self-purchase
         const receiptData = {
-          customerName: customerName,
-          customerEmail: customerEmail,
-          customerPhone: customerPhone,
+          ...baseReceiptData,
           recipientPhone: customerPhone,
           recipientName: 'Self',
-          transactionId: generateTransactionId(transactionData.timestamp),
-          items: cartItems.map(item => ({
-            network: item.network,
-            amount: item.amount,
-            price: item.discountedPrice,
-            type: item.dealType || 'airtime'
-          })),
-          total: transactionData.amount,
           cashbackEarned: profitSharing.customerCashback || 0,
-          timestamp: transactionData.timestamp,
-          purchaseType: 'self'
+          purchaseType: 'self' as const
         };
 
         await sendReceiptToCustomer(receiptData, 'customer');
 
-        // Auto-redirect to WhatsApp for self-purchases
         toast({
-          title: "📧 Email Receipt Sent",
-          description: customerEmail ? `Receipt sent to ${customerEmail}` : "Receipt generated successfully",
+          title: "📧 Receipts Delivered",
+          description: customerEmail ? `WhatsApp & Email receipts sent to ${customerEmail}` : "WhatsApp receipt delivered successfully",
         });
       }
 
@@ -137,7 +119,7 @@ export const useReceiptGeneration = () => {
       console.error('Error in autoGenerateAndSendReceipts:', error);
       toast({
         title: "Receipt Error",
-        description: "Purchase successful but receipt generation failed. Check transaction history.",
+        description: "Payment successful but receipt generation failed. Check transaction history.",
         variant: "destructive"
       });
     }
@@ -154,13 +136,13 @@ export const useReceiptGeneration = () => {
         return;
       }
 
-      console.log(`Receipt sent successfully to ${recipientType}:`, data);
+      console.log(`✅ Receipt sent successfully to ${recipientType}:`, data);
 
-      // Auto-redirect to WhatsApp with receipt if URL provided
+      // Auto-redirect to WhatsApp with receipt
       if (data?.whatsappUrl && recipientType === 'customer') {
         setTimeout(() => {
           window.open(data.whatsappUrl, '_blank');
-        }, 1500);
+        }, 2000);
       }
 
     } catch (error) {

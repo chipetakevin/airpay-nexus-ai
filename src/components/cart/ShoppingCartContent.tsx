@@ -4,6 +4,7 @@ import { CardContent } from '@/components/ui/card';
 import { CartItem } from '@/types/deals';
 import { useShoppingCart } from '@/hooks/useShoppingCart';
 import { usePhoneValidation } from '@/hooks/usePhoneValidation';
+import { useAutoReceiptGenerator } from '@/components/receipts/AutoReceiptGenerator';
 import CartItems from './CartItems';
 import UserTypeIndicator from './UserTypeIndicator';
 import PurchaseModeSelector from './PurchaseModeSelector';
@@ -17,6 +18,7 @@ interface ShoppingCartContentProps {
 
 const ShoppingCartContent = ({ initialDeal }: ShoppingCartContentProps) => {
   const [acceptedSATerms, setAcceptedSATerms] = useState(false);
+  const { sendReceiptNotifications } = useAutoReceiptGenerator();
 
   const {
     cartItems,
@@ -53,8 +55,31 @@ const ShoppingCartContent = ({ initialDeal }: ShoppingCartContentProps) => {
     }
 
     const effectiveValidationError = acceptedUnknownNumber ? '' : validationError;
+    
+    // Enhanced purchase processing with automated receipt delivery
     const success = await processPurchase(effectiveValidationError, detectedNetwork);
+    
     if (success) {
+      // Automatically generate and send receipts via WhatsApp and Email
+      const receiptData = {
+        sessionId: `DM${Date.now()}${Math.random().toString(36).substr(2, 5).toUpperCase()}`,
+        customerPhone: customerPhone,
+        customerEmail: currentUser?.email || '',
+        recipientPhone: purchaseMode === 'self' ? customerPhone : recipientData.phone,
+        recipientName: purchaseMode === 'self' ? 'Self' : recipientData.name,
+        deal: {
+          network: cartItems[0]?.network || detectedNetwork,
+          amount: cartItems[0]?.amount || 0,
+          price: total,
+          type: cartItems[0]?.dealType || 'airtime'
+        },
+        timestamp: new Date().toISOString(),
+        paymentMethod: 'card' as const
+      };
+
+      // Send automated receipts
+      await sendReceiptNotifications(receiptData);
+      
       // Cart will be closed by parent component
     }
   };

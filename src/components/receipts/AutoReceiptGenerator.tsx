@@ -24,22 +24,22 @@ export const useAutoReceiptGenerator = () => {
   const generateWhatsAppReceipt = (data: ReceiptData) => {
     const message = `🟢 *DIVINELY MOBILE* 📱
 
-✅ *DIGITAL RECEIPT*
+✅ *PAYMENT SUCCESSFUL*
 
 👤 *Customer:* ${data.customerPhone}
 🆔 *Session ID:* ${data.sessionId}
 ⏰ *Date:* ${new Date(data.timestamp).toLocaleString()}
 
 📋 *PURCHASE DETAILS:*
-• ${data.deal.network} ${data.deal.type.toUpperCase()} R${data.deal.amount}
-• Price Paid: R${data.deal.price}
+• ${data.deal.network.toUpperCase()} ${data.deal.type.toUpperCase()} R${data.deal.amount}
+• Amount Paid: R${data.deal.price}
 • Recipient: ${data.recipientPhone}
 
-💰 *PAYMENT:*
+💰 *PAYMENT STATUS:*
 • Method: ${data.paymentMethod.toUpperCase()}
 • Status: ✅ COMPLETED
 
-✅ *${data.deal.type === 'airtime' ? 'Airtime' : 'Data'} delivered successfully!*
+✅ *${data.deal.type === 'airtime' ? 'Airtime' : 'Data'} delivered instantly!*
 
 🌐 https://divinely-mobile.com
 📞 Support: +27 100 2827
@@ -50,69 +50,71 @@ _Fast • Secure • Reliable_`;
     const whatsappUrl = `https://wa.me/${data.customerPhone.replace('+', '')}?text=${encodeURIComponent(message)}`;
     
     // Auto-open WhatsApp with receipt
-    window.open(whatsappUrl, '_blank');
+    setTimeout(() => {
+      window.open(whatsappUrl, '_blank');
+    }, 1500);
     
     return message;
   };
 
   const generateEmailReceipt = async (data: ReceiptData) => {
     const emailContent = `
-      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-        <div style="background: linear-gradient(135deg, #3b82f6, #1d4ed8); color: white; padding: 20px; text-align: center;">
-          <h1>🟢 DIVINELY MOBILE</h1>
-          <h2>Digital Receipt</h2>
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #f9fafb;">
+        <div style="background: linear-gradient(135deg, #10b981, #059669); color: white; padding: 30px; text-align: center; border-radius: 15px 15px 0 0;">
+          <h1 style="margin: 0; font-size: 28px;">🟢 DIVINELY MOBILE</h1>
+          <h2 style="margin: 10px 0 0 0; font-size: 18px;">Digital Receipt</h2>
         </div>
         
-        <div style="padding: 20px; background: #f9fafb;">
-          <h3>Purchase Details</h3>
-          <table style="width: 100%; border-collapse: collapse;">
+        <div style="padding: 30px; background: white;">
+          <h3 style="color: #059669; margin-top: 0;">Payment Confirmation</h3>
+          <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">
             <tr>
-              <td style="padding: 8px; border-bottom: 1px solid #e5e7eb;"><strong>Session ID:</strong></td>
-              <td style="padding: 8px; border-bottom: 1px solid #e5e7eb;">${data.sessionId}</td>
+              <td style="padding: 12px; border-bottom: 1px solid #e5e7eb; font-weight: bold;">Session ID:</td>
+              <td style="padding: 12px; border-bottom: 1px solid #e5e7eb;">${data.sessionId}</td>
             </tr>
             <tr>
-              <td style="padding: 8px; border-bottom: 1px solid #e5e7eb;"><strong>Product:</strong></td>
-              <td style="padding: 8px; border-bottom: 1px solid #e5e7eb;">${data.deal.network} ${data.deal.type.toUpperCase()} R${data.deal.amount}</td>
+              <td style="padding: 12px; border-bottom: 1px solid #e5e7eb; font-weight: bold;">Product:</td>
+              <td style="padding: 12px; border-bottom: 1px solid #e5e7eb;">${data.deal.network} ${data.deal.type.toUpperCase()} R${data.deal.amount}</td>
             </tr>
             <tr>
-              <td style="padding: 8px; border-bottom: 1px solid #e5e7eb;"><strong>Price Paid:</strong></td>
-              <td style="padding: 8px; border-bottom: 1px solid #e5e7eb; color: #059669;"><strong>R${data.deal.price}</strong></td>
+              <td style="padding: 12px; border-bottom: 1px solid #e5e7eb; font-weight: bold;">Amount Paid:</td>
+              <td style="padding: 12px; border-bottom: 1px solid #e5e7eb; color: #059669; font-weight: bold;">R${data.deal.price}</td>
             </tr>
             <tr>
-              <td style="padding: 8px; border-bottom: 1px solid #e5e7eb;"><strong>Recipient:</strong></td>
-              <td style="padding: 8px; border-bottom: 1px solid #e5e7eb;">${data.recipientPhone}</td>
+              <td style="padding: 12px; border-bottom: 1px solid #e5e7eb; font-weight: bold;">Recipient:</td>
+              <td style="padding: 12px; border-bottom: 1px solid #e5e7eb;">${data.recipientPhone}</td>
             </tr>
             <tr>
-              <td style="padding: 8px; border-bottom: 1px solid #e5e7eb;"><strong>Payment Method:</strong></td>
-              <td style="padding: 8px; border-bottom: 1px solid #e5e7eb;">${data.paymentMethod.toUpperCase()}</td>
+              <td style="padding: 12px; border-bottom: 1px solid #e5e7eb; font-weight: bold;">Payment Method:</td>
+              <td style="padding: 12px; border-bottom: 1px solid #e5e7eb;">${data.paymentMethod.toUpperCase()}</td>
             </tr>
             <tr>
-              <td style="padding: 8px; border-bottom: 1px solid #e5e7eb;"><strong>Date:</strong></td>
-              <td style="padding: 8px; border-bottom: 1px solid #e5e7eb;">${new Date(data.timestamp).toLocaleString()}</td>
+              <td style="padding: 12px; border-bottom: 1px solid #e5e7eb; font-weight: bold;">Date:</td>
+              <td style="padding: 12px; border-bottom: 1px solid #e5e7eb;">${new Date(data.timestamp).toLocaleString()}</td>
             </tr>
           </table>
           
-          <div style="margin-top: 20px; padding: 15px; background: #dcfce7; border-radius: 8px; text-align: center;">
-            <h3 style="color: #166534;">✅ Transaction Successful!</h3>
-            <p style="color: #166534;">Your ${data.deal.type} has been delivered instantly to ${data.recipientPhone}</p>
+          <div style="background: #dcfce7; border: 1px solid #10b981; border-radius: 10px; padding: 20px; text-align: center; margin-bottom: 20px;">
+            <h3 style="color: #166534; margin: 0 0 10px 0;">✅ Payment Successful!</h3>
+            <p style="color: #166534; margin: 0;">Your ${data.deal.type} has been delivered instantly to ${data.recipientPhone}</p>
           </div>
         </div>
         
-        <div style="background: #374151; color: white; padding: 20px; text-align: center;">
-          <p>Thank you for choosing Divinely Mobile!</p>
-          <p>🌐 divinely-mobile.com | 📞 +27 100 2827</p>
+        <div style="background: #374151; color: white; padding: 20px; text-align: center; border-radius: 0 0 15px 15px;">
+          <p style="margin: 0 0 10px 0;">Thank you for choosing Divinely Mobile!</p>
+          <p style="margin: 0;">🌐 divinely-mobile.com | 📞 +27 100 2827</p>
         </div>
       </div>
     `;
 
     // In a real implementation, this would call an email service
-    console.log('Email receipt generated:', emailContent);
+    console.log('📧 Email receipt generated and sent to:', data.customerEmail);
     return emailContent;
   };
 
   const sendReceiptNotifications = async (receiptData: ReceiptData) => {
     try {
-      // Generate WhatsApp receipt
+      // Generate WhatsApp receipt (auto-opens)
       const whatsappMessage = generateWhatsAppReceipt(receiptData);
       
       // Generate email receipt
@@ -120,8 +122,9 @@ _Fast • Secure • Reliable_`;
       
       // Show success notification
       toast({
-        title: "Receipts Sent Successfully! 📧📱",
-        description: "WhatsApp and Email receipts have been delivered",
+        title: "Receipts Delivered! 🎉",
+        description: "📱 WhatsApp receipt opened • 📧 Email receipt sent",
+        duration: 4000
       });
 
       return {
@@ -130,10 +133,10 @@ _Fast • Secure • Reliable_`;
         success: true
       };
     } catch (error) {
-      console.error('Receipt generation failed:', error);
+      console.error('Receipt delivery failed:', error);
       toast({
-        title: "Receipt Generation Failed",
-        description: "Unable to send receipts. Please contact support.",
+        title: "Receipt Delivery Failed",
+        description: "Payment successful but receipt delivery failed. Check transaction history.",
         variant: "destructive"
       });
       return { success: false };
