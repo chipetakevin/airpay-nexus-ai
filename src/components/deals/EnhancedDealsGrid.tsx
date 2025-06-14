@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -54,6 +53,15 @@ const EnhancedDealsGrid = ({ deals, onDealSelect }: EnhancedDealsGridProps) => {
   };
 
   if (showUSSDPayment && selectedDeal) {
+    // Transform deal to match USSDPaymentProcessor expected format
+    const ussdDeal = {
+      id: selectedDeal.id,
+      network: selectedDeal.network,
+      amount: selectedDeal.amount,
+      price: selectedDeal.price,
+      type: selectedDeal.deal_type // Map deal_type to type
+    };
+
     return (
       <div className="space-y-4">
         <Button 
@@ -64,7 +72,7 @@ const EnhancedDealsGrid = ({ deals, onDealSelect }: EnhancedDealsGridProps) => {
           ← Back to Deals
         </Button>
         <USSDPaymentProcessor 
-          deal={selectedDeal}
+          deal={ussdDeal}
           recipientPhone={recipientPhone}
           onPaymentComplete={handlePaymentComplete}
         />
