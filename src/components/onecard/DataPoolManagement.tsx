@@ -3,8 +3,11 @@ import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Wifi, Smartphone, ArrowRight, Gift } from 'lucide-react';
+import { Wifi, Smartphone, ArrowRight, Gift, AlertTriangle } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { AdminDataPoolManager } from './AdminDataPoolManager';
+import { EligibilityChecker } from './EligibilityChecker';
+import { useCustomerEligibility } from '@/hooks/useCustomerEligibility';
 
 interface DataPoolProps {
   userData: any;
@@ -14,6 +17,12 @@ export const DataPoolManagement = ({ userData }: DataPoolProps) => {
   const [dataPoolBalance, setDataPoolBalance] = useState(0);
   const [availableAdminFunds, setAvailableAdminFunds] = useState(0);
   const { toast } = useToast();
+  
+  const {
+    isEligible,
+    automaticCutoff,
+    simulateDataPurchaseSuccess
+  } = useCustomerEligibility();
 
   useEffect(() => {
     // Calculate available admin funds from transaction history
@@ -26,10 +35,17 @@ export const DataPoolManagement = ({ userData }: DataPoolProps) => {
       setDataPoolBalance(JSON.parse(poolData));
     }
     
-    setAvailableAdminFunds(totalAdminFees);
+    // Get admin pool balance
+    const adminPoolBalance = JSON.parse(localStorage.getItem('adminDataPoolBalance') || '0');
+    setAvailableAdminFunds(totalAdminFees + adminPoolBalance);
   }, []);
 
   const allocateDataFromAdminPool = () => {
+    // Check eligibility first - automatic cutoff
+    if (!automaticCutoff()) {
+      return;
+    }
+
     // Allocate data equivalent to R10 from admin pool (minimum allocation)
     const allocationAmount = 10;
     
@@ -58,29 +74,39 @@ export const DataPoolManagement = ({ userData }: DataPoolProps) => {
     } else {
       toast({
         title: "Insufficient Admin Pool Funds",
-        description: "Not enough admin pool balance for data allocation.",
+        description: "Admin needs to top-up the data pool. Notification sent.",
         variant: "destructive"
       });
     }
   };
 
   const purchaseAirtimeFromDataPool = (amount: number) => {
+    // Check eligibility first
+    if (!automaticCutoff()) {
+      return;
+    }
+
     if (dataPoolBalance >= amount) {
       const newBalance = dataPoolBalance - amount;
       setDataPoolBalance(newBalance);
       localStorage.setItem('dataPoolBalance', JSON.stringify(newBalance));
       
+      // Simulate successful data purchase and receipt
+      simulateDataPurchaseSuccess(amount);
+      
       // Update user's cashback balance
       const updatedUserData = {
         ...userData,
         cashbackBalance: (userData.cashbackBalance || 0) + amount,
-        dataPoolUsed: (userData.dataPoolUsed || 0) + amount
+        dataPoolUsed: (userData.dataPoolUsed || 0) + amount,
+        airtimeBalance: (userData.airtimeBalance || 0) + amount,
+        dataBalance: (userData.dataBalance || 0) + (amount * 100) // Convert to MB
       };
       localStorage.setItem('onecardUser', JSON.stringify(updatedUserData));
       
       toast({
-        title: "Airtime Purchase Complete! 📱",
-        description: `R${amount} airtime purchased using data pool credits.`,
+        title: "🎉 Purchase Complete & Data Activated!",
+        description: `R${amount} airtime purchased. ${amount * 100}MB data now active. Access Smart Deals now!`,
       });
     } else {
       toast({
@@ -91,8 +117,20 @@ export const DataPoolManagement = ({ userData }: DataPoolProps) => {
     }
   };
 
+  const handlePoolUpdate = (amount: number) => {
+    setAvailableAdminFunds(prev => prev + amount);
+  };
+
   return (
     <div className="space-y-4">
+      {/* Customer Eligibility Status */}
+      <EligibilityChecker />
+
+      {/* Admin Data Pool Manager - Only visible to admin */}
+      {userData?.userType === 'admin' && (
+        <AdminDataPoolManager onPoolUpdate={handlePoolUpdate} />
+      )}
+
       {/* Data Pool Balance Card */}
       <Card className="bg-gradient-to-r from-purple-50 to-purple-100 border-purple-200">
         <CardHeader>
@@ -133,34 +171,41 @@ export const DataPoolManagement = ({ userData }: DataPoolProps) => {
           <Button
             onClick={allocateDataFromAdminPool}
             className="w-full bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800"
-            disabled={availableAdminFunds < 10}
+            disabled={!isEligible || availableAdminFunds < 10}
           >
             <Gift className="w-4 h-4 mr-2" />
-            Allocate R10 Data Credits from Admin Pool
+            {!isEligible ? "Not Eligible - Sufficient Balance" : "Allocate R10 Data Credits from Admin Pool"}
           </Button>
 
           <div className="grid grid-cols-2 gap-2">
             <Button
               onClick={() => purchaseAirtimeFromDataPool(5)}
               variant="outline"
-              disabled={dataPoolBalance < 5}
+              disabled={!isEligible || dataPoolBalance < 5}
               className="border-green-300 text-green-700 hover:bg-green-50"
             >
-              Buy R5 Airtime
+              Buy R5 Data
             </Button>
             <Button
               onClick={() => purchaseAirtimeFromDataPool(10)}
               variant="outline"
-              disabled={dataPoolBalance < 10}
+              disabled={!isEligible || dataPoolBalance < 10}
               className="border-green-300 text-green-700 hover:bg-green-50"
             >
-              Buy R10 Airtime
+              Buy R10 Data
             </Button>
           </div>
 
+          {!isEligible && (
+            <div className="text-xs text-orange-600 bg-orange-50 p-2 rounded flex items-center gap-1">
+              <AlertTriangle className="w-3 h-3" />
+              System detected sufficient balance - data pool access restricted
+            </div>
+          )}
+
           <div className="text-xs text-gray-600 bg-blue-50 p-2 rounded">
             <ArrowRight className="w-3 h-3 inline mr-1" />
-            Data pool credits are allocated from admin percentage shares to help customers without airtime
+            Data pool credits help customers without airtime access smart deals
           </div>
         </CardContent>
       </Card>
