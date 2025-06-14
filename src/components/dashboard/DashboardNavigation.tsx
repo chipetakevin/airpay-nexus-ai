@@ -51,7 +51,7 @@ const DashboardNavigation = ({ activeTab, onTabChange }: DashboardNavigationProp
       id: 'alerts',
       label: 'Deal Alerts',
       emoji: '🔔',
-      description: 'Real-time Notifications',
+      description: 'Live Notifications',
       gradient: 'from-yellow-500 to-orange-600',
       bgGradient: 'from-yellow-50 to-orange-50',
       icon: <Bell className="w-4 h-4" />
@@ -80,14 +80,14 @@ const DashboardNavigation = ({ activeTab, onTabChange }: DashboardNavigationProp
     <div className="mb-6">
       <div className="w-full overflow-hidden">
         <ScrollArea className="w-full whitespace-nowrap">
-          <div className="flex justify-start lg:justify-center pb-2">
-            <div className="flex space-x-2 p-2 bg-white/90 backdrop-blur-md rounded-xl md:rounded-2xl shadow-lg border border-gray-100 w-max">
+          <div className="flex justify-start lg:justify-center pb-2 px-2">
+            <div className="flex space-x-1.5 md:space-x-2 p-2 bg-white/90 backdrop-blur-md rounded-xl md:rounded-2xl shadow-lg border border-gray-100 w-max">
               {navigationTabs.map((tab) => (
                 <button
                   key={tab.id}
                   onClick={() => onTabChange(tab.id)}
                   className={`
-                    flex-shrink-0 p-2 md:p-3 rounded-lg md:rounded-xl transition-all duration-300 w-[90px] md:w-[110px] relative
+                    flex-shrink-0 p-2 md:p-3 rounded-lg md:rounded-xl transition-all duration-300 w-[85px] md:w-[105px] relative
                     ${activeTab === tab.id 
                       ? `bg-gradient-to-br ${tab.gradient} text-white shadow-lg scale-105` 
                       : `bg-gradient-to-br ${tab.bgGradient} hover:bg-white text-gray-700 hover:shadow-md hover:scale-102`
@@ -95,7 +95,7 @@ const DashboardNavigation = ({ activeTab, onTabChange }: DashboardNavigationProp
                   `}
                 >
                   <div className="flex flex-col items-center gap-1">
-                    <div className={`text-lg md:text-xl ${activeTab === tab.id ? 'animate-bounce' : 'group-hover:animate-pulse'}`}>
+                    <div className={`text-base md:text-lg ${activeTab === tab.id ? 'animate-bounce' : 'group-hover:animate-pulse'}`}>
                       {tab.emoji}
                     </div>
                     <div className="text-center">
