@@ -2,7 +2,7 @@
 import React from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { OverviewTabContent } from './OverviewTabContent';
-import { HistoryTabContent } from './HistoryTabContent';
+import { EnhancedHistoryTabContent } from './EnhancedHistoryTabContent';
 import { DataPoolManagement } from './DataPoolManagement';
 import AirtimeDealsSystem from '../AirtimeDealsSystem';
 
@@ -51,9 +51,9 @@ const OneCardTabsLayout = ({
     },
     {
       value: 'history',
-      label: 'History',
-      icon: '📋',
-      description: 'Records',
+      label: 'Smart History',
+      icon: '🔍',
+      description: 'AI Search',
       color: 'green'
     }
   ];
@@ -136,7 +136,7 @@ const OneCardTabsLayout = ({
           </TabsContent>
 
           <TabsContent value="history" className="space-y-4 animate-fade-in">
-            <HistoryTabContent />
+            <EnhancedHistoryTabContent />
           </TabsContent>
         </div>
       </Tabs>
