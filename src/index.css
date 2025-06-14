@@ -130,6 +130,15 @@
     }
   }
 
+  @keyframes shimmer {
+    0% {
+      transform: translateX(-100%) skewX(-12deg);
+    }
+    100% {
+      transform: translateX(200%) skewX(-12deg);
+    }
+  }
+
   @keyframes blue-flash {
     0%, 100% {
       background: linear-gradient(135deg, #3b82f6, #1d4ed8);
@@ -171,6 +180,10 @@
 
   .animate-pulse-glow {
     animation: pulse-glow 2s ease-in-out infinite;
+  }
+
+  .animate-shimmer {
+    animation: shimmer 2s ease-in-out;
   }
 
   .animate-blue-flash {
