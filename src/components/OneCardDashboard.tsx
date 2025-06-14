@@ -27,7 +27,7 @@ const OneCardDashboard = () => {
 
   return (
     <div className="space-y-4 sm:space-y-6">
-      <Tabs defaultValue="overview" className="w-full">
+      <Tabs defaultValue="deals" className="w-full">
         <TabsList className="grid w-full grid-cols-3 bg-gray-100">
           <TabsTrigger value="overview">Overview</TabsTrigger>
           <TabsTrigger value="deals">Smart Deals</TabsTrigger>

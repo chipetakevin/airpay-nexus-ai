@@ -185,14 +185,14 @@ export const useShoppingCart = (initialDeal?: CartItem) => {
 
       toast({
         title: successMessage,
-        description: "Receipt sent to WhatsApp & Email. Redirecting to shop..."
+        description: "Receipt sent to WhatsApp & Email. Redirecting to Smart Deals..."
       });
 
       setCartItems([]);
 
-      // Redirect to main deals page after 3 seconds
+      // Redirect to portal with onecard tab and deals subtab after 3 seconds
       setTimeout(() => {
-        window.location.href = '/';
+        window.location.href = '/portal?tab=onecard#deals';
       }, 3000);
 
       return true;
