@@ -122,7 +122,7 @@ export const useAdminRegistration = () => {
         ...formData,
         adminId,
         registeredPhone: `${formData.countryCode}${formData.phoneNumber}`,
-        cardType: 'OneCard Platinum',
+        cardType: 'onecard@myonecard.ai Platinum',
         accessLevel: 'Full System Access',
         cashbackBalance: 0,
         totalCustomers: 0,
@@ -156,7 +156,7 @@ export const useAdminRegistration = () => {
 
       toast({
         title: "Admin Registration Successful! 🔑",
-        description: `OneCard Platinum created: ****${adminId.slice(-4)}. Redirecting to Smart Deals now!`,
+        description: `onecard@myonecard.ai Platinum created: ****${adminId.slice(-4)}. Redirecting to Smart Deals now!`,
       });
 
       // Direct redirect to Smart Deals tab - fastest shopping experience
