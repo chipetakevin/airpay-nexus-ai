@@ -1,12 +1,15 @@
 
 import React, { useState, useEffect } from 'react';
 import { useMobileAuth } from '@/hooks/useMobileAuth';
+import { useSessionManager } from '@/hooks/useSessionManager';
 import { DisabledProfileCard } from './profile/DisabledProfileCard';
 import { EnabledProfileCard } from './profile/EnabledProfileCard';
 import { AdminProfileToggle } from './profile/AdminProfileToggle';
+import SessionStatusIndicator from './session/SessionStatusIndicator';
 
 const CustomerProfileDropdown = () => {
   const { currentUser, isAuthenticated } = useMobileAuth();
+  const { sessionInfo } = useSessionManager();
   const [isProfileEnabled, setIsProfileEnabled] = useState(false);
   const [showAdminControls, setShowAdminControls] = useState(false);
 
@@ -50,8 +53,19 @@ const CustomerProfileDropdown = () => {
     return null;
   }
 
+  // Check if this is Kevin Chipeta or admin user for session monitoring
+  const isKevinOrAdmin = (
+    (currentUser.firstName === 'Kevin' && currentUser.lastName === 'Chipeta') ||
+    currentUser.userType === 'admin'
+  );
+
   return (
     <div className="w-full px-3 py-2 space-y-3">
+      {/* Session Status for Kevin and Admin users */}
+      {isKevinOrAdmin && sessionInfo && (
+        <SessionStatusIndicator />
+      )}
+      
       {isProfileEnabled ? (
         <EnabledProfileCard user={currentUser} onDisable={handleDisableProfile} />
       ) : (

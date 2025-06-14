@@ -1,10 +1,10 @@
-
 import React, { useState, useEffect } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import PortalHeader from '@/components/PortalHeader';
 import PortalTabs from '@/components/PortalTabs';
 import { useToast } from "@/hooks/use-toast"
 import WhatsAppFloatingButton from '@/components/WhatsAppFloatingButton';
+import { useSessionManager } from '@/hooks/useSessionManager';
 
 type UserType = 'customer' | 'vendor' | 'admin' | null;
 
@@ -15,7 +15,10 @@ const Portal = () => {
   const [showAdminTab, setShowAdminTab] = useState(false);
   const [isAdminAuthenticated, setIsAdminAuthenticated] = useState(false);
   const navigate = useNavigate();
-  const { toast } = useToast()
+  const { toast } = useToast();
+  
+  // Initialize session manager for Kevin and admin users
+  useSessionManager();
 
   useEffect(() => {
     const storedUserCredentials = localStorage.getItem('userCredentials');
