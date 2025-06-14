@@ -8,7 +8,7 @@ import AirtimeDealsSystem from './AirtimeDealsSystem';
 
 const OneCardDashboard = () => {
   const [userData, setUserData] = useState(null);
-  const [activeTab, setActiveTab] = useState('deals');
+  const [activeTab, setActiveTab] = useState('overview');
 
   useEffect(() => {
     const storedUser = localStorage.getItem('onecardUser');
