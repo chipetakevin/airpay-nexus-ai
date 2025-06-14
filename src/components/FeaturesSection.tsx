@@ -259,7 +259,7 @@ const FeaturesSection = () => {
                 { name: 'Virgin Mobile', color: 'from-pink-500 to-rose-500' }
               ].map((network, index) => (
                 <div key={network.name} className="flex flex-col items-center group">
-                  <div className={`w-12 h-12 sm:w-14 sm:h-14 lg:w-16 lg:h-16 bg-gradient-to-br ${network.color} rounded-2xl flex items-center justify-center text-white font-bold text-xs sm:text-sm shadow-lg transform hover:scale-110 transition-all duration-300 group-hover:shadow-2xl`} 
+                  <div className={`w-14 h-14 sm:w-16 sm:h-16 lg:w-18 lg:h-18 bg-gradient-to-br ${network.color} rounded-2xl flex items-center justify-center text-white font-bold text-xs sm:text-sm shadow-lg transform hover:scale-110 transition-all duration-300 group-hover:shadow-2xl`} 
                        style={{ animationDelay: `${index * 0.1}s` }}>
                     <span className="text-center leading-tight px-1">
                       {network.name === 'Divinely Mobile' ? (
@@ -272,6 +272,8 @@ const FeaturesSection = () => {
                           <span className="block text-[10px] sm:text-xs">Virgin</span>
                           <span className="block text-[10px] sm:text-xs -mt-1">Mobile</span>
                         </span>
+                      ) : network.name === 'Vodacom' ? (
+                        <span className="block text-[11px] sm:text-sm font-bold">Vodacom</span>
                       ) : (
                         network.name
                       )}
