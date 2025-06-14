@@ -10,8 +10,11 @@ export const formatWhatsAppMessage = (data: ReceiptData): string => {
   const dateObj = new Date(data.timestamp);
   const formattedDate = `${dateObj.getFullYear()}/${String(dateObj.getMonth() + 1).padStart(2, '0')}/${String(dateObj.getDate()).padStart(2, '0')}, ${String(dateObj.getHours()).padStart(2, '0')}:${String(dateObj.getMinutes()).padStart(2, '0')}:${String(dateObj.getSeconds()).padStart(2, '0')}`;
 
-  // Capitalize first letter of customer name
-  const capitalizedCustomerName = data.customerName.charAt(0).toUpperCase() + data.customerName.slice(1);
+  // Capitalize first letter of each word in customer name (first name and surname)
+  const capitalizedCustomerName = data.customerName
+    .split(' ')
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+    .join(' ');
 
   return `🟢 *DIVINELY MOBILE* 📱
 

@@ -4,10 +4,16 @@ import { ReceiptData } from './types.ts';
 export const formatEmailReceipt = (data: ReceiptData): string => {
   const itemsList = data.items.map(item => 
     `<tr>
-      <td style="padding: 8px; border-bottom: 1px solid #eee;">${item.network} ${item.type} R${item.amount}</td>
-      <td style="padding: 8px; border-bottom: 1px solid #eee; text-align: right;">R${item.price.toFixed(2)}</td>
+      <td style="padding: 8px; border-bottom: 1px solid white;">${item.network} ${item.type} R${item.amount}</td>
+      <td style="padding: 8px; border-bottom: 1px solid white; text-align: right;">R${item.price.toFixed(2)}</td>
     </tr>`
   ).join('');
+
+  // Capitalize first letter of each word in customer name (first name and surname)
+  const capitalizedCustomerName = data.customerName
+    .split(' ')
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+    .join(' ');
 
   return `<!DOCTYPE html>
 <html>
@@ -31,20 +37,20 @@ export const formatEmailReceipt = (data: ReceiptData): string => {
 
   <div style="background: #f8f9fa; padding: 20px; border-radius: 10px; margin-bottom: 20px;">
     <h2 style="color: #059669; margin-top: 0;">Transaction Details</h2>
-    <p><strong>Customer:</strong> ${data.customerName}</p>
+    <p><strong>Customer:</strong> ${capitalizedCustomerName}</p>
     <p><strong>Email:</strong> ${data.customerEmail}</p>
     <p><strong>Phone:</strong> ${data.customerPhone}</p>
     <p><strong>Transaction ID:</strong> ${data.transactionId}</p>
     <p><strong>Date:</strong> ${new Date(data.timestamp).toLocaleString('en-ZA')}</p>
   </div>
 
-  <div style="background: white; border: 1px solid #e5e7eb; border-radius: 10px; margin-bottom: 20px;">
+  <div style="background: white; border: 1px solid white; border-radius: 10px; margin-bottom: 20px;">
     <h3 style="background: #059669; color: white; margin: 0; padding: 15px; border-radius: 10px 10px 0 0;">Purchase Items</h3>
     <table style="width: 100%; border-collapse: collapse;">
       <thead>
         <tr style="background: #f3f4f6;">
-          <th style="padding: 12px; text-align: left; border-bottom: 2px solid #e5e7eb;">Item</th>
-          <th style="padding: 12px; text-align: right; border-bottom: 2px solid #e5e7eb;">Price</th>
+          <th style="padding: 12px; text-align: left; border-bottom: 2px solid white;">Item</th>
+          <th style="padding: 12px; text-align: right; border-bottom: 2px solid white;">Price</th>
         </tr>
       </thead>
       <tbody>
@@ -76,7 +82,7 @@ export const formatEmailReceipt = (data: ReceiptData): string => {
     </p>
   </div>
 
-  <div style="text-align: center; padding: 20px; border-top: 1px solid #e5e7eb;">
+  <div style="text-align: center; padding: 20px; border-top: 1px solid white;">
     <div style="margin-bottom: 15px;">
       <!-- Footer Logo -->
       <div style="display: inline-block; position: relative;">
