@@ -33,19 +33,15 @@ const Portal = () => {
   }, []);
 
   useEffect(() => {
-    // Always prioritize deals tab, but allow URL tab parameter to override if specified
+    // Only read from URL params, don't create a loop by writing back
     const tabParam = searchParams.get('tab');
-    if (tabParam && tabParam !== 'deals') {
+    if (tabParam && tabParam !== activeTab) {
       setActiveTab(tabParam);
-    } else {
-      setActiveTab('deals'); // Force deals as default
+    } else if (!tabParam) {
+      // Only navigate if there's no tab param at all
+      navigate('?tab=deals', { replace: true });
     }
-  }, [searchParams]);
-
-  useEffect(() => {
-    // Update the URL when the active tab changes
-    navigate(`?tab=${activeTab}`, { replace: true });
-  }, [activeTab, navigate]);
+  }, [searchParams]); // Removed navigate and activeTab from dependencies to prevent loop
 
   useEffect(() => {
     // Show admin tab based on authentication and user type
@@ -67,6 +63,7 @@ const Portal = () => {
   const resetUserType = () => {
     setUserType(null);
     setActiveTab('deals'); // Always return to deals when resetting
+    navigate('?tab=deals', { replace: true });
   };
 
   const isTabAllowed = (tabValue: string) => {
@@ -113,6 +110,8 @@ const Portal = () => {
   const handleTabChange = (value: string) => {
     if (isTabAllowed(value)) {
       setActiveTab(value);
+      // Only update URL when user explicitly changes tabs
+      navigate(`?tab=${value}`, { replace: true });
     }
   };
 
