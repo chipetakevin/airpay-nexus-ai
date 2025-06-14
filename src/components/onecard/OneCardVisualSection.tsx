@@ -8,6 +8,11 @@ interface OneCardVisualSectionProps {
 }
 
 export const OneCardVisualSection = ({ onAccessRewards }: OneCardVisualSectionProps) => {
+  const handleAccessDivinelyMobile = () => {
+    // Redirect to Divinely Mobile deals with default filters
+    window.location.href = '/portal?tab=deals&network=divinely%20mobile&dealType=airtime';
+  };
+
   return (
     <>
       {/* OneCard Visual */}
@@ -22,12 +27,12 @@ export const OneCardVisualSection = ({ onAccessRewards }: OneCardVisualSectionPr
       {/* Rewards Access Button */}
       <div className="mb-6">
         <Button
-          onClick={onAccessRewards}
+          onClick={handleAccessDivinelyMobile}
           className="w-full bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-black font-bold py-4 rounded-xl shadow-lg transition-all duration-300 transform hover:scale-105"
         >
           <div className="flex items-center justify-center gap-3">
             <Gift className="w-6 h-6" />
-            <span className="text-lg">Access Divine Mobile Deals</span>
+            <span className="text-lg">Access Divinely Mobile Deals</span>
             <ArrowRight className="w-6 h-6" />
           </div>
         </Button>
