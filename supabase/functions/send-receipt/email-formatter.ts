@@ -1,6 +1,10 @@
 
 import { ReceiptData } from './types.ts';
 
+const getInitials = (name: string): string => {
+  return name.split(' ').map(word => word.charAt(0).toUpperCase()).join('');
+};
+
 export const formatEmailReceipt = (data: ReceiptData): string => {
   const itemsList = data.items.map(item => 
     `<tr>
@@ -8,6 +12,8 @@ export const formatEmailReceipt = (data: ReceiptData): string => {
       <td style="padding: 8px; border-bottom: 1px solid #eee; text-align: right;">R${item.price.toFixed(2)}</td>
     </tr>`
   ).join('');
+
+  const senderInitials = getInitials(data.customerName);
 
   return `<!DOCTYPE html>
 <html>
@@ -31,7 +37,7 @@ export const formatEmailReceipt = (data: ReceiptData): string => {
 
   <div style="background: #f8f9fa; padding: 20px; border-radius: 10px; margin-bottom: 20px;">
     <h2 style="color: #059669; margin-top: 0;">Transaction Details</h2>
-    <p><strong>Customer:</strong> ${data.customerName}</p>
+    <p><strong>Sender:</strong> ${senderInitials}</p>
     <p><strong>Email:</strong> ${data.customerEmail}</p>
     <p><strong>Phone:</strong> ${data.customerPhone}</p>
     <p><strong>Transaction ID:</strong> ${data.transactionId}</p>
@@ -92,7 +98,7 @@ export const formatEmailReceipt = (data: ReceiptData): string => {
   </div>
 
   <div style="text-align: center; margin-top: 20px; color: #6b7280; font-size: 12px;">
-    <p>Need help? Contact us at support@divinely-mobile.com or +27 100 2827</p>
+    <p>Need help? Contact us at +27 100 2827</p>
     <p>© 2024 Divinely Mobile. All rights reserved.</p>
     <p><em>Brought To You By OneCard Global Rewards Program</em></p>
   </div>

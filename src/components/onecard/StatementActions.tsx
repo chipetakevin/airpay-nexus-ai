@@ -1,4 +1,5 @@
 
+
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
@@ -50,6 +51,10 @@ export const StatementActions = ({ transaction }: StatementActionsProps) => {
     ).join(' ');
   };
 
+  const getInitials = (name: string) => {
+    return name.split(' ').map(word => word.charAt(0).toUpperCase()).join('');
+  };
+
   const getCustomerDisplayName = () => {
     const credentials = localStorage.getItem('userCredentials');
     let displayName = 'Valued Customer';
@@ -99,6 +104,7 @@ export const StatementActions = ({ transaction }: StatementActionsProps) => {
       // Get customer details from localStorage
       const credentials = localStorage.getItem('userCredentials');
       const customerName = getCustomerDisplayName();
+      const customerInitials = getInitials(customerName);
       let customerPhone = '';
       
       if (credentials) {
@@ -131,7 +137,7 @@ export const StatementActions = ({ transaction }: StatementActionsProps) => {
       doc.setFontSize(12);
       doc.text('Transaction Details', 25, 65);
       doc.setFontSize(10);
-      doc.text(`Customer: ${customerName}`, 25, 75);
+      doc.text(`Sender: ${customerInitials}`, 25, 75);
       doc.text(`Phone: ${customerPhone}`, 25, 82);
       doc.text(`Transaction ID: ${transactionId}`, 25, 89);
       doc.text(`Date: ${formattedDate}`, 120, 75);
