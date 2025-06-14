@@ -18,46 +18,6 @@ import {
 const FeaturesSection = () => {
   const features = [
     {
-      icon: <Shield className="w-8 h-8" />,
-      title: "Secure & Safe",
-      description: "Bank-grade security for all transactions",
-      graphic: "security",
-      color: "from-purple-500 to-violet-600",
-      bgColor: "bg-purple-50",
-      stats: "Bank-Level Security",
-      mockupType: "dashboard"
-    },
-    {
-      icon: <Smartphone className="w-8 h-8" />,
-      title: "Mobile Optimized",
-      description: "Designed specifically for smartphone users",
-      graphic: "mobile",
-      color: "from-orange-500 to-red-600",
-      bgColor: "bg-orange-50",
-      stats: "Mobile First",
-      mockupType: "smartphone"
-    },
-    {
-      icon: <MessageCircle className="w-8 h-8" />,
-      title: "WhatsApp Shopping",
-      description: "Shop directly through WhatsApp - no app needed!",
-      graphic: "whatsapp",
-      color: "from-green-500 to-emerald-600",
-      bgColor: "bg-green-50",
-      stats: "24/7 Available",
-      mockupType: "whatsapp"
-    },
-    {
-      icon: <Clock className="w-8 h-8" />,
-      title: "Instant Delivery",
-      description: "Airtime and data delivered within 30 seconds",
-      graphic: "speed",
-      color: "from-blue-500 to-indigo-600",
-      bgColor: "bg-blue-50",
-      stats: "< 30 Seconds",
-      mockupType: "chart"
-    },
-    {
       icon: <CreditCard className="w-8 h-8" />,
       title: "OneCard Rewards",
       description: "Earn 2.5% cashback on every purchase with our exclusive OneCard system",
@@ -82,14 +42,6 @@ const FeaturesSection = () => {
   const renderEnhancedGraphic = (type: string, color: string, mockupType: string) => {
     const baseIconElement = (() => {
       switch (type) {
-        case "security":
-          return <Shield className="w-6 h-6 text-white" />;
-        case "mobile":
-          return <Smartphone className="w-6 h-6 text-white" />;
-        case "whatsapp":
-          return <MessageCircle className="w-6 h-6 text-white" />;
-        case "speed":
-          return <Clock className="w-6 h-6 text-white" />;
         case "rewards":
           return <CreditCard className="w-6 h-6 text-white" />;
         case "processing":
@@ -130,41 +82,6 @@ const FeaturesSection = () => {
             </div>
           </div>
 
-          {/* Enhanced Mockup Based on Type */}
-          {mockupType === "smartphone" && (
-            <div className="relative z-10">
-              {/* Smartphone Mockup */}
-              <div className="mx-auto w-24 h-40 bg-gray-900 rounded-2xl p-1 shadow-xl">
-                <div className="w-full h-full bg-white rounded-xl overflow-hidden relative">
-                  {/* Screen Content */}
-                  <div className="absolute top-2 left-2 right-2 bottom-2 bg-gradient-to-br from-blue-50 to-purple-50 rounded-lg p-2">
-                    {/* Status Bar */}
-                    <div className="flex justify-between items-center mb-2">
-                      <div className="w-8 h-1 bg-gray-300 rounded-full"></div>
-                      <div className="flex space-x-1">
-                        <div className="w-1 h-1 bg-green-500 rounded-full"></div>
-                        <div className="w-1 h-1 bg-green-500 rounded-full"></div>
-                        <div className="w-1 h-1 bg-green-500 rounded-full"></div>
-                      </div>
-                    </div>
-                    {/* App Interface */}
-                    <div className="space-y-1">
-                      <div className="w-full h-2 bg-blue-200 rounded animate-pulse"></div>
-                      <div className="w-3/4 h-1 bg-blue-100 rounded"></div>
-                      <div className="w-1/2 h-1 bg-blue-100 rounded"></div>
-                      <div className="grid grid-cols-2 gap-1 mt-2">
-                        <div className="h-4 bg-gradient-to-r from-green-400 to-blue-400 rounded"></div>
-                        <div className="h-4 bg-gradient-to-r from-purple-400 to-pink-400 rounded"></div>
-                      </div>
-                    </div>
-                  </div>
-                  {/* Home Indicator */}
-                  <div className="absolute bottom-1 left-1/2 transform -translate-x-1/2 w-6 h-1 bg-gray-400 rounded-full"></div>
-                </div>
-              </div>
-            </div>
-          )}
-
           {mockupType === "dashboard" && (
             <div className="relative z-10">
               {/* Dashboard Mockup */}
@@ -202,41 +119,6 @@ const FeaturesSection = () => {
                   <div className="flex items-center justify-between">
                     <div className="w-6 h-1 bg-blue-400 rounded-full"></div>
                     <div className="text-xs font-bold text-blue-600">Active</div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {mockupType === "whatsapp" && (
-            <div className="relative z-10">
-              {/* WhatsApp Interface Mockup */}
-              <div className="bg-green-50 rounded-xl p-3 border border-green-200">
-                <div className="space-y-2">
-                  {/* Header */}
-                  <div className="flex items-center space-x-2">
-                    <div className="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center">
-                      <MessageCircle className="w-3 h-3 text-white" />
-                    </div>
-                    <div className="text-xs font-semibold text-green-800">Divinely Mobile</div>
-                  </div>
-                  {/* Messages */}
-                  <div className="space-y-1">
-                    <div className="bg-white rounded-lg p-2 text-xs shadow-sm">
-                      Hi! Need airtime? 📱
-                    </div>
-                    <div className="bg-green-500 text-white rounded-lg p-2 text-xs ml-4 shadow-sm">
-                      Yes, R50 MTN please ✨
-                    </div>
-                    <div className="bg-white rounded-lg p-2 text-xs shadow-sm">
-                      Processing... ⚡
-                    </div>
-                  </div>
-                  {/* Typing Indicator */}
-                  <div className="flex space-x-1 items-center">
-                    <div className="w-1 h-1 bg-green-400 rounded-full animate-bounce"></div>
-                    <div className="w-1 h-1 bg-green-400 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
-                    <div className="w-1 h-1 bg-green-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
                   </div>
                 </div>
               </div>
@@ -288,30 +170,15 @@ const FeaturesSection = () => {
           {/* Bottom Section with Enhanced Stats */}
           <div className="relative z-10 mt-6 text-center">
             <h3 className={`text-lg font-bold bg-gradient-to-r ${color} bg-clip-text text-transparent mb-2`}>
-              {type === "security" ? "Secure & Safe" :
-               type === "mobile" ? "Mobile Optimized" :
-               type === "whatsapp" ? "WhatsApp Shopping" :
-               type === "speed" ? "Instant Delivery" :
-               type === "rewards" ? "OneCard Rewards" :
-               "Instant Processing"}
+              {type === "rewards" ? "OneCard Rewards" : "Instant Processing"}
             </h3>
             <p className="text-gray-600 text-sm mb-3">
-              {type === "security" ? "Bank-grade security for all transactions" :
-               type === "mobile" ? "Designed specifically for smartphone users" :
-               type === "whatsapp" ? "Shop directly through WhatsApp - no app needed!" :
-               type === "speed" ? "Airtime and data delivered within 30 seconds" :
-               type === "rewards" ? "Earn 2.5% cashback on every purchase" :
-               "Lightning-fast airtime delivery with AI-powered processing"}
+              {type === "rewards" ? "Earn 2.5% cashback on every purchase" : "Lightning-fast airtime delivery with AI-powered processing"}
             </p>
             
             {/* Enhanced Stats Badge */}
             <div className={`inline-flex items-center px-4 py-2 bg-gradient-to-r ${color} text-white text-xs font-bold rounded-full shadow-lg animate-pulse`}>
-              {type === "security" ? "Bank-Level Security" :
-               type === "mobile" ? "Mobile First" :
-               type === "whatsapp" ? "24/7 Available" :
-               type === "speed" ? "< 30 Seconds" :
-               type === "rewards" ? "2.5% Cashback" :
-               "AI Powered"}
+              {type === "rewards" ? "2.5% Cashback" : "AI Powered"}
             </div>
           </div>
         </div>
@@ -351,19 +218,10 @@ const FeaturesSection = () => {
           </div>
         </div>
 
-        {/* Enhanced Feature Grid with Recreated Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
-          {features.slice(0, 4).map((feature, index) => (
+        {/* Simplified Feature Grid with Only 2 Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+          {features.map((feature, index) => (
             <div key={index} className="group transform hover:scale-105 transition-all duration-500">
-              {renderEnhancedGraphic(feature.graphic, feature.color, feature.mockupType)}
-            </div>
-          ))}
-        </div>
-
-        {/* Additional Features Row */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto mt-12">
-          {features.slice(4).map((feature, index) => (
-            <div key={index + 4} className="group transform hover:scale-105 transition-all duration-500">
               {renderEnhancedGraphic(feature.graphic, feature.color, feature.mockupType)}
             </div>
           ))}
