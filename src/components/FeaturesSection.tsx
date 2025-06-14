@@ -248,10 +248,8 @@ const FeaturesSection = () => {
           </div>
 
           {/* Feature Grid - Only show when isOpen is true */}
-          {console.log('Rendering feature grid condition check, isOpen:', isOpen)}
           {isOpen && (
             <div className="space-y-8">
-              {console.log('Feature grid is being rendered')}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 {features.map((feature, index) => (
                   <div key={index} className="group transform hover:scale-105 transition-all duration-500 animate-fade-in">
