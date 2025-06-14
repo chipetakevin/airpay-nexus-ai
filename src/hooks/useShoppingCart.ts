@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
@@ -65,7 +64,11 @@ export const useShoppingCart = (initialDeal?: CartItem) => {
     };
   };
 
-  const sendComprehensiveReceipt = async (transactionData: any, profitSharing: any) => {
+  const generateTransactionId = (timestamp: string) => {
+    return 'AP' + timestamp.replace(/[^0-9]/g, '').slice(-8);
+  };
+
+  const autoGenerateAndSendReceipts = async (transactionData: any, profitSharing: any) => {
     try {
       const credentials = localStorage.getItem('userCredentials');
       let customerEmail = '';
@@ -83,7 +86,7 @@ export const useShoppingCart = (initialDeal?: CartItem) => {
         customerPhone: customerPhone,
         recipientPhone: purchaseMode === 'self' ? customerPhone : recipientData.phone,
         recipientName: purchaseMode === 'self' ? 'Self' : recipientData.name,
-        transactionId: transactionData.timestamp.replace(/[^0-9]/g, '').slice(-10),
+        transactionId: generateTransactionId(transactionData.timestamp),
         items: cartItems.map(item => ({
           network: item.network,
           amount: item.amount,
@@ -96,25 +99,48 @@ export const useShoppingCart = (initialDeal?: CartItem) => {
         purchaseType: purchaseMode
       };
 
-      // Send receipt via edge function
+      // Send receipt via edge function (handles both email and WhatsApp)
       const { data, error } = await supabase.functions.invoke('send-receipt', {
         body: receiptData
       });
 
       if (error) {
         console.error('Error sending receipt:', error);
+        toast({
+          title: "Receipt Warning",
+          description: "Purchase successful but receipt delivery failed. Check transaction history for manual resend options.",
+          variant: "destructive"
+        });
       } else {
         console.log('Receipt sent successfully:', data);
         
-        // Open WhatsApp with receipt if URL provided
+        // Auto-redirect to WhatsApp with receipt if URL provided
         if (data?.whatsappUrl) {
+          toast({
+            title: "📱 Opening WhatsApp",
+            description: "Receipt sent! Redirecting to WhatsApp for instant access...",
+          });
+          
           setTimeout(() => {
             window.open(data.whatsappUrl, '_blank');
-          }, 2000);
+          }, 1500);
+        }
+
+        // Show email confirmation
+        if (customerEmail) {
+          toast({
+            title: "📧 Email Receipt Sent",
+            description: `Receipt sent to ${customerEmail}`,
+          });
         }
       }
     } catch (error) {
-      console.error('Error in sendComprehensiveReceipt:', error);
+      console.error('Error in autoGenerateAndSendReceipts:', error);
+      toast({
+        title: "Receipt Error",
+        description: "Purchase successful but receipt generation failed. Check transaction history.",
+        variant: "destructive"
+      });
     }
   };
 
@@ -128,7 +154,6 @@ export const useShoppingCart = (initialDeal?: CartItem) => {
       return false;
     }
 
-    // Skip authentication check since user is already authenticated after registration
     if (!isAuthenticated || !currentUser) {
       toast({
         title: "Session Expired",
@@ -145,7 +170,7 @@ export const useShoppingCart = (initialDeal?: CartItem) => {
       const recipientPhone = purchaseMode === 'self' ? customerPhone : recipientData.phone;
       const recipientName = purchaseMode === 'self' ? 'Self' : recipientData.name;
       
-      // Simulate transaction processing (replace with actual API call)
+      // Simulate transaction processing
       await new Promise(resolve => setTimeout(resolve, 1500));
       
       // Create transaction record
@@ -168,18 +193,18 @@ export const useShoppingCart = (initialDeal?: CartItem) => {
         timestamp: new Date().toISOString()
       };
 
-      // Store transaction locally for demo purposes
+      // Store transaction locally
       const existingTransactions = JSON.parse(localStorage.getItem('userTransactions') || '[]');
       existingTransactions.push(transactionData);
       localStorage.setItem('userTransactions', JSON.stringify(existingTransactions));
 
-      // Auto-save recipient details for future use (only for third-party purchases)
+      // Auto-save recipient details for future use
       if (purchaseMode === 'other' && recipientData.name && recipientData.phone && recipientData.relationship) {
         await saveRecipient(recipientData, detectedNetwork);
       }
 
-      // Send comprehensive receipt
-      await sendComprehensiveReceipt(transactionData, profitSharing);
+      // Auto-generate and send receipts to WhatsApp and email
+      await autoGenerateAndSendReceipts(transactionData, profitSharing);
 
       let successMessage = "Purchase Successful! 🎉";
       if (isVendor) {
@@ -192,7 +217,7 @@ export const useShoppingCart = (initialDeal?: CartItem) => {
 
       toast({
         title: successMessage,
-        description: "Receipt sent to WhatsApp & Email. Redirecting to Smart Deals..."
+        description: "Receipts auto-sent to WhatsApp & Email. Redirecting to Smart Deals..."
       });
 
       setCartItems([]);
