@@ -1,4 +1,3 @@
-
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 
 const corsHeaders = {
@@ -35,7 +34,6 @@ const formatWhatsAppMessage = (data: ReceiptData) => {
   const formattedDate = `${dateObj.getFullYear()}/${String(dateObj.getMonth() + 1).padStart(2, '0')}/${String(dateObj.getDate()).padStart(2, '0')}, ${String(dateObj.getHours()).padStart(2, '0')}:${String(dateObj.getMinutes()).padStart(2, '0')}:${String(dateObj.getSeconds()).padStart(2, '0')}`;
 
   return `🟢 *DIVINELY MOBILE* 📱
-_Ø=Ün Smart Technology Solutions_
 
 ✅ *DIGITAL RECEIPT*
 
@@ -87,7 +85,6 @@ const formatEmailReceipt = (data: ReceiptData) => {
       </div>
     </div>
     <h1 style="margin: 0; font-size: 28px; font-weight: bold;">DIVINELY MOBILE</h1>
-    <p style="margin: 5px 0 0 0; opacity: 0.9; font-size: 14px;">Smart Technology Solutions</p>
     <p style="margin: 10px 0 0 0; font-size: 16px; font-weight: bold;">📱 Digital Receipt</p>
   </div>
 
