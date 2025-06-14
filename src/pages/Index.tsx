@@ -9,7 +9,6 @@ import TestimonialsCarousel from '@/components/TestimonialsCarousel';
 import StatsGrid from '@/components/StatsGrid';
 import CTASection from '@/components/CTASection';
 import FAQSection from '@/components/FAQSection';
-import NewsletterSignup from '@/components/NewsletterSignup';
 import WhatsAppFloatingButton from '@/components/WhatsAppFloatingButton';
 import MobileCustomerLanding from '@/components/MobileCustomerLanding';
 import WhatsAppShoppingSection from '@/components/WhatsAppShoppingSection';
@@ -50,7 +49,6 @@ const Index = () => {
         <div id="faq">
           <FAQSection />
         </div>
-        <NewsletterSignup />
       </main>
       
       <Footer />
