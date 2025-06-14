@@ -105,7 +105,7 @@ const WhatsAppShoppingSection = () => {
                   <MessageCircle className="w-7 h-7 text-green-600" />
                 </div>
                 <div className="flex-1">
-                  <h3 className="font-bold text-lg">Devine Mobile Assistant</h3>
+                  <h3 className="font-bold text-lg">Divinely Mobile Assistant</h3>
                   <div className="flex items-center gap-2 text-sm opacity-90">
                     <div className="w-2 h-2 bg-green-300 rounded-full animate-pulse"></div>
                     <span>Online • Always here to help</span>
@@ -141,7 +141,7 @@ const WhatsAppShoppingSection = () => {
                 <div className="flex items-start gap-2 mb-3">
                   <span className="text-2xl">👋</span>
                   <div>
-                    <p className="font-semibold text-gray-900 mb-2">Welcome to Devine Mobile!</p>
+                    <p className="font-semibold text-gray-900 mb-2">Welcome to Divinely Mobile!</p>
                     <p className="text-gray-700 text-sm">
                       Your one-stop shop for airtime & data right here in WhatsApp!
                     </p>

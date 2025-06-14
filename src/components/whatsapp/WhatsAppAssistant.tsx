@@ -14,7 +14,7 @@ const WhatsAppAssistant = () => {
     {
       id: 1,
       type: 'bot',
-      message: `👋 Welcome to Devine Mobile!
+      message: `👋 Welcome to Divinely Mobile!
 Your one-stop shop for airtime & data right here in WhatsApp!
 
 🌟 What can I help you with today?
@@ -228,7 +228,7 @@ Just tell me what you need, or type a number from the main menu! 😊`;
           <MessageCircle className="w-6 h-6 text-green-600" />
         </div>
         <div>
-          <h3 className="font-semibold">Devine Mobile Assistant</h3>
+          <h3 className="font-semibold">Divinely Mobile Assistant</h3>
           <p className="text-xs opacity-90">Online • Always here to help</p>
         </div>
         <Badge className="ml-auto bg-green-800">AI Agent</Badge>
