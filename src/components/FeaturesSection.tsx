@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
@@ -224,36 +225,37 @@ const FeaturesSection = () => {
         </div>
 
         {/* Collapsible Features Section */}
-        <Collapsible open={isOpen} onOpenChange={setIsOpen} className="max-w-4xl mx-auto">
+        <div className="max-w-4xl mx-auto">
           <div className="text-center mb-8">
-            <CollapsibleTrigger asChild>
-              <Button 
-                variant="outline" 
-                className="bg-white/80 backdrop-blur-sm border-gray-200 hover:bg-white/90 hover:border-blue-300 transition-all duration-300 px-6 py-3 text-base font-semibold"
-              >
-                <span className="mr-2">
-                  {isOpen ? "Hide Features" : "View Features"}
-                </span>
-                {isOpen ? (
-                  <ChevronUp className="w-5 h-5" />
-                ) : (
-                  <ChevronDown className="w-5 h-5" />
-                )}
-              </Button>
-            </CollapsibleTrigger>
+            <Button 
+              onClick={() => setIsOpen(!isOpen)}
+              variant="outline" 
+              className="bg-white/80 backdrop-blur-sm border-gray-200 hover:bg-white/90 hover:border-blue-300 transition-all duration-300 px-6 py-3 text-base font-semibold"
+            >
+              <span className="mr-2">
+                {isOpen ? "Hide Features" : "View Features"}
+              </span>
+              {isOpen ? (
+                <ChevronUp className="w-5 h-5" />
+              ) : (
+                <ChevronDown className="w-5 h-5" />
+              )}
+            </Button>
           </div>
 
-          <CollapsibleContent className="space-y-8">
-            {/* Feature Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              {features.map((feature, index) => (
-                <div key={index} className="group transform hover:scale-105 transition-all duration-500 animate-fade-in">
-                  {renderEnhancedGraphic(feature.graphic, feature.color, feature.mockupType)}
-                </div>
-              ))}
+          {/* Feature Grid - Only show when isOpen is true */}
+          {isOpen && (
+            <div className="space-y-8">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                {features.map((feature, index) => (
+                  <div key={index} className="group transform hover:scale-105 transition-all duration-500 animate-fade-in">
+                    {renderEnhancedGraphic(feature.graphic, feature.color, feature.mockupType)}
+                  </div>
+                ))}
+              </div>
             </div>
-          </CollapsibleContent>
-        </Collapsible>
+          )}
+        </div>
 
         {/* Enhanced Network Support Visualization */}
         <div className="mt-16 text-center">
