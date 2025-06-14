@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
@@ -21,6 +20,8 @@ import {
 
 const FeaturesSection = () => {
   const [isOpen, setIsOpen] = useState(false);
+
+  console.log('FeaturesSection rendered, isOpen:', isOpen);
 
   const features = [
     {
@@ -228,7 +229,10 @@ const FeaturesSection = () => {
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-8">
             <Button 
-              onClick={() => setIsOpen(!isOpen)}
+              onClick={() => {
+                console.log('Button clicked, current isOpen:', isOpen);
+                setIsOpen(!isOpen);
+              }}
               variant="outline" 
               className="bg-white/80 backdrop-blur-sm border-gray-200 hover:bg-white/90 hover:border-blue-300 transition-all duration-300 px-6 py-3 text-base font-semibold"
             >
@@ -244,8 +248,10 @@ const FeaturesSection = () => {
           </div>
 
           {/* Feature Grid - Only show when isOpen is true */}
+          {console.log('Rendering feature grid condition check, isOpen:', isOpen)}
           {isOpen && (
             <div className="space-y-8">
+              {console.log('Feature grid is being rendered')}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 {features.map((feature, index) => (
                   <div key={index} className="group transform hover:scale-105 transition-all duration-500 animate-fade-in">
