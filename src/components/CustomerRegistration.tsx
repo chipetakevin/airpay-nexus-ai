@@ -16,7 +16,6 @@ const CustomerRegistration = () => {
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-2xl font-bold mb-2">Customer Registration</h2>
         <p className="text-gray-600">Join Divinely Mobile and start earning OneCard rewards on every purchase!</p>
       </div>
 

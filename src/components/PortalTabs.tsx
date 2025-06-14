@@ -24,7 +24,7 @@ const PortalTabs = ({
 }: PortalTabsProps) => {
   
   const getTabClassName = (tabValue: string) => {
-    let baseClass = "flex flex-col items-center gap-1 p-2 rounded-lg transition-all duration-300 min-h-[50px] w-full border text-xs";
+    let baseClass = "flex flex-col items-center gap-1 p-2 rounded-xl transition-all duration-300 min-h-[45px] w-full border text-xs shadow-sm";
     
     const allowed = isTabAllowed(tabValue);
     
@@ -33,24 +33,24 @@ const PortalTabs = ({
     } else {
       switch (tabValue) {
         case 'registration':
-          baseClass += " data-[state=active]:bg-gradient-to-br data-[state=active]:from-green-500 data-[state=active]:to-emerald-600 data-[state=active]:text-white data-[state=active]:shadow-sm data-[state=active]:border-green-400 bg-green-50 border-green-200 hover:border-green-300 hover:bg-green-100";
+          baseClass += " data-[state=active]:bg-gradient-to-br data-[state=active]:from-green-500 data-[state=active]:to-emerald-600 data-[state=active]:text-white data-[state=active]:shadow-md data-[state=active]:border-green-400 bg-green-50 border-green-200 hover:border-green-300 hover:bg-green-100 hover:shadow-md";
           break;
         case 'vendor':
-          baseClass += " data-[state=active]:bg-gradient-to-br data-[state=active]:from-blue-500 data-[state=active]:to-cyan-600 data-[state=active]:text-white data-[state=active]:shadow-sm data-[state=active]:border-blue-400 bg-blue-50 border-blue-200 hover:border-blue-300 hover:bg-blue-100";
+          baseClass += " data-[state=active]:bg-gradient-to-br data-[state=active]:from-blue-500 data-[state=active]:to-cyan-600 data-[state=active]:text-white data-[state=active]:shadow-md data-[state=active]:border-blue-400 bg-blue-50 border-blue-200 hover:border-blue-300 hover:bg-blue-100 hover:shadow-md";
           break;
         case 'onecard':
-          baseClass += " data-[state=active]:bg-gradient-to-br data-[state=active]:from-purple-500 data-[state=active]:to-pink-600 data-[state=active]:text-white data-[state=active]:shadow-sm data-[state=active]:border-purple-400 bg-purple-50 border-purple-200 hover:border-purple-300 hover:bg-purple-100";
+          baseClass += " data-[state=active]:bg-gradient-to-br data-[state=active]:from-purple-500 data-[state=active]:to-pink-600 data-[state=active]:text-white data-[state=active]:shadow-md data-[state=active]:border-purple-400 bg-purple-50 border-purple-200 hover:border-purple-300 hover:bg-purple-100 hover:shadow-md";
           break;
         case 'admin-reg':
         case 'admin':
           if (!isTabAllowed('admin-reg') && !isTabAllowed('admin')) {
             baseClass += " opacity-30 cursor-not-allowed bg-gray-200 text-gray-300 pointer-events-none border-gray-300";
           } else {
-            baseClass += " data-[state=active]:bg-gradient-to-br data-[state=active]:from-gray-600 data-[state=active]:to-slate-700 data-[state=active]:text-white data-[state=active]:shadow-sm data-[state=active]:border-gray-400 bg-gray-50 border-gray-200 hover:border-gray-300 hover:bg-gray-100";
+            baseClass += " data-[state=active]:bg-gradient-to-br data-[state=active]:from-gray-600 data-[state=active]:to-slate-700 data-[state=active]:text-white data-[state=active]:shadow-md data-[state=active]:border-gray-400 bg-gray-50 border-gray-200 hover:border-gray-300 hover:bg-gray-100 hover:shadow-md";
           }
           break;
         default:
-          baseClass += " data-[state=active]:bg-gradient-to-br data-[state=active]:from-indigo-500 data-[state=active]:to-blue-600 data-[state=active]:text-white data-[state=active]:shadow-sm data-[state=active]:border-indigo-400 bg-indigo-50 border-indigo-200 hover:border-indigo-300 hover:bg-indigo-100";
+          baseClass += " data-[state=active]:bg-gradient-to-br data-[state=active]:from-indigo-500 data-[state=active]:to-blue-600 data-[state=active]:text-white data-[state=active]:shadow-md data-[state=active]:border-indigo-400 bg-indigo-50 border-indigo-200 hover:border-indigo-300 hover:bg-indigo-100 hover:shadow-md";
       }
     }
     
@@ -61,7 +61,7 @@ const PortalTabs = ({
     if ((tabValue === 'admin-reg' || tabValue === 'admin') && !isTabAllowed(tabValue)) {
       return (
         <div className="flex flex-col items-center gap-0.5">
-          <div className="text-base opacity-30 blur-sm">🔒</div>
+          <div className="text-sm opacity-30 blur-sm">🔒</div>
           <div className="text-center">
             <div className="text-xs font-semibold opacity-30 select-none pointer-events-none blur-sm">
               {tabValue === 'admin-reg' ? 'Admin' : 'Portal'}
@@ -75,7 +75,7 @@ const PortalTabs = ({
       case 'registration':
         return (
           <div className="flex flex-col items-center gap-0.5">
-            <div className="text-base">👤</div>
+            <div className="text-sm">👤</div>
             <div className="text-center">
               <div className="text-xs font-semibold">Customer</div>
               <div className="text-xs opacity-75">Registration</div>
@@ -85,7 +85,7 @@ const PortalTabs = ({
       case 'vendor':
         return (
           <div className="flex flex-col items-center gap-0.5">
-            <div className="text-base">🏪</div>
+            <div className="text-sm">🏪</div>
             <div className="text-center">
               <div className="text-xs font-semibold">Vendor</div>
               <div className="text-xs opacity-75">Partnership</div>
@@ -96,8 +96,8 @@ const PortalTabs = ({
         return (
           <div className="flex flex-col items-center gap-0.5">
             <div className="flex items-center gap-0.5">
-              <div className="text-base">🔥</div>
-              <div className="text-sm">✨</div>
+              <div className="text-sm">🔥</div>
+              <div className="text-xs">✨</div>
             </div>
             <div className="text-center">
               <div className="text-xs font-semibold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">Smart Deals</div>
@@ -108,7 +108,7 @@ const PortalTabs = ({
       case 'admin-reg':
         return (
           <div className="flex flex-col items-center gap-0.5">
-            <div className="text-base">🔐</div>
+            <div className="text-sm">🔐</div>
             <div className="text-center">
               <div className="text-xs font-semibold">Admin</div>
               <div className="text-xs opacity-75">Access</div>
@@ -118,7 +118,7 @@ const PortalTabs = ({
       case 'admin':
         return (
           <div className="flex flex-col items-center gap-0.5">
-            <div className="text-base">⚙️</div>
+            <div className="text-sm">⚙️</div>
             <div className="text-center">
               <div className="text-xs font-semibold">Admin</div>
               <div className="text-xs opacity-75">Portal</div>
@@ -131,16 +131,16 @@ const PortalTabs = ({
   };
 
   return (
-    <div className="w-full max-w-4xl mx-auto">
+    <div className="w-full max-w-4xl mx-auto pt-6">
       <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full">
         {/* Mobile-First Tab Navigation */}
-        <div className="w-full mb-4">
-          <TabsList className="w-full bg-white/95 backdrop-blur-md shadow-md border border-gray-200 rounded-xl p-1">
+        <div className="w-full mb-6">
+          <TabsList className="w-full bg-white/95 backdrop-blur-md shadow-lg border border-gray-200 rounded-2xl p-1.5">
             {/* Mobile: Horizontal Scroll */}
             <div className="flex lg:hidden w-full overflow-x-auto scrollbar-hide gap-1 pb-0.5">
               <TabsTrigger 
                 value="registration" 
-                className={getTabClassName('registration') + " flex-shrink-0 min-w-[80px]"}
+                className={getTabClassName('registration') + " flex-shrink-0 min-w-[70px]"}
                 disabled={!isTabAllowed('registration')}
               >
                 {getTabContent('registration')}
@@ -148,7 +148,7 @@ const PortalTabs = ({
               
               <TabsTrigger 
                 value="vendor" 
-                className={getTabClassName('vendor') + " flex-shrink-0 min-w-[80px]"}
+                className={getTabClassName('vendor') + " flex-shrink-0 min-w-[70px]"}
                 disabled={!isTabAllowed('vendor')}
               >
                 {getTabContent('vendor')}
@@ -156,7 +156,7 @@ const PortalTabs = ({
               
               <TabsTrigger 
                 value="onecard" 
-                className={getTabClassName('onecard') + " flex-shrink-0 min-w-[80px]"}
+                className={getTabClassName('onecard') + " flex-shrink-0 min-w-[70px]"}
                 disabled={!isTabAllowed('onecard')}
               >
                 {getTabContent('onecard')}
@@ -164,7 +164,7 @@ const PortalTabs = ({
               
               <TabsTrigger 
                 value="admin-reg" 
-                className={getTabClassName('admin-reg') + " flex-shrink-0 min-w-[80px]"}
+                className={getTabClassName('admin-reg') + " flex-shrink-0 min-w-[70px]"}
                 disabled={!isTabAllowed('admin-reg')}
               >
                 {getTabContent('admin-reg')}
@@ -173,7 +173,7 @@ const PortalTabs = ({
               {showAdminTab && (
                 <TabsTrigger 
                   value="admin" 
-                  className={getTabClassName('admin') + " flex-shrink-0 min-w-[80px]"}
+                  className={getTabClassName('admin') + " flex-shrink-0 min-w-[70px]"}
                   disabled={!isTabAllowed('admin')}
                 >
                   {getTabContent('admin')}
