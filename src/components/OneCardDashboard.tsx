@@ -28,7 +28,7 @@ const OneCardDashboard = () => {
     );
   }
 
-  const navigateToRewards = () => {
+  const handleAccessRewards = () => {
     setActiveTab('deals');
   };
 
@@ -103,7 +103,7 @@ const OneCardDashboard = () => {
             {/* Rewards Tab at Bottom */}
             <div className="mt-6">
               <Button
-                onClick={navigateToRewards}
+                onClick={handleAccessRewards}
                 className="w-full bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-black font-bold py-4 rounded-xl shadow-lg transition-all duration-300 transform hover:scale-105"
               >
                 <div className="flex items-center justify-center gap-3">
