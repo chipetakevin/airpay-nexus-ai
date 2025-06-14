@@ -1,4 +1,3 @@
-
 import React from 'react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
@@ -145,9 +144,7 @@ const DivinelyBaaS = () => {
               Complete Mobile Solution
             </h2>
             <p className="text-lg text-gray-600 mb-8">
-              From SIM porting to airtime purchases, data bundles to balance checks—everything you need 
-              for your mobile life is right here. Our platform integrates seamlessly into your daily 
-              smartphone experience.
+              From SIM porting to airtime purchases, data bundles to balance checks.
             </p>
             
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
