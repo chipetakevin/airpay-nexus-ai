@@ -5,10 +5,12 @@ import { supabase } from '@/integrations/supabase/client';
 import { calculateProfitSharing } from '@/services/dealsService';
 import { CartItem } from '@/types/deals';
 import { useMobileAuth } from './useMobileAuth';
+import { useRecipientMemory } from './useRecipientMemory';
 
 export const useShoppingCart = (initialDeal?: CartItem) => {
   const { toast } = useToast();
   const { currentUser, isAuthenticated, userType } = useMobileAuth();
+  const { saveRecipient } = useRecipientMemory();
   const [cartItems, setCartItems] = useState<CartItem[]>(initialDeal ? [initialDeal] : []);
   const [purchaseMode, setPurchaseMode] = useState<'self' | 'other'>('self');
   const [recipientData, setRecipientData] = useState({
@@ -171,6 +173,11 @@ export const useShoppingCart = (initialDeal?: CartItem) => {
       existingTransactions.push(transactionData);
       localStorage.setItem('userTransactions', JSON.stringify(existingTransactions));
 
+      // Auto-save recipient details for future use (only for third-party purchases)
+      if (purchaseMode === 'other' && recipientData.name && recipientData.phone && recipientData.relationship) {
+        await saveRecipient(recipientData, detectedNetwork);
+      }
+
       // Send comprehensive receipt
       await sendComprehensiveReceipt(transactionData, profitSharing);
 
@@ -178,7 +185,7 @@ export const useShoppingCart = (initialDeal?: CartItem) => {
       if (isVendor) {
         successMessage = `Vendor purchase completed! R${profitSharing.vendorProfit?.toFixed(2)} profit earned!`;
       } else if (purchaseMode === 'other') {
-        successMessage = `Gift purchase completed! Both you and recipient earn R${profitSharing.registeredCustomerReward?.toFixed(2)} each!`;
+        successMessage = `Gift purchase completed! Recipient details saved for future payments.`;
       } else {
         successMessage = `Purchase completed! R${profitSharing.customerCashback?.toFixed(2)} cashback earned!`;
       }
