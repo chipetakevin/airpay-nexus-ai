@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { History, Download, Eye } from 'lucide-react';
+import { StatementActions } from './StatementActions';
 
 interface Transaction {
   customer_id: string;
@@ -161,15 +162,12 @@ export const HistoryTabContent = () => {
                       </div>
                     </div>
                     
-                    <div className="flex gap-2">
+                    <div className="flex flex-col sm:flex-row gap-2">
                       <Button size="sm" variant="outline" className="text-xs">
                         <Eye className="w-3 h-3 mr-1" />
                         Details
                       </Button>
-                      <Button size="sm" variant="outline" className="text-xs">
-                        <Download className="w-3 h-3 mr-1" />
-                        Receipt
-                      </Button>
+                      <StatementActions transaction={transaction} />
                     </div>
                   </div>
                 </CardContent>
