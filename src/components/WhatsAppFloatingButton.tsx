@@ -34,13 +34,13 @@ const WhatsAppFloatingButton = () => {
   };
 
   return (
-    <div className="fixed bottom-20 right-6 z-50">
+    <div className="fixed bottom-4 left-4 z-50">
       {/* Exclusive Customer Badge */}
       {isAuthenticated && (
-        <div className="absolute -top-12 right-0 bg-gradient-to-r from-green-600 to-emerald-600 text-white px-3 py-1 rounded-full text-xs font-medium shadow-lg animate-bounce">
+        <div className="absolute -top-8 left-0 bg-gradient-to-r from-green-600 to-emerald-600 text-white px-2 py-1 rounded-full text-xs font-medium shadow-lg animate-bounce">
           <div className="flex items-center gap-1">
-            <CheckCircle className="w-3 h-3" />
-            VIP Access
+            <CheckCircle className="w-2 h-2" />
+            VIP
           </div>
         </div>
       )}
@@ -49,7 +49,7 @@ const WhatsAppFloatingButton = () => {
         onClick={handleWhatsAppClick}
         onMouseEnter={() => setShowTooltip(true)}
         onMouseLeave={() => setShowTooltip(false)}
-        className={`relative group rounded-full p-4 shadow-xl hover:shadow-2xl transform hover:scale-110 transition-all duration-300 ${
+        className={`relative group rounded-full p-3 shadow-lg hover:shadow-xl transform hover:scale-110 transition-all duration-300 ${
           isAuthenticated 
             ? 'bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700' 
             : 'bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700'
@@ -57,27 +57,27 @@ const WhatsAppFloatingButton = () => {
         aria-label="Chat with Divinely Mobile AI on WhatsApp"
       >
         <div className="relative">
-          <MessageCircle className="w-6 h-6" />
+          <MessageCircle className="w-5 h-5" />
           
           {/* Customer Status Indicator */}
           {isAuthenticated ? (
-            <div className="absolute -top-1 -right-1 w-4 h-4 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full flex items-center justify-center">
-              <User className="w-2 h-2 text-white" />
+            <div className="absolute -top-1 -right-1 w-3 h-3 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full flex items-center justify-center">
+              <User className="w-1.5 h-1.5 text-white" />
             </div>
           ) : (
-            <div className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 rounded-full flex items-center justify-center animate-pulse">
-              <div className="w-2 h-2 bg-white rounded-full"></div>
+            <div className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full flex items-center justify-center animate-pulse">
+              <div className="w-1.5 h-1.5 bg-white rounded-full"></div>
             </div>
           )}
         </div>
         
         {/* Enhanced Tooltip */}
         {showTooltip && (
-          <div className="absolute right-full mr-3 top-1/2 transform -translate-y-1/2 bg-gray-900 text-white px-4 py-3 rounded-lg text-sm opacity-100 transition-opacity duration-200 whitespace-nowrap pointer-events-none shadow-xl">
+          <div className="absolute left-full ml-3 top-1/2 transform -translate-y-1/2 bg-gray-900 text-white px-3 py-2 rounded-lg text-xs opacity-100 transition-opacity duration-200 whitespace-nowrap pointer-events-none shadow-xl">
             {isAuthenticated ? (
               <div>
                 <div className="font-bold text-green-400 flex items-center gap-1 mb-1">
-                  <CheckCircle className="w-3 h-3" />
+                  <CheckCircle className="w-2 h-2" />
                   Exclusive WhatsApp Shopping
                 </div>
                 <div className="text-xs opacity-90 mb-1">
@@ -102,7 +102,7 @@ const WhatsAppFloatingButton = () => {
               </div>
             )}
             {/* Arrow pointing to button */}
-            <div className="absolute top-1/2 left-full transform -translate-y-1/2 w-0 h-0 border-l-4 border-l-gray-900 border-t-4 border-t-transparent border-b-4 border-b-transparent"></div>
+            <div className="absolute top-1/2 right-full transform -translate-y-1/2 w-0 h-0 border-r-4 border-r-gray-900 border-t-4 border-t-transparent border-b-4 border-b-transparent"></div>
           </div>
         )}
         
