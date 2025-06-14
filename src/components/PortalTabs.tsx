@@ -72,7 +72,7 @@ const PortalTabs = ({
   }
 
   const getTabClassName = (tabValue: string, color: string) => {
-    let baseClass = "flex flex-col items-center gap-1.5 p-3 rounded-xl transition-all duration-300 min-h-[60px] w-full border text-xs shadow-sm relative overflow-hidden";
+    let baseClass = "flex flex-col items-center gap-1 p-2 rounded-xl transition-all duration-300 min-h-[60px] flex-1 border text-xs shadow-sm relative overflow-hidden";
     
     const allowed = isTabAllowed(tabValue);
     
@@ -97,9 +97,9 @@ const PortalTabs = ({
       <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full">
         {/* Mobile-First Tab Navigation */}
         <div className="w-full mb-6">
-          <TabsList className="w-full">
-            {/* Mobile: 2x3 Grid */}
-            <div className="grid grid-cols-2 gap-2 w-full sm:hidden">
+          <TabsList className="w-full max-w-full">
+            {/* Mobile: 2 rows of tabs to prevent overcrowding */}
+            <div className="grid grid-cols-3 gap-2 w-full sm:hidden">
               {tabs.slice(0, 6).map((tab) => (
                 <TabsTrigger 
                   key={tab.value}
@@ -107,17 +107,17 @@ const PortalTabs = ({
                   className={getTabClassName(tab.value, tab.color)}
                   disabled={!isTabAllowed(tab.value)}
                 >
-                  <span className="text-lg">{tab.icon}</span>
+                  <span className="text-sm">{tab.icon}</span>
                   <div className="text-center">
-                    <div className="font-semibold leading-tight">{tab.label}</div>
+                    <div className="font-semibold leading-tight text-xs">{tab.label}</div>
                     <div className="text-xs opacity-75 leading-tight">{tab.description}</div>
                   </div>
                 </TabsTrigger>
               ))}
             </div>
 
-            {/* Tablet: 3x2 Grid */}
-            <div className="hidden sm:grid sm:grid-cols-3 lg:hidden gap-3 w-full">
+            {/* Tablet: 3 columns */}
+            <div className="hidden sm:grid sm:grid-cols-3 lg:hidden gap-2 w-full">
               {tabs.map((tab) => (
                 <TabsTrigger 
                   key={tab.value}
@@ -125,7 +125,7 @@ const PortalTabs = ({
                   className={getTabClassName(tab.value, tab.color)}
                   disabled={!isTabAllowed(tab.value)}
                 >
-                  <span className="text-xl">{tab.icon}</span>
+                  <span className="text-lg">{tab.icon}</span>
                   <div className="text-center">
                     <div className="font-semibold text-sm">{tab.label}</div>
                     <div className="text-xs opacity-75">{tab.description}</div>
@@ -135,7 +135,7 @@ const PortalTabs = ({
             </div>
 
             {/* Desktop: Single Row */}
-            <div className={`hidden lg:grid gap-3 w-full ${showAdminTab ? 'grid-cols-6' : 'grid-cols-5'}`}>
+            <div className={`hidden lg:grid gap-2 w-full ${showAdminTab ? 'grid-cols-6' : 'grid-cols-5'}`}>
               {tabs.map((tab) => (
                 <TabsTrigger 
                   key={tab.value}
@@ -143,7 +143,7 @@ const PortalTabs = ({
                   className={getTabClassName(tab.value, tab.color)}
                   disabled={!isTabAllowed(tab.value)}
                 >
-                  <span className="text-2xl">{tab.icon}</span>
+                  <span className="text-xl">{tab.icon}</span>
                   <div className="text-center">
                     <div className="font-semibold text-sm">{tab.label}</div>
                     <div className="text-xs opacity-75">{tab.description}</div>
