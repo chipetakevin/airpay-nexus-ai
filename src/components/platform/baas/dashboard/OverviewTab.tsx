@@ -3,11 +3,15 @@ import React from 'react';
 import ServiceStatus from './ServiceStatus';
 import QuickActions from './QuickActions';
 
-const OverviewTab = () => {
+interface OverviewTabProps {
+  onTabChange?: (value: string) => void;
+}
+
+const OverviewTab = ({ onTabChange }: OverviewTabProps) => {
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
       <ServiceStatus />
-      <QuickActions />
+      <QuickActions onTabChange={onTabChange} />
     </div>
   );
 };

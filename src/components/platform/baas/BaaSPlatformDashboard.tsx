@@ -24,6 +24,12 @@ import CustomerDataPlatformPanel from './cdp/CustomerDataPlatformPanel';
 import WhatsAppBusinessPanel from './whatsapp/WhatsAppBusinessPanel';
 
 const BaaSPlatformDashboard = () => {
+  const [activeTab, setActiveTab] = React.useState('overview');
+
+  const handleTabChange = (value: string) => {
+    setActiveTab(value);
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-purple-50/30 p-2 md:p-4 lg:p-6">
       <div className="max-w-7xl mx-auto space-y-4 md:space-y-6 lg:space-y-8">
@@ -34,7 +40,7 @@ const BaaSPlatformDashboard = () => {
         <PlatformMetrics />
 
         {/* Properly structured Tabs using Radix UI */}
-        <Tabs defaultValue="overview" className="w-full">
+        <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full">
           {/* Mobile Tab Navigation */}
           <div className="block lg:hidden mb-6">
             <TabsList className="grid grid-cols-3 h-auto p-1 bg-white/90 backdrop-blur-md rounded-xl shadow-lg border border-gray-100">
@@ -81,7 +87,7 @@ const BaaSPlatformDashboard = () => {
 
           {/* Tab Content */}
           <TabsContent value="overview" className="mt-0 space-y-6">
-            <OverviewTab />
+            <OverviewTab onTabChange={handleTabChange} />
           </TabsContent>
 
           <TabsContent value="agentic-ai" className="mt-0">
