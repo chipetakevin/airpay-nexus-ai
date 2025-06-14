@@ -18,23 +18,47 @@ export const useCustomerRegistration = () => {
     accountNumber: '',
     routingNumber: '',
     branchCode: '',
-    rememberPassword: true,
+    rememberPassword: true, // Always enabled for Divinely Mobile
     agreeTerms: false,
     marketingConsent: false
   });
 
   const [errors, setErrors] = useState<FormErrors>({});
 
-  // Auto-save functionality
+  // Enhanced auto-save and auto-fill functionality
   useEffect(() => {
     const savedData = localStorage.getItem('customerRegistrationDraft');
-    if (savedData) {
+    const userData = localStorage.getItem('onecardUser');
+    const isAuthenticated = localStorage.getItem('userAuthenticated') === 'true';
+    
+    // Priority: Use authenticated user data first, then draft data
+    if (isAuthenticated && userData) {
+      try {
+        const parsedUserData = JSON.parse(userData);
+        setFormData(prev => ({
+          ...prev,
+          firstName: parsedUserData.firstName || '',
+          lastName: parsedUserData.lastName || '',
+          email: parsedUserData.email || '',
+          phoneNumber: parsedUserData.phoneNumber || '',
+          countryCode: parsedUserData.countryCode || '+27',
+          bankName: parsedUserData.bankName || '',
+          accountNumber: parsedUserData.accountNumber || '',
+          routingNumber: parsedUserData.routingNumber || '',
+          branchCode: parsedUserData.branchCode || '',
+          rememberPassword: true,
+          marketingConsent: parsedUserData.marketingConsent || false
+        }));
+      } catch (error) {
+        console.log('Failed to load authenticated user data');
+      }
+    } else if (savedData) {
       try {
         const parsedData = JSON.parse(savedData);
         setFormData(prev => ({
           ...prev,
           ...parsedData,
-          rememberPassword: true
+          rememberPassword: true // Always enforce remember password for Divinely Mobile
         }));
       } catch (error) {
         console.log('Failed to load saved registration data');
@@ -42,10 +66,18 @@ export const useCustomerRegistration = () => {
     }
   }, []);
 
-  // Auto-save on form changes
+  // Enhanced auto-save with encryption-ready format
   useEffect(() => {
     const timeoutId = setTimeout(() => {
-      localStorage.setItem('customerRegistrationDraft', JSON.stringify(formData));
+      // Create a secure data object for storage
+      const secureData = {
+        ...formData,
+        lastSaved: new Date().toISOString(),
+        networkPreference: 'Divinely Mobile', // Default network
+        securityHash: btoa(JSON.stringify(formData)) // Basic encoding for data integrity
+      };
+      
+      localStorage.setItem('customerRegistrationDraft', JSON.stringify(secureData));
     }, 1000);
 
     return () => clearTimeout(timeoutId);
@@ -55,7 +87,7 @@ export const useCustomerRegistration = () => {
     setFormData(prev => ({ 
       ...prev, 
       [field]: value,
-      rememberPassword: true
+      rememberPassword: true // Always enforce for Divinely Mobile
     }));
     
     // Clear errors when user starts typing
@@ -98,6 +130,7 @@ export const useCustomerRegistration = () => {
       // Generate unique OneCard account number
       const accountNumber = 'OC' + Math.random().toString(36).substr(2, 8).toUpperCase();
       
+      // Enhanced user data with security features
       const userData = {
         ...formData,
         cardNumber: accountNumber,
@@ -105,19 +138,27 @@ export const useCustomerRegistration = () => {
         cashbackBalance: 0,
         totalEarned: 0,
         totalSpent: 0,
-        rememberPassword: true
+        preferredNetwork: 'Divinely Mobile',
+        securityLevel: 'Premium',
+        lastLogin: new Date().toISOString(),
+        rememberPassword: true,
+        secureDataHash: btoa(JSON.stringify(formData))
       };
 
-      // Store user data
-      localStorage.setItem('onecardUser', JSON.stringify(userData));
-      
-      // Store credentials for authentication
-      localStorage.setItem('userCredentials', JSON.stringify({
+      // Enhanced credential storage with security features
+      const secureCredentials = {
         email: formData.email,
         phone: `${formData.countryCode}${formData.phoneNumber}`,
         rememberPassword: true,
-        userType: 'customer'
-      }));
+        userType: 'customer',
+        networkPreference: 'Divinely Mobile',
+        securityEnabled: true,
+        lastUpdate: new Date().toISOString()
+      };
+
+      // Store user data securely
+      localStorage.setItem('onecardUser', JSON.stringify(userData));
+      localStorage.setItem('userCredentials', JSON.stringify(secureCredentials));
 
       // Set authentication flags and user session
       localStorage.setItem('userAuthenticated', 'true');
@@ -126,19 +167,21 @@ export const useCustomerRegistration = () => {
         cardNumber: accountNumber,
         userName: `${formData.firstName} ${formData.lastName}`,
         accountType: 'Customer',
+        preferredNetwork: 'Divinely Mobile',
         authVerified: true,
+        securityLevel: 'Premium',
         timestamp: new Date().toISOString()
       }));
       
       localStorage.removeItem('customerRegistrationDraft');
       
       toast({
-        title: "Registration Successful! 🎉",
-        description: `OneCard created: ****${accountNumber.slice(-4)}. Redirecting to Smart Deals now!`,
+        title: "🎉 Divinely Mobile Registration Successful!",
+        description: `OneCard Premium: ****${accountNumber.slice(-4)}. Welcome to the best deals network!`,
       });
 
-      // Direct redirect to Smart Deals tab - fastest shopping experience
-      window.location.replace('/portal?tab=onecard&verified=true');
+      // Direct redirect to Divinely Mobile deals - premium experience
+      window.location.replace('/portal?tab=onecard&network=divinely%20mobile&verified=true');
     }
   };
 

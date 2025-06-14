@@ -130,12 +130,42 @@
     }
   }
 
+  @keyframes blue-flash {
+    0%, 100% {
+      background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+      box-shadow: 0 0 20px rgba(59, 130, 246, 0.5);
+    }
+    50% {
+      background: linear-gradient(135deg, #1d4ed8, #3730a3);
+      box-shadow: 0 0 30px rgba(59, 130, 246, 0.8);
+    }
+  }
+
+  @keyframes divinely-glow {
+    0%, 100% {
+      border-color: #3b82f6;
+      box-shadow: 0 0 15px rgba(59, 130, 246, 0.3);
+    }
+    50% {
+      border-color: #1d4ed8;
+      box-shadow: 0 0 25px rgba(59, 130, 246, 0.6);
+    }
+  }
+
   .animate-float {
     animation: float 3s ease-in-out infinite;
   }
 
   .animate-pulse-glow {
     animation: pulse-glow 2s ease-in-out infinite;
+  }
+
+  .animate-blue-flash {
+    animation: blue-flash 2s ease-in-out infinite;
+  }
+
+  .animate-divinely-glow {
+    animation: divinely-glow 3s ease-in-out infinite;
   }
 
   /* Enhanced mobile scrolling */
@@ -147,5 +177,14 @@
   .momentum-scroll {
     -webkit-overflow-scrolling: touch;
     overflow-scrolling: touch;
+  }
+
+  /* Divinely Mobile special styling */
+  .divinely-mobile-default {
+    @apply bg-gradient-to-r from-blue-500 to-blue-700 text-white font-bold animate-blue-flash;
+  }
+
+  .divinely-mobile-form {
+    @apply border-2 animate-divinely-glow rounded-lg p-4;
   }
 }
