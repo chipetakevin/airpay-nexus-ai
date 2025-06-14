@@ -8,6 +8,7 @@ import AirtimeDealsSystem from './AirtimeDealsSystem';
 
 const OneCardDashboard = () => {
   const [userData, setUserData] = useState(null);
+  const [activeTab, setActiveTab] = useState('deals');
 
   useEffect(() => {
     const storedUser = localStorage.getItem('onecardUser');
@@ -28,16 +29,12 @@ const OneCardDashboard = () => {
   }
 
   const navigateToRewards = () => {
-    // Navigate to the deals tab
-    const dealsTab = document.querySelector('[value="deals"]');
-    if (dealsTab) {
-      dealsTab.click();
-    }
+    setActiveTab('deals');
   };
 
   return (
     <div className="space-y-4 sm:space-y-6">
-      <Tabs defaultValue="deals" className="w-full">
+      <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
         <TabsList className="grid w-full grid-cols-3 bg-gray-100">
           <TabsTrigger value="overview">Overview</TabsTrigger>
           <TabsTrigger value="deals">Smart Deals</TabsTrigger>
