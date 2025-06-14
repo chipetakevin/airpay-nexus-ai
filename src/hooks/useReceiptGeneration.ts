@@ -9,20 +9,43 @@ export const useReceiptGeneration = () => {
     return 'AP' + timestamp.replace(/[^0-9]/g, '').slice(-8);
   };
 
+  const getCustomerDisplayName = () => {
+    const credentials = localStorage.getItem('userCredentials');
+    let displayName = 'Valued Customer';
+    
+    if (credentials) {
+      const parsedCredentials = JSON.parse(credentials);
+      
+      // Priority: nickname > full name > first name > email prefix
+      if (parsedCredentials.nickname) {
+        displayName = parsedCredentials.nickname;
+      } else if (parsedCredentials.firstName && parsedCredentials.lastName) {
+        displayName = `${parsedCredentials.firstName} ${parsedCredentials.lastName}`;
+      } else if (parsedCredentials.firstName) {
+        displayName = parsedCredentials.firstName;
+      } else if (parsedCredentials.email) {
+        // Use email prefix as last resort
+        displayName = parsedCredentials.email.split('@')[0];
+      }
+    }
+    
+    return displayName;
+  };
+
   const autoGenerateAndSendReceipts = async (transactionData: any, profitSharing: any, cartItems: any[], purchaseMode: string, customerPhone: string, recipientData: any) => {
     try {
       const credentials = localStorage.getItem('userCredentials');
       let customerEmail = '';
-      let customerName = '';
       
       if (credentials) {
         const parsedCredentials = JSON.parse(credentials);
         customerEmail = parsedCredentials.email || '';
-        customerName = `${parsedCredentials.firstName || ''} ${parsedCredentials.lastName || ''}`.trim();
       }
 
+      const customerName = getCustomerDisplayName();
+
       const receiptData = {
-        customerName: customerName || 'Valued Customer',
+        customerName: customerName,
         customerEmail: customerEmail,
         customerPhone: customerPhone,
         recipientPhone: purchaseMode === 'self' ? customerPhone : recipientData.phone,
@@ -87,6 +110,7 @@ export const useReceiptGeneration = () => {
 
   return {
     autoGenerateAndSendReceipts,
-    generateTransactionId
+    generateTransactionId,
+    getCustomerDisplayName
   };
 };

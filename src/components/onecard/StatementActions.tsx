@@ -44,16 +44,38 @@ export const StatementActions = ({ transaction }: StatementActionsProps) => {
     return 'AP' + timestamp.replace(/[^0-9]/g, '').slice(-8);
   };
 
+  const getCustomerDisplayName = () => {
+    const credentials = localStorage.getItem('userCredentials');
+    let displayName = 'Valued Customer';
+    
+    if (credentials) {
+      const parsedCredentials = JSON.parse(credentials);
+      
+      // Priority: nickname > full name > first name > email prefix
+      if (parsedCredentials.nickname) {
+        displayName = parsedCredentials.nickname;
+      } else if (parsedCredentials.firstName && parsedCredentials.lastName) {
+        displayName = `${parsedCredentials.firstName} ${parsedCredentials.lastName}`;
+      } else if (parsedCredentials.firstName) {
+        displayName = parsedCredentials.firstName;
+      } else if (parsedCredentials.email) {
+        // Use email prefix as last resort
+        displayName = parsedCredentials.email.split('@')[0];
+      }
+    }
+    
+    return displayName;
+  };
+
   const generatePDFStatement = () => {
     try {
       // Get customer details from localStorage
       const credentials = localStorage.getItem('userCredentials');
-      let customerName = 'Valued Customer';
+      const customerName = getCustomerDisplayName();
       let customerPhone = '';
       
       if (credentials) {
         const parsedCredentials = JSON.parse(credentials);
-        customerName = `${parsedCredentials.firstName || ''} ${parsedCredentials.lastName || ''}`.trim();
         customerPhone = parsedCredentials.phone || '';
       }
 
@@ -180,12 +202,11 @@ export const StatementActions = ({ transaction }: StatementActionsProps) => {
     try {
       // Get customer details from localStorage
       const credentials = localStorage.getItem('userCredentials');
-      let customerName = 'Valued Customer';
+      const customerName = getCustomerDisplayName();
       let customerPhone = '';
       
       if (credentials) {
         const parsedCredentials = JSON.parse(credentials);
-        customerName = `${parsedCredentials.firstName || ''} ${parsedCredentials.lastName || ''}`.trim();
         customerPhone = parsedCredentials.phone || '';
       }
 
@@ -250,15 +271,7 @@ export const StatementActions = ({ transaction }: StatementActionsProps) => {
     
     try {
       // Get customer details from localStorage
-      const credentials = localStorage.getItem('userCredentials');
-      let customerName = 'Valued Customer';
-      let customerPhone = '';
-      
-      if (credentials) {
-        const parsedCredentials = JSON.parse(credentials);
-        customerName = `${parsedCredentials.firstName || ''} ${parsedCredentials.lastName || ''}`.trim();
-        customerPhone = parsedCredentials.phone || '';
-      }
+      const customerName = getCustomerDisplayName();
 
       const receiptData = {
         customerName,
