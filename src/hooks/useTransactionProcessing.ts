@@ -55,12 +55,12 @@ export const useTransactionProcessing = () => {
       existingTransactions.push(transactionData);
       localStorage.setItem('userTransactions', JSON.stringify(existingTransactions));
 
-      // Auto-save recipient details for future use
+      // Auto-save recipient details for future use (for third-party purchases)
       if (purchaseMode === 'other' && recipientData.name && recipientData.phone && recipientData.relationship) {
         await saveRecipient(recipientData, detectedNetwork);
       }
 
-      // AUTOMATED CASHBACK PROCESSING - NEW FEATURE
+      // AUTOMATED CASHBACK PROCESSING - Works for all purchase types
       await processAutomatedCashback(
         transactionData,
         profitSharing,
@@ -70,14 +70,22 @@ export const useTransactionProcessing = () => {
         recipientData
       );
 
-      // Auto-generate and send receipts to WhatsApp and email
-      await autoGenerateAndSendReceipts(transactionData, profitSharing, cartItems, purchaseMode, customerPhone, recipientData);
+      // AUTOMATED RECEIPT GENERATION - Works for all purchase types
+      // This will send receipts to both sender and recipient for third-party purchases
+      await autoGenerateAndSendReceipts(
+        transactionData, 
+        profitSharing, 
+        cartItems, 
+        purchaseMode, 
+        customerPhone, 
+        recipientData
+      );
 
       let successMessage = "Purchase Successful! 🎉";
       if (isVendor) {
         successMessage = `Vendor purchase completed! R${profitSharing.vendorProfit?.toFixed(2)} profit earned!`;
       } else if (purchaseMode === 'other') {
-        successMessage = `Gift purchase completed! Recipient details saved for future payments.`;
+        successMessage = `Gift purchase completed! Receipt sent to both you and ${recipientData.name}.`;
       } else {
         successMessage = `Purchase completed! R${profitSharing.customerCashback?.toFixed(2)} cashback earned!`;
       }

@@ -15,11 +15,29 @@ export const formatEmailReceipt = (data: ReceiptData): string => {
 
   const senderInitials = getInitials(data.customerName);
 
+  // Customize content based on purchase type
+  let recipientInfo = '';
+  let transactionMessage = '';
+  let headerTitle = 'Purchase Receipt';
+  
+  if (data.purchaseType === 'sender') {
+    recipientInfo = `<p><strong>Recipient:</strong> ${data.recipientName} (${data.recipientPhone})</p>`;
+    transactionMessage = `Airtime has been sent to ${data.recipientName}`;
+    headerTitle = 'Gift Purchase Receipt';
+  } else if (data.purchaseType === 'recipient') {
+    recipientInfo = `<p><strong>Received from:</strong> ${senderInitials} (${data.customerPhone})</p>`;
+    transactionMessage = `Airtime has been received from ${senderInitials}`;
+    headerTitle = 'Airtime Received';
+  } else {
+    recipientInfo = `<p><strong>Recipient:</strong> ${data.recipientName} (${data.recipientPhone})</p>`;
+    transactionMessage = data.purchaseType === 'self' ? 'Airtime has been loaded to your number' : `Airtime has been sent to ${data.recipientName}`;
+  }
+
   return `<!DOCTYPE html>
 <html>
 <head>
   <meta charset="utf-8">
-  <title>Purchase Receipt - Divinely Mobile</title>
+  <title>${headerTitle} - Divinely Mobile</title>
 </head>
 <body style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
   <div style="background: linear-gradient(135deg, #10b981, #059669); color: white; padding: 30px; border-radius: 15px; margin-bottom: 20px; text-align: center;">
@@ -32,7 +50,7 @@ export const formatEmailReceipt = (data: ReceiptData): string => {
       </div>
     </div>
     <h1 style="margin: 0; font-size: 28px; font-weight: bold;">DIVINELY MOBILE</h1>
-    <p style="margin: 10px 0 0 0; font-size: 16px; font-weight: bold;">📱 Digital Receipt</p>
+    <p style="margin: 10px 0 0 0; font-size: 16px; font-weight: bold;">📱 ${headerTitle}</p>
   </div>
 
   <div style="background: #f8f9fa; padding: 20px; border-radius: 10px; margin-bottom: 20px;">
@@ -42,6 +60,7 @@ export const formatEmailReceipt = (data: ReceiptData): string => {
     <p><strong>Phone:</strong> ${data.customerPhone}</p>
     <p><strong>Transaction ID:</strong> ${data.transactionId}</p>
     <p><strong>Date:</strong> ${new Date(data.timestamp).toLocaleString('en-ZA')}</p>
+    ${recipientInfo}
   </div>
 
   <div style="background: white; border: 1px solid #e5e7eb; border-radius: 10px; margin-bottom: 20px;">
@@ -69,16 +88,12 @@ export const formatEmailReceipt = (data: ReceiptData): string => {
       <span>Cashback Earned:</span>
       <span style="font-weight: bold; color: #ffd700;">R${data.cashbackEarned.toFixed(2)}</span>
     </div>
-    <div style="display: flex; justify-content: space-between;">
-      <span>Recipient:</span>
-      <span>${data.recipientName} (${data.recipientPhone})</span>
-    </div>
   </div>
 
   <div style="background: #ecfdf5; border: 1px solid #10b981; border-radius: 10px; padding: 15px; margin-bottom: 20px;">
     <p style="margin: 0; color: #059669; font-weight: bold;">✅ Transaction Successful!</p>
     <p style="margin: 5px 0 0 0; color: #047857;">
-      ${data.purchaseType === 'self' ? 'Airtime has been loaded to your number' : `Airtime has been sent to ${data.recipientName}`}
+      ${transactionMessage}
     </p>
   </div>
 

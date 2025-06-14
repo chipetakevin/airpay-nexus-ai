@@ -16,6 +16,21 @@ export const formatWhatsAppMessage = (data: ReceiptData): string => {
 
   const senderInitials = getInitials(data.customerName);
 
+  // Customize message based on purchase type
+  let recipientInfo = '';
+  let transactionMessage = '';
+  
+  if (data.purchaseType === 'sender') {
+    recipientInfo = `• Recipient: ${data.recipientName} (${data.recipientPhone})`;
+    transactionMessage = `Airtime sent to ${data.recipientName}`;
+  } else if (data.purchaseType === 'recipient') {
+    recipientInfo = `• Received from: ${senderInitials} (${data.customerPhone})`;
+    transactionMessage = `Airtime received from ${senderInitials}`;
+  } else {
+    recipientInfo = `• Recipient: ${data.recipientName} (${data.recipientPhone})`;
+    transactionMessage = data.purchaseType === 'self' ? 'Airtime loaded to your number' : `Airtime sent to ${data.recipientName}`;
+  }
+
   return `🟢 *DIVINELY MOBILE* 📱
 
 ✅ *DIGITAL RECEIPT*
@@ -31,10 +46,10 @@ ${itemsList}
 💰 *PAYMENT SUMMARY:*
 • Total Paid: R${data.total.toFixed(2)}
 • Cashback Earned: R${data.cashbackEarned.toFixed(2)}
-• Recipient: ${data.recipientName} (${data.recipientPhone})
+${recipientInfo}
 
 ✅ *Transaction Successful!*
-${data.purchaseType === 'self' ? 'Airtime loaded to your number' : `Airtime sent to ${data.recipientName}`}
+${transactionMessage}
 
 🌐 https://divinely-mobile.com
 📞 +27 100 2827

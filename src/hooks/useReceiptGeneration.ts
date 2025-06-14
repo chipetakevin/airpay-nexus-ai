@@ -50,60 +50,89 @@ export const useReceiptGeneration = () => {
 
       const customerName = getCustomerDisplayName();
 
-      const receiptData = {
-        customerName: customerName,
-        customerEmail: customerEmail,
-        customerPhone: customerPhone,
-        recipientPhone: purchaseMode === 'self' ? customerPhone : recipientData.phone,
-        recipientName: purchaseMode === 'self' ? 'Self' : capitalizeWords(recipientData.name),
-        transactionId: generateTransactionId(transactionData.timestamp),
-        items: cartItems.map(item => ({
-          network: item.network,
-          amount: item.amount,
-          price: item.discountedPrice,
-          type: item.dealType || 'airtime'
-        })),
-        total: transactionData.amount,
-        cashbackEarned: profitSharing.customerCashback || profitSharing.registeredCustomerReward || 0,
-        timestamp: transactionData.timestamp,
-        purchaseType: purchaseMode
-      };
+      // For third-party purchases, send receipt to BOTH sender and recipient
+      if (purchaseMode === 'other') {
+        // Send receipt to SENDER (customer who made the purchase)
+        const senderReceiptData = {
+          customerName: customerName,
+          customerEmail: customerEmail,
+          customerPhone: customerPhone,
+          recipientPhone: recipientData.phone,
+          recipientName: capitalizeWords(recipientData.name),
+          transactionId: generateTransactionId(transactionData.timestamp),
+          items: cartItems.map(item => ({
+            network: item.network,
+            amount: item.amount,
+            price: item.discountedPrice,
+            type: item.dealType || 'airtime'
+          })),
+          total: transactionData.amount,
+          cashbackEarned: profitSharing.registeredCustomerReward || 0,
+          timestamp: transactionData.timestamp,
+          purchaseType: 'sender' // Special type for sender's receipt
+        };
 
-      // Send receipt via edge function (handles both email and WhatsApp)
-      const { data, error } = await supabase.functions.invoke('send-receipt', {
-        body: receiptData
-      });
+        // Send receipt to RECIPIENT
+        const recipientReceiptData = {
+          customerName: capitalizeWords(recipientData.name),
+          customerEmail: '', // Recipient email not available
+          customerPhone: recipientData.phone,
+          recipientPhone: recipientData.phone,
+          recipientName: capitalizeWords(recipientData.name),
+          transactionId: generateTransactionId(transactionData.timestamp),
+          items: cartItems.map(item => ({
+            network: item.network,
+            amount: item.amount,
+            price: item.discountedPrice,
+            type: item.dealType || 'airtime'
+          })),
+          total: transactionData.amount,
+          cashbackEarned: profitSharing.unregisteredRecipientReward || 0,
+          timestamp: transactionData.timestamp,
+          purchaseType: 'recipient' // Special type for recipient's receipt
+        };
 
-      if (error) {
-        console.error('Error sending receipt:', error);
+        // Send both receipts
+        await Promise.all([
+          sendReceiptToCustomer(senderReceiptData, 'sender'),
+          sendReceiptToCustomer(recipientReceiptData, 'recipient')
+        ]);
+
         toast({
-          title: "Receipt Warning",
-          description: "Purchase successful but receipt delivery failed. Check transaction history for manual resend options.",
-          variant: "destructive"
+          title: "📱 Receipts Sent",
+          description: `Receipts sent to both you and ${recipientData.name}`,
         });
-      } else {
-        console.log('Receipt sent successfully:', data);
-        
-        // Auto-redirect to WhatsApp with receipt if URL provided
-        if (data?.whatsappUrl) {
-          toast({
-            title: "📱 Opening WhatsApp",
-            description: "Receipt sent! Redirecting to WhatsApp for instant access...",
-          });
-          
-          setTimeout(() => {
-            window.open(data.whatsappUrl, '_blank');
-          }, 1500);
-        }
 
-        // Show email confirmation
-        if (customerEmail) {
-          toast({
-            title: "📧 Email Receipt Sent",
-            description: `Receipt sent to ${customerEmail}`,
-          });
-        }
+      } else {
+        // Self-purchase - send receipt to customer only
+        const receiptData = {
+          customerName: customerName,
+          customerEmail: customerEmail,
+          customerPhone: customerPhone,
+          recipientPhone: customerPhone,
+          recipientName: 'Self',
+          transactionId: generateTransactionId(transactionData.timestamp),
+          items: cartItems.map(item => ({
+            network: item.network,
+            amount: item.amount,
+            price: item.discountedPrice,
+            type: item.dealType || 'airtime'
+          })),
+          total: transactionData.amount,
+          cashbackEarned: profitSharing.customerCashback || 0,
+          timestamp: transactionData.timestamp,
+          purchaseType: 'self'
+        };
+
+        await sendReceiptToCustomer(receiptData, 'customer');
+
+        // Auto-redirect to WhatsApp for self-purchases
+        toast({
+          title: "📧 Email Receipt Sent",
+          description: customerEmail ? `Receipt sent to ${customerEmail}` : "Receipt generated successfully",
+        });
       }
+
     } catch (error) {
       console.error('Error in autoGenerateAndSendReceipts:', error);
       toast({
@@ -111,6 +140,31 @@ export const useReceiptGeneration = () => {
         description: "Purchase successful but receipt generation failed. Check transaction history.",
         variant: "destructive"
       });
+    }
+  };
+
+  const sendReceiptToCustomer = async (receiptData: any, recipientType: string) => {
+    try {
+      const { data, error } = await supabase.functions.invoke('send-receipt', {
+        body: receiptData
+      });
+
+      if (error) {
+        console.error(`Error sending receipt to ${recipientType}:`, error);
+        return;
+      }
+
+      console.log(`Receipt sent successfully to ${recipientType}:`, data);
+
+      // Auto-redirect to WhatsApp with receipt if URL provided
+      if (data?.whatsappUrl && recipientType === 'customer') {
+        setTimeout(() => {
+          window.open(data.whatsappUrl, '_blank');
+        }, 1500);
+      }
+
+    } catch (error) {
+      console.error(`Error sending receipt to ${recipientType}:`, error);
     }
   };
 

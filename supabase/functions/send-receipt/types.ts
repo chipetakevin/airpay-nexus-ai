@@ -15,7 +15,7 @@ export interface ReceiptData {
   total: number;
   cashbackEarned: number;
   timestamp: string;
-  purchaseType: 'self' | 'other';
+  purchaseType: 'self' | 'other' | 'sender' | 'recipient';
 }
 
 export const corsHeaders = {
