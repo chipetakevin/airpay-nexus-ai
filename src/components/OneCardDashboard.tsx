@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
-import { Gift, ArrowRight } from 'lucide-react';
+import { Gift, ArrowRight, CreditCard, Phone, User } from 'lucide-react';
 import AirtimeDealsSystem from './AirtimeDealsSystem';
 
 const OneCardDashboard = () => {
@@ -42,10 +42,68 @@ const OneCardDashboard = () => {
         </TabsList>
 
         <TabsContent value="overview" className="space-y-4 sm:space-y-6">
-          {/* Enhanced OneCard Display */}
-          <div className="relative w-full max-w-md mx-auto">
-            {/* Gold OneCard Image */}
-            <div className="relative w-full">
+          {/* Modern OneCard Account Display */}
+          <div className="w-full max-w-lg mx-auto">
+            {/* Header Section */}
+            <div className="mb-6 text-center">
+              <div className="flex items-center justify-center gap-3 mb-2">
+                <div className="p-2 bg-blue-100 rounded-lg">
+                  <CreditCard className="w-6 h-6 text-blue-600" />
+                </div>
+                <h2 className="text-2xl font-bold text-gray-800">Your OneCard Account</h2>
+              </div>
+            </div>
+
+            {/* Account Information Cards */}
+            <div className="space-y-4 mb-6">
+              {/* OneCard Number Card */}
+              <Card className="bg-gradient-to-r from-gray-50 to-gray-100 border-gray-200 shadow-sm">
+                <CardContent className="p-6">
+                  <div className="text-center space-y-3">
+                    <div className="flex items-center justify-center gap-2 text-gray-600 mb-2">
+                      <CreditCard className="w-4 h-4" />
+                      <span className="text-sm font-medium">OneCard Number</span>
+                    </div>
+                    <div className="text-2xl font-bold text-gray-800 tracking-wider">
+                      ****PP7F
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Registered Phone Card */}
+              <Card className="bg-gradient-to-r from-blue-50 to-blue-100 border-blue-200 shadow-sm">
+                <CardContent className="p-6">
+                  <div className="text-center space-y-3">
+                    <div className="flex items-center justify-center gap-2 text-blue-600 mb-2">
+                      <Phone className="w-4 h-4" />
+                      <span className="text-sm font-medium">Registered Phone</span>
+                    </div>
+                    <div className="text-xl font-bold text-blue-800">
+                      +27832455650
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Account Holder Card */}
+              <Card className="bg-gradient-to-r from-green-50 to-green-100 border-green-200 shadow-sm">
+                <CardContent className="p-6">
+                  <div className="text-center space-y-3">
+                    <div className="flex items-center justify-center gap-2 text-green-600 mb-2">
+                      <User className="w-4 h-4" />
+                      <span className="text-sm font-medium">Account Holder</span>
+                    </div>
+                    <div className="text-lg font-bold text-green-800">
+                      {userData.firstName?.toUpperCase()} {userData.lastName?.toUpperCase() || 'KEVIN CHIPETA'}
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+
+            {/* OneCard Visual */}
+            <div className="relative w-full mb-6">
               <img 
                 src="/lovable-uploads/ba334c5a-5d5a-4c29-a99b-3961e7a7f11a.png" 
                 alt="AirPay OneCard Gold"
@@ -53,8 +111,8 @@ const OneCardDashboard = () => {
               />
             </div>
 
-            {/* Rewards Tab at Bottom */}
-            <div className="mt-6">
+            {/* Rewards Access Button */}
+            <div className="mb-6">
               <Button
                 onClick={handleAccessRewards}
                 className="w-full bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-black font-bold py-4 rounded-xl shadow-lg transition-all duration-300 transform hover:scale-105"
@@ -68,7 +126,7 @@ const OneCardDashboard = () => {
             </div>
 
             {/* Quick Stats */}
-            <div className="mt-4 grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-2 gap-3">
               <div className="bg-gradient-to-r from-yellow-400/20 to-yellow-500/20 rounded-xl p-4 text-center border border-yellow-300">
                 <div className="text-xl font-bold text-gray-800 mb-1">
                   R{userData.cashbackBalance?.toFixed(2) || '0.00'}
