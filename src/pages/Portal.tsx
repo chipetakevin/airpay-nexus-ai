@@ -33,15 +33,18 @@ const Portal = () => {
   }, []);
 
   useEffect(() => {
-    // Only read from URL params, don't create a loop by writing back
+    // Always default to deals tab on initial load
     const tabParam = searchParams.get('tab');
-    if (tabParam && tabParam !== activeTab) {
-      setActiveTab(tabParam);
-    } else if (!tabParam) {
-      // Only navigate if there's no tab param at all
+    
+    if (!tabParam) {
+      // No tab specified, default to deals and update URL
       navigate('?tab=deals', { replace: true });
+      setActiveTab('deals');
+    } else if (tabParam !== activeTab) {
+      // Tab specified in URL, use it
+      setActiveTab(tabParam);
     }
-  }, [searchParams]); // Removed navigate and activeTab from dependencies to prevent loop
+  }, [searchParams, navigate]);
 
   useEffect(() => {
     // Show admin tab based on authentication and user type
@@ -67,7 +70,7 @@ const Portal = () => {
   };
 
   const isTabAllowed = (tabValue: string) => {
-    // Always allow deals tab for everyone
+    // Always allow deals tab for everyone - this is the default landing page
     if (tabValue === 'deals') return true;
     
     const isAuthenticated = localStorage.getItem('userAuthenticated') === 'true';
@@ -90,7 +93,7 @@ const Portal = () => {
           case 'onecard':
             return true; // Available to all authenticated users
           case 'deals':
-            return true; // Always available
+            return true; // Always available - default landing page
           case 'admin-reg':
             return currentUserType === 'admin';
           case 'admin':
@@ -110,7 +113,7 @@ const Portal = () => {
   const handleTabChange = (value: string) => {
     if (isTabAllowed(value)) {
       setActiveTab(value);
-      // Only update URL when user explicitly changes tabs
+      // Update URL when user explicitly changes tabs
       navigate(`?tab=${value}`, { replace: true });
     }
   };
