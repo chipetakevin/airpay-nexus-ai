@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useToast } from '@/hooks/use-toast';
@@ -10,7 +9,8 @@ import ReportsSection from './admin/ReportsSection';
 import CustomerDetailModal from './admin/CustomerDetailModal';
 import { Customer, Transaction } from './types/admin';
 import { loadCustomerData, loadTransactionData } from './utils/adminDataLoader';
-import { generateCustomerReport, generateMasterReport } from './utils/pdfGenerator';
+import { generateCustomerReport } from './utils/pdfGenerator';
+import { generateEnhancedMasterReport } from './utils/enhancedPdfGenerator';
 
 const AdminOneCardDashboard = () => {
   const [customers, setCustomers] = useState<Customer[]>([]);
@@ -35,7 +35,7 @@ const AdminOneCardDashboard = () => {
   };
 
   const handleGenerateMasterReport = () => {
-    generateMasterReport(customers, transactions, toast);
+    generateEnhancedMasterReport(customers, transactions, toast);
   };
 
   const tabs = [
