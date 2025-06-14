@@ -63,6 +63,59 @@ export const useShoppingCart = (initialDeal?: CartItem) => {
     };
   };
 
+  const sendComprehensiveReceipt = async (transactionData: any, profitSharing: any) => {
+    try {
+      const credentials = localStorage.getItem('userCredentials');
+      let customerEmail = '';
+      let customerName = '';
+      
+      if (credentials) {
+        const parsedCredentials = JSON.parse(credentials);
+        customerEmail = parsedCredentials.email || '';
+        customerName = `${parsedCredentials.firstName || ''} ${parsedCredentials.lastName || ''}`.trim();
+      }
+
+      const receiptData = {
+        customerName: customerName || 'Valued Customer',
+        customerEmail: customerEmail,
+        customerPhone: customerPhone,
+        recipientPhone: purchaseMode === 'self' ? customerPhone : recipientData.phone,
+        recipientName: purchaseMode === 'self' ? 'Self' : recipientData.name,
+        transactionId: transactionData.timestamp.replace(/[^0-9]/g, '').slice(-10),
+        items: cartItems.map(item => ({
+          network: item.network,
+          amount: item.amount,
+          price: item.discountedPrice,
+          type: item.dealType || 'airtime'
+        })),
+        total: transactionData.amount,
+        cashbackEarned: profitSharing.customerCashback || profitSharing.registeredCustomerReward || 0,
+        timestamp: transactionData.timestamp,
+        purchaseType: purchaseMode
+      };
+
+      // Send receipt via edge function
+      const { data, error } = await supabase.functions.invoke('send-receipt', {
+        body: receiptData
+      });
+
+      if (error) {
+        console.error('Error sending receipt:', error);
+      } else {
+        console.log('Receipt sent successfully:', data);
+        
+        // Open WhatsApp with receipt if URL provided
+        if (data?.whatsappUrl) {
+          setTimeout(() => {
+            window.open(data.whatsappUrl, '_blank');
+          }, 2000);
+        }
+      }
+    } catch (error) {
+      console.error('Error in sendComprehensiveReceipt:', error);
+    }
+  };
+
   const processPurchase = async (validationError: string, detectedNetwork: string) => {
     if (validationError) {
       toast({
@@ -118,6 +171,9 @@ export const useShoppingCart = (initialDeal?: CartItem) => {
       existingTransactions.push(transactionData);
       localStorage.setItem('userTransactions', JSON.stringify(existingTransactions));
 
+      // Send comprehensive receipt
+      await sendComprehensiveReceipt(transactionData, profitSharing);
+
       let successMessage = "Purchase Successful! 🎉";
       if (isVendor) {
         successMessage = `Vendor purchase completed! R${profitSharing.vendorProfit?.toFixed(2)} profit earned!`;
@@ -129,10 +185,16 @@ export const useShoppingCart = (initialDeal?: CartItem) => {
 
       toast({
         title: successMessage,
-        description: "Airtime loaded successfully. No need to login again!"
+        description: "Receipt sent to WhatsApp & Email. Redirecting to shop..."
       });
 
       setCartItems([]);
+
+      // Redirect to main deals page after 3 seconds
+      setTimeout(() => {
+        window.location.href = '/';
+      }, 3000);
+
       return true;
       
     } catch (error) {

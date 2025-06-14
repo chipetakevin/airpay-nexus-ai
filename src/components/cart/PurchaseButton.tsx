@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Button } from '@/components/ui/button';
-import { CreditCard, Lock } from 'lucide-react';
+import { CreditCard, Lock, ArrowRight } from 'lucide-react';
 
 interface PurchaseButtonProps {
   isProcessing: boolean;
@@ -57,6 +57,20 @@ const PurchaseButton = ({
           </div>
         )}
       </Button>
+
+      {hasAcceptedTerms && (
+        <div className="text-xs text-gray-600 bg-blue-50 p-3 rounded-lg border border-blue-200">
+          <div className="flex items-center gap-2 mb-1">
+            <ArrowRight className="w-3 h-3 text-blue-600" />
+            <span className="font-medium">After payment:</span>
+          </div>
+          <ul className="space-y-1 ml-5 text-gray-600">
+            <li>• Receipt sent to your WhatsApp & Email</li>
+            <li>• Auto-redirect to Divinely Mobile deals</li>
+            <li>• Continue shopping with exclusive discounts</li>
+          </ul>
+        </div>
+      )}
 
       <div className="text-xs text-gray-500 text-center px-2 flex items-center justify-center gap-2">
         <Lock className="w-3 h-3" />
