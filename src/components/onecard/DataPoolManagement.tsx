@@ -1,239 +1,176 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Wifi, Smartphone, ArrowRight, Gift, AlertTriangle } from 'lucide-react';
-import { useToast } from '@/hooks/use-toast';
-import { AdminDataPoolManager } from './AdminDataPoolManager';
+import { Progress } from '@/components/ui/progress';
+import { Wifi, Users, Award, Clock, AlertTriangle, CheckCircle, Gift } from 'lucide-react';
 import { EligibilityChecker } from './EligibilityChecker';
-import { useCustomerEligibility } from '@/hooks/useCustomerEligibility';
 
-interface DataPoolProps {
+interface DataPoolManagementProps {
   userData: any;
 }
 
-export const DataPoolManagement = ({ userData }: DataPoolProps) => {
-  const [dataPoolBalance, setDataPoolBalance] = useState(0);
-  const [availableAdminFunds, setAvailableAdminFunds] = useState(0);
-  const { toast } = useToast();
-  
-  const {
-    isEligible,
-    automaticCutoff,
-    simulateDataPurchaseSuccess
-  } = useCustomerEligibility();
+export const DataPoolManagement = ({ userData }: DataPoolManagementProps) => {
+  const [poolStats] = useState({
+    totalCredits: 2500,
+    usedCredits: 750,
+    availableCredits: 1750,
+    membersCount: 12,
+    expiryDays: 25
+  });
 
-  useEffect(() => {
-    // Calculate available admin funds from transaction history
-    const transactions = JSON.parse(localStorage.getItem('userTransactions') || '[]');
-    const totalAdminFees = transactions.reduce((sum: number, tx: any) => sum + (tx.admin_fee || 0), 0);
-    
-    // Get current data pool balance
-    const poolData = localStorage.getItem('dataPoolBalance');
-    if (poolData) {
-      setDataPoolBalance(JSON.parse(poolData));
-    }
-    
-    // Get admin pool balance
-    const adminPoolBalance = JSON.parse(localStorage.getItem('adminDataPoolBalance') || '0');
-    setAvailableAdminFunds(totalAdminFees + adminPoolBalance);
-  }, []);
+  const usagePercentage = (poolStats.usedCredits / poolStats.totalCredits) * 100;
 
-  const allocateDataFromAdminPool = (amount: number) => {
-    // Check eligibility first - automatic cutoff
-    if (!automaticCutoff()) {
-      return;
-    }
-
-    if (availableAdminFunds >= amount) {
-      const newDataPoolBalance = dataPoolBalance + amount;
-      const newAdminFunds = availableAdminFunds - amount;
-      
-      setDataPoolBalance(newDataPoolBalance);
-      setAvailableAdminFunds(newAdminFunds);
-      
-      // Save to localStorage
-      localStorage.setItem('dataPoolBalance', JSON.stringify(newDataPoolBalance));
-      
-      // Update user's OneCard with allocated data credits
-      const updatedUserData = {
-        ...userData,
-        dataPoolCredits: (userData.dataPoolCredits || 0) + amount,
-        totalDataAllocated: (userData.totalDataAllocated || 0) + amount
-      };
-      localStorage.setItem('onecardUser', JSON.stringify(updatedUserData));
-      
-      toast({
-        title: "Data Pool Allocation Successful! 📶",
-        description: `R${amount} data credits allocated from admin pool to your account.`,
-      });
-    } else {
-      toast({
-        title: "Insufficient Admin Pool Funds",
-        description: "Admin needs to top-up the data pool. Notification sent.",
-        variant: "destructive"
-      });
-    }
+  const handleAllocateData = () => {
+    console.log('Allocating data from pool...');
   };
 
-  const purchaseAirtimeFromDataPool = (amount: number) => {
-    // Check eligibility first
-    if (!automaticCutoff()) {
-      return;
-    }
-
-    if (dataPoolBalance >= amount) {
-      const newBalance = dataPoolBalance - amount;
-      setDataPoolBalance(newBalance);
-      localStorage.setItem('dataPoolBalance', JSON.stringify(newBalance));
-      
-      // Simulate successful data purchase and receipt
-      simulateDataPurchaseSuccess(amount);
-      
-      // Update user's cashback balance
-      const updatedUserData = {
-        ...userData,
-        cashbackBalance: (userData.cashbackBalance || 0) + amount,
-        dataPoolUsed: (userData.dataPoolUsed || 0) + amount,
-        airtimeBalance: (userData.airtimeBalance || 0) + amount,
-        dataBalance: (userData.dataBalance || 0) + (amount * 100) // Convert to MB
-      };
-      localStorage.setItem('onecardUser', JSON.stringify(updatedUserData));
-      
-      toast({
-        title: "🎉 Purchase Complete & Data Activated!",
-        description: `R${amount} airtime purchased. ${amount * 100}MB data now active. Access Smart Deals now!`,
-      });
-    } else {
-      toast({
-        title: "Insufficient Data Pool Balance",
-        description: "Not enough data pool credits for this purchase.",
-        variant: "destructive"
-      });
-    }
-  };
-
-  const handlePoolUpdate = (amount: number) => {
-    setAvailableAdminFunds(prev => prev + amount);
+  const handleRequestAccess = () => {
+    console.log('Requesting pool access...');
   };
 
   return (
-    <div className="space-y-4">
-      {/* Customer Eligibility Status */}
+    <div className="space-y-6">
+      {/* Enhanced Header with Smaller, More Appealing Title */}
+      <div className="text-center mb-6">
+        <div className="inline-flex items-center gap-3 bg-gradient-to-r from-purple-100 to-blue-100 px-6 py-3 rounded-2xl border border-purple-200 shadow-sm">
+          <Wifi className="w-6 h-6 text-purple-600" />
+          <div>
+            <h2 className="text-xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
+              Smart Data Pool
+            </h2>
+            <p className="text-sm text-gray-600">Shared data credits for everyone</p>
+          </div>
+          <Gift className="w-5 h-5 text-blue-500" />
+        </div>
+      </div>
+
+      {/* Eligibility Check */}
       <EligibilityChecker />
 
-      {/* Admin Data Pool Manager - Only visible to admin */}
-      {userData?.userType === 'admin' && (
-        <AdminDataPoolManager onPoolUpdate={handlePoolUpdate} />
-      )}
-
-      {/* Data Pool Balance Card */}
-      <Card className="bg-gradient-to-r from-purple-50 to-purple-100 border-purple-200">
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2 text-purple-800">
-            <Wifi className="w-5 h-5" />
-            Divinely Mobile Data Pool
+      {/* Pool Status Overview */}
+      <Card className="bg-gradient-to-br from-purple-50 to-blue-50 border-purple-200">
+        <CardHeader className="pb-4">
+          <CardTitle className="flex items-center gap-2 text-lg">
+            <Wifi className="w-5 h-5 text-purple-600" />
+            Pool Status
+            <Badge className="bg-green-500 text-white ml-auto">
+              <CheckCircle className="w-3 h-3 mr-1" />
+              Active
+            </Badge>
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm text-purple-600 font-medium">Available Data Credits</p>
-              <p className="text-2xl font-bold text-purple-800">
-                R{dataPoolBalance.toFixed(2)}
-              </p>
+          {/* Credits Overview */}
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div className="text-center p-4 bg-white rounded-xl border border-purple-100">
+              <div className="text-2xl font-bold text-purple-600">
+                {poolStats.totalCredits.toLocaleString()}
+              </div>
+              <div className="text-sm text-gray-600">Total Credits</div>
             </div>
-            <Badge variant="outline" className="bg-purple-100 text-purple-700 border-purple-300">
-              From Admin Pool
-            </Badge>
+            <div className="text-center p-4 bg-white rounded-xl border border-blue-100">
+              <div className="text-2xl font-bold text-blue-600">
+                {poolStats.availableCredits.toLocaleString()}
+              </div>
+              <div className="text-sm text-gray-600">Available</div>
+            </div>
+            <div className="text-center p-4 bg-white rounded-xl border border-gray-100">
+              <div className="text-2xl font-bold text-gray-600">
+                {poolStats.membersCount}
+              </div>
+              <div className="text-sm text-gray-600">Active Members</div>
+            </div>
           </div>
-          
-          <div className="bg-white p-3 rounded-lg border border-purple-200">
-            <p className="text-xs text-purple-600 mb-2">Admin Pool Available:</p>
-            <p className="text-lg font-semibold text-purple-800">R{availableAdminFunds.toFixed(2)}</p>
+
+          {/* Usage Progress */}
+          <div className="space-y-2">
+            <div className="flex justify-between text-sm">
+              <span className="text-gray-600">Pool Usage</span>
+              <span className="font-medium">{usagePercentage.toFixed(1)}%</span>
+            </div>
+            <Progress value={usagePercentage} className="h-3" />
+            <div className="flex justify-between text-xs text-gray-500">
+              <span>{poolStats.usedCredits} used</span>
+              <span>{poolStats.availableCredits} remaining</span>
+            </div>
+          </div>
+
+          {/* Expiry Warning */}
+          <div className="flex items-center gap-2 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
+            <Clock className="w-4 h-4 text-yellow-600" />
+            <div className="text-sm">
+              <span className="font-medium text-yellow-800">
+                Pool expires in {poolStats.expiryDays} days
+              </span>
+              <div className="text-yellow-600">Use your credits before expiry</div>
+            </div>
           </div>
         </CardContent>
       </Card>
 
-      {/* Data Pool Actions */}
+      {/* Quick Actions */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <Card className="hover:shadow-lg transition-shadow">
+          <CardContent className="p-6 text-center">
+            <Award className="w-8 h-8 text-green-600 mx-auto mb-3" />
+            <h3 className="font-semibold mb-2">Allocate Data</h3>
+            <p className="text-sm text-gray-600 mb-4">
+              Get your share of pool credits
+            </p>
+            <Button 
+              onClick={handleAllocateData}
+              className="w-full bg-green-600 hover:bg-green-700"
+            >
+              Claim Credits
+            </Button>
+          </CardContent>
+        </Card>
+
+        <Card className="hover:shadow-lg transition-shadow">
+          <CardContent className="p-6 text-center">
+            <Users className="w-8 h-8 text-blue-600 mx-auto mb-3" />
+            <h3 className="font-semibold mb-2">Pool Members</h3>
+            <p className="text-sm text-gray-600 mb-4">
+              View active pool participants
+            </p>
+            <Button 
+              variant="outline" 
+              className="w-full border-blue-200 text-blue-600 hover:bg-blue-50"
+            >
+              View Members
+            </Button>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Recent Activity */}
       <Card>
         <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Smartphone className="w-5 h-5" />
-            Data Pool Actions
+          <CardTitle className="text-lg flex items-center gap-2">
+            <Clock className="w-5 h-5" />
+            Recent Pool Activity
           </CardTitle>
         </CardHeader>
-        <CardContent className="space-y-3">
-          <div className="grid grid-cols-1 gap-3">
-            <Button
-              onClick={() => allocateDataFromAdminPool(1000)}
-              className="w-full bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800"
-              disabled={!isEligible || availableAdminFunds < 1000}
-            >
-              <Gift className="w-4 h-4 mr-2" />
-              {!isEligible ? "Not Eligible - Sufficient Balance" : "Allocate Data for Customers (R1000)"}
-            </Button>
-            
-            <Button
-              onClick={() => allocateDataFromAdminPool(5000)}
-              className="w-full bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800"
-              disabled={!isEligible || availableAdminFunds < 5000}
-            >
-              <Gift className="w-4 h-4 mr-2" />
-              {!isEligible ? "Not Eligible - Sufficient Balance" : "Allocate Data for Customers (R5000)"}
-            </Button>
-          </div>
-
-          <div className="grid grid-cols-2 gap-2">
-            <Button
-              onClick={() => purchaseAirtimeFromDataPool(1000)}
-              variant="outline"
-              disabled={!isEligible || dataPoolBalance < 1000}
-              className="border-green-300 text-green-700 hover:bg-green-50"
-            >
-              Buy R1000 Data
-            </Button>
-            <Button
-              onClick={() => purchaseAirtimeFromDataPool(5000)}
-              variant="outline"
-              disabled={!isEligible || dataPoolBalance < 5000}
-              className="border-green-300 text-green-700 hover:bg-green-50"
-            >
-              Buy R5000 Data
-            </Button>
-          </div>
-
-          {!isEligible && (
-            <div className="text-xs text-orange-600 bg-orange-50 p-2 rounded flex items-center gap-1">
-              <AlertTriangle className="w-3 h-3" />
-              System detected sufficient balance - data pool access restricted
-            </div>
-          )}
-
-          <div className="text-xs text-gray-600 bg-blue-50 p-2 rounded">
-            <ArrowRight className="w-3 h-3 inline mr-1" />
-            Data pool credits help customers without airtime access smart deals
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* User Data Pool Stats */}
-      <Card className="bg-gradient-to-r from-green-50 to-green-100 border-green-200">
-        <CardContent className="p-4">
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <p className="text-sm text-green-600 font-medium">Total Allocated</p>
-              <p className="text-lg font-bold text-green-800">
-                R{(userData.totalDataAllocated || 0).toFixed(2)}
-              </p>
-            </div>
-            <div>
-              <p className="text-sm text-green-600 font-medium">Pool Used</p>
-              <p className="text-lg font-bold text-green-800">
-                R{(userData.dataPoolUsed || 0).toFixed(2)}
-              </p>
-            </div>
+        <CardContent>
+          <div className="space-y-3">
+            {[1, 2, 3].map((_, index) => (
+              <div key={index} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                <div className="flex items-center gap-3">
+                  <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center">
+                    <CheckCircle className="w-4 h-4 text-green-600" />
+                  </div>
+                  <div>
+                    <div className="font-medium text-sm">Data allocation successful</div>
+                    <div className="text-xs text-gray-500">2 hours ago</div>
+                  </div>
+                </div>
+                <Badge variant="outline" className="text-xs">
+                  +50 MB
+                </Badge>
+              </div>
+            ))}
           </div>
         </CardContent>
       </Card>
