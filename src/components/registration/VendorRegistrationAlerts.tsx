@@ -26,7 +26,7 @@ const VendorRegistrationAlerts = () => {
       <Alert className="border-green-200 bg-green-50">
         <MapPin className="w-5 h-5 text-green-600" />
         <AlertDescription className="text-green-800">
-          <strong>📍 VIP Detected Location:</strong> Johannesburg, Gauteng, South Africa
+          <strong>📍 VIP Detected Location:</strong> Johannesburg, Gauteng, South Africa (+27)
         </AlertDescription>
       </Alert>
 

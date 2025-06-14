@@ -43,7 +43,7 @@ export const useVendorRegistration = () => {
     lastName: '',
     email: '',
     phoneNumber: '',
-    countryCode: '+265',
+    countryCode: '+27', // Fixed to South Africa country code
     password: '',
     confirmPassword: '',
     companyName: '',
@@ -73,6 +73,7 @@ export const useVendorRegistration = () => {
         setFormData(prev => ({
           ...prev,
           ...parsedData,
+          countryCode: '+27', // Always ensure South Africa country code
           password: '', // Never auto-fill passwords for security
           confirmPassword: '',
           rememberPassword: true
@@ -97,7 +98,8 @@ export const useVendorRegistration = () => {
             firstName: vendor.firstName || '',
             lastName: vendor.lastName || '',
             email: vendor.email || credentials.email || '',
-            phoneNumber: vendor.phone?.replace(prev.countryCode, '') || '',
+            phoneNumber: vendor.phone?.replace('+27', '') || '', // Remove country code for display
+            countryCode: '+27', // Always South Africa
             companyName: vendor.businessName || '',
             rememberPassword: true
           }));
@@ -126,6 +128,7 @@ export const useVendorRegistration = () => {
         
         localStorage.setItem('vendorRegistrationDraft', JSON.stringify({
           ...dataToSave,
+          countryCode: '+27', // Always save with South Africa code
           rememberPassword: true
         }));
         

@@ -12,7 +12,7 @@ const LocationDetector: React.FC<LocationDetectorProps> = ({ onLocationUpdate })
       navigator.geolocation.getCurrentPosition(
         (position) => {
           // In a real app, you'd use reverse geocoding API
-          // For demo purposes, we'll simulate location detection
+          // For demo purposes, we'll simulate location detection for South Africa
           onLocationUpdate('Johannesburg, Gauteng, South Africa');
         },
         (error) => {
@@ -29,7 +29,7 @@ const LocationDetector: React.FC<LocationDetectorProps> = ({ onLocationUpdate })
     <Card className="bg-blue-50 border-blue-200">
       <CardContent className="p-4">
         <p className="text-sm text-blue-800">
-          📍 <strong>Detected Location:</strong> Johannesburg, Gauteng, South Africa
+          📍 <strong>Detected Location:</strong> Johannesburg, Gauteng, South Africa (+27)
         </p>
       </CardContent>
     </Card>
