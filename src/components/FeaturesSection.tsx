@@ -1,6 +1,7 @@
-
-import React from 'react';
+import React, { useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
+import { Button } from '@/components/ui/button';
 import { 
   Smartphone, 
   CreditCard, 
@@ -12,10 +13,14 @@ import {
   Clock,
   BarChart3,
   PieChart,
-  LineChart
+  LineChart,
+  ChevronDown,
+  ChevronUp
 } from 'lucide-react';
 
 const FeaturesSection = () => {
+  const [isOpen, setIsOpen] = useState(false);
+
   const features = [
     {
       icon: <CreditCard className="w-8 h-8" />,
@@ -218,14 +223,37 @@ const FeaturesSection = () => {
           </div>
         </div>
 
-        {/* Simplified Feature Grid with Only 2 Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-          {features.map((feature, index) => (
-            <div key={index} className="group transform hover:scale-105 transition-all duration-500">
-              {renderEnhancedGraphic(feature.graphic, feature.color, feature.mockupType)}
+        {/* Collapsible Features Section */}
+        <Collapsible open={isOpen} onOpenChange={setIsOpen} className="max-w-4xl mx-auto">
+          <div className="text-center mb-8">
+            <CollapsibleTrigger asChild>
+              <Button 
+                variant="outline" 
+                className="bg-white/80 backdrop-blur-sm border-gray-200 hover:bg-white/90 hover:border-blue-300 transition-all duration-300 px-6 py-3 text-base font-semibold"
+              >
+                <span className="mr-2">
+                  {isOpen ? "Hide Features" : "View Features"}
+                </span>
+                {isOpen ? (
+                  <ChevronUp className="w-5 h-5" />
+                ) : (
+                  <ChevronDown className="w-5 h-5" />
+                )}
+              </Button>
+            </CollapsibleTrigger>
+          </div>
+
+          <CollapsibleContent className="space-y-8">
+            {/* Feature Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              {features.map((feature, index) => (
+                <div key={index} className="group transform hover:scale-105 transition-all duration-500 animate-fade-in">
+                  {renderEnhancedGraphic(feature.graphic, feature.color, feature.mockupType)}
+                </div>
+              ))}
             </div>
-          ))}
-        </div>
+          </CollapsibleContent>
+        </Collapsible>
 
         {/* Enhanced Network Support Visualization */}
         <div className="mt-16 text-center">
