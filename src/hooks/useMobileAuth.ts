@@ -38,7 +38,7 @@ export const useMobileAuth = () => {
           
           if (userData) {
             const parsedData = JSON.parse(userData);
-            setCurrentUser({
+            const authUser: AuthUser = {
               id: parsedData.cardNumber || parsedData.vendorId || parsedData.adminId || 'user-id',
               email: userCreds.email,
               firstName: parsedData.firstName,
@@ -47,8 +47,10 @@ export const useMobileAuth = () => {
               cardNumber: parsedData.cardNumber,
               vendorId: parsedData.vendorId,
               adminId: parsedData.adminId,
-              registeredPhone: parsedData.registeredPhone || userCreds.phone // Use registered phone
-            });
+              registeredPhone: parsedData.registeredPhone || userCreds.phone
+            };
+            
+            setCurrentUser(authUser);
             setIsAuthenticated(true);
           }
         } catch (error) {

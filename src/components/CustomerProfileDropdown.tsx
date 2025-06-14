@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useMobileAuth } from '@/hooks/useMobileAuth';
 import { useSessionManager } from '@/hooks/useSessionManager';
@@ -6,6 +5,7 @@ import { DisabledProfileCard } from './profile/DisabledProfileCard';
 import { EnabledProfileCard } from './profile/EnabledProfileCard';
 import { AdminProfileToggle } from './profile/AdminProfileToggle';
 import SessionStatusIndicator from './session/SessionStatusIndicator';
+import UnifiedProfileSwitcher from './profile/UnifiedProfileSwitcher';
 
 const CustomerProfileDropdown = () => {
   const { currentUser, isAuthenticated } = useMobileAuth();
@@ -65,6 +65,9 @@ const CustomerProfileDropdown = () => {
       {isKevinOrAdmin && sessionInfo && (
         <SessionStatusIndicator />
       )}
+      
+      {/* Unified Profile Switcher */}
+      <UnifiedProfileSwitcher />
       
       {isProfileEnabled ? (
         <EnabledProfileCard user={currentUser} onDisable={handleDisableProfile} />
