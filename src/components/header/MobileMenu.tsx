@@ -39,7 +39,7 @@ const MobileMenu = ({ isMenuOpen, toggleMenu }: MobileMenuProps) => {
     <>
       <div className="md:hidden border-t bg-white relative z-50 max-h-[calc(100vh-4rem)] overflow-hidden">
         <ScrollArea className="h-full">
-          <div className="container mx-auto px-4 py-4 space-y-2 pb-20">
+          <div className="container mx-auto px-4 py-4 space-y-2 pb-24">
             {/* Customer Authentication Section for Mobile */}
             {isAuthenticated ? (
               <div className="pb-4 border-b border-gray-200 sticky top-0 bg-white z-10">
@@ -101,15 +101,15 @@ const MobileMenu = ({ isMenuOpen, toggleMenu }: MobileMenuProps) => {
               </Link>
             </div>
             
-            {/* Prominent Mobile Logout Section - Only show if authenticated */}
+            {/* Enhanced Mobile Logout Section - Moved up with reduced bottom padding */}
             {isAuthenticated && (
-              <div className="mt-6 pt-4 border-t-2 border-red-100 bg-red-50/50 rounded-lg p-3 mb-6">
+              <div className="mt-4 pt-4 border-t-2 border-red-100 bg-red-50/50 rounded-lg p-3 sticky bottom-0 bg-white/95 backdrop-blur-sm">
                 <button 
                   onClick={() => {
                     handleLogout();
                     toggleMenu();
                   }}
-                  className="flex items-center justify-center gap-3 w-full bg-red-600 hover:bg-red-700 active:bg-red-800 text-white p-4 rounded-lg transition-all duration-200 min-h-[48px] font-semibold shadow-md touch-manipulation transform active:scale-95"
+                  className="flex items-center justify-center gap-3 w-full bg-red-600 hover:bg-red-700 active:bg-red-800 text-white p-4 rounded-lg transition-all duration-200 min-h-[48px] font-semibold shadow-lg touch-manipulation transform active:scale-95"
                 >
                   <LogOut className="w-5 h-5 flex-shrink-0" />
                   <span>Logout Account</span>

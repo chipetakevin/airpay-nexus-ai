@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -152,7 +153,7 @@ const MobileCustomerLanding = () => {
         </div>
       </div>
 
-      {/* Account Summary */}
+      {/* Account Summary - Hide OneCard Number */}
       <Card className="bg-gradient-to-r from-gray-50 to-blue-50 border border-blue-200">
         <CardHeader>
           <CardTitle className="flex items-center gap-2 text-gray-900">
@@ -161,15 +162,9 @@ const MobileCustomerLanding = () => {
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-3">
-          <div className="grid grid-cols-2 gap-4">
-            <div className="text-center p-3 bg-white rounded-lg border">
-              <p className="text-xs text-gray-600 mb-1">OneCard Number</p>
-              <p className="font-bold text-gray-900">****{currentUser.cardNumber?.slice(-4)}</p>
-            </div>
-            <div className="text-center p-3 bg-white rounded-lg border">
-              <p className="text-xs text-gray-600 mb-1">Registered Phone</p>
-              <p className="font-bold text-gray-900">{currentUser.registeredPhone}</p>
-            </div>
+          <div className="text-center p-3 bg-white rounded-lg border">
+            <p className="text-xs text-gray-600 mb-1">Registered Phone</p>
+            <p className="font-bold text-gray-900">{currentUser.registeredPhone}</p>
           </div>
           
           <Link to="/portal?tab=onecard&network=divinely%20mobile&dealType=airtime">
