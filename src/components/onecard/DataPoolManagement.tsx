@@ -187,20 +187,20 @@ export const DataPoolManagement = ({ userData }: DataPoolProps) => {
 
           <div className="grid grid-cols-2 gap-2">
             <Button
-              onClick={() => purchaseAirtimeFromDataPool(5)}
+              onClick={() => purchaseAirtimeFromDataPool(1000)}
               variant="outline"
-              disabled={!isEligible || dataPoolBalance < 5}
+              disabled={!isEligible || dataPoolBalance < 1000}
               className="border-green-300 text-green-700 hover:bg-green-50"
             >
-              Buy R5 Data
+              Buy R1000 Data
             </Button>
             <Button
-              onClick={() => purchaseAirtimeFromDataPool(10)}
+              onClick={() => purchaseAirtimeFromDataPool(5000)}
               variant="outline"
-              disabled={!isEligible || dataPoolBalance < 10}
+              disabled={!isEligible || dataPoolBalance < 5000}
               className="border-green-300 text-green-700 hover:bg-green-50"
             >
-              Buy R10 Data
+              Buy R5000 Data
             </Button>
           </div>
 
