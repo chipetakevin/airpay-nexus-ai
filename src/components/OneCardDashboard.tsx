@@ -3,12 +3,13 @@ import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
-import { Gift, ArrowRight, CreditCard, Phone, User } from 'lucide-react';
+import { Gift, ArrowRight, CreditCard, Phone, User, Eye, EyeOff } from 'lucide-react';
 import AirtimeDealsSystem from './AirtimeDealsSystem';
 
 const OneCardDashboard = () => {
   const [userData, setUserData] = useState(null);
   const [activeTab, setActiveTab] = useState('overview');
+  const [showPhoneNumber, setShowPhoneNumber] = useState(false);
 
   useEffect(() => {
     const storedUser = localStorage.getItem('onecardUser');
@@ -30,6 +31,10 @@ const OneCardDashboard = () => {
 
   const handleAccessRewards = () => {
     setActiveTab('deals');
+  };
+
+  const togglePhoneVisibility = () => {
+    setShowPhoneNumber(!showPhoneNumber);
   };
 
   return (
@@ -79,9 +84,20 @@ const OneCardDashboard = () => {
                       <Phone className="w-4 h-4" />
                       <span className="text-sm font-medium">Registered Phone</span>
                     </div>
-                    <div className="text-xl font-bold text-blue-800">
-                      +27832455650
+                    <div 
+                      className="flex items-center justify-center gap-2 cursor-pointer hover:bg-blue-200/50 rounded-lg p-2 transition-colors"
+                      onClick={togglePhoneVisibility}
+                    >
+                      <div className="text-xl font-bold text-blue-800">
+                        {showPhoneNumber ? '+27832455650' : '•••••••••••••'}
+                      </div>
+                      {showPhoneNumber ? (
+                        <EyeOff className="w-4 h-4 text-blue-600" />
+                      ) : (
+                        <Eye className="w-4 h-4 text-blue-600" />
+                      )}
                     </div>
+                    <p className="text-xs text-blue-600">Click to {showPhoneNumber ? 'hide' : 'reveal'}</p>
                   </div>
                 </CardContent>
               </Card>
