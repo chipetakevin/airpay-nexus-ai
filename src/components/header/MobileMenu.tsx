@@ -36,7 +36,7 @@ const MobileMenu = ({ isMenuOpen, toggleMenu }: MobileMenuProps) => {
 
   return (
     <>
-      <div className="md:hidden border-t bg-white">
+      <div className="md:hidden border-t bg-white relative z-50">
         <div className="container mx-auto px-4 py-4 space-y-2">
           {/* Customer Authentication Section for Mobile */}
           {isAuthenticated ? (
@@ -97,23 +97,23 @@ const MobileMenu = ({ isMenuOpen, toggleMenu }: MobileMenuProps) => {
             <span className="font-medium">Master Dashboard</span>
           </Link>
           
-          {/* Mobile Logout Option - Only show if authenticated */}
+          {/* Prominent Mobile Logout Section - Only show if authenticated */}
           {isAuthenticated && (
-            <>
-              <div className="border-t border-gray-200 my-4"></div>
+            <div className="mt-6 pt-4 border-t-2 border-red-100 bg-red-50/50 rounded-lg p-3">
               <button 
                 onClick={() => {
                   handleLogout();
                   toggleMenu();
                 }}
-                className="flex items-center gap-3 p-3 rounded-lg hover:bg-red-50 transition-colors w-full text-left min-h-[44px]"
+                className="flex items-center justify-center gap-3 w-full bg-red-600 hover:bg-red-700 text-white p-4 rounded-lg transition-colors min-h-[48px] font-semibold shadow-md"
               >
-                <LogOut className="w-4 h-4 text-red-600" />
-                <div className="pt-1">
-                  <span className="font-medium text-red-600">Logout</span>
-                </div>
+                <LogOut className="w-5 h-5" />
+                <span>Logout Account</span>
               </button>
-            </>
+              <p className="text-xs text-red-600 text-center mt-2 font-medium">
+                Secure logout from your session
+              </p>
+            </div>
           )}
         </div>
       </div>
