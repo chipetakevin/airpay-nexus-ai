@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { ShoppingBag, Activity, Bell, MessageSquare, Settings2, UserPlus } from 'lucide-react';
+import { ShoppingBag, Activity, Bell, MessageSquare, Settings2 } from 'lucide-react';
 
 interface NavigationTab {
   id: string;
@@ -55,15 +55,6 @@ const DashboardNavigation = ({ activeTab, onTabChange }: DashboardNavigationProp
       gradient: 'from-yellow-500 to-orange-600',
       bgGradient: 'from-yellow-50 to-orange-50',
       icon: <Bell className="w-4 h-4" />
-    },
-    {
-      id: 'invite',
-      label: 'Invite A Friend',
-      emoji: '👥',
-      description: 'Share Deals',
-      gradient: 'from-pink-500 to-rose-600',
-      bgGradient: 'from-pink-50 to-rose-50',
-      icon: <UserPlus className="w-4 h-4" />
     },
     {
       id: 'notifications',

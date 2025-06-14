@@ -1,52 +1,74 @@
 
-import React, { useState } from 'react';
-import DashboardNavigation from './dashboard/DashboardNavigation';
-import DealAlertSystem from './alerts/DealAlertSystem';
-import BillingDashboard from './billing/BillingDashboard';
-import SpazaMarketplace from './spaza/SpazaMarketplace';
-import NotificationCenter from './reporting/NotificationCenter';
-import AdminPortal from './AdminPortal';
-import EnhancedDealsGrid from './deals/EnhancedDealsGrid';
-import InviteFriendTab from './invite/InviteFriendTab';
+import React, { useState, useEffect } from 'react';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import AirtimeDealsSystem from './AirtimeDealsSystem';
+import { OverviewTabContent } from './onecard/OverviewTabContent';
+import { HistoryTabContent } from './onecard/HistoryTabContent';
 
 const OneCardDashboard = () => {
-  const [activeTab, setActiveTab] = useState('deals');
+  const [userData, setUserData] = useState(null);
+  const [activeTab, setActiveTab] = useState('overview');
+  const [showPhoneNumber, setShowPhoneNumber] = useState(false);
+  const [showCardNumber, setShowCardNumber] = useState(false);
 
-  const renderTabContent = () => {
-    switch (activeTab) {
-      case 'deals':
-        return <EnhancedDealsGrid deals={[]} onAddToCart={() => {}} />;
-      case 'billing':
-        return <BillingDashboard />;
-      case 'spaza':
-        return <SpazaMarketplace />;
-      case 'alerts':
-        return <DealAlertSystem />;
-      case 'invite':
-        return <InviteFriendTab />;
-      case 'notifications':
-        return <NotificationCenter />;
-      case 'admin':
-        return <AdminPortal onAuthSuccess={() => {}} />;
-      default:
-        return <EnhancedDealsGrid deals={[]} onAddToCart={() => {}} />;
+  useEffect(() => {
+    const storedUser = localStorage.getItem('onecardUser');
+    if (storedUser) {
+      setUserData(JSON.parse(storedUser));
     }
+  }, []);
+
+  if (!userData) {
+    return (
+      <div className="text-center py-8 sm:py-12">
+        <h2 className="text-xl sm:text-2xl font-bold mb-4">OneCard Rewards Dashboard</h2>
+        <p className="text-gray-600 mb-6 text-sm sm:text-base px-4">
+          Please register first to access your OneCard rewards and smart deals
+        </p>
+      </div>
+    );
+  }
+
+  const handleAccessRewards = () => {
+    setActiveTab('deals');
+  };
+
+  const togglePhoneVisibility = () => {
+    setShowPhoneNumber(!showPhoneNumber);
+  };
+
+  const toggleCardVisibility = () => {
+    setShowCardNumber(!showCardNumber);
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
-      <div className="container mx-auto px-4 py-6 max-w-7xl">
-        <DashboardNavigation 
-          activeTab={activeTab} 
-          onTabChange={setActiveTab}
-        />
-        
-        <div className="bg-white/90 backdrop-blur-sm border-0 shadow-xl ring-1 ring-white rounded-xl">
-          <div className="p-4 md:p-6">
-            {renderTabContent()}
-          </div>
-        </div>
-      </div>
+    <div className="space-y-4 sm:space-y-6">
+      <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+        <TabsList className="grid w-full grid-cols-3 bg-gray-100">
+          <TabsTrigger value="overview">Overview</TabsTrigger>
+          <TabsTrigger value="deals">Smart Deals</TabsTrigger>
+          <TabsTrigger value="history">History</TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="overview">
+          <OverviewTabContent
+            userData={userData}
+            showPhoneNumber={showPhoneNumber}
+            showCardNumber={showCardNumber}
+            onTogglePhoneVisibility={togglePhoneVisibility}
+            onToggleCardVisibility={toggleCardVisibility}
+            onAccessRewards={handleAccessRewards}
+          />
+        </TabsContent>
+
+        <TabsContent value="deals" className="space-y-4 sm:space-y-6">
+          <AirtimeDealsSystem />
+        </TabsContent>
+
+        <TabsContent value="history">
+          <HistoryTabContent />
+        </TabsContent>
+      </Tabs>
     </div>
   );
 };
