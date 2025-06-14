@@ -1,10 +1,11 @@
+
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Mail, ExternalLink } from 'lucide-react';
 
 const Footer = () => {
-  // Enhanced Futuristic Devine Mobile Logo Component
-  const DevineLogoIcon = () => (
+  // Enhanced Futuristic Divinely Mobile Logo Component
+  const DivinelyLogoIcon = () => (
     <div className="relative w-8 h-8 flex items-center justify-center">
       {/* Outer ring with enhanced gradient */}
       <div className="absolute inset-0 rounded-full bg-gradient-to-br from-cyan-400 via-blue-500 to-purple-600 p-0.5">
@@ -42,10 +43,10 @@ const Footer = () => {
           {/* Logo and Description */}
           <div className="space-y-4">
             <div className="flex items-center space-x-3">
-              <DevineLogoIcon />
+              <DivinelyLogoIcon />
               <div className="flex flex-col">
                 <span className="text-xl font-bold bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-600 bg-clip-text text-transparent leading-tight font-montserrat">
-                  Devine
+                  Divinely
                 </span>
                 <span className="text-xs font-light tracking-[0.25em] uppercase -mt-1 bg-gradient-to-r from-gray-400 via-gray-500 to-gray-600 bg-clip-text text-transparent font-roboto">
                   Mobile
@@ -121,7 +122,7 @@ const Footer = () => {
 
         <div className="border-t border-gray-800 mt-8 pt-8 text-center">
           <p className="text-gray-400 text-sm">
-            © 2024 Devine Mobile. All rights reserved. | Powered by Kukaya Labs
+            © 2024 Divinely Mobile. All rights reserved. | Powered by Kukaya Labs
           </p>
         </div>
       </div>
