@@ -4,7 +4,7 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } f
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { User, Lock, Eye, EyeOff } from 'lucide-react';
+import { User, Lock, Eye, EyeOff, UserPlus, Mail } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import ForgotPasswordModal from './ForgotPasswordModal';
 
@@ -14,9 +14,14 @@ interface LoginModalProps {
 }
 
 const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
+  const [mode, setMode] = useState<'login' | 'signup'>('login');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showForgotPassword, setShowForgotPassword] = useState(false);
   const { toast } = useToast();
@@ -65,7 +70,7 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
       } else {
         toast({
           title: "Account Not Found",
-          description: "No account found with this email. Please register first.",
+          description: "No account found with this email. Please sign up first.",
           variant: "destructive"
         });
       }
@@ -74,12 +79,96 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
     }, 1500);
   };
 
+  const handleSignup = async () => {
+    if (!email || !password || !firstName || !lastName) {
+      toast({
+        title: "All Fields Required",
+        description: "Please fill in all required fields.",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    if (password !== confirmPassword) {
+      toast({
+        title: "Passwords Don't Match",
+        description: "Please ensure both passwords are identical.",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    if (password.length < 6) {
+      toast({
+        title: "Password Too Short",
+        description: "Password must be at least 6 characters long.",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    setIsSubmitting(true);
+    
+    // Simulate signup process
+    setTimeout(() => {
+      // Store user credentials
+      const userCredentials = {
+        email,
+        password,
+        userType: 'customer'
+      };
+      
+      const userData = {
+        firstName,
+        lastName,
+        email,
+        cardNumber: `OC${Math.random().toString().substr(2, 8)}`,
+        registeredPhone: '',
+        balance: 0
+      };
+      
+      localStorage.setItem('userCredentials', JSON.stringify(userCredentials));
+      localStorage.setItem('onecardUser', JSON.stringify(userData));
+      localStorage.setItem('userAuthenticated', 'true');
+      
+      toast({
+        title: "Account Created Successfully! 🎉",
+        description: "Welcome to OneCard! Redirecting to your dashboard.",
+      });
+      
+      // Redirect to portal
+      setTimeout(() => {
+        window.location.href = '/portal?tab=onecard';
+      }, 1000);
+      
+      onClose();
+      setIsSubmitting(false);
+    }, 1500);
+  };
+
   const handleClose = () => {
     setEmail('');
     setPassword('');
+    setConfirmPassword('');
+    setFirstName('');
+    setLastName('');
     setShowPassword(false);
+    setShowConfirmPassword(false);
     setIsSubmitting(false);
+    setMode('login');
     onClose();
+  };
+
+  const switchMode = () => {
+    setMode(mode === 'login' ? 'signup' : 'login');
+    // Clear form when switching modes
+    setEmail('');
+    setPassword('');
+    setConfirmPassword('');
+    setFirstName('');
+    setLastName('');
+    setShowPassword(false);
+    setShowConfirmPassword(false);
   };
 
   return (
@@ -88,19 +177,58 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
-              <User className="w-5 h-5 text-blue-600" />
-              Customer Login
+              {mode === 'login' ? (
+                <>
+                  <User className="w-5 h-5 text-blue-600" />
+                  Customer Login
+                </>
+              ) : (
+                <>
+                  <UserPlus className="w-5 h-5 text-green-600" />
+                  Create Account
+                </>
+              )}
             </DialogTitle>
             <DialogDescription>
-              Sign in to access your OneCard account and Smart Deals
+              {mode === 'login' 
+                ? 'Sign in to access your OneCard account and Smart Deals'
+                : 'Create your free OneCard account to access Smart Deals'
+              }
             </DialogDescription>
           </DialogHeader>
 
           <div className="space-y-4">
+            {mode === 'signup' && (
+              <>
+                <div className="grid grid-cols-2 gap-2">
+                  <div className="space-y-2">
+                    <Label htmlFor="firstName">First Name</Label>
+                    <Input
+                      id="firstName"
+                      type="text"
+                      placeholder="John"
+                      value={firstName}
+                      onChange={(e) => setFirstName(e.target.value)}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="lastName">Last Name</Label>
+                    <Input
+                      id="lastName"
+                      type="text"
+                      placeholder="Doe"
+                      value={lastName}
+                      onChange={(e) => setLastName(e.target.value)}
+                    />
+                  </div>
+                </div>
+              </>
+            )}
+
             <div className="space-y-2">
-              <Label htmlFor="login-email">Email Address</Label>
+              <Label htmlFor="auth-email">Email Address</Label>
               <Input
-                id="login-email"
+                id="auth-email"
                 type="email"
                 placeholder="Enter your email"
                 value={email}
@@ -109,10 +237,10 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
             </div>
             
             <div className="space-y-2">
-              <Label htmlFor="login-password">Password</Label>
+              <Label htmlFor="auth-password">Password</Label>
               <div className="relative">
                 <Input
-                  id="login-password"
+                  id="auth-password"
                   type={showPassword ? 'text' : 'password'}
                   placeholder="Enter your password"
                   value={password}
@@ -129,15 +257,41 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
               </div>
             </div>
 
-            <div className="flex justify-between items-center">
-              <button
-                type="button"
-                onClick={() => setShowForgotPassword(true)}
-                className="text-sm text-blue-600 hover:text-blue-700"
-              >
-                Forgot Password?
-              </button>
-            </div>
+            {mode === 'signup' && (
+              <div className="space-y-2">
+                <Label htmlFor="confirm-password">Confirm Password</Label>
+                <div className="relative">
+                  <Input
+                    id="confirm-password"
+                    type={showConfirmPassword ? 'text' : 'password'}
+                    placeholder="Confirm your password"
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    className="pr-10"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                  >
+                    {showConfirmPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {mode === 'login' && (
+              <div className="flex justify-center">
+                <button
+                  type="button"
+                  onClick={() => setShowForgotPassword(true)}
+                  className="flex items-center gap-2 text-sm text-blue-600 hover:text-blue-700 font-medium bg-blue-50 hover:bg-blue-100 px-3 py-2 rounded-lg transition-colors"
+                >
+                  <Mail className="w-4 h-4" />
+                  Forgot Password?
+                </button>
+              </div>
+            )}
             
             <div className="flex gap-2">
               <Button
@@ -148,12 +302,29 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
                 Cancel
               </Button>
               <Button
-                onClick={handleLogin}
+                onClick={mode === 'login' ? handleLogin : handleSignup}
                 disabled={isSubmitting}
-                className="flex-1 bg-blue-600 hover:bg-blue-700"
+                className={`flex-1 ${mode === 'login' ? 'bg-blue-600 hover:bg-blue-700' : 'bg-green-600 hover:bg-green-700'}`}
               >
-                {isSubmitting ? 'Signing In...' : 'Sign In'}
+                {isSubmitting 
+                  ? (mode === 'login' ? 'Signing In...' : 'Creating Account...') 
+                  : (mode === 'login' ? 'Sign In' : 'Create Account')
+                }
               </Button>
+            </div>
+
+            {/* Switch between login and signup */}
+            <div className="text-center pt-2 border-t">
+              <p className="text-sm text-gray-600">
+                {mode === 'login' ? "Don't have an account?" : "Already have an account?"}
+                <button
+                  type="button"
+                  onClick={switchMode}
+                  className="ml-2 text-blue-600 hover:text-blue-700 font-medium"
+                >
+                  {mode === 'login' ? 'Sign Up' : 'Sign In'}
+                </button>
+              </p>
             </div>
           </div>
         </DialogContent>
