@@ -1,8 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Trophy, LogOut } from 'lucide-react';
+import { LogOut } from 'lucide-react';
 import LocationDetector from './LocationDetector';
 import PersonalInfoSection from './registration/PersonalInfoSection';
 import PhoneSection from './registration/PhoneSection';
@@ -64,42 +63,20 @@ const CustomerRegistration = () => {
 
   return (
     <div className="space-y-6">
-      {/* Divinely Mobile Header with Enhanced Blue Flashing Effect */}
-      <div className="divinely-mobile-form bg-gradient-to-br from-blue-50 to-blue-100">
-        <div className="flex items-center justify-between mb-4">
-          <div className="flex items-center gap-3">
-            <Trophy className="w-8 h-8 text-yellow-500 animate-float" />
-            <div>
-              <h2 className="dm-default-text">
-                🌟 Divinely Mobile (Best Deals) 🌟
-              </h2>
-              <Badge className="divinely-mobile-default mt-2">
-                🏆 DM DEFAULT NETWORK - PREMIUM REWARDS
-              </Badge>
-            </div>
-          </div>
-          
-          {isLoggedIn && (
-            <Button
-              onClick={handleLogout}
-              variant="outline"
-              size="sm"
-              className="border-red-300 text-red-600 hover:bg-red-50"
-            >
-              <LogOut className="w-4 h-4 mr-2" />
-              Logout
-            </Button>
-          )}
+      {/* Logout button for logged in users */}
+      {isLoggedIn && (
+        <div className="flex justify-end">
+          <Button
+            onClick={handleLogout}
+            variant="outline"
+            size="sm"
+            className="border-red-300 text-red-600 hover:bg-red-50"
+          >
+            <LogOut className="w-4 h-4 mr-2" />
+            Logout
+          </Button>
         </div>
-        
-        <div className="text-blue-700 font-medium">
-          {isLoggedIn ? (
-            <p>✅ Welcome back! Your information has been auto-filled securely.</p>
-          ) : (
-            <p>🎯 Join Divinely Mobile and start earning OneCard rewards on every purchase!</p>
-          )}
-        </div>
-      </div>
+      )}
 
       <RegistrationAlerts />
 
