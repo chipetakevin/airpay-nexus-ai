@@ -40,18 +40,15 @@ export const DataPoolManagement = ({ userData }: DataPoolProps) => {
     setAvailableAdminFunds(totalAdminFees + adminPoolBalance);
   }, []);
 
-  const allocateDataFromAdminPool = () => {
+  const allocateDataFromAdminPool = (amount: number) => {
     // Check eligibility first - automatic cutoff
     if (!automaticCutoff()) {
       return;
     }
 
-    // Allocate data equivalent to R10 from admin pool (minimum allocation)
-    const allocationAmount = 10;
-    
-    if (availableAdminFunds >= allocationAmount) {
-      const newDataPoolBalance = dataPoolBalance + allocationAmount;
-      const newAdminFunds = availableAdminFunds - allocationAmount;
+    if (availableAdminFunds >= amount) {
+      const newDataPoolBalance = dataPoolBalance + amount;
+      const newAdminFunds = availableAdminFunds - amount;
       
       setDataPoolBalance(newDataPoolBalance);
       setAvailableAdminFunds(newAdminFunds);
@@ -62,14 +59,14 @@ export const DataPoolManagement = ({ userData }: DataPoolProps) => {
       // Update user's OneCard with allocated data credits
       const updatedUserData = {
         ...userData,
-        dataPoolCredits: (userData.dataPoolCredits || 0) + allocationAmount,
-        totalDataAllocated: (userData.totalDataAllocated || 0) + allocationAmount
+        dataPoolCredits: (userData.dataPoolCredits || 0) + amount,
+        totalDataAllocated: (userData.totalDataAllocated || 0) + amount
       };
       localStorage.setItem('onecardUser', JSON.stringify(updatedUserData));
       
       toast({
         title: "Data Pool Allocation Successful! 📶",
-        description: `R${allocationAmount} data credits allocated from admin pool to your account.`,
+        description: `R${amount} data credits allocated from admin pool to your account.`,
       });
     } else {
       toast({
@@ -168,14 +165,25 @@ export const DataPoolManagement = ({ userData }: DataPoolProps) => {
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-3">
-          <Button
-            onClick={allocateDataFromAdminPool}
-            className="w-full bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800"
-            disabled={!isEligible || availableAdminFunds < 10}
-          >
-            <Gift className="w-4 h-4 mr-2" />
-            {!isEligible ? "Not Eligible - Sufficient Balance" : "Allocate R10 Data Credits from Admin Pool"}
-          </Button>
+          <div className="grid grid-cols-1 gap-3">
+            <Button
+              onClick={() => allocateDataFromAdminPool(1000)}
+              className="w-full bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800"
+              disabled={!isEligible || availableAdminFunds < 1000}
+            >
+              <Gift className="w-4 h-4 mr-2" />
+              {!isEligible ? "Not Eligible - Sufficient Balance" : "Allocate Data for Customers (R1000)"}
+            </Button>
+            
+            <Button
+              onClick={() => allocateDataFromAdminPool(5000)}
+              className="w-full bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800"
+              disabled={!isEligible || availableAdminFunds < 5000}
+            >
+              <Gift className="w-4 h-4 mr-2" />
+              {!isEligible ? "Not Eligible - Sufficient Balance" : "Allocate Data for Customers (R5000)"}
+            </Button>
+          </div>
 
           <div className="grid grid-cols-2 gap-2">
             <Button
