@@ -1,7 +1,6 @@
 
 import React, { useState } from 'react';
 import DashboardNavigation from './dashboard/DashboardNavigation';
-import TabContentContainer from './dashboard/TabContentContainer';
 import DealAlertSystem from './alerts/DealAlertSystem';
 import BillingDashboard from './billing/BillingDashboard';
 import SpazaMarketplace from './spaza/SpazaMarketplace';
@@ -16,7 +15,7 @@ const OneCardDashboard = () => {
   const renderTabContent = () => {
     switch (activeTab) {
       case 'deals':
-        return <EnhancedDealsGrid />;
+        return <EnhancedDealsGrid deals={[]} onAddToCart={() => {}} />;
       case 'billing':
         return <BillingDashboard />;
       case 'spaza':
@@ -30,7 +29,7 @@ const OneCardDashboard = () => {
       case 'admin':
         return <AdminPortal onAuthSuccess={() => {}} />;
       default:
-        return <EnhancedDealsGrid />;
+        return <EnhancedDealsGrid deals={[]} onAddToCart={() => {}} />;
     }
   };
 
@@ -42,9 +41,11 @@ const OneCardDashboard = () => {
           onTabChange={setActiveTab}
         />
         
-        <TabContentContainer>
-          {renderTabContent()}
-        </TabContentContainer>
+        <div className="bg-white/90 backdrop-blur-sm border-0 shadow-xl ring-1 ring-white rounded-xl">
+          <div className="p-4 md:p-6">
+            {renderTabContent()}
+          </div>
+        </div>
       </div>
     </div>
   );
