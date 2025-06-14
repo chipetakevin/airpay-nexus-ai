@@ -18,13 +18,44 @@ import {
 const FeaturesSection = () => {
   const features = [
     {
+      icon: <Shield className="w-8 h-8" />,
+      title: "Secure & Safe",
+      description: "Bank-grade security for all transactions",
+      graphic: "security",
+      color: "from-purple-500 to-violet-600",
+      bgColor: "bg-purple-50",
+      stats: "Bank-Level Security",
+      mockupType: "dashboard"
+    },
+    {
+      icon: <Smartphone className="w-8 h-8" />,
+      title: "Mobile Optimized",
+      description: "Designed specifically for smartphone users",
+      graphic: "mobile",
+      color: "from-orange-500 to-red-600",
+      bgColor: "bg-orange-50",
+      stats: "Mobile First",
+      mockupType: "smartphone"
+    },
+    {
       icon: <MessageCircle className="w-8 h-8" />,
       title: "WhatsApp Shopping",
       description: "Shop directly through WhatsApp - no app needed!",
       graphic: "whatsapp",
       color: "from-green-500 to-emerald-600",
       bgColor: "bg-green-50",
-      stats: "24/7 Available"
+      stats: "24/7 Available",
+      mockupType: "whatsapp"
+    },
+    {
+      icon: <Clock className="w-8 h-8" />,
+      title: "Instant Delivery",
+      description: "Airtime and data delivered within 30 seconds",
+      graphic: "speed",
+      color: "from-blue-500 to-indigo-600",
+      bgColor: "bg-blue-50",
+      stats: "< 30 Seconds",
+      mockupType: "chart"
     },
     {
       icon: <CreditCard className="w-8 h-8" />,
@@ -33,34 +64,8 @@ const FeaturesSection = () => {
       graphic: "rewards",
       color: "from-blue-500 to-indigo-600",
       bgColor: "bg-blue-50",
-      stats: "2.5% Cashback"
-    },
-    {
-      icon: <Clock className="w-8 h-8" />,
-      title: "Instant Delivery",
-      description: "Airtime and data delivered within 30 seconds",
-      graphic: "speed",
-      color: "from-orange-500 to-red-600",
-      bgColor: "bg-orange-50",
-      stats: "< 30 Seconds"
-    },
-    {
-      icon: <Shield className="w-8 h-8" />,
-      title: "Secure & Safe",
-      description: "Bank-grade security for all transactions",
-      graphic: "security",
-      color: "from-purple-500 to-violet-600",
-      bgColor: "bg-purple-50",
-      stats: "Bank-Level Security"
-    },
-    {
-      icon: <Smartphone className="w-8 h-8" />,
-      title: "Mobile Optimized",
-      description: "Designed specifically for smartphone users",
-      graphic: "mobile",
-      color: "from-cyan-500 to-blue-600",
-      bgColor: "bg-cyan-50",
-      stats: "Mobile First"
+      stats: "2.5% Cashback",
+      mockupType: "dashboard"
     },
     {
       icon: <Zap className="w-8 h-8" />,
@@ -69,112 +74,249 @@ const FeaturesSection = () => {
       graphic: "processing",
       color: "from-yellow-500 to-orange-600",
       bgColor: "bg-yellow-50",
-      stats: "AI Powered"
+      stats: "AI Powered",
+      mockupType: "chart"
     }
   ];
 
-  const renderGraphic = (type: string, color: string) => {
-    switch (type) {
-      case "whatsapp":
-        return (
-          <div className="relative">
-            <div className="w-20 h-20 mx-auto mb-4 relative">
-              <div className={`absolute inset-0 bg-gradient-to-br ${color} rounded-2xl rotate-3 opacity-20`}></div>
-              <div className={`absolute inset-0 bg-gradient-to-br ${color} rounded-2xl -rotate-3 opacity-30`}></div>
+  const renderEnhancedGraphic = (type: string, color: string, mockupType: string) => {
+    const baseIconElement = (() => {
+      switch (type) {
+        case "security":
+          return <Shield className="w-6 h-6 text-white" />;
+        case "mobile":
+          return <Smartphone className="w-6 h-6 text-white" />;
+        case "whatsapp":
+          return <MessageCircle className="w-6 h-6 text-white" />;
+        case "speed":
+          return <Clock className="w-6 h-6 text-white" />;
+        case "rewards":
+          return <CreditCard className="w-6 h-6 text-white" />;
+        case "processing":
+          return <Zap className="w-6 h-6 text-white" />;
+        default:
+          return <Smartphone className="w-6 h-6 text-white" />;
+      }
+    })();
+
+    return (
+      <div className="relative w-full max-w-sm mx-auto">
+        {/* Modern Card Container */}
+        <div className="relative bg-white rounded-3xl p-8 shadow-2xl border border-gray-100 overflow-hidden">
+          {/* Background Pattern */}
+          <div className="absolute inset-0 opacity-5">
+            <div className="absolute top-0 left-0 w-full h-full">
+              {[...Array(20)].map((_, i) => (
+                <div
+                  key={i}
+                  className="absolute w-1 h-1 bg-gray-400 rounded-full"
+                  style={{
+                    left: `${Math.random() * 100}%`,
+                    top: `${Math.random() * 100}%`,
+                    animationDelay: `${Math.random() * 2}s`
+                  }}
+                />
+              ))}
+            </div>
+          </div>
+
+          {/* Main Icon with Glow */}
+          <div className="relative z-10 mb-6">
+            <div className="relative mx-auto w-20 h-20">
+              <div className={`absolute inset-0 bg-gradient-to-br ${color} rounded-2xl blur-lg opacity-50 animate-pulse`}></div>
               <div className={`relative w-full h-full bg-gradient-to-br ${color} rounded-2xl flex items-center justify-center shadow-xl`}>
-                <MessageCircle className="w-10 h-10 text-white" />
-              </div>
-            </div>
-            <div className="flex justify-center space-x-1">
-              <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-              <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse delay-75"></div>
-              <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse delay-150"></div>
-            </div>
-          </div>
-        );
-      case "rewards":
-        return (
-          <div className="relative">
-            <div className="w-20 h-20 mx-auto mb-4 relative">
-              <div className={`w-full h-full bg-gradient-to-br ${color} rounded-2xl flex items-center justify-center shadow-xl relative overflow-hidden`}>
-                <CreditCard className="w-10 h-10 text-white z-10" />
-                <div className="absolute top-2 right-2 w-3 h-3 bg-yellow-300 rounded-full animate-ping"></div>
-                <div className="absolute bottom-2 left-2 w-2 h-2 bg-green-300 rounded-full animate-bounce"></div>
-              </div>
-            </div>
-            <div className="flex justify-center items-center space-x-2">
-              <PieChart className="w-4 h-4 text-blue-500" />
-              <span className="text-xs font-semibold text-blue-600">2.5%</span>
-            </div>
-          </div>
-        );
-      case "speed":
-        return (
-          <div className="relative">
-            <div className="w-20 h-20 mx-auto mb-4 relative">
-              <div className={`w-full h-full bg-gradient-to-br ${color} rounded-2xl flex items-center justify-center shadow-xl relative overflow-hidden`}>
-                <Clock className="w-10 h-10 text-white animate-spin" style={{ animationDuration: '3s' }} />
-                <div className="absolute inset-0 border-4 border-white/20 rounded-2xl animate-pulse"></div>
-              </div>
-            </div>
-            <div className="flex justify-center items-center">
-              <div className="flex space-x-1">
-                {[...Array(5)].map((_, i) => (
-                  <div key={i} className={`w-1 h-4 bg-orange-400 rounded-full animate-bounce`} style={{ animationDelay: `${i * 0.1}s` }}></div>
-                ))}
+                {baseIconElement}
               </div>
             </div>
           </div>
-        );
-      case "security":
-        return (
-          <div className="relative">
-            <div className="w-20 h-20 mx-auto mb-4 relative">
-              <div className={`w-full h-full bg-gradient-to-br ${color} rounded-2xl flex items-center justify-center shadow-xl relative`}>
-                <Shield className="w-10 h-10 text-white" />
-                <div className="absolute -inset-2 border-2 border-purple-300 rounded-3xl animate-ping"></div>
+
+          {/* Enhanced Mockup Based on Type */}
+          {mockupType === "smartphone" && (
+            <div className="relative z-10">
+              {/* Smartphone Mockup */}
+              <div className="mx-auto w-24 h-40 bg-gray-900 rounded-2xl p-1 shadow-xl">
+                <div className="w-full h-full bg-white rounded-xl overflow-hidden relative">
+                  {/* Screen Content */}
+                  <div className="absolute top-2 left-2 right-2 bottom-2 bg-gradient-to-br from-blue-50 to-purple-50 rounded-lg p-2">
+                    {/* Status Bar */}
+                    <div className="flex justify-between items-center mb-2">
+                      <div className="w-8 h-1 bg-gray-300 rounded-full"></div>
+                      <div className="flex space-x-1">
+                        <div className="w-1 h-1 bg-green-500 rounded-full"></div>
+                        <div className="w-1 h-1 bg-green-500 rounded-full"></div>
+                        <div className="w-1 h-1 bg-green-500 rounded-full"></div>
+                      </div>
+                    </div>
+                    {/* App Interface */}
+                    <div className="space-y-1">
+                      <div className="w-full h-2 bg-blue-200 rounded animate-pulse"></div>
+                      <div className="w-3/4 h-1 bg-blue-100 rounded"></div>
+                      <div className="w-1/2 h-1 bg-blue-100 rounded"></div>
+                      <div className="grid grid-cols-2 gap-1 mt-2">
+                        <div className="h-4 bg-gradient-to-r from-green-400 to-blue-400 rounded"></div>
+                        <div className="h-4 bg-gradient-to-r from-purple-400 to-pink-400 rounded"></div>
+                      </div>
+                    </div>
+                  </div>
+                  {/* Home Indicator */}
+                  <div className="absolute bottom-1 left-1/2 transform -translate-x-1/2 w-6 h-1 bg-gray-400 rounded-full"></div>
+                </div>
               </div>
             </div>
-            <div className="flex justify-center space-x-2">
-              <div className="w-6 h-1 bg-purple-400 rounded-full"></div>
-              <div className="w-4 h-1 bg-purple-300 rounded-full"></div>
-              <div className="w-2 h-1 bg-purple-200 rounded-full"></div>
-            </div>
-          </div>
-        );
-      case "mobile":
-        return (
-          <div className="relative">
-            <div className="w-20 h-20 mx-auto mb-4 relative">
-              <div className={`w-full h-full bg-gradient-to-br ${color} rounded-2xl flex items-center justify-center shadow-xl relative overflow-hidden`}>
-                <Smartphone className="w-10 h-10 text-white" />
-                <div className="absolute top-1 left-1 w-16 h-2 bg-white/20 rounded-full"></div>
-                <div className="absolute bottom-1 left-1/2 transform -translate-x-1/2 w-8 h-1 bg-white/30 rounded-full"></div>
+          )}
+
+          {mockupType === "dashboard" && (
+            <div className="relative z-10">
+              {/* Dashboard Mockup */}
+              <div className="bg-gray-50 rounded-xl p-4 border border-gray-200">
+                <div className="grid grid-cols-2 gap-2 mb-3">
+                  {/* Mini Charts */}
+                  <div className="bg-white rounded-lg p-2 shadow-sm">
+                    <div className="flex items-end space-x-1 h-8">
+                      {[...Array(5)].map((_, i) => (
+                        <div
+                          key={i}
+                          className={`bg-gradient-to-t ${color} rounded-sm animate-pulse`}
+                          style={{
+                            width: '4px',
+                            height: `${20 + Math.random() * 20}px`,
+                            animationDelay: `${i * 0.1}s`
+                          }}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                  <div className="bg-white rounded-lg p-2 shadow-sm flex items-center justify-center">
+                    <div className={`w-8 h-8 bg-gradient-to-br ${color} rounded-full relative overflow-hidden`}>
+                      <div className="absolute inset-1 bg-white rounded-full"></div>
+                      <div className={`absolute inset-2 bg-gradient-to-br ${color} rounded-full`}></div>
+                    </div>
+                  </div>
+                </div>
+                {/* Status Indicators */}
+                <div className="space-y-1">
+                  <div className="flex items-center justify-between">
+                    <div className="w-8 h-1 bg-green-400 rounded-full"></div>
+                    <div className="text-xs font-bold text-green-600">99.7%</div>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <div className="w-6 h-1 bg-blue-400 rounded-full"></div>
+                    <div className="text-xs font-bold text-blue-600">Active</div>
+                  </div>
+                </div>
               </div>
             </div>
-            <div className="flex justify-center">
-              <BarChart3 className="w-6 h-4 text-cyan-500" />
-            </div>
-          </div>
-        );
-      case "processing":
-        return (
-          <div className="relative">
-            <div className="w-20 h-20 mx-auto mb-4 relative">
-              <div className={`w-full h-full bg-gradient-to-br ${color} rounded-2xl flex items-center justify-center shadow-xl relative overflow-hidden`}>
-                <Zap className="w-10 h-10 text-white animate-pulse" />
-                <div className="absolute top-0 left-0 w-full h-1 bg-white/50"></div>
-                <div className="absolute top-0 left-0 w-1/3 h-1 bg-white animate-pulse"></div>
+          )}
+
+          {mockupType === "whatsapp" && (
+            <div className="relative z-10">
+              {/* WhatsApp Interface Mockup */}
+              <div className="bg-green-50 rounded-xl p-3 border border-green-200">
+                <div className="space-y-2">
+                  {/* Header */}
+                  <div className="flex items-center space-x-2">
+                    <div className="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center">
+                      <MessageCircle className="w-3 h-3 text-white" />
+                    </div>
+                    <div className="text-xs font-semibold text-green-800">Divinely Mobile</div>
+                  </div>
+                  {/* Messages */}
+                  <div className="space-y-1">
+                    <div className="bg-white rounded-lg p-2 text-xs shadow-sm">
+                      Hi! Need airtime? 📱
+                    </div>
+                    <div className="bg-green-500 text-white rounded-lg p-2 text-xs ml-4 shadow-sm">
+                      Yes, R50 MTN please ✨
+                    </div>
+                    <div className="bg-white rounded-lg p-2 text-xs shadow-sm">
+                      Processing... ⚡
+                    </div>
+                  </div>
+                  {/* Typing Indicator */}
+                  <div className="flex space-x-1 items-center">
+                    <div className="w-1 h-1 bg-green-400 rounded-full animate-bounce"></div>
+                    <div className="w-1 h-1 bg-green-400 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
+                    <div className="w-1 h-1 bg-green-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+                  </div>
+                </div>
               </div>
             </div>
-            <div className="flex justify-center">
-              <LineChart className="w-6 h-4 text-yellow-500" />
+          )}
+
+          {mockupType === "chart" && (
+            <div className="relative z-10">
+              {/* Advanced Chart Mockup */}
+              <div className="bg-gray-50 rounded-xl p-3 border border-gray-200">
+                <div className="space-y-3">
+                  {/* Real-time Chart */}
+                  <div className="bg-white rounded-lg p-3 shadow-sm">
+                    <div className="flex items-end justify-between h-12 space-x-1">
+                      {[...Array(8)].map((_, i) => (
+                        <div key={i} className="flex flex-col items-center space-y-1">
+                          <div
+                            className={`bg-gradient-to-t ${color} rounded-sm animate-pulse`}
+                            style={{
+                              width: '3px',
+                              height: `${15 + Math.random() * 25}px`,
+                              animationDelay: `${i * 0.2}s`
+                            }}
+                          />
+                        </div>
+                      ))}
+                    </div>
+                    <div className="flex justify-between text-xs text-gray-500 mt-1">
+                      <span>0s</span>
+                      <span>30s</span>
+                    </div>
+                  </div>
+                  {/* Metrics */}
+                  <div className="grid grid-cols-2 gap-2">
+                    <div className="bg-white rounded p-2 text-center shadow-sm">
+                      <div className="text-xs font-bold text-green-600">99.7%</div>
+                      <div className="text-xs text-gray-500">Success</div>
+                    </div>
+                    <div className="bg-white rounded p-2 text-center shadow-sm">
+                      <div className="text-xs font-bold text-blue-600">< 30s</div>
+                      <div className="text-xs text-gray-500">Speed</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Bottom Section with Enhanced Stats */}
+          <div className="relative z-10 mt-6 text-center">
+            <h3 className={`text-lg font-bold bg-gradient-to-r ${color} bg-clip-text text-transparent mb-2`}>
+              {type === "security" ? "Secure & Safe" :
+               type === "mobile" ? "Mobile Optimized" :
+               type === "whatsapp" ? "WhatsApp Shopping" :
+               type === "speed" ? "Instant Delivery" :
+               type === "rewards" ? "OneCard Rewards" :
+               "Instant Processing"}
+            </h3>
+            <p className="text-gray-600 text-sm mb-3">
+              {type === "security" ? "Bank-grade security for all transactions" :
+               type === "mobile" ? "Designed specifically for smartphone users" :
+               type === "whatsapp" ? "Shop directly through WhatsApp - no app needed!" :
+               type === "speed" ? "Airtime and data delivered within 30 seconds" :
+               type === "rewards" ? "Earn 2.5% cashback on every purchase" :
+               "Lightning-fast airtime delivery with AI-powered processing"}
+            </p>
+            
+            {/* Enhanced Stats Badge */}
+            <div className={`inline-flex items-center px-4 py-2 bg-gradient-to-r ${color} text-white text-xs font-bold rounded-full shadow-lg animate-pulse`}>
+              {type === "security" ? "Bank-Level Security" :
+               type === "mobile" ? "Mobile First" :
+               type === "whatsapp" ? "24/7 Available" :
+               type === "speed" ? "< 30 Seconds" :
+               type === "rewards" ? "2.5% Cashback" :
+               "AI Powered"}
             </div>
           </div>
-        );
-      default:
-        return null;
-    }
+        </div>
+      </div>
+    );
   };
 
   return (
@@ -209,37 +351,21 @@ const FeaturesSection = () => {
           </div>
         </div>
 
-        {/* Enhanced Feature Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {features.map((feature, index) => (
-            <Card key={index} className="group hover:shadow-2xl transition-all duration-500 hover:-translate-y-3 border-0 bg-white overflow-hidden relative">
-              {/* Background Pattern */}
-              <div className={`absolute top-0 right-0 w-32 h-32 ${feature.bgColor} rounded-full opacity-10 transform translate-x-16 -translate-y-16`}></div>
-              <div className={`absolute bottom-0 left-0 w-20 h-20 ${feature.bgColor} rounded-full opacity-20 transform -translate-x-10 translate-y-10`}></div>
-              
-              <CardContent className="p-8 text-center relative z-10">
-                {/* Enhanced Graphic */}
-                <div className="mb-6 transform group-hover:scale-110 transition-transform duration-300">
-                  {renderGraphic(feature.graphic, feature.color)}
-                </div>
+        {/* Enhanced Feature Grid with Recreated Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
+          {features.slice(0, 4).map((feature, index) => (
+            <div key={index} className="group transform hover:scale-105 transition-all duration-500">
+              {renderEnhancedGraphic(feature.graphic, feature.color, feature.mockupType)}
+            </div>
+          ))}
+        </div>
 
-                {/* Feature Title with Gradient */}
-                <h3 className={`text-xl font-bold bg-gradient-to-r ${feature.color} bg-clip-text text-transparent mb-4 group-hover:scale-105 transition-transform`}>
-                  {feature.title}
-                </h3>
-
-                {/* Description */}
-                <p className="text-gray-600 text-sm leading-relaxed mb-4">{feature.description}</p>
-
-                {/* Stats Badge */}
-                <div className={`inline-flex items-center px-3 py-1 bg-gradient-to-r ${feature.color} text-white text-xs font-semibold rounded-full shadow-lg`}>
-                  {feature.stats}
-                </div>
-
-                {/* Hover Effect Element */}
-                <div className={`absolute inset-0 bg-gradient-to-br ${feature.color} opacity-0 group-hover:opacity-5 transition-opacity duration-300 rounded-lg`}></div>
-              </CardContent>
-            </Card>
+        {/* Additional Features Row */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto mt-12">
+          {features.slice(4).map((feature, index) => (
+            <div key={index + 4} className="group transform hover:scale-105 transition-all duration-500">
+              {renderEnhancedGraphic(feature.graphic, feature.color, feature.mockupType)}
+            </div>
           ))}
         </div>
 
