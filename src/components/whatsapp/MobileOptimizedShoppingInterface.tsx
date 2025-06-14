@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -9,6 +8,8 @@ import {
   Smartphone, Wifi, Phone, Send, ArrowRight
 } from 'lucide-react';
 import { useMobileAuth } from '@/hooks/useMobileAuth';
+import { Link } from 'react-router-dom';
+import EnhancedPaymentProcessor from './EnhancedPaymentProcessor';
 
 interface Product {
   id: number;
@@ -33,7 +34,8 @@ const MobileOptimizedShoppingInterface = () => {
   const [activeTab, setActiveTab] = useState('featured');
   const [cart, setCart] = useState<CartItem[]>([]);
   const [cartTotal, setCartTotal] = useState(0);
-  const [isCheckingOut, setIsCheckingOut] = useState(false);
+  const [showPayment, setShowPayment] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
 
   const featuredProducts: Product[] = [
     {
@@ -157,6 +159,11 @@ const MobileOptimizedShoppingInterface = () => {
     });
   };
 
+  const quickCheckout = (product: Product) => {
+    setSelectedProduct(product);
+    setShowPayment(true);
+  };
+
   const updateQuantity = (productId: number, change: number) => {
     setCart(prev => {
       return prev.map(item => {
@@ -167,40 +174,6 @@ const MobileOptimizedShoppingInterface = () => {
         return item;
       }).filter(item => item.quantity > 0);
     });
-  };
-
-  const handleWhatsAppCheckout = async () => {
-    if (cart.length === 0) return;
-    
-    setIsCheckingOut(true);
-    
-    // Simulate processing delay
-    await new Promise(resolve => setTimeout(resolve, 1500));
-
-    const orderSummary = cart.map(item => 
-      `${item.name} x${item.quantity} - R${item.price * item.quantity}`
-    ).join('\n');
-
-    const customerInfo = isAuthenticated && currentUser 
-      ? `\n👤 ${currentUser.firstName} ${currentUser.lastName}\n📱 ${currentUser.registeredPhone}\n🎯 OneCard: ${currentUser.cardNumber}`
-      : '\n👤 New Customer - Please provide your details';
-
-    const message = encodeURIComponent(
-      `🛍️ *Mobile Service Purchase*${customerInfo}\n\n📦 *Order Details:*\n${orderSummary}\n\n💰 *Total: R${cartTotal}*\n\n✅ Ready to complete purchase!\n\n📱 Purchasing from WhatsApp Mobile\n🚀 Instant delivery after payment`
-    );
-
-    const phoneNumber = '27832466539'; // Divinely Mobile WhatsApp Business number
-
-    // Open WhatsApp with pre-filled message
-    const whatsappUrl = `https://wa.me/${phoneNumber}?text=${message}`;
-    window.open(whatsappUrl, '_blank');
-    
-    setIsCheckingOut(false);
-    
-    // Clear cart after successful checkout
-    setTimeout(() => {
-      setCart([]);
-    }, 2000);
   };
 
   const getProductsByCategory = (category: string) => {
@@ -214,19 +187,27 @@ const MobileOptimizedShoppingInterface = () => {
 
   const ProductCard = ({ product }: { product: Product }) => (
     <Card className="hover:shadow-xl transition-all duration-300 hover:scale-[1.02] border-2 hover:border-green-200 relative overflow-hidden">
-      {product.popular && (
-        <div className="absolute top-0 right-0 bg-gradient-to-l from-red-500 to-pink-500 text-white text-xs px-3 py-1 rounded-bl-lg font-bold">
-          🔥 Popular
-        </div>
-      )}
-      {product.discount && (
-        <div className="absolute top-0 left-0 bg-gradient-to-r from-green-500 to-emerald-500 text-white text-xs px-3 py-1 rounded-br-lg font-bold">
-          {product.discount}% OFF
-        </div>
-      )}
-      
       <CardContent className="p-4">
-        <div className="flex justify-between items-start mb-4">
+        {/* Popular badge positioned at top left, not overlapping price */}
+        {product.popular && (
+          <div className="absolute top-2 left-2 z-10">
+            <Badge className="bg-gradient-to-r from-red-500 to-pink-500 text-white text-xs px-2 py-1 rounded-full font-bold flex items-center gap-1">
+              <span className="text-yellow-300">🔥</span>
+              Popular
+            </Badge>
+          </div>
+        )}
+        
+        {/* Discount badge positioned at top right if no popular badge */}
+        {product.discount && !product.popular && (
+          <div className="absolute top-2 right-2 z-10">
+            <Badge className="bg-gradient-to-r from-green-500 to-emerald-500 text-white text-xs px-2 py-1 rounded-full font-bold">
+              {product.discount}% OFF
+            </Badge>
+          </div>
+        )}
+        
+        <div className="flex justify-between items-start mb-4 mt-8">
           <div className="text-4xl">{product.icon}</div>
           <div className="text-right">
             <div className="flex items-center gap-2">
@@ -262,13 +243,24 @@ const MobileOptimizedShoppingInterface = () => {
           ))}
         </div>
         
-        <Button 
-          onClick={() => addToCart(product)}
-          className="w-full bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 h-12 text-base font-semibold shadow-lg hover:shadow-xl transition-all duration-300"
-        >
-          <ShoppingCart className="w-5 h-5 mr-2" />
-          Add to Cart
-        </Button>
+        {/* Action buttons */}
+        <div className="space-y-2">
+          <Button 
+            onClick={() => addToCart(product)}
+            className="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 h-11 text-base font-semibold"
+          >
+            <ShoppingCart className="w-4 h-4 mr-2" />
+            Add to Cart
+          </Button>
+          
+          <Button 
+            onClick={() => quickCheckout(product)}
+            className="w-full bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 h-11 text-base font-semibold"
+          >
+            <CreditCard className="w-4 h-4 mr-2" />
+            Quick Checkout
+          </Button>
+        </div>
       </CardContent>
     </Card>
   );
@@ -280,22 +272,36 @@ const MobileOptimizedShoppingInterface = () => {
     { id: 'cart', label: '🛒 Cart', icon: ShoppingCart }
   ];
 
+  if (showPayment) {
+    return (
+      <div className="max-w-md mx-auto bg-white rounded-3xl overflow-hidden shadow-2xl border-4 border-green-100">
+        <EnhancedPaymentProcessor 
+          product={selectedProduct}
+          cartItems={selectedProduct ? [{ ...selectedProduct, quantity: 1 }] : cart}
+          onBack={() => setShowPayment(false)}
+        />
+      </div>
+    );
+  }
+
   return (
     <div className="max-w-md mx-auto bg-white rounded-3xl overflow-hidden shadow-2xl border-4 border-green-100">
-      {/* WhatsApp-style Header */}
+      {/* WhatsApp-style Header with Divinely Mobile logo */}
       <div className="bg-gradient-to-r from-green-600 via-green-700 to-emerald-700 text-white p-4 relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-r from-green-400/20 to-emerald-400/20"></div>
         <div className="relative flex items-center gap-3">
-          <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-lg">
-            <MessageCircle className="w-7 h-7 text-green-600" />
-          </div>
-          <div className="flex-1">
-            <h3 className="font-bold text-lg">Divinely Mobile Store</h3>
-            <p className="text-xs opacity-90 flex items-center gap-1">
-              <div className="w-2 h-2 bg-green-300 rounded-full animate-pulse"></div>
-              Mobile Services • Always Available
-            </p>
-          </div>
+          <Link to="/" className="flex items-center gap-3 hover:opacity-80 transition-opacity">
+            <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-lg">
+              <Smartphone className="w-7 h-7 text-green-600" />
+            </div>
+            <div className="flex-1">
+              <h3 className="font-bold text-lg">Divinely Mobile</h3>
+              <p className="text-xs opacity-90 flex items-center gap-1">
+                <div className="w-2 h-2 bg-green-300 rounded-full animate-pulse"></div>
+                Mobile Services • Always Available
+              </p>
+            </div>
+          </Link>
           <div className="flex flex-col items-end">
             {isAuthenticated && (
               <Badge className="bg-yellow-500 text-yellow-900 text-xs font-bold">
@@ -441,22 +447,12 @@ const MobileOptimizedShoppingInterface = () => {
                     
                     <div className="border-t border-green-200 pt-3">
                       <Button 
-                        onClick={handleWhatsAppCheckout}
-                        disabled={isCheckingOut}
+                        onClick={() => setShowPayment(true)}
                         className="w-full bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 h-14 text-lg font-bold shadow-xl hover:shadow-2xl transition-all duration-300"
                       >
-                        {isCheckingOut ? (
-                          <div className="flex items-center gap-3">
-                            <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                            <span>Processing...</span>
-                          </div>
-                        ) : (
-                          <div className="flex items-center gap-3">
-                            <MessageCircle className="w-6 h-6" />
-                            <span>Complete Purchase on WhatsApp</span>
-                            <ArrowRight className="w-5 h-5" />
-                          </div>
-                        )}
+                        <CreditCard className="w-6 h-6 mr-3" />
+                        <span>Secure Checkout</span>
+                        <ArrowRight className="w-5 h-5 ml-3" />
                       </Button>
                     </div>
                     
@@ -465,7 +461,7 @@ const MobileOptimizedShoppingInterface = () => {
                         ✅ Instant delivery • 🔒 Secure payment • 📱 Mobile optimized
                       </p>
                       <p className="text-xs text-green-600 font-semibold">
-                        Complete your purchase safely on WhatsApp
+                        Complete your purchase safely and securely
                       </p>
                     </div>
                   </div>
