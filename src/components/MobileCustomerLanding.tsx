@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -41,7 +42,7 @@ const MobileCustomerLanding = () => {
       title: 'Smart Deals Portal',
       description: 'Browse exclusive customer deals',
       icon: <Zap className="w-6 h-6" />,
-      action: () => window.location.href = '/portal?tab=onecard',
+      action: () => window.location.href = '/portal?tab=deals',
       gradient: 'from-blue-500 to-purple-600',
       badge: 'VIP Only'
     },
@@ -49,7 +50,7 @@ const MobileCustomerLanding = () => {
       title: 'Gift & Share',
       description: 'Send airtime/data to loved ones',
       icon: <Gift className="w-6 h-6" />,
-      action: () => window.location.href = '/portal?tab=onecard',
+      action: () => window.location.href = '/portal?tab=deals',
       gradient: 'from-pink-500 to-rose-600',
       badge: 'Social'
     }
@@ -166,10 +167,10 @@ const MobileCustomerLanding = () => {
             <p className="font-bold text-gray-900">{currentUser.registeredPhone}</p>
           </div>
           
-          <Link to="/portal?tab=onecard">
+          <Link to="/portal?tab=deals">
             <Button className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 mt-4">
               <TrendingUp className="w-4 h-4 mr-2" />
-              View Full Dashboard
+              View Smart Deals
             </Button>
           </Link>
         </CardContent>
