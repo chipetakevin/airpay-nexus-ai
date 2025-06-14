@@ -22,71 +22,86 @@ const WhatsAppIntegration = () => {
       {/* Metrics Overview */}
       <WhatsAppMetrics />
 
-      {/* Main Content Tabs - Mobile First Design */}
+      {/* Main Content Tabs - Enhanced Mobile First Design */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <div className="mb-6">
-          <TabsList className="w-full h-auto bg-white border shadow-sm rounded-xl p-2">
-            <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-5 gap-2 w-full">
+        <div className="mb-8">
+          <TabsList className="w-full h-auto bg-gradient-to-r from-gray-50 to-white border-2 border-gray-100 shadow-xl rounded-2xl p-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 w-full">
               <TabsTrigger 
                 value="shopping" 
-                className="flex flex-col items-center gap-2 p-4 rounded-lg transition-all duration-300 data-[state=active]:bg-gradient-to-r data-[state=active]:from-green-500 data-[state=active]:to-emerald-500 data-[state=active]:text-white data-[state=active]:shadow-lg hover:bg-gray-50"
+                className="flex flex-col items-center gap-3 p-6 rounded-xl transition-all duration-500 data-[state=active]:bg-gradient-to-br data-[state=active]:from-green-500 data-[state=active]:to-emerald-600 data-[state=active]:text-white data-[state=active]:shadow-2xl data-[state=active]:scale-105 hover:bg-gray-50 hover:shadow-lg group"
               >
-                <span className="text-2xl">🛒</span>
-                <span className="text-sm font-medium">Shopping</span>
-                <span className="text-xs opacity-75">Mobile Services</span>
+                <div className="text-3xl group-data-[state=active]:animate-bounce">🛒</div>
+                <div className="text-center">
+                  <div className="text-sm font-bold">Shopping</div>
+                  <div className="text-xs opacity-75 mt-1">Mobile Services</div>
+                </div>
+                <div className="w-full h-1 bg-gray-200 rounded-full group-data-[state=active]:bg-white/30 transition-all duration-300"></div>
               </TabsTrigger>
               
               <TabsTrigger 
                 value="business" 
-                className="flex flex-col items-center gap-2 p-4 rounded-lg transition-all duration-300 data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-500 data-[state=active]:to-cyan-500 data-[state=active]:text-white data-[state=active]:shadow-lg hover:bg-gray-50"
+                className="flex flex-col items-center gap-3 p-6 rounded-xl transition-all duration-500 data-[state=active]:bg-gradient-to-br data-[state=active]:from-blue-500 data-[state=active]:to-cyan-600 data-[state=active]:text-white data-[state=active]:shadow-2xl data-[state=active]:scale-105 hover:bg-gray-50 hover:shadow-lg group"
               >
-                <span className="text-2xl">🏢</span>
-                <span className="text-sm font-medium">Business</span>
-                <span className="text-xs opacity-75">Platform</span>
+                <div className="text-3xl group-data-[state=active]:animate-pulse">🏢</div>
+                <div className="text-center">
+                  <div className="text-sm font-bold">Business</div>
+                  <div className="text-xs opacity-75 mt-1">Platform</div>
+                </div>
+                <div className="w-full h-1 bg-gray-200 rounded-full group-data-[state=active]:bg-white/30 transition-all duration-300"></div>
               </TabsTrigger>
               
               <TabsTrigger 
                 value="assistant" 
-                className="flex flex-col items-center gap-2 p-4 rounded-lg transition-all duration-300 data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-500 data-[state=active]:to-pink-500 data-[state=active]:text-white data-[state=active]:shadow-lg hover:bg-gray-50"
+                className="flex flex-col items-center gap-3 p-6 rounded-xl transition-all duration-500 data-[state=active]:bg-gradient-to-br data-[state=active]:from-purple-500 data-[state=active]:to-pink-600 data-[state=active]:text-white data-[state=active]:shadow-2xl data-[state=active]:scale-105 hover:bg-gray-50 hover:shadow-lg group"
               >
-                <span className="text-2xl">🤖</span>
-                <span className="text-sm font-medium">AI Assistant</span>
-                <span className="text-xs opacity-75">Smart Help</span>
+                <div className="text-3xl group-data-[state=active]:animate-spin">🤖</div>
+                <div className="text-center">
+                  <div className="text-sm font-bold">AI Assistant</div>
+                  <div className="text-xs opacity-75 mt-1">Smart Help</div>
+                </div>
+                <div className="w-full h-1 bg-gray-200 rounded-full group-data-[state=active]:bg-white/30 transition-all duration-300"></div>
               </TabsTrigger>
               
               <TabsTrigger 
                 value="analytics" 
-                className="flex flex-col items-center gap-2 p-4 rounded-lg transition-all duration-300 data-[state=active]:bg-gradient-to-r data-[state=active]:from-orange-500 data-[state=active]:to-red-500 data-[state=active]:text-white data-[state=active]:shadow-lg hover:bg-gray-50"
+                className="flex flex-col items-center gap-3 p-6 rounded-xl transition-all duration-500 data-[state=active]:bg-gradient-to-br data-[state=active]:from-orange-500 data-[state=active]:to-red-600 data-[state=active]:text-white data-[state=active]:shadow-2xl data-[state=active]:scale-105 hover:bg-gray-50 hover:shadow-lg group"
               >
-                <span className="text-2xl">📊</span>
-                <span className="text-sm font-medium">Analytics</span>
-                <span className="text-xs opacity-75">Insights</span>
+                <div className="text-3xl group-data-[state=active]:animate-pulse">📊</div>
+                <div className="text-center">
+                  <div className="text-sm font-bold">Analytics</div>
+                  <div className="text-xs opacity-75 mt-1">Insights</div>
+                </div>
+                <div className="w-full h-1 bg-gray-200 rounded-full group-data-[state=active]:bg-white/30 transition-all duration-300"></div>
               </TabsTrigger>
               
               <TabsTrigger 
                 value="settings" 
-                className="flex flex-col items-center gap-2 p-4 rounded-lg transition-all duration-300 data-[state=active]:bg-gradient-to-r data-[state=active]:from-gray-500 data-[state=active]:to-slate-500 data-[state=active]:text-white data-[state=active]:shadow-lg hover:bg-gray-50"
+                className="flex flex-col items-center gap-3 p-6 rounded-xl transition-all duration-500 data-[state=active]:bg-gradient-to-br data-[state=active]:from-gray-500 data-[state=active]:to-slate-600 data-[state=active]:text-white data-[state=active]:shadow-2xl data-[state=active]:scale-105 hover:bg-gray-50 hover:shadow-lg group"
               >
-                <span className="text-2xl">⚙️</span>
-                <span className="text-sm font-medium">Settings</span>
-                <span className="text-xs opacity-75">Configure</span>
+                <div className="text-3xl group-data-[state=active]:animate-spin">⚙️</div>
+                <div className="text-center">
+                  <div className="text-sm font-bold">Settings</div>
+                  <div className="text-xs opacity-75 mt-1">Configure</div>
+                </div>
+                <div className="w-full h-1 bg-gray-200 rounded-full group-data-[state=active]:bg-white/30 transition-all duration-300"></div>
               </TabsTrigger>
             </div>
           </TabsList>
         </div>
 
-        <TabsContent value="shopping" className="space-y-6">
+        <TabsContent value="shopping" className="space-y-6 animate-fade-in">
           <WhatsAppShoppingTab />
         </TabsContent>
 
-        <TabsContent value="business" className="space-y-6">
+        <TabsContent value="business" className="space-y-6 animate-fade-in">
           <WhatsAppBusinessPlatform />
         </TabsContent>
 
-        <TabsContent value="assistant" className="space-y-6">
+        <TabsContent value="assistant" className="space-y-6 animate-fade-in">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             <div className="lg:col-span-2">
-              <Card className="h-[600px]">
+              <Card className="h-[600px] shadow-xl border-2 border-purple-100">
                 <CardContent className="p-0 h-full">
                   <WhatsAppAssistant />
                 </CardContent>
@@ -96,11 +111,11 @@ const WhatsAppIntegration = () => {
           </div>
         </TabsContent>
 
-        <TabsContent value="analytics" className="space-y-6">
+        <TabsContent value="analytics" className="space-y-6 animate-fade-in">
           <WhatsAppAnalytics />
         </TabsContent>
 
-        <TabsContent value="settings" className="space-y-6">
+        <TabsContent value="settings" className="space-y-6 animate-fade-in">
           <WhatsAppSettings />
         </TabsContent>
       </Tabs>
