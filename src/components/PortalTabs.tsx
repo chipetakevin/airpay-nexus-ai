@@ -24,7 +24,7 @@ const PortalTabs = ({
 }: PortalTabsProps) => {
   
   const getTabClassName = (tabValue: string) => {
-    let baseClass = "flex flex-col items-center gap-2 p-3 rounded-xl transition-all duration-300 min-h-[100px] w-full border-2";
+    let baseClass = "flex flex-col items-center gap-1 p-2 rounded-lg transition-all duration-300 min-h-[70px] w-full border";
     
     const allowed = isTabAllowed(tabValue);
     
@@ -33,24 +33,24 @@ const PortalTabs = ({
     } else {
       switch (tabValue) {
         case 'registration':
-          baseClass += " data-[state=active]:bg-gradient-to-br data-[state=active]:from-green-500 data-[state=active]:to-emerald-600 data-[state=active]:text-white data-[state=active]:shadow-lg data-[state=active]:border-green-400 bg-green-50 border-green-200 hover:border-green-300 hover:bg-green-100";
+          baseClass += " data-[state=active]:bg-gradient-to-br data-[state=active]:from-green-500 data-[state=active]:to-emerald-600 data-[state=active]:text-white data-[state=active]:shadow-md data-[state=active]:border-green-400 bg-green-50 border-green-200 hover:border-green-300 hover:bg-green-100";
           break;
         case 'vendor':
-          baseClass += " data-[state=active]:bg-gradient-to-br data-[state=active]:from-blue-500 data-[state=active]:to-cyan-600 data-[state=active]:text-white data-[state=active]:shadow-lg data-[state=active]:border-blue-400 bg-blue-50 border-blue-200 hover:border-blue-300 hover:bg-blue-100";
+          baseClass += " data-[state=active]:bg-gradient-to-br data-[state=active]:from-blue-500 data-[state=active]:to-cyan-600 data-[state=active]:text-white data-[state=active]:shadow-md data-[state=active]:border-blue-400 bg-blue-50 border-blue-200 hover:border-blue-300 hover:bg-blue-100";
           break;
         case 'onecard':
-          baseClass += " data-[state=active]:bg-gradient-to-br data-[state=active]:from-purple-500 data-[state=active]:to-pink-600 data-[state=active]:text-white data-[state=active]:shadow-lg data-[state=active]:border-purple-400 bg-purple-50 border-purple-200 hover:border-purple-300 hover:bg-purple-100";
+          baseClass += " data-[state=active]:bg-gradient-to-br data-[state=active]:from-purple-500 data-[state=active]:to-pink-600 data-[state=active]:text-white data-[state=active]:shadow-md data-[state=active]:border-purple-400 bg-purple-50 border-purple-200 hover:border-purple-300 hover:bg-purple-100";
           break;
         case 'admin-reg':
         case 'admin':
           if (!isTabAllowed('admin-reg') && !isTabAllowed('admin')) {
             baseClass += " opacity-30 cursor-not-allowed bg-gray-200 text-gray-300 pointer-events-none border-gray-300";
           } else {
-            baseClass += " data-[state=active]:bg-gradient-to-br data-[state=active]:from-gray-600 data-[state=active]:to-slate-700 data-[state=active]:text-white data-[state=active]:shadow-lg data-[state=active]:border-gray-400 bg-gray-50 border-gray-200 hover:border-gray-300 hover:bg-gray-100";
+            baseClass += " data-[state=active]:bg-gradient-to-br data-[state=active]:from-gray-600 data-[state=active]:to-slate-700 data-[state=active]:text-white data-[state=active]:shadow-md data-[state=active]:border-gray-400 bg-gray-50 border-gray-200 hover:border-gray-300 hover:bg-gray-100";
           }
           break;
         default:
-          baseClass += " data-[state=active]:bg-gradient-to-br data-[state=active]:from-indigo-500 data-[state=active]:to-blue-600 data-[state=active]:text-white data-[state=active]:shadow-lg data-[state=active]:border-indigo-400 bg-indigo-50 border-indigo-200 hover:border-indigo-300 hover:bg-indigo-100";
+          baseClass += " data-[state=active]:bg-gradient-to-br data-[state=active]:from-indigo-500 data-[state=active]:to-blue-600 data-[state=active]:text-white data-[state=active]:shadow-md data-[state=active]:border-indigo-400 bg-indigo-50 border-indigo-200 hover:border-indigo-300 hover:bg-indigo-100";
       }
     }
     
@@ -60,10 +60,10 @@ const PortalTabs = ({
   const getTabContent = (tabValue: string) => {
     if ((tabValue === 'admin-reg' || tabValue === 'admin') && !isTabAllowed(tabValue)) {
       return (
-        <div className="flex flex-col items-center gap-2">
-          <div className="text-3xl opacity-30 blur-sm">🔒</div>
+        <div className="flex flex-col items-center gap-1">
+          <div className="text-2xl opacity-30 blur-sm">🔒</div>
           <div className="text-center">
-            <div className="text-sm font-bold opacity-30 select-none pointer-events-none blur-sm">
+            <div className="text-xs font-bold opacity-30 select-none pointer-events-none blur-sm">
               {tabValue === 'admin-reg' ? 'Admin' : 'Portal'}
             </div>
             <div className="text-xs opacity-30 select-none pointer-events-none blur-sm">
@@ -77,59 +77,59 @@ const PortalTabs = ({
     switch (tabValue) {
       case 'registration':
         return (
-          <div className="flex flex-col items-center gap-2">
-            <div className="text-3xl">👤</div>
+          <div className="flex flex-col items-center gap-1">
+            <div className="text-2xl">👤</div>
             <div className="text-center">
-              <div className="text-sm font-bold">Customer</div>
+              <div className="text-xs font-bold">Customer</div>
               <div className="text-xs opacity-75">Registration</div>
-              <div className="text-xs opacity-60 mt-1">Join AirPay & OneCard</div>
+              <div className="text-xs opacity-60 mt-0.5">Join Divinely Mobile & OneCard</div>
             </div>
           </div>
         );
       case 'vendor':
         return (
-          <div className="flex flex-col items-center gap-2">
-            <div className="text-3xl">🏪</div>
+          <div className="flex flex-col items-center gap-1">
+            <div className="text-2xl">🏪</div>
             <div className="text-center">
-              <div className="text-sm font-bold">Vendor</div>
+              <div className="text-xs font-bold">Vendor</div>
               <div className="text-xs opacity-75">Partnership</div>
-              <div className="text-xs opacity-60 mt-1">Business Solutions</div>
+              <div className="text-xs opacity-60 mt-0.5">Business Solutions</div>
             </div>
           </div>
         );
       case 'onecard':
         return (
-          <div className="flex flex-col items-center gap-2">
+          <div className="flex flex-col items-center gap-1">
             <div className="flex items-center gap-1">
-              <div className="text-3xl">🔥</div>
-              <div className="text-2xl">✨</div>
+              <div className="text-2xl">🔥</div>
+              <div className="text-xl">✨</div>
             </div>
             <div className="text-center">
-              <div className="text-sm font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">Smart Deals</div>
+              <div className="text-xs font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">Smart Deals</div>
               <div className="text-xs opacity-75">Rewards & Offers</div>
-              <div className="text-xs opacity-60 mt-1">AI-Powered Savings</div>
+              <div className="text-xs opacity-60 mt-0.5">AI-Powered Savings</div>
             </div>
           </div>
         );
       case 'admin-reg':
         return (
-          <div className="flex flex-col items-center gap-2">
-            <div className="text-3xl">🔐</div>
+          <div className="flex flex-col items-center gap-1">
+            <div className="text-2xl">🔐</div>
             <div className="text-center">
-              <div className="text-sm font-bold">Admin</div>
+              <div className="text-xs font-bold">Admin</div>
               <div className="text-xs opacity-75">Access</div>
-              <div className="text-xs opacity-60 mt-1">System Entry</div>
+              <div className="text-xs opacity-60 mt-0.5">System Entry</div>
             </div>
           </div>
         );
       case 'admin':
         return (
-          <div className="flex flex-col items-center gap-2">
-            <div className="text-3xl">⚙️</div>
+          <div className="flex flex-col items-center gap-1">
+            <div className="text-2xl">⚙️</div>
             <div className="text-center">
-              <div className="text-sm font-bold">Admin</div>
+              <div className="text-xs font-bold">Admin</div>
               <div className="text-xs opacity-75">Portal</div>
-              <div className="text-xs opacity-60 mt-1">System Control</div>
+              <div className="text-xs opacity-60 mt-0.5">System Control</div>
             </div>
           </div>
         );
@@ -142,13 +142,13 @@ const PortalTabs = ({
     <div className="w-full max-w-4xl mx-auto">
       <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full">
         {/* Mobile-First Tab Navigation */}
-        <div className="w-full mb-6">
-          <TabsList className="w-full bg-white/95 backdrop-blur-md shadow-lg border border-gray-200 rounded-2xl p-2">
+        <div className="w-full mb-4">
+          <TabsList className="w-full bg-white/95 backdrop-blur-md shadow-lg border border-gray-200 rounded-2xl p-1.5">
             {/* Mobile: Horizontal Scroll */}
-            <div className="flex lg:hidden w-full overflow-x-auto scrollbar-hide gap-2 pb-1">
+            <div className="flex lg:hidden w-full overflow-x-auto scrollbar-hide gap-1.5 pb-1">
               <TabsTrigger 
                 value="registration" 
-                className={getTabClassName('registration') + " flex-shrink-0 min-w-[120px]"}
+                className={getTabClassName('registration') + " flex-shrink-0 min-w-[100px]"}
                 disabled={!isTabAllowed('registration')}
               >
                 {getTabContent('registration')}
@@ -156,7 +156,7 @@ const PortalTabs = ({
               
               <TabsTrigger 
                 value="vendor" 
-                className={getTabClassName('vendor') + " flex-shrink-0 min-w-[120px]"}
+                className={getTabClassName('vendor') + " flex-shrink-0 min-w-[100px]"}
                 disabled={!isTabAllowed('vendor')}
               >
                 {getTabContent('vendor')}
@@ -164,7 +164,7 @@ const PortalTabs = ({
               
               <TabsTrigger 
                 value="onecard" 
-                className={getTabClassName('onecard') + " flex-shrink-0 min-w-[120px]"}
+                className={getTabClassName('onecard') + " flex-shrink-0 min-w-[100px]"}
                 disabled={!isTabAllowed('onecard')}
               >
                 {getTabContent('onecard')}
@@ -172,7 +172,7 @@ const PortalTabs = ({
               
               <TabsTrigger 
                 value="admin-reg" 
-                className={getTabClassName('admin-reg') + " flex-shrink-0 min-w-[120px]"}
+                className={getTabClassName('admin-reg') + " flex-shrink-0 min-w-[100px]"}
                 disabled={!isTabAllowed('admin-reg')}
               >
                 {getTabContent('admin-reg')}
@@ -181,7 +181,7 @@ const PortalTabs = ({
               {showAdminTab && (
                 <TabsTrigger 
                   value="admin" 
-                  className={getTabClassName('admin') + " flex-shrink-0 min-w-[120px]"}
+                  className={getTabClassName('admin') + " flex-shrink-0 min-w-[100px]"}
                   disabled={!isTabAllowed('admin')}
                 >
                   {getTabContent('admin')}
@@ -190,7 +190,7 @@ const PortalTabs = ({
             </div>
 
             {/* Desktop: Grid Layout */}
-            <div className={`hidden lg:grid w-full gap-3 ${showAdminTab ? 'grid-cols-5' : 'grid-cols-4'}`}>
+            <div className={`hidden lg:grid w-full gap-2 ${showAdminTab ? 'grid-cols-5' : 'grid-cols-4'}`}>
               <TabsTrigger 
                 value="registration" 
                 className={getTabClassName('registration')}
