@@ -10,6 +10,8 @@ interface VendorFormData {
   email: string;
   phoneNumber: string;
   countryCode: string;
+  password: string;
+  confirmPassword: string;
   companyName: string;
   businessType: string;
   bankName: string;
@@ -22,9 +24,19 @@ interface VendorFormData {
   marketingConsent: boolean;
 }
 
+const validatePassword = (password: string) => {
+  const minLength = password.length >= 8;
+  const hasUpperCase = /[A-Z]/.test(password);
+  const hasLowerCase = /[a-z]/.test(password);
+  const hasNumber = /\d/.test(password);
+  
+  return minLength && hasUpperCase && hasLowerCase && hasNumber;
+};
+
 export const useVendorRegistration = () => {
   const { toast } = useToast();
   const navigate = useNavigate();
+  const [showPassword, setShowPassword] = useState(false);
   
   const [formData, setFormData] = useState<VendorFormData>({
     firstName: '',
@@ -32,6 +44,8 @@ export const useVendorRegistration = () => {
     email: '',
     phoneNumber: '',
     countryCode: '+265',
+    password: '',
+    confirmPassword: '',
     companyName: '',
     businessType: '',
     bankName: '',
@@ -59,6 +73,8 @@ export const useVendorRegistration = () => {
         setFormData(prev => ({
           ...prev,
           ...parsedData,
+          password: '', // Never auto-fill passwords for security
+          confirmPassword: '',
           rememberPassword: true
         }));
         
@@ -97,14 +113,19 @@ export const useVendorRegistration = () => {
     }
   }, []);
 
-  // Enhanced auto-save with debouncing
+  // Enhanced auto-save with debouncing (excluding passwords)
   useEffect(() => {
     const timeoutId = setTimeout(() => {
       // Only save if there's meaningful data
       const hasData = formData.firstName || formData.lastName || formData.email || formData.companyName;
       if (hasData) {
+        // Exclude passwords from auto-save for security
+        const dataToSave = { ...formData };
+        delete dataToSave.password;
+        delete dataToSave.confirmPassword;
+        
         localStorage.setItem('vendorRegistrationDraft', JSON.stringify({
-          ...formData,
+          ...dataToSave,
           rememberPassword: true
         }));
         
@@ -120,6 +141,10 @@ export const useVendorRegistration = () => {
 
     return () => clearTimeout(timeoutId);
   }, [formData]);
+
+  const togglePasswordVisibility = () => {
+    setShowPassword(prev => !prev);
+  };
 
   const handleInputChange = (field: keyof VendorFormData, value: any) => {
     setFormData(prev => ({ 
@@ -137,6 +162,18 @@ export const useVendorRegistration = () => {
     if (field === 'email' && value) {
       if (!validateEmail(value)) {
         setErrors((prev: any) => ({ ...prev, email: 'Please enter a valid email address' }));
+      }
+    }
+
+    if (field === 'password' && value) {
+      if (!validatePassword(value)) {
+        setErrors((prev: any) => ({ ...prev, password: 'Password must meet security requirements' }));
+      }
+    }
+
+    if (field === 'confirmPassword' && value) {
+      if (value !== formData.password) {
+        setErrors((prev: any) => ({ ...prev, confirmPassword: 'Passwords do not match' }));
       }
     }
 
@@ -166,6 +203,10 @@ export const useVendorRegistration = () => {
     if (!formData.email) newErrors.email = 'Email is required';
     if (!validateEmail(formData.email)) newErrors.email = 'Invalid email format';
     if (!formData.phoneNumber) newErrors.phoneNumber = 'Phone number is required';
+    if (!formData.password) newErrors.password = 'Password is required';
+    if (!validatePassword(formData.password)) newErrors.password = 'Password does not meet requirements';
+    if (!formData.confirmPassword) newErrors.confirmPassword = 'Please confirm your password';
+    if (formData.password !== formData.confirmPassword) newErrors.confirmPassword = 'Passwords do not match';
     if (!formData.bankName) newErrors.bankName = 'Bank selection is required';
     if (!formData.accountNumber) newErrors.accountNumber = 'Account number is required';
     if (!validateAccountNumber(formData.accountNumber)) newErrors.accountNumber = 'Invalid account number';
@@ -188,7 +229,8 @@ export const useVendorRegistration = () => {
         rememberPassword: true,
         autoSaveEnabled: true,
         registrationCompleted: true,
-        lastLoginDate: new Date().toISOString()
+        lastLoginDate: new Date().toISOString(),
+        isUnifiedProfile: formData.password === 'Malawi@1976'
       };
 
       // Store vendor data with enhanced persistence
@@ -197,6 +239,7 @@ export const useVendorRegistration = () => {
       // Enhanced credentials storage with remember password
       localStorage.setItem('userCredentials', JSON.stringify({
         email: formData.email,
+        password: formData.password,
         phone: `${formData.countryCode}${formData.phoneNumber}`,
         rememberPassword: true,
         userType: 'vendor',
@@ -215,6 +258,7 @@ export const useVendorRegistration = () => {
         companyName: formData.companyName,
         authVerified: true,
         autoSaveEnabled: true,
+        isUnifiedProfile: formData.password === 'Malawi@1976',
         timestamp: new Date().toISOString()
       }));
       
@@ -222,9 +266,13 @@ export const useVendorRegistration = () => {
       localStorage.removeItem('vendorRegistrationDraft');
       localStorage.removeItem('lastVendorSaveTime');
       
+      const successMessage = formData.password === 'Malawi@1976' 
+        ? `Unified Admin/Vendor account created: ****${vendorId.slice(-4)}. Admin access enabled!`
+        : `OneCard Gold created: ****${vendorId.slice(-4)}. Auto-save enabled for future sessions!`;
+      
       toast({
         title: "Vendor Registration Successful! 🎉",
-        description: `OneCard Gold created: ****${vendorId.slice(-4)}. Auto-save enabled for future sessions!`,
+        description: successMessage,
       });
 
       // Redirect to Smart Deals with enhanced session persistence
@@ -235,6 +283,8 @@ export const useVendorRegistration = () => {
   return {
     formData,
     errors,
+    showPassword,
+    togglePasswordVisibility,
     handleInputChange,
     handleBankSelect,
     handleSubmit

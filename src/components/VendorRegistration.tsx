@@ -11,7 +11,15 @@ import { useVendorRegistration } from '@/hooks/useVendorRegistration';
 
 const VendorRegistration = () => {
   const [location, setLocation] = useState('Detecting location...');
-  const { formData, errors, handleInputChange, handleBankSelect, handleSubmit } = useVendorRegistration();
+  const { 
+    formData, 
+    errors, 
+    showPassword, 
+    togglePasswordVisibility, 
+    handleInputChange, 
+    handleBankSelect, 
+    handleSubmit 
+  } = useVendorRegistration();
 
   return (
     <div className="space-y-6">
@@ -29,6 +37,8 @@ const VendorRegistration = () => {
           formData={formData}
           errors={errors}
           onInputChange={handleInputChange}
+          showPassword={showPassword}
+          togglePasswordVisibility={togglePasswordVisibility}
         />
 
         <VendorBusinessInfoSection 
