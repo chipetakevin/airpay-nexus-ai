@@ -10,7 +10,7 @@ type UserType = 'customer' | 'vendor' | 'admin' | null;
 
 const Portal = () => {
   const [searchParams] = useSearchParams();
-  const [activeTab, setActiveTab] = useState(searchParams.get('tab') || 'deals');
+  const [activeTab, setActiveTab] = useState('deals'); // Always default to deals
   const [userType, setUserType] = useState<UserType>(null);
   const [showAdminTab, setShowAdminTab] = useState(false);
   const [isAdminAuthenticated, setIsAdminAuthenticated] = useState(false);
@@ -31,6 +31,16 @@ const Portal = () => {
       setUserType(null);
     }
   }, []);
+
+  useEffect(() => {
+    // Always prioritize deals tab, but allow URL tab parameter to override if specified
+    const tabParam = searchParams.get('tab');
+    if (tabParam && tabParam !== 'deals') {
+      setActiveTab(tabParam);
+    } else {
+      setActiveTab('deals'); // Force deals as default
+    }
+  }, [searchParams]);
 
   useEffect(() => {
     // Update the URL when the active tab changes
@@ -56,15 +66,18 @@ const Portal = () => {
 
   const resetUserType = () => {
     setUserType(null);
-    setActiveTab('registration');
+    setActiveTab('deals'); // Always return to deals when resetting
   };
 
   const isTabAllowed = (tabValue: string) => {
+    // Always allow deals tab for everyone
+    if (tabValue === 'deals') return true;
+    
     const isAuthenticated = localStorage.getItem('userAuthenticated') === 'true';
     const storedCredentials = localStorage.getItem('userCredentials');
     
     if (!isAuthenticated) {
-      return ['registration', 'vendor', 'admin-reg'].includes(tabValue);
+      return ['registration', 'vendor', 'admin-reg', 'deals'].includes(tabValue);
     }
 
     if (storedCredentials) {
@@ -78,8 +91,9 @@ const Portal = () => {
           case 'vendor':
             return currentUserType === 'vendor';
           case 'onecard':
-          case 'deals':
             return true; // Available to all authenticated users
+          case 'deals':
+            return true; // Always available
           case 'admin-reg':
             return currentUserType === 'admin';
           case 'admin':
@@ -89,11 +103,11 @@ const Portal = () => {
         }
       } catch (error) {
         console.error('Error parsing credentials:', error);
-        return false;
+        return tabValue === 'deals'; // Fallback to deals only
       }
     }
 
-    return false;
+    return tabValue === 'deals'; // Fallback to deals only
   };
 
   const handleTabChange = (value: string) => {
