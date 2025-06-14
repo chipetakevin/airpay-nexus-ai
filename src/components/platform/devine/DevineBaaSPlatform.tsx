@@ -50,7 +50,7 @@ const DivinelyBaaSPlatform = () => {
             </div>
             <div className="text-left">
               <h1 className="text-3xl font-bold text-gray-900">
-                Divinely Mobile BaaS
+                Devine Mobile BaaS
               </h1>
               <p className="text-gray-600">Intelligent Porting & RICA Platform</p>
             </div>
