@@ -1,10 +1,10 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
+import DealsHub from "./pages/DealsHub";
 import Portal from "./pages/Portal";
 import MasterDashboard from "./pages/MasterDashboard";
 import PlatformDashboard from "./pages/PlatformDashboard";
@@ -26,6 +26,7 @@ const App = () => (
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Index />} />
+          <Route path="/deals" element={<DealsHub />} />
           <Route path="/portal" element={<Portal />} />
           <Route path="/master-dashboard" element={<MasterDashboard />} />
           <Route path="/platform-dashboard" element={<PlatformDashboard />} />
