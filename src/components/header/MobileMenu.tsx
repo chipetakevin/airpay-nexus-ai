@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { 
-  Crown, Zap, Brain, MessageCircle, Scan, Settings, FileCheck, LogOut, LogIn, UserPlus, ChevronDown, ChevronUp, Shield, CreditCard, User, Store, Key, ShoppingCart
+  Crown, Zap, Brain, MessageCircle, Scan, Settings, FileCheck, LogOut, LogIn, UserPlus, ChevronDown, ChevronUp, Shield, CreditCard, User, Store, Key, ShoppingCart, Flame
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -85,6 +85,13 @@ const MobileMenu = ({ isMenuOpen, toggleMenu }: MobileMenuProps) => {
                 <Brain className="w-3 h-3 text-purple-600 flex-shrink-0" />
                 <span className="font-medium text-xs">Mobile Divinely BaaS Portal</span>
               </Link>
+              
+              {/* New Smart Deals - Airtime and Data category */}
+              <Link to="/portal?tab=deals" className="flex items-center gap-2 p-1.5 rounded-md hover:bg-orange-50 active:bg-orange-100 transition-all duration-200 min-h-[32px] touch-manipulation" onClick={toggleMenu}>
+                <Flame className="w-3 h-3 text-orange-600 flex-shrink-0" />
+                <span className="font-medium text-xs">Smart Deals - Airtime and Data</span>
+              </Link>
+              
               <Link to="/deals" className="flex items-center gap-2 p-1.5 rounded-md hover:bg-blue-50 active:bg-blue-100 transition-all duration-200 min-h-[32px] touch-manipulation" onClick={toggleMenu}>
                 <Zap className="w-3 h-3 text-blue-600 flex-shrink-0" />
                 <span className="font-medium text-xs">Smart Deals Hub</span>
