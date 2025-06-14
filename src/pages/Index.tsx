@@ -12,6 +12,7 @@ import FAQSection from '@/components/FAQSection';
 import NewsletterSignup from '@/components/NewsletterSignup';
 import WhatsAppFloatingButton from '@/components/WhatsAppFloatingButton';
 import MobileCustomerLanding from '@/components/MobileCustomerLanding';
+import WhatsAppShoppingSection from '@/components/WhatsAppShoppingSection';
 import { useMobileAuth } from '@/hooks/useMobileAuth';
 
 const Index = () => {
@@ -30,6 +31,10 @@ const Index = () => {
       
       <main>
         <HeroSection />
+        
+        {/* WhatsApp Shopping Section - New addition */}
+        <WhatsAppShoppingSection />
+        
         <FeaturesSection />
         <BenefitsSection />
         <StatsGrid />
