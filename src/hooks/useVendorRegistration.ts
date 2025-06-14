@@ -31,7 +31,7 @@ export const useVendorRegistration = () => {
     lastName: '',
     email: '',
     phoneNumber: '',
-    countryCode: '+27',
+    countryCode: '+265',
     companyName: '',
     businessType: '',
     bankName: '',
@@ -46,9 +46,13 @@ export const useVendorRegistration = () => {
 
   const [errors, setErrors] = useState<any>({});
 
-  // Auto-save functionality
+  // Enhanced auto-save and autofill functionality
   useEffect(() => {
+    // Load saved registration data
     const savedData = localStorage.getItem('vendorRegistrationDraft');
+    const userCredentials = localStorage.getItem('userCredentials');
+    const vendorData = localStorage.getItem('onecardVendor');
+    
     if (savedData) {
       try {
         const parsedData = JSON.parse(savedData);
@@ -57,16 +61,61 @@ export const useVendorRegistration = () => {
           ...parsedData,
           rememberPassword: true
         }));
+        
+        toast({
+          title: "Draft Restored 📝",
+          description: "Your previous registration data has been restored.",
+        });
       } catch (error) {
         console.log('Failed to load saved registration data');
+      }
+    } else if (userCredentials && vendorData) {
+      // Autofill from existing vendor profile if logged in
+      try {
+        const credentials = JSON.parse(userCredentials);
+        const vendor = JSON.parse(vendorData);
+        
+        if (credentials.userType === 'vendor') {
+          setFormData(prev => ({
+            ...prev,
+            firstName: vendor.firstName || '',
+            lastName: vendor.lastName || '',
+            email: vendor.email || credentials.email || '',
+            phoneNumber: vendor.phone?.replace(prev.countryCode, '') || '',
+            companyName: vendor.businessName || '',
+            rememberPassword: true
+          }));
+          
+          toast({
+            title: "Profile Autofilled ✨",
+            description: "Registration form filled with your saved profile data.",
+          });
+        }
+      } catch (error) {
+        console.log('Failed to autofill from existing profile');
       }
     }
   }, []);
 
-  // Auto-save on form changes
+  // Enhanced auto-save with debouncing
   useEffect(() => {
     const timeoutId = setTimeout(() => {
-      localStorage.setItem('vendorRegistrationDraft', JSON.stringify(formData));
+      // Only save if there's meaningful data
+      const hasData = formData.firstName || formData.lastName || formData.email || formData.companyName;
+      if (hasData) {
+        localStorage.setItem('vendorRegistrationDraft', JSON.stringify({
+          ...formData,
+          rememberPassword: true
+        }));
+        
+        // Show periodic save confirmation (every 10 seconds)
+        const lastSaveTime = localStorage.getItem('lastVendorSaveTime');
+        const now = Date.now();
+        if (!lastSaveTime || now - parseInt(lastSaveTime) > 10000) {
+          localStorage.setItem('lastVendorSaveTime', now.toString());
+          console.log('✅ Registration data auto-saved');
+        }
+      }
     }, 1000);
 
     return () => clearTimeout(timeoutId);
@@ -76,13 +125,15 @@ export const useVendorRegistration = () => {
     setFormData(prev => ({ 
       ...prev, 
       [field]: value,
-      rememberPassword: true
+      rememberPassword: true // Always keep remember password enabled
     }));
     
+    // Clear field-specific errors
     if (errors[field]) {
       setErrors((prev: any) => ({ ...prev, [field]: '' }));
     }
 
+    // Real-time validation
     if (field === 'email' && value) {
       if (!validateEmail(value)) {
         setErrors((prev: any) => ({ ...prev, email: 'Please enter a valid email address' }));
@@ -134,19 +185,28 @@ export const useVendorRegistration = () => {
         totalEarned: 0,
         totalSpent: 0,
         commissionRate: 10.00,
-        rememberPassword: true
+        rememberPassword: true,
+        autoSaveEnabled: true,
+        registrationCompleted: true,
+        lastLoginDate: new Date().toISOString()
       };
 
+      // Store vendor data with enhanced persistence
       localStorage.setItem('onecardVendor', JSON.stringify(vendorData));
       
+      // Enhanced credentials storage with remember password
       localStorage.setItem('userCredentials', JSON.stringify({
         email: formData.email,
         phone: `${formData.countryCode}${formData.phoneNumber}`,
         rememberPassword: true,
-        userType: 'vendor'
+        userType: 'vendor',
+        autoLogin: true,
+        lastAccessDate: new Date().toISOString()
       }));
 
       localStorage.setItem('userAuthenticated', 'true');
+      
+      // Enhanced session data
       sessionStorage.setItem('userAuth', JSON.stringify({
         userId: vendorId,
         cardNumber: vendorId,
@@ -154,18 +214,21 @@ export const useVendorRegistration = () => {
         accountType: 'Vendor',
         companyName: formData.companyName,
         authVerified: true,
+        autoSaveEnabled: true,
         timestamp: new Date().toISOString()
       }));
       
+      // Clear draft after successful registration
       localStorage.removeItem('vendorRegistrationDraft');
+      localStorage.removeItem('lastVendorSaveTime');
       
       toast({
         title: "Vendor Registration Successful! 🎉",
-        description: `OneCard Gold created: ****${vendorId.slice(-4)}. Redirecting to Smart Deals now!`,
+        description: `OneCard Gold created: ****${vendorId.slice(-4)}. Auto-save enabled for future sessions!`,
       });
 
-      // Direct redirect to Smart Deals tab - fastest shopping experience
-      window.location.replace('/portal?tab=onecard&verified=true');
+      // Redirect to Smart Deals with enhanced session persistence
+      window.location.replace('/portal?tab=onecard&verified=true&autosave=enabled');
     }
   };
 

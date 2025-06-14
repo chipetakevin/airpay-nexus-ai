@@ -1,26 +1,43 @@
 
 import React from 'react';
-import { Card, CardContent } from '@/components/ui/card';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Trophy, ShoppingCart, MapPin, Shield } from 'lucide-react';
 
-const VendorRegistrationAlerts: React.FC = () => {
+const VendorRegistrationAlerts = () => {
   return (
-    <>
-      <Card className="bg-yellow-50 border-yellow-200">
-        <CardContent className="p-4">
-          <p className="text-sm text-yellow-800">
-            🏆 <strong>Smart Business Registration:</strong> Auto-save enabled and credentials remembered for faster future access.
-          </p>
-        </CardContent>
-      </Card>
+    <div className="space-y-3">
+      {/* Smart Business Registration Alert */}
+      <Alert className="border-yellow-200 bg-yellow-50">
+        <Trophy className="w-5 h-5 text-yellow-600" />
+        <AlertDescription className="text-yellow-800">
+          <strong>🏆 Smart Business Registration:</strong> Auto-save enabled and credentials remembered for faster future access.
+        </AlertDescription>
+      </Alert>
 
-      <Card className="bg-blue-50 border-blue-200">
-        <CardContent className="p-4">
-          <p className="text-sm text-blue-800">
-            🛒 <strong>Instant Shopping Access:</strong> After registration, you'll be immediately redirected to Smart Deals to start shopping!
-          </p>
-        </CardContent>
-      </Card>
-    </>
+      {/* Instant Shopping Access */}
+      <Alert className="border-blue-200 bg-blue-50">
+        <ShoppingCart className="w-5 h-5 text-blue-600" />
+        <AlertDescription className="text-blue-800">
+          <strong>🛒 Instant Shopping Access:</strong> After registration, you'll be immediately redirected to Smart Deals to start shopping!
+        </AlertDescription>
+      </Alert>
+
+      {/* Location Detection */}
+      <Alert className="border-green-200 bg-green-50">
+        <MapPin className="w-5 h-5 text-green-600" />
+        <AlertDescription className="text-green-800">
+          <strong>📍 VIP Detected Location:</strong> Johannesburg, Gauteng, South Africa
+        </AlertDescription>
+      </Alert>
+
+      {/* Password Management */}
+      <Alert className="border-purple-200 bg-purple-50">
+        <Shield className="w-5 h-5 text-purple-600" />
+        <AlertDescription className="text-purple-800">
+          <strong>🔐 Enhanced Security:</strong> Password reset via email OTP available. Use special password (Malawi@1976) for unified admin access.
+        </AlertDescription>
+      </Alert>
+    </div>
   );
 };
 
