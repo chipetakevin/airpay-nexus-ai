@@ -15,6 +15,7 @@ const Portal = () => {
   const [userType, setUserType] = useState<UserType>(null);
   const [showAdminTab, setShowAdminTab] = useState(false);
   const [isAdminAuthenticated, setIsAdminAuthenticated] = useState(false);
+  const [isUnifiedProfile, setIsUnifiedProfile] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
   
@@ -27,12 +28,15 @@ const Portal = () => {
       try {
         const userCredentials = JSON.parse(storedUserCredentials);
         setUserType(userCredentials.userType || null);
+        setIsUnifiedProfile(userCredentials.isUnifiedProfile || false);
       } catch (error) {
         console.error("Error parsing user credentials from localStorage:", error);
         setUserType(null);
+        setIsUnifiedProfile(false);
       }
     } else {
       setUserType(null);
+      setIsUnifiedProfile(false);
     }
   }, []);
 
@@ -58,7 +62,7 @@ const Portal = () => {
     if (isAuthenticated && storedCredentials) {
       try {
         const credentials = JSON.parse(storedCredentials);
-        if (credentials.userType === 'admin') {
+        if (credentials.userType === 'admin' || credentials.isUnifiedProfile) {
           setShowAdminTab(true);
           setIsAdminAuthenticated(true);
         }
@@ -70,6 +74,7 @@ const Portal = () => {
 
   const resetUserType = () => {
     setUserType(null);
+    setIsUnifiedProfile(false);
     setActiveTab('deals'); // Always return to deals when resetting
     navigate('?tab=deals', { replace: true });
   };
@@ -89,6 +94,12 @@ const Portal = () => {
       try {
         const credentials = JSON.parse(storedCredentials);
         const currentUserType = credentials.userType;
+        const isUnified = credentials.isUnifiedProfile;
+
+        // If user has unified profile, allow all tabs
+        if (isUnified) {
+          return true;
+        }
 
         // If user is admin and authenticated, allow all tabs
         if (currentUserType === 'admin' && isAdminAuthenticated) {
@@ -97,17 +108,17 @@ const Portal = () => {
 
         switch (tabValue) {
           case 'registration':
-            return currentUserType === 'customer' || currentUserType === 'admin';
+            return currentUserType === 'customer' || currentUserType === 'admin' || isUnified;
           case 'vendor':
-            return currentUserType === 'vendor' || currentUserType === 'admin';
+            return currentUserType === 'vendor' || currentUserType === 'admin' || isUnified;
           case 'onecard':
             return true; // Available to all authenticated users
           case 'deals':
             return true; // Always available - default landing page
           case 'admin-reg':
-            return currentUserType === 'admin';
+            return currentUserType === 'admin' || isUnified;
           case 'admin':
-            return currentUserType === 'admin' && isAdminAuthenticated;
+            return (currentUserType === 'admin' && isAdminAuthenticated) || isUnified;
           default:
             return false;
         }
@@ -125,6 +136,14 @@ const Portal = () => {
       setActiveTab(value);
       // Update URL when user explicitly changes tabs
       navigate(`?tab=${value}`, { replace: true });
+    } else {
+      toast({
+        title: "Access Restricted",
+        description: isUnifiedProfile 
+          ? "This tab is temporarily unavailable" 
+          : "Complete unified admin registration for full access",
+        variant: "destructive"
+      });
     }
   };
 
@@ -141,6 +160,7 @@ const Portal = () => {
           isTabAllowed={isTabAllowed}
           handleTabChange={handleTabChange}
           setIsAdminAuthenticated={setIsAdminAuthenticated}
+          isUnifiedProfile={isUnifiedProfile}
         />
       </main>
       

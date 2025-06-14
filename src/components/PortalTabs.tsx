@@ -13,6 +13,7 @@ interface PortalTabsProps {
   isTabAllowed: (tabValue: string) => boolean;
   handleTabChange: (value: string) => void;
   setIsAdminAuthenticated: (value: boolean) => void;
+  isUnifiedProfile?: boolean;
 }
 
 const PortalTabs = ({ 
@@ -20,7 +21,8 @@ const PortalTabs = ({
   showAdminTab, 
   isTabAllowed, 
   handleTabChange, 
-  setIsAdminAuthenticated 
+  setIsAdminAuthenticated,
+  isUnifiedProfile = false
 }: PortalTabsProps) => {
   
   const tabs = [
@@ -69,7 +71,7 @@ const PortalTabs = ({
     
     const allowed = isTabAllowed(tabValue);
     
-    if (!allowed) {
+    if (!allowed && !isUnifiedProfile) {
       baseClass += " opacity-40 cursor-not-allowed bg-gray-100 text-gray-400 pointer-events-none border-gray-200";
     } else {
       const colorClasses = {
@@ -79,6 +81,11 @@ const PortalTabs = ({
         gray: "data-[state=active]:bg-gradient-to-br data-[state=active]:from-gray-600 data-[state=active]:to-slate-700 data-[state=active]:text-white data-[state=active]:shadow-lg data-[state=active]:border-gray-400 bg-gray-50 border-gray-200 hover:border-gray-300 hover:bg-gray-100"
       };
       baseClass += " " + colorClasses[color];
+      
+      // Add unified profile indicator
+      if (isUnifiedProfile && allowed) {
+        baseClass += " ring-2 ring-orange-400 ring-opacity-50";
+      }
     }
     
     return baseClass;
@@ -87,6 +94,17 @@ const PortalTabs = ({
   return (
     <div className="w-full max-w-6xl mx-auto pt-4">
       <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full">
+        {/* Unified Profile Indicator */}
+        {isUnifiedProfile && (
+          <div className="mb-4 p-3 bg-gradient-to-r from-orange-50 to-yellow-50 border border-orange-200 rounded-lg">
+            <div className="flex items-center gap-2 text-orange-700">
+              <span className="text-lg">🌟</span>
+              <span className="font-semibold">Unified Access Active</span>
+              <span className="text-sm opacity-75">- All tabs enabled</span>
+            </div>
+          </div>
+        )}
+
         {/* Optimized Mobile-First Tab Navigation */}
         <div className="w-full mb-6">
           <TabsList className="w-full max-w-full">
@@ -97,13 +115,16 @@ const PortalTabs = ({
                   key={tab.value}
                   value={tab.value} 
                   className={getTabClassName(tab.value, tab.color)}
-                  disabled={!isTabAllowed(tab.value)}
+                  disabled={!isTabAllowed(tab.value) && !isUnifiedProfile}
                 >
                   <span className="text-lg">{tab.icon}</span>
                   <div className="text-center">
                     <div className="font-semibold leading-tight text-xs">{tab.label}</div>
                     <div className="text-xs opacity-75 leading-tight">{tab.description}</div>
                   </div>
+                  {isUnifiedProfile && (
+                    <div className="absolute top-1 right-1 w-2 h-2 bg-orange-400 rounded-full"></div>
+                  )}
                 </TabsTrigger>
               ))}
               {/* Admin tab on second row if present */}
@@ -113,13 +134,16 @@ const PortalTabs = ({
                   <TabsTrigger 
                     value={tabs[4].value} 
                     className={getTabClassName(tabs[4].value, tabs[4].color)}
-                    disabled={!isTabAllowed(tabs[4].value)}
+                    disabled={!isTabAllowed(tabs[4].value) && !isUnifiedProfile}
                   >
                     <span className="text-lg">{tabs[4].icon}</span>
                     <div className="text-center">
                       <div className="font-semibold leading-tight text-xs">{tabs[4].label}</div>
                       <div className="text-xs opacity-75 leading-tight">{tabs[4].description}</div>
                     </div>
+                    {isUnifiedProfile && (
+                      <div className="absolute top-1 right-1 w-2 h-2 bg-orange-400 rounded-full"></div>
+                    )}
                   </TabsTrigger>
                 </>
               )}
@@ -132,13 +156,16 @@ const PortalTabs = ({
                   key={tab.value}
                   value={tab.value} 
                   className={getTabClassName(tab.value, tab.color)}
-                  disabled={!isTabAllowed(tab.value)}
+                  disabled={!isTabAllowed(tab.value) && !isUnifiedProfile}
                 >
                   <span className="text-lg">{tab.icon}</span>
                   <div className="text-center">
                     <div className="font-semibold text-sm">{tab.label}</div>
                     <div className="text-xs opacity-75">{tab.description}</div>
                   </div>
+                  {isUnifiedProfile && (
+                    <div className="absolute top-1 right-1 w-2 h-2 bg-orange-400 rounded-full"></div>
+                  )}
                 </TabsTrigger>
               ))}
             </div>
@@ -150,13 +177,16 @@ const PortalTabs = ({
                   key={tab.value}
                   value={tab.value} 
                   className={getTabClassName(tab.value, tab.color)}
-                  disabled={!isTabAllowed(tab.value)}
+                  disabled={!isTabAllowed(tab.value) && !isUnifiedProfile}
                 >
                   <span className="text-xl">{tab.icon}</span>
                   <div className="text-center">
                     <div className="font-semibold text-sm">{tab.label}</div>
                     <div className="text-xs opacity-75">{tab.description}</div>
                   </div>
+                  {isUnifiedProfile && (
+                    <div className="absolute top-1 right-1 w-2 h-2 bg-orange-400 rounded-full"></div>
+                  )}
                 </TabsTrigger>
               ))}
             </div>
