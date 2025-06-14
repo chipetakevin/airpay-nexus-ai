@@ -2,16 +2,16 @@
 import React from 'react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
-import DevineBaaSPlatform from '@/components/platform/devine/DevineBaaSPlatform';
+import DivinelyBaaSPlatform from '@/components/platform/devine/DevineBaaSPlatform';
 import WhatsAppFloatingButton from '@/components/WhatsAppFloatingButton';
 
-const DevineBaaS = () => {
+const DivinelyBaaS = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       <Header />
       
       <main>
-        <DevineBaaSPlatform />
+        <DivinelyBaaSPlatform />
       </main>
       <Footer />
       <WhatsAppFloatingButton />
@@ -19,4 +19,4 @@ const DevineBaaS = () => {
   );
 };
 
-export default DevineBaaS;
+export default DivinelyBaaS;
