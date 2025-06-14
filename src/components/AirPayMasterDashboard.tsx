@@ -177,22 +177,21 @@ const AirPayMasterDashboard = () => {
       {/* Main Content Area with Tabs */}
       <div className="max-w-7xl mx-auto p-3 md:p-4">
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          {/* Mobile-First Navigation */}
+          {/* Enhanced Mobile-First Navigation */}
           <div className="mb-6">
-            {/* Mobile Navigation - Improved Horizontal Scroll */}
-            <div className="block w-full">
-              <ScrollArea className="w-full">
+            <div className="w-full overflow-hidden">
+              <ScrollArea className="w-full whitespace-nowrap">
                 <div className="flex justify-start lg:justify-center pb-2">
-                  <div className="flex space-x-2 p-2 bg-white/90 backdrop-blur-md rounded-xl md:rounded-2xl shadow-lg border border-gray-100 min-w-fit">
+                  <div className="flex space-x-2 p-2 bg-white/90 backdrop-blur-md rounded-xl md:rounded-2xl shadow-lg border border-gray-100 w-max">
                     {navigationTabs.map((tab) => (
                       <button
                         key={tab.id}
                         onClick={() => setActiveTab(tab.id)}
                         className={`
-                          flex-shrink-0 p-2 md:p-3 rounded-lg md:rounded-xl transition-all duration-300 min-w-[80px] md:min-w-[100px]
+                          flex-shrink-0 p-2 md:p-3 rounded-lg md:rounded-xl transition-all duration-300 w-[90px] md:w-[110px] relative
                           ${activeTab === tab.id 
                             ? `bg-gradient-to-br ${tab.gradient} text-white shadow-lg scale-105` 
-                            : `bg-gradient-to-br ${tab.bgGradient} hover:bg-white text-gray-700 hover:shadow-md hover:scale-105`
+                            : `bg-gradient-to-br ${tab.bgGradient} hover:bg-white text-gray-700 hover:shadow-md hover:scale-102`
                           }
                         `}
                       >
