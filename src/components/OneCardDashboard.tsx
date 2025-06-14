@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -10,6 +9,7 @@ const OneCardDashboard = () => {
   const [userData, setUserData] = useState(null);
   const [activeTab, setActiveTab] = useState('overview');
   const [showPhoneNumber, setShowPhoneNumber] = useState(false);
+  const [showCardNumber, setShowCardNumber] = useState(false);
 
   useEffect(() => {
     const storedUser = localStorage.getItem('onecardUser');
@@ -35,6 +35,10 @@ const OneCardDashboard = () => {
 
   const togglePhoneVisibility = () => {
     setShowPhoneNumber(!showPhoneNumber);
+  };
+
+  const toggleCardVisibility = () => {
+    setShowCardNumber(!showCardNumber);
   };
 
   return (
@@ -69,9 +73,20 @@ const OneCardDashboard = () => {
                       <CreditCard className="w-4 h-4" />
                       <span className="text-sm font-medium">OneCard Number</span>
                     </div>
-                    <div className="text-2xl font-bold text-gray-800 tracking-wider">
-                      ****PP7F
+                    <div 
+                      className="flex items-center justify-center gap-2 cursor-pointer hover:bg-gray-200/50 rounded-lg p-2 transition-colors"
+                      onClick={toggleCardVisibility}
+                    >
+                      <div className="text-2xl font-bold text-gray-800 tracking-wider">
+                        {showCardNumber ? '****PP7F' : '••••••••'}
+                      </div>
+                      {showCardNumber ? (
+                        <EyeOff className="w-4 h-4 text-gray-600" />
+                      ) : (
+                        <Eye className="w-4 h-4 text-gray-600" />
+                      )}
                     </div>
+                    <p className="text-xs text-gray-600">Click to {showCardNumber ? 'hide' : 'reveal'}</p>
                   </div>
                 </CardContent>
               </Card>
