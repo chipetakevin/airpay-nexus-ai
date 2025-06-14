@@ -1,4 +1,3 @@
-
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 
 const corsHeaders = {
@@ -27,16 +26,19 @@ interface ReceiptData {
 
 const formatWhatsAppMessage = (data: ReceiptData) => {
   const itemsList = data.items.map(item => 
-    `• ${item.network} ${item.type} R${item.amount} - R${item.price.toFixed(2)}`
+    `• Divinely Mobile ${item.type} R${item.amount} - R${item.price.toFixed(2)}`
   ).join('\n');
 
-  return `🧾 *DIGITAL RECEIPT*
-📱 *Divinely Mobile*
+  // Format date as YYYY/MM/DD, HH:mm:ss
+  const dateObj = new Date(data.timestamp);
+  const formattedDate = `${dateObj.getFullYear()}/${String(dateObj.getMonth() + 1).padStart(2, '0')}/${String(dateObj.getDate()).padStart(2, '0')}, ${String(dateObj.getHours()).padStart(2, '0')}:${String(dateObj.getMinutes()).padStart(2, '0')}:${String(dateObj.getSeconds()).padStart(2, '0')}`;
+
+  return `📱 *Divinely Mobile* Digital Receipt
 
 👤 *Customer:* ${data.customerName}
 📞 *Account:* ${data.customerPhone}
 🆔 *Transaction ID:* ${data.transactionId}
-⏰ *Date:* ${new Date(data.timestamp).toLocaleString('en-ZA')}
+⏰ *Date:* ${formattedDate}
 
 📋 *PURCHASE DETAILS:*
 ${itemsList}
@@ -50,9 +52,9 @@ ${itemsList}
 ${data.purchaseType === 'self' ? 'Airtime loaded to your number' : `Airtime sent to ${data.recipientName}`}
 
 📱 Continue shopping: https://divinely-mobile.com
-💬 Support: +27 83 246 6539
+💬 Support: +27 100 2827
 
-*Thank you for choosing Divinely Mobile!*`;
+*Thank you for choosing Divinely Mobile!* Brought To You By OneCard Global Rewards Program`;
 };
 
 const formatEmailReceipt = (data: ReceiptData) => {
@@ -128,7 +130,7 @@ const formatEmailReceipt = (data: ReceiptData) => {
   </div>
 
   <div style="text-align: center; margin-top: 20px; color: #6b7280; font-size: 12px;">
-    <p>Need help? Contact us at support@divinely-mobile.com or +27 83 246 6539</p>
+    <p>Need help? Contact us at support@divinely-mobile.com or +27 100 2827</p>
     <p>© 2024 Divinely Mobile. All rights reserved.</p>
   </div>
 </body>
