@@ -114,7 +114,7 @@ const AirPayMasterDashboard = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-purple-50/30">
+    <div className="bg-gradient-to-br from-slate-50 via-blue-50/30 to-purple-50/30">
       {/* Enhanced Header with better branding */}
       <div className="bg-white/95 backdrop-blur-md border-b border-gray-200/50 shadow-lg sticky top-0 z-50">
         <div className="max-w-7xl mx-auto p-4 md:p-6">
@@ -218,8 +218,8 @@ const AirPayMasterDashboard = () => {
         </div>
       </div>
 
-      {/* Main Content with improved spacing */}
-      <div className="max-w-7xl mx-auto p-4 md:p-6">
+      {/* Main Content with improved scrolling */}
+      <div className="max-w-7xl mx-auto p-4 md:p-6 pb-20">
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
           <div className="space-y-6">
             <TabsContent value="deals" className="space-y-6 animate-fade-in">
