@@ -1,3 +1,4 @@
+
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 
 const corsHeaders = {
@@ -33,7 +34,10 @@ const formatWhatsAppMessage = (data: ReceiptData) => {
   const dateObj = new Date(data.timestamp);
   const formattedDate = `${dateObj.getFullYear()}/${String(dateObj.getMonth() + 1).padStart(2, '0')}/${String(dateObj.getDate()).padStart(2, '0')}, ${String(dateObj.getHours()).padStart(2, '0')}:${String(dateObj.getMinutes()).padStart(2, '0')}:${String(dateObj.getSeconds()).padStart(2, '0')}`;
 
-  return `📱 *Divinely Mobile* Digital Receipt
+  return `🟢 *DIVINELY MOBILE* 📱
+_Ø=Ün Smart Technology Solutions_
+
+✅ *DIGITAL RECEIPT*
 
 👤 *Customer:* ${data.customerName}
 📞 *Account:* ${data.customerPhone}
@@ -51,10 +55,11 @@ ${itemsList}
 ✅ *Transaction Successful!*
 ${data.purchaseType === 'self' ? 'Airtime loaded to your number' : `Airtime sent to ${data.recipientName}`}
 
-📱 Continue shopping: https://divinely-mobile.com
+🌐 Continue shopping: https://divinely-mobile.com
 💬 Support: +27 100 2827
 
-*Thank you for choosing Divinely Mobile!* Brought To You By OneCard Global Rewards Program`;
+*Thank you for choosing Divinely Mobile!* 
+_Brought To You By OneCard Global Rewards Program_`;
 };
 
 const formatEmailReceipt = (data: ReceiptData) => {
@@ -72,9 +77,18 @@ const formatEmailReceipt = (data: ReceiptData) => {
   <title>Purchase Receipt - Divinely Mobile</title>
 </head>
 <body style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
-  <div style="background: linear-gradient(135deg, #10b981, #059669); color: white; padding: 20px; border-radius: 10px; margin-bottom: 20px;">
-    <h1 style="margin: 0; font-size: 24px;">📱 Divinely Mobile</h1>
-    <p style="margin: 5px 0 0 0; opacity: 0.9;">Digital Receipt</p>
+  <div style="background: linear-gradient(135deg, #10b981, #059669); color: white; padding: 30px; border-radius: 15px; margin-bottom: 20px; text-align: center;">
+    <!-- Divinely Mobile Logo -->
+    <div style="display: inline-block; position: relative; margin-bottom: 15px;">
+      <div style="width: 60px; height: 60px; background: #34d399; border-radius: 50%; display: inline-block; position: relative; box-shadow: 0 4px 15px rgba(0,0,0,0.2);">
+        <div style="width: 36px; height: 36px; background: #10b981; border-radius: 50%; position: absolute; top: 12px; left: 12px; display: flex; align-items: center; justify-content: center;">
+          <span style="color: white; font-size: 12px; font-weight: bold;">Ø=Ün</span>
+        </div>
+      </div>
+    </div>
+    <h1 style="margin: 0; font-size: 28px; font-weight: bold;">DIVINELY MOBILE</h1>
+    <p style="margin: 5px 0 0 0; opacity: 0.9; font-size: 14px;">Smart Technology Solutions</p>
+    <p style="margin: 10px 0 0 0; font-size: 16px; font-weight: bold;">📱 Digital Receipt</p>
   </div>
 
   <div style="background: #f8f9fa; padding: 20px; border-radius: 10px; margin-bottom: 20px;">
@@ -125,6 +139,16 @@ const formatEmailReceipt = (data: ReceiptData) => {
   </div>
 
   <div style="text-align: center; padding: 20px; border-top: 1px solid #e5e7eb;">
+    <div style="margin-bottom: 15px;">
+      <!-- Footer Logo -->
+      <div style="display: inline-block; position: relative;">
+        <div style="width: 40px; height: 40px; background: #10b981; border-radius: 50%; display: inline-block; position: relative;">
+          <div style="width: 24px; height: 24px; background: #34d399; border-radius: 50%; position: absolute; top: 8px; left: 8px; display: flex; align-items: center; justify-content: center;">
+            <span style="color: white; font-size: 8px; font-weight: bold;">Ø=Ün</span>
+          </div>
+        </div>
+      </div>
+    </div>
     <p style="color: #6b7280; margin-bottom: 10px;">Continue shopping for more great deals!</p>
     <a href="https://divinely-mobile.com" style="background: #10b981; color: white; padding: 12px 24px; border-radius: 6px; text-decoration: none; display: inline-block;">Shop Now</a>
   </div>
@@ -132,6 +156,7 @@ const formatEmailReceipt = (data: ReceiptData) => {
   <div style="text-align: center; margin-top: 20px; color: #6b7280; font-size: 12px;">
     <p>Need help? Contact us at support@divinely-mobile.com or +27 100 2827</p>
     <p>© 2024 Divinely Mobile. All rights reserved.</p>
+    <p><em>Brought To You By OneCard Global Rewards Program</em></p>
   </div>
 </body>
 </html>`;
