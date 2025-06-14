@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -7,10 +6,10 @@ import {
   Brain, Bot, Network, Zap, Activity, 
   MessageSquare, Target, TrendingUp, Shield,
   Cpu, CloudCog, Layers, Settings, BarChart3,
-  Pie, LineChart, Activity as ActivityIcon,
+  PieChart, LineChart, Activity as ActivityIcon,
   Smartphone, Globe, Database, Users
 } from 'lucide-react';
-import { PieChart, ResponsiveContainer, Cell, LineChart as RechartsLineChart, Line, XAxis, YAxis, AreaChart, Area, BarChart, Bar } from 'recharts';
+import { PieChart as RechartsPieChart, ResponsiveContainer, Cell, LineChart as RechartsLineChart, Line, XAxis, YAxis, AreaChart, Area, BarChart, Bar, Pie } from 'recharts';
 
 const AgenticBaaSAIPanel = () => {
   const [activeAgent, setActiveAgent] = useState('churn-prediction');
@@ -329,25 +328,26 @@ const AgenticBaaSAIPanel = () => {
             <Card className="shadow-xl border-0">
               <CardHeader className="bg-gradient-to-r from-purple-50 to-pink-50">
                 <CardTitle className="flex items-center gap-3 text-lg md:text-xl">
-                  <Pie className="w-5 h-5 md:w-6 md:h-6 text-purple-600" />
+                  <PieChart className="w-5 h-5 md:w-6 md:h-6 text-purple-600" />
                   Agent Workload Distribution
                 </CardTitle>
               </CardHeader>
               <CardContent className="p-4 md:p-6">
                 <ResponsiveContainer width="100%" height={200}>
-                  <PieChart>
-                    <PieChart 
+                  <RechartsPieChart>
+                    <Pie 
                       data={agentDistribution} 
                       cx="50%" 
                       cy="50%" 
                       outerRadius={60} 
                       innerRadius={30}
+                      dataKey="value"
                     >
                       {agentDistribution.map((entry, index) => (
                         <Cell key={`cell-${index}`} fill={entry.color} />
                       ))}
-                    </PieChart>
-                  </PieChart>
+                    </Pie>
+                  </RechartsPieChart>
                 </ResponsiveContainer>
                 <div className="grid grid-cols-2 gap-2 mt-4">
                   {agentDistribution.map((item, index) => (
