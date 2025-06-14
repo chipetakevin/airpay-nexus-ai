@@ -82,16 +82,37 @@ export const useDealsData = () => {
     loadDeals(true);
   };
 
-  // Auto-refresh effect with autonomous scraping
+  // Check if we should trigger scraping based on last scrape time
+  const shouldTriggerScraping = () => {
+    const lastScrapeTime = localStorage.getItem('lastScrapeTime');
+    if (!lastScrapeTime) return true;
+    
+    const lastScrape = new Date(lastScrapeTime);
+    const now = new Date();
+    const timeDiff = now.getTime() - lastScrape.getTime();
+    const hoursDiff = timeDiff / (1000 * 3600);
+    
+    return hoursDiff >= 24; // Only scrape if 24+ hours have passed
+  };
+
+  // Auto-refresh effect with 24-hour autonomous scraping
   useEffect(() => {
     // Initial load
     loadDeals();
 
-    // Set up auto-refresh interval (60 seconds) with autonomous scraping
+    // Check if we need to trigger scraping on initial load
+    if (shouldTriggerScraping()) {
+      console.log('24 hours have passed, triggering autonomous scraping...');
+      triggerAutonomousScraping();
+      localStorage.setItem('lastScrapeTime', new Date().toISOString());
+    }
+
+    // Set up auto-refresh interval (24 hours = 86400000 milliseconds)
     const autoRefreshInterval = setInterval(async () => {
-      console.log('Auto-refreshing deals with autonomous scraping...');
+      console.log('24-hour auto-refresh: triggering autonomous scraping...');
       await triggerAutonomousScraping();
-    }, 60000); // 60 seconds
+      localStorage.setItem('lastScrapeTime', new Date().toISOString());
+    }, 86400000); // 24 hours
 
     // Cleanup interval on component unmount
     return () => {
