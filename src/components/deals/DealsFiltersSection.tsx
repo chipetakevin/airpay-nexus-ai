@@ -1,6 +1,13 @@
 
 import React from 'react';
 import { Button } from '@/components/ui/button';
+import { 
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 interface DealsFiltersSectionProps {
   selectedDealType: string;
@@ -25,120 +32,126 @@ const DealsFiltersSection = ({
     <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
       <div>
         <label className="block text-sm font-medium mb-2">Deal Type</label>
-        <select
-          value={selectedDealType}
-          onChange={(e) => onDealTypeChange(e.target.value)}
-          className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-        >
-          <option value="all">All Types</option>
-          <option value="airtime">Airtime</option>
-          <option value="data">Data</option>
-          <option value="sms">SMS</option>
-          <option value="voice">Voice</option>
-        </select>
+        <Select value={selectedDealType} onValueChange={onDealTypeChange}>
+          <SelectTrigger className="w-full">
+            <SelectValue placeholder="Select deal type" />
+          </SelectTrigger>
+          <SelectContent className="bg-white border border-gray-300 shadow-lg z-50">
+            <SelectItem value="all">All Types</SelectItem>
+            <SelectItem value="airtime">Airtime</SelectItem>
+            <SelectItem value="data">Data</SelectItem>
+            <SelectItem value="sms">SMS</SelectItem>
+            <SelectItem value="voice">Voice</SelectItem>
+          </SelectContent>
+        </Select>
       </div>
+      
       <div>
         <label className="block text-sm font-medium mb-2">Networks & Retailers</label>
-        <select
-          value={selectedNetwork}
-          onChange={(e) => onNetworkChange(e.target.value)}
-          className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-        >
-          <option value="all">All Networks & Retailers</option>
-          
-          {/* Primary Network Providers */}
-          <optgroup label="🏢 Primary Networks">
-            <option value="vodacom">Vodacom</option>
-            <option value="mtn">MTN</option>
-            <option value="cell c">Cell C</option>
-            <option value="telkom">Telkom</option>
-          </optgroup>
-          
-          {/* Alternative Networks */}
-          <optgroup label="📱 Alternative Networks">
-            <option value="lyca mobile">Lyca Mobile</option>
-            <option value="virgin mobile">Virgin Mobile</option>
-            <option value="sentech">Sentech</option>
-            <option value="rain">Rain</option>
-          </optgroup>
-          
-          {/* Specialized Airtime Retailers */}
-          <optgroup label="🎯 Airtime Specialists">
-            <option value="smartcall">SmartCall</option>
-            <option value="myairtime">MyAirtime</option>
-            <option value="surveila">Surveila</option>
-            <option value="rebtel">Rebtel</option>
-            <option value="doctorsim">DoctorSIM</option>
-          </optgroup>
-          
-          {/* Major Retailers */}
-          <optgroup label="🛒 Major Retailers">
-            <option value="takealot">Takealot</option>
-            <option value="game">Game</option>
-            <option value="makro">Makro</option>
-            <option value="checkers">Checkers</option>
-            <option value="shoprite">Shoprite</option>
-            <option value="pick n pay">Pick n Pay</option>
-            <option value="spar">SPAR</option>
-            <option value="woolworths">Woolworths</option>
-            <option value="dis-chem">Dis-Chem</option>
-            <option value="clicks">Clicks</option>
-          </optgroup>
-          
-          {/* Online Marketplaces */}
-          <optgroup label="🌐 Online Marketplaces">
-            <option value="bidorbuy">BidorBuy</option>
-            <option value="loot">Loot.co.za</option>
-            <option value="wantitall">WantItAll</option>
-            <option value="amazon">Amazon SA</option>
-          </optgroup>
-          
-          {/* Network Stores */}
-          <optgroup label="🏪 Network Stores">
-            <option value="vodacom store">Vodacom Store</option>
-            <option value="mtn store">MTN Store</option>
-            <option value="cell c store">Cell C Store</option>
-            <option value="telkom store">Telkom Store</option>
-          </optgroup>
-          
-          {/* Specialty Retailers */}
-          <optgroup label="🔧 Specialty Retailers">
-            <option value="incredible connection">Incredible Connection</option>
-            <option value="hifi corp">HiFi Corp</option>
-            <option value="cash crusaders">Cash Crusaders</option>
-            <option value="pep">PEP</option>
-            <option value="ackermans">Ackermans</option>
-            <option value="jet">Jet</option>
-          </optgroup>
-          
-          {/* Petrol Stations */}
-          <optgroup label="⛽ Petrol Stations & Convenience">
-            <option value="sasol">Sasol</option>
-            <option value="shell">Shell</option>
-            <option value="bp">BP</option>
-            <option value="total">Total</option>
-            <option value="engen">Engen</option>
-            <option value="7-eleven">7-Eleven</option>
-          </optgroup>
-        </select>
+        <Select value={selectedNetwork} onValueChange={onNetworkChange}>
+          <SelectTrigger className="w-full">
+            <SelectValue placeholder="Select network" />
+          </SelectTrigger>
+          <SelectContent className="bg-white border border-gray-300 shadow-lg z-50 max-h-80 overflow-y-auto">
+            <SelectItem value="all">All Networks & Retailers</SelectItem>
+            
+            {/* Priority Networks - Divinely Mobile First, then MTN */}
+            <div className="px-2 py-1.5 text-xs font-semibold text-gray-500 bg-yellow-50">⭐ Priority Networks</div>
+            <SelectItem value="divinely mobile" className="font-semibold text-yellow-700 bg-yellow-50">
+              🏆 Divinely Mobile (Best Deals)
+            </SelectItem>
+            <SelectItem value="mtn" className="font-medium text-orange-600">
+              📱 MTN
+            </SelectItem>
+            
+            {/* Primary Network Providers */}
+            <div className="px-2 py-1.5 text-xs font-semibold text-gray-500">🏢 Primary Networks</div>
+            <SelectItem value="vodacom">Vodacom</SelectItem>
+            <SelectItem value="cell c">Cell C</SelectItem>
+            <SelectItem value="telkom">Telkom</SelectItem>
+            
+            {/* Alternative Networks */}
+            <div className="px-2 py-1.5 text-xs font-semibold text-gray-500">📱 Alternative Networks</div>
+            <SelectItem value="lyca mobile">Lyca Mobile</SelectItem>
+            <SelectItem value="virgin mobile">Virgin Mobile</SelectItem>
+            <SelectItem value="sentech">Sentech</SelectItem>
+            <SelectItem value="rain">Rain</SelectItem>
+            
+            {/* Specialized Airtime Retailers */}
+            <div className="px-2 py-1.5 text-xs font-semibold text-gray-500">🎯 Airtime Specialists</div>
+            <SelectItem value="smartcall">SmartCall</SelectItem>
+            <SelectItem value="myairtime">MyAirtime</SelectItem>
+            <SelectItem value="surveila">Surveila</SelectItem>
+            <SelectItem value="rebtel">Rebtel</SelectItem>
+            <SelectItem value="doctorsim">DoctorSIM</SelectItem>
+            
+            {/* Major Retailers */}
+            <div className="px-2 py-1.5 text-xs font-semibold text-gray-500">🛒 Major Retailers</div>
+            <SelectItem value="takealot">Takealot</SelectItem>
+            <SelectItem value="game">Game</SelectItem>
+            <SelectItem value="makro">Makro</SelectItem>
+            <SelectItem value="checkers">Checkers</SelectItem>
+            <SelectItem value="shoprite">Shoprite</SelectItem>
+            <SelectItem value="pick n pay">Pick n Pay</SelectItem>
+            <SelectItem value="spar">SPAR</SelectItem>
+            <SelectItem value="woolworths">Woolworths</SelectItem>
+            <SelectItem value="dis-chem">Dis-Chem</SelectItem>
+            <SelectItem value="clicks">Clicks</SelectItem>
+            
+            {/* Online Marketplaces */}
+            <div className="px-2 py-1.5 text-xs font-semibold text-gray-500">🌐 Online Marketplaces</div>
+            <SelectItem value="bidorbuy">BidorBuy</SelectItem>
+            <SelectItem value="loot">Loot.co.za</SelectItem>
+            <SelectItem value="wantitall">WantItAll</SelectItem>
+            <SelectItem value="amazon">Amazon SA</SelectItem>
+            
+            {/* Network Stores */}
+            <div className="px-2 py-1.5 text-xs font-semibold text-gray-500">🏪 Network Stores</div>
+            <SelectItem value="vodacom store">Vodacom Store</SelectItem>
+            <SelectItem value="mtn store">MTN Store</SelectItem>
+            <SelectItem value="cell c store">Cell C Store</SelectItem>
+            <SelectItem value="telkom store">Telkom Store</SelectItem>
+            
+            {/* Specialty Retailers */}
+            <div className="px-2 py-1.5 text-xs font-semibold text-gray-500">🔧 Specialty Retailers</div>
+            <SelectItem value="incredible connection">Incredible Connection</SelectItem>
+            <SelectItem value="hifi corp">HiFi Corp</SelectItem>
+            <SelectItem value="cash crusaders">Cash Crusaders</SelectItem>
+            <SelectItem value="pep">PEP</SelectItem>
+            <SelectItem value="ackermans">Ackermans</SelectItem>
+            <SelectItem value="jet">Jet</SelectItem>
+            
+            {/* Petrol Stations */}
+            <div className="px-2 py-1.5 text-xs font-semibold text-gray-500">⛽ Petrol Stations & Convenience</div>
+            <SelectItem value="sasol">Sasol</SelectItem>
+            <SelectItem value="shell">Shell</SelectItem>
+            <SelectItem value="bp">BP</SelectItem>
+            <SelectItem value="total">Total</SelectItem>
+            <SelectItem value="engen">Engen</SelectItem>
+            <SelectItem value="7-eleven">7-Eleven</SelectItem>
+          </SelectContent>
+        </Select>
       </div>
+      
       <div>
         <label className="block text-sm font-medium mb-2">Amount</label>
-        <select
-          value={selectedAmount}
-          onChange={(e) => onAmountChange(e.target.value)}
-          className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-        >
-          <option value="all">All Amounts</option>
-          <option value="10">R10</option>
-          <option value="25">R25</option>
-          <option value="50">R50</option>
-          <option value="100">R100</option>
-          <option value="200">R200</option>
-          <option value="500">R500</option>
-          <option value="1000">R1000</option>
-        </select>
+        <Select value={selectedAmount} onValueChange={onAmountChange}>
+          <SelectTrigger className="w-full">
+            <SelectValue placeholder="Select amount" />
+          </SelectTrigger>
+          <SelectContent className="bg-white border border-gray-300 shadow-lg z-50">
+            <SelectItem value="all">All Amounts</SelectItem>
+            <SelectItem value="10">R10</SelectItem>
+            <SelectItem value="25">R25</SelectItem>
+            <SelectItem value="50">R50</SelectItem>
+            <SelectItem value="100">R100</SelectItem>
+            <SelectItem value="200">R200</SelectItem>
+            <SelectItem value="500">R500</SelectItem>
+            <SelectItem value="1000">R1000</SelectItem>
+          </SelectContent>
+        </Select>
       </div>
+      
       <div className="flex items-end">
         <Button
           variant="outline"

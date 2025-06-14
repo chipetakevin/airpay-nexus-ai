@@ -11,9 +11,10 @@ import AuthenticationIndicator from './deals/AuthenticationIndicator';
 
 const AirtimeDealsSystem = () => {
   const { deals, isLoading, lastRefresh, scrapingStatus, handleManualRefresh } = useDealsData();
-  const [selectedNetwork, setSelectedNetwork] = useState('all');
+  // Set defaults: Divinely Mobile as default network, airtime as default deal type
+  const [selectedNetwork, setSelectedNetwork] = useState('divinely mobile');
   const [selectedAmount, setSelectedAmount] = useState('all');
-  const [selectedDealType, setSelectedDealType] = useState('all');
+  const [selectedDealType, setSelectedDealType] = useState('airtime');
   const [showCart, setShowCart] = useState(false);
   const [selectedDeal, setSelectedDeal] = useState<CartItem | null>(null);
 
@@ -30,9 +31,10 @@ const AirtimeDealsSystem = () => {
   };
 
   const handleClearFilters = () => {
-    setSelectedNetwork('all');
+    // Reset to defaults: Divinely Mobile and airtime
+    setSelectedNetwork('divinely mobile');
     setSelectedAmount('all');
-    setSelectedDealType('all');
+    setSelectedDealType('airtime');
   };
 
   return (
