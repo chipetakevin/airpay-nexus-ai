@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
@@ -43,6 +44,12 @@ export const StatementActions = ({ transaction }: StatementActionsProps) => {
     return 'AP' + timestamp.replace(/[^0-9]/g, '').slice(-8);
   };
 
+  const capitalizeWords = (str: string) => {
+    return str.split(' ').map(word => 
+      word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
+    ).join(' ');
+  };
+
   const getCustomerDisplayName = () => {
     const credentials = localStorage.getItem('userCredentials');
     let displayName = 'Valued Customer';
@@ -52,14 +59,14 @@ export const StatementActions = ({ transaction }: StatementActionsProps) => {
       
       // Priority: nickname > full name > first name > email prefix
       if (parsedCredentials.nickname) {
-        displayName = parsedCredentials.nickname;
+        displayName = capitalizeWords(parsedCredentials.nickname);
       } else if (parsedCredentials.firstName && parsedCredentials.lastName) {
-        displayName = `${parsedCredentials.firstName} ${parsedCredentials.lastName}`;
+        displayName = `${capitalizeWords(parsedCredentials.firstName)} ${capitalizeWords(parsedCredentials.lastName)}`;
       } else if (parsedCredentials.firstName) {
-        displayName = parsedCredentials.firstName;
+        displayName = capitalizeWords(parsedCredentials.firstName);
       } else if (parsedCredentials.email) {
-        // Use email prefix as last resort
-        displayName = parsedCredentials.email.split('@')[0];
+        // Use email prefix as last resort and capitalize it
+        displayName = capitalizeWords(parsedCredentials.email.split('@')[0]);
       }
     }
     
