@@ -152,6 +152,19 @@
     }
   }
 
+  @keyframes dm-default-flash {
+    0%, 100% {
+      color: #3b82f6;
+      text-shadow: 0 0 10px rgba(59, 130, 246, 0.6), 0 0 20px rgba(59, 130, 246, 0.4);
+      transform: scale(1);
+    }
+    50% {
+      color: #1d4ed8;
+      text-shadow: 0 0 15px rgba(29, 78, 216, 0.8), 0 0 30px rgba(29, 78, 216, 0.6);
+      transform: scale(1.02);
+    }
+  }
+
   .animate-float {
     animation: float 3s ease-in-out infinite;
   }
@@ -166,6 +179,10 @@
 
   .animate-divinely-glow {
     animation: divinely-glow 3s ease-in-out infinite;
+  }
+
+  .animate-dm-default-flash {
+    animation: dm-default-flash 2.5s ease-in-out infinite;
   }
 
   /* Enhanced mobile scrolling */
@@ -186,5 +203,16 @@
 
   .divinely-mobile-form {
     @apply border-2 animate-divinely-glow rounded-lg p-4;
+  }
+
+  /* DM Default - Special catchy styling */
+  .dm-default-text {
+    @apply font-extrabold text-3xl animate-dm-default-flash;
+    background: linear-gradient(135deg, #3b82f6, #1d4ed8, #2563eb);
+    background-size: 200% 200%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    filter: drop-shadow(0 0 8px rgba(59, 130, 246, 0.4));
   }
 }

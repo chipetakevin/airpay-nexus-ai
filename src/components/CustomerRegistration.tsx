@@ -64,15 +64,17 @@ const CustomerRegistration = () => {
 
   return (
     <div className="space-y-6">
-      {/* Divinely Mobile Header with Blue Flashing Effect */}
+      {/* Divinely Mobile Header with Enhanced Blue Flashing Effect */}
       <div className="divinely-mobile-form bg-gradient-to-br from-blue-50 to-blue-100">
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-3">
-            <Trophy className="w-8 h-8 text-yellow-500" />
+            <Trophy className="w-8 h-8 text-yellow-500 animate-float" />
             <div>
-              <h2 className="text-2xl font-bold text-blue-800">Divinely Mobile (Best Deals)</h2>
-              <Badge className="divinely-mobile-default">
-                🏆 DEFAULT NETWORK - PREMIUM REWARDS
+              <h2 className="dm-default-text">
+                🌟 Divinely Mobile (Best Deals) 🌟
+              </h2>
+              <Badge className="divinely-mobile-default mt-2">
+                🏆 DM DEFAULT NETWORK - PREMIUM REWARDS
               </Badge>
             </div>
           </div>
