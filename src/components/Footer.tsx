@@ -1,7 +1,10 @@
 
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Mail, ExternalLink } from 'lucide-react';
+import { Mail, ExternalLink, Smartphone, Shield, Zap, Globe, CheckCircle, ArrowRight, Star, Users, Clock, BarChart3, MessageCircle, CreditCard, Wifi, Phone } from 'lucide-react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
 
 const Footer = () => {
   // Enhanced Futuristic Divinely Mobile Logo Component
@@ -36,8 +39,155 @@ const Footer = () => {
     </div>
   );
 
+  const stats = [
+    { label: "Success Rate", value: "99.7%", icon: <CheckCircle className="w-4 h-4" /> },
+    { label: "Avg Processing", value: "5 Min", icon: <Clock className="w-4 h-4" /> },
+    { label: "Active Users", value: "50K+", icon: <Users className="w-4 h-4" /> },
+    { label: "Monthly Growth", value: "45%", icon: <BarChart3 className="w-4 h-4" /> }
+  ];
+
+  const features = [
+    {
+      icon: <Zap className="w-6 h-6 text-blue-600" />,
+      title: "#1 Fastest Porting",
+      description: "Complete SIM porting and RICA registration in 5 minutes",
+      badge: "Most Popular"
+    },
+    {
+      icon: <Shield className="w-6 h-6 text-green-600" />,
+      title: "ICASA Compliant",
+      description: "99.7% accuracy with full regulatory compliance",
+      badge: "Verified"
+    },
+    {
+      icon: <Globe className="w-6 h-6 text-purple-600" />,
+      title: "AI-Powered Processing",
+      description: "Autonomous SIM porting and RICA platform",
+      badge: "Advanced"
+    }
+  ];
+
   return (
     <footer className="bg-gray-900 text-white">
+      {/* Devine Mobile BaaS Section */}
+      <div className="bg-gradient-to-br from-blue-50 via-white to-purple-50 text-gray-900 py-8">
+        <div className="container mx-auto px-4">
+          {/* Compact Header */}
+          <div className="bg-white/95 backdrop-blur-sm border border-gray-200/50 shadow-sm rounded-2xl mb-6">
+            <div className="p-4">
+              <div className="flex items-center justify-between mb-4">
+                {/* Logo and Title - Compact */}
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-purple-600 rounded-xl flex items-center justify-center shadow-md">
+                    <Smartphone className="w-5 h-5 text-white" />
+                  </div>
+                  <div>
+                    <h2 className="text-lg font-bold text-gray-900">Devine Mobile BaaS</h2>
+                    <p className="text-xs text-gray-600">Intelligent Porting & RICA Platform</p>
+                  </div>
+                </div>
+
+                {/* Compact Badges */}
+                <div className="flex items-center gap-2">
+                  <Badge className="bg-green-100 text-green-800 font-semibold text-xs">
+                    <CheckCircle className="w-3 h-3 mr-1" />
+                    ICASA Compliant
+                  </Badge>
+                </div>
+              </div>
+
+              {/* Compact Stats Row */}
+              <div className="grid grid-cols-4 gap-2">
+                {stats.map((stat, index) => (
+                  <div key={index} className="text-center">
+                    <div className="flex justify-center mb-1 text-blue-600">
+                      {stat.icon}
+                    </div>
+                    <div className="text-sm font-bold text-gray-900">{stat.value}</div>
+                    <div className="text-xs text-gray-600">{stat.label}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Main Feature Card - Streamlined */}
+          <Card className="bg-gradient-to-r from-green-50 to-blue-50 border-2 border-green-200 shadow-lg mb-6">
+            <CardContent className="p-4">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="w-12 h-12 bg-green-600 rounded-xl flex items-center justify-center">
+                    <Zap className="w-6 h-6 text-white" />
+                  </div>
+                  <div>
+                    <Badge className="bg-yellow-500 text-yellow-900 font-bold mb-1 text-xs">
+                      <Star className="w-3 h-3 mr-1" />
+                      Most Popular
+                    </Badge>
+                    <h3 className="text-lg font-bold text-gray-900 mb-1">
+                      Port & RICA in 5 Minutes
+                    </h3>
+                    <p className="text-gray-700 text-xs">
+                      Complete SIM porting and RICA registration instantly
+                    </p>
+                  </div>
+                </div>
+                <Button className="bg-green-600 hover:bg-green-700 text-white text-sm">
+                  Start Process
+                  <ArrowRight className="w-3 h-3 ml-2" />
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Features Grid - More Compact */}
+          <div className="grid md:grid-cols-3 gap-4 mb-6">
+            {features.map((feature, index) => (
+              <Card key={index} className="hover:shadow-lg transition-all duration-300 border-2 hover:border-blue-200">
+                <CardHeader className="text-center pb-2">
+                  <div className="w-10 h-10 mx-auto mb-2 bg-gray-100 rounded-full flex items-center justify-center">
+                    {feature.icon}
+                  </div>
+                  <Badge className="mb-2 bg-blue-100 text-blue-800 text-xs">{feature.badge}</Badge>
+                  <CardTitle className="text-sm">{feature.title}</CardTitle>
+                </CardHeader>
+                <CardContent className="text-center pt-0">
+                  <p className="text-gray-600 text-xs">{feature.description}</p>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+
+          {/* Quick Services - More Compact */}
+          <Card className="bg-white shadow-lg">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-center text-sm">Quick Mobile Services</CardTitle>
+            </CardHeader>
+            <CardContent className="pt-0">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+                <Button variant="outline" className="h-12 flex flex-col items-center justify-center">
+                  <CreditCard className="w-4 h-4 mb-1 text-blue-600" />
+                  <span className="text-xs">Airtime</span>
+                </Button>
+                <Button variant="outline" className="h-12 flex flex-col items-center justify-center">
+                  <Wifi className="w-4 h-4 mb-1 text-green-600" />
+                  <span className="text-xs">Data</span>
+                </Button>
+                <Button variant="outline" className="h-12 flex flex-col items-center justify-center">
+                  <Phone className="w-4 h-4 mb-1 text-purple-600" />
+                  <span className="text-xs">Porting</span>
+                </Button>
+                <Button variant="outline" className="h-12 flex flex-col items-center justify-center">
+                  <MessageCircle className="w-4 h-4 mb-1 text-orange-600" />
+                  <span className="text-xs">Support</span>
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+
+      {/* Original Footer Content */}
       <div className="container mx-auto px-4 py-12">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* Logo and Description */}
