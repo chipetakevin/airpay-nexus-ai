@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -42,7 +41,7 @@ const MobileCustomerLanding = () => {
       title: 'Smart Deals Portal',
       description: 'Browse exclusive customer deals',
       icon: <Zap className="w-6 h-6" />,
-      action: () => window.location.href = '/portal?tab=onecard',
+      action: () => window.location.href = '/portal?tab=onecard&network=divinely%20mobile&dealType=airtime',
       gradient: 'from-blue-500 to-purple-600',
       badge: 'VIP Only'
     },
@@ -50,16 +49,7 @@ const MobileCustomerLanding = () => {
       title: 'Gift & Share',
       description: 'Send airtime/data to loved ones',
       icon: <Gift className="w-6 h-6" />,
-      action: () => {
-        const phoneNumber = currentUser.registeredPhone?.replace('+', '') || '27832466539';
-        const message = encodeURIComponent(
-          `🎁 Gift Purchase\n\n` +
-          `From: ${currentUser.firstName} ${currentUser.lastName}\n` +
-          `OneCard: ${currentUser.cardNumber}\n\n` +
-          `I want to gift airtime/data. Please help! 💝`
-        );
-        window.open(`https://wa.me/${phoneNumber}?text=${message}`, '_blank');
-      },
+      action: () => window.location.href = '/portal?tab=onecard&network=divinely%20mobile&dealType=airtime',
       gradient: 'from-pink-500 to-rose-600',
       badge: 'Social'
     }
@@ -182,7 +172,7 @@ const MobileCustomerLanding = () => {
             </div>
           </div>
           
-          <Link to="/portal?tab=onecard">
+          <Link to="/portal?tab=onecard&network=divinely%20mobile&dealType=airtime">
             <Button className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 mt-4">
               <TrendingUp className="w-4 h-4 mr-2" />
               View Full Dashboard
