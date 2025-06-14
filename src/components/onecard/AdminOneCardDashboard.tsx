@@ -58,16 +58,16 @@ const AdminOneCardDashboard = () => {
       const customer = JSON.parse(customerData);
       storedCustomers.push({
         id: customer.cardNumber || 'user-1',
-        firstName: customer.firstName,
-        lastName: customer.lastName,
-        email: customer.email,
-        phone: customer.registeredPhone,
-        cardNumber: customer.cardNumber,
-        onecardBalance: customer.onecardBalance || 0,
-        totalCashback: customer.totalCashback || 0,
+        firstName: customer.firstName || 'Unknown',
+        lastName: customer.lastName || 'User',
+        email: customer.email || 'unknown@email.com',
+        phone: customer.registeredPhone || 'Unknown',
+        cardNumber: customer.cardNumber || 'Unknown',
+        onecardBalance: Number(customer.onecardBalance) || 0,
+        totalCashback: Number(customer.totalCashback) || 0,
         registrationDate: customer.registrationDate || new Date().toISOString(),
         networkProvider: customer.networkProvider || 'Unknown',
-        ricaVerified: customer.ricaVerified || false
+        ricaVerified: Boolean(customer.ricaVerified)
       });
     }
 
@@ -149,9 +149,17 @@ const AdminOneCardDashboard = () => {
         }
       ];
       
-      setTransactions([...userTransactions, ...sampleTransactions]);
+      // Ensure all transactions have proper numeric values
+      const processedTransactions = [...userTransactions, ...sampleTransactions].map(tx => ({
+        ...tx,
+        amount: Number(tx.amount) || 0,
+        cashbackEarned: Number(tx.cashbackEarned) || 0
+      }));
+      
+      setTransactions(processedTransactions);
     } catch (error) {
       console.error('Error loading transactions:', error);
+      setTransactions([]);
     }
   };
 
@@ -192,12 +200,12 @@ const AdminOneCardDashboard = () => {
     doc.setFontSize(16);
     doc.text('Financial Summary', 20, 145);
     doc.setFontSize(11);
-    doc.text(`OneCard Balance: R${customer.onecardBalance.toFixed(2)}`, 20, 160);
-    doc.text(`Total Cashback Earned: R${customer.totalCashback.toFixed(2)}`, 20, 170);
+    doc.text(`OneCard Balance: ${formatCurrency(customer.onecardBalance)}`, 20, 160);
+    doc.text(`Total Cashback Earned: ${formatCurrency(customer.totalCashback)}`, 20, 170);
     doc.text(`Total Transactions: ${customerTransactions.length}`, 20, 180);
     
-    const totalSpent = customerTransactions.reduce((sum, tx) => sum + tx.amount, 0);
-    doc.text(`Total Amount Spent: R${totalSpent.toFixed(2)}`, 20, 190);
+    const totalSpent = customerTransactions.reduce((sum, tx) => sum + (Number(tx.amount) || 0), 0);
+    doc.text(`Total Amount Spent: ${formatCurrency(totalSpent)}`, 20, 190);
     
     // Recent Transactions
     if (customerTransactions.length > 0) {
@@ -211,7 +219,7 @@ const AdminOneCardDashboard = () => {
           doc.addPage();
           yPos = 20;
         }
-        doc.text(`${new Date(tx.timestamp).toLocaleDateString()} - ${tx.network} - R${tx.amount.toFixed(2)} - ${tx.status}`, 20, yPos);
+        doc.text(`${new Date(tx.timestamp).toLocaleDateString()} - ${tx.network} - ${formatCurrency(tx.amount)} - ${tx.status}`, 20, yPos);
         yPos += 10;
       });
     }
@@ -241,19 +249,20 @@ const AdminOneCardDashboard = () => {
     doc.text(`Total Customers: ${customers.length}`, 20, 65);
     doc.text(`Total Active Cards: ${customers.length}`, 20, 75);
     
-    const totalBalance = customers.reduce((sum, customer) => sum + customer.onecardBalance, 0);
-    const totalCashback = customers.reduce((sum, customer) => sum + customer.totalCashback, 0);
+    const totalBalance = customers.reduce((sum, customer) => sum + (Number(customer.onecardBalance) || 0), 0);
+    const totalCashback = customers.reduce((sum, customer) => sum + (Number(customer.totalCashback) || 0), 0);
     const totalTransactions = transactions.length;
-    const totalRevenue = transactions.reduce((sum, tx) => sum + tx.amount, 0);
+    const totalRevenue = transactions.reduce((sum, tx) => sum + (Number(tx.amount) || 0), 0);
     
-    doc.text(`Total Platform Balance: R${totalBalance.toFixed(2)}`, 20, 85);
-    doc.text(`Total Cashback Distributed: R${totalCashback.toFixed(2)}`, 20, 95);
+    doc.text(`Total Platform Balance: ${formatCurrency(totalBalance)}`, 20, 85);
+    doc.text(`Total Cashback Distributed: ${formatCurrency(totalCashback)}`, 20, 95);
     doc.text(`Total Transactions: ${totalTransactions}`, 20, 105);
-    doc.text(`Total Revenue: R${totalRevenue.toFixed(2)}`, 20, 115);
+    doc.text(`Total Revenue: ${formatCurrency(totalRevenue)}`, 20, 115);
     
     // Network Breakdown
     const networkStats = customers.reduce((stats, customer) => {
-      stats[customer.networkProvider] = (stats[customer.networkProvider] || 0) + 1;
+      const network = customer.networkProvider || 'Unknown';
+      stats[network] = (stats[network] || 0) + 1;
       return stats;
     }, {} as Record<string, number>);
     
@@ -278,7 +287,7 @@ const AdminOneCardDashboard = () => {
         doc.addPage();
         yPos = 20;
       }
-      doc.text(`${customer.cardNumber} - ${customer.firstName} ${customer.lastName} - R${customer.onecardBalance.toFixed(2)}`, 20, yPos);
+      doc.text(`${customer.cardNumber} - ${customer.firstName} ${customer.lastName} - ${formatCurrency(customer.onecardBalance)}`, 20, yPos);
       yPos += 8;
     });
     
@@ -291,7 +300,12 @@ const AdminOneCardDashboard = () => {
     });
   };
 
-  const formatCurrency = (amount: number) => `R${amount.toFixed(2)}`;
+  // Fixed formatCurrency function with proper null/undefined handling
+  const formatCurrency = (amount: number | null | undefined): string => {
+    const numericAmount = Number(amount) || 0;
+    return `R${numericAmount.toFixed(2)}`;
+  };
+
   const formatDate = (dateString: string) => new Date(dateString).toLocaleDateString();
 
   return (
@@ -328,7 +342,7 @@ const AdminOneCardDashboard = () => {
               <div>
                 <p className="text-sm text-gray-600">Total Balance</p>
                 <p className="text-2xl font-bold">
-                  {formatCurrency(customers.reduce((sum, c) => sum + c.onecardBalance, 0))}
+                  {formatCurrency(customers.reduce((sum, c) => sum + (Number(c.onecardBalance) || 0), 0))}
                 </p>
               </div>
             </div>
@@ -342,7 +356,7 @@ const AdminOneCardDashboard = () => {
               <div>
                 <p className="text-sm text-gray-600">Total Cashback</p>
                 <p className="text-2xl font-bold">
-                  {formatCurrency(customers.reduce((sum, c) => sum + c.totalCashback, 0))}
+                  {formatCurrency(customers.reduce((sum, c) => sum + (Number(c.totalCashback) || 0), 0))}
                 </p>
               </div>
             </div>
