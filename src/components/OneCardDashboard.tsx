@@ -4,6 +4,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import AirtimeDealsSystem from './AirtimeDealsSystem';
 import { OverviewTabContent } from './onecard/OverviewTabContent';
 import { HistoryTabContent } from './onecard/HistoryTabContent';
+import { DataPoolManagement } from './onecard/DataPoolManagement';
 
 const OneCardDashboard = () => {
   const [userData, setUserData] = useState(null);
@@ -44,9 +45,10 @@ const OneCardDashboard = () => {
   return (
     <div className="space-y-4 sm:space-y-6">
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <TabsList className="grid w-full grid-cols-3 bg-gray-100">
+        <TabsList className="grid w-full grid-cols-4 bg-gray-100">
           <TabsTrigger value="overview">Overview</TabsTrigger>
           <TabsTrigger value="deals">Smart Deals</TabsTrigger>
+          <TabsTrigger value="datapool">Data Pool</TabsTrigger>
           <TabsTrigger value="history">History</TabsTrigger>
         </TabsList>
 
@@ -63,6 +65,10 @@ const OneCardDashboard = () => {
 
         <TabsContent value="deals" className="space-y-4 sm:space-y-6">
           <AirtimeDealsSystem />
+        </TabsContent>
+
+        <TabsContent value="datapool">
+          <DataPoolManagement userData={userData} />
         </TabsContent>
 
         <TabsContent value="history">

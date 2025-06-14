@@ -7,7 +7,7 @@ import { usePhoneValidation } from '@/hooks/usePhoneValidation';
 import CartItems from './CartItems';
 import UserTypeIndicator from './UserTypeIndicator';
 import PurchaseModeSelector from './PurchaseModeSelector';
-import StreamlinedRecipientDetails from './StreamlinedRecipientDetails';
+import EnhancedStreamlinedRecipientDetails from './EnhancedStreamlinedRecipientDetails';
 import OrderSummary from './OrderSummary';
 import PurchaseButton from './PurchaseButton';
 
@@ -93,7 +93,7 @@ const ShoppingCartContent = ({ initialDeal }: ShoppingCartContentProps) => {
         onModeChange={setPurchaseMode} 
       />
 
-      <StreamlinedRecipientDetails
+      <EnhancedStreamlinedRecipientDetails
         purchaseMode={purchaseMode}
         recipientData={recipientData}
         customerPhone={customerPhone}

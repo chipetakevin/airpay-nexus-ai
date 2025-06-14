@@ -10,6 +10,7 @@ import ConsentSection from './registration/ConsentSection';
 import RegistrationAlerts from './registration/RegistrationAlerts';
 import { useCustomerRegistration } from '@/hooks/useCustomerRegistration';
 import { useMobileAuth } from '@/hooks/useMobileAuth';
+import { usePhoneAutofill } from '@/hooks/usePhoneAutofill';
 import { useToast } from '@/hooks/use-toast';
 
 const CustomerRegistration = () => {
@@ -17,6 +18,7 @@ const CustomerRegistration = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const { formData, errors, handleInputChange, handleSubmit } = useCustomerRegistration();
   const { isAuthenticated, currentUser } = useMobileAuth();
+  const { saveBankingInfo } = usePhoneAutofill();
   const { toast } = useToast();
 
   useEffect(() => {
@@ -61,6 +63,22 @@ const CustomerRegistration = () => {
     window.location.reload();
   };
 
+  const handleCustomSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    // Save banking information before submission
+    if (formData.bankName && formData.accountNumber) {
+      saveBankingInfo({
+        bankName: formData.bankName,
+        branchCode: formData.branchCode,
+        accountNumber: formData.accountNumber
+      });
+    }
+    
+    // Call the original submit handler
+    await handleSubmit(e);
+  };
+
   return (
     <div className="space-y-6">
       {/* Logout button for logged in users */}
@@ -82,7 +100,7 @@ const CustomerRegistration = () => {
 
       <LocationDetector onLocationUpdate={setLocation} />
 
-      <form onSubmit={handleSubmit} className="space-y-6" autoComplete="on">
+      <form onSubmit={handleCustomSubmit} className="space-y-6" autoComplete="on">
         <PersonalInfoSection 
           formData={formData}
           errors={errors}
@@ -114,9 +132,9 @@ const CustomerRegistration = () => {
               <span className="text-white text-sm">✓</span>
             </div>
             <div>
-              <h3 className="font-semibold text-blue-800">Secure Auto-Login Enabled</h3>
+              <h3 className="font-semibold text-blue-800">Secure Auto-Login & Banking Save</h3>
               <p className="text-sm text-blue-600">
-                Your login details are securely encrypted and stored for faster future access to Smart Deals.
+                Your login details and banking information are securely encrypted and stored for faster future access.
               </p>
             </div>
           </div>
