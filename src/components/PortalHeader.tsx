@@ -22,7 +22,7 @@ const PortalHeader = ({ userType, resetUserType }: PortalHeaderProps) => {
       </Link>
       
       <div className="text-center text-white">
-        <h1 className="text-lg sm:text-2xl font-bold text-shadow">Devine Mobile Portal</h1>
+        <h1 className="text-lg sm:text-2xl font-bold text-shadow">Divinely Mobile Portal</h1>
         <p className="text-xs sm:text-sm opacity-90 hidden sm:block">OneCard Rewards Platform</p>
         {userType && userType !== 'admin' && (
           <Button 
