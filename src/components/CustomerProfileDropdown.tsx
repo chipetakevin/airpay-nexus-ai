@@ -31,7 +31,7 @@ const CustomerProfileDropdown = () => {
   }
 
   return (
-    <div className="relative">
+    <div className="w-full px-4 py-2">
       {isProfileEnabled ? (
         <EnabledProfileCard user={currentUser} onDisable={handleDisableProfile} />
       ) : (
