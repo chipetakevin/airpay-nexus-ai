@@ -208,11 +208,13 @@
   /* DM Default - Special catchy styling */
   .dm-default-text {
     @apply font-extrabold text-3xl animate-dm-default-flash;
-    background: linear-gradient(135deg, #3b82f6, #1d4ed8, #2563eb);
+    background: linear-gradient(135deg, #1e40af, #2563eb, #3b82f6);
     background-size: 200% 200%;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
-    filter: drop-shadow(0 0 8px rgba(59, 130, 246, 0.4));
+    filter: drop-shadow(0 0 12px rgba(59, 130, 246, 0.6));
+    font-weight: 900;
+    letter-spacing: -0.02em;
   }
 }
