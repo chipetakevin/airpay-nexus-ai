@@ -69,7 +69,7 @@ const Footer = () => {
 
   return (
     <footer className="bg-gray-900 text-white">
-      {/* Devine Mobile BaaS Section */}
+      {/* Divinely Mobile BaaS Section */}
       <div className="bg-gradient-to-br from-blue-50 via-white to-purple-50 text-gray-900 py-8">
         <div className="container mx-auto px-4">
           {/* Compact Header */}
@@ -82,7 +82,7 @@ const Footer = () => {
                     <Smartphone className="w-5 h-5 text-white" />
                   </div>
                   <div>
-                    <h2 className="text-lg font-bold text-gray-900">Devine Mobile BaaS</h2>
+                    <h2 className="text-lg font-bold text-gray-900">Divinely Mobile BaaS</h2>
                     <p className="text-xs text-gray-600">Intelligent Porting & RICA Platform</p>
                   </div>
                 </div>
