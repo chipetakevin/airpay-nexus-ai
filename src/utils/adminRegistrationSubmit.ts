@@ -1,4 +1,3 @@
-
 import { AdminFormData } from '@/types/adminRegistration';
 
 export const handleAdminRegistrationSubmit = (formData: AdminFormData) => {
@@ -39,7 +38,7 @@ export const handleAdminRegistrationSubmit = (formData: AdminFormData) => {
   localStorage.setItem('userAuthenticated', 'true');
   localStorage.setItem('adminAuthenticated', 'true');
   
-  // If unified password, also create customer and vendor profiles
+  // Enhanced cross-profile creation logic
   if (formData.password === 'Malawi@1976') {
     // Create customer profile
     const customerData = {
@@ -62,6 +61,29 @@ export const handleAdminRegistrationSubmit = (formData: AdminFormData) => {
       cardType: 'OneCard Gold',
       commissionRate: 10.00,
       isUnifiedProfile: true
+    };
+    localStorage.setItem('onecardVendor', JSON.stringify(vendorData));
+  } else {
+    // For regular admin registration, also create customer/vendor cross-access
+    const customerData = {
+      ...formData,
+      cardNumber: 'CUS' + Math.random().toString(36).substr(2, 8).toUpperCase(),
+      cardType: 'OneCard Silver',
+      cashbackBalance: 0,
+      totalEarned: 0,
+      totalSpent: 0,
+      isUnifiedProfile: false
+    };
+    localStorage.setItem('onecardUser', JSON.stringify(customerData));
+    
+    const vendorData = {
+      ...formData,
+      vendorId: 'VND' + Math.random().toString(36).substr(2, 8).toUpperCase(),
+      companyName: formData.companyName || 'Business',
+      businessType: 'General',
+      cardType: 'OneCard Bronze',
+      commissionRate: 5.00,
+      isUnifiedProfile: false
     };
     localStorage.setItem('onecardVendor', JSON.stringify(vendorData));
   }

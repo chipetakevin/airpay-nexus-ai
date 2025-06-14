@@ -1,7 +1,7 @@
-
 import React, { useState, useEffect } from 'react';
 import OneCardTabsLayout from './onecard/OneCardTabsLayout';
 import AdminOneCardDashboard from './onecard/AdminOneCardDashboard';
+import UnifiedProfileSwitcher from './profile/UnifiedProfileSwitcher';
 
 const OneCardDashboard = () => {
   const [userData, setUserData] = useState(null);
@@ -62,7 +62,10 @@ const OneCardDashboard = () => {
   };
 
   return (
-    <div className="space-y-4 sm:space-y-6">
+    <div className="space-y-6">
+      {/* Profile Switcher for Unified Users */}
+      <UnifiedProfileSwitcher />
+      
       <OneCardTabsLayout
         userData={userData}
         showPhoneNumber={showPhoneNumber}

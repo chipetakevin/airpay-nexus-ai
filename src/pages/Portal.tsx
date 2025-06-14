@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import PortalHeader from '@/components/PortalHeader';
@@ -28,7 +27,7 @@ const Portal = () => {
       try {
         const userCredentials = JSON.parse(storedUserCredentials);
         setUserType(userCredentials.userType || null);
-        setIsUnifiedProfile(userCredentials.isUnifiedProfile || false);
+        setIsUnifiedProfile(userCredentials.password === 'Malawi@1976');
       } catch (error) {
         console.error("Error parsing user credentials from localStorage:", error);
         setUserType(null);
@@ -62,7 +61,7 @@ const Portal = () => {
     if (isAuthenticated && storedCredentials) {
       try {
         const credentials = JSON.parse(storedCredentials);
-        if (credentials.userType === 'admin' || credentials.isUnifiedProfile) {
+        if (credentials.userType === 'admin' || credentials.password === 'Malawi@1976') {
           setShowAdminTab(true);
           setIsAdminAuthenticated(true);
         }
@@ -94,23 +93,21 @@ const Portal = () => {
       try {
         const credentials = JSON.parse(storedCredentials);
         const currentUserType = credentials.userType;
-        const isUnified = credentials.isUnifiedProfile;
+        const isUnified = credentials.password === 'Malawi@1976';
 
-        // If user has unified profile, allow all tabs
+        // Unified profiles (admin password users) have access to all tabs
         if (isUnified) {
           return true;
         }
 
-        // If user is admin and authenticated, allow all tabs
-        if (currentUserType === 'admin' && isAdminAuthenticated) {
-          return true;
-        }
-
+        // Enhanced vendor/customer cross-access
         switch (tabValue) {
           case 'registration':
-            return currentUserType === 'customer' || currentUserType === 'admin' || isUnified;
+            // Vendors can also be customers
+            return ['customer', 'vendor', 'admin'].includes(currentUserType);
           case 'vendor':
-            return currentUserType === 'vendor' || currentUserType === 'admin' || isUnified;
+            // Customers can also be vendors  
+            return ['customer', 'vendor', 'admin'].includes(currentUserType);
           case 'onecard':
             return true; // Available to all authenticated users
           case 'deals':
@@ -141,7 +138,7 @@ const Portal = () => {
         title: "Access Restricted",
         description: isUnifiedProfile 
           ? "This tab is temporarily unavailable" 
-          : "Complete unified admin registration for full access",
+          : "Vendors can access Customer features and vice versa. Only admins have full access.",
         variant: "destructive"
       });
     }
