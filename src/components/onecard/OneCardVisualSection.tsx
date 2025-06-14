@@ -27,7 +27,7 @@ export const OneCardVisualSection = ({ onAccessRewards }: OneCardVisualSectionPr
         >
           <div className="flex items-center justify-center gap-3">
             <Gift className="w-6 h-6" />
-            <span className="text-lg">Access Smart Rewards</span>
+            <span className="text-lg">Access Divine Mobile Deals</span>
             <ArrowRight className="w-6 h-6" />
           </div>
         </Button>
