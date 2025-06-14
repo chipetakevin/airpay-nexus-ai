@@ -14,25 +14,6 @@ const OneCardDashboard = () => {
     }
   }, []);
 
-  const maskCardNumber = (cardNumber: string) => {
-    if (!cardNumber) return '**** **** **** ****';
-    return `**** **** **** ${cardNumber.slice(-4)}`;
-  };
-
-  const formatCardNumber = (cardNumber: string) => {
-    if (!cardNumber) return '0125 8456 355 258';
-    // Generate a formatted card number based on the stored card number
-    const masked = cardNumber.replace(/(.{4})/g, '$1 ').trim();
-    return masked;
-  };
-
-  const getValidThru = () => {
-    const currentDate = new Date();
-    const year = currentDate.getFullYear() + 3; // 3 years from now
-    const month = String(currentDate.getMonth() + 1).padStart(2, '0');
-    return `${month}/${String(year).slice(-2)}`;
-  };
-
   if (!userData) {
     return (
       <div className="text-center py-8 sm:py-12">
@@ -46,13 +27,6 @@ const OneCardDashboard = () => {
 
   return (
     <div className="space-y-4 sm:space-y-6">
-      <div className="text-center sm:text-left">
-        <h2 className="text-xl sm:text-2xl font-bold mb-2">OneCard Rewards Dashboard</h2>
-        <p className="text-gray-600 text-sm sm:text-base">
-          Track your cashback rewards and discover the best airtime deals
-        </p>
-      </div>
-
       <Tabs defaultValue="overview" className="w-full">
         <TabsList className="grid w-full grid-cols-3 bg-gray-100">
           <TabsTrigger value="overview">Overview</TabsTrigger>
@@ -93,7 +67,7 @@ const OneCardDashboard = () => {
                 {/* Card Number */}
                 <div className="text-center">
                   <div className="text-xl font-mono font-bold tracking-wider mb-1">
-                    {formatCardNumber(userData.cardNumber)}
+                    {userData.cardNumber ? userData.cardNumber.replace(/(.{4})/g, '$1 ').trim() : '0125 8456 355 258'}
                   </div>
                 </div>
 
@@ -110,7 +84,9 @@ const OneCardDashboard = () => {
                   </div>
                   <div className="text-right">
                     <div className="text-xs text-black/70 mb-1">VALID THRU</div>
-                    <div className="text-sm font-bold">{getValidThru()}</div>
+                    <div className="text-sm font-bold">
+                      {String(new Date().getMonth() + 1).padStart(2, '0')}/{String(new Date().getFullYear() + 3).slice(-2)}
+                    </div>
                   </div>
                 </div>
               </div>
