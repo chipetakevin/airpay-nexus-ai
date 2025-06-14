@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { 
-  Crown, Zap, Brain, MessageCircle, Scan, Settings, FileCheck, LogOut, LogIn, UserPlus, ChevronDown, ChevronUp, Shield, CreditCard, User, Store, Key
+  Crown, Zap, Brain, MessageCircle, Scan, Settings, FileCheck, LogOut, LogIn, UserPlus, ChevronDown, ChevronUp, Shield, CreditCard, User, Store, Key, ShoppingCart
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -111,9 +111,13 @@ const MobileMenu = ({ isMenuOpen, toggleMenu }: MobileMenuProps) => {
                   )}
                 </button>
                 
-                {/* Portal Dropdown Items - All 4 main tabs */}
+                {/* Portal Dropdown Items - All 5 main tabs including new airtime/data option */}
                 {showPortalDropdown && (
                   <div className="ml-4 mt-0.5 space-y-0 bg-purple-50/50 rounded-md p-1">
+                    <Link to="/portal" className="flex items-center gap-2 p-1.5 rounded-md hover:bg-orange-100 active:bg-orange-200 transition-all duration-200 min-h-[28px] touch-manipulation" onClick={toggleMenu}>
+                      <ShoppingCart className="w-2.5 h-2.5 text-orange-700 flex-shrink-0" />
+                      <span className="font-medium text-xs text-orange-700">Buy Airtime and Data (Customer Vendor Portal)</span>
+                    </Link>
                     <Link to="/portal?tab=onecard" className="flex items-center gap-2 p-1.5 rounded-md hover:bg-purple-100 active:bg-purple-200 transition-all duration-200 min-h-[28px] touch-manipulation" onClick={toggleMenu}>
                       <CreditCard className="w-2.5 h-2.5 text-purple-700 flex-shrink-0" />
                       <span className="font-medium text-xs text-purple-700">OneCard Dashboard</span>
