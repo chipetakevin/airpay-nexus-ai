@@ -276,7 +276,7 @@ const FeaturesSection = () => {
                       <div className="text-xs text-gray-500">Success</div>
                     </div>
                     <div className="bg-white rounded p-2 text-center shadow-sm">
-                      <div className="text-xs font-bold text-blue-600">< 30s</div>
+                      <div className="text-xs font-bold text-blue-600">&lt; 30s</div>
                       <div className="text-xs text-gray-500">Speed</div>
                     </div>
                   </div>
