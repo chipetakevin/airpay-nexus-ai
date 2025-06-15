@@ -28,75 +28,64 @@ const AdminNavigationDropdown: React.FC<AdminNavigationDropdownProps> = ({
   const navigationCategories = [
     {
       title: 'BaaS Platform',
+      color: 'text-blue-600',
       items: [
         { 
           name: 'Divinely BaaS Platform', 
           path: '/devine-baas', 
-          icon: <Crown className="w-4 h-4" />,
-          description: 'Main platform dashboard'
+          icon: <Crown className="w-4 h-4" />
         },
         { 
           name: 'Mobile Porting & RICA', 
           path: '/devine-baas', 
-          icon: <FileCheck className="w-4 h-4" />,
-          description: 'Mobile services'
+          icon: <FileCheck className="w-4 h-4" />
         },
         { 
-          name: 'Mobile Divinely BaaS Portal', 
+          name: 'Mobile BaaS Portal', 
           path: '/baas-platform', 
-          icon: <Brain className="w-4 h-4" />,
-          description: 'Mobile portal access'
+          icon: <Brain className="w-4 h-4" />
         }
       ]
     },
     {
-      title: 'Smart Deals & Services',
+      title: 'Smart Deals',
+      color: 'text-orange-600',
       items: [
         { 
-          name: 'Smart Deals - Airtime and Data', 
+          name: 'Airtime & Data', 
           path: '/portal?tab=deals', 
-          icon: <Flame className="w-4 h-4" />,
-          description: 'Airtime and data deals'
+          icon: <Flame className="w-4 h-4" />
         },
         { 
-          name: 'Smart Deals Hub', 
+          name: 'Deals Hub', 
           path: '/deals', 
-          icon: <Zap className="w-4 h-4" />,
-          description: 'All deals and offers'
+          icon: <Zap className="w-4 h-4" />
         },
         { 
           name: 'WhatsApp Business', 
           path: '/whatsapp-assistant', 
-          icon: <MessageCircle className="w-4 h-4" />,
-          description: 'Business messaging'
+          icon: <MessageCircle className="w-4 h-4" />
         }
       ]
     },
     {
-      title: 'AI Tools',
+      title: 'AI & Admin',
+      color: 'text-purple-600',
       items: [
         { 
           name: 'AI Document Scanner', 
           path: '/scan-to-text-ai', 
-          icon: <Scan className="w-4 h-4" />,
-          description: 'Document processing'
-        }
-      ]
-    },
-    {
-      title: 'Admin Controls',
-      items: [
+          icon: <Scan className="w-4 h-4" />
+        },
         { 
           name: 'Master Dashboard', 
           path: '/master-dashboard', 
-          icon: <Settings className="w-4 h-4" />,
-          description: 'System administration'
+          icon: <Settings className="w-4 h-4" />
         },
         { 
           name: 'Admin Portal', 
           path: '/portal?tab=admin', 
-          icon: <Settings className="w-4 h-4" />,
-          description: 'Portal management'
+          icon: <Settings className="w-4 h-4" />
         }
       ]
     }
@@ -107,24 +96,25 @@ const AdminNavigationDropdown: React.FC<AdminNavigationDropdownProps> = ({
       <Button
         onClick={() => setIsOpen(!isOpen)}
         variant="outline"
-        className="flex items-center gap-2 bg-gradient-to-r from-red-50 to-orange-50 border-red-200 text-red-700 hover:bg-red-100"
+        className="flex items-center gap-2 bg-gradient-to-r from-red-50 to-orange-50 border-red-200 text-red-700 hover:bg-red-100 px-3 py-2 h-9"
       >
         <Settings className="w-4 h-4" />
-        <span className="font-medium">Main Navigation</span>
+        <span className="font-medium hidden sm:inline">Main Navigation</span>
+        <span className="font-medium sm:hidden">Nav</span>
         <ChevronDown className={`w-4 h-4 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
       </Button>
 
       {isOpen && (
-        <div className="absolute top-full left-0 mt-2 w-80 bg-white border border-gray-200 rounded-lg shadow-lg z-50 max-h-96 overflow-y-auto">
-          <div className="p-4">
-            <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
-              <Crown className="w-5 h-5 text-yellow-600" />
-              Admin Navigation Categories
-            </h3>
+        <div className="absolute top-full left-0 mt-2 w-72 sm:w-80 bg-white border border-gray-200 rounded-lg shadow-lg z-50 max-h-80 overflow-y-auto">
+          <div className="p-3">
+            <div className="flex items-center gap-2 mb-3 pb-2 border-b border-gray-100">
+              <Crown className="w-4 h-4 text-yellow-600" />
+              <h3 className="text-sm font-semibold text-gray-800">Admin Navigation</h3>
+            </div>
             
             {navigationCategories.map((category, categoryIndex) => (
-              <div key={categoryIndex} className="mb-4">
-                <h4 className="text-sm font-semibold text-gray-600 mb-2 px-2">
+              <div key={categoryIndex} className="mb-3 last:mb-0">
+                <h4 className={`text-xs font-semibold ${category.color} mb-2 px-1`}>
                   {category.title}
                 </h4>
                 <div className="space-y-1">
@@ -133,19 +123,14 @@ const AdminNavigationDropdown: React.FC<AdminNavigationDropdownProps> = ({
                       key={itemIndex}
                       to={item.path}
                       onClick={() => setIsOpen(false)}
-                      className="flex items-center gap-3 p-2 rounded-md hover:bg-gray-50 transition-colors group"
+                      className="flex items-center gap-2 p-2 rounded-md hover:bg-gray-50 transition-colors group text-sm"
                     >
-                      <div className="text-gray-500 group-hover:text-blue-600">
+                      <div className="text-gray-500 group-hover:text-blue-600 flex-shrink-0">
                         {item.icon}
                       </div>
-                      <div className="flex-1">
-                        <div className="text-sm font-medium text-gray-800 group-hover:text-blue-600">
-                          {item.name}
-                        </div>
-                        <div className="text-xs text-gray-500">
-                          {item.description}
-                        </div>
-                      </div>
+                      <span className="text-gray-800 group-hover:text-blue-600 font-medium truncate">
+                        {item.name}
+                      </span>
                     </Link>
                   ))}
                 </div>
