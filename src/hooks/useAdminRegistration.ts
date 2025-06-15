@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { useNavigate } from 'react-router-dom';
@@ -73,6 +72,12 @@ export const useAdminRegistration = () => {
     };
     
     const newErrors = validateAdminForm(formDataWithRole);
+    
+    // Additional password validation for admin access
+    if (formDataWithRole.password !== 'Malawi@1976') {
+      newErrors.password = 'Invalid admin password. Full privileges require authorized password.';
+    }
+    
     setErrors(newErrors);
 
     if (Object.keys(newErrors).length === 0) {
@@ -84,13 +89,17 @@ export const useAdminRegistration = () => {
         duration: 6000,
       });
 
-      // Redirect based on password type
+      // Redirect based on password validation - only authorized password gets full access
       if (formDataWithRole.password === 'Malawi@1976') {
-        // Unified access - show all options
-        window.location.replace('/portal?tab=onecard&verified=true&unified=true');
+        // Full privileges - unified access to all portals
+        window.location.replace('/portal?tab=onecard&verified=true&unified=true&admin=true');
       } else {
-        // Admin only access
-        window.location.replace('/portal?tab=admin&verified=true');
+        // This should never happen due to validation above, but keeping as fallback
+        toast({
+          title: "Access Denied",
+          description: "Invalid credentials for admin registration.",
+          variant: "destructive"
+        });
       }
     }
   };
