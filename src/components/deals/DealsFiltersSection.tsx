@@ -5,6 +5,7 @@ import {
   Select,
   SelectContent,
   SelectItem,
+  SelectLabel,
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
@@ -56,7 +57,7 @@ const DealsFiltersSection = ({
             <SelectItem value="all">All Networks & Retailers</SelectItem>
             
             {/* Priority Networks - Divinely Mobile First, then MTN */}
-            <div className="px-2 py-1.5 text-xs font-semibold text-gray-500 bg-yellow-50">⭐ Priority Networks</div>
+            <SelectLabel>⭐ Priority Networks</SelectLabel>
             <SelectItem value="divinely mobile" className="font-semibold text-yellow-700 bg-yellow-50">
               🏆 Divinely Mobile (Best Deals)
             </SelectItem>
@@ -65,20 +66,20 @@ const DealsFiltersSection = ({
             </SelectItem>
             
             {/* Primary Network Providers */}
-            <div className="px-2 py-1.5 text-xs font-semibold text-gray-500">🏢 Primary Networks</div>
+            <SelectLabel>🏢 Primary Networks</SelectLabel>
             <SelectItem value="vodacom">Vodacom</SelectItem>
             <SelectItem value="cell c">Cell C</SelectItem>
             <SelectItem value="telkom">Telkom</SelectItem>
             
             {/* Alternative Networks */}
-            <div className="px-2 py-1.5 text-xs font-semibold text-gray-500">📱 Alternative Networks</div>
+            <SelectLabel>📱 Alternative Networks</SelectLabel>
             <SelectItem value="lyca mobile">Lyca Mobile</SelectItem>
             <SelectItem value="virgin mobile">Virgin Mobile</SelectItem>
             <SelectItem value="sentech">Sentech</SelectItem>
             <SelectItem value="rain">Rain</SelectItem>
             
             {/* Specialized Airtime Retailers */}
-            <div className="px-2 py-1.5 text-xs font-semibold text-gray-500">🎯 Airtime Specialists</div>
+            <SelectLabel>🎯 Airtime Specialists</SelectLabel>
             <SelectItem value="smartcall">SmartCall</SelectItem>
             <SelectItem value="myairtime">MyAirtime</SelectItem>
             <SelectItem value="surveila">Surveila</SelectItem>
@@ -86,7 +87,7 @@ const DealsFiltersSection = ({
             <SelectItem value="doctorsim">DoctorSIM</SelectItem>
             
             {/* Major Retailers */}
-            <div className="px-2 py-1.5 text-xs font-semibold text-gray-500">🛒 Major Retailers</div>
+            <SelectLabel>🛒 Major Retailers</SelectLabel>
             <SelectItem value="takealot">Takealot</SelectItem>
             <SelectItem value="game">Game</SelectItem>
             <SelectItem value="makro">Makro</SelectItem>
@@ -99,21 +100,21 @@ const DealsFiltersSection = ({
             <SelectItem value="clicks">Clicks</SelectItem>
             
             {/* Online Marketplaces */}
-            <div className="px-2 py-1.5 text-xs font-semibold text-gray-500">🌐 Online Marketplaces</div>
+            <SelectLabel>🌐 Online Marketplaces</SelectLabel>
             <SelectItem value="bidorbuy">BidorBuy</SelectItem>
             <SelectItem value="loot">Loot.co.za</SelectItem>
             <SelectItem value="wantitall">WantItAll</SelectItem>
             <SelectItem value="amazon">Amazon SA</SelectItem>
             
             {/* Network Stores */}
-            <div className="px-2 py-1.5 text-xs font-semibold text-gray-500">🏪 Network Stores</div>
+            <SelectLabel>🏪 Network Stores</SelectLabel>
             <SelectItem value="vodacom store">Vodacom Store</SelectItem>
             <SelectItem value="mtn store">MTN Store</SelectItem>
             <SelectItem value="cell c store">Cell C Store</SelectItem>
             <SelectItem value="telkom store">Telkom Store</SelectItem>
             
             {/* Specialty Retailers */}
-            <div className="px-2 py-1.5 text-xs font-semibold text-gray-500">🔧 Specialty Retailers</div>
+            <SelectLabel>🔧 Specialty Retailers</SelectLabel>
             <SelectItem value="incredible connection">Incredible Connection</SelectItem>
             <SelectItem value="hifi corp">HiFi Corp</SelectItem>
             <SelectItem value="cash crusaders">Cash Crusaders</SelectItem>
@@ -122,7 +123,7 @@ const DealsFiltersSection = ({
             <SelectItem value="jet">Jet</SelectItem>
             
             {/* Petrol Stations */}
-            <div className="px-2 py-1.5 text-xs font-semibold text-gray-500">⛽ Petrol Stations & Convenience</div>
+            <SelectLabel>⛽ Petrol Stations & Convenience</SelectLabel>
             <SelectItem value="sasol">Sasol</SelectItem>
             <SelectItem value="shell">Shell</SelectItem>
             <SelectItem value="bp">BP</SelectItem>
