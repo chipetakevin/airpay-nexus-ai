@@ -15,12 +15,12 @@ export const useCustomerRegistration = () => {
     branchCode: '',
     accountNumber: '',
     routingNumber: '',
-    rememberPassword: true, // Fixed: changed from string to boolean
+    rememberPassword: true,
     agreeTerms: false,
     marketingConsent: false,
   });
 
-  const [errors, setErrors] = useState<Partial<CustomerFormData>>({});
+  const [errors, setErrors] = useState<Partial<Record<keyof CustomerFormData, string>>>({});
   const { toast } = useToast();
   const { createPersistentSession } = usePersistentAuth();
 
@@ -40,7 +40,7 @@ export const useCustomerRegistration = () => {
   };
 
   const validateForm = (): boolean => {
-    const newErrors: Partial<CustomerFormData> = {};
+    const newErrors: Partial<Record<keyof CustomerFormData, string>> = {};
 
     if (!formData.firstName.trim()) newErrors.firstName = 'First name is required';
     if (!formData.lastName.trim()) newErrors.lastName = 'Last name is required';
@@ -72,7 +72,9 @@ export const useCustomerRegistration = () => {
       const userCredentials = {
         email: formData.email,
         password: 'auto-generated-password',
-        userType: 'customer'
+        userType: 'customer',
+        firstName: formData.firstName,
+        lastName: formData.lastName
       };
 
       // Create user data

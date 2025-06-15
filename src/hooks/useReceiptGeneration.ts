@@ -1,4 +1,3 @@
-
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 
@@ -17,20 +16,37 @@ export const useReceiptGeneration = () => {
 
   const getCustomerDisplayName = () => {
     const credentials = localStorage.getItem('userCredentials');
+    const userData = localStorage.getItem('onecardUser');
     let displayName = 'Valued Customer';
     
+    // First try to get name from user credentials (includes firstName and lastName from registration)
     if (credentials) {
-      const parsedCredentials = JSON.parse(credentials);
-      
-      // Priority: nickname > full name > first name > email prefix
-      if (parsedCredentials.nickname) {
-        displayName = capitalizeWords(parsedCredentials.nickname);
-      } else if (parsedCredentials.firstName && parsedCredentials.lastName) {
-        displayName = `${capitalizeWords(parsedCredentials.firstName)} ${capitalizeWords(parsedCredentials.lastName)}`;
-      } else if (parsedCredentials.firstName) {
-        displayName = capitalizeWords(parsedCredentials.firstName);
-      } else if (parsedCredentials.email) {
-        displayName = capitalizeWords(parsedCredentials.email.split('@')[0]);
+      try {
+        const parsedCredentials = JSON.parse(credentials);
+        
+        if (parsedCredentials.firstName && parsedCredentials.lastName) {
+          displayName = `${capitalizeWords(parsedCredentials.firstName)} ${capitalizeWords(parsedCredentials.lastName)}`;
+          return displayName;
+        }
+      } catch (error) {
+        console.error('Error parsing credentials:', error);
+      }
+    }
+    
+    // Fallback to user data if credentials don't have name
+    if (userData) {
+      try {
+        const parsedUserData = JSON.parse(userData);
+        
+        if (parsedUserData.firstName && parsedUserData.lastName) {
+          displayName = `${capitalizeWords(parsedUserData.firstName)} ${capitalizeWords(parsedUserData.lastName)}`;
+        } else if (parsedUserData.firstName) {
+          displayName = capitalizeWords(parsedUserData.firstName);
+        } else if (parsedUserData.email) {
+          displayName = capitalizeWords(parsedUserData.email.split('@')[0]);
+        }
+      } catch (error) {
+        console.error('Error parsing user data:', error);
       }
     }
     

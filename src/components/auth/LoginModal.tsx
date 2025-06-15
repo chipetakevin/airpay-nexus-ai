@@ -6,7 +6,7 @@ import { Label } from '@/components/ui/label';
 import { User, Lock, Eye, EyeOff, UserPlus, Mail } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import ForgotPasswordModal from './ForgotPasswordModal';
-import { usePersistentAuth } from '@/hooks/use-persistent-auth';
+import { usePersistentAuth } from '@/hooks/usePersistentAuth';
 
 interface LoginModalProps {
   isOpen: boolean;
@@ -131,7 +131,9 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
       const userCredentials = {
         email,
         password,
-        userType: 'customer'
+        userType: 'customer',
+        firstName,
+        lastName
       };
       
       const userData = {
