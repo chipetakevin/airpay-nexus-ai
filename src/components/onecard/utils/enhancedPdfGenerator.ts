@@ -3,7 +3,7 @@ import jsPDF from 'jspdf';
 import { Customer, Transaction } from '../types/admin';
 import { formatCurrency } from './adminUtils';
 
-// Enhanced PDF Generator with modern design and charts
+// Enhanced PDF Generator with modern design and consistent branding
 export class EnhancedPDFGenerator {
   private doc: jsPDF;
   private pageWidth: number;
@@ -20,6 +20,21 @@ export class EnhancedPDFGenerator {
     this.pageHeight = this.doc.internal.pageSize.getHeight();
   }
 
+  // Add consistent logo across all reports
+  private addLogo(x: number = 20, y: number = 15, width: number = 40, height: number = 12) {
+    // Create a modern logo representation
+    this.doc.setFillColor(79, 70, 229); // Primary blue color
+    this.doc.roundedRect(x, y, width, height, 3, 3, 'F');
+    
+    this.doc.setTextColor(255, 255, 255);
+    this.doc.setFontSize(14);
+    this.doc.setFont('helvetica', 'bold');
+    this.doc.text('DM', x + width/2 - 6, y + height/2 + 2);
+    
+    // Reset colors
+    this.doc.setTextColor(31, 41, 55);
+  }
+
   // Add gradient background
   private addGradientBackground() {
     // Create a subtle gradient effect using rectangles
@@ -30,20 +45,28 @@ export class EnhancedPDFGenerator {
     this.doc.rect(0, 40, this.pageWidth, 20, 'F');
   }
 
-  // Add header with logo area and title
+  // Add header with logo and title
   private addHeader(title: string, subtitle?: string) {
     this.addGradientBackground();
+    
+    // Add logo to header
+    this.doc.setFillColor(255, 255, 255);
+    this.doc.roundedRect(this.margin, 15, 40, 12, 3, 3, 'F');
+    this.doc.setTextColor(79, 70, 229);
+    this.doc.setFontSize(14);
+    this.doc.setFont('helvetica', 'bold');
+    this.doc.text('DM', this.margin + 14, 24);
     
     // Title
     this.doc.setTextColor(255, 255, 255);
     this.doc.setFontSize(28);
     this.doc.setFont('helvetica', 'bold');
-    this.doc.text(title, this.margin, 35);
+    this.doc.text(title, this.margin + 50, 35);
     
     if (subtitle) {
       this.doc.setFontSize(14);
       this.doc.setFont('helvetica', 'normal');
-      this.doc.text(subtitle, this.margin, 50);
+      this.doc.text(subtitle, this.margin + 50, 50);
     }
     
     // Reset text color
