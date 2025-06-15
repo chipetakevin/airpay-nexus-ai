@@ -117,27 +117,27 @@ const PortalHeader: React.FC<PortalHeaderProps> = ({ userType, resetUserType }) 
         </div>
 
         {/* Center - Admin Navigation Dropdown with better spacing */}
-        <div className="flex-1 flex justify-center px-6">
+        <div className="flex-1 flex justify-center px-4">
           <AdminNavigationDropdown isAdminAuthenticated={isAdminAuthenticated} />
         </div>
 
-        {/* User Menu with improved spacing */}
-        <div className="flex items-center gap-4 pr-2">
+        {/* User Menu with improved spacing and closer to border */}
+        <div className="flex items-center gap-2">
           {currentUser && (
             <div className="relative">
               <Button
                 onClick={() => setShowUserMenu(!showUserMenu)}
                 variant="outline"
-                className="flex items-center gap-2 mr-2"
+                className="flex items-center gap-2 px-3 py-1.5 h-8 text-sm"
               >
                 {getUserTypeIcon(currentUser.userType)}
-                <span className="hidden sm:inline">
+                <span className="hidden sm:inline text-xs">
                   {currentUser.firstName} {currentUser.lastName}
                 </span>
-                <Badge className={getUserTypeColor(currentUser.userType)}>
+                <Badge className={`${getUserTypeColor(currentUser.userType)} text-xs px-1.5 py-0.5`}>
                   {currentUser.userType}
                 </Badge>
-                <ChevronDown className="w-4 h-4" />
+                <ChevronDown className="w-3 h-3" />
               </Button>
 
               {showUserMenu && (
@@ -182,7 +182,7 @@ const PortalHeader: React.FC<PortalHeaderProps> = ({ userType, resetUserType }) 
           {!currentUser && (
             <Button
               onClick={() => window.location.href = '/portal?tab=registration'}
-              className="bg-gradient-to-r from-blue-600 to-purple-600 text-white mr-2"
+              className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-3 py-1.5 h-8 text-sm"
             >
               Get Started
             </Button>
