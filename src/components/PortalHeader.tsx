@@ -116,19 +116,19 @@ const PortalHeader: React.FC<PortalHeaderProps> = ({ userType, resetUserType }) 
           </div>
         </div>
 
-        {/* Center - Admin Navigation Dropdown */}
-        <div className="flex-1 flex justify-center">
+        {/* Center - Admin Navigation Dropdown with better spacing */}
+        <div className="flex-1 flex justify-center px-6">
           <AdminNavigationDropdown isAdminAuthenticated={isAdminAuthenticated} />
         </div>
 
-        {/* User Menu */}
-        <div className="flex items-center gap-4">
+        {/* User Menu with improved spacing */}
+        <div className="flex items-center gap-4 pr-2">
           {currentUser && (
             <div className="relative">
               <Button
                 onClick={() => setShowUserMenu(!showUserMenu)}
                 variant="outline"
-                className="flex items-center gap-2"
+                className="flex items-center gap-2 mr-2"
               >
                 {getUserTypeIcon(currentUser.userType)}
                 <span className="hidden sm:inline">
@@ -182,7 +182,7 @@ const PortalHeader: React.FC<PortalHeaderProps> = ({ userType, resetUserType }) 
           {!currentUser && (
             <Button
               onClick={() => window.location.href = '/portal?tab=registration'}
-              className="bg-gradient-to-r from-blue-600 to-purple-600 text-white"
+              className="bg-gradient-to-r from-blue-600 to-purple-600 text-white mr-2"
             >
               Get Started
             </Button>
