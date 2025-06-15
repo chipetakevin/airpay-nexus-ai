@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import PortalHeader from '@/components/PortalHeader';
@@ -16,6 +17,7 @@ const Portal = () => {
   const [showAdminTab, setShowAdminTab] = useState(false);
   const [isAdminAuthenticated, setIsAdminAuthenticated] = useState(false);
   const [isUnifiedProfile, setIsUnifiedProfile] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
   
@@ -25,6 +27,9 @@ const Portal = () => {
 
   useEffect(() => {
     const storedUserCredentials = localStorage.getItem('userCredentials');
+    const authStatus = localStorage.getItem('userAuthenticated') === 'true';
+    setIsAuthenticated(authStatus);
+    
     if (storedUserCredentials) {
       try {
         const userCredentials = JSON.parse(storedUserCredentials);
@@ -76,6 +81,7 @@ const Portal = () => {
   const resetUserType = () => {
     setUserType(null);
     setIsUnifiedProfile(false);
+    setIsAuthenticated(false);
     setActiveTab('deals'); // Always return to deals when resetting
     navigate('?tab=deals', { replace: true });
   };
@@ -162,6 +168,7 @@ const Portal = () => {
           handleTabChange={handleTabChange}
           setIsAdminAuthenticated={setIsAdminAuthenticated}
           isUnifiedProfile={isUnifiedProfile}
+          isAuthenticated={isAuthenticated}
         />
       </main>
       

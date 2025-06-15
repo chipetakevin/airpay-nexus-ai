@@ -7,6 +7,7 @@ import AdminRegistration from './AdminRegistration';
 import OneCardDashboard from './OneCardDashboard';
 import AdminPortal from './AdminPortal';
 import ReportsTabContent from './onecard/ReportsTabContent';
+import AirtimeDealsSystem from './AirtimeDealsSystem';
 
 interface PortalTabsProps {
   activeTab: string;
@@ -15,6 +16,7 @@ interface PortalTabsProps {
   handleTabChange: (value: string) => void;
   setIsAdminAuthenticated: (value: boolean) => void;
   isUnifiedProfile?: boolean;
+  isAuthenticated?: boolean;
 }
 
 const PortalTabs = ({ 
@@ -23,10 +25,19 @@ const PortalTabs = ({
   isTabAllowed, 
   handleTabChange, 
   setIsAdminAuthenticated,
-  isUnifiedProfile = false
+  isUnifiedProfile = false,
+  isAuthenticated = false
 }: PortalTabsProps) => {
   
   const tabs = [
+    {
+      value: 'deals',
+      label: 'Smart Deals',
+      icon: '🔥',
+      description: 'Shop Now',
+      color: 'orange',
+      special: true // Mark as special for animations
+    },
     {
       value: 'onecard',
       label: 'OneCard',
@@ -74,7 +85,7 @@ const PortalTabs = ({
     });
   }
 
-  const getTabClassName = (tabValue: string, color: string) => {
+  const getTabClassName = (tabValue: string, color: string, isSpecial = false) => {
     let baseClass = "flex flex-col items-center gap-1 p-3 rounded-xl transition-all duration-300 min-h-[65px] flex-1 border text-xs shadow-sm relative overflow-hidden";
     
     const allowed = isTabAllowed(tabValue);
@@ -83,12 +94,19 @@ const PortalTabs = ({
       baseClass += " opacity-40 cursor-not-allowed bg-gray-100 text-gray-400 pointer-events-none border-gray-200";
     } else {
       const colorClasses = {
+        orange: "data-[state=active]:bg-gradient-to-br data-[state=active]:from-orange-500 data-[state=active]:to-red-600 data-[state=active]:text-white data-[state=active]:shadow-lg data-[state=active]:border-orange-400 bg-orange-50 border-orange-200 hover:border-orange-300 hover:bg-orange-100",
         purple: "data-[state=active]:bg-gradient-to-br data-[state=active]:from-purple-500 data-[state=active]:to-pink-600 data-[state=active]:text-white data-[state=active]:shadow-lg data-[state=active]:border-purple-400 bg-purple-50 border-purple-200 hover:border-purple-300 hover:bg-purple-100",
         green: "data-[state=active]:bg-gradient-to-br data-[state=active]:from-green-500 data-[state=active]:to-emerald-600 data-[state=active]:text-white data-[state=active]:shadow-lg data-[state=active]:border-green-400 bg-green-50 border-green-200 hover:border-green-300 hover:bg-green-100",
         blue: "data-[state=active]:bg-gradient-to-br data-[state=active]:from-blue-500 data-[state=active]:to-cyan-600 data-[state=active]:text-white data-[state=active]:shadow-lg data-[state=active]:border-blue-400 bg-blue-50 border-blue-200 hover:border-blue-300 hover:bg-blue-100",
+        yellow: "data-[state=active]:bg-gradient-to-br data-[state=active]:from-yellow-500 data-[state=active]:to-amber-600 data-[state=active]:text-white data-[state=active]:shadow-lg data-[state=active]:border-yellow-400 bg-yellow-50 border-yellow-200 hover:border-yellow-300 hover:bg-yellow-100",
         gray: "data-[state=active]:bg-gradient-to-br data-[state=active]:from-gray-600 data-[state=active]:to-slate-700 data-[state=active]:text-white data-[state=active]:shadow-lg data-[state=active]:border-gray-400 bg-gray-50 border-gray-200 hover:border-gray-300 hover:bg-gray-100"
       };
       baseClass += " " + colorClasses[color];
+      
+      // Add special flashing animation for deals tab when authenticated
+      if (isSpecial && isAuthenticated && activeTab !== 'deals') {
+        baseClass += " animate-smart-deals-flash";
+      }
       
       // Add unified profile indicator
       if (isUnifiedProfile && allowed) {
@@ -122,7 +140,7 @@ const PortalTabs = ({
                 <TabsTrigger 
                   key={tab.value}
                   value={tab.value} 
-                  className={getTabClassName(tab.value, tab.color)}
+                  className={getTabClassName(tab.value, tab.color, tab.special)}
                   disabled={!isTabAllowed(tab.value) && !isUnifiedProfile}
                 >
                   <span className="text-lg">{tab.icon}</span>
@@ -133,6 +151,9 @@ const PortalTabs = ({
                   {isUnifiedProfile && (
                     <div className="absolute top-1 right-1 w-2 h-2 bg-orange-400 rounded-full"></div>
                   )}
+                  {tab.special && isAuthenticated && activeTab !== 'deals' && (
+                    <div className="absolute inset-0 bg-gradient-to-r from-orange-400/20 via-red-400/20 to-orange-400/20 animate-pulse pointer-events-none rounded-xl"></div>
+                  )}
                 </TabsTrigger>
               ))}
               {/* Second row for remaining tabs */}
@@ -140,7 +161,7 @@ const PortalTabs = ({
                 <TabsTrigger 
                   key={tab.value}
                   value={tab.value} 
-                  className={getTabClassName(tab.value, tab.color)}
+                  className={getTabClassName(tab.value, tab.color, tab.special)}
                   disabled={!isTabAllowed(tab.value) && !isUnifiedProfile}
                 >
                   <span className="text-lg">{tab.icon}</span>
@@ -161,7 +182,7 @@ const PortalTabs = ({
                 <TabsTrigger 
                   key={tab.value}
                   value={tab.value} 
-                  className={getTabClassName(tab.value, tab.color)}
+                  className={getTabClassName(tab.value, tab.color, tab.special)}
                   disabled={!isTabAllowed(tab.value) && !isUnifiedProfile}
                 >
                   <span className="text-lg">{tab.icon}</span>
@@ -172,17 +193,20 @@ const PortalTabs = ({
                   {isUnifiedProfile && (
                     <div className="absolute top-1 right-1 w-2 h-2 bg-orange-400 rounded-full"></div>
                   )}
+                  {tab.special && isAuthenticated && activeTab !== 'deals' && (
+                    <div className="absolute inset-0 bg-gradient-to-r from-orange-400/20 via-red-400/20 to-orange-400/20 animate-pulse pointer-events-none rounded-xl"></div>
+                  )}
                 </TabsTrigger>
               ))}
             </div>
 
             {/* Desktop: Single Row */}
-            <div className={`hidden lg:grid gap-2 w-full ${showAdminTab ? 'grid-cols-6' : 'grid-cols-5'}`}>
+            <div className={`hidden lg:grid gap-2 w-full ${showAdminTab ? 'grid-cols-7' : 'grid-cols-6'}`}>
               {tabs.map((tab) => (
                 <TabsTrigger 
                   key={tab.value}
                   value={tab.value} 
-                  className={getTabClassName(tab.value, tab.color)}
+                  className={getTabClassName(tab.value, tab.color, tab.special)}
                   disabled={!isTabAllowed(tab.value) && !isUnifiedProfile}
                 >
                   <span className="text-xl">{tab.icon}</span>
@@ -193,6 +217,9 @@ const PortalTabs = ({
                   {isUnifiedProfile && (
                     <div className="absolute top-1 right-1 w-2 h-2 bg-orange-400 rounded-full"></div>
                   )}
+                  {tab.special && isAuthenticated && activeTab !== 'deals' && (
+                    <div className="absolute inset-0 bg-gradient-to-r from-orange-400/20 via-red-400/20 to-orange-400/20 animate-pulse pointer-events-none rounded-xl"></div>
+                  )}
                 </TabsTrigger>
               ))}
             </div>
@@ -201,6 +228,10 @@ const PortalTabs = ({
         
         {/* Tab Content */}
         <div className="w-full">
+          <TabsContent value="deals" className="p-2 sm:p-4 lg:p-6 animate-fade-in">
+            <AirtimeDealsSystem />
+          </TabsContent>
+          
           <TabsContent value="onecard" className="p-2 sm:p-4 lg:p-6 animate-fade-in">
             <OneCardDashboard />
           </TabsContent>
