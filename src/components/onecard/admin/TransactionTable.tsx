@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -137,7 +136,9 @@ const TransactionTable = ({ transactions }: TransactionTableProps) => {
                         <td className="p-2">
                           <div>
                             <div className="font-medium">{transaction.customerName}</div>
-                            <div className="text-sm text-gray-500">ID: {transaction.customerId.slice(0, 8)}...</div>
+                            <div className="text-sm text-gray-500">
+                              ID: {transaction.customerId ? transaction.customerId.slice(0, 8) + '...' : 'N/A'}
+                            </div>
                           </div>
                         </td>
                         <td className="p-2">
