@@ -122,7 +122,7 @@ const PortalHeader: React.FC<PortalHeaderProps> = ({ userType, resetUserType }) 
         </div>
 
         {/* User Menu - compressed and away from border */}
-        <div className="flex items-center mr-4">
+        <div className="flex items-center mr-8">
           {currentUser && (
             <div className="relative">
               <Button
