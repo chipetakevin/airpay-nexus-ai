@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { 
   Select,
   SelectContent,
+  SelectGroup,
   SelectItem,
   SelectLabel,
   SelectTrigger,
@@ -57,79 +58,97 @@ const DealsFiltersSection = ({
             <SelectItem value="all">All Networks & Retailers</SelectItem>
             
             {/* Priority Networks - Divinely Mobile First, then MTN */}
-            <SelectLabel>⭐ Priority Networks</SelectLabel>
-            <SelectItem value="divinely mobile" className="font-semibold text-yellow-700 bg-yellow-50">
-              🏆 Divinely Mobile (Best Deals)
-            </SelectItem>
-            <SelectItem value="mtn" className="font-medium text-orange-600">
-              📱 MTN
-            </SelectItem>
+            <SelectGroup>
+              <SelectLabel>⭐ Priority Networks</SelectLabel>
+              <SelectItem value="divinely mobile" className="font-semibold text-yellow-700 bg-yellow-50">
+                🏆 Divinely Mobile (Best Deals)
+              </SelectItem>
+              <SelectItem value="mtn" className="font-medium text-orange-600">
+                📱 MTN
+              </SelectItem>
+            </SelectGroup>
             
             {/* Primary Network Providers */}
-            <SelectLabel>🏢 Primary Networks</SelectLabel>
-            <SelectItem value="vodacom">Vodacom</SelectItem>
-            <SelectItem value="cell c">Cell C</SelectItem>
-            <SelectItem value="telkom">Telkom</SelectItem>
+            <SelectGroup>
+              <SelectLabel>🏢 Primary Networks</SelectLabel>
+              <SelectItem value="vodacom">Vodacom</SelectItem>
+              <SelectItem value="cell c">Cell C</SelectItem>
+              <SelectItem value="telkom">Telkom</SelectItem>
+            </SelectGroup>
             
             {/* Alternative Networks */}
-            <SelectLabel>📱 Alternative Networks</SelectLabel>
-            <SelectItem value="lyca mobile">Lyca Mobile</SelectItem>
-            <SelectItem value="virgin mobile">Virgin Mobile</SelectItem>
-            <SelectItem value="sentech">Sentech</SelectItem>
-            <SelectItem value="rain">Rain</SelectItem>
+            <SelectGroup>
+              <SelectLabel>📱 Alternative Networks</SelectLabel>
+              <SelectItem value="lyca mobile">Lyca Mobile</SelectItem>
+              <SelectItem value="virgin mobile">Virgin Mobile</SelectItem>
+              <SelectItem value="sentech">Sentech</SelectItem>
+              <SelectItem value="rain">Rain</SelectItem>
+            </SelectGroup>
             
             {/* Specialized Airtime Retailers */}
-            <SelectLabel>🎯 Airtime Specialists</SelectLabel>
-            <SelectItem value="smartcall">SmartCall</SelectItem>
-            <SelectItem value="myairtime">MyAirtime</SelectItem>
-            <SelectItem value="surveila">Surveila</SelectItem>
-            <SelectItem value="rebtel">Rebtel</SelectItem>
-            <SelectItem value="doctorsim">DoctorSIM</SelectItem>
+            <SelectGroup>
+              <SelectLabel>🎯 Airtime Specialists</SelectLabel>
+              <SelectItem value="smartcall">SmartCall</SelectItem>
+              <SelectItem value="myairtime">MyAirtime</SelectItem>
+              <SelectItem value="surveila">Surveila</SelectItem>
+              <SelectItem value="rebtel">Rebtel</SelectItem>
+              <SelectItem value="doctorsim">DoctorSIM</SelectItem>
+            </SelectGroup>
             
             {/* Major Retailers */}
-            <SelectLabel>🛒 Major Retailers</SelectLabel>
-            <SelectItem value="takealot">Takealot</SelectItem>
-            <SelectItem value="game">Game</SelectItem>
-            <SelectItem value="makro">Makro</SelectItem>
-            <SelectItem value="checkers">Checkers</SelectItem>
-            <SelectItem value="shoprite">Shoprite</SelectItem>
-            <SelectItem value="pick n pay">Pick n Pay</SelectItem>
-            <SelectItem value="spar">SPAR</SelectItem>
-            <SelectItem value="woolworths">Woolworths</SelectItem>
-            <SelectItem value="dis-chem">Dis-Chem</SelectItem>
-            <SelectItem value="clicks">Clicks</SelectItem>
+            <SelectGroup>
+              <SelectLabel>🛒 Major Retailers</SelectLabel>
+              <SelectItem value="takealot">Takealot</SelectItem>
+              <SelectItem value="game">Game</SelectItem>
+              <SelectItem value="makro">Makro</SelectItem>
+              <SelectItem value="checkers">Checkers</SelectItem>
+              <SelectItem value="shoprite">Shoprite</SelectItem>
+              <SelectItem value="pick n pay">Pick n Pay</SelectItem>
+              <SelectItem value="spar">SPAR</SelectItem>
+              <SelectItem value="woolworths">Woolworths</SelectItem>
+              <SelectItem value="dis-chem">Dis-Chem</SelectItem>
+              <SelectItem value="clicks">Clicks</SelectItem>
+            </SelectGroup>
             
             {/* Online Marketplaces */}
-            <SelectLabel>🌐 Online Marketplaces</SelectLabel>
-            <SelectItem value="bidorbuy">BidorBuy</SelectItem>
-            <SelectItem value="loot">Loot.co.za</SelectItem>
-            <SelectItem value="wantitall">WantItAll</SelectItem>
-            <SelectItem value="amazon">Amazon SA</SelectItem>
+            <SelectGroup>
+              <SelectLabel>🌐 Online Marketplaces</SelectLabel>
+              <SelectItem value="bidorbuy">BidorBuy</SelectItem>
+              <SelectItem value="loot">Loot.co.za</SelectItem>
+              <SelectItem value="wantitall">WantItAll</SelectItem>
+              <SelectItem value="amazon">Amazon SA</SelectItem>
+            </SelectGroup>
             
             {/* Network Stores */}
-            <SelectLabel>🏪 Network Stores</SelectLabel>
-            <SelectItem value="vodacom store">Vodacom Store</SelectItem>
-            <SelectItem value="mtn store">MTN Store</SelectItem>
-            <SelectItem value="cell c store">Cell C Store</SelectItem>
-            <SelectItem value="telkom store">Telkom Store</SelectItem>
+            <SelectGroup>
+              <SelectLabel>🏪 Network Stores</SelectLabel>
+              <SelectItem value="vodacom store">Vodacom Store</SelectItem>
+              <SelectItem value="mtn store">MTN Store</SelectItem>
+              <SelectItem value="cell c store">Cell C Store</SelectItem>
+              <SelectItem value="telkom store">Telkom Store</SelectItem>
+            </SelectGroup>
             
             {/* Specialty Retailers */}
-            <SelectLabel>🔧 Specialty Retailers</SelectLabel>
-            <SelectItem value="incredible connection">Incredible Connection</SelectItem>
-            <SelectItem value="hifi corp">HiFi Corp</SelectItem>
-            <SelectItem value="cash crusaders">Cash Crusaders</SelectItem>
-            <SelectItem value="pep">PEP</SelectItem>
-            <SelectItem value="ackermans">Ackermans</SelectItem>
-            <SelectItem value="jet">Jet</SelectItem>
+            <SelectGroup>
+              <SelectLabel>🔧 Specialty Retailers</SelectLabel>
+              <SelectItem value="incredible connection">Incredible Connection</SelectItem>
+              <SelectItem value="hifi corp">HiFi Corp</SelectItem>
+              <SelectItem value="cash crusaders">Cash Crusaders</SelectItem>
+              <SelectItem value="pep">PEP</SelectItem>
+              <SelectItem value="ackermans">Ackermans</SelectItem>
+              <SelectItem value="jet">Jet</SelectItem>
+            </SelectGroup>
             
             {/* Petrol Stations */}
-            <SelectLabel>⛽ Petrol Stations & Convenience</SelectLabel>
-            <SelectItem value="sasol">Sasol</SelectItem>
-            <SelectItem value="shell">Shell</SelectItem>
-            <SelectItem value="bp">BP</SelectItem>
-            <SelectItem value="total">Total</SelectItem>
-            <SelectItem value="engen">Engen</SelectItem>
-            <SelectItem value="7-eleven">7-Eleven</SelectItem>
+            <SelectGroup>
+              <SelectLabel>⛽ Petrol Stations & Convenience</SelectLabel>
+              <SelectItem value="sasol">Sasol</SelectItem>
+              <SelectItem value="shell">Shell</SelectItem>
+              <SelectItem value="bp">BP</SelectItem>
+              <SelectItem value="total">Total</SelectItem>
+              <SelectItem value="engen">Engen</SelectItem>
+              <SelectItem value="7-eleven">7-Eleven</SelectItem>
+            </SelectGroup>
           </SelectContent>
         </Select>
       </div>
