@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
@@ -7,6 +6,7 @@ import { Label } from '@/components/ui/label';
 import { User, Lock, Eye, EyeOff, UserPlus, Mail } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import ForgotPasswordModal from './ForgotPasswordModal';
+import { usePersistentAuth } from '@/hooks/use-persistent-auth';
 
 interface LoginModalProps {
   isOpen: boolean;
@@ -25,6 +25,7 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showForgotPassword, setShowForgotPassword] = useState(false);
   const { toast } = useToast();
+  const { createPersistentSession } = usePersistentAuth();
 
   const handleLogin = async () => {
     if (!email || !password) {
@@ -49,9 +50,24 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
           // Set authentication flags
           localStorage.setItem('userAuthenticated', 'true');
           
+          // Get user data for persistent session
+          let userData = null;
+          if (parsedCredentials.userType === 'customer') {
+            userData = JSON.parse(localStorage.getItem('onecardUser') || '{}');
+          } else if (parsedCredentials.userType === 'vendor') {
+            userData = JSON.parse(localStorage.getItem('onecardVendor') || '{}');
+          } else if (parsedCredentials.userType === 'admin') {
+            userData = JSON.parse(localStorage.getItem('onecardAdmin') || '{}');
+          }
+
+          // Create persistent 24-hour session
+          if (userData) {
+            createPersistentSession(parsedCredentials, userData);
+          }
+          
           toast({
             title: "Login Successful! 🎉",
-            description: "Welcome back! Redirecting to Smart Deals.",
+            description: "Welcome back! You'll stay logged in for 24 hours.",
           });
           
           // Redirect to portal
@@ -130,10 +146,13 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
       localStorage.setItem('userCredentials', JSON.stringify(userCredentials));
       localStorage.setItem('onecardUser', JSON.stringify(userData));
       localStorage.setItem('userAuthenticated', 'true');
+
+      // Create persistent 24-hour session
+      createPersistentSession(userCredentials, userData);
       
       toast({
         title: "Account Created Successfully! 🎉",
-        description: "Welcome to OneCard! Redirecting to your dashboard.",
+        description: "Welcome to OneCard! You'll stay logged in for 24 hours.",
       });
       
       // Redirect to portal

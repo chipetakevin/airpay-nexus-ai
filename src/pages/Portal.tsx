@@ -5,6 +5,7 @@ import PortalTabs from '@/components/PortalTabs';
 import { useToast } from "@/hooks/use-toast"
 import WhatsAppFloatingButton from '@/components/WhatsAppFloatingButton';
 import { useSessionManager } from '@/hooks/useSessionManager';
+import { usePersistentAuth } from '@/hooks/usePersistentAuth';
 
 type UserType = 'customer' | 'vendor' | 'admin' | null;
 
@@ -18,8 +19,9 @@ const Portal = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   
-  // Initialize session manager for Kevin and admin users
+  // Initialize session managers
   useSessionManager();
+  const { isSessionValid } = usePersistentAuth();
 
   useEffect(() => {
     const storedUserCredentials = localStorage.getItem('userCredentials');

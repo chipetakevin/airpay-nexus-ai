@@ -12,6 +12,8 @@ import {
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import AdminNavigationDropdown from './navigation/AdminNavigationDropdown';
+import SessionIndicator from './auth/SessionIndicator';
+import { usePersistentAuth } from '@/hooks/usePersistentAuth';
 
 interface PortalHeaderProps {
   userType: 'customer' | 'vendor' | 'admin' | null;
@@ -23,6 +25,7 @@ const PortalHeader: React.FC<PortalHeaderProps> = ({ userType, resetUserType }) 
   const [showUserMenu, setShowUserMenu] = useState(false);
   const [currentUser, setCurrentUser] = useState<any>(null);
   const [isAdminAuthenticated, setIsAdminAuthenticated] = useState(false);
+  const { clearSession } = usePersistentAuth();
 
   useEffect(() => {
     // Check for admin authentication
@@ -63,13 +66,7 @@ const PortalHeader: React.FC<PortalHeaderProps> = ({ userType, resetUserType }) 
   }, []);
 
   const handleLogout = () => {
-    localStorage.removeItem('userAuthenticated');
-    localStorage.removeItem('adminAuthenticated');
-    localStorage.removeItem('onecardUser');
-    localStorage.removeItem('onecardVendor');
-    localStorage.removeItem('onecardAdmin');
-    localStorage.removeItem('userCredentials');
-    sessionStorage.clear();
+    clearSession();
     
     toast({
       title: "Logged Out Successfully",
@@ -108,11 +105,14 @@ const PortalHeader: React.FC<PortalHeaderProps> = ({ userType, resetUserType }) 
           </div>
           <div>
             <h1 className="text-xl font-bold text-gray-800">Divinely Mobile Portal</h1>
-            {currentUser?.isUnifiedProfile && (
-              <Badge className="bg-gradient-to-r from-orange-500 to-yellow-500 text-white text-xs">
-                🌟 Unified Access
-              </Badge>
-            )}
+            <div className="flex items-center gap-2">
+              {currentUser?.isUnifiedProfile && (
+                <Badge className="bg-gradient-to-r from-orange-500 to-yellow-500 text-white text-xs">
+                  🌟 Unified Access
+                </Badge>
+              )}
+              <SessionIndicator />
+            </div>
           </div>
         </div>
 
@@ -199,6 +199,24 @@ const PortalHeader: React.FC<PortalHeaderProps> = ({ userType, resetUserType }) 
       )}
     </div>
   );
+
+  function getUserTypeColor(type: string) {
+    switch (type) {
+      case 'customer': return 'bg-green-100 text-green-800';
+      case 'vendor': return 'bg-blue-100 text-blue-800';
+      case 'admin': return 'bg-red-100 text-red-800';
+      default: return 'bg-gray-100 text-gray-800';
+    }
+  }
+
+  function getUserTypeIcon(type: string) {
+    switch (type) {
+      case 'customer': return <User className="w-3 h-3" />;
+      case 'vendor': return <CreditCard className="w-3 h-3" />;
+      case 'admin': return <Shield className="w-3 h-3" />;
+      default: return <User className="w-3 h-3" />;
+    }
+  }
 };
 
 export default PortalHeader;

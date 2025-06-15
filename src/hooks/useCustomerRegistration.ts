@@ -1,187 +1,136 @@
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useToast } from '@/hooks/use-toast';
-import { useNavigate } from 'react-router-dom';
-import { FormData, FormErrors } from '@/types/customerRegistration';
-import { validateEmail, validateAccountNumber } from '@/utils/formValidation';
+import { usePersistentAuth } from './usePersistentAuth';
+
+interface FormData {
+  firstName: string;
+  lastName: string;
+  email: string;
+  password: string;
+  confirmPassword: string;
+  registeredPhone: string;
+  bankName: string;
+  branchCode: string;
+  accountNumber: string;
+  privacyConsent: boolean;
+  smsConsent: boolean;
+}
 
 export const useCustomerRegistration = () => {
-  const { toast } = useToast();
-  const navigate = useNavigate();
   const [formData, setFormData] = useState<FormData>({
     firstName: '',
     lastName: '',
     email: '',
-    phoneNumber: '',
-    countryCode: '+27',
+    password: '',
+    confirmPassword: '',
+    registeredPhone: '',
     bankName: '',
-    accountNumber: '',
-    routingNumber: '',
     branchCode: '',
-    rememberPassword: true, // Always enabled for Divinely Mobile
-    agreeTerms: false,
-    marketingConsent: false
+    accountNumber: '',
+    privacyConsent: false,
+    smsConsent: false,
   });
 
-  const [errors, setErrors] = useState<FormErrors>({});
-
-  // Enhanced auto-save and auto-fill functionality
-  useEffect(() => {
-    const savedData = localStorage.getItem('customerRegistrationDraft');
-    const userData = localStorage.getItem('onecardUser');
-    const isAuthenticated = localStorage.getItem('userAuthenticated') === 'true';
-    
-    // Priority: Use authenticated user data first, then draft data
-    if (isAuthenticated && userData) {
-      try {
-        const parsedUserData = JSON.parse(userData);
-        setFormData(prev => ({
-          ...prev,
-          firstName: parsedUserData.firstName || '',
-          lastName: parsedUserData.lastName || '',
-          email: parsedUserData.email || '',
-          phoneNumber: parsedUserData.phoneNumber || '',
-          countryCode: parsedUserData.countryCode || '+27',
-          bankName: parsedUserData.bankName || '',
-          accountNumber: parsedUserData.accountNumber || '',
-          routingNumber: parsedUserData.routingNumber || '',
-          branchCode: parsedUserData.branchCode || '',
-          rememberPassword: true,
-          marketingConsent: parsedUserData.marketingConsent || false
-        }));
-      } catch (error) {
-        console.log('Failed to load authenticated user data');
-      }
-    } else if (savedData) {
-      try {
-        const parsedData = JSON.parse(savedData);
-        setFormData(prev => ({
-          ...prev,
-          ...parsedData,
-          rememberPassword: true // Always enforce remember password for Divinely Mobile
-        }));
-      } catch (error) {
-        console.log('Failed to load saved registration data');
-      }
-    }
-  }, []);
-
-  // Enhanced auto-save with encryption-ready format
-  useEffect(() => {
-    const timeoutId = setTimeout(() => {
-      // Create a secure data object for storage
-      const secureData = {
-        ...formData,
-        lastSaved: new Date().toISOString(),
-        networkPreference: 'Divinely Mobile', // Default network
-        securityHash: btoa(JSON.stringify(formData)) // Basic encoding for data integrity
-      };
-      
-      localStorage.setItem('customerRegistrationDraft', JSON.stringify(secureData));
-    }, 1000);
-
-    return () => clearTimeout(timeoutId);
-  }, [formData]);
+  const [errors, setErrors] = useState<Partial<FormData>>({});
+  const { toast } = useToast();
+  const { createPersistentSession } = usePersistentAuth();
 
   const handleInputChange = (field: keyof FormData, value: any) => {
-    setFormData(prev => ({ 
-      ...prev, 
-      [field]: value,
-      rememberPassword: true // Always enforce for Divinely Mobile
+    setFormData(prev => ({
+      ...prev,
+      [field]: value
     }));
     
-    // Clear errors when user starts typing
-    if (errors[field as keyof FormErrors]) {
-      setErrors(prev => ({ ...prev, [field]: '' }));
-    }
-
-    // Real-time validation
-    if (field === 'email' && value) {
-      if (!validateEmail(value)) {
-        setErrors(prev => ({ ...prev, email: 'Please enter a valid email address' }));
-      }
-    }
-
-    if (field === 'accountNumber' && value) {
-      if (!validateAccountNumber(value)) {
-        setErrors(prev => ({ ...prev, accountNumber: 'Account number must be 8-12 digits' }));
-      }
+    // Clear error when user starts typing
+    if (errors[field]) {
+      setErrors(prev => ({
+        ...prev,
+        [field]: undefined
+      }));
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    // Validation
-    const newErrors: FormErrors = {};
-    if (!formData.firstName) newErrors.firstName = 'First name is required';
-    if (!formData.lastName) newErrors.lastName = 'Last name is required';
-    if (!formData.email) newErrors.email = 'Email is required';
-    if (!validateEmail(formData.email)) newErrors.email = 'Invalid email format';
-    if (!formData.phoneNumber) newErrors.phoneNumber = 'Phone number is required';
-    if (!formData.bankName) newErrors.bankName = 'Bank selection is required';
-    if (!formData.accountNumber) newErrors.accountNumber = 'Account number is required';
-    if (!validateAccountNumber(formData.accountNumber)) newErrors.accountNumber = 'Invalid account number';
-    if (!formData.agreeTerms) newErrors.agreeTerms = 'You must agree to terms and conditions';
+  const validateForm = (): boolean => {
+    const newErrors: Partial<FormData> = {};
+
+    if (!formData.firstName.trim()) newErrors.firstName = 'First name is required';
+    if (!formData.lastName.trim()) newErrors.lastName = 'Last name is required';
+    if (!formData.email.trim()) newErrors.email = 'Email is required';
+    if (!formData.password) newErrors.password = 'Password is required';
+    if (formData.password !== formData.confirmPassword) {
+      newErrors.confirmPassword = 'Passwords do not match';
+    }
+    if (!formData.registeredPhone.trim()) newErrors.registeredPhone = 'Phone number is required';
+    if (!formData.privacyConsent) newErrors.privacyConsent = 'Privacy consent is required';
 
     setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
 
-    if (Object.keys(newErrors).length === 0) {
-      // Generate unique OneCard account number
-      const accountNumber = 'OC' + Math.random().toString(36).substr(2, 8).toUpperCase();
-      
-      // Enhanced user data with security features
-      const userData = {
-        ...formData,
-        cardNumber: accountNumber,
-        registeredPhone: `${formData.countryCode}${formData.phoneNumber}`,
-        cashbackBalance: 0,
-        totalEarned: 0,
-        totalSpent: 0,
-        preferredNetwork: 'Divinely Mobile',
-        securityLevel: 'Premium',
-        lastLogin: new Date().toISOString(),
-        rememberPassword: true,
-        secureDataHash: btoa(JSON.stringify(formData))
-      };
-
-      // Enhanced credential storage with security features
-      const secureCredentials = {
-        email: formData.email,
-        phone: `${formData.countryCode}${formData.phoneNumber}`,
-        rememberPassword: true,
-        userType: 'customer',
-        networkPreference: 'Divinely Mobile',
-        securityEnabled: true,
-        lastUpdate: new Date().toISOString()
-      };
-
-      // Store user data securely
-      localStorage.setItem('onecardUser', JSON.stringify(userData));
-      localStorage.setItem('userCredentials', JSON.stringify(secureCredentials));
-
-      // Set authentication flags and user session
-      localStorage.setItem('userAuthenticated', 'true');
-      sessionStorage.setItem('userAuth', JSON.stringify({
-        userId: accountNumber,
-        cardNumber: accountNumber,
-        userName: `${formData.firstName} ${formData.lastName}`,
-        accountType: 'Customer',
-        preferredNetwork: 'Divinely Mobile',
-        authVerified: true,
-        securityLevel: 'Premium',
-        timestamp: new Date().toISOString()
-      }));
-      
-      localStorage.removeItem('customerRegistrationDraft');
-      
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!validateForm()) {
       toast({
-        title: "🎉 Divinely Mobile Registration Successful!",
-        description: `OneCard Premium: ****${accountNumber.slice(-4)}. Welcome to the best deals network!`,
+        title: "Please fix the errors",
+        description: "Check the form for any missing or incorrect information.",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    try {
+      // Generate card number
+      const cardNumber = `OC${Math.random().toString().substr(2, 8)}`;
+      
+      // Create user credentials
+      const userCredentials = {
+        email: formData.email,
+        password: formData.password,
+        userType: 'customer'
+      };
+
+      // Create user data
+      const userData = {
+        firstName: formData.firstName,
+        lastName: formData.lastName,
+        email: formData.email,
+        cardNumber,
+        registeredPhone: formData.registeredPhone,
+        bankName: formData.bankName,
+        branchCode: formData.branchCode,
+        accountNumber: formData.accountNumber,
+        balance: 0,
+        registrationDate: new Date().toISOString()
+      };
+
+      // Store in localStorage for immediate access
+      localStorage.setItem('userCredentials', JSON.stringify(userCredentials));
+      localStorage.setItem('onecardUser', JSON.stringify(userData));
+      localStorage.setItem('userAuthenticated', 'true');
+
+      // Create persistent 24-hour session
+      createPersistentSession(userCredentials, userData);
+
+      toast({
+        title: "Registration Successful! 🎉",
+        description: "Your OneCard has been created! You'll stay logged in for 24 hours.",
+        duration: 4000,
       });
 
-      // Direct redirect to Divinely Mobile deals - premium experience
-      window.location.replace('/portal?tab=onecard&network=divinely%20mobile&verified=true');
+      // Auto redirect to OneCard dashboard
+      setTimeout(() => {
+        window.location.href = '/portal?tab=onecard';
+      }, 2000);
+
+    } catch (error) {
+      console.error('Registration error:', error);
+      toast({
+        title: "Registration Failed",
+        description: "An error occurred during registration. Please try again.",
+        variant: "destructive"
+      });
     }
   };
 
