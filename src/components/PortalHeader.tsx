@@ -199,24 +199,6 @@ const PortalHeader: React.FC<PortalHeaderProps> = ({ userType, resetUserType }) 
       )}
     </div>
   );
-
-  function getUserTypeColor(type: string) {
-    switch (type) {
-      case 'customer': return 'bg-green-100 text-green-800';
-      case 'vendor': return 'bg-blue-100 text-blue-800';
-      case 'admin': return 'bg-red-100 text-red-800';
-      default: return 'bg-gray-100 text-gray-800';
-    }
-  }
-
-  function getUserTypeIcon(type: string) {
-    switch (type) {
-      case 'customer': return <User className="w-3 h-3" />;
-      case 'vendor': return <CreditCard className="w-3 h-3" />;
-      case 'admin': return <Shield className="w-3 h-3" />;
-      default: return <User className="w-3 h-3" />;
-    }
-  }
 };
 
 export default PortalHeader;

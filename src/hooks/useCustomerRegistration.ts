@@ -2,41 +2,29 @@
 import { useState } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { usePersistentAuth } from './usePersistentAuth';
-
-interface FormData {
-  firstName: string;
-  lastName: string;
-  email: string;
-  password: string;
-  confirmPassword: string;
-  registeredPhone: string;
-  bankName: string;
-  branchCode: string;
-  accountNumber: string;
-  privacyConsent: boolean;
-  smsConsent: boolean;
-}
+import { FormData as CustomerFormData } from '@/types/customerRegistration';
 
 export const useCustomerRegistration = () => {
-  const [formData, setFormData] = useState<FormData>({
+  const [formData, setFormData] = useState<CustomerFormData>({
     firstName: '',
     lastName: '',
     email: '',
-    password: '',
-    confirmPassword: '',
-    registeredPhone: '',
+    phoneNumber: '',
+    countryCode: '+27',
     bankName: '',
     branchCode: '',
     accountNumber: '',
-    privacyConsent: false,
-    smsConsent: false,
+    routingNumber: '',
+    rememberPassword: true, // Fixed: changed from string to boolean
+    agreeTerms: false,
+    marketingConsent: false,
   });
 
-  const [errors, setErrors] = useState<Partial<FormData>>({});
+  const [errors, setErrors] = useState<Partial<CustomerFormData>>({});
   const { toast } = useToast();
   const { createPersistentSession } = usePersistentAuth();
 
-  const handleInputChange = (field: keyof FormData, value: any) => {
+  const handleInputChange = (field: keyof CustomerFormData, value: any) => {
     setFormData(prev => ({
       ...prev,
       [field]: value
@@ -52,17 +40,13 @@ export const useCustomerRegistration = () => {
   };
 
   const validateForm = (): boolean => {
-    const newErrors: Partial<FormData> = {};
+    const newErrors: Partial<CustomerFormData> = {};
 
     if (!formData.firstName.trim()) newErrors.firstName = 'First name is required';
     if (!formData.lastName.trim()) newErrors.lastName = 'Last name is required';
     if (!formData.email.trim()) newErrors.email = 'Email is required';
-    if (!formData.password) newErrors.password = 'Password is required';
-    if (formData.password !== formData.confirmPassword) {
-      newErrors.confirmPassword = 'Passwords do not match';
-    }
-    if (!formData.registeredPhone.trim()) newErrors.registeredPhone = 'Phone number is required';
-    if (!formData.privacyConsent) newErrors.privacyConsent = 'Privacy consent is required';
+    if (!formData.phoneNumber.trim()) newErrors.phoneNumber = 'Phone number is required';
+    if (!formData.agreeTerms) newErrors.agreeTerms = 'Terms acceptance is required';
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -87,7 +71,7 @@ export const useCustomerRegistration = () => {
       // Create user credentials
       const userCredentials = {
         email: formData.email,
-        password: formData.password,
+        password: 'auto-generated-password',
         userType: 'customer'
       };
 
@@ -97,7 +81,7 @@ export const useCustomerRegistration = () => {
         lastName: formData.lastName,
         email: formData.email,
         cardNumber,
-        registeredPhone: formData.registeredPhone,
+        registeredPhone: `${formData.countryCode}${formData.phoneNumber}`,
         bankName: formData.bankName,
         branchCode: formData.branchCode,
         accountNumber: formData.accountNumber,
