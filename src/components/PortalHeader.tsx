@@ -91,10 +91,10 @@ const PortalHeader: React.FC<PortalHeaderProps> = ({ userType, resetUserType }) 
 
   const getUserTypeIcon = (type: string) => {
     switch (type) {
-      case 'customer': return <User className="w-4 h-4" />;
-      case 'vendor': return <CreditCard className="w-4 h-4" />;
-      case 'admin': return <Shield className="w-4 h-4" />;
-      default: return <User className="w-4 h-4" />;
+      case 'customer': return <User className="w-3 h-3" />;
+      case 'vendor': return <CreditCard className="w-3 h-3" />;
+      case 'admin': return <Shield className="w-3 h-3" />;
+      default: return <User className="w-3 h-3" />;
     }
   };
 
@@ -116,25 +116,25 @@ const PortalHeader: React.FC<PortalHeaderProps> = ({ userType, resetUserType }) 
           </div>
         </div>
 
-        {/* Center - Admin Navigation Dropdown with better spacing */}
+        {/* Center - Admin Navigation Dropdown */}
         <div className="flex-1 flex justify-center px-4">
           <AdminNavigationDropdown isAdminAuthenticated={isAdminAuthenticated} />
         </div>
 
-        {/* User Menu with improved spacing and closer to border */}
-        <div className="flex items-center gap-2">
+        {/* User Menu - compressed and away from border */}
+        <div className="flex items-center mr-4">
           {currentUser && (
             <div className="relative">
               <Button
                 onClick={() => setShowUserMenu(!showUserMenu)}
                 variant="outline"
-                className="flex items-center gap-2 px-3 py-1.5 h-8 text-sm"
+                className="flex items-center gap-1.5 px-2.5 py-1 h-7 text-xs border-gray-300"
               >
                 {getUserTypeIcon(currentUser.userType)}
-                <span className="hidden sm:inline text-xs">
-                  {currentUser.firstName} {currentUser.lastName}
+                <span className="hidden sm:inline text-xs font-medium">
+                  {currentUser.firstName}
                 </span>
-                <Badge className={`${getUserTypeColor(currentUser.userType)} text-xs px-1.5 py-0.5`}>
+                <Badge className={`${getUserTypeColor(currentUser.userType)} text-xs px-1 py-0`}>
                   {currentUser.userType}
                 </Badge>
                 <ChevronDown className="w-3 h-3" />
@@ -182,7 +182,7 @@ const PortalHeader: React.FC<PortalHeaderProps> = ({ userType, resetUserType }) 
           {!currentUser && (
             <Button
               onClick={() => window.location.href = '/portal?tab=registration'}
-              className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-3 py-1.5 h-8 text-sm"
+              className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-2.5 py-1 h-7 text-xs"
             >
               Get Started
             </Button>
