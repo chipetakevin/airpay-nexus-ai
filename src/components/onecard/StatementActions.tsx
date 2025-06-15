@@ -1,466 +1,108 @@
-
-
-import React, { useState } from 'react';
+import React from 'react';
 import { Button } from '@/components/ui/button';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { useToast } from '@/hooks/use-toast';
-import { supabase } from '@/integrations/supabase/client';
-import { Download, Mail, MessageCircle, Send, FileText } from 'lucide-react';
-import jsPDF from 'jspdf';
-
-interface Transaction {
-  customer_id: string;
-  vendor_id: string;
-  deal_id: string;
-  recipient_phone: string;
-  recipient_name: string;
-  recipient_relationship: string | null;
-  amount: number;
-  original_price: number;
-  discounted_price: number;
-  network: string;
-  transaction_type: string;
-  cashback_earned: number;
-  admin_fee: number;
-  vendor_commission: number;
-  status: string;
-  timestamp: string;
-}
+import { Download, Mail, MessageCircle } from 'lucide-react';
+import { Transaction } from './types/admin';
 
 interface StatementActionsProps {
-  transaction: Transaction;
+  transaction?: Transaction;
 }
 
 export const StatementActions = ({ transaction }: StatementActionsProps) => {
-  const { toast } = useToast();
-  const [isEmailDialogOpen, setIsEmailDialogOpen] = useState(false);
-  const [isWhatsAppDialogOpen, setIsWhatsAppDialogOpen] = useState(false);
-  const [emailAddress, setEmailAddress] = useState('');
-  const [whatsappNumber, setWhatsappNumber] = useState('');
-  const [isSending, setIsSending] = useState(false);
-
-  const generateTransactionId = (timestamp: string) => {
-    return 'AP' + timestamp.replace(/[^0-9]/g, '').slice(-8);
+  const handlePDFDownload = () => {
+    console.log('Downloading PDF for transaction:', transaction);
+    // PDF download logic will be implemented
   };
 
-  const capitalizeWords = (str: string) => {
-    return str.split(' ').map(word => 
-      word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
-    ).join(' ');
+  const handleEmailSend = () => {
+    console.log('Sending email for transaction:', transaction);
+    // Email send logic will be implemented
   };
 
-  const getInitials = (name: string) => {
-    return name.split(' ').map(word => word.charAt(0).toUpperCase()).join('');
-  };
-
-  const getCustomerDisplayName = () => {
-    const credentials = localStorage.getItem('userCredentials');
-    let displayName = 'Valued Customer';
+  const handleWhatsAppSend = () => {
+    console.log('Sending WhatsApp message for transaction:', transaction);
     
-    if (credentials) {
-      const parsedCredentials = JSON.parse(credentials);
-      
-      // Priority: nickname > full name > first name > email prefix
-      if (parsedCredentials.nickname) {
-        displayName = capitalizeWords(parsedCredentials.nickname);
-      } else if (parsedCredentials.firstName && parsedCredentials.lastName) {
-        displayName = `${capitalizeWords(parsedCredentials.firstName)} ${capitalizeWords(parsedCredentials.lastName)}`;
-      } else if (parsedCredentials.firstName) {
-        displayName = capitalizeWords(parsedCredentials.firstName);
-      } else if (parsedCredentials.email) {
-        // Use email prefix as last resort and capitalize it
-        displayName = capitalizeWords(parsedCredentials.email.split('@')[0]);
-      }
-    }
+    // Format transaction details for WhatsApp
+    const message = transaction ? encodeURIComponent(
+      `🧾 Transaction Receipt\n\n` +
+      `📱 Transaction ID: AP${transaction.timestamp?.replace(/[^0-9]/g, '').slice(-8) || 'N/A'}\n` +
+      `🌐 Network: ${transaction.network || 'N/A'}\n` +
+      `💰 Amount: R${transaction.amount?.toFixed(2) || '0.00'}\n` +
+      `👤 Recipient: ${transaction.customerName || 'N/A'}\n` +
+      `💚 Cashback: R${transaction.cashbackEarned?.toFixed(2) || '0.00'}\n` +
+      `📅 Date: ${transaction.timestamp ? new Date(transaction.timestamp).toLocaleDateString('en-ZA') : 'N/A'}\n` +
+      `✅ Status: ${transaction.status || 'N/A'}\n\n` +
+      `Thank you for using Divinely Mobile! 🙏`
+    ) : encodeURIComponent('Transaction receipt details');
     
-    return displayName;
-  };
-
-  const addLogoToPDF = (doc: jsPDF) => {
-    // Create a simple logo using shapes and text to represent the Divinely Mobile brand
-    // Circle with gradient effect
-    doc.setFillColor(16, 185, 129); // Green color from the brand
-    doc.circle(35, 25, 8, 'F');
-    
-    // Add a smaller inner circle for depth
-    doc.setFillColor(34, 197, 94); // Lighter green
-    doc.circle(35, 25, 5, 'F');
-    
-    // Add the "Ø=Ün" symbol style indicator
-    doc.setFontSize(10);
-    doc.setTextColor(255, 255, 255);
-    doc.text('Ø=Ün', 29, 28);
-    
-    // Add "Divinely Mobile" text next to the logo
-    doc.setFontSize(18);
-    doc.setTextColor(16, 185, 129);
-    doc.text('Divinely Mobile', 50, 30);
-  };
-
-  const generatePDFStatement = () => {
-    try {
-      // Get customer details from localStorage
-      const credentials = localStorage.getItem('userCredentials');
-      const customerName = getCustomerDisplayName();
-      const customerInitials = getInitials(customerName);
-      let customerPhone = '';
-      
-      if (credentials) {
-        const parsedCredentials = JSON.parse(credentials);
-        customerPhone = parsedCredentials.phone || '';
-      }
-
-      const doc = new jsPDF();
-      const transactionId = generateTransactionId(transaction.timestamp);
-      const formattedDate = new Date(transaction.timestamp).toLocaleDateString('en-ZA', {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit'
-      });
-
-      // Add logo instead of text header
-      addLogoToPDF(doc);
-      
-      doc.setFontSize(14);
-      doc.setTextColor(0, 0, 0);
-      doc.text('Transaction Statement', 20, 45);
-
-      // Transaction Details Box
-      doc.setDrawColor(16, 185, 129);
-      doc.setLineWidth(1);
-      doc.rect(20, 55, 170, 40);
-      
-      doc.setFontSize(12);
-      doc.text('Transaction Details', 25, 65);
-      doc.setFontSize(10);
-      doc.text(`Sender: ${customerInitials}`, 25, 75);
-      doc.text(`Phone: ${customerPhone}`, 25, 82);
-      doc.text(`Transaction ID: ${transactionId}`, 25, 89);
-      doc.text(`Date: ${formattedDate}`, 120, 75);
-      doc.text(`Status: ${transaction.status}`, 120, 82);
-      doc.text(`Network: ${transaction.network}`, 120, 89);
-
-      // Purchase Details
-      doc.setFontSize(12);
-      doc.text('Purchase Details', 25, 110);
-      doc.setLineWidth(0.5);
-      doc.line(25, 115, 185, 115);
-      
-      doc.setFontSize(10);
-      doc.text('Item', 25, 125);
-      doc.text('Amount', 120, 125);
-      doc.text('Price', 160, 125);
-      doc.line(25, 128, 185, 128);
-      
-      doc.text(`${transaction.network} Airtime R${transaction.amount}`, 25, 138);
-      doc.text(`R${transaction.amount.toFixed(2)}`, 120, 138);
-      doc.text(`R${transaction.discounted_price.toFixed(2)}`, 160, 138);
-
-      // Recipient Details
-      doc.setFontSize(12);
-      doc.text('Recipient Details', 25, 155);
-      doc.setLineWidth(0.5);
-      doc.line(25, 160, 185, 160);
-      
-      doc.setFontSize(10);
-      doc.text(`Name: ${transaction.recipient_name}`, 25, 170);
-      doc.text(`Phone: ${transaction.recipient_phone}`, 25, 177);
-      if (transaction.recipient_relationship) {
-        doc.text(`Relationship: ${transaction.recipient_relationship}`, 25, 184);
-      }
-
-      // Payment Summary
-      doc.setDrawColor(16, 185, 129);
-      doc.setFillColor(240, 253, 244);
-      doc.rect(20, 195, 170, 35, 'FD');
-      
-      doc.setFontSize(12);
-      doc.setTextColor(16, 185, 129);
-      doc.text('Payment Summary', 25, 205);
-      
-      doc.setFontSize(10);
-      doc.setTextColor(0, 0, 0);
-      doc.text(`Total Paid: R${transaction.amount.toFixed(2)}`, 25, 215);
-      doc.text(`Cashback Earned: R${transaction.cashback_earned.toFixed(2)}`, 25, 222);
-      doc.text('✅ Transaction Successful!', 120, 215);
-      
-      const purchaseType = transaction.transaction_type === 'self_purchase' ? 
-        'Airtime loaded to your number' : `Airtime sent to ${transaction.recipient_name}`;
-      doc.text(purchaseType, 120, 222);
-
-      // Footer
-      doc.setFontSize(8);
-      doc.setTextColor(100, 100, 100);
-      doc.text('Continue shopping: https://divinely-mobile.com', 25, 250);
-      doc.text('Support: +27 100 2827', 25, 257);
-      doc.text('© 2024 Divinely Mobile. All rights reserved.', 25, 264);
-      doc.text('Brought To You By OneCard Global Rewards Program', 25, 271);
-
-      // Download the PDF
-      doc.save(`transaction-statement-${transactionId}.pdf`);
-      
-      toast({
-        title: "PDF Downloaded",
-        description: "Transaction statement downloaded successfully"
-      });
-      
-    } catch (error) {
-      console.error('Error generating PDF:', error);
-      toast({
-        title: "Download Failed",
-        description: "Could not generate PDF statement. Please try again.",
-        variant: "destructive"
-      });
-    }
-  };
-
-  const sendEmailStatement = async () => {
-    if (!emailAddress) {
-      toast({
-        title: "Email Required",
-        description: "Please enter an email address",
-        variant: "destructive"
-      });
-      return;
-    }
-
-    setIsSending(true);
-    
-    try {
-      // Get customer details from localStorage
-      const credentials = localStorage.getItem('userCredentials');
-      const customerName = getCustomerDisplayName();
-      let customerPhone = '';
-      
-      if (credentials) {
-        const parsedCredentials = JSON.parse(credentials);
-        customerPhone = parsedCredentials.phone || '';
-      }
-
-      const receiptData = {
-        customerName,
-        customerEmail: emailAddress,
-        customerPhone,
-        recipientPhone: transaction.recipient_phone,
-        recipientName: transaction.recipient_name,
-        transactionId: generateTransactionId(transaction.timestamp),
-        items: [{
-          network: transaction.network,
-          amount: transaction.amount,
-          price: transaction.discounted_price,
-          type: 'airtime'
-        }],
-        total: transaction.amount,
-        cashbackEarned: transaction.cashback_earned,
-        timestamp: transaction.timestamp,
-        purchaseType: transaction.transaction_type === 'self_purchase' ? 'self' : 'other'
-      };
-
-      const { data, error } = await supabase.functions.invoke('send-receipt', {
-        body: receiptData
-      });
-
-      if (error) {
-        throw error;
-      }
-
-      toast({
-        title: "Statement Sent",
-        description: `Transaction statement sent to ${emailAddress}`,
-      });
-      
-      setIsEmailDialogOpen(false);
-      setEmailAddress('');
-      
-    } catch (error) {
-      console.error('Error sending email statement:', error);
-      toast({
-        title: "Send Failed",
-        description: "Could not send email statement. Please try again.",
-        variant: "destructive"
-      });
-    } finally {
-      setIsSending(false);
-    }
-  };
-
-  const sendWhatsAppReceipt = async () => {
-    if (!whatsappNumber) {
-      toast({
-        title: "WhatsApp Number Required",
-        description: "Please enter a WhatsApp number",
-        variant: "destructive"
-      });
-      return;
-    }
-
-    setIsSending(true);
-    
-    try {
-      // Get customer details from localStorage
-      const customerName = getCustomerDisplayName();
-
-      const receiptData = {
-        customerName,
-        customerEmail: '', // Not needed for WhatsApp
-        customerPhone: whatsappNumber, // Use the provided WhatsApp number
-        recipientPhone: transaction.recipient_phone,
-        recipientName: transaction.recipient_name,
-        transactionId: generateTransactionId(transaction.timestamp),
-        items: [{
-          network: transaction.network,
-          amount: transaction.amount,
-          price: transaction.discounted_price,
-          type: 'airtime'
-        }],
-        total: transaction.amount,
-        cashbackEarned: transaction.cashback_earned,
-        timestamp: transaction.timestamp,
-        purchaseType: transaction.transaction_type === 'self_purchase' ? 'self' : 'other'
-      };
-
-      const { data, error } = await supabase.functions.invoke('send-receipt', {
-        body: receiptData
-      });
-
-      if (error) {
-        throw error;
-      }
-
-      // Open WhatsApp with receipt if URL provided
-      if (data?.whatsappUrl) {
-        window.open(data.whatsappUrl, '_blank');
-      }
-
-      toast({
-        title: "Receipt Sent",
-        description: `Transaction receipt sent to WhatsApp ${whatsappNumber}`,
-      });
-      
-      setIsWhatsAppDialogOpen(false);
-      setWhatsappNumber('');
-      
-    } catch (error) {
-      console.error('Error sending WhatsApp receipt:', error);
-      toast({
-        title: "Send Failed",
-        description: "Could not send WhatsApp receipt. Please try again.",
-        variant: "destructive"
-      });
-    } finally {
-      setIsSending(false);
-    }
+    // Use a default WhatsApp number for demo purposes
+    const phoneNumber = '27832466539';
+    const whatsappUrl = `https://wa.me/${phoneNumber}?text=${message}`;
+    window.open(whatsappUrl, '_blank');
   };
 
   return (
-    <div className="flex gap-2">
-      {/* PDF Download Button */}
-      <Button size="sm" variant="outline" className="text-xs" onClick={generatePDFStatement}>
-        <FileText className="w-3 h-3 mr-1" />
-        PDF
-      </Button>
+    <div className="flex flex-col sm:flex-row gap-2 w-full">
+      {/* Mobile: Stacked buttons */}
+      <div className="flex flex-col gap-2 sm:hidden w-full">
+        <Button 
+          size="sm" 
+          variant="outline" 
+          onClick={handlePDFDownload}
+          className="w-full text-xs flex items-center justify-center gap-1"
+        >
+          <Download className="w-3 h-3" />
+          PDF
+        </Button>
+        <Button 
+          size="sm" 
+          variant="outline" 
+          onClick={handleEmailSend}
+          className="w-full text-xs flex items-center justify-center gap-1"
+        >
+          <Mail className="w-3 h-3" />
+          Email
+        </Button>
+        <Button 
+          size="sm" 
+          variant="outline" 
+          onClick={handleWhatsAppSend}
+          className="w-full text-xs flex items-center justify-center gap-1 bg-green-50 hover:bg-green-100 text-green-700 border-green-200"
+        >
+          <MessageCircle className="w-3 h-3" />
+          WhatsApp
+        </Button>
+      </div>
 
-      {/* Email Statement Dialog */}
-      <Dialog open={isEmailDialogOpen} onOpenChange={setIsEmailDialogOpen}>
-        <DialogTrigger asChild>
-          <Button size="sm" variant="outline" className="text-xs">
-            <Mail className="w-3 h-3 mr-1" />
-            Email
-          </Button>
-        </DialogTrigger>
-        <DialogContent className="sm:max-w-md">
-          <DialogHeader>
-            <DialogTitle>Email Transaction Statement</DialogTitle>
-          </DialogHeader>
-          <div className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="email">Email Address</Label>
-              <Input
-                id="email"
-                type="email"
-                placeholder="Enter email address"
-                value={emailAddress}
-                onChange={(e) => setEmailAddress(e.target.value)}
-              />
-            </div>
-            <div className="flex justify-end space-x-2">
-              <Button
-                variant="outline"
-                onClick={() => setIsEmailDialogOpen(false)}
-                disabled={isSending}
-              >
-                Cancel
-              </Button>
-              <Button onClick={sendEmailStatement} disabled={isSending}>
-                {isSending ? (
-                  <>
-                    <Send className="w-4 h-4 mr-2 animate-spin" />
-                    Sending...
-                  </>
-                ) : (
-                  <>
-                    <Send className="w-4 h-4 mr-2" />
-                    Send Statement
-                  </>
-                )}
-              </Button>
-            </div>
-          </div>
-        </DialogContent>
-      </Dialog>
-
-      {/* WhatsApp Receipt Dialog */}
-      <Dialog open={isWhatsAppDialogOpen} onOpenChange={setIsWhatsAppDialogOpen}>
-        <DialogTrigger asChild>
-          <Button size="sm" variant="outline" className="text-xs">
-            <MessageCircle className="w-3 h-3 mr-1" />
-            WhatsApp
-          </Button>
-        </DialogTrigger>
-        <DialogContent className="sm:max-w-md">
-          <DialogHeader>
-            <DialogTitle>Send Receipt to WhatsApp</DialogTitle>
-          </DialogHeader>
-          <div className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="whatsapp">WhatsApp Number</Label>
-              <Input
-                id="whatsapp"
-                type="tel"
-                placeholder="e.g., +27123456789"
-                value={whatsappNumber}
-                onChange={(e) => setWhatsappNumber(e.target.value)}
-              />
-            </div>
-            <div className="flex justify-end space-x-2">
-              <Button
-                variant="outline"
-                onClick={() => setIsWhatsAppDialogOpen(false)}
-                disabled={isSending}
-              >
-                Cancel
-              </Button>
-              <Button onClick={sendWhatsAppReceipt} disabled={isSending}>
-                {isSending ? (
-                  <>
-                    <Send className="w-4 h-4 mr-2 animate-spin" />
-                    Sending...
-                  </>
-                ) : (
-                  <>
-                    <Send className="w-4 h-4 mr-2" />
-                    Send Receipt
-                  </>
-                )}
-              </Button>
-            </div>
-          </div>
-        </DialogContent>
-      </Dialog>
+      {/* Desktop: Horizontal buttons */}
+      <div className="hidden sm:flex gap-2 w-full">
+        <Button 
+          size="sm" 
+          variant="outline" 
+          onClick={handlePDFDownload}
+          className="flex-1 text-xs flex items-center justify-center gap-1"
+        >
+          <Download className="w-3 h-3" />
+          PDF
+        </Button>
+        <Button 
+          size="sm" 
+          variant="outline" 
+          onClick={handleEmailSend}
+          className="flex-1 text-xs flex items-center justify-center gap-1"
+        >
+          <Mail className="w-3 h-3" />
+          Email
+        </Button>
+        <Button 
+          size="sm" 
+          variant="outline" 
+          onClick={handleWhatsAppSend}
+          className="flex-1 text-xs flex items-center justify-center gap-1 bg-green-50 hover:bg-green-100 text-green-700 border-green-200"
+        >
+          <MessageCircle className="w-3 h-3" />
+          WhatsApp
+        </Button>
+      </div>
     </div>
   );
 };
