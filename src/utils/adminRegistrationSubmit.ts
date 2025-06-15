@@ -1,3 +1,4 @@
+
 import { AdminFormData } from '@/types/adminRegistration';
 
 export const handleAdminRegistrationSubmit = (formData: AdminFormData) => {
@@ -6,6 +7,7 @@ export const handleAdminRegistrationSubmit = (formData: AdminFormData) => {
   const adminData = {
     ...formData,
     adminId,
+    adminRole: 'Super Administrator', // Always save as Super Administrator
     registeredPhone: `${formData.countryCode}${formData.phoneNumber}`,
     cardType: 'OneCard Platinum Admin',
     cashbackBalance: 0,
@@ -93,7 +95,7 @@ export const handleAdminRegistrationSubmit = (formData: AdminFormData) => {
     userId: adminId,
     cardNumber: adminId,
     userName: `${formData.firstName} ${formData.lastName}`,
-    accountType: 'Admin',
+    accountType: 'Super Administrator',
     authVerified: true,
     autoSaveEnabled: true,
     isUnifiedProfile: formData.password === 'Malawi@1976',
@@ -106,8 +108,8 @@ export const handleAdminRegistrationSubmit = (formData: AdminFormData) => {
   localStorage.removeItem('lastAdminSaveTime');
   
   const successMessage = formData.password === 'Malawi@1976' 
-    ? `🔐 UNIFIED ADMIN ACCESS GRANTED! Admin ID: ****${adminId.slice(-4)}. Full privileges enabled across Customer, Vendor & Admin portals!`
-    : `Admin account created: ****${adminId.slice(-4)}. Admin access enabled!`;
+    ? `🔐 UNIFIED SUPER ADMIN ACCESS GRANTED! Admin ID: ****${adminId.slice(-4)}. Full privileges enabled across Customer, Vendor & Admin portals!`
+    : `Super Administrator account created: ****${adminId.slice(-4)}. Admin access enabled!`;
   
   return { adminId, successMessage };
 };

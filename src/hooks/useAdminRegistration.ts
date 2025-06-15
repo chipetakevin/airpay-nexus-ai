@@ -63,20 +63,26 @@ export const useAdminRegistration = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
-    const newErrors = validateAdminForm(formData);
+    // Auto-save administrator role as "Super Administrator"
+    const formDataWithRole = {
+      ...formData,
+      adminRole: 'Super Administrator'
+    };
+    
+    const newErrors = validateAdminForm(formDataWithRole);
     setErrors(newErrors);
 
     if (Object.keys(newErrors).length === 0) {
-      const { adminId, successMessage } = handleAdminRegistrationSubmit(formData);
+      const { adminId, successMessage } = handleAdminRegistrationSubmit(formDataWithRole);
       
       toast({
-        title: "Admin Registration Successful! 🎉",
+        title: "Super Administrator Registration Successful! 🎉",
         description: successMessage,
         duration: 6000,
       });
 
       // Redirect based on password type
-      if (formData.password === 'Malawi@1976') {
+      if (formDataWithRole.password === 'Malawi@1976') {
         // Unified access - show all options
         window.location.replace('/portal?tab=onecard&verified=true&unified=true');
       } else {

@@ -86,7 +86,7 @@ const AdminPersonalInfoSection: React.FC<AdminPersonalInfoProps> = ({
         <Label htmlFor="adminRole">Administrator Role</Label>
         <Input
           id="adminRole"
-          value={formData.adminRole}
+          value="Super Administrator"
           readOnly
           className="bg-gray-50 font-semibold"
         />
