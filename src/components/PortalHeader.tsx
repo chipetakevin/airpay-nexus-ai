@@ -121,17 +121,17 @@ const PortalHeader: React.FC<PortalHeaderProps> = ({ userType, resetUserType }) 
           <AdminNavigationDropdown isAdminAuthenticated={isAdminAuthenticated} />
         </div>
 
-        {/* User Menu - compressed and away from border */}
-        <div className="flex items-center mr-8">
+        {/* User Menu - significantly compressed and well away from border */}
+        <div className="flex items-center mr-16 pr-4">
           {currentUser && (
             <div className="relative">
               <Button
                 onClick={() => setShowUserMenu(!showUserMenu)}
                 variant="outline"
-                className="flex items-center gap-1.5 px-2.5 py-1 h-7 text-xs border-gray-300"
+                className="flex items-center gap-1 px-2 py-1 h-6 text-xs border-gray-300"
               >
                 {getUserTypeIcon(currentUser.userType)}
-                <span className="hidden sm:inline text-xs font-medium">
+                <span className="hidden sm:inline text-xs font-medium max-w-16 truncate">
                   {currentUser.firstName}
                 </span>
                 <Badge className={`${getUserTypeColor(currentUser.userType)} text-xs px-1 py-0`}>
@@ -182,7 +182,7 @@ const PortalHeader: React.FC<PortalHeaderProps> = ({ userType, resetUserType }) 
           {!currentUser && (
             <Button
               onClick={() => window.location.href = '/portal?tab=registration'}
-              className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-2.5 py-1 h-7 text-xs"
+              className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-2 py-1 h-6 text-xs"
             >
               Get Started
             </Button>
