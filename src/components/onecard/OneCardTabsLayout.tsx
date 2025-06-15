@@ -4,6 +4,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { OverviewTabContent } from './OverviewTabContent';
 import { EnhancedHistoryTabContent } from './EnhancedHistoryTabContent';
 import { DataPoolManagement } from './DataPoolManagement';
+import ReportsTabContent from './ReportsTabContent';
 import AirtimeDealsSystem from '../AirtimeDealsSystem';
 
 interface OneCardTabsLayoutProps {
@@ -50,6 +51,13 @@ const OneCardTabsLayout = ({
       color: 'blue'
     },
     {
+      value: 'reports',
+      label: 'Reports',
+      icon: '👑',
+      description: 'Gold Card',
+      color: 'yellow'
+    },
+    {
       value: 'history',
       label: 'Smart History',
       icon: '🔍',
@@ -65,7 +73,8 @@ const OneCardTabsLayout = ({
       orange: "data-[state=active]:bg-gradient-to-br data-[state=active]:from-orange-500 data-[state=active]:to-red-600 data-[state=active]:text-white data-[state=active]:shadow-lg data-[state=active]:border-orange-400 bg-orange-50 border-orange-200 hover:border-orange-300 hover:bg-orange-100",
       purple: "data-[state=active]:bg-gradient-to-br data-[state=active]:from-purple-500 data-[state=active]:to-pink-600 data-[state=active]:text-white data-[state=active]:shadow-lg data-[state=active]:border-purple-400 bg-purple-50 border-purple-200 hover:border-purple-300 hover:bg-purple-100",
       blue: "data-[state=active]:bg-gradient-to-br data-[state=active]:from-blue-500 data-[state=active]:to-cyan-600 data-[state=active]:text-white data-[state=active]:shadow-lg data-[state=active]:border-blue-400 bg-blue-50 border-blue-200 hover:border-blue-300 hover:bg-blue-100",
-      green: "data-[state=active]:bg-gradient-to-br data-[state=active]:from-green-500 data-[state=active]:to-emerald-600 data-[state=active]:text-white data-[state=active]:shadow-lg data-[state=active]:border-green-400 bg-green-50 border-green-200 hover:border-green-300 hover:bg-green-100"
+      green: "data-[state=active]:bg-gradient-to-br data-[state=active]:from-green-500 data-[state=active]:to-emerald-600 data-[state=active]:text-white data-[state=active]:shadow-lg data-[state=active]:border-green-400 bg-green-50 border-green-200 hover:border-green-300 hover:bg-green-100",
+      yellow: "data-[state=active]:bg-gradient-to-br data-[state=active]:from-yellow-500 data-[state=active]:to-amber-600 data-[state=active]:text-white data-[state=active]:shadow-lg data-[state=active]:border-yellow-400 bg-yellow-50 border-yellow-200 hover:border-yellow-300 hover:bg-yellow-100"
     };
     baseClass += " " + colorClasses[color];
     
@@ -78,9 +87,9 @@ const OneCardTabsLayout = ({
         {/* Enhanced Mobile-First Navigation */}
         <div className="w-full mb-4">
           <TabsList className="w-full max-w-full">
-            {/* Mobile: Optimized 2x2 Grid for better touch targets */}
+            {/* Mobile: Optimized layout for better touch targets */}
             <div className="grid grid-cols-2 gap-2 w-full sm:hidden">
-              {tabs.map((tab) => (
+              {tabs.slice(0, 4).map((tab) => (
                 <TabsTrigger 
                   key={tab.value}
                   value={tab.value} 
@@ -93,10 +102,21 @@ const OneCardTabsLayout = ({
                   </div>
                 </TabsTrigger>
               ))}
+              {/* Second row for remaining tabs on mobile */}
+              <TabsTrigger 
+                value="history" 
+                className={getTabClassName('history', 'green')}
+              >
+                <span className="text-base">🔍</span>
+                <div className="text-center">
+                  <div className="font-semibold leading-tight text-xs">Smart History</div>
+                  <div className="text-xs opacity-75 leading-tight">AI Search</div>
+                </div>
+              </TabsTrigger>
             </div>
 
-            {/* Tablet & Desktop: Single Row */}
-            <div className="hidden sm:grid sm:grid-cols-4 gap-2 w-full">
+            {/* Tablet & Desktop: All tabs in responsive layout */}
+            <div className="hidden sm:grid sm:grid-cols-5 gap-2 w-full">
               {tabs.map((tab) => (
                 <TabsTrigger 
                   key={tab.value}
@@ -133,6 +153,10 @@ const OneCardTabsLayout = ({
 
           <TabsContent value="datapool" className="space-y-4 animate-fade-in">
             <DataPoolManagement userData={userData} />
+          </TabsContent>
+
+          <TabsContent value="reports" className="space-y-4 animate-fade-in">
+            <ReportsTabContent />
           </TabsContent>
 
           <TabsContent value="history" className="space-y-4 animate-fade-in">
