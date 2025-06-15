@@ -6,6 +6,7 @@ import VendorRegistration from './VendorRegistration';
 import AdminRegistration from './AdminRegistration';
 import OneCardDashboard from './OneCardDashboard';
 import AdminPortal from './AdminPortal';
+import ReportsTabContent from './onecard/ReportsTabContent';
 
 interface PortalTabsProps {
   activeTab: string;
@@ -46,6 +47,13 @@ const PortalTabs = ({
       icon: '🏪',
       description: 'Partner',
       color: 'blue'
+    },
+    {
+      value: 'unified-reports',
+      label: 'Unified Reports',
+      icon: '👑',
+      description: 'Gold Card',
+      color: 'yellow'
     },
     {
       value: 'admin-reg',
@@ -108,7 +116,7 @@ const PortalTabs = ({
         {/* Optimized Mobile-First Tab Navigation */}
         <div className="w-full mb-6">
           <TabsList className="w-full max-w-full">
-            {/* Mobile: 2x2 Grid for better touch experience */}
+            {/* Mobile: 2x3 Grid for better touch experience */}
             <div className="grid grid-cols-2 gap-2 w-full sm:hidden">
               {tabs.slice(0, 4).map((tab) => (
                 <TabsTrigger 
@@ -127,30 +135,28 @@ const PortalTabs = ({
                   )}
                 </TabsTrigger>
               ))}
-              {/* Admin tab on second row if present */}
-              {showAdminTab && tabs.length > 4 && (
-                <>
-                  <div></div> {/* Empty cell for centering */}
-                  <TabsTrigger 
-                    value={tabs[4].value} 
-                    className={getTabClassName(tabs[4].value, tabs[4].color)}
-                    disabled={!isTabAllowed(tabs[4].value) && !isUnifiedProfile}
-                  >
-                    <span className="text-lg">{tabs[4].icon}</span>
-                    <div className="text-center">
-                      <div className="font-semibold leading-tight text-xs">{tabs[4].label}</div>
-                      <div className="text-xs opacity-75 leading-tight">{tabs[4].description}</div>
-                    </div>
-                    {isUnifiedProfile && (
-                      <div className="absolute top-1 right-1 w-2 h-2 bg-orange-400 rounded-full"></div>
-                    )}
-                  </TabsTrigger>
-                </>
-              )}
+              {/* Second row for remaining tabs */}
+              {tabs.slice(4, 6).map((tab) => (
+                <TabsTrigger 
+                  key={tab.value}
+                  value={tab.value} 
+                  className={getTabClassName(tab.value, tab.color)}
+                  disabled={!isTabAllowed(tab.value) && !isUnifiedProfile}
+                >
+                  <span className="text-lg">{tab.icon}</span>
+                  <div className="text-center">
+                    <div className="font-semibold leading-tight text-xs">{tab.label}</div>
+                    <div className="text-xs opacity-75 leading-tight">{tab.description}</div>
+                  </div>
+                  {isUnifiedProfile && (
+                    <div className="absolute top-1 right-1 w-2 h-2 bg-orange-400 rounded-full"></div>
+                  )}
+                </TabsTrigger>
+              ))}
             </div>
 
             {/* Tablet: Responsive grid */}
-            <div className="hidden sm:grid sm:grid-cols-2 lg:hidden gap-2 w-full">
+            <div className="hidden sm:grid sm:grid-cols-3 lg:hidden gap-2 w-full">
               {tabs.map((tab) => (
                 <TabsTrigger 
                   key={tab.value}
@@ -171,7 +177,7 @@ const PortalTabs = ({
             </div>
 
             {/* Desktop: Single Row */}
-            <div className={`hidden lg:grid gap-2 w-full ${showAdminTab ? 'grid-cols-5' : 'grid-cols-4'}`}>
+            <div className={`hidden lg:grid gap-2 w-full ${showAdminTab ? 'grid-cols-6' : 'grid-cols-5'}`}>
               {tabs.map((tab) => (
                 <TabsTrigger 
                   key={tab.value}
@@ -205,6 +211,10 @@ const PortalTabs = ({
           
           <TabsContent value="vendor" className="p-2 sm:p-4 lg:p-6 animate-fade-in">
             <VendorRegistration />
+          </TabsContent>
+
+          <TabsContent value="unified-reports" className="p-2 sm:p-4 lg:p-6 animate-fade-in">
+            <ReportsTabContent />
           </TabsContent>
           
           <TabsContent value="admin-reg" className="p-2 sm:p-4 lg:p-6 animate-fade-in">

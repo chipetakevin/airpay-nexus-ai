@@ -112,6 +112,8 @@ const Portal = () => {
             return ['customer', 'vendor', 'admin'].includes(currentUserType);
           case 'onecard':
             return true; // Available to all authenticated users
+          case 'unified-reports':
+            return isUnified; // Only for unified profile users
           case 'deals':
             return true; // Always available - default landing page
           case 'admin-reg':
