@@ -96,12 +96,12 @@ const AdminNavigationDropdown: React.FC<AdminNavigationDropdownProps> = ({
       <Button
         onClick={() => setIsOpen(!isOpen)}
         variant="outline"
-        className="flex items-center gap-2 bg-gradient-to-r from-red-50 to-orange-50 border-red-200 text-red-700 hover:bg-red-100 px-3 py-2 h-9"
+        className="flex items-center gap-1 bg-gradient-to-r from-red-50 to-orange-50 border-red-200 text-red-700 hover:bg-red-100 px-2 py-1 h-6 text-xs"
       >
-        <Settings className="w-4 h-4" />
+        <Settings className="w-3 h-3" />
         <span className="font-medium hidden sm:inline">Main Navigation</span>
         <span className="font-medium sm:hidden">Nav</span>
-        <ChevronDown className={`w-4 h-4 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
+        <ChevronDown className={`w-3 h-3 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
       </Button>
 
       {isOpen && (
