@@ -14,9 +14,11 @@ export interface AdminFormData {
   routingNumber: string;
   branchCode: string;
   promoCode: string;
+  adminRole: string;
   rememberPassword: boolean;
   agreeTerms: boolean;
   marketingConsent: boolean;
+  twoFactorAuth?: boolean;
 }
 
 export interface AdminFormErrors {

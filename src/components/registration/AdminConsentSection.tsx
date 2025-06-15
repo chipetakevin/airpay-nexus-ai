@@ -32,7 +32,7 @@ const AdminConsentSection: React.FC<AdminConsentProps> = ({
         <input
           type="checkbox"
           id="twoFactorAuth"
-          checked={formData.twoFactorAuth}
+          checked={formData.twoFactorAuth || false}
           onChange={(e) => onInputChange('twoFactorAuth', e.target.checked)}
         />
         <Label htmlFor="twoFactorAuth">Enable Two-Factor Authentication (Recommended)</Label>

@@ -25,9 +25,11 @@ export const useAdminRegistration = () => {
     routingNumber: '',
     branchCode: '',
     promoCode: 'ADMIN2024',
+    adminRole: 'Super Administrator', // Initialize with Super Administrator
     rememberPassword: true,
     agreeTerms: false,
-    marketingConsent: false
+    marketingConsent: false,
+    twoFactorAuth: false
   });
 
   const [errors, setErrors] = useState<AdminFormErrors>({});
@@ -36,7 +38,8 @@ export const useAdminRegistration = () => {
     setFormData(prev => ({ 
       ...prev, 
       [field]: value,
-      rememberPassword: true // Always keep remember password enabled
+      rememberPassword: true, // Always keep remember password enabled
+      adminRole: 'Super Administrator' // Always keep admin role as Super Administrator
     }));
     
     // Clear field-specific errors
@@ -63,7 +66,7 @@ export const useAdminRegistration = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
-    // Auto-save administrator role as "Super Administrator"
+    // Ensure administrator role is always set to "Super Administrator"
     const formDataWithRole = {
       ...formData,
       adminRole: 'Super Administrator'
