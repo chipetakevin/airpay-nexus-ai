@@ -19,7 +19,8 @@ export const loadCustomerData = (): Customer[] => {
       totalCashback: Number(customer.totalCashback) || 0,
       registrationDate: customer.registrationDate || new Date().toISOString(),
       networkProvider: customer.networkProvider || 'Unknown',
-      ricaVerified: Boolean(customer.ricaVerified)
+      ricaVerified: Boolean(customer.ricaVerified),
+      isActive: true
     });
   }
 
@@ -36,7 +37,8 @@ export const loadCustomerData = (): Customer[] => {
       totalCashback: 245.50,
       registrationDate: '2024-01-15T10:30:00Z',
       networkProvider: 'Vodacom',
-      ricaVerified: true
+      ricaVerified: true,
+      isActive: true
     },
     {
       id: 'cust-001',
@@ -49,7 +51,8 @@ export const loadCustomerData = (): Customer[] => {
       totalCashback: 125.25,
       registrationDate: '2024-02-10T14:20:00Z',
       networkProvider: 'MTN',
-      ricaVerified: true
+      ricaVerified: true,
+      isActive: true
     },
     {
       id: 'cust-002',
@@ -62,7 +65,8 @@ export const loadCustomerData = (): Customer[] => {
       totalCashback: 78.90,
       registrationDate: '2024-03-05T09:15:00Z',
       networkProvider: 'Cell C',
-      ricaVerified: false
+      ricaVerified: false,
+      isActive: true
     }
   );
 
