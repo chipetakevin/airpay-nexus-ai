@@ -1,3 +1,4 @@
+
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 
@@ -6,6 +7,16 @@ export const useReceiptGeneration = () => {
 
   const generateTransactionId = (timestamp: string) => {
     return 'AP' + timestamp.replace(/[^0-9]/g, '').slice(-8);
+  };
+
+  const generateSessionId = () => {
+    // Generate a 10-character unique session ID with letters and numbers
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    let result = 'DM'; // Start with DM prefix
+    for (let i = 0; i < 8; i++) {
+      result += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+    return result;
   };
 
   const capitalizeWords = (str: string) => {
@@ -64,6 +75,7 @@ export const useReceiptGeneration = () => {
       }
 
       const customerName = getCustomerDisplayName();
+      const sessionId = generateSessionId();
 
       // Enhanced receipt data for both WhatsApp and Email
       const baseReceiptData = {
@@ -71,6 +83,7 @@ export const useReceiptGeneration = () => {
         customerEmail: customerEmail,
         customerPhone: customerPhone,
         transactionId: generateTransactionId(transactionData.timestamp),
+        sessionId: sessionId,
         items: cartItems.map(item => ({
           network: item.network,
           amount: item.amount,
@@ -169,6 +182,7 @@ export const useReceiptGeneration = () => {
   return {
     autoGenerateAndSendReceipts,
     generateTransactionId,
+    generateSessionId,
     getCustomerDisplayName
   };
 };

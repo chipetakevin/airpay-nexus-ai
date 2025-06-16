@@ -102,10 +102,11 @@ const PortalHeader: React.FC<PortalHeaderProps> = ({ userType, resetUserType }) 
           <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-2xl flex items-center justify-center shadow-lg">
             <Crown className="w-7 h-7 text-white" />
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex flex-col items-start gap-1">
             {currentUser?.isUnifiedProfile && (
-              <Badge className="bg-gradient-to-r from-orange-500 to-yellow-500 text-white text-xs">
-                🌟 Unified Access
+              <Badge className="bg-gradient-to-r from-orange-400 to-orange-500 text-white text-xs px-3 py-1 rounded-full flex items-center justify-center">
+                <span className="mr-1">🌟</span>
+                <span className="font-medium">Unified Access</span>
               </Badge>
             )}
             <SessionIndicator />

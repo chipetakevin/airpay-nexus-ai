@@ -2,7 +2,7 @@ import jsPDF from 'jspdf';
 import { Customer, Transaction } from '../types/admin';
 import { formatCurrency } from './adminUtils';
 
-// Enhanced PDF Generator with modern design and consistent branding
+// Enhanced PDF Generator with modern design and consistent crown logo branding
 export class EnhancedPDFGenerator {
   private doc: jsPDF;
   private pageWidth: number;
@@ -19,60 +19,88 @@ export class EnhancedPDFGenerator {
     this.pageHeight = this.doc.internal.pageSize.getHeight();
   }
 
-  // Add consistent Divinely Mobile logo across all reports
+  // Add consistent Divinely Mobile crown logo across all reports
   private addDivinelyMobileLogo(x: number = 20, y: number = 15, width: number = 50, height: number = 16) {
-    // Create the Divinely Mobile logo with rounded purple background
-    this.doc.setFillColor(79, 70, 229); // Purple gradient start
+    // Create the Divinely Mobile logo background with crown
+    this.doc.setFillColor(79, 70, 229); // Purple gradient
     this.doc.roundedRect(x, y, width, height, 4, 4, 'F');
     
-    // Add mobile phone icon representation in the logo
+    // Add crown icon representation
     this.doc.setFillColor(255, 255, 255);
-    this.doc.roundedRect(x + 4, y + 3, 10, 10, 2, 2, 'F');
-    this.doc.setFillColor(79, 70, 229);
-    this.doc.roundedRect(x + 5, y + 4, 8, 8, 1, 1, 'F');
-    this.doc.setFillColor(255, 255, 255);
-    this.doc.circle(x + 9, y + 6, 0.5, 'F');
-    this.doc.rect(x + 6, y + 7, 6, 4, 'F');
+    // Crown base
+    this.doc.rect(x + 4, y + 10, 12, 4, 'F');
+    // Crown points
+    this.doc.triangle(x + 6, y + 6, x + 8, y + 10, x + 10, y + 6, 'F');
+    this.doc.triangle(x + 8, y + 4, x + 10, y + 8, x + 12, y + 4, 'F');
+    this.doc.triangle(x + 10, y + 6, x + 12, y + 10, x + 14, y + 6, 'F');
+    // Crown jewels
+    this.doc.setFillColor(255, 215, 0); // Gold
+    this.doc.circle(x + 9, y + 8, 0.5, 'F');
+    this.doc.circle(x + 11, y + 6, 0.5, 'F');
+    this.doc.circle(x + 13, y + 8, 0.5, 'F');
     
     // Add "Divinely Mobile" text
     this.doc.setTextColor(255, 255, 255);
     this.doc.setFontSize(10);
     this.doc.setFont('helvetica', 'bold');
-    this.doc.text('Divinely', x + 16, y + 8);
+    this.doc.text('Divinely', x + 18, y + 8);
     this.doc.setTextColor(147, 197, 253); // Light blue for "Mobile"
-    this.doc.text('Mobile', x + 16, y + 13);
+    this.doc.text('Mobile', x + 18, y + 13);
     
     // Reset colors
     this.doc.setTextColor(31, 41, 55);
   }
 
-  // Add gradient background with Divinely Mobile branding
+  // Add crown watermark
+  private addCrownWatermark() {
+    this.doc.saveGraphicsState();
+    this.doc.setGState(this.doc.GState({ opacity: 0.1 }));
+    this.doc.setFillColor(79, 70, 229);
+    
+    // Large crown in center
+    const centerX = this.pageWidth / 2;
+    const centerY = this.pageHeight / 2;
+    
+    // Crown base
+    this.doc.rect(centerX - 20, centerY + 10, 40, 10, 'F');
+    // Crown points
+    this.doc.triangle(centerX - 15, centerY - 10, centerX - 5, centerY + 10, centerX + 5, centerY - 10, 'F');
+    this.doc.triangle(centerX - 5, centerY - 15, centerX + 5, centerY + 5, centerX + 15, centerY - 15, 'F');
+    this.doc.triangle(centerX + 5, centerY - 10, centerX + 15, centerY + 10, centerX + 25, centerY - 10, 'F');
+    
+    this.doc.restoreGraphicsState();
+  }
+
+  // Add gradient background with crown watermark
   private addGradientBackground() {
-    // Create a gradient effect using rectangles with Divinely Mobile colors
+    // Create a gradient effect using rectangles with crown branding
     this.doc.setFillColor(79, 70, 229); // Primary purple
     this.doc.rect(0, 0, this.pageWidth, 60, 'F');
     
     this.doc.setFillColor(99, 102, 241); // Lighter purple shade
     this.doc.rect(0, 40, this.pageWidth, 20, 'F');
+    
+    // Add subtle crown watermark
+    this.addCrownWatermark();
   }
 
-  // Add header with Divinely Mobile logo and title
+  // Add header with crown logo and title
   private addHeader(title: string, subtitle?: string) {
     this.addGradientBackground();
     
-    // Add Divinely Mobile logo to header
-    this.addDivinelyMobileLogo(this.margin, 15, 50, 16);
+    // Add Divinely Mobile crown logo to header
+    this.addDivinelyMobileLogo(this.margin, 15, 60, 20);
     
-    // Title
+    // Title with crown emoji
     this.doc.setTextColor(255, 255, 255);
     this.doc.setFontSize(28);
     this.doc.setFont('helvetica', 'bold');
-    this.doc.text(title, this.margin + 60, 35);
+    this.doc.text(`👑 ${title}`, this.margin + 70, 35);
     
     if (subtitle) {
       this.doc.setFontSize(14);
       this.doc.setFont('helvetica', 'normal');
-      this.doc.text(subtitle, this.margin + 60, 50);
+      this.doc.text(subtitle, this.margin + 70, 50);
     }
     
     // Reset text color
@@ -90,22 +118,26 @@ export class EnhancedPDFGenerator {
     this.doc.setLineWidth(0.5);
     this.doc.roundedRect(x, y, width, height, 5, 5, 'S');
     
-    // Color accent bar
+    // Color accent bar with crown
     const [r, g, b] = this.hexToRgb(color);
     this.doc.setFillColor(r, g, b);
     this.doc.rect(x, y, width, 4, 'F');
+    
+    // Small crown icon
+    this.doc.setFillColor(255, 215, 0);
+    this.doc.circle(x + 8, y + 12, 1, 'F');
     
     // Title
     this.doc.setTextColor(107, 114, 128);
     this.doc.setFontSize(10);
     this.doc.setFont('helvetica', 'normal');
-    this.doc.text(title, x + 8, y + 18);
+    this.doc.text(title, x + 12, y + 18);
     
     // Value
     this.doc.setTextColor(31, 41, 55);
     this.doc.setFontSize(18);
     this.doc.setFont('helvetica', 'bold');
-    this.doc.text(value, x + 8, y + 32);
+    this.doc.text(value, x + 12, y + 32);
   }
 
   // Add section header
@@ -116,7 +148,7 @@ export class EnhancedPDFGenerator {
     this.doc.setTextColor(255, 255, 255);
     this.doc.setFontSize(16);
     this.doc.setFont('helvetica', 'bold');
-    this.doc.text(title, this.margin + 8, y + 17);
+    this.doc.text(`👑 ${title}`, this.margin + 8, y + 17);
     
     this.doc.setTextColor(31, 41, 55);
     return y + 35;
@@ -134,7 +166,7 @@ export class EnhancedPDFGenerator {
     this.doc.setDrawColor(226, 232, 240);
     this.doc.rect(x, y, width, height, 'S');
     
-    // Draw bars
+    // Draw bars with crown tops
     data.forEach((item, index) => {
       const barHeight = (item.value / maxValue) * chartAreaHeight;
       const barX = x + 20 + (index * barWidth);
@@ -144,6 +176,10 @@ export class EnhancedPDFGenerator {
       this.doc.setFillColor(r, g, b);
       this.doc.rect(barX, barY, barWidth - 5, barHeight, 'F');
       
+      // Crown on top of bar
+      this.doc.setFillColor(255, 215, 0);
+      this.doc.circle(barX + (barWidth - 5) / 2, barY - 2, 1, 'F');
+      
       // Label
       this.doc.setTextColor(107, 114, 128);
       this.doc.setFontSize(8);
@@ -151,7 +187,7 @@ export class EnhancedPDFGenerator {
       
       // Value
       this.doc.setFontSize(9);
-      this.doc.text(item.value.toString(), barX, barY - 3);
+      this.doc.text(item.value.toString(), barX, barY - 6);
     });
   }
 
@@ -165,14 +201,14 @@ export class EnhancedPDFGenerator {
     ] : [0, 0, 0];
   }
 
-  // Generate enhanced master report with consistent Divinely Mobile branding
+  // Generate enhanced master report with consistent crown branding
   generateMasterReport(customers: Customer[], transactions: Transaction[]): jsPDF {
-    // Page 1: Overview
+    // Page 1: Overview with crown branding
     this.addHeader('OneCard Master Report', `Generated on: ${new Date().toLocaleDateString()}`);
     
     let yPos = 80;
     
-    // Key metrics cards
+    // Key metrics cards with crown icons
     const totalBalance = customers.reduce((sum, customer) => sum + (Number(customer.onecardBalance) || 0), 0);
     const totalCashback = customers.reduce((sum, customer) => sum + (Number(customer.totalCashback) || 0), 0);
     const totalRevenue = transactions.reduce((sum, tx) => sum + (Number(tx.amount) || 0), 0);
@@ -247,7 +283,7 @@ export class EnhancedPDFGenerator {
     this.doc.setTextColor(31, 41, 55);
     this.doc.setFontSize(10);
     this.doc.setFont('helvetica', 'bold');
-    this.doc.text('Customer Name', this.margin + 5, yPos + 10);
+    this.doc.text('👑 Customer Name', this.margin + 5, yPos + 10);
     this.doc.text('Balance', this.margin + 80, yPos + 10);
     this.doc.text('Network', this.margin + 130, yPos + 10);
     
@@ -273,12 +309,12 @@ export class EnhancedPDFGenerator {
       yPos += 12;
     });
     
-    // Footer with Divinely Mobile branding
+    // Footer with crown branding
     this.doc.setFontSize(8);
     this.doc.setTextColor(107, 114, 128);
-    this.doc.text('Generated by Divinely Mobile OneCard Platform Analytics Engine', this.margin, this.pageHeight - 15);
+    this.doc.text('👑 Generated by Divinely Mobile OneCard Premium Analytics Platform', this.margin, this.pageHeight - 15);
     this.doc.text(`Page ${this.doc.getCurrentPageInfo().pageNumber} of ${this.doc.getNumberOfPages()}`, this.pageWidth - 50, this.pageHeight - 15);
-    this.doc.text('Powered by Divinely Mobile', this.pageWidth - 80, this.pageHeight - 5);
+    this.doc.text('Powered by Divinely Mobile 👑', this.pageWidth - 80, this.pageHeight - 5);
     
     return this.doc;
   }
@@ -288,11 +324,11 @@ export const generateEnhancedMasterReport = (customers: Customer[], transactions
   const generator = new EnhancedPDFGenerator();
   const doc = generator.generateMasterReport(customers, transactions);
   
-  doc.save(`Divinely_Mobile_OneCard_Master_Report_${new Date().toISOString().split('T')[0]}.pdf`);
+  doc.save(`Divinely_Mobile_Crown_Master_Report_${new Date().toISOString().split('T')[0]}.pdf`);
   
   toast({
-    title: "Enhanced Master Report Generated",
-    description: "Modern platform report with Divinely Mobile branding has been downloaded.",
+    title: "👑 Premium Report Generated",
+    description: "Modern master report with crown logo branding has been downloaded.",
     duration: 3000,
   });
 };
