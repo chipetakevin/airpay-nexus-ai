@@ -166,7 +166,8 @@ const ReportsTabContent = () => {
         networkProvider: 'Vodacom',
         ricaVerified: true,
         onecardBalance: profile.balance,
-        totalCashback: profile.totalEarned
+        totalCashback: profile.totalEarned,
+        isActive: true // Added missing isActive property
       }));
 
       const mockTransactions = unifiedProfiles.flatMap((profile, profileIndex) => 
