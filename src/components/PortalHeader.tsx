@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -98,21 +97,18 @@ const PortalHeader: React.FC<PortalHeaderProps> = ({ userType, resetUserType }) 
   return (
     <div className="bg-white border-b border-blue-100 px-4 py-3">
       <div className="flex items-center justify-between max-w-6xl mx-auto">
-        {/* Logo and Title with Divinely Mobile branding */}
+        {/* Clean Logo - Crown Icon Only */}
         <div className="flex items-center gap-3">
-          <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
-            <Crown className="w-5 h-5 text-white" />
+          <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-2xl flex items-center justify-center shadow-lg">
+            <Crown className="w-7 h-7 text-white" />
           </div>
-          <div>
-            <h1 className="text-xl font-bold text-gray-800">Divinely Mobile Portal</h1>
-            <div className="flex items-center gap-2">
-              {currentUser?.isUnifiedProfile && (
-                <Badge className="bg-gradient-to-r from-orange-500 to-yellow-500 text-white text-xs">
-                  🌟 Unified Access
-                </Badge>
-              )}
-              <SessionIndicator />
-            </div>
+          <div className="flex items-center gap-2">
+            {currentUser?.isUnifiedProfile && (
+              <Badge className="bg-gradient-to-r from-orange-500 to-yellow-500 text-white text-xs">
+                🌟 Unified Access
+              </Badge>
+            )}
+            <SessionIndicator />
           </div>
         </div>
 
