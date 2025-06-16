@@ -19,6 +19,7 @@ import {
   CheckCircle
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { generateEnhancedMasterReport } from './utils/enhancedPdfGenerator';
 
 interface UnifiedProfile {
   userType: 'customer' | 'vendor' | 'admin';
@@ -151,6 +152,47 @@ const ReportsTabContent = () => {
     return `GOLD${baseNumber}`;
   };
 
+  const handleGenerateReport = () => {
+    try {
+      // Mock data for demonstration - replace with actual data
+      const mockCustomers = unifiedProfiles.map((profile, index) => ({
+        id: `customer_${index}`,
+        firstName: profile.firstName,
+        lastName: profile.lastName,
+        email: `${profile.firstName.toLowerCase()}@example.com`,
+        phone: '+27123456789',
+        cardNumber: profile.cardNumber,
+        registrationDate: new Date().toISOString(),
+        networkProvider: 'Vodacom',
+        ricaVerified: true,
+        onecardBalance: profile.balance,
+        totalCashback: profile.totalEarned
+      }));
+
+      const mockTransactions = unifiedProfiles.flatMap((profile, profileIndex) => 
+        Array.from({ length: 5 }, (_, txIndex) => ({
+          id: `tx_${profileIndex}_${txIndex}`,
+          timestamp: new Date(Date.now() - Math.random() * 30 * 24 * 60 * 60 * 1000).toISOString(),
+          amount: Math.floor(Math.random() * 500) + 50,
+          network: ['Vodacom', 'MTN', 'Cell C'][Math.floor(Math.random() * 3)],
+          status: 'completed',
+          recipient_name: profile.firstName,
+          cashback_earned: Math.floor(Math.random() * 25) + 5
+        }))
+      );
+
+      generateEnhancedMasterReport(mockCustomers, mockTransactions, toast);
+
+    } catch (error) {
+      console.error('Error generating report:', error);
+      toast({
+        title: "Report Generation Failed",
+        description: "There was an error generating the report. Please try again.",
+        variant: "destructive"
+      });
+    }
+  };
+
   const getProfileIcon = (userType: string) => {
     switch (userType) {
       case 'customer': return <Users className="w-4 h-4 sm:w-5 sm:h-5" />;
@@ -223,26 +265,26 @@ const ReportsTabContent = () => {
         </Badge>
       </div>
 
-      {/* OneCard Gold Card - Enhanced Mobile Design */}
-      <Card className="relative overflow-hidden bg-gradient-to-br from-yellow-400 via-yellow-500 to-amber-600 text-white shadow-2xl border-0">
-        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent"></div>
-        <div className="absolute top-0 right-0 w-32 h-32 bg-white/5 rounded-full -translate-y-16 translate-x-16"></div>
-        <div className="absolute bottom-0 left-0 w-24 h-24 bg-white/5 rounded-full translate-y-12 -translate-x-12"></div>
+      {/* OneCard Gold Card - Updated with black text */}
+      <Card className="relative overflow-hidden bg-gradient-to-br from-yellow-400 via-yellow-500 to-amber-600 text-black shadow-2xl border-0">
+        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-black/5 to-transparent"></div>
+        <div className="absolute top-0 right-0 w-32 h-32 bg-black/5 rounded-full -translate-y-16 translate-x-16"></div>
+        <div className="absolute bottom-0 left-0 w-24 h-24 bg-black/5 rounded-full translate-y-12 -translate-x-12"></div>
         
         <CardContent className="p-4 sm:p-6 relative z-10">
           <div className="flex items-start justify-between mb-6">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 sm:w-12 sm:h-12 bg-white/20 rounded-full flex items-center justify-center backdrop-blur-sm">
-                <Crown className="w-5 h-5 sm:w-6 sm:h-6 text-yellow-100" />
+              <div className="w-10 h-10 sm:w-12 sm:h-12 bg-black/20 rounded-full flex items-center justify-center backdrop-blur-sm">
+                <Crown className="w-5 h-5 sm:w-6 sm:h-6 text-black" />
               </div>
               <div>
-                <h2 className="text-lg sm:text-xl font-bold">OneCard Gold</h2>
-                <p className="text-yellow-100 text-xs sm:text-sm">Unified Rewards Account</p>
+                <h2 className="text-lg sm:text-xl font-bold text-black">OneCard Gold</h2>
+                <p className="text-black/80 text-xs sm:text-sm">Unified Rewards Account</p>
               </div>
             </div>
             <div className="flex items-center gap-2">
-              <Sparkles className="w-4 h-4 text-yellow-200 animate-pulse" />
-              <Badge className="bg-white/20 text-white border-white/30 text-xs">
+              <Sparkles className="w-4 h-4 text-black animate-pulse" />
+              <Badge className="bg-black/20 text-black border-black/30 text-xs">
                 Premium
               </Badge>
             </div>
@@ -250,26 +292,47 @@ const ReportsTabContent = () => {
 
           <div className="space-y-4 sm:space-y-6">
             <div>
-              <p className="text-yellow-200 text-xs sm:text-sm mb-1">Unified Account Number</p>
-              <p className="text-xl sm:text-2xl font-mono font-bold tracking-wider break-all">{unifiedAccountNumber}</p>
+              <p className="text-black/70 text-xs sm:text-sm mb-1">Unified Account Number</p>
+              <p className="text-xl sm:text-2xl font-mono font-bold tracking-wider break-all text-black">{unifiedAccountNumber}</p>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div className="bg-white/10 rounded-xl p-3 sm:p-4 backdrop-blur-sm">
+              <div className="bg-black/10 rounded-xl p-3 sm:p-4 backdrop-blur-sm">
                 <div className="flex items-center gap-2 mb-2">
-                  <Wallet className="w-4 h-4 text-yellow-200" />
-                  <p className="text-yellow-200 text-xs sm:text-sm">Available Balance</p>
+                  <Wallet className="w-4 h-4 text-black/70" />
+                  <p className="text-black/70 text-xs sm:text-sm">Available Balance</p>
                 </div>
-                <p className="text-xl sm:text-2xl font-bold">R{totalConsolidatedBalance.toFixed(2)}</p>
+                <p className="text-xl sm:text-2xl font-bold text-black">R{totalConsolidatedBalance.toFixed(2)}</p>
               </div>
-              <div className="bg-white/10 rounded-xl p-3 sm:p-4 backdrop-blur-sm">
+              <div className="bg-black/10 rounded-xl p-3 sm:p-4 backdrop-blur-sm">
                 <div className="flex items-center gap-2 mb-2">
-                  <TrendingUp className="w-4 h-4 text-yellow-200" />
-                  <p className="text-yellow-200 text-xs sm:text-sm">Lifetime Earnings</p>
+                  <TrendingUp className="w-4 h-4 text-black/70" />
+                  <p className="text-black/70 text-xs sm:text-sm">Lifetime Earnings</p>
                 </div>
-                <p className="text-lg sm:text-xl font-semibold">R{totalLifetimeEarnings.toFixed(2)}</p>
+                <p className="text-lg sm:text-xl font-semibold text-black">R{totalLifetimeEarnings.toFixed(2)}</p>
               </div>
             </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Generate Report Button */}
+      <Card className="shadow-lg border-0 bg-white">
+        <CardContent className="p-4 sm:p-6">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+            <div className="text-center sm:text-left">
+              <h4 className="font-semibold text-gray-700 mb-1 text-sm sm:text-base">Generate Unified Report</h4>
+              <p className="text-gray-600 text-xs sm:text-sm">Download comprehensive report with analytics and visualizations</p>
+            </div>
+            <Button 
+              onClick={handleGenerateReport}
+              className="w-full sm:w-auto bg-gradient-to-r from-yellow-500 to-amber-600 hover:from-yellow-600 hover:to-amber-700 text-black font-semibold px-6 py-3 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300"
+              size="lg"
+            >
+              <TrendingUp className="w-4 h-4 mr-2" />
+              Generate Report
+              <ArrowRight className="w-4 h-4 ml-2" />
+            </Button>
           </div>
         </CardContent>
       </Card>
