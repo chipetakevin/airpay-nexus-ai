@@ -31,24 +31,24 @@ export const PDFGenerator = ({ transaction }: PDFGeneratorProps) => {
     doc.setFillColor(79, 70, 229); // Primary blue
     doc.rect(0, 0, pageWidth, 70, 'F');
     
-    // Divinely Mobile logo area (simplified representation)
+    // Divinely Mobile logo area with consistent branding
     doc.setFillColor(255, 255, 255);
-    doc.roundedRect(margin, 15, 50, 40, 8, 8, 'F');
+    doc.roundedRect(margin, 15, 60, 20, 4, 4, 'F');
     
-    // Logo icon representation (mobile phone icon)
+    // Logo icon representation (mobile phone icon in rounded purple background)
     doc.setFillColor(79, 70, 229);
-    doc.roundedRect(margin + 15, 22, 20, 26, 3, 3, 'F');
+    doc.roundedRect(margin + 4, 18, 14, 14, 2, 2, 'F');
     doc.setFillColor(255, 255, 255);
-    doc.circle(margin + 25, 30, 2, 'F');
-    doc.rect(margin + 20, 35, 10, 15, 'F');
+    doc.circle(margin + 11, 22, 1, 'F');
+    doc.rect(margin + 7, 25, 8, 6, 'F');
     
-    // Company name
+    // Company name with consistent Divinely Mobile branding
     doc.setTextColor(79, 70, 229);
-    doc.setFontSize(16);
+    doc.setFontSize(12);
     doc.setFont('helvetica', 'bold');
-    doc.text('Divinely', margin + 55, 30);
+    doc.text('Divinely', margin + 20, 24);
     doc.setTextColor(59, 130, 246);
-    doc.text('Mobile', margin + 55, 45);
+    doc.text('Mobile', margin + 20, 30);
     
     // Receipt title
     doc.setTextColor(255, 255, 255);
@@ -78,9 +78,9 @@ export const PDFGenerator = ({ transaction }: PDFGeneratorProps) => {
     doc.setFillColor(248, 250, 252);
     doc.roundedRect(margin, yPos, pageWidth - (margin * 2), 120, 5, 5, 'F');
     
-    // Card border
-    doc.setDrawColor(226, 232, 240);
-    doc.setLineWidth(0.5);
+    // Card border - Changed to blue as requested
+    doc.setDrawColor(59, 130, 246); // Blue border instead of gray
+    doc.setLineWidth(1);
     doc.roundedRect(margin, yPos, pageWidth - (margin * 2), 120, 5, 5, 'S');
     
     // Transaction details
@@ -160,7 +160,7 @@ export const PDFGenerator = ({ transaction }: PDFGeneratorProps) => {
     doc.setFont('helvetica', 'bold');
     doc.text('✓ Transaction Successful', pageWidth - margin - 60, yPos + 17);
     
-    // Footer
+    // Footer with Divinely Mobile branding
     yPos = doc.internal.pageSize.height - 30;
     doc.setTextColor(107, 114, 128);
     doc.setFontSize(8);

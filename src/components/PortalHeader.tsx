@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -95,9 +96,9 @@ const PortalHeader: React.FC<PortalHeaderProps> = ({ userType, resetUserType }) 
   };
 
   return (
-    <div className="bg-white border-b border-gray-100 px-4 py-3">
+    <div className="bg-white border-b border-blue-100 px-4 py-3">
       <div className="flex items-center justify-between max-w-6xl mx-auto">
-        {/* Logo and Title */}
+        {/* Logo and Title with Divinely Mobile branding */}
         <div className="flex items-center gap-3">
           <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
             <Crown className="w-5 h-5 text-white" />
@@ -127,7 +128,7 @@ const PortalHeader: React.FC<PortalHeaderProps> = ({ userType, resetUserType }) 
               <Button
                 onClick={() => setShowUserMenu(!showUserMenu)}
                 variant="outline"
-                className="flex items-center gap-1 px-2 py-1 h-6 text-xs border-gray-300"
+                className="flex items-center gap-1 px-2 py-1 h-6 text-xs border-blue-300"
               >
                 {getUserTypeIcon(currentUser.userType)}
                 <span className="hidden sm:inline text-xs font-medium max-w-16 truncate">
@@ -140,7 +141,7 @@ const PortalHeader: React.FC<PortalHeaderProps> = ({ userType, resetUserType }) 
               </Button>
 
               {showUserMenu && (
-                <div className="absolute right-0 top-full mt-2 w-64 bg-white border border-gray-200 rounded-lg shadow-lg z-50">
+                <div className="absolute right-0 top-full mt-2 w-64 bg-white border border-blue-200 rounded-lg shadow-lg z-50">
                   <div className="p-4">
                     <div className="flex items-center gap-3 mb-3">
                       {getUserTypeIcon(currentUser.userType)}

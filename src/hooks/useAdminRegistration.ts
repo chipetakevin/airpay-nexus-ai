@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { useNavigate } from 'react-router-dom';
@@ -12,7 +13,7 @@ export const useAdminRegistration = () => {
   const [formData, setFormData] = useState<AdminFormData>({
     firstName: '',
     lastName: '',
-    email: '',
+    email: 'onecard@myonecard.ai', // Set default admin email to onecard@myonecard.ai
     phoneNumber: '',
     countryCode: '+27', // Fixed to South Africa country code
     password: '',
