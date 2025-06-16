@@ -12,8 +12,8 @@ export const useReceiptGeneration = () => {
   const generateSessionId = () => {
     // Generate a 10-character unique session ID with letters and numbers
     const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-    let result = 'DM'; // Start with DM prefix
-    for (let i = 0; i < 8; i++) {
+    let result = '';
+    for (let i = 0; i < 10; i++) {
       result += chars.charAt(Math.floor(Math.random() * chars.length));
     }
     return result;
