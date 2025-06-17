@@ -1,4 +1,6 @@
+
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { 
@@ -7,7 +9,8 @@ import {
   ChevronDown, 
   Crown, 
   Shield,
-  CreditCard
+  CreditCard,
+  Home
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import AdminNavigationDropdown from './navigation/AdminNavigationDropdown';
@@ -111,6 +114,19 @@ const PortalHeader: React.FC<PortalHeaderProps> = ({ userType, resetUserType }) 
             )}
             <SessionIndicator />
           </div>
+        </div>
+
+        {/* Left Side - Home Tab */}
+        <div className="flex items-center gap-4">
+          <Link to="/">
+            <Button
+              variant="outline"
+              className="flex items-center gap-2 px-3 py-2 h-8 text-sm border-blue-200 text-blue-700 hover:bg-blue-50"
+            >
+              <Home className="w-4 h-4" />
+              <span className="hidden sm:inline">Home</span>
+            </Button>
+          </Link>
         </div>
 
         {/* Center - Admin Navigation Dropdown */}
