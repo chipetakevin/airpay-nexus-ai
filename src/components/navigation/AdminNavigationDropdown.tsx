@@ -11,7 +11,8 @@ import {
   Scan, 
   FileCheck, 
   Flame,
-  Settings
+  Settings,
+  Calculator
 } from 'lucide-react';
 
 interface AdminNavigationDropdownProps {
@@ -65,6 +66,17 @@ const AdminNavigationDropdown: React.FC<AdminNavigationDropdownProps> = ({
           name: 'WhatsApp Business', 
           path: '/whatsapp-assistant', 
           icon: <MessageCircle className="w-4 h-4" />
+        }
+      ]
+    },
+    {
+      title: 'Payroll & HR',
+      color: 'text-green-600',
+      items: [
+        { 
+          name: 'DM Payroll System', 
+          path: '/dm-payroll', 
+          icon: <Calculator className="w-4 h-4" />
         }
       ]
     },
