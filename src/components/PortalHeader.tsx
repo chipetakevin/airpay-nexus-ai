@@ -98,110 +98,119 @@ const PortalHeader: React.FC<PortalHeaderProps> = ({ userType, resetUserType }) 
   };
 
   return (
-    <div className="bg-white border-b border-blue-100 px-6 py-4 shadow-sm">
-      <div className="flex items-center justify-between max-w-7xl mx-auto">
-        {/* Left Section - Logo and Status */}
-        <div className="flex items-center gap-6">
-          <div className="flex items-center gap-4">
-            <div className="w-14 h-14 bg-gradient-to-br from-blue-500 to-purple-600 rounded-2xl flex items-center justify-center shadow-xl">
-              <Crown className="w-8 h-8 text-white" />
+    <div className="bg-white border-b border-blue-100 shadow-sm">
+      <div className="px-3 sm:px-6 py-3 sm:py-4">
+        <div className="flex items-center justify-between max-w-7xl mx-auto">
+          {/* Left Section - Logo and Status */}
+          <div className="flex items-center gap-2 sm:gap-4 flex-shrink-0">
+            <div className="flex items-center gap-2 sm:gap-3">
+              <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl sm:rounded-2xl flex items-center justify-center shadow-lg">
+                <Crown className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
+              </div>
+              <div className="flex flex-col items-start gap-1">
+                {currentUser?.isUnifiedProfile && (
+                  <Badge className="bg-gradient-to-r from-orange-400 to-orange-500 text-white text-xs px-2 py-0.5 rounded-full flex items-center justify-center shadow-md">
+                    <span className="mr-1">🌟</span>
+                    <span className="font-medium text-xs">Unified Access</span>
+                  </Badge>
+                )}
+                <div className="hidden sm:block">
+                  <SessionIndicator />
+                </div>
+              </div>
             </div>
-            <div className="flex flex-col items-start gap-2">
-              {currentUser?.isUnifiedProfile && (
-                <Badge className="bg-gradient-to-r from-orange-400 to-orange-500 text-white text-xs px-3 py-1 rounded-full flex items-center justify-center shadow-md">
-                  <span className="mr-1">🌟</span>
-                  <span className="font-medium">Unified Access</span>
-                </Badge>
-              )}
-              <SessionIndicator />
-            </div>
+
+            {/* Home Button - Compact on mobile */}
+            <Link to="/" className="ml-1 sm:ml-3">
+              <Button
+                variant="outline"
+                size="sm"
+                className="flex items-center gap-1 sm:gap-2 px-2 sm:px-3 py-1.5 sm:py-2 h-8 sm:h-9 text-xs sm:text-sm border-blue-200 text-blue-700 hover:bg-blue-50 hover:border-blue-300 transition-all duration-200 shadow-sm"
+              >
+                <Home className="w-3 h-3 sm:w-4 sm:h-4" />
+                <span className="hidden xs:inline font-medium">Home</span>
+              </Button>
+            </Link>
           </div>
 
-          {/* Home Button - Well spaced */}
-          <Link to="/" className="ml-4">
-            <Button
-              variant="outline"
-              className="flex items-center gap-3 px-4 py-2 h-10 text-sm border-blue-200 text-blue-700 hover:bg-blue-50 hover:border-blue-300 transition-all duration-200 shadow-sm"
-            >
-              <Home className="w-4 h-4" />
-              <span className="hidden sm:inline font-medium">Home</span>
-            </Button>
-          </Link>
-        </div>
+          {/* Center - Admin Navigation */}
+          <div className="flex-1 flex justify-center px-2 sm:px-4 max-w-xs sm:max-w-none">
+            <AdminNavigationDropdown isAdminAuthenticated={isAdminAuthenticated} />
+          </div>
 
-        {/* Center - Admin Navigation */}
-        <div className="flex-1 flex justify-center px-8">
-          <AdminNavigationDropdown isAdminAuthenticated={isAdminAuthenticated} />
-        </div>
+          {/* Right Section - User Menu */}
+          <div className="flex items-center gap-2 sm:gap-4 flex-shrink-0">
+            {currentUser && (
+              <div className="relative">
+                <Button
+                  onClick={() => setShowUserMenu(!showUserMenu)}
+                  variant="outline"
+                  size="sm"
+                  className="flex items-center gap-1 sm:gap-2 px-2 sm:px-3 py-1.5 sm:py-2 h-8 sm:h-9 text-xs sm:text-sm border-blue-300 hover:bg-blue-50 hover:border-blue-400 transition-all duration-200 shadow-sm"
+                >
+                  {getUserTypeIcon(currentUser.userType)}
+                  <span className="hidden sm:inline text-xs font-medium max-w-16 truncate">
+                    {currentUser.firstName}
+                  </span>
+                  <Badge className={`${getUserTypeColor(currentUser.userType)} text-xs px-1.5 py-0.5 shadow-sm`}>
+                    {currentUser.userType}
+                  </Badge>
+                  <ChevronDown className="w-3 h-3" />
+                </Button>
 
-        {/* Right Section - User Menu and Get Started */}
-        <div className="flex items-center gap-6">
-          {currentUser && (
-            <div className="relative">
-              <Button
-                onClick={() => setShowUserMenu(!showUserMenu)}
-                variant="outline"
-                className="flex items-center gap-3 px-4 py-2 h-10 text-sm border-blue-300 hover:bg-blue-50 hover:border-blue-400 transition-all duration-200 shadow-sm"
-              >
-                {getUserTypeIcon(currentUser.userType)}
-                <span className="hidden sm:inline text-sm font-medium max-w-20 truncate">
-                  {currentUser.firstName}
-                </span>
-                <Badge className={`${getUserTypeColor(currentUser.userType)} text-xs px-2 py-1 shadow-sm`}>
-                  {currentUser.userType}
-                </Badge>
-                <ChevronDown className="w-4 h-4" />
-              </Button>
-
-              {showUserMenu && (
-                <div className="absolute right-0 top-full mt-3 w-72 bg-white border border-blue-200 rounded-xl shadow-xl z-50 overflow-hidden">
-                  <div className="p-6">
-                    <div className="flex items-center gap-4 mb-4 pb-4 border-b border-gray-100">
-                      <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center">
-                        {getUserTypeIcon(currentUser.userType)}
-                      </div>
-                      <div>
-                        <div className="font-semibold text-gray-800 text-base">
-                          {currentUser.firstName} {currentUser.lastName}
+                {showUserMenu && (
+                  <div className="absolute right-0 top-full mt-2 w-64 sm:w-72 bg-white border border-blue-200 rounded-xl shadow-xl z-50 overflow-hidden">
+                    <div className="p-4 sm:p-6">
+                      <div className="flex items-center gap-3 mb-3 pb-3 border-b border-gray-100">
+                        <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg sm:rounded-xl flex items-center justify-center">
+                          {getUserTypeIcon(currentUser.userType)}
                         </div>
-                        <div className="text-sm text-gray-500">{currentUser.email}</div>
+                        <div>
+                          <div className="font-semibold text-gray-800 text-sm sm:text-base">
+                            {currentUser.firstName} {currentUser.lastName}
+                          </div>
+                          <div className="text-xs sm:text-sm text-gray-500">{currentUser.email}</div>
+                        </div>
                       </div>
+                      
+                      {currentUser.cardNumber && (
+                        <div className="text-xs sm:text-sm text-gray-600 mb-3 p-2 sm:p-3 bg-gray-50 rounded-lg">
+                          <span className="font-medium">Card:</span> ****{currentUser.cardNumber.slice(-4)}
+                        </div>
+                      )}
+                      
+                      {currentUser.isUnifiedProfile && (
+                        <Badge className="bg-orange-100 text-orange-800 text-xs sm:text-sm mb-3 px-2 sm:px-3 py-1.5 sm:py-2 w-full justify-center">
+                          🌟 Full Access Profile
+                        </Badge>
+                      )}
+                      
+                      <Button
+                        onClick={handleLogout}
+                        variant="outline"
+                        size="sm"
+                        className="w-full flex items-center gap-2 text-red-600 border-red-200 hover:bg-red-50 hover:border-red-300 h-8 sm:h-9"
+                      >
+                        <LogOut className="w-3 h-3 sm:w-4 sm:h-4" />
+                        <span className="font-medium text-xs sm:text-sm">Logout</span>
+                      </Button>
                     </div>
-                    
-                    {currentUser.cardNumber && (
-                      <div className="text-sm text-gray-600 mb-3 p-3 bg-gray-50 rounded-lg">
-                        <span className="font-medium">Card:</span> ****{currentUser.cardNumber.slice(-4)}
-                      </div>
-                    )}
-                    
-                    {currentUser.isUnifiedProfile && (
-                      <Badge className="bg-orange-100 text-orange-800 text-sm mb-4 px-3 py-2 w-full justify-center">
-                        🌟 Full Access Profile
-                      </Badge>
-                    )}
-                    
-                    <Button
-                      onClick={handleLogout}
-                      variant="outline"
-                      className="w-full flex items-center gap-3 text-red-600 border-red-200 hover:bg-red-50 hover:border-red-300 h-10"
-                    >
-                      <LogOut className="w-4 h-4" />
-                      <span className="font-medium">Logout</span>
-                    </Button>
                   </div>
-                </div>
-              )}
-            </div>
-          )}
+                )}
+              </div>
+            )}
 
-          {!currentUser && (
-            <Button
-              onClick={() => window.location.href = '/portal?tab=registration'}
-              className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-6 py-2 h-10 text-sm font-semibold shadow-lg hover:shadow-xl transition-all duration-200"
-            >
-              Get Started
-            </Button>
-          )}
+            {!currentUser && (
+              <Button
+                onClick={() => window.location.href = '/portal?tab=registration'}
+                size="sm"
+                className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-3 sm:px-4 py-1.5 sm:py-2 h-8 sm:h-9 text-xs sm:text-sm font-semibold shadow-lg hover:shadow-xl transition-all duration-200"
+              >
+                <span className="hidden xs:inline">Get Started</span>
+                <span className="xs:hidden">Start</span>
+              </Button>
+            )}
+          </div>
         </div>
       </div>
 
