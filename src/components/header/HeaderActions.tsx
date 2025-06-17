@@ -46,14 +46,16 @@ const HeaderActions = ({ isMenuOpen, toggleMenu }: HeaderActionsProps) => {
                 <Store className="w-4 h-4 mr-2" />
                 Vendor Login
               </Button>
-              <Link to="/portal?tab=registration">
-                <Badge className="bg-green-600 text-white hover:bg-green-700 cursor-pointer px-3 py-1">
-                  Register Free
-                </Badge>
-              </Link>
             </div>
           )}
         </div>
+
+        {/* Get Started Button - Moved to far right */}
+        <Link to="/portal?tab=registration" className="hidden md:block">
+          <Button className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold px-6 py-2 rounded-lg shadow-lg">
+            Get Started
+          </Button>
+        </Link>
 
         {/* Mobile Menu Toggle */}
         <Button
