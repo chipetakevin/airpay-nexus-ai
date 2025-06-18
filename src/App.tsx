@@ -17,6 +17,7 @@ import MVNXBaaS from "./pages/MVNXBaaS";
 import MasterDashboard from "./pages/MasterDashboard";
 import USSDSystem from "./pages/USSDSystem";
 import DMPayroll from "./pages/DMPayroll";
+import DGXStation from "./pages/DGXStation";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -41,6 +42,7 @@ const App = () => (
           <Route path="/master-dashboard" element={<MasterDashboard />} />
           <Route path="/ussd-system" element={<USSDSystem />} />
           <Route path="/dm-payroll" element={<DMPayroll />} />
+          <Route path="/dgx-station" element={<DGXStation />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>

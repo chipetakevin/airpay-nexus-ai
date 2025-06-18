@@ -12,7 +12,10 @@ import {
   FileCheck, 
   Flame,
   Settings,
-  Calculator
+  Calculator,
+  Server,
+  Cpu,
+  HardDrive
 } from 'lucide-react';
 
 interface AdminNavigationDropdownProps {
@@ -45,6 +48,27 @@ const AdminNavigationDropdown: React.FC<AdminNavigationDropdownProps> = ({
           name: 'Mobile BaaS Portal', 
           path: '/baas-platform', 
           icon: <Brain className="w-4 h-4" />
+        }
+      ]
+    },
+    {
+      title: 'DGX Station',
+      color: 'text-purple-600',
+      items: [
+        { 
+          name: 'DGX Control Center', 
+          path: '/dgx-station', 
+          icon: <Server className="w-4 h-4" />
+        },
+        { 
+          name: 'Agentic Workflows', 
+          path: '/dgx-station?tab=workflows', 
+          icon: <Cpu className="w-4 h-4" />
+        },
+        { 
+          name: 'Resource Management', 
+          path: '/dgx-station?tab=resources', 
+          icon: <HardDrive className="w-4 h-4" />
         }
       ]
     },
@@ -82,7 +106,7 @@ const AdminNavigationDropdown: React.FC<AdminNavigationDropdownProps> = ({
     },
     {
       title: 'AI & Admin',
-      color: 'text-purple-600',
+      color: 'text-indigo-600',
       items: [
         { 
           name: 'AI Document Scanner', 

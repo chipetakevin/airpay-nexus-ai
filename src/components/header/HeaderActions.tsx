@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Menu, User, LogIn, Store } from 'lucide-react';
+import { Menu, User, LogIn, Store, Server } from 'lucide-react';
 import CustomerProfileDropdown from '../CustomerProfileDropdown';
 import LoginModal from '../auth/LoginModal';
 import VendorLoginModal from '../auth/VendorLoginModal';
@@ -48,6 +48,20 @@ const HeaderActions = ({ isMenuOpen, toggleMenu }: HeaderActionsProps) => {
               </Button>
             </div>
           )}
+        </div>
+
+        {/* DGX Station Quick Access - Desktop */}
+        <div className="hidden lg:block">
+          <Link to="/dgx-station">
+            <Button 
+              variant="outline" 
+              size="sm"
+              className="border-purple-200 text-purple-700 hover:bg-purple-50"
+            >
+              <Server className="w-4 h-4 mr-2" />
+              DGX Station
+            </Button>
+          </Link>
         </div>
 
         {/* Get Started Button - Moved to far right */}
