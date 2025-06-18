@@ -10,10 +10,10 @@ export const useReceiptGeneration = () => {
   };
 
   const generateSessionId = () => {
-    // Generate a 10-character unique session ID with letters and numbers
+    // Generate a 7-character unique session ID with letters and numbers
     const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
     let result = '';
-    for (let i = 0; i < 10; i++) {
+    for (let i = 0; i < 7; i++) {
       result += chars.charAt(Math.floor(Math.random() * chars.length));
     }
     return result;
