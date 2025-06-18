@@ -99,23 +99,23 @@ const DGXStation = () => {
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50">
       <Header />
       
-      <main className="container mx-auto px-4 py-8">
+      <main className="container mx-auto px-3 py-4 md:px-4 md:py-8">
         {/* Header Section */}
-        <div className="flex items-center justify-between mb-8">
-          <div className="flex items-center gap-4">
-            <div className="w-12 h-12 bg-gradient-to-br from-purple-600 to-blue-600 rounded-2xl flex items-center justify-center shadow-lg">
-              <Server className="w-6 h-6 text-white" />
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 gap-4">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 md:w-12 md:h-12 bg-gradient-to-br from-purple-600 to-blue-600 rounded-xl md:rounded-2xl flex items-center justify-center shadow-lg">
+              <Server className="w-5 h-5 md:w-6 md:h-6 text-white" />
             </div>
             <div>
-              <h1 className="text-3xl font-bold text-gray-900 flex items-center gap-2">
+              <h1 className="text-2xl md:text-3xl font-bold text-gray-900 flex items-center gap-2">
                 DGX Station
-                <Crown className="w-6 h-6 text-yellow-600" />
+                <Crown className="w-5 h-5 md:w-6 md:h-6 text-yellow-600" />
               </h1>
-              <p className="text-gray-600">Enterprise-grade AI processing and data center capabilities</p>
+              <p className="text-sm md:text-base text-gray-600">Enterprise-grade AI processing and data center capabilities</p>
             </div>
           </div>
           <Link to="/">
-            <Button variant="outline" className="flex items-center gap-2">
+            <Button variant="outline" className="flex items-center gap-2 text-sm">
               <Home className="w-4 h-4" />
               Home
             </Button>
@@ -123,16 +123,16 @@ const DGXStation = () => {
         </div>
 
         {/* System Overview Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-6 mb-6">
           {systemMetrics.map((metric, index) => (
             <Card key={index} className="hover:shadow-lg transition-shadow">
-              <CardContent className="p-6">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm font-medium text-gray-600">{metric.label}</p>
-                    <p className={`text-2xl font-bold ${metric.color}`}>{metric.value}</p>
+              <CardContent className="p-3 md:p-6">
+                <div className="flex flex-col items-center text-center sm:flex-row sm:text-left sm:justify-between">
+                  <div className="mb-2 sm:mb-0">
+                    <p className="text-xs md:text-sm font-medium text-gray-600 mb-1">{metric.label}</p>
+                    <p className={`text-lg md:text-2xl font-bold ${metric.color}`}>{metric.value}</p>
                   </div>
-                  <div className={`${metric.color}`}>
+                  <div className={`${metric.color} sm:ml-2`}>
                     {metric.icon}
                   </div>
                 </div>
@@ -141,43 +141,72 @@ const DGXStation = () => {
           ))}
         </div>
 
-        {/* Main Dashboard Tabs */}
-        <Tabs defaultValue="workflows" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-3">
-            <TabsTrigger value="workflows" className="flex items-center gap-2">
-              <Brain className="w-4 h-4" />
-              Agentic Workflows
-            </TabsTrigger>
-            <TabsTrigger value="resources" className="flex items-center gap-2">
-              <HardDrive className="w-4 h-4" />
-              Resource Management
-            </TabsTrigger>
-            <TabsTrigger value="monitor" className="flex items-center gap-2">
-              <Activity className="w-4 h-4" />
-              System Monitor
-            </TabsTrigger>
-          </TabsList>
+        {/* Enhanced Mobile-First Tabs */}
+        <Tabs defaultValue="workflows" className="space-y-4">
+          {/* Mobile-First Vertical Tab Navigation */}
+          <div className="w-full">
+            <TabsList className="flex flex-col w-full h-auto p-1 bg-white shadow-lg border border-blue-100 rounded-xl space-y-1">
+              <TabsTrigger 
+                value="workflows" 
+                className="w-full flex items-center justify-start gap-3 p-4 text-left text-sm font-medium data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-50 data-[state=active]:to-blue-50 data-[state=active]:text-purple-700 data-[state=active]:border-l-4 data-[state=active]:border-l-purple-500 hover:bg-gray-50 transition-all rounded-lg"
+              >
+                <div className="p-2 rounded-lg bg-purple-100 text-purple-600">
+                  <Brain className="w-5 h-5" />
+                </div>
+                <div className="flex-1">
+                  <div className="font-semibold">Agentic Workflows</div>
+                  <div className="text-xs text-gray-500">Manage AI workflows</div>
+                </div>
+              </TabsTrigger>
+              
+              <TabsTrigger 
+                value="resources" 
+                className="w-full flex items-center justify-start gap-3 p-4 text-left text-sm font-medium data-[state=active]:bg-gradient-to-r data-[state=active]:from-green-50 data-[state=active]:to-emerald-50 data-[state=active]:text-green-700 data-[state=active]:border-l-4 data-[state=active]:border-l-green-500 hover:bg-gray-50 transition-all rounded-lg"
+              >
+                <div className="p-2 rounded-lg bg-green-100 text-green-600">
+                  <HardDrive className="w-5 h-5" />
+                </div>
+                <div className="flex-1">
+                  <div className="font-semibold">Resource Management</div>
+                  <div className="text-xs text-gray-500">Monitor system resources</div>
+                </div>
+              </TabsTrigger>
+              
+              <TabsTrigger 
+                value="monitor" 
+                className="w-full flex items-center justify-start gap-3 p-4 text-left text-sm font-medium data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-50 data-[state=active]:to-indigo-50 data-[state=active]:text-blue-700 data-[state=active]:border-l-4 data-[state=active]:border-l-blue-500 hover:bg-gray-50 transition-all rounded-lg"
+              >
+                <div className="p-2 rounded-lg bg-blue-100 text-blue-600">
+                  <Activity className="w-5 h-5" />
+                </div>
+                <div className="flex-1">
+                  <div className="font-semibold">System Monitor</div>
+                  <div className="text-xs text-gray-500">Real-time system status</div>
+                </div>
+              </TabsTrigger>
+            </TabsList>
+          </div>
 
-          {/* Workflows Tab */}
-          <TabsContent value="workflows" className="space-y-6">
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Brain className="w-5 h-5 text-purple-600" />
+          {/* Tab Content */}
+          <TabsContent value="workflows" className="space-y-4 mt-6">
+            <Card className="border-purple-200 shadow-lg">
+              <CardHeader className="bg-gradient-to-r from-purple-50 to-blue-50 rounded-t-lg">
+                <CardTitle className="flex items-center gap-2 text-purple-700">
+                  <Brain className="w-5 h-5" />
                   Active Agentic Workflows
                 </CardTitle>
               </CardHeader>
-              <CardContent>
+              <CardContent className="p-4">
                 <div className="grid gap-4">
                   {workflowTemplates.map((workflow) => (
-                    <Card key={workflow.id} className="border-l-4 border-l-blue-500">
+                    <Card key={workflow.id} className="border-l-4 border-l-purple-500 hover:shadow-md transition-shadow">
                       <CardContent className="p-4">
-                        <div className="flex items-center justify-between mb-3">
-                          <div className="flex-1">
-                            <h3 className="font-semibold text-gray-900">{workflow.name}</h3>
+                        <div className="flex flex-col lg:flex-row lg:items-center justify-between mb-3 gap-3">
+                          <div className="flex-1 min-w-0">
+                            <h3 className="font-semibold text-gray-900 mb-1">{workflow.name}</h3>
                             <p className="text-sm text-gray-600">{workflow.description}</p>
                           </div>
-                          <div className="flex items-center gap-3">
+                          <div className="flex items-center gap-2 flex-wrap">
                             <Badge className={getStatusColor(workflow.status)}>
                               {workflow.status}
                             </Badge>
@@ -195,7 +224,7 @@ const DGXStation = () => {
                           </div>
                         </div>
                         
-                        <div className="grid grid-cols-3 gap-4">
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                           <div>
                             <div className="flex items-center justify-between text-sm mb-1">
                               <span>CPU</span>
@@ -230,17 +259,16 @@ const DGXStation = () => {
             </Card>
           </TabsContent>
 
-          {/* Resources Tab */}
-          <TabsContent value="resources" className="space-y-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <Cpu className="w-5 h-5 text-blue-600" />
+          <TabsContent value="resources" className="space-y-4 mt-6">
+            <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
+              <Card className="border-green-200 shadow-lg">
+                <CardHeader className="bg-gradient-to-r from-green-50 to-emerald-50 rounded-t-lg">
+                  <CardTitle className="flex items-center gap-2 text-green-700">
+                    <Cpu className="w-5 h-5" />
                     Compute Resources
                   </CardTitle>
                 </CardHeader>
-                <CardContent className="space-y-4">
+                <CardContent className="space-y-4 p-4">
                   <div>
                     <div className="flex justify-between text-sm mb-2">
                       <span>GPU Utilization</span>
@@ -265,14 +293,14 @@ const DGXStation = () => {
                 </CardContent>
               </Card>
 
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <Database className="w-5 h-5 text-green-600" />
+              <Card className="border-green-200 shadow-lg">
+                <CardHeader className="bg-gradient-to-r from-green-50 to-emerald-50 rounded-t-lg">
+                  <CardTitle className="flex items-center gap-2 text-green-700">
+                    <Database className="w-5 h-5" />
                     Storage & Network
                   </CardTitle>
                 </CardHeader>
-                <CardContent className="space-y-4">
+                <CardContent className="space-y-4 p-4">
                   <div>
                     <div className="flex justify-between text-sm mb-2">
                       <span>NVMe Storage</span>
@@ -299,16 +327,15 @@ const DGXStation = () => {
             </div>
           </TabsContent>
 
-          {/* Monitor Tab */}
-          <TabsContent value="monitor" className="space-y-6">
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Activity className="w-5 h-5 text-red-600" />
+          <TabsContent value="monitor" className="space-y-4 mt-6">
+            <Card className="border-blue-200 shadow-lg">
+              <CardHeader className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-t-lg">
+                <CardTitle className="flex items-center gap-2 text-blue-700">
+                  <Activity className="w-5 h-5" />
                   Real-time System Monitor
                 </CardTitle>
               </CardHeader>
-              <CardContent>
+              <CardContent className="p-4">
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                   <div className="space-y-4">
                     <h3 className="font-semibold flex items-center gap-2">
@@ -365,13 +392,13 @@ const DGXStation = () => {
         </Tabs>
 
         {/* Integration with BaaS */}
-        <Card className="mt-8 bg-gradient-to-r from-purple-50 to-blue-50 border-purple-200">
-          <CardContent className="p-6">
-            <div className="flex items-center gap-4">
-              <div className="w-12 h-12 bg-gradient-to-br from-purple-600 to-blue-600 rounded-xl flex items-center justify-center">
-                <Zap className="w-6 h-6 text-white" />
+        <Card className="mt-6 bg-gradient-to-r from-purple-50 to-blue-50 border-purple-200 shadow-lg">
+          <CardContent className="p-4 md:p-6">
+            <div className="flex flex-col lg:flex-row items-start lg:items-center gap-4">
+              <div className="w-10 h-10 md:w-12 md:h-12 bg-gradient-to-br from-purple-600 to-blue-600 rounded-xl flex items-center justify-center flex-shrink-0">
+                <Zap className="w-5 h-5 md:w-6 md:h-6 text-white" />
               </div>
-              <div className="flex-1">
+              <div className="flex-1 min-w-0">
                 <h3 className="font-bold text-gray-900 mb-2">BaaS Integration Active</h3>
                 <p className="text-gray-600 text-sm">
                   DGX Station is fully integrated with Divinely Mobile's BaaS platform, providing 
@@ -379,7 +406,7 @@ const DGXStation = () => {
                   and AI processing tasks.
                 </p>
               </div>
-              <div className="flex gap-2">
+              <div className="flex gap-2 flex-shrink-0">
                 <Link to="/baas-platform">
                   <Button variant="outline" size="sm">
                     View BaaS
