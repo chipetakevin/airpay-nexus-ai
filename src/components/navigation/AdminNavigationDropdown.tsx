@@ -35,7 +35,7 @@ const AdminNavigationDropdown: React.FC<AdminNavigationDropdownProps> = ({
       color: 'text-blue-600',
       items: [
         { 
-          name: 'Divinely BaaS Platform', 
+          name: 'DM BaaS Platform', 
           path: '/devine-baas', 
           icon: <Crown className="w-3 h-3" />
         },

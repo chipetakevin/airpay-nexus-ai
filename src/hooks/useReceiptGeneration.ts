@@ -10,7 +10,7 @@ export const useReceiptGeneration = () => {
   };
 
   const generateSessionId = () => {
-    // Generate a 7-character unique session ID with letters and numbers
+    // Generate exactly 7-character unique session ID with letters and numbers
     const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
     let result = '';
     for (let i = 0; i < 7; i++) {
@@ -75,7 +75,9 @@ export const useReceiptGeneration = () => {
       }
 
       const customerName = getCustomerDisplayName();
-      const sessionId = generateSessionId();
+      const sessionId = generateSessionId(); // This now generates exactly 7 characters
+
+      console.log(`Generated 7-character session ID: ${sessionId} (length: ${sessionId.length})`);
 
       // Enhanced receipt data for both WhatsApp and Email
       const baseReceiptData = {

@@ -68,7 +68,7 @@ const CustomerTable = ({
   ];
 
   const getTabClassName = (tabValue: string, color: string) => {
-    let baseClass = "flex flex-col items-center gap-1 p-3 rounded-xl transition-all duration-300 min-h-[65px] flex-1 border text-xs shadow-sm relative overflow-hidden";
+    let baseClass = "flex flex-col items-center gap-1 p-2 rounded-xl transition-all duration-300 min-h-[55px] flex-1 border text-xs shadow-sm relative overflow-hidden";
     
     const colorClasses = {
       blue: "data-[state=active]:bg-gradient-to-br data-[state=active]:from-blue-500 data-[state=active]:to-cyan-600 data-[state=active]:text-white data-[state=active]:shadow-lg data-[state=active]:border-blue-400 bg-blue-50 border-blue-200 hover:border-blue-300 hover:bg-blue-100",
@@ -80,40 +80,22 @@ const CustomerTable = ({
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        {/* Mobile-First Tab Navigation */}
-        <div className="w-full mb-6">
+        {/* Compact Tab Navigation */}
+        <div className="w-full mb-4">
           <TabsList className="w-full max-w-full">
-            {/* Mobile: Single column */}
-            <div className="grid grid-cols-1 gap-2 w-full sm:hidden">
+            <div className="grid grid-cols-2 gap-1 w-full">
               {tabs.map((tab) => (
                 <TabsTrigger 
                   key={tab.value}
                   value={tab.value} 
                   className={getTabClassName(tab.value, tab.color)}
                 >
-                  <span className="text-lg">{tab.icon}</span>
+                  <span className="text-base">{tab.icon}</span>
                   <div className="text-center">
-                    <div className="font-semibold leading-tight text-sm">{tab.label}</div>
+                    <div className="font-semibold leading-tight text-xs">{tab.label}</div>
                     <div className="text-xs opacity-75 leading-tight">{tab.description}</div>
-                  </div>
-                </TabsTrigger>
-              ))}
-            </div>
-
-            {/* Desktop: Single Row */}
-            <div className="hidden sm:grid sm:grid-cols-2 gap-2 w-full">
-              {tabs.map((tab) => (
-                <TabsTrigger 
-                  key={tab.value}
-                  value={tab.value} 
-                  className={getTabClassName(tab.value, tab.color)}
-                >
-                  <span className="text-xl">{tab.icon}</span>
-                  <div className="text-center">
-                    <div className="font-semibold text-sm">{tab.label}</div>
-                    <div className="text-xs opacity-75">{tab.description}</div>
                   </div>
                 </TabsTrigger>
               ))}
@@ -121,16 +103,16 @@ const CustomerTable = ({
           </TabsList>
         </div>
 
-        {/* Tab Content */}
-        <TabsContent value="directory" className="space-y-4 animate-fade-in">
+        {/* Customer Directory Tab - Mobile-First Vertical Layout */}
+        <TabsContent value="directory" className="space-y-3 animate-fade-in">
           <Card>
-            <CardHeader>
+            <CardHeader className="pb-3">
               <CardTitle className="text-lg flex items-center gap-2">
                 <Users className="w-5 h-5 text-blue-600" />
                 Customer Directory ({filteredCustomers.length})
               </CardTitle>
             </CardHeader>
-            <CardContent>
+            <CardContent className="p-3">
               <div className="mb-4">
                 <div className="relative">
                   <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
@@ -143,64 +125,76 @@ const CustomerTable = ({
                 </div>
               </div>
 
-              <div className="overflow-x-auto">
-                <table className="w-full">
-                  <thead>
-                    <tr className="border-b">
-                      <th className="text-left p-2 font-semibold">Customer</th>
-                      <th className="text-left p-2 font-semibold">Contact</th>
-                      <th className="text-left p-2 font-semibold">Balance</th>
-                      <th className="text-left p-2 font-semibold">Network</th>
-                      <th className="text-left p-2 font-semibold">Status</th>
-                      <th className="text-left p-2 font-semibold">Actions</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {filteredCustomers.map((customer) => (
-                      <tr key={customer.id} className="border-b hover:bg-gray-50">
-                        <td className="p-2">
-                          <div>
-                            <div className="font-medium">{customer.firstName} {customer.lastName}</div>
-                            <div className="text-sm text-gray-500">Joined {formatDate(customer.registrationDate)}</div>
+              {/* Mobile-First Vertical Card Layout */}
+              <div className="space-y-3">
+                {filteredCustomers.map((customer) => (
+                  <Card key={customer.id} className="bg-gray-50 border-l-4 border-l-blue-500">
+                    <CardContent className="p-3">
+                      <div className="space-y-2">
+                        {/* Header with Customer Name and Status */}
+                        <div className="flex items-center justify-between">
+                          <div className="flex-1 min-w-0">
+                            <h4 className="font-semibold text-sm text-gray-900 truncate">
+                              {customer.firstName} {customer.lastName}
+                            </h4>
+                            <p className="text-xs text-gray-500">
+                              Joined {formatDate(customer.registrationDate)}
+                            </p>
                           </div>
-                        </td>
-                        <td className="p-2">
-                          <div>
-                            <div className="text-sm">{customer.email}</div>
-                            <div className="text-sm text-gray-500">{customer.phone}</div>
-                          </div>
-                        </td>
-                        <td className="p-2 font-medium">{formatCurrency(customer.onecardBalance)}</td>
-                        <td className="p-2">{customer.networkProvider || 'Unknown'}</td>
-                        <td className="p-2">
-                          <Badge variant={customer.ricaVerified ? "default" : "secondary"}>
+                          <Badge variant={customer.ricaVerified ? "default" : "secondary"} className="text-xs">
                             {customer.ricaVerified ? 'Verified' : 'Pending'}
                           </Badge>
-                        </td>
-                        <td className="p-2">
-                          <div className="flex gap-2">
-                            <Button
-                              size="sm"
-                              variant="outline"
-                              onClick={() => onCustomerSelect(customer)}
-                            >
-                              <Eye className="w-4 h-4 mr-1" />
-                              View
-                            </Button>
-                            <Button
-                              size="sm"
-                              variant="outline"
-                              onClick={() => onGenerateReport(customer)}
-                            >
-                              <FileText className="w-4 h-4 mr-1" />
-                              Report
-                            </Button>
+                        </div>
+                        
+                        {/* Customer Details Grid */}
+                        <div className="grid grid-cols-2 gap-3 text-xs">
+                          <div className="space-y-1">
+                            <div className="flex justify-between">
+                              <span className="text-gray-600">Email:</span>
+                              <span className="font-medium truncate text-right">{customer.email}</span>
+                            </div>
+                            <div className="flex justify-between">
+                              <span className="text-gray-600">Phone:</span>
+                              <span className="font-medium">{customer.phone}</span>
+                            </div>
                           </div>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
+                          <div className="space-y-1">
+                            <div className="flex justify-between">
+                              <span className="text-gray-600">Balance:</span>
+                              <span className="font-semibold text-green-600">{formatCurrency(customer.onecardBalance)}</span>
+                            </div>
+                            <div className="flex justify-between">
+                              <span className="text-gray-600">Network:</span>
+                              <span className="font-medium">{customer.networkProvider || 'Unknown'}</span>
+                            </div>
+                          </div>
+                        </div>
+                        
+                        {/* Actions */}
+                        <div className="flex gap-2 pt-2 border-t border-gray-200">
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={() => onCustomerSelect(customer)}
+                            className="text-xs px-2 py-1 h-6"
+                          >
+                            <Eye className="w-3 h-3 mr-1" />
+                            View
+                          </Button>
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={() => onGenerateReport(customer)}
+                            className="text-xs px-2 py-1 h-6"
+                          >
+                            <FileText className="w-3 h-3 mr-1" />
+                            Report
+                          </Button>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
               </div>
             </CardContent>
           </Card>
