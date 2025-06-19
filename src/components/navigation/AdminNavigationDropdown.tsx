@@ -54,7 +54,7 @@ const AdminNavigationDropdown: React.FC<AdminNavigationDropdownProps> = ({
 
   const navigationCategories = [
     {
-      title: 'BaaS Platform',
+      title: 'DM BaaS Platform',
       color: 'text-blue-600',
       items: [
         { 
@@ -92,6 +92,18 @@ const AdminNavigationDropdown: React.FC<AdminNavigationDropdownProps> = ({
           path: '/devine-baas?tab=portal', 
           icon: <Layers className="w-3 h-3" />,
           description: 'Custom Branding'
+        },
+        { 
+          name: 'Consumer Services', 
+          path: '/devine-baas?tab=consumer', 
+          icon: <Users className="w-3 h-3" />,
+          description: 'Multi-Channel'
+        },
+        { 
+          name: 'Exit Management', 
+          path: '/devine-baas?tab=exit', 
+          icon: <Eye className="w-3 h-3" />,
+          description: 'Migration & Data'
         }
       ]
     },
@@ -122,6 +134,18 @@ const AdminNavigationDropdown: React.FC<AdminNavigationDropdownProps> = ({
           path: '/devine-baas?tab=network', 
           icon: <Network className="w-3 h-3" />,
           description: 'Multi-MNO'
+        },
+        { 
+          name: 'Cellular Capacity', 
+          path: '/devine-baas?tab=capacity', 
+          icon: <Wifi className="w-3 h-3" />,
+          description: 'Bulk GSM'
+        },
+        { 
+          name: 'Quality Monitoring', 
+          path: '/devine-baas?tab=quality-monitor', 
+          icon: <Target className="w-3 h-3" />,
+          description: 'Service Quality'
         }
       ]
     },
@@ -150,8 +174,20 @@ const AdminNavigationDropdown: React.FC<AdminNavigationDropdownProps> = ({
         { 
           name: 'Business Intelligence', 
           path: '/devine-baas?tab=bi', 
-          icon: <BarChart3className="w-3 h-3" />,
+          icon: <BarChart3 className="w-3 h-3" />,
           description: 'Executive Dashboards'
+        },
+        { 
+          name: 'Revenue Optimization', 
+          path: '/devine-baas?tab=revenue', 
+          icon: <CreditCard className="w-3 h-3" />,
+          description: 'Dynamic Pricing'
+        },
+        { 
+          name: 'Churn Prevention', 
+          path: '/devine-baas?tab=churn', 
+          icon: <Activity className="w-3 h-3" />,
+          description: 'Retention AI'
         }
       ]
     },
@@ -206,6 +242,12 @@ const AdminNavigationDropdown: React.FC<AdminNavigationDropdownProps> = ({
           path: '/devine-baas?tab=audit', 
           icon: <FileText className="w-3 h-3" />,
           description: 'Regulatory Reports'
+        },
+        { 
+          name: 'RICA Automation', 
+          path: '/devine-baas?tab=rica-auto', 
+          icon: <FileCheck className="w-3 h-3" />,
+          description: 'Auto Compliance'
         }
       ]
     },
@@ -232,10 +274,16 @@ const AdminNavigationDropdown: React.FC<AdminNavigationDropdownProps> = ({
           description: 'Version Control'
         },
         { 
-          name: 'Exit Management', 
-          path: '/devine-baas?tab=migration', 
-          icon: <Eye className="w-3 h-3" />,
-          description: 'Data Portability'
+          name: 'Performance Optimization', 
+          path: '/devine-baas?tab=optimization', 
+          icon: <Gauge className="w-3 h-3" />,
+          description: 'AI Enhancement'
+        },
+        { 
+          name: 'Automated Operations', 
+          path: '/devine-baas?tab=automation', 
+          icon: <Cpu className="w-3 h-3" />,
+          description: 'Zero-Touch'
         }
       ]
     },
