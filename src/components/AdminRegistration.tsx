@@ -23,8 +23,8 @@ const AdminRegistration = () => {
     return (
       <div className="space-y-6">
         <div>
-          <h2 className="text-2xl font-bold mb-2 text-green-600">✅ Already Authenticated</h2>
-          <p className="text-gray-600">You are currently logged in as an administrator</p>
+          <h2 className="text-2xl font-bold mb-2 text-green-600">✅ Admin Authenticated</h2>
+          <p className="text-gray-600">Currently logged in as administrator</p>
         </div>
 
         <LogoutSection 
@@ -42,7 +42,7 @@ const AdminRegistration = () => {
               className="w-full bg-purple-600 hover:bg-purple-700"
               size="sm"
             >
-              Go to Admin Portal
+              Admin Portal
             </Button>
             <Button 
               onClick={() => window.location.href = '/portal?tab=onecard'}
@@ -50,7 +50,7 @@ const AdminRegistration = () => {
               className="w-full"
               size="sm"
             >
-              Go to OneCard Dashboard
+              OneCard Dashboard
             </Button>
           </div>
         </div>
@@ -62,7 +62,7 @@ const AdminRegistration = () => {
     <div className="space-y-6">
       <div>
         <h2 className="text-2xl font-bold mb-2 text-red-600">🔐 Admin Registration</h2>
-        <p className="text-gray-600">Restricted registration for authorized administrators only</p>
+        <p className="text-gray-600">Authorized administrators only</p>
       </div>
 
       <AdminRegistrationAlerts />

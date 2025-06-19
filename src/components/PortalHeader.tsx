@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
@@ -98,20 +97,20 @@ const PortalHeader: React.FC<PortalHeaderProps> = ({ userType, resetUserType }) 
   };
 
   return (
-    <div className="bg-white border-b border-blue-100 shadow-sm mx-1 rounded-lg">
+    <div className="bg-white border border-blue-100 shadow-sm mx-1 rounded-lg">
       <div className="px-2 sm:px-4 py-2 sm:py-3">
-        <div className="flex items-center justify-between max-w-7xl mx-auto gap-1 sm:gap-2">
+        <div className="flex items-center justify-between max-w-7xl mx-auto gap-2 sm:gap-3">
           {/* Left Section - Logo, Badge and Home */}
-          <div className="flex items-center gap-1 sm:gap-2 flex-shrink-0 min-w-0">
-            <div className="flex items-center gap-1 sm:gap-2">
-              <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg sm:rounded-xl flex items-center justify-center shadow-lg flex-shrink-0">
-                <Crown className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
+          <div className="flex items-center gap-2 sm:gap-3 flex-shrink-0 min-w-0">
+            <div className="flex items-center gap-2 sm:gap-3">
+              <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center shadow-lg flex-shrink-0">
+                <Crown className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
               </div>
               <div className="flex flex-col min-w-0">
                 {currentUser?.isUnifiedProfile && (
-                  <Badge className="bg-gradient-to-r from-orange-400 to-orange-500 text-white text-xs px-1.5 py-0.5 rounded-full flex items-center justify-center shadow-md mb-0.5 whitespace-nowrap">
+                  <Badge className="bg-gradient-to-r from-orange-400 to-orange-500 text-white text-xs px-2 py-1 rounded-full flex items-center justify-center shadow-md mb-1 whitespace-nowrap">
                     <span className="mr-1">🌟</span>
-                    <span className="font-medium text-xs">Unified</span>
+                    <span className="font-medium">Unified</span>
                   </Badge>
                 )}
                 <div className="hidden sm:block">
@@ -120,67 +119,67 @@ const PortalHeader: React.FC<PortalHeaderProps> = ({ userType, resetUserType }) 
               </div>
             </div>
 
-            {/* Compact Home Button */}
+            {/* Enhanced Home Button */}
             <Link to="/">
               <Button
                 variant="outline"
                 size="sm"
-                className="flex items-center gap-1 px-1.5 sm:px-2 py-1 sm:py-1.5 h-6 sm:h-7 text-xs border-blue-200 text-blue-700 hover:bg-blue-50 hover:border-blue-300 transition-all duration-200 shadow-sm"
+                className="flex items-center gap-2 px-3 sm:px-4 py-2 sm:py-2.5 h-8 sm:h-9 border border-blue-200 text-blue-700 hover:bg-blue-50 hover:border-blue-300 transition-all duration-200 shadow-sm"
               >
-                <Home className="w-3 h-3" />
-                <span className="hidden sm:inline font-medium text-xs">Home</span>
+                <Home className="w-4 h-4" />
+                <span className="hidden sm:inline font-medium">Home</span>
               </Button>
             </Link>
           </div>
 
-          {/* Center - Compact Admin Navigation */}
-          <div className="flex-1 flex justify-center px-1 max-w-[180px] sm:max-w-none">
+          {/* Center - Enhanced Admin Navigation */}
+          <div className="flex-1 flex justify-center px-2 max-w-[220px] sm:max-w-none">
             <AdminNavigationDropdown isAdminAuthenticated={isAdminAuthenticated} />
           </div>
 
-          {/* Right Section - Compact User Menu */}
-          <div className="flex items-center gap-1 sm:gap-2 flex-shrink-0">
+          {/* Right Section - Enhanced User Menu */}
+          <div className="flex items-center gap-2 sm:gap-3 flex-shrink-0">
             {currentUser && (
               <div className="relative">
                 <Button
                   onClick={() => setShowUserMenu(!showUserMenu)}
                   variant="outline"
                   size="sm"
-                  className="flex items-center gap-1 px-1.5 sm:px-2 py-1 sm:py-1.5 h-6 sm:h-7 text-xs border-blue-300 hover:bg-blue-50 hover:border-blue-400 transition-all duration-200 shadow-sm"
+                  className="flex items-center gap-2 px-3 sm:px-4 py-2 sm:py-2.5 h-8 sm:h-9 border border-blue-300 hover:bg-blue-50 hover:border-blue-400 transition-all duration-200 shadow-sm"
                 >
                   {getUserTypeIcon(currentUser.userType)}
-                  <span className="hidden xs:inline text-xs font-medium max-w-12 truncate">
+                  <span className="hidden xs:inline font-medium max-w-16 truncate">
                     {currentUser.firstName}
                   </span>
-                  <Badge className={`${getUserTypeColor(currentUser.userType)} text-xs px-1 py-0.5 shadow-sm`}>
+                  <Badge className={`${getUserTypeColor(currentUser.userType)} text-xs px-2 py-1 shadow-sm`}>
                     {currentUser.userType.charAt(0).toUpperCase()}
                   </Badge>
-                  <ChevronDown className="w-2.5 h-2.5" />
+                  <ChevronDown className="w-3 h-3" />
                 </Button>
 
                 {showUserMenu && (
-                  <div className="absolute right-0 top-full mt-1 w-56 sm:w-64 bg-white border border-blue-200 rounded-lg shadow-xl z-50 overflow-hidden">
-                    <div className="p-3 sm:p-4">
-                      <div className="flex items-center gap-2 mb-2 pb-2 border-b border-gray-100">
-                        <div className="w-6 h-6 sm:w-8 sm:h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
+                  <div className="absolute right-0 top-full mt-2 w-64 sm:w-72 bg-white border border-blue-200 rounded-lg shadow-xl z-50 overflow-hidden">
+                    <div className="p-4 sm:p-5">
+                      <div className="flex items-center gap-3 mb-3 pb-3 border-b border-gray-100">
+                        <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
                           {getUserTypeIcon(currentUser.userType)}
                         </div>
                         <div className="min-w-0">
-                          <div className="font-semibold text-gray-800 text-xs sm:text-sm truncate">
+                          <div className="font-semibold text-gray-800 sm:text-base truncate">
                             {currentUser.firstName} {currentUser.lastName}
                           </div>
-                          <div className="text-xs text-gray-500 truncate">{currentUser.email}</div>
+                          <div className="text-sm text-gray-500 truncate">{currentUser.email}</div>
                         </div>
                       </div>
                       
                       {currentUser.cardNumber && (
-                        <div className="text-xs text-gray-600 mb-2 p-2 bg-gray-50 rounded-lg">
+                        <div className="text-sm text-gray-600 mb-3 p-3 bg-gray-50 rounded-lg">
                           <span className="font-medium">Card:</span> ****{currentUser.cardNumber.slice(-4)}
                         </div>
                       )}
                       
                       {currentUser.isUnifiedProfile && (
-                        <Badge className="bg-orange-100 text-orange-800 text-xs mb-2 px-2 py-1 w-full justify-center">
+                        <Badge className="bg-orange-100 text-orange-800 text-sm mb-3 px-3 py-2 w-full justify-center">
                           🌟 Full Access
                         </Badge>
                       )}
@@ -189,9 +188,9 @@ const PortalHeader: React.FC<PortalHeaderProps> = ({ userType, resetUserType }) 
                         onClick={handleLogout}
                         variant="outline"
                         size="sm"
-                        className="w-full flex items-center gap-2 text-red-600 border-red-200 hover:bg-red-50 hover:border-red-300 h-7 text-xs"
+                        className="w-full flex items-center gap-2 text-red-600 border-red-200 hover:bg-red-50 hover:border-red-300 h-9"
                       >
-                        <LogOut className="w-3 h-3" />
+                        <LogOut className="w-4 h-4" />
                         <span className="font-medium">Logout</span>
                       </Button>
                     </div>
@@ -204,10 +203,10 @@ const PortalHeader: React.FC<PortalHeaderProps> = ({ userType, resetUserType }) 
               <Button
                 onClick={() => window.location.href = '/portal?tab=registration'}
                 size="sm"
-                className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-2 sm:px-3 py-1 sm:py-1.5 h-6 sm:h-7 text-xs font-semibold shadow-lg hover:shadow-xl transition-all duration-200"
+                className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-4 sm:px-5 py-2 sm:py-2.5 h-8 sm:h-9 font-semibold shadow-lg hover:shadow-xl transition-all duration-200"
               >
-                <span className="hidden xs:inline">Start</span>
-                <span className="xs:hidden">Go</span>
+                <span className="hidden xs:inline">Get Started</span>
+                <span className="xs:hidden">Start</span>
               </Button>
             )}
           </div>
