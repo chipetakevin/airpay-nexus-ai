@@ -100,10 +100,10 @@ const AdminOneCardDashboard = () => {
   return (
     <div className="space-y-4 sm:space-y-6">
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        {/* Enhanced Tab Navigation */}
+        {/* Enhanced Tab Navigation with better spacing */}
         <div className="w-full mb-6">
-          <TabsList className="w-full max-w-full">
-            <div className="grid grid-cols-4 gap-2 w-full">
+          <TabsList className="w-full max-w-full bg-gradient-to-r from-gray-50 to-gray-100 p-1.5">
+            <div className="grid grid-cols-4 gap-1.5 w-full">
               {tabConfig.map((tab) => (
                 <TabsTrigger 
                   key={tab.value}

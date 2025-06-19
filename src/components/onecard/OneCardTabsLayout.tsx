@@ -84,11 +84,11 @@ const OneCardTabsLayout = ({
   return (
     <div className="w-full">
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        {/* Enhanced Mobile-First Navigation */}
+        {/* Enhanced Mobile-First Navigation with better spacing */}
         <div className="w-full mb-4">
-          <TabsList className="w-full max-w-full">
-            {/* Mobile: Optimized layout for better touch targets */}
-            <div className="grid grid-cols-2 gap-2 w-full sm:hidden">
+          <TabsList className="w-full max-w-full bg-gradient-to-r from-gray-50 to-gray-100 p-1.5">
+            {/* Mobile: Optimized layout for better touch targets and spacing */}
+            <div className="grid grid-cols-2 gap-1.5 w-full sm:hidden">
               {tabs.slice(0, 4).map((tab) => (
                 <TabsTrigger 
                   key={tab.value}
@@ -116,7 +116,7 @@ const OneCardTabsLayout = ({
             </div>
 
             {/* Tablet & Desktop: All tabs in responsive layout */}
-            <div className="hidden sm:grid sm:grid-cols-5 gap-2 w-full">
+            <div className="hidden sm:grid sm:grid-cols-5 gap-1.5 w-full">
               {tabs.map((tab) => (
                 <TabsTrigger 
                   key={tab.value}

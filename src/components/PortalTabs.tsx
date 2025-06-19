@@ -35,8 +35,7 @@ const PortalTabs = ({
       label: 'Smart Deals',
       icon: '🔥',
       description: 'Shop Now',
-      color: 'orange',
-      special: true // Mark as special for animations
+      color: 'orange'
     },
     {
       value: 'onecard',
@@ -85,7 +84,7 @@ const PortalTabs = ({
     });
   }
 
-  const getTabClassName = (tabValue: string, color: string, isSpecial = false) => {
+  const getTabClassName = (tabValue: string, color: string) => {
     let baseClass = "flex flex-col items-center gap-1 p-3 rounded-xl transition-all duration-300 min-h-[65px] flex-1 border text-xs shadow-sm relative overflow-hidden";
     
     const allowed = isTabAllowed(tabValue);
@@ -102,16 +101,6 @@ const PortalTabs = ({
         gray: "data-[state=active]:bg-gradient-to-br data-[state=active]:from-gray-600 data-[state=active]:to-slate-700 data-[state=active]:text-white data-[state=active]:shadow-lg data-[state=active]:border-gray-400 bg-gray-50 border-gray-200 hover:border-gray-300 hover:bg-gray-100"
       };
       baseClass += " " + colorClasses[color];
-      
-      // Add special flashing animation for deals tab when authenticated
-      if (isSpecial && isAuthenticated && activeTab !== 'deals') {
-        baseClass += " animate-smart-deals-flash";
-      }
-      
-      // Add unified profile indicator
-      if (isUnifiedProfile && allowed) {
-        baseClass += " ring-2 ring-orange-400 ring-opacity-50";
-      }
     }
     
     return baseClass;
@@ -120,27 +109,16 @@ const PortalTabs = ({
   return (
     <div className="w-full max-w-6xl mx-auto pt-4">
       <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full">
-        {/* Unified Profile Indicator */}
-        {isUnifiedProfile && (
-          <div className="mb-4 p-3 bg-gradient-to-r from-orange-50 to-yellow-50 border border-orange-200 rounded-lg">
-            <div className="flex items-center gap-2 text-orange-700">
-              <span className="text-lg">🌟</span>
-              <span className="font-semibold">Unified Access Active</span>
-              <span className="text-sm opacity-75">- All tabs enabled</span>
-            </div>
-          </div>
-        )}
-
-        {/* Optimized Mobile-First Tab Navigation */}
+        {/* Mobile-Optimized Tab Navigation - Improved Spacing */}
         <div className="w-full mb-6">
-          <TabsList className="w-full max-w-full">
-            {/* Mobile: 2x3 Grid for better touch experience */}
-            <div className="grid grid-cols-2 gap-2 w-full sm:hidden">
+          <TabsList className="w-full max-w-full bg-gradient-to-r from-gray-50 to-gray-100 p-1.5">
+            {/* Mobile: 2x3 Grid with better spacing */}
+            <div className="grid grid-cols-2 gap-1.5 w-full sm:hidden">
               {tabs.slice(0, 4).map((tab) => (
                 <TabsTrigger 
                   key={tab.value}
                   value={tab.value} 
-                  className={getTabClassName(tab.value, tab.color, tab.special)}
+                  className={getTabClassName(tab.value, tab.color)}
                   disabled={!isTabAllowed(tab.value) && !isUnifiedProfile}
                 >
                   <span className="text-lg">{tab.icon}</span>
@@ -148,12 +126,6 @@ const PortalTabs = ({
                     <div className="font-semibold leading-tight text-xs">{tab.label}</div>
                     <div className="text-xs opacity-75 leading-tight">{tab.description}</div>
                   </div>
-                  {isUnifiedProfile && (
-                    <div className="absolute top-1 right-1 w-2 h-2 bg-orange-400 rounded-full"></div>
-                  )}
-                  {tab.special && isAuthenticated && activeTab !== 'deals' && (
-                    <div className="absolute inset-0 bg-gradient-to-r from-orange-400/20 via-red-400/20 to-orange-400/20 animate-pulse pointer-events-none rounded-xl"></div>
-                  )}
                 </TabsTrigger>
               ))}
               {/* Second row for remaining tabs */}
@@ -161,7 +133,7 @@ const PortalTabs = ({
                 <TabsTrigger 
                   key={tab.value}
                   value={tab.value} 
-                  className={getTabClassName(tab.value, tab.color, tab.special)}
+                  className={getTabClassName(tab.value, tab.color)}
                   disabled={!isTabAllowed(tab.value) && !isUnifiedProfile}
                 >
                   <span className="text-lg">{tab.icon}</span>
@@ -169,20 +141,17 @@ const PortalTabs = ({
                     <div className="font-semibold leading-tight text-xs">{tab.label}</div>
                     <div className="text-xs opacity-75 leading-tight">{tab.description}</div>
                   </div>
-                  {isUnifiedProfile && (
-                    <div className="absolute top-1 right-1 w-2 h-2 bg-orange-400 rounded-full"></div>
-                  )}
                 </TabsTrigger>
               ))}
             </div>
 
-            {/* Tablet: Responsive grid */}
-            <div className="hidden sm:grid sm:grid-cols-3 lg:hidden gap-2 w-full">
+            {/* Tablet: Responsive grid with improved spacing */}
+            <div className="hidden sm:grid sm:grid-cols-3 lg:hidden gap-1.5 w-full">
               {tabs.map((tab) => (
                 <TabsTrigger 
                   key={tab.value}
                   value={tab.value} 
-                  className={getTabClassName(tab.value, tab.color, tab.special)}
+                  className={getTabClassName(tab.value, tab.color)}
                   disabled={!isTabAllowed(tab.value) && !isUnifiedProfile}
                 >
                   <span className="text-lg">{tab.icon}</span>
@@ -190,23 +159,17 @@ const PortalTabs = ({
                     <div className="font-semibold text-sm">{tab.label}</div>
                     <div className="text-xs opacity-75">{tab.description}</div>
                   </div>
-                  {isUnifiedProfile && (
-                    <div className="absolute top-1 right-1 w-2 h-2 bg-orange-400 rounded-full"></div>
-                  )}
-                  {tab.special && isAuthenticated && activeTab !== 'deals' && (
-                    <div className="absolute inset-0 bg-gradient-to-r from-orange-400/20 via-red-400/20 to-orange-400/20 animate-pulse pointer-events-none rounded-xl"></div>
-                  )}
                 </TabsTrigger>
               ))}
             </div>
 
-            {/* Desktop: Single Row */}
-            <div className={`hidden lg:grid gap-2 w-full ${showAdminTab ? 'grid-cols-7' : 'grid-cols-6'}`}>
+            {/* Desktop: Single Row with optimal spacing */}
+            <div className={`hidden lg:grid gap-1.5 w-full ${showAdminTab ? 'grid-cols-7' : 'grid-cols-6'}`}>
               {tabs.map((tab) => (
                 <TabsTrigger 
                   key={tab.value}
                   value={tab.value} 
-                  className={getTabClassName(tab.value, tab.color, tab.special)}
+                  className={getTabClassName(tab.value, tab.color)}
                   disabled={!isTabAllowed(tab.value) && !isUnifiedProfile}
                 >
                   <span className="text-xl">{tab.icon}</span>
@@ -214,12 +177,6 @@ const PortalTabs = ({
                     <div className="font-semibold text-sm">{tab.label}</div>
                     <div className="text-xs opacity-75">{tab.description}</div>
                   </div>
-                  {isUnifiedProfile && (
-                    <div className="absolute top-1 right-1 w-2 h-2 bg-orange-400 rounded-full"></div>
-                  )}
-                  {tab.special && isAuthenticated && activeTab !== 'deals' && (
-                    <div className="absolute inset-0 bg-gradient-to-r from-orange-400/20 via-red-400/20 to-orange-400/20 animate-pulse pointer-events-none rounded-xl"></div>
-                  )}
                 </TabsTrigger>
               ))}
             </div>
