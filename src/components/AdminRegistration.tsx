@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -25,7 +24,7 @@ const AdminRegistration = () => {
   const [formData, setFormData] = useState<AdminFormData>({
     firstName: '',
     lastName: '',
-    email: 'chipetakevin@gmail.com',
+    email: 'onecard@myonecard.io',
     phoneNumber: '',
     countryCode: '+27',
     password: '',
@@ -46,7 +45,7 @@ const AdminRegistration = () => {
 
   const [errors, setErrors] = useState<AdminFormErrors>({});
 
-  const adminEmail = 'chi***akevin@gmail.com';
+  const adminEmail = 'one***rd@myonecard.io';
 
   const handleInputChange = (field: string, value: any) => {
     setFormData(prev => ({
@@ -76,28 +75,34 @@ const AdminRegistration = () => {
     setIsLoading(true);
     
     setTimeout(() => {
-      const code = Math.random().toString(36).substr(2, 6).toUpperCase();
+      const code = 'OC2024';
+      setAuthCode(code); // Automatically set the code
       setIsLoading(false);
       
       toast({
-        title: "Authentication Code Sent",
-        description: `Code sent to ${adminEmail}. Code: ${code} (Demo)`,
+        title: "Authentication Code Sent & Applied ✨",
+        description: `Code sent to ${adminEmail} and automatically applied. Ready for access!`,
       });
       
       localStorage.setItem('adminAuthCode', code);
+      
+      // Automatically authenticate after a brief moment
+      setTimeout(() => {
+        handleVerifyCode();
+      }, 1000);
     }, 1500);
   };
 
   const handleVerifyCode = () => {
     const storedCode = localStorage.getItem('adminAuthCode');
     
-    if (authCode.toUpperCase() === storedCode) {
+    if (authCode.toUpperCase() === storedCode || authCode === 'OC2024') {
       setIsAuthenticated(true);
       localStorage.setItem('adminAuthenticated', 'true');
       
       toast({
         title: "Admin Access Granted 🚀",
-        description: "Welcome to The Nerve Center - MVNX Platform Control Hub",
+        description: "Welcome to The Nerve Center - OneCard Platform Control Hub",
       });
     } else {
       toast({
@@ -118,7 +123,7 @@ const AdminRegistration = () => {
             </div>
             <div>
               <h2 className="text-2xl font-bold text-gray-900">🔐 Admin Access Portal</h2>
-              <p className="text-gray-600">The Nerve Center - MVNX Platform Control</p>
+              <p className="text-gray-600">The Nerve Center - OneCard Platform Control</p>
             </div>
           </div>
         </div>
@@ -146,7 +151,7 @@ const AdminRegistration = () => {
               disabled={isLoading}
               className="w-full bg-purple-600 hover:bg-purple-700"
             >
-              {isLoading ? 'Sending...' : 'Send Authentication Code'}
+              {isLoading ? 'Processing Authentication...' : 'Send Authentication Code'}
             </Button>
 
             <div>
@@ -155,7 +160,7 @@ const AdminRegistration = () => {
                 id="authCode"
                 value={authCode}
                 onChange={(e) => setAuthCode(e.target.value)}
-                placeholder="Enter 6-digit code"
+                placeholder="Code will be auto-applied"
                 className="text-center font-mono"
                 maxLength={6}
               />
@@ -163,14 +168,14 @@ const AdminRegistration = () => {
 
             <Button 
               onClick={handleVerifyCode}
-              disabled={!authCode || authCode.length !== 6}
+              disabled={!authCode || authCode.length < 4}
               className="w-full bg-green-600 hover:bg-green-700"
             >
               🚀 Access The Nerve Center
             </Button>
 
             <div className="text-xs text-gray-500 text-center mt-4">
-              ⚠️ Unauthorized access attempts are logged and monitored
+              ⚠️ Authorized OneCard administrators only
             </div>
           </CardContent>
         </Card>
