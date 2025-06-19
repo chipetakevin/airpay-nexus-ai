@@ -115,3 +115,10 @@ export const loadTransactionData = (): Transaction[] => {
     return [];
   }
 };
+
+export const loadAdminData = async () => {
+  return {
+    customers: loadCustomerData(),
+    transactions: loadTransactionData()
+  };
+};

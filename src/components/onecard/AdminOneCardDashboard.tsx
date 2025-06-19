@@ -4,9 +4,9 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { loadAdminData } from './utils/adminDataLoader';
-import { CustomerTable } from './admin/CustomerTable';
-import { TransactionTable } from './admin/TransactionTable';
-import { ReportsSection } from './admin/ReportsSection';
+import CustomerTable from './admin/CustomerTable';
+import TransactionTable from './admin/TransactionTable';
+import ReportsSection from './admin/ReportsSection';
 import EnhancedAdminDashboard from './admin/EnhancedAdminDashboard';
 import { 
   Users, 

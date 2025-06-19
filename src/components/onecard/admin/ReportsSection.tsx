@@ -1,14 +1,18 @@
-
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Crown, FileText, TrendingUp, Users, BarChart3, PieChart, Activity } from 'lucide-react';
 
 interface ReportsSectionProps {
-  onGenerateMasterReport: () => void;
+  customers: any[];
+  transactions: any[];
 }
 
-const ReportsSection = ({ onGenerateMasterReport }: ReportsSectionProps) => {
+const ReportsSection = ({ customers, transactions }: ReportsSectionProps) => {
+  const handleGenerateMasterReport = () => {
+    console.log('Generating master report with data:', { customers, transactions });
+  };
+
   return (
     <div className="space-y-4 sm:space-y-6 p-2 sm:p-4">
       {/* Mobile-Optimized Header */}
@@ -69,7 +73,7 @@ const ReportsSection = ({ onGenerateMasterReport }: ReportsSectionProps) => {
 
             {/* One-Click Download Button - Mobile Optimized */}
             <Button 
-              onClick={onGenerateMasterReport} 
+              onClick={handleGenerateMasterReport} 
               className="w-full sm:w-auto bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white font-semibold px-6 sm:px-8 py-3 sm:py-4 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 text-sm sm:text-base"
               size="lg"
             >

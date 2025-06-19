@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -21,21 +20,10 @@ import { formatCurrency, formatDate } from '../utils/adminUtils';
 
 interface CustomerTableProps {
   customers: Customer[];
-  searchTerm: string;
-  onSearchChange: (term: string) => void;
-  onCustomerSelect: (customer: Customer) => void;
-  onGenerateReport: (customer: Customer) => void;
-  onGenerateMasterReport: () => void;
 }
 
-const CustomerTable = ({ 
-  customers, 
-  searchTerm, 
-  onSearchChange, 
-  onCustomerSelect, 
-  onGenerateReport,
-  onGenerateMasterReport 
-}: CustomerTableProps) => {
+const CustomerTable = ({ customers }: CustomerTableProps) => {
+  const [searchTerm, setSearchTerm] = useState('');
   const [activeTab, setActiveTab] = useState('directory');
 
   const filteredCustomers = customers.filter(customer =>
@@ -47,7 +35,14 @@ const CustomerTable = ({
   const handleGenerateCustomerReport = () => {
     // Generate comprehensive customer analytics report
     console.log('Generating customer analytics report...');
-    onGenerateMasterReport(); // Reusing the master report for now, can be customized later
+  };
+
+  const handleCustomerSelect = (customer: Customer) => {
+    console.log('Selected customer:', customer);
+  };
+
+  const handleGenerateReport = (customer: Customer) => {
+    console.log('Generating report for customer:', customer);
   };
 
   const tabs = [
@@ -119,7 +114,7 @@ const CustomerTable = ({
                   <Input
                     placeholder="Search customers by name, email, or phone..."
                     value={searchTerm}
-                    onChange={(e) => onSearchChange(e.target.value)}
+                    onChange={(e) => setSearchTerm(e.target.value)}
                     className="pl-10"
                   />
                 </div>
@@ -175,7 +170,7 @@ const CustomerTable = ({
                           <Button
                             size="sm"
                             variant="outline"
-                            onClick={() => onCustomerSelect(customer)}
+                            onClick={() => handleCustomerSelect(customer)}
                             className="text-xs px-2 py-1 h-6"
                           >
                             <Eye className="w-3 h-3 mr-1" />
@@ -184,7 +179,7 @@ const CustomerTable = ({
                           <Button
                             size="sm"
                             variant="outline"
-                            onClick={() => onGenerateReport(customer)}
+                            onClick={() => handleGenerateReport(customer)}
                             className="text-xs px-2 py-1 h-6"
                           >
                             <FileText className="w-3 h-3 mr-1" />

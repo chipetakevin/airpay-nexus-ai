@@ -1,4 +1,3 @@
-
 import React, { useState, useMemo } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -20,7 +19,7 @@ import {
   ArrowUpRight,
   ArrowDownRight
 } from 'lucide-react';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, ResponsiveContainer, PieChart as RechartsPieChart, Cell, LineChart, Line, Area, AreaChart } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, ResponsiveContainer, PieChart as RechartsPieChart, Cell, LineChart, Line, Area, AreaChart, Pie } from 'recharts';
 
 interface EnhancedAdminDashboardProps {
   customers: any[];
@@ -209,19 +208,18 @@ const EnhancedAdminDashboard = ({ customers, transactions }: EnhancedAdminDashbo
             <div style={{ width: '100%', height: '200px' }}>
               <ResponsiveContainer>
                 <RechartsPieChart>
-                  <RechartsPieChart
+                  <Pie
                     data={pieChartData}
                     cx="50%"
                     cy="50%"
                     innerRadius={30}
                     outerRadius={70}
-                    paddingAngle={5}
                     dataKey="value"
                   >
                     {pieChartData.map((entry, index) => (
                       <Cell key={`cell-${index}`} fill={entry.color} />
                     ))}
-                  </RechartsPieChart>
+                  </Pie>
                 </RechartsPieChart>
               </ResponsiveContainer>
             </div>
