@@ -12,6 +12,7 @@ import AdminBankingSection from './registration/AdminBankingSection';
 import AdminConsentSection from './registration/AdminConsentSection';
 import AdminRegistrationAlerts from './registration/AdminRegistrationAlerts';
 import NerveCenterDashboard from './admin/NerveCenterDashboard';
+import { AdminFormData, AdminFormErrors } from '@/types/adminRegistration';
 
 const AdminRegistration = () => {
   const { toast } = useToast();
@@ -20,7 +21,56 @@ const AdminRegistration = () => {
   const [authCode, setAuthCode] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
+  // Form state for admin registration
+  const [formData, setFormData] = useState<AdminFormData>({
+    firstName: '',
+    lastName: '',
+    email: 'chipetakevin@gmail.com',
+    phoneNumber: '',
+    countryCode: '+27',
+    password: '',
+    confirmPassword: '',
+    companyName: '',
+    businessType: '',
+    bankName: '',
+    accountNumber: '',
+    routingNumber: '',
+    branchCode: '',
+    promoCode: '',
+    adminRole: 'Super Administrator',
+    rememberPassword: true,
+    agreeTerms: false,
+    marketingConsent: false,
+    twoFactorAuth: true
+  });
+
+  const [errors, setErrors] = useState<AdminFormErrors>({});
+
   const adminEmail = 'chi***akevin@gmail.com';
+
+  const handleInputChange = (field: string, value: any) => {
+    setFormData(prev => ({
+      ...prev,
+      [field]: value
+    }));
+    
+    // Clear error when user starts typing
+    if (errors[field]) {
+      setErrors(prev => ({
+        ...prev,
+        [field]: ''
+      }));
+    }
+  };
+
+  const handleBankSelect = (bankName: string, routing: string, branchCode: string) => {
+    setFormData(prev => ({
+      ...prev,
+      bankName,
+      routingNumber: routing,
+      branchCode
+    }));
+  };
 
   const handleSendCode = () => {
     setIsLoading(true);
@@ -193,9 +243,22 @@ const AdminRegistration = () => {
             </div>
 
             <div className="max-w-2xl mx-auto space-y-6">
-              <AdminPersonalInfoSection />
-              <AdminBankingSection />
-              <AdminConsentSection />
+              <AdminPersonalInfoSection 
+                formData={formData}
+                errors={errors}
+                onInputChange={handleInputChange}
+              />
+              <AdminBankingSection 
+                formData={formData}
+                errors={errors}
+                onInputChange={handleInputChange}
+                onBankSelect={handleBankSelect}
+              />
+              <AdminConsentSection 
+                formData={formData}
+                errors={errors}
+                onInputChange={handleInputChange}
+              />
               <AdminRegistrationAlerts />
             </div>
           </div>
