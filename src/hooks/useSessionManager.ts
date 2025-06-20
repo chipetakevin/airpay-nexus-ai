@@ -15,9 +15,22 @@ export const useSessionManager = () => {
   const { toast } = useToast();
   const location = useLocation();
 
+  // COMPLETELY DISABLE session management on deals page
+  const isDealsPage = location.pathname === '/' && location.search.includes('tab=deals');
+  const isDealsRoute = location.pathname.includes('/deals') || location.pathname === '/portal' && location.search.includes('tab=deals');
+  
+  if (isDealsPage || isDealsRoute) {
+    return {
+      sessionInfo: null,
+      getRemainingTime: () => null,
+      sendWhatsAppLogoutNotification: () => {},
+      performLogout: () => {}
+    };
+  }
+
   useEffect(() => {
     // COMPLETELY EXCLUDE deals page from session management
-    if (location.search.includes('tab=deals')) {
+    if (location.search.includes('tab=deals') || location.pathname.includes('/deals')) {
       setSessionInfo(null);
       return;
     }
@@ -91,7 +104,7 @@ export const useSessionManager = () => {
 
   useEffect(() => {
     // NEVER run session expiry logic on deals page
-    if (location.search.includes('tab=deals') || !sessionInfo) {
+    if (location.search.includes('tab=deals') || location.pathname.includes('/deals') || !sessionInfo) {
       return;
     }
 

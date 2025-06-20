@@ -39,7 +39,7 @@ const AirtimeDealsSystem = () => {
 
   return (
     <div className="space-y-6">
-      {/* Authentication Indicator */}
+      {/* Authentication Indicator - but NO session management */}
       <AuthenticationIndicator />
 
       {/* Header Section */}
@@ -70,7 +70,7 @@ const AirtimeDealsSystem = () => {
 
       <SystemInfo />
 
-      {/* Shopping Cart Modal */}
+      {/* Shopping Cart Modal - NO session management */}
       {showCart && (
         <ShoppingCart 
           initialDeal={selectedDeal}

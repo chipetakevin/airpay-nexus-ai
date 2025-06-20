@@ -13,8 +13,10 @@ const SessionStatusIndicator = () => {
   const [isExpiringSoon, setIsExpiringSoon] = useState(false);
   const location = useLocation();
 
-  // NEVER show session indicator on deals page
-  if (location.search.includes('tab=deals')) {
+  // COMPLETELY DISABLE on deals page - multiple checks
+  if (location.search.includes('tab=deals') || 
+      location.pathname.includes('/deals') || 
+      location.pathname === '/portal' && location.search.includes('tab=deals')) {
     return null;
   }
 
