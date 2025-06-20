@@ -16,14 +16,15 @@ export const useSessionManager = () => {
   const location = useLocation();
 
   useEffect(() => {
+    // COMPLETELY EXCLUDE deals page from session management
+    if (location.search.includes('tab=deals')) {
+      setSessionInfo(null);
+      return;
+    }
+
     // Only apply session management on authenticated pages
     const isAuthenticatedPage = location.search.includes('tab=onecard') ||
-                               location.search.includes('tab=admin') ||
-                               (location.search.includes('tab=') && 
-                                !location.search.includes('tab=deals') &&
-                                !location.search.includes('tab=registration') &&
-                                !location.search.includes('tab=vendor') &&
-                                !location.search.includes('tab=unified-reports'));
+                               location.search.includes('tab=admin');
 
     // Early return if not on authenticated page
     if (!isAuthenticatedPage) {
@@ -89,16 +90,14 @@ export const useSessionManager = () => {
   }, [location]);
 
   useEffect(() => {
-    if (!sessionInfo) return;
+    // NEVER run session expiry logic on deals page
+    if (location.search.includes('tab=deals') || !sessionInfo) {
+      return;
+    }
 
     // Only apply session expiry logic if we have valid session info
     const isAuthenticatedPage = location.search.includes('tab=onecard') ||
-                               location.search.includes('tab=admin') ||
-                               (location.search.includes('tab=') && 
-                                !location.search.includes('tab=deals') &&
-                                !location.search.includes('tab=registration') &&
-                                !location.search.includes('tab=vendor') &&
-                                !location.search.includes('tab=unified-reports'));
+                               location.search.includes('tab=admin');
 
     if (!isAuthenticatedPage) {
       return;

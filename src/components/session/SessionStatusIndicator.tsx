@@ -13,14 +13,14 @@ const SessionStatusIndicator = () => {
   const [isExpiringSoon, setIsExpiringSoon] = useState(false);
   const location = useLocation();
 
+  // NEVER show session indicator on deals page
+  if (location.search.includes('tab=deals')) {
+    return null;
+  }
+
   // Show session indicator only on authenticated pages
   const isAuthenticatedPage = location.search.includes('tab=onecard') ||
-                             location.search.includes('tab=admin') ||
-                             (location.search.includes('tab=') && 
-                              !location.search.includes('tab=deals') &&
-                              !location.search.includes('tab=registration') &&
-                              !location.search.includes('tab=vendor') &&
-                              !location.search.includes('tab=unified-reports'));
+                             location.search.includes('tab=admin');
 
   useEffect(() => {
     if (!sessionInfo || !isAuthenticatedPage) return;
