@@ -16,14 +16,18 @@ export const useSessionManager = () => {
   const location = useLocation();
 
   useEffect(() => {
-    // Don't apply session management on deals page or public pages
-    const isPublicPage = location.pathname === '/' || 
-                        location.search.includes('tab=deals') ||
-                        location.search.includes('tab=registration') ||
-                        location.search.includes('tab=vendor') ||
-                        !location.search.includes('tab=');
+    // Only apply session management on authenticated pages
+    const isAuthenticatedPage = location.search.includes('tab=onecard') ||
+                               location.search.includes('tab=admin') ||
+                               (location.search.includes('tab=') && 
+                                !location.search.includes('tab=deals') &&
+                                !location.search.includes('tab=registration') &&
+                                !location.search.includes('tab=vendor') &&
+                                !location.search.includes('tab=unified-reports'));
 
-    if (isPublicPage) {
+    // Early return if not on authenticated page
+    if (!isAuthenticatedPage) {
+      setSessionInfo(null);
       return;
     }
 
@@ -31,62 +35,72 @@ export const useSessionManager = () => {
     const isAuthenticated = localStorage.getItem('userAuthenticated') === 'true';
     const credentials = localStorage.getItem('userCredentials');
     
-    if (isAuthenticated && credentials) {
-      try {
-        const userCreds = JSON.parse(credentials);
-        let userData = null;
-        
-        // Get user data based on type
-        if (userCreds.userType === 'customer') {
-          userData = localStorage.getItem('onecardUser');
-        } else if (userCreds.userType === 'vendor') {
-          userData = localStorage.getItem('onecardVendor');
-        } else if (userCreds.userType === 'admin') {
-          userData = localStorage.getItem('onecardAdmin');
-        }
-        
-        if (userData) {
-          const parsedData = JSON.parse(userData);
-          
-          // Check if this is Kevin Chipeta or admin
-          const isKevinOrAdmin = (
-            (parsedData.firstName === 'Kevin' && parsedData.lastName === 'Chipeta') ||
-            userCreds.userType === 'admin'
-          );
-          
-          if (isKevinOrAdmin) {
-            // Get or set login time
-            let loginTime = localStorage.getItem('sessionStartTime');
-            if (!loginTime) {
-              loginTime = Date.now().toString();
-              localStorage.setItem('sessionStartTime', loginTime);
-            }
-            
-            setSessionInfo({
-              loginTime: parseInt(loginTime),
-              userType: userCreds.userType,
-              userName: `${parsedData.firstName} ${parsedData.lastName}`,
-              isActive: true
-            });
-          }
-        }
-      } catch (error) {
-        console.error('Error parsing session data:', error);
+    if (!isAuthenticated || !credentials) {
+      setSessionInfo(null);
+      return;
+    }
+    
+    try {
+      const userCreds = JSON.parse(credentials);
+      let userData = null;
+      
+      // Get user data based on type
+      if (userCreds.userType === 'customer') {
+        userData = localStorage.getItem('onecardUser');
+      } else if (userCreds.userType === 'vendor') {
+        userData = localStorage.getItem('onecardVendor');
+      } else if (userCreds.userType === 'admin') {
+        userData = localStorage.getItem('onecardAdmin');
       }
+      
+      if (userData) {
+        const parsedData = JSON.parse(userData);
+        
+        // Check if this is Kevin Chipeta or admin
+        const isKevinOrAdmin = (
+          (parsedData.firstName === 'Kevin' && parsedData.lastName === 'Chipeta') ||
+          userCreds.userType === 'admin'
+        );
+        
+        if (isKevinOrAdmin) {
+          // Get or set login time
+          let loginTime = localStorage.getItem('sessionStartTime');
+          if (!loginTime) {
+            loginTime = Date.now().toString();
+            localStorage.setItem('sessionStartTime', loginTime);
+          }
+          
+          setSessionInfo({
+            loginTime: parseInt(loginTime),
+            userType: userCreds.userType,
+            userName: `${parsedData.firstName} ${parsedData.lastName}`,
+            isActive: true
+          });
+        } else {
+          setSessionInfo(null);
+        }
+      } else {
+        setSessionInfo(null);
+      }
+    } catch (error) {
+      console.error('Error parsing session data:', error);
+      setSessionInfo(null);
     }
   }, [location]);
 
   useEffect(() => {
     if (!sessionInfo) return;
 
-    // Don't apply session expiry on deals page
-    const isPublicPage = location.pathname === '/' || 
-                        location.search.includes('tab=deals') ||
-                        location.search.includes('tab=registration') ||
-                        location.search.includes('tab=vendor') ||
-                        !location.search.includes('tab=');
+    // Only apply session expiry logic if we have valid session info
+    const isAuthenticatedPage = location.search.includes('tab=onecard') ||
+                               location.search.includes('tab=admin') ||
+                               (location.search.includes('tab=') && 
+                                !location.search.includes('tab=deals') &&
+                                !location.search.includes('tab=registration') &&
+                                !location.search.includes('tab=vendor') &&
+                                !location.search.includes('tab=unified-reports'));
 
-    if (isPublicPage) {
+    if (!isAuthenticatedPage) {
       return;
     }
 
@@ -124,10 +138,12 @@ export const useSessionManager = () => {
   }, [sessionInfo, toast, location]);
 
   const sendWhatsAppLogoutNotification = () => {
+    if (!sessionInfo) return;
+    
     const message = encodeURIComponent(
       `🔐 DIVINELY MOBILE - SESSION EXPIRED 📣\n\n` +
-      `👤 User: ${sessionInfo?.userName}\n` +
-      `🔑 Account Type: ${sessionInfo?.userType?.toUpperCase()}\n` +
+      `👤 User: ${sessionInfo.userName}\n` +
+      `🔑 Account Type: ${sessionInfo.userType?.toUpperCase()}\n` +
       `⏰ Session Duration: 5 Minutes\n` +
       `📅 Logged Out: ${new Date().toLocaleString()}\n\n` +
       `🚨 Your session has automatically expired after 5 minutes for security purposes.\n\n` +

@@ -13,15 +13,17 @@ const SessionStatusIndicator = () => {
   const [isExpiringSoon, setIsExpiringSoon] = useState(false);
   const location = useLocation();
 
-  // Don't show session indicator on public pages
-  const isPublicPage = location.pathname === '/' || 
-                      location.search.includes('tab=deals') ||
-                      location.search.includes('tab=registration') ||
-                      location.search.includes('tab=vendor') ||
-                      !location.search.includes('tab=');
+  // Show session indicator only on authenticated pages
+  const isAuthenticatedPage = location.search.includes('tab=onecard') ||
+                             location.search.includes('tab=admin') ||
+                             (location.search.includes('tab=') && 
+                              !location.search.includes('tab=deals') &&
+                              !location.search.includes('tab=registration') &&
+                              !location.search.includes('tab=vendor') &&
+                              !location.search.includes('tab=unified-reports'));
 
   useEffect(() => {
-    if (!sessionInfo || isPublicPage) return;
+    if (!sessionInfo || !isAuthenticatedPage) return;
 
     const updateTimeDisplay = () => {
       const remaining = getRemainingTime();
@@ -41,10 +43,10 @@ const SessionStatusIndicator = () => {
     const interval = setInterval(updateTimeDisplay, 1000); // Update every second
 
     return () => clearInterval(interval);
-  }, [sessionInfo, getRemainingTime, isPublicPage]);
+  }, [sessionInfo, getRemainingTime, isAuthenticatedPage]);
 
   // Don't render anything on public pages or when no session
-  if (!sessionInfo || isPublicPage) return null;
+  if (!sessionInfo || !isAuthenticatedPage) return null;
 
   return (
     <Card className={`mb-4 border-l-4 ${isExpiringSoon ? 'border-l-red-500 bg-red-50' : 'border-l-blue-500 bg-blue-50'}`}>
