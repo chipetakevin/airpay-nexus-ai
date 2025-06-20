@@ -1,5 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -10,9 +11,17 @@ const SessionStatusIndicator = () => {
   const { sessionInfo, getRemainingTime, sendWhatsAppLogoutNotification } = useSessionManager();
   const [timeDisplay, setTimeDisplay] = useState<string>('');
   const [isExpiringSoon, setIsExpiringSoon] = useState(false);
+  const location = useLocation();
+
+  // Don't show session indicator on public pages
+  const isPublicPage = location.pathname === '/' || 
+                      location.search.includes('tab=deals') ||
+                      location.search.includes('tab=registration') ||
+                      location.search.includes('tab=vendor') ||
+                      !location.search.includes('tab=');
 
   useEffect(() => {
-    if (!sessionInfo) return;
+    if (!sessionInfo || isPublicPage) return;
 
     const updateTimeDisplay = () => {
       const remaining = getRemainingTime();
@@ -32,9 +41,10 @@ const SessionStatusIndicator = () => {
     const interval = setInterval(updateTimeDisplay, 1000); // Update every second
 
     return () => clearInterval(interval);
-  }, [sessionInfo, getRemainingTime]);
+  }, [sessionInfo, getRemainingTime, isPublicPage]);
 
-  if (!sessionInfo) return null;
+  // Don't render anything on public pages or when no session
+  if (!sessionInfo || isPublicPage) return null;
 
   return (
     <Card className={`mb-4 border-l-4 ${isExpiringSoon ? 'border-l-red-500 bg-red-50' : 'border-l-blue-500 bg-blue-50'}`}>

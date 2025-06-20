@@ -1,6 +1,7 @@
 
 import { useEffect, useState } from 'react';
 import { useToast } from '@/hooks/use-toast';
+import { useLocation } from 'react-router-dom';
 
 interface SessionInfo {
   loginTime: number;
@@ -12,8 +13,20 @@ interface SessionInfo {
 export const useSessionManager = () => {
   const [sessionInfo, setSessionInfo] = useState<SessionInfo | null>(null);
   const { toast } = useToast();
+  const location = useLocation();
 
   useEffect(() => {
+    // Don't apply session management on deals page or public pages
+    const isPublicPage = location.pathname === '/' || 
+                        location.search.includes('tab=deals') ||
+                        location.search.includes('tab=registration') ||
+                        location.search.includes('tab=vendor') ||
+                        !location.search.includes('tab=');
+
+    if (isPublicPage) {
+      return;
+    }
+
     // Check if user is authenticated
     const isAuthenticated = localStorage.getItem('userAuthenticated') === 'true';
     const credentials = localStorage.getItem('userCredentials');
@@ -61,10 +74,21 @@ export const useSessionManager = () => {
         console.error('Error parsing session data:', error);
       }
     }
-  }, []);
+  }, [location]);
 
   useEffect(() => {
     if (!sessionInfo) return;
+
+    // Don't apply session expiry on deals page
+    const isPublicPage = location.pathname === '/' || 
+                        location.search.includes('tab=deals') ||
+                        location.search.includes('tab=registration') ||
+                        location.search.includes('tab=vendor') ||
+                        !location.search.includes('tab=');
+
+    if (isPublicPage) {
+      return;
+    }
 
     const checkSessionExpiry = () => {
       const currentTime = Date.now();
@@ -97,7 +121,7 @@ export const useSessionManager = () => {
     checkSessionExpiry();
 
     return () => clearInterval(interval);
-  }, [sessionInfo, toast]);
+  }, [sessionInfo, toast, location]);
 
   const sendWhatsAppLogoutNotification = () => {
     const message = encodeURIComponent(
@@ -137,9 +161,9 @@ export const useSessionManager = () => {
       duration: 8000,
     });
     
-    // Redirect to home page after a short delay
+    // Redirect to deals page instead of home
     setTimeout(() => {
-      window.location.href = '/';
+      window.location.href = '/?tab=deals';
     }, 2000);
   };
 
