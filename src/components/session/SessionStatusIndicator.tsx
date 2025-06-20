@@ -21,15 +21,15 @@ const SessionStatusIndicator = () => {
         return;
       }
 
-      const { hours, minutes } = remaining;
-      setTimeDisplay(`${hours}h ${minutes}m`);
+      const { minutes, seconds } = remaining;
+      setTimeDisplay(`${minutes}m ${seconds}s`);
       
-      // Mark as expiring soon if less than 30 minutes remain
-      setIsExpiringSoon(remaining.totalMs < 30 * 60 * 1000);
+      // Mark as expiring soon if less than 1 minute remains
+      setIsExpiringSoon(remaining.totalMs < 60 * 1000);
     };
 
     updateTimeDisplay();
-    const interval = setInterval(updateTimeDisplay, 60000); // Update every minute
+    const interval = setInterval(updateTimeDisplay, 1000); // Update every second
 
     return () => clearInterval(interval);
   }, [sessionInfo, getRemainingTime]);
@@ -42,7 +42,7 @@ const SessionStatusIndicator = () => {
         <div className="flex items-center justify-between mb-2">
           <div className="flex items-center space-x-2">
             <Shield className={`w-4 h-4 ${isExpiringSoon ? 'text-red-600' : 'text-blue-600'}`} />
-            <span className="font-semibold text-sm">24-Hour Session Active</span>
+            <span className="font-semibold text-sm">5-Minute Session Active</span>
             {isExpiringSoon && (
               <Badge variant="destructive" className="text-xs px-2 py-0.5">
                 Expiring Soon

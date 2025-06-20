@@ -69,29 +69,29 @@ export const useSessionManager = () => {
     const checkSessionExpiry = () => {
       const currentTime = Date.now();
       const sessionDuration = currentTime - sessionInfo.loginTime;
-      const TWENTY_FOUR_HOURS = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
-      const WARNING_TIME = TWENTY_FOUR_HOURS - (10 * 60 * 1000); // 10 minutes before expiry
+      const FIVE_MINUTES = 5 * 60 * 1000; // 5 minutes in milliseconds
+      const WARNING_TIME = FIVE_MINUTES - (30 * 1000); // 30 seconds before expiry
 
-      if (sessionDuration >= WARNING_TIME && sessionDuration < TWENTY_FOUR_HOURS) {
+      if (sessionDuration >= WARNING_TIME && sessionDuration < FIVE_MINUTES) {
         // Show warning notification
-        const remainingMinutes = Math.ceil((TWENTY_FOUR_HOURS - sessionDuration) / (60 * 1000));
+        const remainingSeconds = Math.ceil((FIVE_MINUTES - sessionDuration) / 1000);
         
         toast({
           title: "🚨 Session Expiring Soon",
-          description: `Your session will expire in ${remainingMinutes} minutes. WhatsApp notification will be sent.`,
+          description: `Your session will expire in ${remainingSeconds} seconds. WhatsApp notification will be sent.`,
           duration: 8000,
         });
       }
 
-      if (sessionDuration >= TWENTY_FOUR_HOURS) {
+      if (sessionDuration >= FIVE_MINUTES) {
         // Send WhatsApp notification and logout
         sendWhatsAppLogoutNotification();
         performLogout();
       }
     };
 
-    // Check every minute
-    const interval = setInterval(checkSessionExpiry, 60000);
+    // Check every 5 seconds for more precise timing
+    const interval = setInterval(checkSessionExpiry, 5000);
     
     // Also check immediately
     checkSessionExpiry();
@@ -104,9 +104,9 @@ export const useSessionManager = () => {
       `🔐 DIVINELY MOBILE - SESSION EXPIRED 📣\n\n` +
       `👤 User: ${sessionInfo?.userName}\n` +
       `🔑 Account Type: ${sessionInfo?.userType?.toUpperCase()}\n` +
-      `⏰ Session Duration: 24 Hours\n` +
+      `⏰ Session Duration: 5 Minutes\n` +
       `📅 Logged Out: ${new Date().toLocaleString()}\n\n` +
-      `🚨 Your session has automatically expired after 24 hours for security purposes.\n\n` +
+      `🚨 Your session has automatically expired after 5 minutes for security purposes.\n\n` +
       `Please log back in to continue using the system.\n\n` +
       `🌐 https://divinely-mobile.com\n` +
       `📱 OneCard System Security`
@@ -132,7 +132,7 @@ export const useSessionManager = () => {
     
     toast({
       title: "🔐 Session Expired",
-      description: "You have been automatically logged out after 24 hours.",
+      description: "You have been automatically logged out after 5 minutes.",
       variant: "destructive",
       duration: 8000,
     });
@@ -148,15 +148,15 @@ export const useSessionManager = () => {
     
     const currentTime = Date.now();
     const sessionDuration = currentTime - sessionInfo.loginTime;
-    const TWENTY_FOUR_HOURS = 24 * 60 * 60 * 1000;
-    const remaining = TWENTY_FOUR_HOURS - sessionDuration;
+    const FIVE_MINUTES = 5 * 60 * 1000;
+    const remaining = FIVE_MINUTES - sessionDuration;
     
     if (remaining <= 0) return null;
     
-    const hours = Math.floor(remaining / (60 * 60 * 1000));
-    const minutes = Math.floor((remaining % (60 * 60 * 1000)) / (60 * 1000));
+    const minutes = Math.floor(remaining / (60 * 1000));
+    const seconds = Math.floor((remaining % (60 * 1000)) / 1000);
     
-    return { hours, minutes, totalMs: remaining };
+    return { minutes, seconds, totalMs: remaining };
   };
 
   return {
