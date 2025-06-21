@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -24,15 +23,8 @@ const MobileCustomerLanding = () => {
       description: 'Shop instantly via WhatsApp - No app needed!',
       icon: <MessageCircle className="w-6 h-6" />,
       action: () => {
-        const phoneNumber = currentUser.registeredPhone?.replace('+', '') || '27832466539';
-        const message = encodeURIComponent(
-          `🛒 Express Shopping Request\n\n` +
-          `Customer: ${currentUser.firstName} ${currentUser.lastName}\n` +
-          `OneCard: ${currentUser.cardNumber}\n` +
-          `Phone: ${currentUser.registeredPhone}\n\n` +
-          `Show me today's hottest deals! 🔥`
-        );
-        window.open(`https://wa.me/${phoneNumber}?text=${message}`, '_blank');
+        // Redirect to WhatsApp Assistant page instead of opening WhatsApp directly
+        window.location.href = '/whatsapp-assistant';
       },
       gradient: 'from-green-500 to-emerald-600',
       badge: 'Instant',
