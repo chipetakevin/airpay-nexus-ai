@@ -17,7 +17,7 @@ export const useVendorRegistration = () => {
     lastName: '',
     email: '',
     phoneNumber: '',
-    countryCode: '+27', // Fixed to South Africa country code
+    countryCode: '+27', // Preset South Africa country code
     password: '',
     confirmPassword: '',
     companyName: '',
@@ -49,6 +49,24 @@ export const useVendorRegistration = () => {
   };
 
   const handleInputChange = (field: keyof VendorFormData, value: any) => {
+    // Special handling for phone number to ensure proper formatting
+    if (field === 'phoneNumber') {
+      // Remove any non-numeric characters
+      let cleanValue = value.replace(/\D/g, '');
+      
+      // Remove leading zero if present
+      if (cleanValue.startsWith('0')) {
+        cleanValue = cleanValue.substring(1);
+      }
+      
+      // Limit to 9 digits
+      if (cleanValue.length > 9) {
+        cleanValue = cleanValue.substring(0, 9);
+      }
+      
+      value = cleanValue;
+    }
+    
     setFormData(prev => ({ 
       ...prev, 
       [field]: value,

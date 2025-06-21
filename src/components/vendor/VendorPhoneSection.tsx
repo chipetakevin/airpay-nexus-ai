@@ -4,15 +4,15 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Phone } from 'lucide-react';
-import { FormData } from '@/types/customerRegistration';
+import { VendorFormData, VendorFormErrors } from '@/types/vendorRegistration';
 
-interface PhoneSectionProps {
-  formData: FormData;
-  errors: Partial<Record<keyof FormData, string>>;
-  onInputChange: (field: keyof FormData, value: any) => void;
+interface VendorPhoneSectionProps {
+  formData: VendorFormData;
+  errors: VendorFormErrors;
+  onInputChange: (field: keyof VendorFormData, value: any) => void;
 }
 
-const PhoneSection = ({ formData, errors, onInputChange }: PhoneSectionProps) => {
+const VendorPhoneSection = ({ formData, errors, onInputChange }: VendorPhoneSectionProps) => {
   const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     let value = e.target.value;
     // Remove any non-numeric characters
@@ -36,13 +36,13 @@ const PhoneSection = ({ formData, errors, onInputChange }: PhoneSectionProps) =>
       <CardHeader className="pb-3">
         <CardTitle className="text-lg flex items-center gap-2 text-blue-800">
           <Phone className="w-5 h-5" />
-          Phone Number (Required for All Services)
+          Business Phone Number
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="space-y-2">
           <Label htmlFor="phoneNumber" className="text-sm font-medium text-blue-700">
-            Mobile Number *
+            Business Mobile Number *
           </Label>
           <div className="flex">
             <div className="flex items-center px-3 py-2 bg-gray-100 border border-r-0 border-gray-300 rounded-l-md">
@@ -68,7 +68,7 @@ const PhoneSection = ({ formData, errors, onInputChange }: PhoneSectionProps) =>
             <p className="text-red-500 text-xs mt-1">{errors.phoneNumber}</p>
           )}
           <p className="text-xs text-blue-600">
-            Enter your mobile number without the leading zero. This number will be permanently saved for payments and services.
+            Your business contact number will be permanently saved for vendor services and communications.
           </p>
         </div>
       </CardContent>
@@ -76,4 +76,4 @@ const PhoneSection = ({ formData, errors, onInputChange }: PhoneSectionProps) =>
   );
 };
 
-export default PhoneSection;
+export default VendorPhoneSection;

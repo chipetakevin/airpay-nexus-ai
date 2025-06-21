@@ -17,20 +17,27 @@ const MobileMenu = ({ isMenuOpen, toggleMenu }: MobileMenuProps) => {
   if (!isMenuOpen) return null;
 
   return (
-    <div className="md:hidden border-t bg-white relative z-50 max-h-[calc(100vh-4rem)] overflow-hidden">
+    <div className="md:hidden border-t bg-white relative z-50 max-h-[calc(100vh-4rem)] overflow-hidden shadow-xl">
       <ScrollArea className="h-full">
         <div className="container mx-auto px-3 py-2 space-y-0.5 pb-16">
-          {/* Customer Authentication Section */}
+          {/* Enhanced Authentication Section with Registration Links */}
           <MobileMenuAuth 
             isAuthenticated={isAuthenticated} 
             toggleMenu={toggleMenu} 
           />
 
-          {/* Main Navigation Links */}
+          {/* Services Notice */}
+          <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-2 my-2">
+            <p className="text-xs text-yellow-800 text-center font-medium">
+              ⚠️ All services require completed registration with valid phone number and banking details
+            </p>
+          </div>
+
+          {/* Enhanced Navigation Links */}
           <MobileMenuNavigation toggleMenu={toggleMenu} />
           
-          {/* Portal and Admin Dropdowns */}
-          <MobileMenuDropdowns toggleMenu={toggleMenu} />
+          {/* Portal and Admin Dropdowns - Only show if authenticated */}
+          {isAuthenticated && <MobileMenuDropdowns toggleMenu={toggleMenu} />}
         </div>
       </ScrollArea>
     </div>
