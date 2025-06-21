@@ -15,22 +15,14 @@ export const useSessionManager = () => {
   const { toast } = useToast();
   const location = useLocation();
 
-  // COMPLETELY DISABLE session management on deals page
+  // Check if we're on deals page
   const isDealsPage = location.pathname === '/' && location.search.includes('tab=deals');
   const isDealsRoute = location.pathname.includes('/deals') || location.pathname === '/portal' && location.search.includes('tab=deals');
-  
-  if (isDealsPage || isDealsRoute) {
-    return {
-      sessionInfo: null,
-      getRemainingTime: () => null,
-      sendWhatsAppLogoutNotification: () => {},
-      performLogout: () => {}
-    };
-  }
+  const shouldDisableSession = isDealsPage || isDealsRoute;
 
   useEffect(() => {
     // COMPLETELY EXCLUDE deals page from session management
-    if (location.search.includes('tab=deals') || location.pathname.includes('/deals')) {
+    if (shouldDisableSession) {
       setSessionInfo(null);
       return;
     }
@@ -100,11 +92,11 @@ export const useSessionManager = () => {
       console.error('Error parsing session data:', error);
       setSessionInfo(null);
     }
-  }, [location]);
+  }, [location, shouldDisableSession]);
 
   useEffect(() => {
-    // NEVER run session expiry logic on deals page
-    if (location.search.includes('tab=deals') || location.pathname.includes('/deals') || !sessionInfo) {
+    // NEVER run session expiry logic on deals page or when no session
+    if (shouldDisableSession || !sessionInfo) {
       return;
     }
 
@@ -147,10 +139,10 @@ export const useSessionManager = () => {
     checkSessionExpiry();
 
     return () => clearInterval(interval);
-  }, [sessionInfo, toast, location]);
+  }, [sessionInfo, toast, location, shouldDisableSession]);
 
   const sendWhatsAppLogoutNotification = () => {
-    if (!sessionInfo) return;
+    if (!sessionInfo || shouldDisableSession) return;
     
     const message = encodeURIComponent(
       `🔐 DIVINELY MOBILE - SESSION EXPIRED 📣\n\n` +
@@ -178,6 +170,8 @@ export const useSessionManager = () => {
   };
 
   const performLogout = () => {
+    if (shouldDisableSession) return;
+    
     // Clear all authentication data
     localStorage.removeItem('userAuthenticated');
     localStorage.removeItem('sessionStartTime');
@@ -196,7 +190,7 @@ export const useSessionManager = () => {
   };
 
   const getRemainingTime = () => {
-    if (!sessionInfo) return null;
+    if (!sessionInfo || shouldDisableSession) return null;
     
     const currentTime = Date.now();
     const sessionDuration = currentTime - sessionInfo.loginTime;
@@ -211,10 +205,11 @@ export const useSessionManager = () => {
     return { minutes, seconds, totalMs: remaining };
   };
 
+  // Always return the same object structure, but with conditional behavior
   return {
-    sessionInfo,
-    getRemainingTime,
-    sendWhatsAppLogoutNotification,
-    performLogout
+    sessionInfo: shouldDisableSession ? null : sessionInfo,
+    getRemainingTime: shouldDisableSession ? () => null : getRemainingTime,
+    sendWhatsAppLogoutNotification: shouldDisableSession ? () => {} : sendWhatsAppLogoutNotification,
+    performLogout: shouldDisableSession ? () => {} : performLogout
   };
 };
