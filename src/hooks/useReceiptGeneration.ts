@@ -9,16 +9,6 @@ export const useReceiptGeneration = () => {
     return 'AP' + timestamp.replace(/[^0-9]/g, '').slice(-8);
   };
 
-  const generateSessionId = () => {
-    // Generate exactly 7-character unique session ID with letters and numbers
-    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-    let result = '';
-    for (let i = 0; i < 7; i++) {
-      result += chars.charAt(Math.floor(Math.random() * chars.length));
-    }
-    return result;
-  };
-
   const capitalizeWords = (str: string) => {
     return str.split(' ').map(word => 
       word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
@@ -75,17 +65,13 @@ export const useReceiptGeneration = () => {
       }
 
       const customerName = getCustomerDisplayName();
-      const sessionId = generateSessionId(); // This now generates exactly 7 characters
 
-      console.log(`Generated 7-character session ID: ${sessionId} (length: ${sessionId.length})`);
-
-      // Enhanced receipt data for both WhatsApp and Email
+      // Enhanced receipt data WITHOUT session ID
       const baseReceiptData = {
         customerName: customerName,
         customerEmail: customerEmail,
         customerPhone: customerPhone,
         transactionId: generateTransactionId(transactionData.timestamp),
-        sessionId: sessionId,
         items: cartItems.map(item => ({
           network: item.network,
           amount: item.amount,
@@ -184,7 +170,6 @@ export const useReceiptGeneration = () => {
   return {
     autoGenerateAndSendReceipts,
     generateTransactionId,
-    generateSessionId,
     getCustomerDisplayName
   };
 };

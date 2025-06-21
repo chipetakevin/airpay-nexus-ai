@@ -3,7 +3,6 @@ import React from 'react';
 import { useToast } from '@/hooks/use-toast';
 
 interface ReceiptData {
-  sessionId: string;
   customerPhone: string;
   customerEmail?: string;
   recipientPhone: string;
@@ -27,7 +26,6 @@ export const useAutoReceiptGenerator = () => {
 ✅ *PAYMENT SUCCESSFUL*
 
 👤 *Customer:* ${data.customerPhone}
-🆔 *Session ID:* ${data.sessionId}
 ⏰ *Date:* ${new Date(data.timestamp).toLocaleString()}
 
 📋 *PURCHASE DETAILS:*
@@ -68,10 +66,6 @@ _Fast • Secure • Reliable_`;
         <div style="padding: 30px; background: white;">
           <h3 style="color: #059669; margin-top: 0;">Payment Confirmation</h3>
           <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">
-            <tr>
-              <td style="padding: 12px; border-bottom: 1px solid #e5e7eb; font-weight: bold;">Session ID:</td>
-              <td style="padding: 12px; border-bottom: 1px solid #e5e7eb;">${data.sessionId}</td>
-            </tr>
             <tr>
               <td style="padding: 12px; border-bottom: 1px solid #e5e7eb; font-weight: bold;">Product:</td>
               <td style="padding: 12px; border-bottom: 1px solid #e5e7eb;">${data.deal.network} ${data.deal.type.toUpperCase()} R${data.deal.amount}</td>
@@ -126,6 +120,11 @@ _Fast • Secure • Reliable_`;
         description: "📱 WhatsApp receipt opened • 📧 Email receipt sent",
         duration: 4000
       });
+
+      // Auto-redirect to shopping page after receipt delivery
+      setTimeout(() => {
+        window.location.replace('/portal?tab=deals');
+      }, 3000);
 
       return {
         whatsappMessage,

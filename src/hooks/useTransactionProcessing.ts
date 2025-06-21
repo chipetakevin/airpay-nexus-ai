@@ -95,10 +95,10 @@ export const useTransactionProcessing = () => {
         duration: 5000
       });
 
-      // Auto-redirect after showing success
+      // Immediate redirect to shopping page after successful processing
       setTimeout(() => {
-        window.location.href = '/portal?tab=onecard#deals';
-      }, 3000);
+        window.location.replace('/portal?tab=deals');
+      }, 2500);
 
       return true;
       

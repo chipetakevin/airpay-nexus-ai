@@ -1,10 +1,8 @@
 
 export interface ReceiptData {
-  customerName: string;
-  customerEmail: string;
+  customerName?: string;
+  customerEmail?: string;
   customerPhone: string;
-  recipientPhone: string;
-  recipientName: string;
   transactionId: string;
   items: Array<{
     network: string;
@@ -13,12 +11,14 @@ export interface ReceiptData {
     type: string;
   }>;
   total: number;
-  cashbackEarned: number;
+  cashbackEarned?: number;
+  recipientPhone: string;
+  recipientName?: string;
   timestamp: string;
-  purchaseType: 'self' | 'other' | 'sender' | 'recipient';
+  purchaseType?: 'self' | 'sender' | 'recipient';
 }
 
 export const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
