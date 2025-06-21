@@ -1,10 +1,11 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { CardContent } from '@/components/ui/card';
 import { CartItem } from '@/types/deals';
 import { useShoppingCart } from '@/hooks/useShoppingCart';
 import { usePhoneValidation } from '@/hooks/usePhoneValidation';
 import { useAutoReceiptGenerator } from '@/components/receipts/AutoReceiptGenerator';
+import { useRegistrationGuard } from '@/hooks/useRegistrationGuard';
 import CartItems from './CartItems';
 import UserTypeIndicator from './UserTypeIndicator';
 import PurchaseModeSelector from './PurchaseModeSelector';
@@ -19,6 +20,7 @@ interface ShoppingCartContentProps {
 const ShoppingCartContent = ({ initialDeal }: ShoppingCartContentProps) => {
   const [acceptedSATerms, setAcceptedSATerms] = useState(false);
   const { sendReceiptNotifications } = useAutoReceiptGenerator();
+  const { getStoredPhoneNumber, userProfile } = useRegistrationGuard();
 
   const {
     cartItems,
@@ -36,6 +38,14 @@ const ShoppingCartContent = ({ initialDeal }: ShoppingCartContentProps) => {
     calculateTotals,
     processPurchase
   } = useShoppingCart(initialDeal);
+
+  // Auto-fill customer phone from profile
+  useEffect(() => {
+    const storedPhone = getStoredPhoneNumber();
+    if (storedPhone && !customerPhone) {
+      setCustomerPhone(storedPhone);
+    }
+  }, [getStoredPhoneNumber, customerPhone, setCustomerPhone]);
 
   const {
     detectedNetwork,
@@ -64,7 +74,7 @@ const ShoppingCartContent = ({ initialDeal }: ShoppingCartContentProps) => {
       const receiptData = {
         sessionId: `DM${Date.now()}${Math.random().toString(36).substr(2, 5).toUpperCase()}`,
         customerPhone: customerPhone,
-        customerEmail: currentUser?.email || '',
+        customerEmail: userProfile?.email || currentUser?.email || '',
         recipientPhone: purchaseMode === 'self' ? customerPhone : recipientData.phone,
         recipientName: purchaseMode === 'self' ? 'Self' : recipientData.name,
         deal: {

@@ -8,6 +8,7 @@ import DealsGrid from './deals/DealsGrid';
 import SystemInfo from './deals/SystemInfo';
 import ShoppingCart from './ShoppingCart';
 import AuthenticationIndicator from './deals/AuthenticationIndicator';
+import RegistrationGate from './auth/RegistrationGate';
 
 const AirtimeDealsSystem = () => {
   const { deals, isLoading, lastRefresh, scrapingStatus, handleManualRefresh } = useDealsData();
@@ -38,49 +39,55 @@ const AirtimeDealsSystem = () => {
   };
 
   return (
-    <div className="space-y-6">
-      {/* Authentication Indicator - but NO session management */}
-      <AuthenticationIndicator />
+    <RegistrationGate 
+      serviceName="airtime deals and payments"
+      requireBankingInfo={true}
+      allowedPaths={['/portal?tab=registration', '/portal?tab=deals']}
+    >
+      <div className="space-y-6">
+        {/* Authentication Indicator - but NO session management */}
+        <AuthenticationIndicator />
 
-      {/* Header Section */}
-      <DealsHeader
-        lastRefresh={lastRefresh}
-        scrapingStatus={scrapingStatus}
-        isLoading={isLoading}
-        onManualRefresh={handleManualRefresh}
-      />
-
-      {/* Enhanced Filters */}
-      <DealsFiltersSection
-        selectedDealType={selectedDealType}
-        selectedNetwork={selectedNetwork}
-        selectedAmount={selectedAmount}
-        onDealTypeChange={setSelectedDealType}
-        onNetworkChange={setSelectedNetwork}
-        onAmountChange={setSelectedAmount}
-        onClearFilters={handleClearFilters}
-      />
-
-      {/* Deals Grid */}
-      <DealsGrid
-        deals={filteredDeals}
-        isLoading={isLoading}
-        onGrabDeal={handleGrabDeal}
-      />
-
-      <SystemInfo />
-
-      {/* Shopping Cart Modal - NO session management */}
-      {showCart && (
-        <ShoppingCart 
-          initialDeal={selectedDeal}
-          onClose={() => {
-            setShowCart(false);
-            setSelectedDeal(null);
-          }}
+        {/* Header Section */}
+        <DealsHeader
+          lastRefresh={lastRefresh}
+          scrapingStatus={scrapingStatus}
+          isLoading={isLoading}
+          onManualRefresh={handleManualRefresh}
         />
-      )}
-    </div>
+
+        {/* Enhanced Filters */}
+        <DealsFiltersSection
+          selectedDealType={selectedDealType}
+          selectedNetwork={selectedNetwork}
+          selectedAmount={selectedAmount}
+          onDealTypeChange={setSelectedDealType}
+          onNetworkChange={setSelectedNetwork}
+          onAmountChange={setSelectedAmount}
+          onClearFilters={handleClearFilters}
+        />
+
+        {/* Deals Grid */}
+        <DealsGrid
+          deals={filteredDeals}
+          isLoading={isLoading}
+          onGrabDeal={handleGrabDeal}
+        />
+
+        <SystemInfo />
+
+        {/* Shopping Cart Modal - NO session management */}
+        {showCart && (
+          <ShoppingCart 
+            initialDeal={selectedDeal}
+            onClose={() => {
+              setShowCart(false);
+              setSelectedDeal(null);
+            }}
+          />
+        )}
+      </div>
+    </RegistrationGate>
   );
 };
 

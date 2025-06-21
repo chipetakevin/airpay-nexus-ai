@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { LogOut } from 'lucide-react';
@@ -11,6 +10,7 @@ import RegistrationAlerts from './registration/RegistrationAlerts';
 import { useCustomerRegistration } from '@/hooks/useCustomerRegistration';
 import { useMobileAuth } from '@/hooks/useMobileAuth';
 import { usePhoneAutofill } from '@/hooks/usePhoneAutofill';
+import { useRegistrationGuard } from '@/hooks/useRegistrationGuard';
 import { useToast } from '@/hooks/use-toast';
 
 const CustomerRegistration = () => {
@@ -19,6 +19,7 @@ const CustomerRegistration = () => {
   const { formData, errors, handleInputChange, handleSubmit } = useCustomerRegistration();
   const { isAuthenticated, currentUser } = useMobileAuth();
   const { saveBankingInfo } = usePhoneAutofill();
+  const { userProfile, saveProfilePermanently, checkRegistrationStatus } = useRegistrationGuard();
   const { toast } = useToast();
 
   useEffect(() => {
@@ -37,9 +38,15 @@ const CustomerRegistration = () => {
           }
         });
         
+        // Also auto-fill phone number from registered phone
+        if (parsedData.registeredPhone && !formData.phoneNumber) {
+          const cleanPhone = parsedData.registeredPhone.replace('+27', '');
+          handleInputChange('phoneNumber', cleanPhone);
+        }
+        
         toast({
           title: "Welcome Back! 👋",
-          description: `Auto-filled your information, ${parsedData.firstName}!`,
+          description: `Auto-filled your information, ${parsedData.firstName}! Your profile is permanently saved.`,
         });
       } catch (error) {
         console.error('Error parsing saved user data:', error);
@@ -48,15 +55,14 @@ const CustomerRegistration = () => {
   }, []);
 
   const handleLogout = () => {
+    // Don't clear user data - keep it permanently saved
     localStorage.removeItem('userAuthenticated');
-    localStorage.removeItem('onecardUser');
-    localStorage.removeItem('userCredentials');
     sessionStorage.clear();
     setIsLoggedIn(false);
     
     toast({
       title: "Logged Out Successfully",
-      description: "You have been securely logged out.",
+      description: "Your profile information remains permanently saved for future logins.",
     });
     
     // Refresh the page to reset the form
@@ -66,7 +72,7 @@ const CustomerRegistration = () => {
   const handleCustomSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    // Save banking information before submission
+    // Save banking information permanently before submission
     if (formData.bankName && formData.accountNumber) {
       saveBankingInfo({
         bankName: formData.bankName,
@@ -75,15 +81,34 @@ const CustomerRegistration = () => {
       });
     }
     
+    // Save all profile data permanently
+    saveProfilePermanently({
+      firstName: formData.firstName,
+      lastName: formData.lastName,
+      email: formData.email,
+      phoneNumber: `+27${formData.phoneNumber}`,
+      bankName: formData.bankName,
+      accountNumber: formData.accountNumber,
+      isComplete: true
+    });
+    
     // Call the original submit handler
     await handleSubmit(e);
+    
+    // Refresh registration status
+    setTimeout(() => {
+      checkRegistrationStatus();
+    }, 1000);
   };
 
   return (
     <div className="space-y-6">
       {/* Logout button for logged in users */}
       {isLoggedIn && (
-        <div className="flex justify-end">
+        <div className="flex justify-between items-center">
+          <div className="text-sm text-green-600 bg-green-50 px-3 py-2 rounded-lg">
+            ✅ Profile permanently saved - ready for payments & services
+          </div>
           <Button
             onClick={handleLogout}
             variant="outline"
@@ -91,7 +116,7 @@ const CustomerRegistration = () => {
             className="border-red-300 text-red-600 hover:bg-red-50"
           >
             <LogOut className="w-4 h-4 mr-2" />
-            Logout
+            Logout (Profile Saved)
           </Button>
         </div>
       )}
@@ -125,16 +150,16 @@ const CustomerRegistration = () => {
           onInputChange={handleInputChange}
         />
 
-        {/* Enhanced Remember Password Section */}
-        <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+        {/* Enhanced Permanent Profile Save Section */}
+        <div className="bg-gradient-to-r from-blue-50 to-green-50 border border-blue-200 rounded-lg p-4">
           <div className="flex items-center gap-3">
-            <div className="w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center">
+            <div className="w-6 h-6 bg-gradient-to-r from-blue-500 to-green-500 rounded-full flex items-center justify-center">
               <span className="text-white text-sm">✓</span>
             </div>
             <div>
-              <h3 className="font-semibold text-blue-800">Secure Auto-Login & Banking Save</h3>
+              <h3 className="font-semibold text-blue-800">Permanent Profile & Banking Save</h3>
               <p className="text-sm text-blue-600">
-                Your login details and banking information are securely encrypted and stored for faster future access.
+                Your complete profile, phone number, and banking information are permanently encrypted and stored for instant future payments, RICA services, and porting. No need to re-enter information.
               </p>
             </div>
           </div>
@@ -142,9 +167,9 @@ const CustomerRegistration = () => {
 
         <Button 
           type="submit" 
-          className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 animate-pulse-glow"
+          className="w-full bg-gradient-to-r from-blue-600 to-green-600 hover:from-blue-700 hover:to-green-700 animate-pulse-glow"
         >
-          {isLoggedIn ? 'Update & Continue Shopping 🛒' : 'Register & Start Shopping 🛒'}
+          {isLoggedIn ? 'Update Profile & Enable All Services 🚀' : 'Register & Enable All Services 🚀'}
         </Button>
       </form>
     </div>
