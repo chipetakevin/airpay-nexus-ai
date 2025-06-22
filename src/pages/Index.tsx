@@ -14,51 +14,54 @@ import WhatsAppFloatingButton from '@/components/WhatsAppFloatingButton';
 import MobileCustomerLanding from '@/components/MobileCustomerLanding';
 import WhatsAppShoppingSection from '@/components/WhatsAppShoppingSection';
 import SmoothScrollNav from '@/components/SmoothScrollNav';
+import MobileLayout from '@/components/navigation/MobileLayout';
 import { useMobileAuth } from '@/hooks/useMobileAuth';
 
 const Index = () => {
   const { isAuthenticated } = useMobileAuth();
 
   return (
-    <div className="min-h-screen bg-white">
-      <Header />
-      
-      {/* Mobile Customer Experience - Only show for authenticated users */}
-      {isAuthenticated && (
-        <section className="container mx-auto px-4 py-8">
-          <MobileCustomerLanding />
-        </section>
-      )}
-      
-      <main>
-        <div id="hero">
-          <HeroSection />
-        </div>
+    <MobileLayout>
+      <div className="min-h-screen bg-white">
+        <Header />
         
-        {/* RICA Services Section - Added right after hero */}
-        <RicaServicesSection />
+        {/* Mobile Customer Experience - Only show for authenticated users */}
+        {isAuthenticated && (
+          <section className="container mx-auto px-4 py-8">
+            <MobileCustomerLanding />
+          </section>
+        )}
         
-        {/* WhatsApp Shopping Section */}
-        <WhatsAppShoppingSection />
+        <main>
+          <div id="hero">
+            <HeroSection />
+          </div>
+          
+          {/* RICA Services Section - Added right after hero */}
+          <RicaServicesSection />
+          
+          {/* WhatsApp Shopping Section */}
+          <WhatsAppShoppingSection />
+          
+          <div id="features">
+            <FeaturesSection />
+          </div>
+          <BenefitsSection />
+          <StatsGrid />
+          <div id="testimonials">
+            <TestimonialsCarousel />
+          </div>
+          <CTASection />
+          <div id="faq">
+            <FAQSection />
+          </div>
+        </main>
         
-        <div id="features">
-          <FeaturesSection />
-        </div>
-        <BenefitsSection />
-        <StatsGrid />
-        <div id="testimonials">
-          <TestimonialsCarousel />
-        </div>
-        <CTASection />
-        <div id="faq">
-          <FAQSection />
-        </div>
-      </main>
-      
-      <Footer />
-      <WhatsAppFloatingButton />
-      <SmoothScrollNav />
-    </div>
+        <Footer />
+        <WhatsAppFloatingButton />
+        <SmoothScrollNav />
+      </div>
+    </MobileLayout>
   );
 };
 

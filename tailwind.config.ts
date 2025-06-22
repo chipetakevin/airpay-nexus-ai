@@ -75,6 +75,12 @@ export default {
 				md: 'calc(var(--radius) - 2px)',
 				sm: 'calc(var(--radius) - 4px)'
 			},
+			spacing: {
+				'safe-top': 'env(safe-area-inset-top)',
+				'safe-bottom': 'env(safe-area-inset-bottom)',
+				'safe-left': 'env(safe-area-inset-left)',
+				'safe-right': 'env(safe-area-inset-right)',
+			},
 			keyframes: {
 				'accordion-down': {
 					from: {
@@ -104,5 +110,23 @@ export default {
 			}
 		}
 	},
-	plugins: [require("tailwindcss-animate")],
+	plugins: [
+		require("tailwindcss-animate"),
+		function({ addUtilities }: any) {
+			addUtilities({
+				'.safe-area-pt': {
+					'padding-top': 'env(safe-area-inset-top)'
+				},
+				'.safe-area-pb': {
+					'padding-bottom': 'env(safe-area-inset-bottom)'
+				},
+				'.safe-area-pl': {
+					'padding-left': 'env(safe-area-inset-left)'
+				},
+				'.safe-area-pr': {
+					'padding-right': 'env(safe-area-inset-right)'
+				}
+			})
+		}
+	],
 } satisfies Config;
