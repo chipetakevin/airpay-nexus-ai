@@ -1,227 +1,266 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { 
-  MessageCircle, Smartphone, Star, Zap, 
-  ArrowRight, CheckCircle, Gift, CreditCard
+  MessageCircle, Smartphone, Star, Phone, Wifi, 
+  ShoppingCart, CheckCircle, Gift, Zap, CreditCard,
+  ArrowRight, Users, Clock, Shield, BarChart3
 } from 'lucide-react';
+import { useMobileAuth } from '@/hooks/useMobileAuth';
 import { Link } from 'react-router-dom';
-import MobileOptimizedShoppingInterface from './MobileOptimizedShoppingInterface';
+import WhatsAppAssistant from './WhatsAppAssistant';
+import MobileShoppingInterface from '../mobile/MobileShoppingInterface';
 
 const WhatsAppIntegration = () => {
+  const { currentUser, isAuthenticated } = useMobileAuth();
+  const [activeTab, setActiveTab] = useState('assistant');
+
   const features = [
     {
       icon: <MessageCircle className="w-6 h-6 text-green-600" />,
       title: "WhatsApp Shopping",
-      description: "Shop directly through WhatsApp with our AI assistant",
-      badge: "Popular"
+      description: "Shop directly through WhatsApp - no app needed!"
     },
     {
-      icon: <Zap className="w-6 h-6 text-yellow-600" />,
-      title: "USSD Payments",
-      description: "Quick dial-code payments for instant transactions",
-      badge: "New"
+      icon: <Clock className="w-6 h-6 text-blue-600" />,
+      title: "Instant Delivery",
+      description: "Airtime and data delivered within 30 seconds"
     },
     {
-      icon: <CheckCircle className="w-6 h-6 text-blue-600" />,
-      title: "Auto Receipts",
-      description: "Instant WhatsApp & Email receipts for all purchases",
-      badge: "Featured"
+      icon: <Shield className="w-6 h-6 text-purple-600" />,
+      title: "Secure & Safe",
+      description: "Bank-grade security for all transactions"
     },
     {
-      icon: <Gift className="w-6 h-6 text-purple-600" />,
-      title: "Mobile First",
-      description: "Optimized experience for smartphone users",
-      badge: "Essential"
+      icon: <Smartphone className="w-6 h-6 text-orange-600" />,
+      title: "Mobile Optimized",
+      description: "Designed specifically for smartphone users"
+    }
+  ];
+
+  const quickActions = [
+    {
+      icon: <CreditCard className="w-5 h-5" />,
+      title: "Buy Airtime",
+      description: "Instant top-ups for all networks",
+      number: "1",
+      action: () => setActiveTab('mobile')
+    },
+    {
+      icon: <Wifi className="w-5 h-5" />,
+      title: "Purchase Data Bundles", 
+      description: "High-speed internet packages",
+      number: "2",
+      action: () => setActiveTab('mobile')
+    },
+    {
+      icon: <Phone className="w-5 h-5" />,
+      title: "Check Balance",
+      description: "View your current balance",
+      number: "3",
+      action: () => setActiveTab('mobile')
+    },
+    {
+      icon: <Gift className="w-5 h-5" />,
+      title: "Gift Airtime/Data",
+      description: "Send to friends & family",
+      number: "4",
+      action: () => setActiveTab('mobile')
     }
   ];
 
   const handleWhatsAppStart = () => {
-    const message = encodeURIComponent(
-      `🛍️ Hi Divinely Mobile AI!\n\n` +
-      `I'm interested in your mobile shopping services:\n\n` +
-      `• 📞 Airtime top-ups\n` +
-      `• 📊 Data bundles\n` +
-      `• 💳 USSD payments\n` +
-      `• 📧 Auto receipts\n\n` +
-      `Please help me get started with the best deals!`
+    const phoneNumber = isAuthenticated && currentUser?.registeredPhone 
+      ? currentUser.registeredPhone.replace('+', '')
+      : '27832466539';
+    
+    const message = isAuthenticated ? encodeURIComponent(
+      `🔥 Hi Divinely Mobile AI! I'm ${currentUser?.firstName} ${currentUser?.lastName}\n\n` +
+      `🎯 OneCard: ${currentUser?.cardNumber}\n` +
+      `📱 Account: ${currentUser?.registeredPhone}\n\n` +
+      `I'd like exclusive access to:\n` +
+      `• 💎 VIP Deals & Discounts\n` +
+      `• ⚡ Instant Top-ups\n` +
+      `• 📊 Premium Data Bundles\n` +
+      `• 🎁 Loyalty Rewards\n\n` +
+      `Ready to shop! 🛒`
+    ) : encodeURIComponent(
+      `Hi Divinely Mobile AI! 🤖\n\nI'd like to get instant airtime & data deals. Please assist me with:\n\n• Best available deals\n• Account management\n• Top-up services\n• Balance inquiries\n\nThank you!`
     );
-    window.open(`https://wa.me/27832466539?text=${message}`, '_blank');
+    
+    window.open(`https://wa.me/${phoneNumber}?text=${message}`, '_blank');
   };
 
   return (
-    <div className="max-w-6xl mx-auto space-y-8">
-      {/* Header Section */}
+    <div className="max-w-4xl mx-auto space-y-6">
+      {/* Header */}
       <div className="text-center space-y-4">
-        <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-green-600 via-blue-600 to-purple-600 bg-clip-text text-transparent">
+        <h1 className="text-3xl md:text-4xl font-bold text-gray-900">
           WhatsApp Shopping Experience
         </h1>
-        <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-          Revolutionary mobile commerce powered by AI, USSD payments, and instant receipt delivery
+        <p className="text-lg text-gray-600 max-w-3xl mx-auto">
+          Experience seamless mobile commerce with our AI-powered WhatsApp assistant and mobile-optimized shopping platform
         </p>
-      </div>
 
-      {/* Features Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-        {features.map((feature, index) => (
-          <Card key={index} className="hover:shadow-lg transition-all duration-300 border-2 hover:border-green-200">
-            <CardContent className="p-6 text-center">
-              <div className="relative mb-4">
-                <div className="w-12 h-12 mx-auto bg-gray-100 rounded-full flex items-center justify-center">
-                  {feature.icon}
-                </div>
-                <Badge className="absolute -top-2 -right-2 bg-gradient-to-r from-green-500 to-blue-500 text-white text-xs">
-                  {feature.badge}
+        {/* User Status */}
+        {isAuthenticated && currentUser && (
+          <Card className="bg-gradient-to-r from-green-50 to-emerald-50 border-2 border-green-200">
+            <CardContent className="p-4">
+              <div className="flex items-center justify-center gap-4">
+                <Badge className="bg-green-600 text-white">
+                  <CheckCircle className="w-3 h-3 mr-1" />
+                  VIP Customer
+                </Badge>
+                <span className="font-medium text-green-800">
+                  Welcome back, {currentUser.firstName}!
+                </span>
+                <Badge className="bg-blue-600 text-white">
+                  OneCard: ****{currentUser.cardNumber?.slice(-4)}
                 </Badge>
               </div>
-              <h3 className="font-semibold text-gray-900 mb-2">{feature.title}</h3>
-              <p className="text-sm text-gray-600">{feature.description}</p>
             </CardContent>
           </Card>
-        ))}
+        )}
       </div>
 
       {/* Main Interface */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
-        {/* Mobile Shopping Interface */}
-        <div className="space-y-6">
-          <div className="text-center lg:text-left">
-            <h2 className="text-2xl font-bold text-gray-900 mb-2">
-              Mobile Shopping Interface
-            </h2>
-            <p className="text-gray-600">
-              Experience our mobile-optimized shopping platform with USSD payment integration
-            </p>
-          </div>
-          <MobileOptimizedShoppingInterface />
-        </div>
+      <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+        <TabsList className="grid w-full grid-cols-3">
+          <TabsTrigger value="assistant" className="flex items-center gap-2">
+            <MessageCircle className="w-4 h-4" />
+            WhatsApp AI
+          </TabsTrigger>
+          <TabsTrigger value="mobile" className="flex items-center gap-2">
+            <Smartphone className="w-4 h-4" />
+            Mobile Shopping
+          </TabsTrigger>
+          <TabsTrigger value="features" className="flex items-center gap-2">
+            <Star className="w-4 h-4" />
+            Features
+          </TabsTrigger>
+        </TabsList>
 
-        {/* WhatsApp Integration Info */}
-        <div className="space-y-6">
-          <Card className="bg-gradient-to-br from-green-50 to-emerald-50 border-green-200">
+        <TabsContent value="assistant" className="space-y-6">
+          {/* Quick Actions Preview */}
+          <Card>
             <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-green-800">
-                <MessageCircle className="w-6 h-6" />
-                WhatsApp AI Assistant
+              <CardTitle className="flex items-center gap-2">
+                <MessageCircle className="w-5 h-5 text-green-600" />
+                Quick WhatsApp Actions
               </CardTitle>
             </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="bg-white p-4 rounded-lg border border-green-200">
-                <div className="flex items-center gap-3 mb-3">
-                  <div className="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center">
-                    <MessageCircle className="w-6 h-6 text-white" />
+            <CardContent>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                {quickActions.map((action, index) => (
+                  <div 
+                    key={index} 
+                    onClick={action.action}
+                    className="flex items-center gap-3 p-4 bg-gray-50 rounded-lg hover:bg-blue-50 transition-colors cursor-pointer"
+                  >
+                    <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center text-blue-600 font-bold">
+                      {action.number}
+                    </div>
+                    <div className="flex-1">
+                      <div className="font-medium text-gray-900">{action.title}</div>
+                      <div className="text-sm text-gray-600">{action.description}</div>
+                    </div>
                   </div>
-                  <div>
-                    <div className="font-semibold text-green-800">Divinely Mobile AI</div>
-                    <div className="text-sm text-green-600">Always online • Instant responses</div>
-                  </div>
-                </div>
-                <div className="space-y-2 text-sm">
-                  <div className="flex items-center gap-2">
-                    <CheckCircle className="w-4 h-4 text-green-500" />
-                    <span>Instant airtime & data purchases</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <CheckCircle className="w-4 h-4 text-green-500" />
-                    <span>USSD payment guidance</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <CheckCircle className="w-4 h-4 text-green-500" />
-                    <span>Automatic receipt delivery</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <CheckCircle className="w-4 h-4 text-green-500" />
-                    <span>24/7 customer support</span>
-                  </div>
-                </div>
+                ))}
               </div>
 
-              <Button 
-                onClick={handleWhatsAppStart}
-                className="w-full bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 h-12 text-base font-semibold"
-              >
-                <MessageCircle className="w-5 h-5 mr-2" />
-                Start WhatsApp Shopping
-                <ArrowRight className="w-4 h-4 ml-2" />
-              </Button>
-            </CardContent>
-          </Card>
-
-          {/* USSD Payment Info */}
-          <Card className="bg-gradient-to-br from-blue-50 to-purple-50 border-blue-200">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-blue-800">
-                <CreditCard className="w-6 h-6" />
-                USSD Payment System
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <p className="text-blue-700 text-sm">
-                Make secure payments using your mobile network's USSD codes. No internet required!
-              </p>
-              
-              <div className="grid grid-cols-2 gap-3">
-                <div className="bg-white p-3 rounded border border-blue-200 text-center">
-                  <div className="font-bold text-blue-800">MTN</div>
-                  <div className="text-sm text-blue-600">*141#</div>
-                </div>
-                <div className="bg-white p-3 rounded border border-blue-200 text-center">
-                  <div className="font-bold text-blue-800">Vodacom</div>
-                  <div className="text-sm text-blue-600">*136#</div>
-                </div>
-                <div className="bg-white p-3 rounded border border-blue-200 text-center">
-                  <div className="font-bold text-blue-800">Divinely</div>
-                  <div className="text-sm text-blue-600">*180*2827#</div>
-                </div>
-                <div className="bg-white p-3 rounded border border-blue-200 text-center">
-                  <div className="font-bold text-blue-800">Telkom</div>
-                  <div className="text-sm text-blue-600">*180#</div>
-                </div>
-              </div>
-
-              <Link to="/deals">
+              <div className="flex gap-4">
                 <Button 
-                  variant="outline" 
-                  className="w-full border-2 border-blue-600 text-blue-600 hover:bg-blue-50"
+                  onClick={handleWhatsAppStart}
+                  className="flex-1 bg-green-600 hover:bg-green-700 h-12"
                 >
-                  <Smartphone className="w-4 h-4 mr-2" />
-                  Browse All Deals
+                  <MessageCircle className="w-5 h-5 mr-2" />
+                  Start WhatsApp Chat
                 </Button>
-              </Link>
+                <Button 
+                  onClick={() => setActiveTab('mobile')}
+                  variant="outline"
+                  className="flex-1 h-12 border-2 border-blue-600 text-blue-600 hover:bg-blue-50"
+                >
+                  <Smartphone className="w-5 h-5 mr-2" />
+                  Mobile Interface
+                </Button>
+              </div>
             </CardContent>
           </Card>
-        </div>
-      </div>
 
-      {/* Call to Action */}
-      <Card className="bg-gradient-to-r from-green-600 via-blue-600 to-purple-600 text-white">
-        <CardContent className="p-8 text-center">
-          <h3 className="text-2xl font-bold mb-2">Ready to Start Shopping?</h3>
-          <p className="text-blue-100 mb-6">
-            Experience the future of mobile commerce with instant payments and automated receipts
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button 
-              onClick={handleWhatsAppStart}
-              className="bg-white text-green-600 hover:bg-gray-100"
-            >
-              <MessageCircle className="w-5 h-5 mr-2" />
-              Start on WhatsApp
-            </Button>
-            <Link to="/deals">
-              <Button 
-                variant="outline" 
-                className="border-white text-white hover:bg-white hover:text-blue-600"
-              >
-                <Star className="w-5 h-5 mr-2" />
-                Browse Deals
-              </Button>
-            </Link>
+          {/* WhatsApp Assistant Interface */}
+          <Card className="max-w-md mx-auto">
+            <CardContent className="p-0">
+              <WhatsAppAssistant />
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="mobile" className="space-y-6">
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Smartphone className="w-5 h-5 text-blue-600" />
+                Mobile Shopping Interface
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="max-w-md mx-auto">
+                <MobileShoppingInterface />
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="features" className="space-y-6">
+          {/* Features Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {features.map((feature, index) => (
+              <Card key={index} className="hover:shadow-lg transition-all duration-300">
+                <CardContent className="p-6 text-center">
+                  <div className="w-12 h-12 mx-auto mb-4 bg-gray-100 rounded-full flex items-center justify-center">
+                    {feature.icon}
+                  </div>
+                  <h3 className="font-semibold text-gray-900 mb-2">{feature.title}</h3>
+                  <p className="text-sm text-gray-600">{feature.description}</p>
+                </CardContent>
+              </Card>
+            ))}
           </div>
-        </CardContent>
-      </Card>
+
+          {/* Call to Action */}
+          <Card className="bg-gradient-to-r from-green-50 to-emerald-50 border-2 border-green-200">
+            <CardContent className="p-8 text-center">
+              <div className="text-4xl mb-4">🚀</div>
+              <h3 className="text-2xl font-bold text-green-800 mb-4">Ready to Start Shopping?</h3>
+              <p className="text-green-700 mb-6">
+                Experience the future of mobile commerce with our integrated WhatsApp and mobile shopping platforms.
+              </p>
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <Button 
+                  onClick={handleWhatsAppStart}
+                  className="bg-green-600 hover:bg-green-700 h-12 px-8"
+                >
+                  <MessageCircle className="w-5 h-5 mr-2" />
+                  Start on WhatsApp
+                </Button>
+                <Link to="/portal?tab=deals">
+                  <Button 
+                    variant="outline" 
+                    className="h-12 px-8 border-2 border-blue-600 text-blue-600 hover:bg-blue-50"
+                  >
+                    <ShoppingCart className="w-5 h-5 mr-2" />
+                    Visit Shop
+                  </Button>
+                </Link>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+      </Tabs>
     </div>
   );
 };
