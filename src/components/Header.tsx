@@ -4,7 +4,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { 
-  MessageCircle, Smartphone, Star, ShoppingCart,
+  MessageCircle, Crown, Star, ShoppingCart,
   Menu, X, Zap, CreditCard
 } from 'lucide-react';
 import HeaderLogo from './header/HeaderLogo';
@@ -17,7 +17,7 @@ const Header = () => {
     { 
       path: '/', 
       label: 'Home', 
-      icon: <Smartphone className="w-4 h-4" /> 
+      icon: <Crown className="w-4 h-4" /> 
     },
     { 
       path: '/deals', 

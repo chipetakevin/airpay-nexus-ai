@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Smartphone } from 'lucide-react';
+import { Crown } from 'lucide-react';
 
 const HeaderLogo = () => {
   const location = useLocation();
@@ -25,7 +25,7 @@ const HeaderLogo = () => {
     >
       <div className="relative">
         <div className="w-10 h-10 bg-gradient-to-br from-blue-500 via-purple-600 to-blue-700 rounded-2xl flex items-center justify-center group-hover:scale-105 transition-all duration-300 ease-out group-active:scale-95 shadow-lg">
-          <Smartphone className="h-5 w-5 text-white" />
+          <Crown className="h-5 w-5 text-white" />
         </div>
         <div className="absolute -inset-1 bg-gradient-to-br from-blue-500 via-purple-600 to-blue-700 rounded-2xl blur opacity-20 group-hover:opacity-40 transition-all duration-300"></div>
         {isBaaSPage && (

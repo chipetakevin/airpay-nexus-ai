@@ -10,7 +10,7 @@ const TopNavigation = () => {
   return (
     <div className="fixed top-0 left-0 right-0 z-50 bg-gradient-to-r from-blue-500 via-blue-600 to-purple-600 safe-area-pt">
       <div className="flex items-center justify-between px-4 py-3 max-w-md mx-auto">
-        {/* Left - Crown Logo */}
+        {/* Left - Crown Logo (Main Logo) */}
         <div className="flex items-center">
           <div className="w-12 h-12 bg-white bg-opacity-20 rounded-2xl flex items-center justify-center backdrop-blur-sm">
             <Crown className="w-7 h-7 text-white" />
