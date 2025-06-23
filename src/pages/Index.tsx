@@ -22,22 +22,25 @@ const Index = () => {
 
   return (
     <MobileLayout>
-      <div className="min-h-screen bg-white">
-        <Header />
+      <div className="bg-white bg-opacity-95 backdrop-filter backdrop-blur-3xl rounded-3xl mx-2 mb-8 border border-white border-opacity-20 shadow-2xl overflow-hidden">
+        {/* Desktop Header - Hidden on mobile */}
+        <div className="hidden md:block">
+          <Header />
+        </div>
         
         {/* Mobile Customer Experience - Only show for authenticated users */}
         {isAuthenticated && (
-          <section className="container mx-auto px-4 py-8">
+          <section className="p-6">
             <MobileCustomerLanding />
           </section>
         )}
         
-        <main>
+        <main className="p-6 space-y-8">
           <div id="hero">
             <HeroSection />
           </div>
           
-          {/* RICA Services Section - Added right after hero */}
+          {/* RICA Services Section */}
           <RicaServicesSection />
           
           {/* WhatsApp Shopping Section */}
@@ -57,10 +60,14 @@ const Index = () => {
           </div>
         </main>
         
-        <Footer />
-        <WhatsAppFloatingButton />
-        <SmoothScrollNav />
+        {/* Desktop Footer - Hidden on mobile */}
+        <div className="hidden md:block">
+          <Footer />
+        </div>
       </div>
+      
+      <WhatsAppFloatingButton />
+      <SmoothScrollNav />
     </MobileLayout>
   );
 };

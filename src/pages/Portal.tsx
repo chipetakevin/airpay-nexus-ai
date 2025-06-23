@@ -1,8 +1,8 @@
-
 import React, { useState, useEffect } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import PortalHeader from '@/components/PortalHeader';
 import PortalTabs from '@/components/PortalTabs';
+import MobileLayout from '@/components/navigation/MobileLayout';
 import { useToast } from "@/hooks/use-toast"
 import WhatsAppFloatingButton from '@/components/WhatsAppFloatingButton';
 import { useSessionManager } from '@/hooks/useSessionManager';
@@ -141,7 +141,6 @@ const Portal = () => {
   const handleTabChange = (value: string) => {
     if (isTabAllowed(value)) {
       setActiveTab(value);
-      // Update URL when user explicitly changes tabs
       navigate(`?tab=${value}`, { replace: true });
     } else {
       toast({
@@ -155,25 +154,30 @@ const Portal = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="bg-gradient-to-r from-blue-600 to-purple-600 p-2">
-        <PortalHeader userType={userType} resetUserType={resetUserType} />
+    <MobileLayout showTopNav={true} showBottomNav={false}>
+      <div className="min-h-screen">
+        {/* Portal Content with Mobile-First Design */}
+        <div className="bg-white bg-opacity-95 backdrop-filter backdrop-blur-3xl rounded-3xl mx-2 mb-8 border border-white border-opacity-20 shadow-2xl overflow-hidden">
+          <div className="bg-gradient-to-r from-blue-600 to-purple-600 p-1">
+            <PortalHeader userType={userType} resetUserType={resetUserType} />
+          </div>
+          
+          <main className="p-6">
+            <PortalTabs 
+              activeTab={activeTab}
+              showAdminTab={showAdminTab}
+              isTabAllowed={isTabAllowed}
+              handleTabChange={handleTabChange}
+              setIsAdminAuthenticated={setIsAdminAuthenticated}
+              isUnifiedProfile={isUnifiedProfile}
+              isAuthenticated={isAuthenticated}
+            />
+          </main>
+        </div>
+        
+        <WhatsAppFloatingButton />
       </div>
-      
-      <main className="container mx-auto px-4 -mt-1">
-        <PortalTabs 
-          activeTab={activeTab}
-          showAdminTab={showAdminTab}
-          isTabAllowed={isTabAllowed}
-          handleTabChange={handleTabChange}
-          setIsAdminAuthenticated={setIsAdminAuthenticated}
-          isUnifiedProfile={isUnifiedProfile}
-          isAuthenticated={isAuthenticated}
-        />
-      </main>
-      
-      <WhatsAppFloatingButton />
-    </div>
+    </MobileLayout>
   );
 };
 

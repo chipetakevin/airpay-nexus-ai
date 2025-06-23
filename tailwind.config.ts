@@ -81,6 +81,9 @@ export default {
 				'safe-left': 'env(safe-area-inset-left)',
 				'safe-right': 'env(safe-area-inset-right)',
 			},
+			backdropBlur: {
+				'3xl': '64px',
+			},
 			keyframes: {
 				'accordion-down': {
 					from: {
@@ -101,12 +104,21 @@ export default {
 				'fade-in': {
 					'0%': { opacity: '0', transform: 'translateY(10px)' },
 					'100%': { opacity: '1', transform: 'translateY(0)' }
+				},
+				'gradient-shift': {
+					'0%, 100%': { 
+						backgroundPosition: '0% 50%'
+					},
+					'50%': {
+						backgroundPosition: '100% 50%'
+					}
 				}
 			},
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
 				'accordion-up': 'accordion-up 0.2s ease-out',
-				'fade-in': 'fade-in 0.3s ease-out'
+				'fade-in': 'fade-in 0.3s ease-out',
+				'gradient-shift': 'gradient-shift 3s ease infinite'
 			}
 		}
 	},
@@ -125,6 +137,9 @@ export default {
 				},
 				'.safe-area-pr': {
 					'padding-right': 'env(safe-area-inset-right)'
+				},
+				'.backdrop-filter': {
+					'backdrop-filter': 'blur(var(--tw-backdrop-blur)) brightness(var(--tw-backdrop-brightness)) contrast(var(--tw-backdrop-contrast)) grayscale(var(--tw-backdrop-grayscale)) hue-rotate(var(--tw-backdrop-hue-rotate)) invert(var(--tw-backdrop-invert)) opacity(var(--tw-backdrop-opacity)) saturate(var(--tw-backdrop-saturate)) sepia(var(--tw-backdrop-sepia))'
 				}
 			})
 		}
