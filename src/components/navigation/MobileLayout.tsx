@@ -1,6 +1,5 @@
 
 import React from 'react';
-import TopNavigation from './TopNavigation';
 import BottomNavigation from './BottomNavigation';
 
 interface MobileLayoutProps {
@@ -11,15 +10,14 @@ interface MobileLayoutProps {
 
 const MobileLayout = ({ 
   children, 
-  showTopNav = true, 
+  showTopNav = false, // Changed default to false since we're removing top nav
   showBottomNav = true 
 }: MobileLayoutProps) => {
   return (
     <div className="min-h-screen bg-gray-50">
-      {showTopNav && <TopNavigation />}
+      {/* TopNavigation completely removed - no conditional rendering */}
       
       <main className={`
-        ${showTopNav ? 'pt-20' : 'pt-0'}
         ${showBottomNav ? 'pb-20' : 'pb-0'}
         min-h-screen
       `}>

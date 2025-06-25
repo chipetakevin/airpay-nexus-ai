@@ -21,7 +21,7 @@ const Index = () => {
   const { isAuthenticated } = useMobileAuth();
 
   return (
-    <MobileLayout>
+    <MobileLayout showTopNav={false} showBottomNav={true}>
       <div className="min-h-screen bg-white">
         <Header />
         

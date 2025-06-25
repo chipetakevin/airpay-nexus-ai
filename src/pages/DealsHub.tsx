@@ -4,6 +4,7 @@ import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import MobileDealsInterface from '@/components/deals/MobileDealsInterface';
 import WhatsAppFloatingButton from '@/components/WhatsAppFloatingButton';
+import MobileLayout from '@/components/navigation/MobileLayout';
 
 const DealsHub = () => {
   // Completely disable any session management on this page
@@ -21,16 +22,18 @@ const DealsHub = () => {
   }, []);
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <Header />
-      
-      <main className="container mx-auto px-4 py-8">
-        <MobileDealsInterface />
-      </main>
-      
-      <Footer />
-      <WhatsAppFloatingButton />
-    </div>
+    <MobileLayout showTopNav={false} showBottomNav={true}>
+      <div className="min-h-screen bg-gray-50">
+        <Header />
+        
+        <main className="container mx-auto px-4 py-8">
+          <MobileDealsInterface />
+        </main>
+        
+        <Footer />
+        <WhatsAppFloatingButton />
+      </div>
+    </MobileLayout>
   );
 };
 
