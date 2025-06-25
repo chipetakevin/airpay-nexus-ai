@@ -98,19 +98,22 @@ const PortalHeader: React.FC<PortalHeaderProps> = ({ userType, resetUserType }) 
   };
 
   return (
-    <div className="relative bg-gradient-to-r from-purple-50 via-blue-50 to-indigo-50 border border-purple-100 shadow-sm mx-1 rounded-lg">
-      {/* Fade overlay to match logo styling */}
-      <div className="absolute inset-0 bg-gradient-to-r from-purple-100/20 via-blue-100/15 to-indigo-100/20 backdrop-blur-sm rounded-lg"></div>
+    <div className="relative bg-gradient-to-r from-purple-100 via-blue-100 to-indigo-100 border border-purple-200 shadow-sm mx-1 rounded-lg">
+      {/* Enhanced fade overlay with stronger purple gradient matching main header */}
+      <div className="absolute inset-0 bg-gradient-to-r from-purple-200/30 via-blue-200/20 to-indigo-200/30 backdrop-blur-sm rounded-lg"></div>
       
       <div className="px-2 sm:px-4 py-2 sm:py-3 relative">
         <div className="flex items-center justify-between max-w-7xl mx-auto gap-2 sm:gap-3">
-          {/* Left Section - Logo, Badge and Home */}
+          {/* Left Section - Enhanced Logo, Badge and Home */}
           <div className="flex items-center gap-2 sm:gap-3 flex-shrink-0 min-w-0">
             <div className="flex items-center gap-2 sm:gap-3">
               <img 
                 src="/lovable-uploads/e9a58c2c-0e41-4b09-8580-1f46b9a977d2.png" 
                 alt="Divine Mobile Logo"
-                className="h-10 sm:h-12 w-auto object-contain shadow-lg flex-shrink-0"
+                className="h-10 sm:h-12 w-auto object-contain shadow-lg flex-shrink-0 filter brightness-110 contrast-110 saturate-110"
+                style={{
+                  filter: 'drop-shadow(0 2px 6px rgba(139, 92, 246, 0.25)) brightness(1.1) contrast(1.1) saturate(1.15)'
+                }}
               />
               <div className="flex flex-col min-w-0">
                 {currentUser?.isUnifiedProfile && (
@@ -125,12 +128,12 @@ const PortalHeader: React.FC<PortalHeaderProps> = ({ userType, resetUserType }) 
               </div>
             </div>
 
-            {/* Enhanced Home Button */}
+            {/* Enhanced Home Button with purple theme */}
             <Link to="/">
               <Button
                 variant="outline"
                 size="sm"
-                className="flex items-center gap-2 px-3 sm:px-4 py-2 sm:py-2.5 h-8 sm:h-9 border border-purple-200 text-purple-700 hover:bg-white/70 hover:border-purple-300 transition-all duration-200 shadow-sm backdrop-blur-sm"
+                className="flex items-center gap-2 px-3 sm:px-4 py-2 sm:py-2.5 h-8 sm:h-9 border border-purple-300 text-purple-700 hover:bg-white/80 hover:border-purple-400 transition-all duration-200 shadow-sm backdrop-blur-sm font-medium"
               >
                 <Home className="w-4 h-4" />
                 <span className="hidden sm:inline font-medium">Home</span>
@@ -143,7 +146,7 @@ const PortalHeader: React.FC<PortalHeaderProps> = ({ userType, resetUserType }) 
             <AdminNavigationDropdown isAdminAuthenticated={isAdminAuthenticated} />
           </div>
 
-          {/* Right Section - Enhanced User Menu */}
+          {/* Right Section - Enhanced User Menu with purple theme */}
           <div className="flex items-center gap-2 sm:gap-3 flex-shrink-0">
             {currentUser && (
               <div className="relative">
@@ -151,7 +154,7 @@ const PortalHeader: React.FC<PortalHeaderProps> = ({ userType, resetUserType }) 
                   onClick={() => setShowUserMenu(!showUserMenu)}
                   variant="outline"
                   size="sm"
-                  className="flex items-center gap-2 px-3 sm:px-4 py-2 sm:py-2.5 h-8 sm:h-9 border border-purple-300 hover:bg-white/70 hover:border-purple-400 transition-all duration-200 shadow-sm backdrop-blur-sm"
+                  className="flex items-center gap-2 px-3 sm:px-4 py-2 sm:py-2.5 h-8 sm:h-9 border border-purple-300 hover:bg-white/80 hover:border-purple-400 transition-all duration-200 shadow-sm backdrop-blur-sm font-medium"
                 >
                   {getUserTypeIcon(currentUser.userType)}
                   <span className="hidden xs:inline font-medium max-w-16 truncate">

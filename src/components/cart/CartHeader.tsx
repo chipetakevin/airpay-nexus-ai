@@ -57,19 +57,22 @@ const CartHeader = ({ onClose, currentUser, isVendor }: CartHeaderProps) => {
   };
 
   return (
-    <CardHeader className="pb-3 bg-gradient-to-r from-purple-50 via-blue-50 to-indigo-50 border-b border-purple-100 relative">
-      {/* Fade overlay to match logo styling */}
-      <div className="absolute inset-0 bg-gradient-to-r from-purple-100/20 via-blue-100/15 to-indigo-100/20 backdrop-blur-sm"></div>
+    <CardHeader className="pb-3 bg-gradient-to-r from-purple-100 via-blue-100 to-indigo-100 border-b border-purple-200 relative">
+      {/* Enhanced fade overlay with stronger purple gradient matching main header */}
+      <div className="absolute inset-0 bg-gradient-to-r from-purple-200/25 via-blue-200/20 to-indigo-200/25 backdrop-blur-sm"></div>
       
       <div className="relative">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            {/* Clickable Logo to Exit */}
+            {/* Enhanced Clickable Logo with better visibility */}
             <Link to="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
               <img 
                 src="/lovable-uploads/e9a58c2c-0e41-4b09-8580-1f46b9a977d2.png" 
                 alt="Divine Mobile Logo"
-                className="h-8 w-auto object-contain"
+                className="h-8 w-auto object-contain filter brightness-110 contrast-110 saturate-110"
+                style={{
+                  filter: 'drop-shadow(0 2px 6px rgba(139, 92, 246, 0.25)) brightness(1.1) contrast(1.1) saturate(1.15)'
+                }}
               />
             </Link>
           </div>
@@ -80,8 +83,8 @@ const CartHeader = ({ onClose, currentUser, isVendor }: CartHeaderProps) => {
                 <CartIcon className="w-4 h-4 text-white" />
               </div>
               <div>
-                <CardTitle className="text-lg font-bold text-gray-800">Smart Cart</CardTitle>
-                <div className="text-xs text-gray-600">Quick & Secure Checkout</div>
+                <CardTitle className="text-lg font-bold text-purple-800">Smart Cart</CardTitle>
+                <div className="text-xs text-purple-600 font-medium">Quick & Secure Checkout</div>
               </div>
             </div>
             
@@ -89,7 +92,7 @@ const CartHeader = ({ onClose, currentUser, isVendor }: CartHeaderProps) => {
               variant="ghost" 
               size="sm" 
               onClick={onClose}
-              className="h-8 w-8 p-0 hover:bg-white/50 backdrop-blur-sm rounded-full ml-2 transition-colors"
+              className="h-8 w-8 p-0 hover:bg-white/60 backdrop-blur-sm rounded-full ml-2 transition-colors text-purple-700"
             >
               <X className="w-4 h-4" />
             </Button>
