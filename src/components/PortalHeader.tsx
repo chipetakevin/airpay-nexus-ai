@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
@@ -103,9 +104,11 @@ const PortalHeader: React.FC<PortalHeaderProps> = ({ userType, resetUserType }) 
           {/* Left Section - Logo, Badge and Home */}
           <div className="flex items-center gap-2 sm:gap-3 flex-shrink-0 min-w-0">
             <div className="flex items-center gap-2 sm:gap-3">
-              <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center shadow-lg flex-shrink-0">
-                <Crown className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
-              </div>
+              <img 
+                src="/lovable-uploads/e9a58c2c-0e41-4b09-8580-1f46b9a977d2.png" 
+                alt="Divine Mobile Logo"
+                className="h-10 sm:h-12 w-auto object-contain shadow-lg flex-shrink-0"
+              />
               <div className="flex flex-col min-w-0">
                 {currentUser?.isUnifiedProfile && (
                   <Badge className="bg-gradient-to-r from-orange-400 to-orange-500 text-white text-xs px-2 py-1 rounded-full flex items-center justify-center shadow-md mb-1 whitespace-nowrap">

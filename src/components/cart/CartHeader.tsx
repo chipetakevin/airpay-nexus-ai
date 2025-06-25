@@ -2,7 +2,7 @@
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { CardHeader, CardTitle } from '@/components/ui/card';
-import { ShoppingCart as CartIcon, X, Store, User, Smartphone } from 'lucide-react';
+import { ShoppingCart as CartIcon, X, Store, User } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 interface CartHeaderProps {
@@ -62,12 +62,11 @@ const CartHeader = ({ onClose, currentUser, isVendor }: CartHeaderProps) => {
         <div className="flex items-center gap-2">
           {/* Clickable Logo to Exit */}
           <Link to="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
-            <div className="w-8 h-8 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
-              <Smartphone className="w-5 h-5 text-white" />
-            </div>
-            <span className="text-lg font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-              Divine Mobile
-            </span>
+            <img 
+              src="/lovable-uploads/e9a58c2c-0e41-4b09-8580-1f46b9a977d2.png" 
+              alt="Divine Mobile Logo"
+              className="h-8 w-auto object-contain"
+            />
           </Link>
         </div>
         
