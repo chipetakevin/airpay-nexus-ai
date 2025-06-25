@@ -21,7 +21,7 @@ const HeaderLogo = () => {
     <Link 
       to="/" 
       className="flex items-center space-x-3 group cursor-pointer"
-      title={isBaaSPage ? "Return to Homepage" : "Divinely"}
+      title={isBaaSPage ? "Return to Homepage" : "Divine Mobile"}
     >
       <div className="relative">
         <div className="w-10 h-10 bg-gradient-to-br from-blue-500 via-purple-600 to-blue-700 rounded-2xl flex items-center justify-center group-hover:scale-105 transition-all duration-300 ease-out group-active:scale-95 shadow-lg">
@@ -34,7 +34,7 @@ const HeaderLogo = () => {
       </div>
       <div className="flex flex-col group-hover:scale-105 transition-all duration-300 ease-out group-active:scale-95">
         <span className="font-bold text-2xl text-gray-900 group-hover:text-blue-600 transition-colors duration-300 leading-tight">
-          Divinely
+          Divine Mobile
         </span>
       </div>
       {isBaaSPage && (

@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import PortalHeader from '@/components/PortalHeader';
@@ -24,6 +23,11 @@ const Portal = () => {
   // Initialize session managers
   useSessionManager();
   const { isSessionValid } = usePersistentAuth();
+
+  useEffect(() => {
+    // Update document title
+    document.title = 'Divine Mobile Portal - Smart Mobile Services';
+  }, []);
 
   useEffect(() => {
     const storedUserCredentials = localStorage.getItem('userCredentials');

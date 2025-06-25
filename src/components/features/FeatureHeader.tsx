@@ -9,7 +9,7 @@ const FeatureHeader = () => {
         <TrendingUp className="w-8 h-8 text-white" />
       </div>
       <h2 className="text-3xl sm:text-4xl font-bold bg-gradient-to-r from-gray-900 via-blue-800 to-purple-800 bg-clip-text text-transparent mb-4">
-        Why Choose Divinely?
+        Why Choose Divine Mobile?
       </h2>
       <p className="text-lg text-gray-600 max-w-2xl mx-auto">
         Experience the future of airtime purchasing with our AI-driven platform

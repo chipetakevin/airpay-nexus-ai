@@ -1,3 +1,4 @@
+
 import React from 'react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
@@ -10,7 +11,7 @@ import {
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
-const DivinelyBaaS = () => {
+const DivineBaaS = () => {
   const features = [
     {
       icon: <Zap className="w-6 h-6 text-blue-600" />,
@@ -172,4 +173,4 @@ const DivinelyBaaS = () => {
   );
 };
 
-export default DivinelyBaaS;
+export default DivineBaaS;
