@@ -23,7 +23,7 @@ const CartHeader = ({ onClose, currentUser, isVendor }: CartHeaderProps) => {
           const vendor = JSON.parse(vendorData);
           const businessName = vendor.businessName || vendor.companyName || 'Vendor';
           return (
-            <div className="flex items-center gap-2 text-sm text-blue-700 bg-blue-50 px-3 py-1.5 rounded-lg">
+            <div className="flex items-center gap-2 text-sm text-blue-700 bg-blue-50/70 backdrop-blur-sm px-3 py-1.5 rounded-lg">
               <Store className="w-4 h-4" />
               <span className="font-medium">Welcome, {businessName}</span>
             </div>
@@ -41,7 +41,7 @@ const CartHeader = ({ onClose, currentUser, isVendor }: CartHeaderProps) => {
           const fullName = `${customer.firstName || ''} ${customer.lastName || ''}`.trim();
           if (fullName) {
             return (
-              <div className="flex items-center gap-2 text-sm text-green-700 bg-green-50 px-3 py-1.5 rounded-lg">
+              <div className="flex items-center gap-2 text-sm text-green-700 bg-green-50/70 backdrop-blur-sm px-3 py-1.5 rounded-lg">
                 <User className="w-4 h-4" />
                 <span className="font-medium">Welcome, {fullName}</span>
               </div>
@@ -57,44 +57,49 @@ const CartHeader = ({ onClose, currentUser, isVendor }: CartHeaderProps) => {
   };
 
   return (
-    <CardHeader className="pb-3 bg-gradient-to-r from-blue-50 to-green-50 border-b">
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          {/* Clickable Logo to Exit */}
-          <Link to="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
-            <img 
-              src="/lovable-uploads/e9a58c2c-0e41-4b09-8580-1f46b9a977d2.png" 
-              alt="Divine Mobile Logo"
-              className="h-8 w-auto object-contain"
-            />
-          </Link>
-        </div>
-        
-        <div className="flex items-center gap-2">
+    <CardHeader className="pb-3 bg-gradient-to-r from-purple-50 via-blue-50 to-indigo-50 border-b border-purple-100 relative">
+      {/* Fade overlay to match logo styling */}
+      <div className="absolute inset-0 bg-gradient-to-r from-purple-100/20 via-blue-100/15 to-indigo-100/20 backdrop-blur-sm"></div>
+      
+      <div className="relative">
+        <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <div className="p-2 bg-blue-600 rounded-lg">
-              <CartIcon className="w-4 h-4 text-white" />
-            </div>
-            <div>
-              <CardTitle className="text-lg font-bold text-gray-800">Smart Cart</CardTitle>
-              <div className="text-xs text-gray-600">Quick & Secure Checkout</div>
-            </div>
+            {/* Clickable Logo to Exit */}
+            <Link to="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
+              <img 
+                src="/lovable-uploads/e9a58c2c-0e41-4b09-8580-1f46b9a977d2.png" 
+                alt="Divine Mobile Logo"
+                className="h-8 w-auto object-contain"
+              />
+            </Link>
           </div>
           
-          <Button 
-            variant="ghost" 
-            size="sm" 
-            onClick={onClose}
-            className="h-8 w-8 p-0 hover:bg-gray-200 rounded-full ml-2"
-          >
-            <X className="w-4 h-4" />
-          </Button>
+          <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2">
+              <div className="p-2 bg-gradient-to-r from-purple-600 to-blue-600 rounded-lg shadow-md">
+                <CartIcon className="w-4 h-4 text-white" />
+              </div>
+              <div>
+                <CardTitle className="text-lg font-bold text-gray-800">Smart Cart</CardTitle>
+                <div className="text-xs text-gray-600">Quick & Secure Checkout</div>
+              </div>
+            </div>
+            
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              onClick={onClose}
+              className="h-8 w-8 p-0 hover:bg-white/50 backdrop-blur-sm rounded-full ml-2 transition-colors"
+            >
+              <X className="w-4 h-4" />
+            </Button>
+          </div>
         </div>
-      </div>
-      
-      {/* Welcome message section */}
-      <div className="mt-3">
-        {getWelcomeMessage()}
+        
+        {/* Welcome message section */}
+        <div className="mt-3">
+          {getWelcomeMessage()}
+        </div>
       </div>
     </CardHeader>
   );
