@@ -57,21 +57,21 @@ const CartHeader = ({ onClose, currentUser, isVendor }: CartHeaderProps) => {
   };
 
   return (
-    <CardHeader className="pb-3 bg-gradient-to-r from-purple-100 via-blue-100 to-indigo-100 border-b border-purple-200 relative">
-      {/* Enhanced fade overlay with stronger purple gradient matching main header */}
-      <div className="absolute inset-0 bg-gradient-to-r from-purple-200/25 via-blue-200/20 to-indigo-200/25 backdrop-blur-sm"></div>
+    <CardHeader className="pb-3 bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 border-b border-blue-300 relative">
+      {/* Enhanced fade overlay with blue gradient matching main header */}
+      <div className="absolute inset-0 bg-gradient-to-r from-blue-600/25 via-blue-500/20 to-blue-700/25 backdrop-blur-sm"></div>
       
       <div className="relative">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            {/* Enhanced Clickable Logo with better visibility */}
+            {/* Enhanced Clickable Logo with new blue crown design */}
             <Link to="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
               <img 
-                src="/lovable-uploads/e9a58c2c-0e41-4b09-8580-1f46b9a977d2.png" 
+                src="/lovable-uploads/9ca7fcec-0caf-4b50-9334-e7172bc98733.png" 
                 alt="Divine Mobile Logo"
                 className="h-8 w-auto object-contain filter brightness-110 contrast-110 saturate-110"
                 style={{
-                  filter: 'drop-shadow(0 2px 6px rgba(139, 92, 246, 0.25)) brightness(1.1) contrast(1.1) saturate(1.15)'
+                  filter: 'drop-shadow(0 2px 6px rgba(59, 130, 246, 0.3)) brightness(1.1) contrast(1.1) saturate(1.15)'
                 }}
               />
             </Link>
@@ -79,12 +79,12 @@ const CartHeader = ({ onClose, currentUser, isVendor }: CartHeaderProps) => {
           
           <div className="flex items-center gap-2">
             <div className="flex items-center gap-2">
-              <div className="p-2 bg-gradient-to-r from-purple-600 to-blue-600 rounded-lg shadow-md">
+              <div className="p-2 bg-gradient-to-r from-blue-600 to-blue-700 rounded-lg shadow-md">
                 <CartIcon className="w-4 h-4 text-white" />
               </div>
               <div>
-                <CardTitle className="text-lg font-bold text-purple-800">Smart Cart</CardTitle>
-                <div className="text-xs text-purple-600 font-medium">Quick & Secure Checkout</div>
+                <CardTitle className="text-lg font-bold text-white">Smart Cart</CardTitle>
+                <div className="text-xs text-blue-100 font-medium">Quick & Secure Checkout</div>
               </div>
             </div>
             
@@ -92,7 +92,7 @@ const CartHeader = ({ onClose, currentUser, isVendor }: CartHeaderProps) => {
               variant="ghost" 
               size="sm" 
               onClick={onClose}
-              className="h-8 w-8 p-0 hover:bg-white/60 backdrop-blur-sm rounded-full ml-2 transition-colors text-purple-700"
+              className="h-8 w-8 p-0 hover:bg-white/20 backdrop-blur-sm rounded-full ml-2 transition-colors text-white hover:text-white"
             >
               <X className="w-4 h-4" />
             </Button>

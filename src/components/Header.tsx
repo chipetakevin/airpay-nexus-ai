@@ -41,9 +41,9 @@ const Header = () => {
   const isActive = (path: string) => location.pathname === path;
 
   return (
-    <header className="relative bg-gradient-to-r from-purple-100 via-blue-100 to-indigo-100 shadow-lg border-b border-purple-200 sticky top-0 z-50">
-      {/* Enhanced fade overlay with stronger purple gradient */}
-      <div className="absolute inset-0 bg-gradient-to-r from-purple-200/40 via-blue-200/30 to-indigo-200/40 backdrop-blur-sm"></div>
+    <header className="relative bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 shadow-lg border-b border-blue-300 sticky top-0 z-50">
+      {/* Enhanced fade overlay with blue gradient */}
+      <div className="absolute inset-0 bg-gradient-to-r from-blue-600/40 via-blue-500/30 to-blue-700/40 backdrop-blur-sm"></div>
       
       <div className="container mx-auto px-4 relative">
         <div className="flex items-center justify-between h-16">
@@ -58,14 +58,14 @@ const Header = () => {
                 to={item.path}
                 className={`relative px-4 py-2 rounded-lg transition-all duration-200 flex items-center gap-2 ${
                   isActive(item.path)
-                    ? 'bg-white/80 text-purple-700 font-medium shadow-md backdrop-blur-sm border border-purple-200/30'
-                    : 'text-purple-700 hover:bg-white/60 hover:text-purple-800 backdrop-blur-sm font-medium'
+                    ? 'bg-white/80 text-blue-700 font-medium shadow-md backdrop-blur-sm border border-blue-200/30'
+                    : 'text-white hover:bg-white/20 hover:text-white backdrop-blur-sm font-medium'
                 }`}
               >
                 {item.icon}
                 <span>{item.label}</span>
                 {item.badge && (
-                  <Badge className="bg-gradient-to-r from-green-500 to-blue-500 text-white text-xs">
+                  <Badge className="bg-gradient-to-r from-green-500 to-emerald-500 text-white text-xs">
                     {item.badge}
                   </Badge>
                 )}
@@ -84,18 +84,18 @@ const Header = () => {
             </Button>
           </div>
 
-          {/* Mobile Menu Button */}
+          {/* Mobile Menu Button with white lines */}
           <button
             onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="md:hidden p-2 rounded-lg hover:bg-white/60 backdrop-blur-sm transition-colors text-purple-700"
+            className="md:hidden p-2 rounded-lg hover:bg-white/20 backdrop-blur-sm transition-colors text-white"
           >
-            {isMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+            {isMenuOpen ? <X className="w-6 h-6 text-white" /> : <Menu className="w-6 h-6 text-white" />}
           </button>
         </div>
 
         {/* Mobile Navigation */}
         {isMenuOpen && (
-          <div className="md:hidden py-4 border-t border-purple-300/50 bg-white/80 backdrop-blur-sm rounded-b-lg mt-2 shadow-lg">
+          <div className="md:hidden py-4 border-t border-blue-300/50 bg-white/90 backdrop-blur-sm rounded-b-lg mt-2 shadow-lg">
             <nav className="space-y-2">
               {navigationItems.map((item) => (
                 <Link
@@ -104,21 +104,21 @@ const Header = () => {
                   onClick={() => setIsMenuOpen(false)}
                   className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 ${
                     isActive(item.path)
-                      ? 'bg-purple-100/80 text-purple-800 font-semibold border border-purple-200'
-                      : 'text-purple-700 hover:bg-purple-50/80 font-medium'
+                      ? 'bg-blue-100/80 text-blue-800 font-semibold border border-blue-200'
+                      : 'text-blue-700 hover:bg-blue-50/80 font-medium'
                   }`}
                 >
                   {item.icon}
                   <span>{item.label}</span>
                   {item.badge && (
-                    <Badge className="bg-gradient-to-r from-green-500 to-blue-500 text-white text-xs ml-auto">
+                    <Badge className="bg-gradient-to-r from-green-500 to-emerald-500 text-white text-xs ml-auto">
                       {item.badge}
                     </Badge>
                   )}
                 </Link>
               ))}
               
-              <div className="pt-4 border-t border-purple-300/50">
+              <div className="pt-4 border-t border-blue-300/50">
                 <Button
                   onClick={() => {
                     window.open('https://wa.me/27832466539', '_blank');
