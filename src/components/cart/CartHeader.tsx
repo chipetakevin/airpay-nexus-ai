@@ -57,7 +57,7 @@ const CartHeader = ({ onClose, currentUser, isVendor }: CartHeaderProps) => {
   };
 
   return (
-    <CardHeader className="pb-3 bg-blue-500 border-b border-blue-300 relative">
+    <CardHeader className="pb-3 bg-[#5B7FE8] relative">
       <div className="relative">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">

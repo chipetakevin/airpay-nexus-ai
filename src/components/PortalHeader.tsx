@@ -97,7 +97,7 @@ const PortalHeader: React.FC<PortalHeaderProps> = ({ userType, resetUserType }) 
   };
 
   return (
-    <div className="relative bg-blue-500 border border-blue-300 shadow-sm mx-1 rounded-lg">
+    <div className="relative bg-[#5B7FE8] shadow-sm mx-1 rounded-lg">
       <div className="px-2 sm:px-4 py-2 sm:py-3 relative">
         <div className="flex items-center justify-between max-w-7xl mx-auto gap-2 sm:gap-3">
           {/* Left Section - Enhanced Logo, Badge and Home */}
@@ -160,7 +160,7 @@ const PortalHeader: React.FC<PortalHeaderProps> = ({ userType, resetUserType }) 
                 </Button>
 
                 {showUserMenu && (
-                  <div className="absolute right-0 top-full mt-2 w-64 sm:w-72 bg-white/95 backdrop-blur-md border border-blue-200 rounded-lg shadow-xl z-50 overflow-hidden">
+                  <div className="absolute right-0 top-full mt-2 w-64 sm:w-72 bg-white/95 backdrop-blur-md rounded-lg shadow-xl z-50 overflow-hidden">
                     <div className="p-4 sm:p-5">
                       <div className="flex items-center gap-3 mb-3 pb-3 border-b border-blue-100">
                         <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg flex items-center justify-center">
