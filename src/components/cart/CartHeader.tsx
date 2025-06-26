@@ -57,46 +57,44 @@ const CartHeader = ({ onClose, currentUser, isVendor }: CartHeaderProps) => {
   };
 
   return (
-    <CardHeader className="pb-3 bg-[#5B7FE8] relative">
-      <div className="relative">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            {/* Enhanced Clickable Logo - removed any potential borders */}
-            <Link to="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
-              <img 
-                src="/lovable-uploads/9ca7fcec-0caf-4b50-9334-e7172bc98733.png" 
-                alt="Divine Mobile Logo"
-                className="h-8 w-auto object-contain filter brightness-110 contrast-110 saturate-110"
-              />
-            </Link>
-          </div>
-          
-          <div className="flex items-center gap-2">
-            <div className="flex items-center gap-2">
-              <div className="p-2 bg-gradient-to-r from-blue-600 to-blue-700 rounded-lg shadow-md">
-                <CartIcon className="w-4 h-4 text-white" />
-              </div>
-              <div>
-                <CardTitle className="text-lg font-bold text-white">Smart Cart</CardTitle>
-                <div className="text-xs text-blue-100 font-medium">Quick & Secure Checkout</div>
-              </div>
-            </div>
-            
-            <Button 
-              variant="ghost" 
-              size="sm" 
-              onClick={onClose}
-              className="h-8 w-8 p-0 hover:bg-white/20 backdrop-blur-sm rounded-full ml-2 transition-colors text-white hover:text-white"
-            >
-              <X className="w-4 h-4" />
-            </Button>
-          </div>
+    <CardHeader className="pb-3 bg-[#5B7FE8]">
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          {/* Enhanced Clickable Logo */}
+          <Link to="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
+            <img 
+              src="/lovable-uploads/9ca7fcec-0caf-4b50-9334-e7172bc98733.png" 
+              alt="Divine Mobile Logo"
+              className="h-8 w-auto object-contain filter brightness-110 contrast-110 saturate-110"
+            />
+          </Link>
         </div>
         
-        {/* Welcome message section */}
-        <div className="mt-3">
-          {getWelcomeMessage()}
+        <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2">
+            <div className="p-2 bg-gradient-to-r from-blue-600 to-blue-700 rounded-lg shadow-md">
+              <CartIcon className="w-4 h-4 text-white" />
+            </div>
+            <div>
+              <CardTitle className="text-lg font-bold text-white">Smart Cart</CardTitle>
+              <div className="text-xs text-blue-100 font-medium">Quick & Secure Checkout</div>
+            </div>
+          </div>
+          
+          <Button 
+            variant="ghost" 
+            size="sm" 
+            onClick={onClose}
+            className="h-8 w-8 p-0 hover:bg-white/20 backdrop-blur-sm rounded-full ml-2 transition-colors text-white hover:text-white"
+          >
+            <X className="w-4 h-4" />
+          </Button>
         </div>
+      </div>
+      
+      {/* Welcome message section */}
+      <div className="mt-3">
+        {getWelcomeMessage()}
       </div>
     </CardHeader>
   );

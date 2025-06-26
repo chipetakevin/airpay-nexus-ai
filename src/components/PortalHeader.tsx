@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
@@ -97,8 +98,8 @@ const PortalHeader: React.FC<PortalHeaderProps> = ({ userType, resetUserType }) 
   };
 
   return (
-    <div className="relative bg-[#5B7FE8] shadow-sm mx-1 rounded-lg">
-      <div className="px-2 sm:px-4 py-2 sm:py-3 relative">
+    <div className="bg-[#5B7FE8] mx-1 rounded-lg">
+      <div className="px-2 sm:px-4 py-2 sm:py-3">
         <div className="flex items-center justify-between max-w-7xl mx-auto gap-2 sm:gap-3">
           {/* Left Section - Enhanced Logo, Badge and Home */}
           <div className="flex items-center gap-2 sm:gap-3 flex-shrink-0 min-w-0">
@@ -126,7 +127,7 @@ const PortalHeader: React.FC<PortalHeaderProps> = ({ userType, resetUserType }) 
               <Button
                 variant="outline"
                 size="sm"
-                className="flex items-center gap-2 px-3 sm:px-4 py-2 sm:py-2.5 h-8 sm:h-9 border border-white/30 text-white hover:bg-white/20 hover:border-white/50 transition-all duration-200 shadow-sm backdrop-blur-sm font-medium"
+                className="flex items-center gap-2 px-3 sm:px-4 py-2 sm:py-2.5 h-8 sm:h-9 border-white/30 text-white hover:bg-white/20 hover:border-white/50 transition-all duration-200 shadow-sm backdrop-blur-sm font-medium"
               >
                 <Home className="w-4 h-4" />
                 <span className="hidden sm:inline font-medium">Home</span>
@@ -147,7 +148,7 @@ const PortalHeader: React.FC<PortalHeaderProps> = ({ userType, resetUserType }) 
                   onClick={() => setShowUserMenu(!showUserMenu)}
                   variant="outline"
                   size="sm"
-                  className="flex items-center gap-2 px-3 sm:px-4 py-2 sm:py-2.5 h-8 sm:h-9 border border-white/30 text-white hover:bg-white/20 hover:border-white/50 transition-all duration-200 shadow-sm backdrop-blur-sm font-medium"
+                  className="flex items-center gap-2 px-3 sm:px-4 py-2 sm:py-2.5 h-8 sm:h-9 border-white/30 text-white hover:bg-white/20 hover:border-white/50 transition-all duration-200 shadow-sm backdrop-blur-sm font-medium"
                 >
                   {getUserTypeIcon(currentUser.userType)}
                   <span className="hidden xs:inline font-medium max-w-16 truncate">

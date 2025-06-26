@@ -41,8 +41,8 @@ const Header = () => {
   const isActive = (path: string) => location.pathname === path;
 
   return (
-    <header className="relative bg-[#5B7FE8] shadow-lg sticky top-0 z-50">
-      <div className="container mx-auto px-4 relative">
+    <header className="bg-[#5B7FE8] sticky top-0 z-50">
+      <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <HeaderLogo />
@@ -81,7 +81,7 @@ const Header = () => {
             </Button>
           </div>
 
-          {/* Mobile Menu Button with white lines */}
+          {/* Mobile Menu Button */}
           <button
             onClick={() => setIsMenuOpen(!isMenuOpen)}
             className="md:hidden p-2 rounded-lg hover:bg-white/20 backdrop-blur-sm transition-colors text-white"
