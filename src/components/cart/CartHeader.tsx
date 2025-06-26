@@ -57,22 +57,16 @@ const CartHeader = ({ onClose, currentUser, isVendor }: CartHeaderProps) => {
   };
 
   return (
-    <CardHeader className="pb-3 bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 border-b border-blue-300 relative">
-      {/* Enhanced fade overlay with blue gradient matching main header */}
-      <div className="absolute inset-0 bg-gradient-to-r from-blue-600/25 via-blue-500/20 to-blue-700/25 backdrop-blur-sm"></div>
-      
+    <CardHeader className="pb-3 bg-blue-500 border-b border-blue-300 relative">
       <div className="relative">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            {/* Enhanced Clickable Logo with new blue crown design */}
+            {/* Enhanced Clickable Logo */}
             <Link to="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
               <img 
                 src="/lovable-uploads/9ca7fcec-0caf-4b50-9334-e7172bc98733.png" 
                 alt="Divine Mobile Logo"
                 className="h-8 w-auto object-contain filter brightness-110 contrast-110 saturate-110"
-                style={{
-                  filter: 'drop-shadow(0 2px 6px rgba(59, 130, 246, 0.3)) brightness(1.1) contrast(1.1) saturate(1.15)'
-                }}
               />
             </Link>
           </div>

@@ -41,10 +41,7 @@ const Header = () => {
   const isActive = (path: string) => location.pathname === path;
 
   return (
-    <header className="relative bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 shadow-lg border-b border-blue-300 sticky top-0 z-50">
-      {/* Enhanced fade overlay with blue gradient */}
-      <div className="absolute inset-0 bg-gradient-to-r from-blue-600/40 via-blue-500/30 to-blue-700/40 backdrop-blur-sm"></div>
-      
+    <header className="relative bg-blue-500 shadow-lg border-b border-blue-300 sticky top-0 z-50">
       <div className="container mx-auto px-4 relative">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
