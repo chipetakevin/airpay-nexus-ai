@@ -61,7 +61,7 @@ const CartHeader = ({ onClose, currentUser, isVendor }: CartHeaderProps) => {
       <div className="relative">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            {/* Enhanced Clickable Logo */}
+            {/* Enhanced Clickable Logo - removed any potential borders */}
             <Link to="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
               <img 
                 src="/lovable-uploads/9ca7fcec-0caf-4b50-9334-e7172bc98733.png" 
