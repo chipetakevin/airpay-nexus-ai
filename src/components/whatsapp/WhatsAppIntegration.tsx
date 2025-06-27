@@ -1,14 +1,13 @@
 
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { 
   MessageCircle, Smartphone, Star, Phone, Wifi, 
-  ShoppingCart, CheckCircle, Gift, Zap, CreditCard,
-  ArrowRight, Users, Clock, Shield, BarChart3, ChevronDown, ChevronRight
+  ShoppingCart, CheckCircle, Gift, CreditCard,
+  ChevronDown, ChevronRight
 } from 'lucide-react';
 import { useMobileAuth } from '@/hooks/useMobileAuth';
 import { useSearchParams } from 'react-router-dom';
@@ -34,16 +33,6 @@ const WhatsAppIntegration = () => {
       icon: <MessageCircle className="w-6 h-6 text-green-600" />,
       title: "WhatsApp Shopping",
       description: "Shop directly through WhatsApp - no app needed!"
-    },
-    {
-      icon: <Clock className="w-6 h-6 text-blue-600" />,
-      title: "Instant Delivery",
-      description: "Airtime and data delivered within 30 seconds"
-    },
-    {
-      icon: <Shield className="w-6 h-6 text-purple-600" />,
-      title: "Secure & Safe",
-      description: "Bank-grade security for all transactions"
     },
     {
       icon: <Smartphone className="w-6 h-6 text-orange-600" />,
