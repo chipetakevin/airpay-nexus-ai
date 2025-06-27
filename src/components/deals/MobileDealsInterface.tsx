@@ -152,14 +152,6 @@ const MobileDealsInterface = () => {
                           <p className="text-sm text-gray-700 font-medium mb-1">{service.subtitle}</p>
                           <p className="text-xs text-gray-600 hidden sm:block">{service.description}</p>
                         </div>
-                        
-                        {/* Action Button - Compact */}
-                        <Button 
-                          size="sm" 
-                          className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1.5 text-xs whitespace-nowrap"
-                        >
-                          Get Started
-                        </Button>
                       </div>
                     </div>
                   </div>
