@@ -4,24 +4,9 @@ import WhatsAppNavigation from './WhatsAppNavigation';
 import WhatsAppChatView from './WhatsAppChatView';
 import WhatsAppShoppingFlow from './WhatsAppShoppingFlow';
 import WhatsAppCart from './WhatsAppCart';
-
-interface Message {
-  id: number;
-  type: 'user' | 'bot';
-  message: string;
-  timestamp: string;
-}
-
-interface CartItem {
-  id: string;
-  name: string;
-  type: string;
-  network: string;
-  amount: string;
-  price: number;
-  quantity: number;
-  icon: React.ReactNode;
-}
+import { useMessageHandler, Message } from './MessageHandler';
+import { useCartManager, CartItem } from './CartManager';
+import { useCheckoutProcessor } from './CheckoutProcessor';
 
 const WhatsAppAssistant = () => {
   const [messages, setMessages] = useState<Message[]>([
@@ -47,150 +32,30 @@ const WhatsAppAssistant = () => {
   const [activeView, setActiveView] = useState<'chat' | 'shop' | 'cart'>('shop');
   const [cart, setCart] = useState<CartItem[]>([]);
 
-  const addMessage = (message: string, type: 'user' | 'bot') => {
-    const newMessage: Message = {
-      id: messages.length + 1,
-      type,
-      message,
-      timestamp: new Date().toLocaleTimeString()
-    };
-    setMessages(prev => [...prev, newMessage]);
+  const { addMessage, handleSendMessage } = useMessageHandler({
+    messages,
+    setMessages,
+    setActiveView,
+    cartLength: cart.length
+  });
+
+  const { handleAddToCart, handleUpdateQuantity, handleRemoveItem, getCartCount } = useCartManager({
+    cart,
+    setCart,
+    addMessage
+  });
+
+  const { handleCheckout } = useCheckoutProcessor({
+    cart,
+    setCart,
+    setActiveView,
+    addMessage
+  });
+
+  const onSendMessage = () => {
+    handleSendMessage(currentInput);
+    setCurrentInput('');
   };
-
-  const handleAddToCart = (product: any) => {
-    setCart(prev => {
-      const existingItem = prev.find(item => item.id === product.id);
-      if (existingItem) {
-        return prev.map(item =>
-          item.id === product.id
-            ? { ...item, quantity: item.quantity + 1 }
-            : item
-        );
-      }
-      return [...prev, { ...product, quantity: 1 }];
-    });
-    
-    addMessage(`Added ${product.name} to cart! 🛒`, 'bot');
-  };
-
-  const handleUpdateQuantity = (id: string, change: number) => {
-    setCart(prev => {
-      return prev.map(item => {
-        if (item.id === id) {
-          const newQuantity = item.quantity + change;
-          return newQuantity > 0 ? { ...item, quantity: newQuantity } : null;
-        }
-        return item;
-      }).filter(Boolean) as CartItem[];
-    });
-  };
-
-  const handleRemoveItem = (id: string) => {
-    setCart(prev => prev.filter(item => item.id !== id));
-  };
-
-  const handleCheckout = () => {
-    if (cart.length === 0) return;
-    
-    const customerPhone = '27832466539';
-    const transactionId = 'DM' + Date.now().toString().slice(-8);
-    
-    const itemsList = cart.map(item => 
-      `• ${item.name} (${item.network}) x${item.quantity} - R${item.price * item.quantity}`
-    ).join('\n');
-
-    const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-    
-    const message = `🟢 *DIVINELY MOBILE RECEIPT*
-
-✅ *PURCHASE COMPLETED*
-
-📋 *ORDER DETAILS:*
-${itemsList}
-
-💰 *TOTAL PAID:* R${total}
-🆔 *Transaction ID:* ${transactionId}
-📱 *Customer:* ${customerPhone}
-⏰ *Date:* ${new Date().toLocaleString()}
-
-✅ *All items delivered instantly!*
-
-🌐 divinely-mobile.com
-📞 Support: +27 100 2827
-
-*Thank you for shopping with us!*
-_Fast • Secure • Reliable_`;
-
-    const encodedMessage = encodeURIComponent(message);
-    const whatsappUrl = `https://wa.me/${customerPhone.replace('+', '')}?text=${encodedMessage}`;
-    
-    addMessage(`✅ Order confirmed! Transaction ID: ${transactionId}. WhatsApp receipt will open automatically.`, 'bot');
-    
-    setTimeout(() => {
-      window.open(whatsappUrl, '_blank');
-    }, 1000);
-    
-    setTimeout(() => {
-      setCart([]);
-      setActiveView('chat');
-    }, 2000);
-  };
-
-  const handleSendMessage = () => {
-    if (currentInput.trim()) {
-      addMessage(currentInput, 'user');
-      
-      const lowerInput = currentInput.toLowerCase();
-      let response = '';
-      
-      if (lowerInput.includes('help') || lowerInput.includes('support')) {
-        response = `🆘 I'm here to help!
-
-• Browse products below for instant shopping
-• Ask about networks or amounts
-• Customer support: +27 100 2827
-
-What can I help you with? 😊`;
-      } else if (lowerInput.includes('airtime')) {
-        response = `💰 Airtime options available below:
-
-• R10, R20, R50, R100
-• All networks supported
-• Instant delivery
-
-Browse and add to cart below! 🛒`;
-        setActiveView('shop');
-      } else if (lowerInput.includes('data')) {
-        response = `📊 Data bundles with savings:
-
-• 1GB - R29 (17% OFF!)
-• 2GB - R49 - Popular
-• 5GB - R99 - Best value
-• 10GB - R149 - Power users
-
-Check them out below! 📱`;
-        setActiveView('shop');
-      } else if (lowerInput.includes('cart')) {
-        setActiveView('cart');
-        response = `🛒 Opening your cart! You have ${cart.length} items.`;
-      } else {
-        response = `Thanks! 😊
-
-I can help with:
-• Airtime purchases
-• Data bundles with discounts
-• Gift options
-• Order assistance
-
-Browse products below or ask questions! 💬`;
-      }
-      
-      setTimeout(() => addMessage(response, 'bot'), 800);
-      setCurrentInput('');
-    }
-  };
-
-  const getCartCount = () => cart.reduce((sum, item) => sum + item.quantity, 0);
 
   return (
     <div className="flex flex-col h-full max-w-md mx-auto bg-white relative">
@@ -228,7 +93,7 @@ Browse products below or ask questions! 💬`;
             messages={messages}
             currentInput={currentInput}
             setCurrentInput={setCurrentInput}
-            onSendMessage={handleSendMessage}
+            onSendMessage={onSendMessage}
           />
         )}
       </div>
