@@ -13,7 +13,7 @@ const TabsList = React.forwardRef<
   <TabsPrimitive.List
     ref={ref}
     className={cn(
-      "inline-flex h-auto items-center justify-center rounded-xl bg-gradient-to-r from-gray-50 to-gray-100 p-2 text-muted-foreground shadow-lg border border-gray-200/50 backdrop-blur-sm w-full",
+      "inline-flex h-auto items-center justify-center rounded-xl bg-gradient-to-r from-gray-50 to-gray-100 p-1.5 text-muted-foreground shadow-lg border border-gray-200/50 backdrop-blur-sm w-full overflow-x-auto scrollbar-hide",
       className
     )}
     {...props}
@@ -28,8 +28,14 @@ const TabsTrigger = React.forwardRef<
   <TabsPrimitive.Trigger
     ref={ref}
     className={cn(
-      "inline-flex items-center justify-center whitespace-nowrap rounded-lg px-2 py-2 text-xs font-medium ring-offset-background transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-white data-[state=active]:text-foreground data-[state=active]:shadow-lg data-[state=active]:shadow-purple-100/50 data-[state=active]:border data-[state=active]:border-purple-200/30 hover:bg-white/50 hover:shadow-md relative overflow-hidden min-h-[48px] flex-1",
+      "inline-flex items-center justify-center whitespace-nowrap rounded-lg px-3 py-3 text-sm font-medium ring-offset-background transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
+      "data-[state=active]:bg-white data-[state=active]:text-foreground data-[state=active]:shadow-lg data-[state=active]:shadow-blue-100/50 data-[state=active]:border data-[state=active]:border-blue-200/30",
+      "hover:bg-white/70 hover:shadow-md active:scale-95 touch-manipulation",
+      "relative overflow-hidden min-h-[56px] flex-1 min-w-0",
       "before:absolute before:inset-0 before:bg-gradient-to-r before:from-transparent before:via-white/10 before:to-transparent before:translate-x-[-100%] before:transition-transform before:duration-700 hover:before:translate-x-[100%]",
+      // Mobile-specific improvements
+      "sm:px-4 sm:py-3 sm:text-base",
+      "text-xs leading-tight",
       className
     )}
     {...props}
