@@ -1,4 +1,3 @@
-
 import React, { useState, useRef, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -6,7 +5,7 @@ import { Badge } from '@/components/ui/badge';
 import { 
   MessageCircle, Send, Phone, CreditCard, 
   Activity, Gift, Globe, BarChart, 
-  Shield, CheckCircle, AlertTriangle 
+  Shield, CheckCircle, AlertTriangle, Wifi
 } from 'lucide-react';
 
 const WhatsAppAssistant = () => {
@@ -32,12 +31,7 @@ Simply reply with a number or tell me what you need! 💬`,
   
   const [currentInput, setCurrentInput] = useState('');
   const [conversationState, setConversationState] = useState('greeting');
-  const [userSession, setUserSession] = useState({
-    phoneNumber: '',
-    selectedService: '',
-    transactionData: {}
-  });
-  
+  const [activeSelection, setActiveSelection] = useState(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () => {
@@ -56,9 +50,84 @@ Simply reply with a number or tell me what you need! 💬`,
     setMessages(prev => [...prev, newMessage]);
   };
 
+  const quickPurchaseOptions = [
+    {
+      id: 'airtime',
+      title: 'Buy Airtime',
+      icon: <CreditCard className="w-4 h-4" />,
+      color: 'bg-green-600 hover:bg-green-700',
+      amounts: ['R10', 'R20', 'R50', 'R100'],
+      action: () => handleQuickAction('1')
+    },
+    {
+      id: 'data',
+      title: 'Data Bundles',
+      icon: <Wifi className="w-4 h-4" />,
+      color: 'bg-blue-600 hover:bg-blue-700',
+      amounts: ['1GB', '2GB', '5GB', '10GB'],
+      action: () => handleQuickAction('2')
+    },
+    {
+      id: 'balance',
+      title: 'Check Balance',
+      icon: <BarChart className="w-4 h-4" />,
+      color: 'bg-purple-600 hover:bg-purple-700',
+      action: () => handleQuickAction('3')
+    },
+    {
+      id: 'gift',
+      title: 'Gift Services',
+      icon: <Gift className="w-4 h-4" />,
+      color: 'bg-orange-600 hover:bg-orange-700',
+      amounts: ['R25', 'R50', 'R100', '2GB'],
+      action: () => handleQuickAction('4')
+    },
+    {
+      id: 'manage',
+      title: 'Manage Bundles',
+      icon: <Activity className="w-4 h-4" />,
+      color: 'bg-indigo-600 hover:bg-indigo-700',
+      action: () => handleQuickAction('5')
+    },
+    {
+      id: 'international',
+      title: 'International',
+      icon: <Globe className="w-4 h-4" />,
+      color: 'bg-teal-600 hover:bg-teal-700',
+      action: () => handleQuickAction('6')
+    }
+  ];
+
   const handleQuickAction = (action: string) => {
     addMessage(action, 'user');
     processUserInput(action);
+  };
+
+  const handleQuickPurchase = (optionId: string, amount?: string) => {
+    const option = quickPurchaseOptions.find(opt => opt.id === optionId);
+    if (!option) return;
+
+    const message = amount 
+      ? `Quick ${option.title}: ${amount}`
+      : `Quick ${option.title}`;
+    
+    addMessage(message, 'user');
+    
+    // Process the quick purchase
+    if (amount) {
+      const response = `✅ Processing ${option.title} - ${amount}
+      
+Please confirm:
+📱 Phone number: [Your number]
+💰 Amount: ${amount}
+      
+Reply "CONFIRM" to proceed or provide your phone number.`;
+      setTimeout(() => addMessage(response, 'bot'), 500);
+    } else {
+      processUserInput(optionId);
+    }
+    
+    setActiveSelection(null);
   };
 
   const processUserInput = (input: string) => {
@@ -221,9 +290,9 @@ Just tell me what you need, or type a number from the main menu! 😊`;
   };
 
   return (
-    <div className="flex flex-col h-full max-w-md mx-auto bg-white">
+    <div className="flex flex-col h-full max-w-md mx-auto bg-white relative">
       {/* WhatsApp Header */}
-      <div className="bg-gradient-to-r from-green-600 to-green-700 text-white p-4 flex items-center gap-3">
+      <div className="bg-gradient-to-r from-green-600 to-green-700 text-white p-4 flex items-center gap-3 sticky top-0 z-10">
         <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center">
           <MessageCircle className="w-6 h-6 text-green-600" />
         </div>
@@ -234,50 +303,88 @@ Just tell me what you need, or type a number from the main menu! 😊`;
         <Badge className="ml-auto bg-green-800">AI Agent</Badge>
       </div>
 
-      {/* Quick Actions */}
-      <div className="p-3 bg-gray-50 border-b">
-        <div className="flex gap-2 overflow-x-auto">
+      {/* Enhanced Quick Purchase Panel - Always Visible */}
+      <div className="bg-gray-50 border-b p-3 sticky top-[88px] z-10">
+        <div className="grid grid-cols-3 gap-2 mb-3">
+          {quickPurchaseOptions.map((option) => (
+            <div key={option.id} className="relative">
+              <Button
+                size="sm"
+                onClick={() => setActiveSelection(activeSelection === option.id ? null : option.id)}
+                className={`w-full h-12 text-xs flex flex-col items-center justify-center ${option.color} text-white transition-all duration-200 ${
+                  activeSelection === option.id ? 'scale-105 shadow-lg' : ''
+                }`}
+              >
+                {option.icon}
+                <span className="text-xs mt-1 leading-none">{option.title.split(' ')[0]}</span>
+              </Button>
+              
+              {/* Quick Amount Selection */}
+              {activeSelection === option.id && option.amounts && (
+                <div className="absolute top-full left-0 right-0 bg-white border rounded-lg shadow-lg p-2 mt-1 z-20">
+                  <div className="text-xs font-medium text-gray-700 mb-2">Quick Select:</div>
+                  <div className="grid grid-cols-2 gap-1">
+                    {option.amounts.map((amount) => (
+                      <Button
+                        key={amount}
+                        size="sm"
+                        variant="outline"
+                        onClick={() => handleQuickPurchase(option.id, amount)}
+                        className="text-xs h-8 hover:bg-green-50 hover:border-green-300"
+                      >
+                        {amount}
+                      </Button>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+        
+        {/* Traditional Quick Actions */}
+        <div className="flex gap-2 overflow-x-auto pb-1">
           <Button 
             size="sm" 
             variant="outline" 
             onClick={() => handleQuickAction('1')}
-            className="whitespace-nowrap"
+            className="whitespace-nowrap flex items-center gap-1"
           >
-            <CreditCard className="w-3 h-3 mr-1" />
+            <CreditCard className="w-3 h-3" />
             Airtime
           </Button>
           <Button 
             size="sm" 
             variant="outline" 
             onClick={() => handleQuickAction('2')}
-            className="whitespace-nowrap"
+            className="whitespace-nowrap flex items-center gap-1"
           >
-            <Activity className="w-3 h-3 mr-1" />
+            <Activity className="w-3 h-3" />
             Data
           </Button>
           <Button 
             size="sm" 
             variant="outline" 
             onClick={() => handleQuickAction('3')}
-            className="whitespace-nowrap"
+            className="whitespace-nowrap flex items-center gap-1"
           >
-            <BarChart className="w-3 h-3 mr-1" />
+            <BarChart className="w-3 h-3" />
             Balance
           </Button>
           <Button 
             size="sm" 
             variant="outline" 
             onClick={() => handleQuickAction('4')}
-            className="whitespace-nowrap"
+            className="whitespace-nowrap flex items-center gap-1"
           >
-            <Gift className="w-3 h-3 mr-1" />
+            <Gift className="w-3 h-3" />
             Gift
           </Button>
         </div>
       </div>
 
       {/* Messages Container */}
-      <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-gray-100">
+      <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-gray-100" style={{ paddingTop: '120px' }}>
         {messages.map((msg) => (
           <div key={msg.id} className={`flex ${msg.type === 'user' ? 'justify-end' : 'justify-start'}`}>
             <div className={`max-w-xs lg:max-w-md px-4 py-2 rounded-lg ${
@@ -298,7 +405,7 @@ Just tell me what you need, or type a number from the main menu! 😊`;
       </div>
 
       {/* Input Area */}
-      <div className="p-4 bg-white border-t flex items-center gap-2">
+      <div className="p-4 bg-white border-t flex items-center gap-2 sticky bottom-0">
         <input
           type="text"
           value={currentInput}
@@ -328,6 +435,14 @@ Just tell me what you need, or type a number from the main menu! 😊`;
           <span className="text-gray-600">PCI Compliant</span>
         </div>
       </div>
+
+      {/* Overlay to close quick selection when clicking outside */}
+      {activeSelection && (
+        <div 
+          className="fixed inset-0 z-10" 
+          onClick={() => setActiveSelection(null)}
+        />
+      )}
     </div>
   );
 };
