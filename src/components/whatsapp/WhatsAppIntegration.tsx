@@ -1,5 +1,4 @@
-
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -10,7 +9,7 @@ import {
   ArrowRight, Users, Clock, Shield, BarChart3
 } from 'lucide-react';
 import { useMobileAuth } from '@/hooks/useMobileAuth';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import WhatsAppAssistant from './WhatsAppAssistant';
 import MobileShoppingInterface from '../mobile/MobileShoppingInterface';
 
@@ -18,6 +17,15 @@ const WhatsAppIntegration = () => {
   const { currentUser, isAuthenticated } = useMobileAuth();
   const [activeTab, setActiveTab] = useState('assistant');
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+
+  // Check if we should start shopping immediately
+  useEffect(() => {
+    const startShopping = searchParams.get('start-shopping');
+    if (startShopping === 'true') {
+      setActiveTab('mobile');
+    }
+  }, [searchParams]);
 
   const features = [
     {
@@ -74,8 +82,8 @@ const WhatsAppIntegration = () => {
   ];
 
   const handleWhatsAppStart = () => {
-    // Navigate to WhatsApp Assistant page instead of opening external WhatsApp
-    navigate('/whatsapp-assistant');
+    // Immediately switch to mobile shopping tab for in-app experience
+    setActiveTab('mobile');
   };
 
   return (
