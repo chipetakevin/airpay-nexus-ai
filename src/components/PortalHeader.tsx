@@ -81,10 +81,10 @@ const PortalHeader: React.FC<PortalHeaderProps> = ({ userType, resetUserType }) 
 
   const getUserTypeColor = (type: string) => {
     switch (type) {
-      case 'customer': return 'bg-green-100 text-green-800';
-      case 'vendor': return 'bg-blue-100 text-blue-800';
-      case 'admin': return 'bg-red-100 text-red-800';
-      default: return 'bg-gray-100 text-gray-800';
+      case 'customer': return 'bg-white text-[#6FB7FF]';
+      case 'vendor': return 'bg-white text-[#6FB7FF]';
+      case 'admin': return 'bg-white text-[#6FB7FF]';
+      default: return 'bg-white text-[#6FB7FF]';
     }
   };
 
@@ -98,7 +98,7 @@ const PortalHeader: React.FC<PortalHeaderProps> = ({ userType, resetUserType }) 
   };
 
   return (
-    <div className="bg-[#6366f1] mx-1 rounded-lg">
+    <div className="bg-[#6FB7FF] mx-1 rounded-lg">
       <div className="px-2 sm:px-4 py-2 sm:py-3">
         <div className="flex items-center justify-between max-w-7xl mx-auto gap-2 sm:gap-3">
           {/* Left Section - Enhanced Logo, Badge and Home */}
@@ -111,7 +111,7 @@ const PortalHeader: React.FC<PortalHeaderProps> = ({ userType, resetUserType }) 
               />
               <div className="flex flex-col min-w-0">
                 {currentUser?.isUnifiedProfile && (
-                  <Badge className="bg-gradient-to-r from-orange-400 to-orange-500 text-white text-xs px-2 py-1 rounded-full flex items-center justify-center mb-1 whitespace-nowrap">
+                  <Badge className="bg-white text-[#6FB7FF] text-xs px-2 py-1 rounded-full flex items-center justify-center mb-1 whitespace-nowrap">
                     <span className="mr-1">🌟</span>
                     <span className="font-medium">Unified</span>
                   </Badge>
@@ -127,7 +127,7 @@ const PortalHeader: React.FC<PortalHeaderProps> = ({ userType, resetUserType }) 
               <Button
                 variant="outline"
                 size="sm"
-                className="flex items-center gap-2 px-3 sm:px-4 py-2 sm:py-2.5 h-8 sm:h-9 border-white/30 text-white hover:bg-white/20 hover:border-white/50 transition-all duration-200 backdrop-blur-sm font-medium"
+                className="flex items-center gap-2 px-3 sm:px-4 py-2 sm:py-2.5 h-8 sm:h-9 border-white bg-white text-[#6FB7FF] hover:bg-white/90 transition-all duration-200 font-medium"
               >
                 <Home className="w-4 h-4" />
                 <span className="hidden sm:inline font-medium">Home</span>
@@ -148,7 +148,7 @@ const PortalHeader: React.FC<PortalHeaderProps> = ({ userType, resetUserType }) 
                   onClick={() => setShowUserMenu(!showUserMenu)}
                   variant="outline"
                   size="sm"
-                  className="flex items-center gap-2 px-3 sm:px-4 py-2 sm:py-2.5 h-8 sm:h-9 border-white/30 text-white hover:bg-white/20 hover:border-white/50 transition-all duration-200 backdrop-blur-sm font-medium"
+                  className="flex items-center gap-2 px-3 sm:px-4 py-2 sm:py-2.5 h-8 sm:h-9 border-white bg-white text-[#6FB7FF] hover:bg-white/90 transition-all duration-200 font-medium"
                 >
                   {getUserTypeIcon(currentUser.userType)}
                   <span className="hidden xs:inline font-medium max-w-16 truncate">
@@ -161,10 +161,10 @@ const PortalHeader: React.FC<PortalHeaderProps> = ({ userType, resetUserType }) 
                 </Button>
 
                 {showUserMenu && (
-                  <div className="absolute right-0 top-full mt-2 w-64 sm:w-72 bg-white/95 backdrop-blur-md rounded-lg shadow-xl z-50 overflow-hidden">
+                  <div className="absolute right-0 top-full mt-2 w-64 sm:w-72 bg-white rounded-lg shadow-xl z-50 overflow-hidden">
                     <div className="p-4 sm:p-5">
-                      <div className="flex items-center gap-3 mb-3 pb-3 border-b border-blue-100">
-                        <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg flex items-center justify-center">
+                      <div className="flex items-center gap-3 mb-3 pb-3 border-b border-[#6FB7FF]/20">
+                        <div className="w-8 h-8 sm:w-10 sm:h-10 bg-[#6FB7FF] rounded-lg flex items-center justify-center">
                           {getUserTypeIcon(currentUser.userType)}
                         </div>
                         <div className="min-w-0">
@@ -176,13 +176,13 @@ const PortalHeader: React.FC<PortalHeaderProps> = ({ userType, resetUserType }) 
                       </div>
                       
                       {currentUser.cardNumber && (
-                        <div className="text-sm text-gray-600 mb-3 p-3 bg-blue-50/70 rounded-lg backdrop-blur-sm">
+                        <div className="text-sm text-gray-600 mb-3 p-3 bg-[#6FB7FF]/10 rounded-lg">
                           <span className="font-medium">Card:</span> ****{currentUser.cardNumber.slice(-4)}
                         </div>
                       )}
                       
                       {currentUser.isUnifiedProfile && (
-                        <Badge className="bg-orange-100 text-orange-800 text-sm mb-3 px-3 py-2 w-full justify-center">
+                        <Badge className="bg-white text-[#6FB7FF] text-sm mb-3 px-3 py-2 w-full justify-center">
                           🌟 Full Access
                         </Badge>
                       )}
@@ -206,7 +206,7 @@ const PortalHeader: React.FC<PortalHeaderProps> = ({ userType, resetUserType }) 
               <Button
                 onClick={() => window.location.href = '/portal?tab=registration'}
                 size="sm"
-                className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white px-4 sm:px-5 py-2 sm:py-2.5 h-8 sm:h-9 font-semibold transition-all duration-200"
+                className="bg-white text-[#6FB7FF] hover:bg-white/90 px-4 sm:px-5 py-2 sm:py-2.5 h-8 sm:h-9 font-semibold transition-all duration-200"
               >
                 <span className="hidden xs:inline">Get Started</span>
                 <span className="xs:hidden">Start</span>

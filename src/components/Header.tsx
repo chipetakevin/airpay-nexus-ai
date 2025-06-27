@@ -41,7 +41,7 @@ const Header = () => {
   const isActive = (path: string) => location.pathname === path;
 
   return (
-    <header className="bg-[#6366f1] sticky top-0 z-50">
+    <header className="bg-[#6FB7FF] sticky top-0 z-50">
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
@@ -55,14 +55,14 @@ const Header = () => {
                 to={item.path}
                 className={`relative px-4 py-2 rounded-lg transition-all duration-200 flex items-center gap-2 ${
                   isActive(item.path)
-                    ? 'bg-white/80 text-blue-700 font-medium backdrop-blur-sm'
-                    : 'text-white hover:bg-white/20 hover:text-white backdrop-blur-sm font-medium'
+                    ? 'bg-white text-[#6FB7FF] font-medium'
+                    : 'text-white hover:bg-white/20 hover:text-white font-medium'
                 }`}
               >
                 {item.icon}
                 <span>{item.label}</span>
                 {item.badge && (
-                  <Badge className="bg-gradient-to-r from-green-500 to-emerald-500 text-white text-xs">
+                  <Badge className="bg-[#6FB7FF] text-white text-xs border-white">
                     {item.badge}
                   </Badge>
                 )}
@@ -74,7 +74,7 @@ const Header = () => {
           <div className="hidden md:flex items-center gap-3">
             <Button
               onClick={() => window.open('https://wa.me/27832466539', '_blank')}
-              className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white px-4 py-2 font-semibold"
+              className="bg-white text-[#6FB7FF] hover:bg-white/90 px-4 py-2 font-semibold"
             >
               <MessageCircle className="w-4 h-4 mr-2" />
               WhatsApp Support
@@ -84,7 +84,7 @@ const Header = () => {
           {/* Mobile Menu Button */}
           <button
             onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="md:hidden p-2 rounded-lg hover:bg-white/20 backdrop-blur-sm transition-colors"
+            className="md:hidden p-2 rounded-lg hover:bg-white/20 transition-colors"
           >
             {isMenuOpen ? <X className="w-6 h-6 text-white" /> : <Menu className="w-6 h-6 text-white" />}
           </button>
@@ -92,7 +92,7 @@ const Header = () => {
 
         {/* Mobile Navigation */}
         {isMenuOpen && (
-          <div className="md:hidden py-4 bg-white/90 backdrop-blur-sm rounded-b-lg mt-2">
+          <div className="md:hidden py-4 bg-white rounded-b-lg mt-2">
             <nav className="space-y-2">
               {navigationItems.map((item) => (
                 <Link
@@ -101,14 +101,14 @@ const Header = () => {
                   onClick={() => setIsMenuOpen(false)}
                   className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 ${
                     isActive(item.path)
-                      ? 'bg-blue-100/80 text-blue-800 font-semibold'
-                      : 'text-blue-700 hover:bg-blue-50/80 font-medium'
+                      ? 'bg-[#6FB7FF]/10 text-[#6FB7FF] font-semibold'
+                      : 'text-[#6FB7FF] hover:bg-[#6FB7FF]/5 font-medium'
                   }`}
                 >
                   {item.icon}
                   <span>{item.label}</span>
                   {item.badge && (
-                    <Badge className="bg-gradient-to-r from-green-500 to-emerald-500 text-white text-xs ml-auto">
+                    <Badge className="bg-[#6FB7FF] text-white text-xs ml-auto">
                       {item.badge}
                     </Badge>
                   )}
@@ -121,7 +121,7 @@ const Header = () => {
                     window.open('https://wa.me/27832466539', '_blank');
                     setIsMenuOpen(false);
                   }}
-                  className="w-full bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white font-semibold"
+                  className="w-full bg-[#6FB7FF] hover:bg-[#6FB7FF]/90 text-white font-semibold"
                 >
                   <MessageCircle className="w-4 h-4 mr-2" />
                   WhatsApp Support
