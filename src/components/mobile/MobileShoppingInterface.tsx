@@ -1,435 +1,229 @@
 
-import React, { useState, useEffect } from 'react';
-import { Card, CardContent } from '@/components/ui/card';
+import React, { useState } from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { 
-  Phone, Wifi, CreditCard, Gift, Settings, MessageCircle, 
-  Star, ShoppingCart, BarChart3, Menu, ArrowRight, CheckCircle,
-  Zap, Users, Clock, Shield
+  CreditCard, 
+  Wifi, 
+  Phone, 
+  MessageCircle, 
+  Star, 
+  Zap, 
+  Shield,
+  Crown,
+  Timer,
+  Network,
+  ArrowRight
 } from 'lucide-react';
-import { useMobileAuth } from '@/hooks/useMobileAuth';
-import { useToast } from '@/hooks/use-toast';
-import { Link } from 'react-router-dom';
-
-interface DataBundle {
-  id: string;
-  name: string;
-  data: string;
-  price: number;
-  validity: string;
-  color: string;
-  network: string;
-  amount: number;
-  dealType: 'data';
-}
+import { useNavigate } from 'react-router-dom';
 
 const MobileShoppingInterface = () => {
-  const { currentUser, isAuthenticated } = useMobileAuth();
-  const { toast } = useToast();
-  const [currentView, setCurrentView] = useState('home');
-  const [balance] = useState(125.50);
-  const [cart, setCart] = useState<DataBundle[]>([]);
+  const [activeService, setActiveService] = useState('airtime');
+  const navigate = useNavigate();
 
-  const menuItems = [
-    { 
-      id: 1, 
-      title: 'Buy Airtime', 
-      subtitle: 'Instant top-ups for all networks', 
-      icon: Phone,
-      action: () => setCurrentView('airtime')
-    },
-    { 
-      id: 2, 
-      title: 'Purchase Data Bundles', 
-      subtitle: 'High-speed internet packages', 
-      icon: Wifi,
-      action: () => setCurrentView('data')
-    },
-    { 
-      id: 3, 
-      title: 'Check Balance', 
-      subtitle: 'View your current balance', 
-      icon: CreditCard,
-      action: () => setCurrentView('balance')
-    },
-    { 
-      id: 4, 
-      title: 'Gift Airtime/Data', 
-      subtitle: 'Send to friends & family', 
-      icon: Gift,
-      action: () => setCurrentView('gifting')
-    },
-    { 
-      id: 5, 
-      title: 'Manage Bundles', 
-      subtitle: 'View and control your packages', 
-      icon: Settings,
-      action: () => setCurrentView('bundles')
-    },
-    { 
-      id: 6, 
-      title: 'International Airtime', 
-      subtitle: 'Global top-up services', 
-      icon: Phone,
-      action: () => setCurrentView('international')
-    }
-  ];
-
-  const dataBundles: DataBundle[] = [
-    { 
-      id: 'starter-1gb', 
-      name: 'Starter Pack', 
-      data: '1GB', 
-      price: 29, 
-      validity: '7 days', 
-      color: 'bg-green-500',
-      network: 'vodacom',
-      amount: 1024,
-      dealType: 'data'
-    },
-    { 
-      id: 'social-3gb', 
-      name: 'Social Bundle', 
-      data: '3GB', 
-      price: 59, 
-      validity: '14 days', 
-      color: 'bg-red-500',
-      network: 'mtn',
-      amount: 3072,
-      dealType: 'data'
-    },
-    { 
-      id: 'power-10gb', 
-      name: 'Power Pack', 
-      data: '10GB', 
-      price: 149, 
-      validity: '30 days', 
+  const serviceCategories = [
+    {
+      id: 'airtime',
+      title: 'Airtime',
+      icon: <CreditCard className="w-4 h-4" />,
       color: 'bg-blue-500',
-      network: 'vodacom',
-      amount: 10240,
-      dealType: 'data'
+      description: 'Top up airtime instantly'
     },
-    { 
-      id: 'unlimited-50gb', 
-      name: 'Unlimited', 
-      data: '50GB', 
-      price: 299, 
-      validity: '30 days', 
+    {
+      id: 'data',
+      title: 'Data',
+      icon: <Wifi className="w-4 h-4" />,
+      color: 'bg-green-500',
+      description: 'High-speed data bundles'
+    },
+    {
+      id: 'porting',
+      title: 'Porting',
+      icon: <Phone className="w-4 h-4" />,
       color: 'bg-purple-500',
-      network: 'mtn',
-      amount: 51200,
-      dealType: 'data'
+      description: 'AI-powered SIM porting'
+    },
+    {
+      id: 'support',
+      title: 'Support',
+      icon: <MessageCircle className="w-4 h-4" />,
+      color: 'bg-orange-500',
+      description: '24/7 customer support'
     }
   ];
 
-  const addToCart = (bundle: DataBundle) => {
-    setCart([...cart, bundle]);
-    toast({
-      title: "Added to Cart",
-      description: `${bundle.name} (${bundle.data}) added to your cart`,
-    });
+  const featuredServices = [
+    {
+      title: '5 Min Porting',
+      subtitle: 'AI-powered SIM porting & RICA',
+      icon: <Zap className="w-8 h-8 text-white" />,
+      badge: 'Popular',
+      badgeColor: 'bg-orange-500',
+      bgColor: 'bg-gradient-to-br from-green-400 to-green-600',
+      description: 'Fast and secure number porting with AI assistance'
+    },
+    {
+      title: 'ICASA Compliant',
+      subtitle: '99.7% regulatory compliance',
+      icon: <Shield className="w-8 h-8 text-white" />,
+      badge: 'Verified',
+      badgeColor: 'bg-green-500',
+      bgColor: 'bg-gradient-to-br from-blue-400 to-blue-600',
+      description: 'Fully compliant with South African regulations'
+    },
+    {
+      title: 'AI Platform',
+      subtitle: 'Autonomous processing',
+      icon: <Crown className="w-8 h-8 text-white" />,
+      badge: 'Advanced',
+      badgeColor: 'bg-purple-500',
+      bgColor: 'bg-gradient-to-br from-purple-400 to-purple-600',
+      description: 'Smart automation for seamless experiences'
+    }
+  ];
+
+  const handleStartWhatsAppShopping = () => {
+    navigate('/whatsapp-assistant');
   };
 
-  const removeFromCart = (bundleId: string) => {
-    setCart(cart.filter(item => item.id !== bundleId));
-    toast({
-      title: "Removed from Cart",
-      description: "Item removed from your cart",
-    });
-  };
-
-  const getTotalCartPrice = () => {
-    return cart.reduce((total, item) => total + item.price, 0);
-  };
-
-  const handleQuickBuy = (bundle: DataBundle) => {
-    // Integrate with existing shopping cart system
-    window.location.href = `/portal?tab=deals&quickbuy=${bundle.id}`;
-  };
-
-  const HomeView = () => (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50">
-      {/* Header */}
-      <div className="bg-white shadow-sm p-4 flex items-center justify-between">
-        <div className="flex items-center space-x-3">
-          <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-blue-500 rounded-2xl flex items-center justify-center">
-            <Phone className="text-white w-6 h-6" />
-          </div>
-          <div>
-            <h1 className="text-xl font-bold text-gray-900">Divinely</h1>
-            <p className="text-blue-500 font-medium">Mobile</p>
-          </div>
-        </div>
-        <Menu className="w-6 h-6 text-gray-600" />
-      </div>
-
-      {/* Welcome Message for Authenticated Users */}
-      {isAuthenticated && currentUser && (
-        <div className="p-4">
-          <Card className="bg-gradient-to-r from-green-500 to-emerald-600 text-white">
-            <CardContent className="p-4">
-              <div className="flex items-center justify-between">
-                <div>
-                  <h2 className="text-lg font-bold">Welcome back, {currentUser.firstName}!</h2>
-                  <p className="text-green-100">Your mobile services are ready</p>
-                </div>
-                <Badge className="bg-yellow-500 text-yellow-900">
-                  <CheckCircle className="w-3 h-3 mr-1" />
-                  VIP
-                </Badge>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-      )}
-
-      {/* Menu Items */}
-      <div className="p-4 space-y-3">
-        {menuItems.map((item) => (
-          <div
-            key={item.id}
-            onClick={item.action}
-            className="bg-white rounded-2xl p-4 shadow-sm flex items-center space-x-4 cursor-pointer hover:shadow-md transition-shadow"
-          >
-            <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
-              <span className="text-blue-500 font-bold text-lg">{item.id}</span>
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50 p-3 sm:p-4">
+      <div className="max-w-6xl mx-auto space-y-4">
+        {/* Header Section - More Compact */}
+        <div className="text-center space-y-2">
+          <div className="flex items-center justify-center gap-2 mb-2">
+            <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-purple-600 rounded-xl flex items-center justify-center shadow-lg">
+              <Zap className="w-5 h-5 text-white" />
             </div>
-            <div className="flex-1">
-              <h3 className="font-semibold text-gray-900">{item.title}</h3>
-              <p className="text-gray-500 text-sm">{item.subtitle}</p>
-            </div>
-            <ArrowRight className="w-5 h-5 text-gray-400" />
+            <h1 className="text-xl sm:text-2xl font-bold text-gray-900">Smart Deals Hub</h1>
           </div>
-        ))}
-      </div>
-
-      {/* Chat Prompt */}
-      <div className="p-4 mt-4">
-        <div className="bg-blue-50 rounded-2xl p-4">
-          <p className="text-gray-600 mb-2">Simply reply with a number or tell me what you need! 💬</p>
-          <p className="text-gray-400 text-sm">{new Date().toLocaleTimeString()}</p>
-        </div>
-      </div>
-
-      {/* WhatsApp Button */}
-      <div className="fixed bottom-4 left-4 right-4">
-        <Link to="/whatsapp-assistant">
-          <Button className="bg-green-500 text-white rounded-2xl p-4 flex items-center justify-center space-x-3 w-full shadow-lg hover:bg-green-600">
-            <MessageCircle className="w-6 h-6" />
-            <span className="font-semibold">Start Shopping on WhatsApp</span>
-            <ArrowRight className="w-5 h-5" />
-          </Button>
-        </Link>
-      </div>
-    </div>
-  );
-
-  const DataView = () => (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-green-50">
-      {/* Header */}
-      <div className="bg-white shadow-sm p-4 flex items-center justify-between">
-        <div className="flex items-center space-x-3">
-          <button onClick={() => setCurrentView('home')}>
-            <ArrowRight className="w-6 h-6 text-gray-600 rotate-180" />
-          </button>
-          <h1 className="text-xl font-bold text-gray-900">Data Bundles</h1>
-        </div>
-      </div>
-
-      {/* Data Bundles Section */}
-      <div className="p-4">
-        <div className="text-center mb-6">
-          <div className="w-16 h-16 bg-blue-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
-            <BarChart3 className="w-8 h-8 text-blue-500" />
-          </div>
-          <h3 className="text-2xl font-bold text-gray-900 mb-2">Data Bundles</h3>
-          <p className="text-gray-600">High-speed data bundles with great value</p>
+          <p className="text-sm text-gray-600 max-w-lg mx-auto">
+            Experience lightning-fast mobile services with AI-powered solutions
+          </p>
         </div>
 
-        <div className="space-y-4">
-          {dataBundles.map((bundle) => (
-            <Card key={bundle.id} className="border-2 border-green-100 hover:border-green-300 transition-colors">
-              <CardContent className="p-4">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-4">
-                    <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center">
-                      <div className="flex space-x-1">
-                        <div className={`w-2 h-6 ${bundle.color} rounded-sm`}></div>
-                        <div className={`w-2 h-4 ${bundle.color} rounded-sm opacity-60`}></div>
-                        <div className={`w-2 h-8 ${bundle.color} rounded-sm opacity-80`}></div>
-                      </div>
-                    </div>
-                    <div>
-                      <h4 className="font-semibold text-gray-900">{bundle.name}</h4>
-                      <p className="text-gray-500 text-sm">{bundle.data} • {bundle.validity}</p>
-                      <p className="text-xs text-gray-400 capitalize">{bundle.network}</p>
-                    </div>
-                  </div>
-                  <div className="text-right">
-                    <div className="text-2xl font-bold text-green-600">R{bundle.price}</div>
-                    <div className="space-y-2 mt-2">
-                      <Button
-                        onClick={() => addToCart(bundle)}
-                        className="bg-green-500 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-green-600"
-                      >
-                        Add to Cart
-                      </Button>
-                      <Button
-                        onClick={() => handleQuickBuy(bundle)}
-                        variant="outline"
-                        className="px-4 py-2 rounded-lg text-sm font-medium border-blue-500 text-blue-500 hover:bg-blue-50"
-                      >
-                        Quick Buy
-                      </Button>
-                    </div>
-                  </div>
+        {/* Service Categories - Horizontal Compact Layout */}
+        <div className="grid grid-cols-4 gap-2 sm:gap-3">
+          {serviceCategories.map((service) => (
+            <Card 
+              key={service.id}
+              className={`cursor-pointer transition-all duration-200 hover:shadow-lg border-2 ${
+                activeService === service.id 
+                  ? 'border-blue-500 bg-blue-50' 
+                  : 'border-gray-200 hover:border-blue-300'
+              }`}
+              onClick={() => setActiveService(service.id)}
+            >
+              <CardContent className="p-3 text-center">
+                <div className={`w-8 h-8 ${service.color} rounded-lg flex items-center justify-center mx-auto mb-2 shadow-md`}>
+                  {service.icon}
                 </div>
+                <h3 className="font-semibold text-xs sm:text-sm text-gray-900 mb-1">{service.title}</h3>
+                <p className="text-xs text-gray-600 hidden sm:block">{service.description}</p>
               </CardContent>
             </Card>
           ))}
         </div>
-      </div>
 
-      {/* Cart Button */}
-      {cart.length > 0 && (
-        <div className="fixed bottom-4 right-4">
-          <Button
-            onClick={() => setCurrentView('cart')}
-            className="bg-blue-500 hover:bg-blue-600 rounded-full p-4 shadow-lg relative"
-          >
-            <ShoppingCart className="w-6 h-6" />
-            <Badge className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs">
-              {cart.length}
-            </Badge>
-          </Button>
-        </div>
-      )}
-    </div>
-  );
-
-  const CartView = () => (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50">
-      {/* Header */}
-      <div className="bg-white shadow-sm p-4 flex items-center justify-between">
-        <div className="flex items-center space-x-3">
-          <button onClick={() => setCurrentView('data')}>
-            <ArrowRight className="w-6 h-6 text-gray-600 rotate-180" />
-          </button>
-          <h1 className="text-xl font-bold text-gray-900">Shopping Cart</h1>
-        </div>
-        <div className="flex items-center space-x-2">
-          <ShoppingCart className="w-6 h-6 text-gray-600" />
-          <span className="text-sm text-gray-500">{cart.length} items</span>
-        </div>
-      </div>
-
-      {/* Cart Items */}
-      <div className="p-4">
-        {cart.length === 0 ? (
-          <div className="text-center py-12">
-            <ShoppingCart className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-            <h3 className="text-lg font-semibold text-gray-600 mb-2">Your cart is empty</h3>
-            <p className="text-gray-500 mb-6">Add some data bundles to get started</p>
-            <Button
-              onClick={() => setCurrentView('data')}
-              className="bg-green-500 text-white px-6 py-3 rounded-xl font-medium hover:bg-green-600"
-            >
-              Browse Data Bundles
-            </Button>
-          </div>
-        ) : (
-          <div className="space-y-4">
-            {cart.map((item, index) => (
-              <Card key={index} className="shadow-sm">
-                <CardContent className="p-4">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center space-x-4">
-                      <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center">
-                        <BarChart3 className="w-6 h-6 text-blue-500" />
-                      </div>
-                      <div>
-                        <h4 className="font-semibold text-gray-900">{item.name}</h4>
-                        <p className="text-gray-500 text-sm">{item.data} • {item.validity}</p>
-                      </div>
+        {/* Featured Services - Vertical Compact Layout */}
+        <div className="space-y-3">
+          <h2 className="text-lg font-bold text-gray-900 flex items-center gap-2">
+            <Star className="w-5 h-5 text-yellow-500" />
+            Featured Services
+          </h2>
+          
+          <div className="space-y-3">
+            {featuredServices.map((service, index) => (
+              <Card key={index} className="overflow-hidden hover:shadow-lg transition-all duration-200 border border-gray-200">
+                <CardContent className="p-0">
+                  <div className="flex items-center">
+                    {/* Icon Section - Compact */}
+                    <div className={`${service.bgColor} p-4 flex items-center justify-center flex-shrink-0`}>
+                      {service.icon}
                     </div>
-                    <div className="text-right">
-                      <div className="text-lg font-bold text-green-600">R{item.price}</div>
-                      <Button
-                        onClick={() => removeFromCart(item.id)}
-                        variant="ghost"
-                        className="text-red-500 text-sm hover:text-red-700 mt-1"
-                      >
-                        Remove
-                      </Button>
+                    
+                    {/* Content Section */}
+                    <div className="flex-1 p-4">
+                      <div className="flex items-start justify-between gap-3">
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center gap-2 mb-1">
+                            <h3 className="font-bold text-gray-900 text-sm sm:text-base truncate">
+                              {service.title}
+                            </h3>
+                            <Badge className={`${service.badgeColor} text-white text-xs px-2 py-0.5 whitespace-nowrap`}>
+                              {service.badge}
+                            </Badge>
+                          </div>
+                          <p className="text-sm text-gray-700 font-medium mb-1">{service.subtitle}</p>
+                          <p className="text-xs text-gray-600 hidden sm:block">{service.description}</p>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </CardContent>
               </Card>
             ))}
-
-            {/* Total */}
-            <Card className="bg-green-50 border-2 border-green-200">
-              <CardContent className="p-4">
-                <div className="flex items-center justify-between">
-                  <span className="text-lg font-semibold text-gray-900">Total</span>
-                  <span className="text-2xl font-bold text-green-600">R{getTotalCartPrice()}</span>
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Checkout Button */}
-            <Link to="/portal?tab=deals">
-              <Button className="bg-green-500 text-white rounded-2xl p-4 w-full font-semibold text-lg hover:bg-green-600">
-                Proceed to Checkout
-              </Button>
-            </Link>
           </div>
-        )}
-      </div>
-    </div>
-  );
+        </div>
 
-  // Additional views for other menu items
-  const BalanceView = () => (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 to-blue-50">
-      <div className="bg-white shadow-sm p-4 flex items-center space-x-3">
-        <button onClick={() => setCurrentView('home')}>
-          <ArrowRight className="w-6 h-6 text-gray-600 rotate-180" />
-        </button>
-        <h1 className="text-xl font-bold text-gray-900">Account Balance</h1>
-      </div>
-      
-      <div className="p-4">
-        <Card className="bg-gradient-to-r from-purple-500 to-blue-500 text-white">
-          <CardContent className="p-6 text-center">
-            <CreditCard className="w-12 h-12 mx-auto mb-4 text-purple-200" />
-            <p className="text-purple-100 mb-2">Current Balance</p>
-            <p className="text-4xl font-bold">R{balance.toFixed(2)}</p>
-            {isAuthenticated && currentUser && (
-              <p className="text-purple-100 mt-2">OneCard: ****{currentUser.cardNumber?.slice(-4)}</p>
-            )}
+        {/* WhatsApp Shopping CTA */}
+        <Card className="bg-gradient-to-r from-green-50 to-emerald-50 border-2 border-green-200">
+          <CardContent className="p-4">
+            <div className="text-center">
+              <h3 className="font-bold text-green-800 mb-2 flex items-center justify-center gap-2">
+                <MessageCircle className="w-5 h-5" />
+                Instant WhatsApp Shopping
+              </h3>
+              <p className="text-sm text-green-700 mb-4">
+                Skip the forms - shop directly through WhatsApp with our AI assistant
+              </p>
+              <Button 
+                onClick={handleStartWhatsAppShopping}
+                className="w-full bg-green-600 hover:bg-green-700 text-white font-medium py-3"
+              >
+                <MessageCircle className="w-4 h-4 mr-2" />
+                Start Shopping on WhatsApp
+                <ArrowRight className="w-4 h-4 ml-2" />
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Quick Stats - Horizontal Compact */}
+        <Card className="bg-gradient-to-r from-blue-600 to-purple-600 text-white">
+          <CardContent className="p-4">
+            <div className="grid grid-cols-3 gap-3 text-center">
+              <div>
+                <div className="flex items-center justify-center gap-1 mb-1">
+                  <Timer className="w-4 h-4" />
+                  <span className="text-xs font-medium">Speed</span>
+                </div>
+                <p className="text-lg font-bold">5 Min</p>
+                <p className="text-xs opacity-90">Avg. Processing</p>
+              </div>
+              <div>
+                <div className="flex items-center justify-center gap-1 mb-1">
+                  <Shield className="w-4 h-4" />
+                  <span className="text-xs font-medium">Security</span>
+                </div>
+                <p className="text-lg font-bold">99.7%</p>
+                <p className="text-xs opacity-90">Compliance</p>
+              </div>
+              <div>
+                <div className="flex items-center justify-center gap-1 mb-1">
+                  <Network className="w-4 h-4" />
+                  <span className="text-xs font-medium">Networks</span>
+                </div>
+                <p className="text-lg font-bold">All</p>
+                <p className="text-xs opacity-90">Supported</p>
+              </div>
+            </div>
           </CardContent>
         </Card>
       </div>
     </div>
   );
-
-  // Main render based on current view
-  const renderCurrentView = () => {
-    switch (currentView) {
-      case 'data':
-        return <DataView />;
-      case 'cart':
-        return <CartView />;
-      case 'balance':
-        return <BalanceView />;
-      default:
-        return <HomeView />;
-    }
-  };
-
-  return renderCurrentView();
 };
 
 export default MobileShoppingInterface;

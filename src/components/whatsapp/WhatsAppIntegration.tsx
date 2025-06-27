@@ -10,13 +10,14 @@ import {
   ArrowRight, Users, Clock, Shield, BarChart3
 } from 'lucide-react';
 import { useMobileAuth } from '@/hooks/useMobileAuth';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import WhatsAppAssistant from './WhatsAppAssistant';
 import MobileShoppingInterface from '../mobile/MobileShoppingInterface';
 
 const WhatsAppIntegration = () => {
   const { currentUser, isAuthenticated } = useMobileAuth();
   const [activeTab, setActiveTab] = useState('assistant');
+  const navigate = useNavigate();
 
   const features = [
     {
@@ -73,25 +74,8 @@ const WhatsAppIntegration = () => {
   ];
 
   const handleWhatsAppStart = () => {
-    const phoneNumber = isAuthenticated && currentUser?.registeredPhone 
-      ? currentUser.registeredPhone.replace('+', '')
-      : '27832466539';
-    
-    const message = isAuthenticated ? encodeURIComponent(
-      `🔥 Hi Divinely Mobile AI! I'm ${currentUser?.firstName} ${currentUser?.lastName}\n\n` +
-      `🎯 OneCard: ${currentUser?.cardNumber}\n` +
-      `📱 Account: ${currentUser?.registeredPhone}\n\n` +
-      `I'd like exclusive access to:\n` +
-      `• 💎 VIP Deals & Discounts\n` +
-      `• ⚡ Instant Top-ups\n` +
-      `• 📊 Premium Data Bundles\n` +
-      `• 🎁 Loyalty Rewards\n\n` +
-      `Ready to shop! 🛒`
-    ) : encodeURIComponent(
-      `Hi Divinely Mobile AI! 🤖\n\nI'd like to get instant airtime & data deals. Please assist me with:\n\n• Best available deals\n• Account management\n• Top-up services\n• Balance inquiries\n\nThank you!`
-    );
-    
-    window.open(`https://wa.me/${phoneNumber}?text=${message}`, '_blank');
+    // Navigate to WhatsApp Assistant page instead of opening external WhatsApp
+    navigate('/whatsapp-assistant');
   };
 
   return (
@@ -227,7 +211,7 @@ const WhatsAppIntegration = () => {
                   className="bg-green-600 hover:bg-green-700 h-12 px-8"
                 >
                   <MessageCircle className="w-5 h-5 mr-2" />
-                  Start on WhatsApp
+                  Start Shopping on WhatsApp
                 </Button>
                 <Link to="/portal?tab=deals">
                   <Button 

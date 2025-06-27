@@ -2,35 +2,16 @@
 import React, { useState } from 'react';
 import { MessageCircle, User, CheckCircle } from 'lucide-react';
 import { useMobileAuth } from '@/hooks/useMobileAuth';
+import { useNavigate } from 'react-router-dom';
 
 const WhatsAppFloatingButton = () => {
   const { currentUser, isAuthenticated } = useMobileAuth();
   const [showTooltip, setShowTooltip] = useState(false);
+  const navigate = useNavigate();
 
   const handleWhatsAppClick = () => {
-    // Use registered phone number if authenticated, otherwise use test number
-    const phoneNumber = isAuthenticated && currentUser?.registeredPhone 
-      ? currentUser.registeredPhone.replace('+', '')
-      : '27832466539'; // Test number for non-authenticated users
-    
-    // Enhanced message for authenticated customers
-    const message = isAuthenticated ? encodeURIComponent(
-      `🔥 Hi Divine Mobile AI! I'm ${currentUser?.firstName} ${currentUser?.lastName}\n\n` +
-      `🎯 OneCard: ${currentUser?.cardNumber}\n` +
-      `📱 Account: ${currentUser?.registeredPhone}\n\n` +
-      `I'd like exclusive access to:\n` +
-      `• 💎 VIP Deals & Discounts\n` +
-      `• ⚡ Instant Top-ups\n` +
-      `• 📊 Premium Data Bundles\n` +
-      `• 🎁 Loyalty Rewards\n\n` +
-      `Ready to shop! 🛒`
-    ) : encodeURIComponent(
-      `Hi Divine Mobile AI! 🤖\n\nI'd like to get instant airtime & data deals. Please assist me with:\n\n• Best available deals\n• Account management\n• Top-up services\n• Balance inquiries\n\nThank you!`
-    );
-    
-    // Open WhatsApp with the phone number and pre-filled message
-    const whatsappUrl = `https://wa.me/${phoneNumber}?text=${message}`;
-    window.open(whatsappUrl, '_blank');
+    // Navigate to WhatsApp Assistant page
+    navigate('/whatsapp-assistant');
   };
 
   return (
@@ -92,9 +73,9 @@ const WhatsAppFloatingButton = () => {
               </div>
             ) : (
               <div>
-                <div className="font-medium">Chat with Divine Mobile AI</div>
+                <div className="font-medium">Start WhatsApp Shopping</div>
                 <div className="text-xs opacity-75">
-                  Test: +27832466539
+                  AI-powered assistant ready
                 </div>
                 <div className="text-xs text-yellow-400 mt-1">
                   Register for exclusive access!
