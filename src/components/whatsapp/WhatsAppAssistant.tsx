@@ -4,7 +4,6 @@ import WhatsAppNavigation from './WhatsAppNavigation';
 import WhatsAppChatView from './WhatsAppChatView';
 import WhatsAppShoppingFlow from './WhatsAppShoppingFlow';
 import WhatsAppCart from './WhatsAppCart';
-import { useWhatsAppReceipt } from './WhatsAppReceiptSystem';
 
 interface Message {
   id: number;
@@ -47,7 +46,6 @@ const WhatsAppAssistant = () => {
   const [currentInput, setCurrentInput] = useState('');
   const [activeView, setActiveView] = useState<'chat' | 'shop' | 'cart'>('shop');
   const [cart, setCart] = useState<CartItem[]>([]);
-  const { processCheckout } = useWhatsAppReceipt();
 
   const addMessage = (message: string, type: 'user' | 'bot') => {
     const newMessage: Message = {
@@ -95,9 +93,44 @@ const WhatsAppAssistant = () => {
     if (cart.length === 0) return;
     
     const customerPhone = '27832466539';
-    const transactionId = processCheckout(cart, customerPhone);
+    const transactionId = 'DM' + Date.now().toString().slice(-8);
+    
+    // Create WhatsApp message
+    const itemsList = cart.map(item => 
+      `• ${item.name} (${item.network}) x${item.quantity} - R${item.price * item.quantity}`
+    ).join('\n');
+
+    const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+    
+    const message = `🟢 *DIVINELY MOBILE RECEIPT*
+
+✅ *PURCHASE COMPLETED*
+
+📋 *ORDER DETAILS:*
+${itemsList}
+
+💰 *TOTAL PAID:* R${total}
+🆔 *Transaction ID:* ${transactionId}
+📱 *Customer:* ${customerPhone}
+⏰ *Date:* ${new Date().toLocaleString()}
+
+✅ *All items delivered instantly!*
+
+🌐 divinely-mobile.com
+📞 Support: +27 100 2827
+
+*Thank you for shopping with us!*
+_Fast • Secure • Reliable_`;
+
+    const encodedMessage = encodeURIComponent(message);
+    const whatsappUrl = `https://wa.me/${customerPhone.replace('+', '')}?text=${encodedMessage}`;
     
     addMessage(`✅ Order confirmed! Transaction ID: ${transactionId}. WhatsApp receipt will open automatically.`, 'bot');
+    
+    // Auto-open WhatsApp with receipt
+    setTimeout(() => {
+      window.open(whatsappUrl, '_blank');
+    }, 1000);
     
     setTimeout(() => {
       setCart([]);
