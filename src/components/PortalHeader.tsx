@@ -98,7 +98,7 @@ const PortalHeader: React.FC<PortalHeaderProps> = ({ userType, resetUserType }) 
   };
 
   return (
-    <div className="bg-[#5B7FE8] mx-1 rounded-lg">
+    <div className="bg-[#6366f1] mx-1 rounded-lg">
       <div className="px-2 sm:px-4 py-2 sm:py-3">
         <div className="flex items-center justify-between max-w-7xl mx-auto gap-2 sm:gap-3">
           {/* Left Section - Enhanced Logo, Badge and Home */}
@@ -107,11 +107,11 @@ const PortalHeader: React.FC<PortalHeaderProps> = ({ userType, resetUserType }) 
               <img 
                 src="/lovable-uploads/9ca7fcec-0caf-4b50-9334-e7172bc98733.png" 
                 alt="Divine Mobile Logo"
-                className="h-10 sm:h-12 w-auto object-contain shadow-lg flex-shrink-0 filter brightness-110 contrast-110 saturate-110"
+                className="h-10 sm:h-12 w-auto object-contain flex-shrink-0 filter brightness-110 contrast-110 saturate-110"
               />
               <div className="flex flex-col min-w-0">
                 {currentUser?.isUnifiedProfile && (
-                  <Badge className="bg-gradient-to-r from-orange-400 to-orange-500 text-white text-xs px-2 py-1 rounded-full flex items-center justify-center shadow-md mb-1 whitespace-nowrap">
+                  <Badge className="bg-gradient-to-r from-orange-400 to-orange-500 text-white text-xs px-2 py-1 rounded-full flex items-center justify-center mb-1 whitespace-nowrap">
                     <span className="mr-1">🌟</span>
                     <span className="font-medium">Unified</span>
                   </Badge>
@@ -127,7 +127,7 @@ const PortalHeader: React.FC<PortalHeaderProps> = ({ userType, resetUserType }) 
               <Button
                 variant="outline"
                 size="sm"
-                className="flex items-center gap-2 px-3 sm:px-4 py-2 sm:py-2.5 h-8 sm:h-9 border-white/30 text-white hover:bg-white/20 hover:border-white/50 transition-all duration-200 shadow-sm backdrop-blur-sm font-medium"
+                className="flex items-center gap-2 px-3 sm:px-4 py-2 sm:py-2.5 h-8 sm:h-9 border-white/30 text-white hover:bg-white/20 hover:border-white/50 transition-all duration-200 backdrop-blur-sm font-medium"
               >
                 <Home className="w-4 h-4" />
                 <span className="hidden sm:inline font-medium">Home</span>
@@ -148,13 +148,13 @@ const PortalHeader: React.FC<PortalHeaderProps> = ({ userType, resetUserType }) 
                   onClick={() => setShowUserMenu(!showUserMenu)}
                   variant="outline"
                   size="sm"
-                  className="flex items-center gap-2 px-3 sm:px-4 py-2 sm:py-2.5 h-8 sm:h-9 border-white/30 text-white hover:bg-white/20 hover:border-white/50 transition-all duration-200 shadow-sm backdrop-blur-sm font-medium"
+                  className="flex items-center gap-2 px-3 sm:px-4 py-2 sm:py-2.5 h-8 sm:h-9 border-white/30 text-white hover:bg-white/20 hover:border-white/50 transition-all duration-200 backdrop-blur-sm font-medium"
                 >
                   {getUserTypeIcon(currentUser.userType)}
                   <span className="hidden xs:inline font-medium max-w-16 truncate">
                     {currentUser.firstName}
                   </span>
-                  <Badge className={`${getUserTypeColor(currentUser.userType)} text-xs px-2 py-1 shadow-sm`}>
+                  <Badge className={`${getUserTypeColor(currentUser.userType)} text-xs px-2 py-1`}>
                     {currentUser.userType.charAt(0).toUpperCase()}
                   </Badge>
                   <ChevronDown className="w-3 h-3" />
@@ -206,7 +206,7 @@ const PortalHeader: React.FC<PortalHeaderProps> = ({ userType, resetUserType }) 
               <Button
                 onClick={() => window.location.href = '/portal?tab=registration'}
                 size="sm"
-                className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white px-4 sm:px-5 py-2 sm:py-2.5 h-8 sm:h-9 font-semibold shadow-lg hover:shadow-xl transition-all duration-200"
+                className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white px-4 sm:px-5 py-2 sm:py-2.5 h-8 sm:h-9 font-semibold transition-all duration-200"
               >
                 <span className="hidden xs:inline">Get Started</span>
                 <span className="xs:hidden">Start</span>

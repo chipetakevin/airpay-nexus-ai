@@ -57,7 +57,7 @@ const CartHeader = ({ onClose, currentUser, isVendor }: CartHeaderProps) => {
   };
 
   return (
-    <CardHeader className="pb-3 bg-[#5B7FE8]">
+    <CardHeader className="pb-3 bg-[#6366f1]">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           {/* Enhanced Clickable Logo */}
@@ -72,7 +72,7 @@ const CartHeader = ({ onClose, currentUser, isVendor }: CartHeaderProps) => {
         
         <div className="flex items-center gap-2">
           <div className="flex items-center gap-2">
-            <div className="p-2 bg-gradient-to-r from-blue-600 to-blue-700 rounded-lg shadow-md">
+            <div className="p-2 bg-gradient-to-r from-blue-600 to-blue-700 rounded-lg">
               <CartIcon className="w-4 h-4 text-white" />
             </div>
             <div>
