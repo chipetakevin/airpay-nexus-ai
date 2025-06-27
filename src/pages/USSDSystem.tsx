@@ -11,7 +11,7 @@ import MobileLayout from '@/components/navigation/MobileLayout';
 const USSDSystem = () => {
   return (
     <MobileLayout showTopNav={false} showBottomNav={true}>
-      <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50 to-purple-50">
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50 to-purple-50 pb-20">
         <Header />
         
         <div className="container mx-auto px-4 py-8">

@@ -9,7 +9,7 @@ import MobileLayout from '@/components/navigation/MobileLayout';
 const ScanToTextAI = () => {
   return (
     <MobileLayout showTopNav={false} showBottomNav={true}>
-      <div className="min-h-screen bg-gray-50">
+      <div className="min-h-screen bg-gray-50 pb-20">
         <Header />
         
         <main>
