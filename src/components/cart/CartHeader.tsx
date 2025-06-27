@@ -23,7 +23,7 @@ const CartHeader = ({ onClose, currentUser, isVendor }: CartHeaderProps) => {
           const vendor = JSON.parse(vendorData);
           const businessName = vendor.businessName || vendor.companyName || 'Vendor';
           return (
-            <div className="flex items-center gap-2 text-sm text-[#6FB7FF] bg-white/20 px-3 py-1.5 rounded-lg">
+            <div className="flex items-center gap-2 text-sm text-[#75B8FA] bg-white/20 px-3 py-1.5 rounded-lg">
               <Store className="w-4 h-4" />
               <span className="font-medium">Welcome, {businessName}</span>
             </div>
@@ -41,7 +41,7 @@ const CartHeader = ({ onClose, currentUser, isVendor }: CartHeaderProps) => {
           const fullName = `${customer.firstName || ''} ${customer.lastName || ''}`.trim();
           if (fullName) {
             return (
-              <div className="flex items-center gap-2 text-sm text-[#6FB7FF] bg-white/20 px-3 py-1.5 rounded-lg">
+              <div className="flex items-center gap-2 text-sm text-[#75B8FA] bg-white/20 px-3 py-1.5 rounded-lg">
                 <User className="w-4 h-4" />
                 <span className="font-medium">Welcome, {fullName}</span>
               </div>
@@ -57,7 +57,7 @@ const CartHeader = ({ onClose, currentUser, isVendor }: CartHeaderProps) => {
   };
 
   return (
-    <CardHeader className="pb-3 bg-[#6FB7FF]">
+    <CardHeader className="pb-3 bg-[#75B8FA]">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           {/* Enhanced Clickable Logo */}
@@ -73,7 +73,7 @@ const CartHeader = ({ onClose, currentUser, isVendor }: CartHeaderProps) => {
         <div className="flex items-center gap-2">
           <div className="flex items-center gap-2">
             <div className="p-2 bg-white rounded-lg">
-              <CartIcon className="w-4 h-4 text-[#6FB7FF]" />
+              <CartIcon className="w-4 h-4 text-[#75B8FA]" />
             </div>
             <div>
               <CardTitle className="text-lg font-bold text-white">Smart Cart</CardTitle>

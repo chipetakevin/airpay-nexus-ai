@@ -41,7 +41,7 @@ const Header = () => {
   const isActive = (path: string) => location.pathname === path;
 
   return (
-    <header className="bg-[#6FB7FF] sticky top-0 z-50">
+    <header className="bg-[#75B8FA] sticky top-0 z-50">
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
@@ -55,14 +55,14 @@ const Header = () => {
                 to={item.path}
                 className={`relative px-4 py-2 rounded-lg transition-all duration-200 flex items-center gap-2 ${
                   isActive(item.path)
-                    ? 'bg-white text-[#6FB7FF] font-medium'
+                    ? 'bg-white text-[#75B8FA] font-medium'
                     : 'text-white hover:bg-white/20 hover:text-white font-medium'
                 }`}
               >
                 {item.icon}
                 <span>{item.label}</span>
                 {item.badge && (
-                  <Badge className="bg-[#6FB7FF] text-white text-xs border-white">
+                  <Badge className="bg-[#75B8FA] text-white text-xs border-white">
                     {item.badge}
                   </Badge>
                 )}
@@ -74,7 +74,7 @@ const Header = () => {
           <div className="hidden md:flex items-center gap-3">
             <Button
               onClick={() => window.open('https://wa.me/27832466539', '_blank')}
-              className="bg-white text-[#6FB7FF] hover:bg-white/90 px-4 py-2 font-semibold"
+              className="bg-white text-[#75B8FA] hover:bg-white/90 px-4 py-2 font-semibold"
             >
               <MessageCircle className="w-4 h-4 mr-2" />
               WhatsApp Support
@@ -101,14 +101,14 @@ const Header = () => {
                   onClick={() => setIsMenuOpen(false)}
                   className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 ${
                     isActive(item.path)
-                      ? 'bg-[#6FB7FF]/10 text-[#6FB7FF] font-semibold'
-                      : 'text-[#6FB7FF] hover:bg-[#6FB7FF]/5 font-medium'
+                      ? 'bg-[#75B8FA]/10 text-[#75B8FA] font-semibold'
+                      : 'text-[#75B8FA] hover:bg-[#75B8FA]/5 font-medium'
                   }`}
                 >
                   {item.icon}
                   <span>{item.label}</span>
                   {item.badge && (
-                    <Badge className="bg-[#6FB7FF] text-white text-xs ml-auto">
+                    <Badge className="bg-[#75B8FA] text-white text-xs ml-auto">
                       {item.badge}
                     </Badge>
                   )}
@@ -121,7 +121,7 @@ const Header = () => {
                     window.open('https://wa.me/27832466539', '_blank');
                     setIsMenuOpen(false);
                   }}
-                  className="w-full bg-[#6FB7FF] hover:bg-[#6FB7FF]/90 text-white font-semibold"
+                  className="w-full bg-[#75B8FA] hover:bg-[#75B8FA]/90 text-white font-semibold"
                 >
                   <MessageCircle className="w-4 h-4 mr-2" />
                   WhatsApp Support
