@@ -95,7 +95,6 @@ const WhatsAppAssistant = () => {
     const customerPhone = '27832466539';
     const transactionId = 'DM' + Date.now().toString().slice(-8);
     
-    // Create WhatsApp message
     const itemsList = cart.map(item => 
       `• ${item.name} (${item.network}) x${item.quantity} - R${item.price * item.quantity}`
     ).join('\n');
@@ -127,7 +126,6 @@ _Fast • Secure • Reliable_`;
     
     addMessage(`✅ Order confirmed! Transaction ID: ${transactionId}. WhatsApp receipt will open automatically.`, 'bot');
     
-    // Auto-open WhatsApp with receipt
     setTimeout(() => {
       window.open(whatsappUrl, '_blank');
     }, 1000);

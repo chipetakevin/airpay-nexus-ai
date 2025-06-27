@@ -20,7 +20,6 @@ const WhatsAppIntegration = () => {
   const [showQuickActions, setShowQuickActions] = useState(false);
   const [searchParams] = useSearchParams();
 
-  // Check if we should start shopping immediately
   useEffect(() => {
     const startShopping = searchParams.get('start-shopping');
     if (startShopping === 'true') {
@@ -74,7 +73,6 @@ const WhatsAppIntegration = () => {
 
   return (
     <div className="max-w-4xl mx-auto space-y-6">
-      {/* Header */}
       <div className="text-center space-y-4">
         <h1 className="text-3xl md:text-4xl font-bold text-gray-900">
           WhatsApp Shopping Experience
@@ -83,7 +81,6 @@ const WhatsAppIntegration = () => {
           Experience seamless mobile commerce with our AI-powered WhatsApp assistant and mobile-optimized shopping platform
         </p>
 
-        {/* User Status */}
         {isAuthenticated && currentUser && (
           <Card className="bg-gradient-to-r from-green-50 to-emerald-50 border-2 border-green-200">
             <CardContent className="p-4">
@@ -104,7 +101,6 @@ const WhatsAppIntegration = () => {
         )}
       </div>
 
-      {/* Main Interface */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
         <TabsList className="grid w-full grid-cols-3">
           <TabsTrigger value="assistant" className="flex items-center gap-2">
@@ -122,7 +118,6 @@ const WhatsAppIntegration = () => {
         </TabsList>
 
         <TabsContent value="assistant" className="space-y-6">
-          {/* Collapsible Quick Actions */}
           <Collapsible open={showQuickActions} onOpenChange={setShowQuickActions}>
             <Card>
               <CollapsibleTrigger asChild>
@@ -164,7 +159,6 @@ const WhatsAppIntegration = () => {
             </Card>
           </Collapsible>
 
-          {/* WhatsApp Assistant Interface */}
           <Card className="max-w-md mx-auto">
             <CardContent className="p-0">
               <WhatsAppAssistant />
@@ -189,7 +183,6 @@ const WhatsAppIntegration = () => {
         </TabsContent>
 
         <TabsContent value="features" className="space-y-6">
-          {/* Features Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {features.map((feature, index) => (
               <Card key={index} className="hover:shadow-lg transition-all duration-300">
