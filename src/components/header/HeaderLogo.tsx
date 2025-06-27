@@ -23,9 +23,13 @@ const HeaderLogo = () => {
       title={isBaaSPage ? "Return to Homepage" : "Divine Mobile"}
     >
       <div className="relative">
-        {/* No logo - just maintain the space and interaction */}
+        {/* Seamlessly integrated crown logo */}
         <div className="flex items-center">
-          {/* Logo removed - empty space maintained for layout */}
+          <img 
+            src="/lovable-uploads/5ef6be83-8590-459d-942d-7a0539064226.png" 
+            alt="Divine Mobile Crown Logo"
+            className="h-12 w-12 object-contain group-hover:scale-105 transition-all duration-300 ease-out group-active:scale-95 filter drop-shadow-sm"
+          />
         </div>
         {isBaaSPage && (
           <div className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full animate-pulse" />
