@@ -63,9 +63,9 @@ const CartHeader = ({ onClose, currentUser, isVendor }: CartHeaderProps) => {
           {/* Enhanced Clickable Logo */}
           <Link to="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
             <img 
-              src="/lovable-uploads/9ca7fcec-0caf-4b50-9334-e7172bc98733.png" 
-              alt="Divine Mobile Logo"
-              className="h-8 w-auto object-contain filter brightness-110 contrast-110 saturate-110"
+              src="/lovable-uploads/5ef6be83-8590-459d-942d-7a0539064226.png" 
+              alt="Divine Mobile Crown Logo"
+              className="h-8 w-8 object-contain"
             />
           </Link>
         </div>

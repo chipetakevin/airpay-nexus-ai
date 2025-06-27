@@ -8,7 +8,11 @@ const AdminDashboardHeader = () => {
     <Card className="bg-gradient-to-r from-blue-600 to-purple-600 text-white">
       <CardHeader>
         <CardTitle className="flex items-center gap-2 text-2xl">
-          <Users className="w-8 h-8" />
+          <img 
+            src="/lovable-uploads/5ef6be83-8590-459d-942d-7a0539064226.png" 
+            alt="Divine Mobile Crown Logo"
+            className="h-8 w-8 object-contain"
+          />
           OneCard Admin Dashboard
         </CardTitle>
         <p className="text-blue-100">Complete customer management and reporting suite</p>

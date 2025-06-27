@@ -105,9 +105,9 @@ const PortalHeader: React.FC<PortalHeaderProps> = ({ userType, resetUserType }) 
           <div className="flex items-center gap-2 sm:gap-3 flex-shrink-0 min-w-0">
             <div className="flex items-center gap-2 sm:gap-3">
               <img 
-                src="/lovable-uploads/9ca7fcec-0caf-4b50-9334-e7172bc98733.png" 
-                alt="Divine Mobile Logo"
-                className="h-10 sm:h-12 w-auto object-contain flex-shrink-0 filter brightness-110 contrast-110 saturate-110"
+                src="/lovable-uploads/5ef6be83-8590-459d-942d-7a0539064226.png" 
+                alt="Divine Mobile Crown Logo"
+                className="h-10 sm:h-12 w-10 sm:w-12 object-contain flex-shrink-0"
               />
               <div className="flex flex-col min-w-0">
                 {currentUser?.isUnifiedProfile && (
