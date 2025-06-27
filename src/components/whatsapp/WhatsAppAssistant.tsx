@@ -13,6 +13,17 @@ interface Message {
   timestamp: string;
 }
 
+interface CartItem {
+  id: string;
+  name: string;
+  type: string;
+  network: string;
+  amount: string;
+  price: number;
+  quantity: number;
+  icon: React.ReactNode;
+}
+
 const WhatsAppAssistant = () => {
   const [messages, setMessages] = useState<Message[]>([
     {
@@ -35,7 +46,7 @@ const WhatsAppAssistant = () => {
   
   const [currentInput, setCurrentInput] = useState('');
   const [activeView, setActiveView] = useState<'chat' | 'shop' | 'cart'>('shop');
-  const [cart, setCart] = useState([]);
+  const [cart, setCart] = useState<CartItem[]>([]);
   const { processCheckout } = useWhatsAppReceipt();
 
   const addMessage = (message: string, type: 'user' | 'bot') => {
@@ -72,7 +83,7 @@ const WhatsAppAssistant = () => {
           return newQuantity > 0 ? { ...item, quantity: newQuantity } : null;
         }
         return item;
-      }).filter(Boolean);
+      }).filter(Boolean) as CartItem[];
     });
   };
 

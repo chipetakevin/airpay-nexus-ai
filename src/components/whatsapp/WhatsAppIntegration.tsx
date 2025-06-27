@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -10,7 +11,7 @@ import {
   ArrowRight, Users, Clock, Shield, BarChart3, ChevronDown, ChevronRight
 } from 'lucide-react';
 import { useMobileAuth } from '@/hooks/useMobileAuth';
-import { Link, useNavigate, useSearchParams } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 import WhatsAppAssistant from './WhatsAppAssistant';
 import MobileShoppingInterface from '../mobile/MobileShoppingInterface';
 
@@ -18,7 +19,6 @@ const WhatsAppIntegration = () => {
   const { currentUser, isAuthenticated } = useMobileAuth();
   const [activeTab, setActiveTab] = useState('assistant');
   const [showQuickActions, setShowQuickActions] = useState(false);
-  const navigate = useNavigate();
   const [searchParams] = useSearchParams();
 
   // Check if we should start shopping immediately
@@ -82,11 +82,6 @@ const WhatsAppIntegration = () => {
       action: () => setActiveTab('mobile')
     }
   ];
-
-  const handleWhatsAppStart = () => {
-    // Immediately switch to mobile shopping tab for in-app experience
-    setActiveTab('mobile');
-  };
 
   return (
     <div className="max-w-4xl mx-auto space-y-6">
