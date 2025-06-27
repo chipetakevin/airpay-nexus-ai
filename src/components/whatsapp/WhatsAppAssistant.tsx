@@ -164,51 +164,34 @@ Browse products below or ask questions! 💬`;
 
   return (
     <div className="flex flex-col h-full max-w-md mx-auto bg-white relative">
-      {/* Streamlined Header */}
-      <div className="bg-gradient-to-r from-green-600 to-green-700 text-white p-3 flex items-center gap-3 sticky top-0 z-10">
-        <div className="w-8 h-8 bg-white rounded-full flex items-center justify-center">
-          <MessageCircle className="w-5 h-5 text-green-600" />
-        </div>
-        <div className="flex-1">
-          <h3 className="font-semibold text-sm">Divinely Mobile</h3>
-          <p className="text-xs opacity-90">Shop • Chat • Instant</p>
-        </div>
-        {getCartCount() > 0 && (
-          <Badge className="bg-red-500 text-xs">{getCartCount()}</Badge>
-        )}
-      </div>
-
-      {/* Compact View Toggle */}
-      <div className="bg-gray-50 border-b p-1">
+      {/* Minimal Navigation */}
+      <div className="bg-gray-50 p-1 sticky top-0 z-10">
         <div className="flex gap-1">
           <Button
             variant={activeView === 'shop' ? "default" : "ghost"}
             size="sm"
             onClick={() => setActiveView('shop')}
-            className="flex-1 h-8 text-xs"
+            className="flex-1 h-7 text-xs"
           >
-            <ShoppingCart className="w-3 h-3 mr-1" />
             Shop
           </Button>
           <Button
             variant={activeView === 'chat' ? "default" : "ghost"}
             size="sm"
             onClick={() => setActiveView('chat')}
-            className="flex-1 h-8 text-xs"
+            className="flex-1 h-7 text-xs"
           >
-            <MessageCircle className="w-3 h-3 mr-1" />
             Chat
           </Button>
           <Button
             variant={activeView === 'cart' ? "default" : "ghost"}
             size="sm"
             onClick={() => setActiveView('cart')}
-            className="flex-1 h-8 text-xs relative"
+            className="flex-1 h-7 text-xs relative"
           >
-            <ShoppingCart className="w-3 h-3 mr-1" />
             Cart
             {getCartCount() > 0 && (
-              <Badge className="absolute -top-1 -right-1 bg-red-500 text-white w-4 h-4 rounded-full text-xs flex items-center justify-center p-0">
+              <Badge className="absolute -top-1 -right-1 bg-red-500 text-white w-3 h-3 rounded-full text-xs flex items-center justify-center p-0 text-[10px]">
                 {getCartCount()}
               </Badge>
             )}
@@ -219,7 +202,7 @@ Browse products below or ask questions! 💬`;
       {/* Main Content Area */}
       <div className="flex-1 overflow-y-auto">
         {activeView === 'shop' && (
-          <div className="p-3">
+          <div className="p-2">
             <WhatsAppShoppingFlow
               onAddToCart={handleAddToCart}
               onViewCart={() => setActiveView('cart')}
@@ -229,7 +212,7 @@ Browse products below or ask questions! 💬`;
         )}
 
         {activeView === 'cart' && (
-          <div className="p-3">
+          <div className="p-2">
             <WhatsAppCart
               items={cart}
               onUpdateQuantity={handleUpdateQuantity}
@@ -241,10 +224,10 @@ Browse products below or ask questions! 💬`;
         )}
 
         {activeView === 'chat' && (
-          <div className="p-3 space-y-3 bg-gray-100 min-h-full">
+          <div className="p-2 space-y-2 bg-gray-100 min-h-full">
             {messages.map((msg) => (
               <div key={msg.id} className={`flex ${msg.type === 'user' ? 'justify-end' : 'justify-start'}`}>
-                <div className={`max-w-xs px-3 py-2 rounded-lg text-sm ${
+                <div className={`max-w-xs px-2 py-1 rounded-lg text-xs ${
                   msg.type === 'user' 
                     ? 'bg-green-600 text-white rounded-br-none' 
                     : 'bg-white text-gray-900 rounded-bl-none shadow'
@@ -265,37 +248,25 @@ Browse products below or ask questions! 💬`;
 
       {/* Input Area - Only show in chat mode */}
       {activeView === 'chat' && (
-        <div className="p-3 bg-white border-t flex items-center gap-2 sticky bottom-0">
+        <div className="p-2 bg-white border-t flex items-center gap-2 sticky bottom-0">
           <input
             type="text"
             value={currentInput}
             onChange={(e) => setCurrentInput(e.target.value)}
             onKeyPress={handleKeyPress}
             placeholder="Type a message..."
-            className="flex-1 px-3 py-2 text-sm border rounded-full focus:outline-none focus:ring-2 focus:ring-green-500"
+            className="flex-1 px-2 py-1 text-xs border rounded-full focus:outline-none focus:ring-1 focus:ring-green-500"
           />
           <Button 
             onClick={handleSendMessage}
             size="sm"
-            className="rounded-full bg-green-600 hover:bg-green-700 w-8 h-8 p-0"
+            className="rounded-full bg-green-600 hover:bg-green-700 w-6 h-6 p-0"
             disabled={!currentInput.trim()}
           >
             <Send className="w-3 h-3" />
           </Button>
         </div>
       )}
-
-      {/* Compact Status Bar */}
-      <div className="px-3 py-1 bg-gray-50 border-t flex items-center justify-between text-xs">
-        <div className="flex items-center gap-1">
-          <CheckCircle className="w-3 h-3 text-green-600" />
-          <span className="text-gray-600">Instant</span>
-        </div>
-        <div className="flex items-center gap-1">
-          <Shield className="w-3 h-3 text-blue-600" />
-          <span className="text-gray-600">Secure</span>
-        </div>
-      </div>
     </div>
   );
 };
