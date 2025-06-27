@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -165,61 +166,6 @@ const MobileShoppingInterface = () => {
             ))}
           </div>
         </div>
-
-        {/* WhatsApp Shopping CTA */}
-        <Card className="bg-gradient-to-r from-green-50 to-emerald-50 border-2 border-green-200">
-          <CardContent className="p-4">
-            <div className="text-center">
-              <h3 className="font-bold text-green-800 mb-2 flex items-center justify-center gap-2">
-                <MessageCircle className="w-5 h-5" />
-                Instant WhatsApp Shopping
-              </h3>
-              <p className="text-sm text-green-700 mb-4">
-                Skip the forms - shop directly through WhatsApp with our AI assistant
-              </p>
-              <Button 
-                onClick={handleStartWhatsAppShopping}
-                className="w-full bg-green-600 hover:bg-green-700 text-white font-medium py-3"
-              >
-                <MessageCircle className="w-4 h-4 mr-2" />
-                Start Shopping on WhatsApp
-                <ArrowRight className="w-4 h-4 ml-2" />
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Quick Stats - Horizontal Compact */}
-        <Card className="bg-gradient-to-r from-blue-600 to-purple-600 text-white">
-          <CardContent className="p-4">
-            <div className="grid grid-cols-3 gap-3 text-center">
-              <div>
-                <div className="flex items-center justify-center gap-1 mb-1">
-                  <Timer className="w-4 h-4" />
-                  <span className="text-xs font-medium">Speed</span>
-                </div>
-                <p className="text-lg font-bold">5 Min</p>
-                <p className="text-xs opacity-90">Avg. Processing</p>
-              </div>
-              <div>
-                <div className="flex items-center justify-center gap-1 mb-1">
-                  <Shield className="w-4 h-4" />
-                  <span className="text-xs font-medium">Security</span>
-                </div>
-                <p className="text-lg font-bold">99.7%</p>
-                <p className="text-xs opacity-90">Compliance</p>
-              </div>
-              <div>
-                <div className="flex items-center justify-center gap-1 mb-1">
-                  <Network className="w-4 h-4" />
-                  <span className="text-xs font-medium">Networks</span>
-                </div>
-                <p className="text-lg font-bold">All</p>
-                <p className="text-xs opacity-90">Supported</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
       </div>
     </div>
   );

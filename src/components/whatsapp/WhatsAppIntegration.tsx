@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -204,35 +205,6 @@ const WhatsAppIntegration = () => {
               </Card>
             ))}
           </div>
-
-          {/* Call to Action */}
-          <Card className="bg-gradient-to-r from-green-50 to-emerald-50 border-2 border-green-200">
-            <CardContent className="p-8 text-center">
-              <div className="text-4xl mb-4">🚀</div>
-              <h3 className="text-2xl font-bold text-green-800 mb-4">Ready to Start Shopping?</h3>
-              <p className="text-green-700 mb-6">
-                Experience the future of mobile commerce with our integrated WhatsApp and mobile shopping platforms.
-              </p>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Button 
-                  onClick={handleWhatsAppStart}
-                  className="bg-green-600 hover:bg-green-700 h-12 px-8"
-                >
-                  <MessageCircle className="w-5 h-5 mr-2" />
-                  Start Shopping on WhatsApp
-                </Button>
-                <Link to="/portal?tab=deals">
-                  <Button 
-                    variant="outline" 
-                    className="h-12 px-8 border-2 border-blue-600 text-blue-600 hover:bg-blue-50"
-                  >
-                    <ShoppingCart className="w-5 h-5 mr-2" />
-                    Visit Shop
-                  </Button>
-                </Link>
-              </div>
-            </CardContent>
-          </Card>
         </TabsContent>
       </Tabs>
     </div>
