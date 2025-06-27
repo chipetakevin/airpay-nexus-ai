@@ -153,7 +153,7 @@ const WhatsAppIntegration = () => {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {quickActions.map((action, index) => (
                   <div 
                     key={index} 
@@ -169,24 +169,6 @@ const WhatsAppIntegration = () => {
                     </div>
                   </div>
                 ))}
-              </div>
-
-              <div className="flex gap-4">
-                <Button 
-                  onClick={handleWhatsAppStart}
-                  className="flex-1 bg-green-600 hover:bg-green-700 h-12"
-                >
-                  <MessageCircle className="w-5 h-5 mr-2" />
-                  Start WhatsApp Chat
-                </Button>
-                <Button 
-                  onClick={() => setActiveTab('mobile')}
-                  variant="outline"
-                  className="flex-1 h-12 border-2 border-blue-600 text-blue-600 hover:bg-blue-50"
-                >
-                  <Smartphone className="w-5 h-5 mr-2" />
-                  Mobile Interface
-                </Button>
               </div>
             </CardContent>
           </Card>
