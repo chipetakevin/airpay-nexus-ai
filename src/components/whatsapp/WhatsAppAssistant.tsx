@@ -155,12 +155,31 @@ Reply "CONFIRM" to proceed or provide your phone number.`;
   const handleAirtimeFlow = () => {
     setConversationState('airtime');
     const response = `💰 AIRTIME PURCHASE
-Please provide:
-📱 Phone number: [Your number or recipient's]
-💵 Amount: R[amount] (Min: R5, Max: R500)
 
-Example: "Buy R20 airtime for 0821234567"
-Or simply: "R50 airtime for me"`;
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📋 REQUIRED INFORMATION:
+
+📱 Phone Number:
+   • Your number OR recipient's number
+   • Format: 082 123 4567 or 0821234567
+
+💵 Amount:
+   • Minimum: R5
+   • Maximum: R500
+   • Popular: R10, R20, R50, R100
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✅ QUICK EXAMPLES:
+
+🔸 "Buy R20 airtime for 0821234567"
+🔸 "R50 airtime for me"
+🔸 "Airtime R100 for 0827654321"
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+💬 Just type your request above!`;
     
     setTimeout(() => addMessage(response, 'bot'), 500);
   };
