@@ -23,12 +23,12 @@ const HeaderLogo = () => {
       title={isBaaSPage ? "Return to Homepage" : "Divine Mobile"}
     >
       <div className="relative">
-        {/* Clean logo without any background, border, or glow effects */}
+        {/* Clean white crown logo with transparent background */}
         <div className="flex items-center">
           <img 
-            src="/lovable-uploads/9ca7fcec-0caf-4b50-9334-e7172bc98733.png" 
+            src="/lovable-uploads/150cd8e3-f0dd-4e42-a3cc-dde2e5423f8a.png" 
             alt="Divine Mobile Logo"
-            className="h-14 w-auto object-contain group-hover:scale-105 transition-all duration-300 ease-out group-active:scale-95 filter brightness-110 contrast-110 saturate-110"
+            className="h-14 w-auto object-contain group-hover:scale-105 transition-all duration-300 ease-out group-active:scale-95"
           />
         </div>
         {isBaaSPage && (
