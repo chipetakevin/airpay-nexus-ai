@@ -23,7 +23,7 @@ const HeaderLogo = () => {
       title={isBaaSPage ? "Return to Homepage" : "Divine Mobile"}
     >
       <div className="relative">
-        {/* Clean logo without any background or border - just the white logo image */}
+        {/* Clean logo without any background, border, or glow effects */}
         <div className="flex items-center">
           <img 
             src="/lovable-uploads/9ca7fcec-0caf-4b50-9334-e7172bc98733.png" 
@@ -31,8 +31,6 @@ const HeaderLogo = () => {
             className="h-14 w-auto object-contain group-hover:scale-105 transition-all duration-300 ease-out group-active:scale-95 filter brightness-110 contrast-110 saturate-110"
           />
         </div>
-        {/* Subtle glow effect only - no background colors */}
-        <div className="absolute -inset-2 bg-white/10 rounded-2xl blur opacity-20 group-hover:opacity-30 transition-all duration-300"></div>
         {isBaaSPage && (
           <div className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full animate-pulse" />
         )}
