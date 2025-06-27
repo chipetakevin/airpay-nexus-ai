@@ -169,7 +169,7 @@
   /* Enhanced service card styles for ICASA compliance type cards */
   .service-compliance-card {
     display: grid;
-    grid-template-columns: 80px 1fr auto auto;
+    grid-template-columns: 80px 1fr auto;
     gap: 12px;
     align-items: center;
     padding: 20px 16px;
@@ -222,22 +222,9 @@
     margin-right: 8px;
   }
 
+  /* Hide the Get Started button for compliance cards */
   .service-compliance-button {
-    background: #3b82f6;
-    color: white;
-    padding: 10px 20px;
-    border-radius: 8px;
-    font-size: 14px;
-    font-weight: 500;
-    border: none;
-    cursor: pointer;
-    white-space: nowrap;
-    min-width: 100px;
-    transition: background-color 0.2s;
-  }
-
-  .service-compliance-button:hover {
-    background: #2563eb;
+    display: none;
   }
 
   /* Mobile responsive breakpoints */
@@ -318,36 +305,13 @@
       flex-shrink: 0;
     }
 
+    /* Hide Get Started button on mobile for all cards */
     .get-started-button {
-      background: #3b82f6;
-      color: white;
-      padding: 8px 16px;
-      border-radius: 8px;
-      font-size: 13px;
-      font-weight: 500;
-      border: none;
-      cursor: pointer;
-      white-space: nowrap;
-      min-width: 100px;
-      max-width: 120px;
-      height: 36px;
-      flex-shrink: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      box-sizing: border-box;
-    }
-
-    .get-started-button:hover {
-      background: #2563eb;
+      display: none;
     }
 
     .featured-service-action {
-      display: flex;
-      align-items: center;
-      justify-content: flex-end;
-      flex-shrink: 0;
+      display: none;
     }
 
     .service-compliance-card {
@@ -383,7 +347,7 @@
     .service-compliance-footer {
       display: flex;
       align-items: center;
-      justify-content: space-between;
+      justify-content: flex-start;
       gap: 8px;
     }
 
@@ -393,12 +357,9 @@
       flex-shrink: 0;
     }
 
+    /* Ensure button remains hidden on mobile */
     .service-compliance-button {
-      padding: 8px 16px;
-      font-size: 13px;
-      min-width: 90px;
-      height: 36px;
-      flex-shrink: 0;
+      display: none;
     }
 
     .mobile-responsive-tabs {
@@ -417,16 +378,14 @@
   /* Tablet responsive adjustments */
   @media (min-width: 641px) and (max-width: 768px) {
     .featured-service-card {
-      grid-template-columns: 60px 1fr 140px;
+      grid-template-columns: 60px 1fr;
       gap: 16px;
       padding: 18px 16px;
     }
 
+    /* Hide Get Started button on tablet as well */
     .get-started-button {
-      min-width: 130px;
-      max-width: 140px;
-      height: 42px;
-      font-size: 14px;
+      display: none;
     }
 
     .tablet-responsive-tabs {
