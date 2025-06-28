@@ -2,9 +2,13 @@
 import React from 'react';
 import CustomerRegistrationForm from './registration/CustomerRegistration';
 
-// Main export component that wraps the registration
+// Main export component that wraps the registration form
 const CustomerRegistration = () => {
-  return <CustomerRegistrationForm />;
+  return (
+    <div className="w-full">
+      <CustomerRegistrationForm />
+    </div>
+  );
 };
 
 export default CustomerRegistration;

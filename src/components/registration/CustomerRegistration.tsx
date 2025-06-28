@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { LogOut } from 'lucide-react';
@@ -17,9 +18,10 @@ import { useToast } from '@/hooks/use-toast';
 const CustomerRegistration = () => {
   const [location, setLocation] = useState('Detecting location...');
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const { formData, errors, handleInputChange, handleSubmit } = useCustomerRegistration();
   const { isAuthenticated, currentUser } = useMobileAuth();
-  const { saveBankingInfo } = usePhoneAutofill();
+  const { saveBankingInfo, detectedPhone } = usePhoneAutofill();
   const { userProfile, saveProfilePermanently, checkRegistrationStatus } = useRegistrationGuard();
   const { toast } = useToast();
 
@@ -41,7 +43,7 @@ const CustomerRegistration = () => {
         
         // Also auto-fill phone number from registered phone
         if (parsedData.registeredPhone && !formData.phoneNumber) {
-          const cleanPhone = parsedData.registeredPhone.replace('+27', '');
+          const cleanPhone = parsedData.registeredPhone.replace('+27', '').replace(/^0/, '');
           handleInputChange('phoneNumber', cleanPhone);
         }
         
@@ -53,7 +55,12 @@ const CustomerRegistration = () => {
         console.error('Error parsing saved user data:', error);
       }
     }
-  }, []);
+
+    // Auto-fill detected phone number if available
+    if (detectedPhone && !formData.phoneNumber && !isLoggedIn) {
+      handleInputChange('phoneNumber', detectedPhone);
+    }
+  }, [detectedPhone, isLoggedIn]);
 
   const handleLogout = () => {
     // Don't clear user data - keep it permanently saved
@@ -72,42 +79,64 @@ const CustomerRegistration = () => {
 
   const handleCustomSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setIsSubmitting(true);
     
-    // Save banking information permanently before submission
-    if (formData.bankName && formData.accountNumber) {
-      saveBankingInfo({
+    try {
+      // Save banking information permanently before submission
+      if (formData.bankName && formData.accountNumber) {
+        saveBankingInfo({
+          bankName: formData.bankName,
+          branchCode: formData.branchCode,
+          accountNumber: formData.accountNumber
+        });
+      }
+      
+      // Save all profile data permanently
+      saveProfilePermanently({
+        firstName: formData.firstName,
+        lastName: formData.lastName,
+        email: formData.email,
+        phoneNumber: `+27${formData.phoneNumber}`,
         bankName: formData.bankName,
-        branchCode: formData.branchCode,
-        accountNumber: formData.accountNumber
+        accountNumber: formData.accountNumber,
+        isComplete: true
       });
+      
+      // Call the original submit handler
+      await handleSubmit(e);
+      
+      // Refresh registration status
+      setTimeout(() => {
+        checkRegistrationStatus();
+      }, 1000);
+    } catch (error) {
+      console.error('Registration error:', error);
+      toast({
+        title: "Registration Error",
+        description: "Please check your information and try again.",
+        variant: "destructive"
+      });
+    } finally {
+      setIsSubmitting(false);
     }
-    
-    // Save all profile data permanently
-    saveProfilePermanently({
-      firstName: formData.firstName,
-      lastName: formData.lastName,
-      email: formData.email,
-      phoneNumber: `+27${formData.phoneNumber}`,
-      bankName: formData.bankName,
-      accountNumber: formData.accountNumber,
-      isComplete: true
-    });
-    
-    // Call the original submit handler
-    await handleSubmit(e);
-    
-    // Refresh registration status
-    setTimeout(() => {
-      checkRegistrationStatus();
-    }, 1000);
   };
 
   return (
-    <div className="space-y-6 max-w-4xl mx-auto">
+    <div className="space-y-4 sm:space-y-6 max-w-4xl mx-auto px-2 sm:px-4">
+      {/* Mobile-optimized header */}
+      <div className="text-center space-y-2">
+        <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900">
+          Customer Registration
+        </h1>
+        <p className="text-sm sm:text-base text-gray-600">
+          Join AirPay and unlock smart deals with OneCard rewards
+        </p>
+      </div>
+
       {/* Logout button for logged in users */}
       {isLoggedIn && (
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
-          <div className="text-sm text-green-600 bg-green-50 px-3 py-2 rounded-lg flex-1">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 bg-green-50 border border-green-200 rounded-lg p-3 sm:p-4">
+          <div className="text-sm text-green-700 flex-1">
             ✅ Profile permanently saved - ready for payments & services
           </div>
           <Button
@@ -126,7 +155,7 @@ const CustomerRegistration = () => {
 
       <LocationDetector onLocationUpdate={setLocation} />
 
-      <form onSubmit={handleCustomSubmit} className="space-y-6" autoComplete="on">
+      <form onSubmit={handleCustomSubmit} className="space-y-4 sm:space-y-6" autoComplete="on">
         <PersonalInfoSection 
           formData={formData}
           errors={errors}
@@ -156,13 +185,21 @@ const CustomerRegistration = () => {
 
         <Button 
           type="submit" 
-          className="w-full bg-gradient-to-r from-blue-600 to-green-600 hover:from-blue-700 hover:to-green-700 animate-pulse-glow text-lg py-6 font-semibold shadow-lg"
+          disabled={isSubmitting}
+          className="w-full bg-gradient-to-r from-blue-600 to-green-600 hover:from-blue-700 hover:to-green-700 text-white text-base sm:text-lg py-4 sm:py-6 font-semibold shadow-lg transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          {isLoggedIn ? 'Update Profile & Enable All Services 🚀' : 'Register & Enable All Services 🚀'}
+          {isSubmitting ? (
+            <div className="flex items-center justify-center gap-2">
+              <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+              Processing...
+            </div>
+          ) : (
+            isLoggedIn ? 'Update Profile & Enable All Services 🚀' : 'Register & Enable All Services 🚀'
+          )}
         </Button>
 
         {/* Mobile-friendly WhatsApp Integration Notice */}
-        <div className="bg-green-50 border border-green-200 rounded-lg p-4 text-center">
+        <div className="bg-gradient-to-r from-green-50 to-blue-50 border border-green-200 rounded-lg p-4 text-center">
           <div className="flex items-center justify-center gap-2 mb-2">
             <span className="text-2xl">📱</span>
             <span className="font-semibold text-green-800">Mobile & WhatsApp Ready!</span>
