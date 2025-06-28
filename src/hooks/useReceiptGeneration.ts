@@ -1,4 +1,3 @@
-
 import { useToast } from '@/hooks/use-toast';
 import { useReceiptStorage } from './useReceiptStorage';
 import { useReceiptFormatter } from './receipt/useReceiptFormatter';
@@ -13,7 +12,7 @@ export const useReceiptGeneration = () => {
   const { generateTransactionId, capitalizeWords, getCustomerDisplayName } = useReceiptFormatter();
   const { getCurrentUserInfo } = useUserInfo();
   const { generateWhatsAppForwardingInstructions, handleIntelligentWhatsAppRedirect, autoRedirectToSmartDeals } = useWhatsAppForwarding();
-  const { sendReceiptToCustomer } = useReceiptSender();
+  const { sendReceiptToCustomer, sendReceiptWithFallback } = useReceiptSender();
   const { createComprehensiveReceipt, getCustomerInfo } = useComprehensiveReceipts();
 
   const autoGenerateAndSendReceipts = async (transactionData: any, profitSharing: any, cartItems: any[], purchaseMode: string, customerPhone: string, recipientData: any) => {
@@ -80,7 +79,7 @@ export const useReceiptGeneration = () => {
 
         toast({
           title: "📱 Professional Receipt Delivered!",
-          description: "Comprehensive receipt sent via WhatsApp & Email with full transaction details",
+          description: "Comprehensive receipt sent via WhatsApp with smart delivery system",
           duration: 5000
         });
 
@@ -89,21 +88,21 @@ export const useReceiptGeneration = () => {
           autoRedirectToSmartDeals();
         }, 6000);
       } else {
-        // Fallback to basic receipt system if comprehensive fails
-        console.log('⚠️ Comprehensive receipt failed, using fallback system...');
-        await fallbackToBasicReceipt(transactionData, profitSharing, cartItems, purchaseMode, customerPhone, recipientData);
+        // Fallback to enhanced receipt system
+        console.log('⚠️ Comprehensive receipt failed, using enhanced fallback system...');
+        await enhancedFallbackReceipt(transactionData, profitSharing, cartItems, purchaseMode, customerPhone, recipientData);
       }
 
     } catch (error) {
       console.error('❌ Error in autoGenerateAndSendReceipts:', error);
       
-      // Fallback to basic receipt system
-      console.log('⚠️ Using fallback receipt system due to error...');
-      await fallbackToBasicReceipt(transactionData, profitSharing, cartItems, purchaseMode, customerPhone, recipientData);
+      // Fallback to enhanced receipt system
+      console.log('⚠️ Using enhanced fallback receipt system due to error...');
+      await enhancedFallbackReceipt(transactionData, profitSharing, cartItems, purchaseMode, customerPhone, recipientData);
     }
   };
 
-  const fallbackToBasicReceipt = async (transactionData: any, profitSharing: any, cartItems: any[], purchaseMode: string, customerPhone: string, recipientData: any) => {
+  const enhancedFallbackReceipt = async (transactionData: any, profitSharing: any, cartItems: any[], purchaseMode: string, customerPhone: string, recipientData: any) => {
     try {
       const customerName = getCustomerDisplayName();
       const currentUserInfo = getCurrentUserInfo();
@@ -126,37 +125,27 @@ export const useReceiptGeneration = () => {
       if (purchaseMode === 'other') {
         const recipientPhoneNumber = recipientData.phone;
         
-        // Send basic receipt to recipient
-        const recipientReceiptData = {
-          ...baseReceiptData,
-          customerEmail: '',
-          recipientPhone: recipientPhoneNumber,
-          recipientName: capitalizeWords(recipientData.name),
-          cashbackEarned: 0,
-          purchaseType: 'recipient' as const
-        };
-
-        await sendReceiptToCustomer(recipientReceiptData, 'recipient');
-        
-        // Send confirmation to sender
-        const senderReceiptData = {
-          ...baseReceiptData,
-          recipientPhone: recipientPhoneNumber,
-          recipientName: capitalizeWords(recipientData.name),
-          cashbackEarned: profitSharing.registeredCustomerReward || 0,
-          purchaseType: 'sender' as const
-        };
-
-        await sendReceiptToCustomer(senderReceiptData, 'customer');
+        // Use enhanced sending with fallback
+        await sendReceiptWithFallback(
+          {
+            ...baseReceiptData,
+            recipientPhone: recipientPhoneNumber,
+            recipientName: capitalizeWords(recipientData.name),
+            cashbackEarned: 0,
+            purchaseType: 'recipient'
+          },
+          recipientPhoneNumber,
+          customerPhone
+        );
         
         toast({
-          title: "📧 Basic Receipts Delivered",
-          description: `Receipt sent to ${recipientPhoneNumber} and confirmation sent to you`,
+          title: "📧 Smart Receipt Delivery",
+          description: `Receipt sent to ${recipientPhoneNumber} with backup to you`,
           duration: 4000
         });
         
       } else {
-        // Self-purchase basic receipt
+        // Self-purchase enhanced receipt
         const receiptData = {
           ...baseReceiptData,
           recipientPhone: customerPhone,
@@ -168,8 +157,8 @@ export const useReceiptGeneration = () => {
         await sendReceiptToCustomer(receiptData, 'customer');
         
         toast({
-          title: "📧 Basic Receipt Delivered",
-          description: "WhatsApp receipt sent successfully",
+          title: "📧 Receipt Delivered",
+          description: "WhatsApp receipt sent with smart delivery",
         });
       }
 
@@ -182,7 +171,7 @@ export const useReceiptGeneration = () => {
       }, 4000);
 
     } catch (error) {
-      console.error('❌ Fallback receipt system failed:', error);
+      console.error('❌ Enhanced fallback receipt system failed:', error);
       toast({
         title: "Receipt System Error",
         description: "Payment successful but receipt delivery failed. Check transaction history.",

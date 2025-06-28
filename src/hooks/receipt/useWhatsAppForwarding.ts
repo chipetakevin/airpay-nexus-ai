@@ -33,21 +33,26 @@ ${receiptMessage}
   };
 
   const handleIntelligentWhatsAppRedirect = (receiptMessage: string, recipientPhone: string, senderPhone: string) => {
-    console.log('🎯 Intelligent WhatsApp redirect - recipient not on WhatsApp, redirecting to sender');
+    console.log('🎯 Intelligent WhatsApp redirect - handling receipt delivery');
     
-    // First show notification about redirection
+    // First try to send to recipient directly
+    const recipientWhatsAppUrl = `https://wa.me/${recipientPhone.replace('+', '')}?text=${encodeURIComponent(receiptMessage)}`;
+    
+    // Always try to open recipient WhatsApp first
+    window.open(recipientWhatsAppUrl, '_blank');
+    
     toast({
-      title: "📱 Smart Redirect Active",
-      description: `Recipient ${recipientPhone} not on WhatsApp. Redirecting to your number for manual forwarding.`,
-      duration: 4000
+      title: "📱 Receipt Sent",
+      description: `Receipt opened in WhatsApp for ${recipientPhone}`,
+      duration: 3000
     });
 
-    // Generate the forwarding message with clear instructions
-    const forwardingMessage = `🚨 *RECEIPT DELIVERY ASSISTANCE NEEDED*
+    // If there are issues, prepare fallback to sender
+    setTimeout(() => {
+      const fallbackMessage = `🚨 *BACKUP RECEIPT DELIVERY*
 
-The recipient ${recipientPhone} is not available on WhatsApp.
+If ${recipientPhone} didn't receive the receipt, please forward this:
 
-📋 *RECEIPT TO FORWARD:*
 ━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ${receiptMessage}
@@ -66,19 +71,26 @@ ${receiptMessage}
 🌐 https://myonecard.co.za
 📞 Support: +27 100 2827`;
 
-    // Redirect to sender's WhatsApp with forwarding instructions
-    const encodedMessage = encodeURIComponent(forwardingMessage);
-    const senderWhatsAppUrl = `https://wa.me/${senderPhone.replace('+', '')}?text=${encodedMessage}`;
-    
-    setTimeout(() => {
-      window.open(senderWhatsAppUrl, '_blank');
+      const senderWhatsAppUrl = `https://wa.me/${senderPhone.replace('+', '')}?text=${encodeURIComponent(fallbackMessage)}`;
       
+      // Show option to get backup receipt
       toast({
-        title: "📱 WhatsApp Opened",
-        description: "Instructions sent to your WhatsApp for manual forwarding to recipient.",
-        duration: 5000
+        title: "📋 Backup Available",
+        description: "Click here if recipient didn't receive the receipt",
+        duration: 10000,
+        action: {
+          label: "Get Backup",
+          onClick: () => {
+            window.open(senderWhatsAppUrl, '_blank');
+            toast({
+              title: "📱 Backup Receipt Sent",
+              description: "Forwarding instructions sent to your WhatsApp",
+              duration: 3000
+            });
+          }
+        }
       });
-    }, 2000);
+    }, 5000);
   };
 
   const autoRedirectToSmartDeals = () => {
@@ -97,9 +109,27 @@ ${receiptMessage}
     }, 3000);
   };
 
+  const handleDirectWhatsAppSend = (receiptMessage: string, recipientPhone: string) => {
+    console.log('📱 Sending direct WhatsApp receipt to:', recipientPhone);
+    
+    const whatsappUrl = `https://wa.me/${recipientPhone.replace('+', '')}?text=${encodeURIComponent(receiptMessage)}`;
+    
+    // Always attempt to open WhatsApp regardless of "availability" status
+    window.open(whatsappUrl, '_blank');
+    
+    toast({
+      title: "📱 WhatsApp Opened",
+      description: `Receipt ready to send to ${recipientPhone}`,
+      duration: 3000
+    });
+    
+    return whatsappUrl;
+  };
+
   return {
     generateWhatsAppForwardingInstructions,
     handleIntelligentWhatsAppRedirect,
-    autoRedirectToSmartDeals
+    autoRedirectToSmartDeals,
+    handleDirectWhatsAppSend
   };
 };

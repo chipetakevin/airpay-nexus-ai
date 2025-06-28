@@ -31,12 +31,13 @@ Customer has been instructed to forward receipt to ${data.recipientPhone} via Wh
 *Admin notification for unknown recipient number*`;
   }
 
-  // Regular receipt formatting
-  return `🟢 *DIVINELY MOBILE* 📱
+  // Handle sender confirmation receipts
+  if (data.purchaseType === 'sender_confirmation') {
+    return `✅ *DIVINELY MOBILE* - Purchase Confirmation
 
-✅ *PAYMENT SUCCESSFUL*
+🟢 *TRANSACTION COMPLETED*
 
-👤 *Customer:* ${data.customerName || data.customerPhone}
+👤 *You purchased for:* ${data.recipientPhone}
 🆔 *Transaction ID:* ${data.transactionId}
 ⏰ *Date:* ${new Date(data.timestamp).toLocaleString()}
 
@@ -46,13 +47,44 @@ ${data.items.map(item =>
 ).join('\n')}
 
 💰 *TOTAL PAID:* R${data.total}
-🎁 *Cashback Earned:* R${data.cashbackEarned || 0}
+🎁 *Your Cashback:* R${data.cashbackEarned || 0}
 
-✅ *Delivered instantly to ${data.recipientPhone}!*
+✅ *Services delivered to ${data.recipientPhone}*
+📱 *Recipient should receive their own receipt*
 
 🌐 https://myonecard.co.za
 📞 Support: +27 100 2827
 
 *Thank you for choosing Divinely Mobile!*
+_Fast • Secure • Reliable_`;
+  }
+
+  // Regular recipient receipt formatting
+  return `🟢 *DIVINELY MOBILE* 📱
+
+✅ *SERVICES DELIVERED*
+
+📱 *Recipient:* ${data.recipientPhone}
+🆔 *Transaction ID:* ${data.transactionId}
+⏰ *Date:* ${new Date(data.timestamp).toLocaleString()}
+
+📋 *SERVICES RECEIVED:*
+${data.items.map(item => 
+  `• ${item.network.toUpperCase()} ${item.type.toUpperCase()} R${item.amount}`
+).join('\n')}
+
+💰 *Total Value:* R${data.total}
+
+✅ *All services have been delivered to your number!*
+
+${data.customerPhone !== data.recipientPhone ? 
+  `🎁 *Gift from:* ${data.customerPhone}` : 
+  `🎁 *Cashback Earned:* R${data.cashbackEarned || 0}`
+}
+
+🌐 https://myonecard.co.za
+📞 Support: +27 100 2827
+
+*Thank you for using Divinely Mobile!*
 _Fast • Secure • Reliable_`;
 };
