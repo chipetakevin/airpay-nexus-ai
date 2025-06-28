@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { useToast } from '@/hooks/use-toast';
 
@@ -60,72 +59,83 @@ export const useEnhancedReceiptGenerator = () => {
   };
 
   const generateComprehensiveWhatsAppReceipt = (data: EnhancedReceiptData): string => {
-    const itemsTable = data.items.map(item => 
-      `${item.name.padEnd(25)} | ${item.quantity.toString().padStart(3)} | R${item.unitPrice.toFixed(2).padStart(8)} | R${item.subtotal.toFixed(2).padStart(8)}`
+    // Modern WhatsApp receipt with enhanced visual appeal
+    const itemsSection = data.items.map((item, index) => 
+      `${index + 1}. *${item.name}*
+   📱 Network: ${item.network.toUpperCase()}
+   💎 Service: ${item.type.toUpperCase()}
+   💰 Amount: R${item.subtotal.toFixed(2)}
+   ─────────────────────────`
     ).join('\n');
 
-    return `🟢 *DIVINELY MOBILE* 📱
-*Official Digital Receipt*
+    return `🌟 *DIVINELY MOBILE* 📱
+✨ *Premium Digital Receipt* ✨
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ 🎯 *TRANSACTION CONFIRMED* ✅          ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
 
 📋 *RECEIPT DETAILS*
-Receipt No: ${data.receiptNo}
-Transaction ID: ${data.transactionId}
-Date & Time: ${data.dateTime}
+🧾 Receipt No: *${data.receiptNo}*
+🆔 Transaction ID: *${data.transactionId}*
+📅 Date & Time: ${data.dateTime}
 
-👤 *CUSTOMER DETAILS*
-Name: ${data.customer.name}
-Mobile: ${data.customer.mobile}${data.customer.email ? `\nEmail: ${data.customer.email}` : ''}
+👤 *CUSTOMER INFORMATION*
+🏷️ Name: *${data.customer.name}*
+📞 Mobile: ${data.customer.mobile}${data.customer.email ? `\n📧 Email: ${data.customer.email}` : ''}
 
 🏢 *SERVICE PROVIDER*
-Business: Divinely Mobile
-Website: myonecard.co.za
-Support: +27 100 2827
-Platform: OneCard Digital Services
+🌟 Business: *Divinely Mobile*
+🌐 Website: myonecard.co.za
+📞 Support: +27 100 2827
+💼 Platform: OneCard Digital Services
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ 🛒 *PURCHASE SUMMARY*                  ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
 
-📦 *PURCHASE DETAILS*
+${itemsSection}
 
-Item Description          | Qty |   Price  |   Total
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-${itemsTable}
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+💸 *PAYMENT BREAKDOWN*
+💰 Subtotal: R${data.subtotal.toFixed(2)}${data.discounts > 0 ? `\n🎁 Discounts: -R${data.discounts.toFixed(2)}` : ''}${data.tax > 0 ? `\n📊 Tax: R${data.tax.toFixed(2)}` : ''}
 
-💰 *PAYMENT SUMMARY*
-Subtotal: R${data.subtotal.toFixed(2)}${data.discounts > 0 ? `\nDiscounts: -R${data.discounts.toFixed(2)}` : ''}${data.tax > 0 ? `\nTax: R${data.tax.toFixed(2)}` : ''}
-*TOTAL PAID: R${data.totalPaid.toFixed(2)}*
-Payment Method: ${data.paymentMethod}
-Status: ✅ *PAYMENT SUCCESSFUL*
+🏆 *TOTAL PAID: R${data.totalPaid.toFixed(2)}*
+💳 Payment Method: ${data.paymentMethod}
+✅ Status: *PAYMENT SUCCESSFUL* ✅
 
-🎁 *REWARDS & CASHBACK*
-Cashback Earned: R${data.cashbackEarned.toFixed(2)}
-Loyalty Points: +${Math.round(data.totalPaid * 2)}
+🎁 *REWARDS & BENEFITS*
+💎 Cashback Earned: R${data.cashbackEarned.toFixed(2)}
+⭐ Loyalty Points: +${Math.round(data.totalPaid * 2)}
+🔥 VIP Status: Active Customer
 
-📱 *DELIVERY CONFIRMATION*  
-Delivered Instantly to: ${data.deliveryPhone}
-Delivery Status: ✅ *SUCCESSFUL*
+📱 *INSTANT DELIVERY*  
+🚀 Delivered To: ${data.deliveryPhone}
+⚡ Status: *INSTANTLY DELIVERED* ⚡
+🎯 Confirmation: 100% Successful
 
-${data.vendor ? `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-👔 *VENDOR DETAILS*
-Agent: ${data.vendor.name}
-ID: ${data.vendor.id}
-Commission: R${data.vendor.commission.toFixed(2)}
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━` : ''}
+${data.vendor ? `┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ 👔 *AGENT INFORMATION*                 ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+🏷️ Agent: ${data.vendor.name}
+🆔 Agent ID: ${data.vendor.id}
+💰 Commission: R${data.vendor.commission.toFixed(2)}` : ''}
 
-📋 *TERMS & SUPPORT*
-• Keep this receipt for your records
-• Support: +27 100 2827
-• Website: myonecard.co.za/support
-• Refunds subject to T&Cs
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ 📋 *CUSTOMER SUPPORT & POLICIES*       ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+📂 Keep this receipt for your records
+📞 24/7 Support: +27 100 2827
+🌐 Help Center: myonecard.co.za/support
+💬 Live Chat: Available on website
+🔄 Refunds: Subject to T&Cs
 
-*Thank you for choosing Divinely Mobile!*
-_Fast • Secure • Reliable_
+🌟 *Thank you for choosing Divinely Mobile!* 🌟
+_⚡ Fast • 🔒 Secure • 🎯 Reliable_
 
-🔐 *Digital Confirmation*
-Verified: ${new Date().toISOString()}
-Platform: OneCard Secure Payment System`;
+🔐 *Digital Verification*
+✅ Verified: ${new Date().toISOString()}
+🛡️ Platform: OneCard Secure Payment System
+🌟 Trusted by thousands of customers daily`;
   };
 
   const generateProfessionalEmailReceipt = (data: EnhancedReceiptData): string => {
@@ -276,22 +286,22 @@ Platform: OneCard Secure Payment System`;
 
   const processComprehensiveReceipt = async (receiptData: EnhancedReceiptData) => {
     try {
-      // Generate WhatsApp receipt
+      // Generate modern WhatsApp receipt
       const whatsappMessage = generateComprehensiveWhatsAppReceipt(receiptData);
       const whatsappUrl = `https://wa.me/${receiptData.customer.mobile.replace('+', '')}?text=${encodeURIComponent(whatsappMessage)}`;
       
       // Generate email receipt
       const emailContent = generateProfessionalEmailReceipt(receiptData);
       
-      // Auto-open WhatsApp
+      // Auto-open WhatsApp with enhanced receipt
       setTimeout(() => {
         window.open(whatsappUrl, '_blank');
       }, 1000);
 
       // Show success notification
       toast({
-        title: "📱 Professional Receipt Generated!",
-        description: "Comprehensive receipt delivered via WhatsApp & Email",
+        title: "🌟 Premium Receipt Generated!",
+        description: "Modern, comprehensive receipt delivered via WhatsApp & Email",
         duration: 4000
       });
 

@@ -60,7 +60,9 @@ export const EmailHandler = ({ transaction }: EmailHandlerProps) => {
           name: `${transaction.network?.toUpperCase() || 'DIVINELY'} MOBILE SERVICE`,
           quantity: 1,
           unitPrice: transaction.amount || 0,
-          subtotal: transaction.amount || 0
+          subtotal: transaction.amount || 0,
+          network: transaction.network || 'DIVINELY',
+          type: transaction.transaction_type?.includes('airtime') ? 'airtime' : 'data'
         }],
         subtotal: transaction.amount || 0,
         discounts: 0,
