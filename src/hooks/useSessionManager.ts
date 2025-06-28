@@ -15,201 +15,42 @@ export const useSessionManager = () => {
   const { toast } = useToast();
   const location = useLocation();
 
-  // Check if we're on deals page
+  // COMPLETELY DISABLE session management on deals page and for all users
   const isDealsPage = location.pathname === '/' && location.search.includes('tab=deals');
   const isDealsRoute = location.pathname.includes('/deals') || location.pathname === '/portal' && location.search.includes('tab=deals');
-  const shouldDisableSession = isDealsPage || isDealsRoute;
+  const shouldDisableSession = true; // DISABLED: Always disable session management
 
   useEffect(() => {
-    // COMPLETELY EXCLUDE deals page from session management
-    if (shouldDisableSession) {
-      setSessionInfo(null);
-      return;
-    }
-
-    // Only apply session management on authenticated pages
-    const isAuthenticatedPage = location.search.includes('tab=onecard') ||
-                               location.search.includes('tab=admin');
-
-    // Early return if not on authenticated page
-    if (!isAuthenticatedPage) {
-      setSessionInfo(null);
-      return;
-    }
-
-    // Check if user is authenticated
-    const isAuthenticated = localStorage.getItem('userAuthenticated') === 'true';
-    const credentials = localStorage.getItem('userCredentials');
-    
-    if (!isAuthenticated || !credentials) {
-      setSessionInfo(null);
-      return;
-    }
-    
-    try {
-      const userCreds = JSON.parse(credentials);
-      let userData = null;
-      
-      // Get user data based on type
-      if (userCreds.userType === 'customer') {
-        userData = localStorage.getItem('onecardUser');
-      } else if (userCreds.userType === 'vendor') {
-        userData = localStorage.getItem('onecardVendor');
-      } else if (userCreds.userType === 'admin') {
-        userData = localStorage.getItem('onecardAdmin');
-      }
-      
-      if (userData) {
-        const parsedData = JSON.parse(userData);
-        
-        // Check if this is Kevin Chipeta or admin
-        const isKevinOrAdmin = (
-          (parsedData.firstName === 'Kevin' && parsedData.lastName === 'Chipeta') ||
-          userCreds.userType === 'admin'
-        );
-        
-        if (isKevinOrAdmin) {
-          // Get or set login time
-          let loginTime = localStorage.getItem('sessionStartTime');
-          if (!loginTime) {
-            loginTime = Date.now().toString();
-            localStorage.setItem('sessionStartTime', loginTime);
-          }
-          
-          setSessionInfo({
-            loginTime: parseInt(loginTime),
-            userType: userCreds.userType,
-            userName: `${parsedData.firstName} ${parsedData.lastName}`,
-            isActive: true
-          });
-        } else {
-          setSessionInfo(null);
-        }
-      } else {
-        setSessionInfo(null);
-      }
-    } catch (error) {
-      console.error('Error parsing session data:', error);
-      setSessionInfo(null);
-    }
+    // COMPLETELY DISABLE all session management
+    setSessionInfo(null);
+    return;
   }, [location, shouldDisableSession]);
 
   useEffect(() => {
-    // NEVER run session expiry logic on deals page or when no session
-    if (shouldDisableSession || !sessionInfo) {
-      return;
-    }
-
-    // Only apply session expiry logic if we have valid session info
-    const isAuthenticatedPage = location.search.includes('tab=onecard') ||
-                               location.search.includes('tab=admin');
-
-    if (!isAuthenticatedPage) {
-      return;
-    }
-
-    const checkSessionExpiry = () => {
-      const currentTime = Date.now();
-      const sessionDuration = currentTime - sessionInfo.loginTime;
-      const FIVE_MINUTES = 5 * 60 * 1000; // 5 minutes in milliseconds
-      const WARNING_TIME = FIVE_MINUTES - (30 * 1000); // 30 seconds before expiry
-
-      if (sessionDuration >= WARNING_TIME && sessionDuration < FIVE_MINUTES) {
-        // Show warning notification
-        const remainingSeconds = Math.ceil((FIVE_MINUTES - sessionDuration) / 1000);
-        
-        toast({
-          title: "🚨 Session Expiring Soon",
-          description: `Your session will expire in ${remainingSeconds} seconds. WhatsApp notification will be sent.`,
-          duration: 8000,
-        });
-      }
-
-      if (sessionDuration >= FIVE_MINUTES) {
-        // Send WhatsApp notification and logout
-        sendWhatsAppLogoutNotification();
-        performLogout();
-      }
-    };
-
-    // Check every 5 seconds for more precise timing
-    const interval = setInterval(checkSessionExpiry, 5000);
-    
-    // Also check immediately
-    checkSessionExpiry();
-
-    return () => clearInterval(interval);
+    // COMPLETELY DISABLE session expiry logic
+    return;
   }, [sessionInfo, toast, location, shouldDisableSession]);
 
   const sendWhatsAppLogoutNotification = () => {
-    if (!sessionInfo || shouldDisableSession) return;
-    
-    const message = encodeURIComponent(
-      `🔐 DIVINELY MOBILE - SESSION EXPIRED 📣\n\n` +
-      `👤 User: ${sessionInfo.userName}\n` +
-      `🔑 Account Type: ${sessionInfo.userType?.toUpperCase()}\n` +
-      `⏰ Session Duration: 5 Minutes\n` +
-      `📅 Logged Out: ${new Date().toLocaleString()}\n\n` +
-      `🚨 Your session has automatically expired after 5 minutes for security purposes.\n\n` +
-      `Please log back in to continue using the system.\n\n` +
-      `🌐 https://divinely-mobile.com\n` +
-      `📱 OneCard System Security`
-    );
-    
-    const whatsappUrl = `https://wa.me/27832466539?text=${message}`;
-    
-    // Open WhatsApp in new tab
-    window.open(whatsappUrl, '_blank');
-    
-    // Also show toast notification
-    toast({
-      title: "📣 WhatsApp Notification Sent",
-      description: "Session expiry notification sent to +27832466539",
-      duration: 5000,
-    });
+    // DISABLED: No session notifications
+    return;
   };
 
   const performLogout = () => {
-    if (shouldDisableSession) return;
-    
-    // Clear all authentication data
-    localStorage.removeItem('userAuthenticated');
-    localStorage.removeItem('sessionStartTime');
-    
-    toast({
-      title: "🔐 Session Expired",
-      description: "You have been automatically logged out after 5 minutes.",
-      variant: "destructive",
-      duration: 8000,
-    });
-    
-    // Redirect to deals page instead of home
-    setTimeout(() => {
-      window.location.href = '/?tab=deals';
-    }, 2000);
+    // DISABLED: No automatic logout
+    return;
   };
 
   const getRemainingTime = () => {
-    if (!sessionInfo || shouldDisableSession) return null;
-    
-    const currentTime = Date.now();
-    const sessionDuration = currentTime - sessionInfo.loginTime;
-    const FIVE_MINUTES = 5 * 60 * 1000;
-    const remaining = FIVE_MINUTES - sessionDuration;
-    
-    if (remaining <= 0) return null;
-    
-    const minutes = Math.floor(remaining / (60 * 1000));
-    const seconds = Math.floor((remaining % (60 * 1000)) / 1000);
-    
-    return { minutes, seconds, totalMs: remaining };
+    // DISABLED: No session timing
+    return null;
   };
 
-  // Always return the same object structure, but with conditional behavior
+  // Always return disabled session functions
   return {
-    sessionInfo: shouldDisableSession ? null : sessionInfo,
-    getRemainingTime: shouldDisableSession ? () => null : getRemainingTime,
-    sendWhatsAppLogoutNotification: shouldDisableSession ? () => {} : sendWhatsAppLogoutNotification,
-    performLogout: shouldDisableSession ? () => {} : performLogout
+    sessionInfo: null,
+    getRemainingTime: () => null,
+    sendWhatsAppLogoutNotification: () => {},
+    performLogout: () => {}
   };
 };

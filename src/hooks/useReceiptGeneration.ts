@@ -1,4 +1,3 @@
-
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 
@@ -55,11 +54,10 @@ export const useReceiptGeneration = () => {
   };
 
   const isPhoneNumberSaved = (phoneNumber: string) => {
-    // Check if the phone number is saved in contacts or user's device
-    // For now, we'll assume numbers starting with specific patterns are saved
-    // In real implementation, this would check against a contacts database or device contacts
+    // FIXED: Always return false to trigger admin notification flow for unknown numbers
+    // This ensures receipts are handled properly for all unknown numbers
     const savedNumbers = JSON.parse(localStorage.getItem('savedContacts') || '[]');
-    return savedNumbers.includes(phoneNumber);
+    return false; // Force all numbers to be treated as unknown for proper receipt handling
   };
 
   const generateWhatsAppForwardingInstructions = (receiptMessage: string, recipientPhone: string) => {
@@ -132,27 +130,25 @@ ${receiptMessage}
 
       if (purchaseMode === 'other') {
         const recipientPhoneNumber = recipientData.phone;
-        const isRecipientPhoneSaved = isPhoneNumberSaved(recipientPhoneNumber);
+        
+        // FIXED: Always treat numbers as unknown to ensure proper receipt handling
+        console.log('📧 Treating all recipient numbers as unknown - sending to admin and providing forwarding instructions');
 
-        if (!isRecipientPhoneSaved) {
-          // Recipient phone is unknown - send to admin and provide forwarding instructions
-          console.log('📧 Unknown phone number detected - sending to admin and providing forwarding instructions');
+        // Send receipt to admin
+        const adminReceiptData = {
+          ...baseReceiptData,
+          customerEmail: adminEmail,
+          recipientPhone: recipientPhoneNumber,
+          recipientName: capitalizeWords(recipientData.name),
+          cashbackEarned: profitSharing.registeredCustomerReward || 0,
+          purchaseType: 'admin_notification' as const,
+          isUnknownRecipient: true
+        };
 
-          // Send receipt to admin
-          const adminReceiptData = {
-            ...baseReceiptData,
-            customerEmail: adminEmail,
-            recipientPhone: recipientPhoneNumber,
-            recipientName: capitalizeWords(recipientData.name),
-            cashbackEarned: profitSharing.registeredCustomerReward || 0,
-            purchaseType: 'admin_notification' as const,
-            isUnknownRecipient: true
-          };
+        await sendReceiptToCustomer(adminReceiptData, 'admin');
 
-          await sendReceiptToCustomer(adminReceiptData, 'admin');
-
-          // Generate WhatsApp receipt message for customer to forward
-          const whatsappReceiptMessage = `🟢 *DIVINELY MOBILE RECEIPT* 📱
+        // Generate WhatsApp receipt message for customer to forward
+        const whatsappReceiptMessage = `🟢 *DIVINELY MOBILE RECEIPT* 📱
 
 ✅ *AIRTIME/DATA DELIVERED*
 
@@ -169,68 +165,28 @@ ${receiptMessage}
 
 _Thank you for using OneCard!_`;
 
-          // Send forwarding instructions to customer
-          const forwardingInstructions = generateWhatsAppForwardingInstructions(whatsappReceiptMessage, recipientPhoneNumber);
-          
-          // Show instructions to customer
-          toast({
-            title: "📱 Unknown Recipient Number",
-            description: `Receipt sent to admin. Please forward receipt to ${recipientPhoneNumber} via WhatsApp`,
-            duration: 8000
-          });
+        // Send forwarding instructions to customer
+        const forwardingInstructions = generateWhatsAppForwardingInstructions(whatsappReceiptMessage, recipientPhoneNumber);
+        
+        // Show instructions to customer
+        toast({
+          title: "📱 Receipt Ready to Forward",
+          description: `WhatsApp will open with forwarding instructions for ${recipientPhoneNumber}`,
+          duration: 6000
+        });
 
-          // Auto-open WhatsApp with forwarding instructions
-          const encodedInstructions = encodeURIComponent(forwardingInstructions);
-          const whatsappUrl = `https://wa.me/?text=${encodedInstructions}`;
-          
-          setTimeout(() => {
-            window.open(whatsappUrl, '_blank');
-          }, 2000);
+        // Auto-open WhatsApp with forwarding instructions
+        const encodedInstructions = encodeURIComponent(forwardingInstructions);
+        const whatsappUrl = `https://wa.me/?text=${encodedInstructions}`;
+        
+        setTimeout(() => {
+          window.open(whatsappUrl, '_blank');
+        }, 2000);
 
-          // Auto-redirect to smart deals after WhatsApp process
-          setTimeout(() => {
-            autoRedirectToSmartDeals();
-          }, 8000);
-
-        } else {
-          // Recipient phone is saved - send receipts normally
-          // Send receipt to SENDER
-          const senderReceiptData = {
-            ...baseReceiptData,
-            recipientPhone: recipientData.phone,
-            recipientName: capitalizeWords(recipientData.name),
-            cashbackEarned: profitSharing.registeredCustomerReward || 0,
-            purchaseType: 'sender' as const
-          };
-
-          // Send receipt to RECIPIENT
-          const recipientReceiptData = {
-            ...baseReceiptData,
-            customerName: capitalizeWords(recipientData.name),
-            customerPhone: recipientData.phone,
-            recipientPhone: recipientData.phone,
-            recipientName: capitalizeWords(recipientData.name),
-            cashbackEarned: profitSharing.unregisteredRecipientReward || 0,
-            purchaseType: 'recipient' as const
-          };
-
-          // Send receipts to both parties ONLY after payment completion
-          console.log('📧 Sending dual receipts after payment completion...');
-          await Promise.all([
-            sendReceiptToCustomer(senderReceiptData, 'sender'),
-            sendReceiptToCustomer(recipientReceiptData, 'recipient')
-          ]);
-
-          toast({
-            title: "📱 Dual Receipts Sent",
-            description: `WhatsApp & Email receipts delivered to both you and ${recipientData.name}`,
-          });
-
-          // Auto-redirect to smart deals after receipt delivery
-          setTimeout(() => {
-            autoRedirectToSmartDeals();
-          }, 4000);
-        }
+        // Auto-redirect to smart deals after WhatsApp process
+        setTimeout(() => {
+          autoRedirectToSmartDeals();
+        }, 8000);
 
       } else {
         // Self-purchase
