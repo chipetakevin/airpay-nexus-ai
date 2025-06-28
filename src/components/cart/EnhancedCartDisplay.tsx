@@ -37,11 +37,11 @@ const EnhancedCartDisplay = ({ isVisible, onClose, userName = "Kevin Chipeta" }:
             </div>
           </div>
           
-          {/* Welcome Message with improved contrast and visibility */}
-          <div className="mt-3 bg-white/25 backdrop-blur-sm rounded-lg p-3 border border-white/30 shadow-lg">
+          {/* Welcome Message with solid background for maximum visibility */}
+          <div className="mt-3 bg-black/80 backdrop-blur-sm rounded-lg p-4 border border-white/50 shadow-2xl">
             <div className="flex items-center gap-2">
-              <User className="w-4 h-4 text-white drop-shadow-md" />
-              <span className="text-white font-bold text-lg drop-shadow-lg tracking-wide">
+              <User className="w-5 h-5 text-white" />
+              <span className="text-white font-bold text-xl tracking-wide">
                 Welcome, {userName}
               </span>
             </div>
