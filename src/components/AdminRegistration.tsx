@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
-import { Crown, Shield, Settings, BarChart3, LogOut, CheckCircle, User } from 'lucide-react';
+import { Crown, Shield, Settings, BarChart3, LogOut, CheckCircle, User, ChevronDown, ChevronUp, Info } from 'lucide-react';
 import AdminPersonalInfoSection from './registration/AdminPersonalInfoSection';
 import AdminBankingSection from './registration/AdminBankingSection';
 import AdminConsentSection from './registration/AdminConsentSection';
@@ -22,6 +22,7 @@ const AdminRegistration = () => {
   const [authCode, setAuthCode] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [adminProfile, setAdminProfile] = useState<any>(null);
+  const [isRegistrationCollapsed, setIsRegistrationCollapsed] = useState(false);
 
   // Form state for admin registration
   const [formData, setFormData] = useState<AdminFormData>({
@@ -64,6 +65,7 @@ const AdminRegistration = () => {
         if (persistentAuth === 'true' && deviceFingerprint === lastDeviceFingerprint) {
           setIsAuthenticated(true);
           setIsFirstTimeSetup(false);
+          setIsRegistrationCollapsed(true); // Auto-collapse when authenticated
           
           toast({
             title: "Admin Session Restored 🔐",
@@ -214,11 +216,16 @@ const AdminRegistration = () => {
     setIsAuthenticated(false);
     setAuthCode('');
     setIsFirstTimeSetup(true);
+    setIsRegistrationCollapsed(false);
     
     toast({
       title: "Admin Logged Out 👋",
       description: "You have been successfully logged out. Authentication will be required on next access.",
     });
+  };
+
+  const handleRegistrationToggle = () => {
+    setIsRegistrationCollapsed(!isRegistrationCollapsed);
   };
 
   // If not authenticated, show authentication form
@@ -389,29 +396,56 @@ const AdminRegistration = () => {
 
         <TabsContent value="registration" className="mt-0">
           <div className="space-y-6">
-            <div className="text-center mb-6">
-              <h2 className="text-2xl font-bold mb-2">🛡️ Admin Registration & Setup</h2>
-              <p className="text-gray-600">Complete administrator profile configuration</p>
-            </div>
+            {/* Collapsible Registration Section */}
+            <div className="space-y-3">
+              {/* Registration Toggle Button */}
+              <Button
+                onClick={handleRegistrationToggle}
+                variant="outline"
+                className="w-full flex items-center justify-between border-green-200 bg-green-50/50 hover:bg-green-50"
+              >
+                <div className="flex items-center gap-2">
+                  <Info className="w-4 h-4 sm:w-5 sm:h-5 text-green-600 flex-shrink-0" />
+                  <span className="font-medium text-green-800 text-left text-xs sm:text-sm">
+                    {isRegistrationCollapsed ? 'Show Admin Registration & Setup' : 'Hide Admin Registration & Setup'}
+                  </span>
+                </div>
+                {isRegistrationCollapsed ? (
+                  <ChevronDown className="w-4 h-4 sm:w-5 sm:h-5 text-green-600 flex-shrink-0" />
+                ) : (
+                  <ChevronUp className="w-4 h-4 sm:w-5 sm:h-5 text-green-600 flex-shrink-0" />
+                )}
+              </Button>
 
-            <div className="max-w-2xl mx-auto space-y-6">
-              <AdminPersonalInfoSection 
-                formData={formData}
-                errors={errors}
-                onInputChange={handleInputChange}
-              />
-              <AdminBankingSection 
-                formData={formData}
-                errors={errors}
-                onInputChange={handleInputChange}
-                onBankSelect={handleBankSelect}
-              />
-              <AdminConsentSection 
-                formData={formData}
-                errors={errors}
-                onInputChange={handleInputChange}
-              />
-              <AdminRegistrationAlerts />
+              {/* Registration Form - Collapsible */}
+              {!isRegistrationCollapsed && (
+                <div className="space-y-6">
+                  <div className="text-center mb-6">
+                    <h2 className="text-2xl font-bold mb-2">🛡️ Admin Registration & Setup</h2>
+                    <p className="text-gray-600">Complete administrator profile configuration</p>
+                  </div>
+
+                  <div className="max-w-2xl mx-auto space-y-6">
+                    <AdminPersonalInfoSection 
+                      formData={formData}
+                      errors={errors}
+                      onInputChange={handleInputChange}
+                    />
+                    <AdminBankingSection 
+                      formData={formData}
+                      errors={errors}
+                      onInputChange={handleInputChange}
+                      onBankSelect={handleBankSelect}
+                    />
+                    <AdminConsentSection 
+                      formData={formData}
+                      errors={errors}
+                      onInputChange={handleInputChange}
+                    />
+                    <AdminRegistrationAlerts />
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         </TabsContent>
