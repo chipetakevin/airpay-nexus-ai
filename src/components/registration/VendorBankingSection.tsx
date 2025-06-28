@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from 'react';
 import { Card } from '@/components/ui/card';
 import { useBankingAutoSave } from '@/hooks/useBankingAutoSave';
@@ -54,12 +53,12 @@ const VendorBankingSection: React.FC<VendorBankingProps> = ({
     }
   }, [isBankingComplete, isCollapsed, toast]);
 
-  // New effect: Auto-collapse when marketing consent is given and banking is complete
+  // Enhanced effect: Handle marketing consent checkbox changes
   useEffect(() => {
     if (marketingConsent && isBankingComplete && !isCollapsed) {
       console.log('📧 Marketing consent given - auto-collapsing banking section');
       
-      // Force save banking info immediately
+      // Force save banking info immediately and collapse
       const saveAndCollapse = async () => {
         setIsAutoSaving(true);
         try {
@@ -86,6 +85,18 @@ const VendorBankingSection: React.FC<VendorBankingProps> = ({
       };
       
       saveAndCollapse();
+    }
+    
+    // NEW: Handle unchecking the marketing consent - expand banking section
+    if (!marketingConsent && isCollapsed && isBankingComplete) {
+      console.log('📧 Marketing consent removed - expanding banking section');
+      setIsCollapsed(false);
+      
+      toast({
+        title: "Banking Section Expanded",
+        description: "Banking details are now visible for review or editing.",
+        duration: 2000
+      });
     }
   }, [marketingConsent, isBankingComplete, isCollapsed, formData, saveBankingInfo, toast]);
 
