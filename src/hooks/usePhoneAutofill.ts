@@ -1,14 +1,29 @@
-
 import { useState, useEffect } from 'react';
 import { useToast } from '@/hooks/use-toast';
 
 export const usePhoneAutofill = () => {
   const [detectedPhone, setDetectedPhone] = useState('');
+  const [savedPhoneNumbers, setSavedPhoneNumbers] = useState<string[]>([]);
   const [savedBankingInfo, setSavedBankingInfo] = useState(null);
   const { toast } = useToast();
 
   useEffect(() => {
-    // Auto-detect and fill phone number from registration
+    // Load all saved phone numbers
+    const savedNumbers = localStorage.getItem('savedPhoneNumbers');
+    if (savedNumbers) {
+      try {
+        const parsedNumbers = JSON.parse(savedNumbers);
+        setSavedPhoneNumbers(parsedNumbers);
+        // Set the most recent number as detected
+        if (parsedNumbers.length > 0) {
+          setDetectedPhone(parsedNumbers[0]);
+        }
+      } catch (error) {
+        console.error('Error parsing saved phone numbers:', error);
+      }
+    }
+
+    // Auto-detect and fill phone number from various sources
     const credentials = localStorage.getItem('userCredentials');
     const userData = localStorage.getItem('onecardUser');
     
@@ -16,7 +31,9 @@ export const usePhoneAutofill = () => {
       try {
         const parsedCredentials = JSON.parse(credentials);
         if (parsedCredentials.phone) {
-          setDetectedPhone(parsedCredentials.phone);
+          const normalizedPhone = normalizePhoneNumber(parsedCredentials.phone);
+          setDetectedPhone(normalizedPhone);
+          savePhoneNumber(normalizedPhone);
         }
       } catch (error) {
         console.error('Error parsing credentials:', error);
@@ -26,8 +43,11 @@ export const usePhoneAutofill = () => {
     if (userData) {
       try {
         const parsedUserData = JSON.parse(userData);
-        if (parsedUserData.phone) {
-          setDetectedPhone(parsedUserData.phone);
+        if (parsedUserData.phone || parsedUserData.registeredPhone) {
+          const phone = parsedUserData.phone || parsedUserData.registeredPhone;
+          const normalizedPhone = normalizePhoneNumber(phone);
+          setDetectedPhone(normalizedPhone);
+          savePhoneNumber(normalizedPhone);
         }
       } catch (error) {
         console.error('Error parsing user data:', error);
@@ -45,11 +65,57 @@ export const usePhoneAutofill = () => {
     }
   }, []);
 
+  const normalizePhoneNumber = (phone: string): string => {
+    if (!phone) return '';
+    
+    // Remove all non-numeric characters
+    let cleanPhone = phone.replace(/\D/g, '');
+    
+    // Handle different formats
+    if (cleanPhone.startsWith('27')) {
+      // Remove country code to get local format
+      cleanPhone = cleanPhone.substring(2);
+    } else if (cleanPhone.startsWith('0')) {
+      // Remove leading zero
+      cleanPhone = cleanPhone.substring(1);
+    }
+    
+    // Ensure it's a valid 9-digit SA mobile number
+    if (cleanPhone.length === 9) {
+      return cleanPhone;
+    }
+    
+    return phone; // Return original if can't normalize
+  };
+
+  const savePhoneNumber = (phoneNumber: string) => {
+    if (!phoneNumber) return;
+    
+    const normalizedPhone = normalizePhoneNumber(phoneNumber);
+    
+    // Get existing saved numbers
+    const existingNumbers = JSON.parse(localStorage.getItem('savedPhoneNumbers') || '[]');
+    
+    // Add new number if not already saved (move to front if exists)
+    const updatedNumbers = [normalizedPhone, ...existingNumbers.filter((num: string) => num !== normalizedPhone)];
+    
+    // Keep only the last 5 numbers
+    const numbersToSave = updatedNumbers.slice(0, 5);
+    
+    localStorage.setItem('savedPhoneNumbers', JSON.stringify(numbersToSave));
+    setSavedPhoneNumbers(numbersToSave);
+    
+    toast({
+      title: "Phone Number Saved",
+      description: "Your phone number has been permanently saved for future use.",
+    });
+  };
+
   const saveBankingInfo = (bankInfo: any) => {
     const sanitizedInfo = {
       bankName: bankInfo.bankName,
       branchCode: bankInfo.branchCode,
-      accountNumber: bankInfo.accountNumber ? '****' + bankInfo.accountNumber.slice(-4) : '', // Save only last 4 digits for security
+      accountNumber: bankInfo.accountNumber ? '****' + bankInfo.accountNumber.slice(-4) : '',
       hasFullInfo: true
     };
     
@@ -66,10 +132,19 @@ export const usePhoneAutofill = () => {
     return detectedPhone;
   };
 
+  const formatPhoneForDisplay = (phone: string): string => {
+    const normalized = normalizePhoneNumber(phone);
+    return `+27${normalized}`;
+  };
+
   return {
     detectedPhone,
+    savedPhoneNumbers,
     savedBankingInfo,
     saveBankingInfo,
-    autoFillPhone
+    savePhoneNumber,
+    autoFillPhone,
+    normalizePhoneNumber,
+    formatPhoneForDisplay
   };
 };
