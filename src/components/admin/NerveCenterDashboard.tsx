@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -209,7 +208,7 @@ const NerveCenterDashboard = () => {
             </div>
             <div>
               <h1 className="text-2xl sm:text-3xl font-bold mb-2">The Nerve Center</h1>
-              <p className="text-blue-100">Divinely Mobile BaaS - AI-Driven MVNX Platform Control Hub</p>
+              <p className="text-blue-100">MVNE powered Platform by Addex-Hub</p>
             </div>
           </div>
           
@@ -227,7 +226,7 @@ const NerveCenterDashboard = () => {
               <div className="text-xs text-gray-300">Powered</div>
             </div>
             <div className="bg-white/10 rounded-lg p-3 backdrop-blur-sm">
-              <div className="text-2xl font-bold text-purple-300">MVNX</div>
+              <div className="text-2xl font-bold text-purple-300">MVNE</div>
               <div className="text-xs text-gray-300">Platform</div>
             </div>
           </div>
