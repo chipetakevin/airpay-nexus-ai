@@ -59,13 +59,13 @@ export const useEnhancedReceiptGenerator = () => {
   };
 
   const generateComprehensiveWhatsAppReceipt = (data: EnhancedReceiptData): string => {
-    // Modern WhatsApp receipt with enhanced visual appeal
+    // Enhanced WhatsApp receipt with better formatting
     const itemsSection = data.items.map((item, index) => 
       `${index + 1}. *${item.name}*
    📱 Network: ${item.network.toUpperCase()}
    💎 Service: ${item.type.toUpperCase()}
    💰 Amount: R${item.subtotal.toFixed(2)}
-   ─────────────────────────`
+   ════════════════════════════`
     ).join('\n');
 
     return `🌟 *DIVINELY MOBILE* 📱

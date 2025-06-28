@@ -13,9 +13,10 @@ export interface CashbackUpdate {
 
 export const updateCashbackBalances = async (update: CashbackUpdate) => {
   try {
+    console.log('Processing enhanced cashback allocation:', update);
     const updates = [];
 
-    // Update customer OneCard balance if applicable
+    // Update customer OneCard balance with privilege-based allocation
     if (update.customerCashback && update.customerCashback > 0) {
       const customerUpdate = await updateCustomerBalance(
         update.customerCardNumber, 
@@ -25,7 +26,7 @@ export const updateCashbackBalances = async (update: CashbackUpdate) => {
       updates.push(customerUpdate);
     }
 
-    // Update vendor balance if applicable
+    // Update vendor balance with commission tracking
     if (update.vendorProfit && update.vendorProfit > 0 && update.vendorId) {
       const vendorUpdate = await updateVendorBalance(
         update.vendorId, 
@@ -45,41 +46,56 @@ export const updateCashbackBalances = async (update: CashbackUpdate) => {
       updates.push(recipientUpdate);
     }
 
+    console.log('✅ Enhanced cashback allocation completed:', updates);
+
     return {
       success: true,
       updates,
-      message: 'Cashback balances updated successfully'
+      message: 'Enhanced cashback balances updated successfully'
     };
 
   } catch (error) {
-    console.error('Error updating cashback balances:', error);
+    console.error('❌ Error in enhanced cashback allocation:', error);
     return {
       success: false,
       error: error.message,
-      message: 'Failed to update cashback balances'
+      message: 'Failed to update enhanced cashback balances'
     };
   }
 };
 
 const updateCustomerBalance = async (cardNumber: string, cashbackAmount: number, transactionId: string) => {
-  // Try to find customer by card number (assuming it's stored in a customer field)
   const storedUser = localStorage.getItem('onecardUser');
   if (storedUser) {
     const userData = JSON.parse(storedUser);
-    const newCashbackBalance = (userData.cashbackBalance || 0) + cashbackAmount;
-    const newTotalEarned = (userData.totalEarned || 0) + cashbackAmount;
+    
+    // Enhanced allocation based on user privileges
+    const userPrivileges = userData.privileges || [];
+    let bonusMultiplier = 1;
+    
+    if (userPrivileges.includes('premium')) {
+      bonusMultiplier = 1.5;
+    } else if (userPrivileges.includes('vip')) {
+      bonusMultiplier = 2;
+    }
+    
+    const enhancedCashback = cashbackAmount * bonusMultiplier;
+    const newCashbackBalance = (userData.cashbackBalance || 0) + enhancedCashback;
+    const newTotalEarned = (userData.totalEarned || 0) + enhancedCashback;
     
     userData.cashbackBalance = newCashbackBalance;
     userData.totalEarned = newTotalEarned;
+    userData.lastCashbackDate = new Date().toISOString();
     localStorage.setItem('onecardUser', JSON.stringify(userData));
     
-    console.log(`Customer ${cardNumber} cashback updated: +R${cashbackAmount.toFixed(2)} (New balance: R${newCashbackBalance.toFixed(2)})`);
+    console.log(`✅ Customer ${cardNumber} enhanced cashback: +R${enhancedCashback.toFixed(2)} (Multiplier: ${bonusMultiplier}x, New balance: R${newCashbackBalance.toFixed(2)})`);
     
     return {
       type: 'customer',
       cardNumber,
-      amount: cashbackAmount,
+      amount: enhancedCashback,
       newBalance: newCashbackBalance,
+      bonusMultiplier,
       transactionId
     };
   }
@@ -91,20 +107,40 @@ const updateVendorBalance = async (vendorId: string, profitAmount: number, trans
   const storedVendor = localStorage.getItem('onecardVendor');
   if (storedVendor) {
     const vendorData = JSON.parse(storedVendor);
-    const newBalance = (vendorData.onecardBalance || 0) + profitAmount;
-    const newTotalEarned = (vendorData.totalEarned || 0) + profitAmount;
+    
+    // Enhanced vendor profit allocation
+    const vendorTier = vendorData.tier || 'bronze';
+    let commissionBonus = 0;
+    
+    switch (vendorTier) {
+      case 'gold':
+        commissionBonus = profitAmount * 0.1; // 10% bonus
+        break;
+      case 'silver':
+        commissionBonus = profitAmount * 0.05; // 5% bonus
+        break;
+      default:
+        commissionBonus = 0;
+    }
+    
+    const totalProfit = profitAmount + commissionBonus;
+    const newBalance = (vendorData.onecardBalance || 0) + totalProfit;
+    const newTotalEarned = (vendorData.totalEarned || 0) + totalProfit;
     
     vendorData.onecardBalance = newBalance;
     vendorData.totalEarned = newTotalEarned;
+    vendorData.lastCommissionDate = new Date().toISOString();
     localStorage.setItem('onecardVendor', JSON.stringify(vendorData));
     
-    console.log(`Vendor ${vendorId} profit updated: +R${profitAmount.toFixed(2)} (New balance: R${newBalance.toFixed(2)})`);
+    console.log(`✅ Vendor ${vendorId} enhanced profit: +R${totalProfit.toFixed(2)} (Tier: ${vendorTier}, Bonus: R${commissionBonus.toFixed(2)}, New balance: R${newBalance.toFixed(2)})`);
     
     return {
       type: 'vendor',
       vendorId,
-      amount: profitAmount,
+      amount: totalProfit,
       newBalance,
+      tier: vendorTier,
+      bonus: commissionBonus,
       transactionId
     };
   }
@@ -113,24 +149,33 @@ const updateVendorBalance = async (vendorId: string, profitAmount: number, trans
 };
 
 const handleRecipientReward = async (recipientPhone: string, rewardAmount: number, transactionId: string) => {
-  // For unregistered recipients, we'll store their pending reward
-  // In a real system, this would create a notification to encourage registration
+  // Enhanced recipient reward system
   const pendingRewards = JSON.parse(localStorage.getItem('pendingRecipientRewards') || '{}');
   
   if (!pendingRewards[recipientPhone]) {
-    pendingRewards[recipientPhone] = 0;
+    pendingRewards[recipientPhone] = {
+      amount: 0,
+      transactions: [],
+      firstRewardDate: new Date().toISOString()
+    };
   }
   
-  pendingRewards[recipientPhone] += rewardAmount;
+  pendingRewards[recipientPhone].amount += rewardAmount;
+  pendingRewards[recipientPhone].transactions.push({
+    transactionId,
+    amount: rewardAmount,
+    date: new Date().toISOString()
+  });
+  
   localStorage.setItem('pendingRecipientRewards', JSON.stringify(pendingRewards));
   
-  console.log(`Recipient ${recipientPhone} reward pending: +R${rewardAmount.toFixed(2)} (Total pending: R${pendingRewards[recipientPhone].toFixed(2)})`);
+  console.log(`✅ Recipient ${recipientPhone} enhanced reward: +R${rewardAmount.toFixed(2)} (Total pending: R${pendingRewards[recipientPhone].amount.toFixed(2)})`);
   
   return {
     type: 'recipient',
     recipientPhone,
     amount: rewardAmount,
-    pendingTotal: pendingRewards[recipientPhone],
+    pendingTotal: pendingRewards[recipientPhone].amount,
     transactionId,
     status: 'pending_registration'
   };
