@@ -149,6 +149,7 @@ const VendorRegistration = () => {
         <VendorRegistrationAlerts 
           isCollapsed={isAlertsCollapsed} 
           onToggle={handleAlertsToggle}
+          marketingConsent={formData.marketingConsent}
         />
 
         <LocationDetector onLocationUpdate={setLocation} />
@@ -184,15 +185,15 @@ const VendorRegistration = () => {
         </form>
       </div>
 
-      {/* Enhanced functional register button with privilege-based redirection */}
-      <div className="fixed-register-button">
+      {/* Enhanced functional register button with consistent visibility and privilege-based redirection */}
+      <div className="fixed-register-button enhanced-register-tab">
         <div className="register-button-container">
           <Button 
             onClick={handleFormSubmit}
             type="submit"
             className={`mobile-submit-button transition-all duration-300 ${
               isFormValid() 
-                ? 'bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800' 
+                ? 'bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 shadow-lg' 
                 : 'bg-gradient-to-r from-yellow-600 to-yellow-700 hover:from-yellow-700 hover:to-yellow-800'
             }`}
             disabled={isRegistering}
@@ -210,7 +211,7 @@ const VendorRegistration = () => {
           </Button>
           
           {isFormValid() && !isRegistering && (
-            <div className="text-xs text-center mt-2 text-green-600 bg-green-50 p-2 rounded-lg">
+            <div className="text-xs text-center mt-2 text-green-600 bg-green-50 p-2 rounded-lg border border-green-200">
               ✅ Ready to register! You'll be redirected to your personalized shopping experience.
             </div>
           )}

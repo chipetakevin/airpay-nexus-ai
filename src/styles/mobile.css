@@ -308,10 +308,16 @@
       padding: 10px 12px 14px 12px;
     }
 
+    .enhanced-register-tab {
+      border-top: 2px solid #10b981;
+      backdrop-filter: blur(8px);
+    }
+
     .mobile-submit-button {
       font-size: 15px;
       padding: 14px 20px;
       min-height: 52px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     }
 
     .registration-content-wrapper {
@@ -343,10 +349,15 @@
       padding: 14px 20px 18px 20px;
     }
 
+    .enhanced-register-tab {
+      backdrop-filter: blur(16px);
+    }
+
     .mobile-submit-button {
       font-size: 17px;
       padding: 18px 28px;
       min-height: 60px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     }
   }
 

@@ -1,5 +1,5 @@
 
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 import { Trophy, ShoppingCart, MapPin, Shield, ChevronDown, ChevronUp, Info } from 'lucide-react';
@@ -7,13 +7,22 @@ import { Trophy, ShoppingCart, MapPin, Shield, ChevronDown, ChevronUp, Info } fr
 interface VendorRegistrationAlertsProps {
   isCollapsed?: boolean;
   onToggle?: () => void;
+  marketingConsent?: boolean;
 }
 
 const VendorRegistrationAlerts: React.FC<VendorRegistrationAlertsProps> = ({ 
   isCollapsed = true, // Default to collapsed for better mobile UX
-  onToggle 
+  onToggle,
+  marketingConsent = false
 }) => {
   const [isPasswordExpanded, setIsPasswordExpanded] = useState(false);
+
+  // Intelligent collapse based on consent
+  useEffect(() => {
+    if (marketingConsent) {
+      setIsPasswordExpanded(false);
+    }
+  }, [marketingConsent]);
 
   // Stable toggle function
   const togglePasswordExpanded = useCallback(() => {
@@ -74,16 +83,23 @@ const VendorRegistrationAlerts: React.FC<VendorRegistrationAlertsProps> = ({
             </AlertDescription>
           </Alert>
 
-          {/* Enhanced Password Management - Stable collapsible toggle */}
+          {/* Enhanced Password Management - Intelligent collapsible toggle */}
           <div className="space-y-2">
             <Button
               onClick={togglePasswordExpanded}
               variant="outline"
-              className="w-full flex items-center justify-between p-2 sm:p-3 h-auto border-purple-200 bg-purple-50/50 hover:bg-purple-50"
+              className={`w-full flex items-center justify-between p-2 sm:p-3 h-auto border-purple-200 transition-all duration-300 ${
+                marketingConsent ? 'bg-green-50/50 border-green-200' : 'bg-purple-50/50 hover:bg-purple-50'
+              }`}
             >
               <div className="flex items-center gap-2">
                 <Shield className="w-3 h-3 sm:w-4 sm:h-4 text-purple-600 flex-shrink-0" />
-                <span className="text-xs sm:text-sm font-medium text-purple-800">🔐 Enhanced Password Management</span>
+                <span className="text-xs sm:text-sm font-medium text-purple-800">
+                  🔐 Enhanced Password Management
+                  {marketingConsent && (
+                    <span className="ml-2 text-green-600 font-bold">✓ Secured</span>
+                  )}
+                </span>
               </div>
               {isPasswordExpanded ? (
                 <ChevronUp className="w-3 h-3 sm:w-4 sm:h-4 text-purple-600 flex-shrink-0" />
@@ -93,13 +109,21 @@ const VendorRegistrationAlerts: React.FC<VendorRegistrationAlertsProps> = ({
             </Button>
 
             {isPasswordExpanded && (
-              <div className="bg-purple-50 border border-purple-200 rounded-lg p-2 sm:p-3 collapsible-content">
+              <div className={`border rounded-lg p-2 sm:p-3 collapsible-content transition-all duration-300 ${
+                marketingConsent ? 'bg-green-50 border-green-200' : 'bg-purple-50 border-purple-200'
+              }`}>
                 <div className="text-xs sm:text-sm text-purple-700">
                   <ul className="space-y-1 text-xs">
                     <li>• Auto-save keeps your registration safe</li>
                     <li>• Password reset available via email OTP</li>
                     <li>• Use unified password (Malawi@1976) for admin access</li>
+                    <li>• Credentials remembered for faster future logins</li>
                   </ul>
+                  {marketingConsent && (
+                    <div className="mt-2 p-2 bg-green-100 rounded text-green-700 font-medium text-xs">
+                      ✅ Password management secured and configured!
+                    </div>
+                  )}
                 </div>
               </div>
             )}
