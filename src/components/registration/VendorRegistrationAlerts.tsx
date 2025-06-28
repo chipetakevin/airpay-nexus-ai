@@ -6,9 +6,14 @@ import { Trophy, ShoppingCart, MapPin, Shield, ChevronDown, ChevronUp, Info } fr
 
 const VendorRegistrationAlerts = () => {
   const [isExpanded, setIsExpanded] = useState(false);
+  const [isPasswordExpanded, setIsPasswordExpanded] = useState(false);
 
   const toggleExpanded = () => {
     setIsExpanded(!isExpanded);
+  };
+
+  const togglePasswordExpanded = () => {
+    setIsPasswordExpanded(!isPasswordExpanded);
   };
 
   return (
@@ -57,18 +62,36 @@ const VendorRegistrationAlerts = () => {
             </AlertDescription>
           </Alert>
 
-          {/* Enhanced Password Management - Now Collapsible */}
-          <Alert className="border-purple-200 bg-purple-50">
-            <Shield className="w-5 h-5 text-purple-600" />
-            <AlertDescription className="text-purple-800">
-              <strong>🔐 Enhanced Password Management:</strong>
-              <ul className="mt-2 space-y-1 text-sm">
-                <li>• Auto-save keeps your registration safe</li>
-                <li>• Password reset available via email OTP</li>
-                <li>• Use unified password (Malawi@1976) for admin access</li>
-              </ul>
-            </AlertDescription>
-          </Alert>
+          {/* Enhanced Password Management - Collapsible Toggle */}
+          <div className="space-y-2">
+            <Button
+              onClick={togglePasswordExpanded}
+              variant="outline"
+              className="w-full flex items-center justify-between p-3 h-auto border-purple-200 bg-purple-50/50 hover:bg-purple-50"
+            >
+              <div className="flex items-center gap-2">
+                <Shield className="w-4 h-4 text-purple-600" />
+                <span className="text-sm font-medium text-purple-800">🔐 Enhanced Password Management</span>
+              </div>
+              {isPasswordExpanded ? (
+                <ChevronUp className="w-4 h-4 text-purple-600" />
+              ) : (
+                <ChevronDown className="w-4 h-4 text-purple-600" />
+              )}
+            </Button>
+
+            {isPasswordExpanded && (
+              <div className="bg-purple-50 border border-purple-200 rounded-lg p-3 animate-in slide-in-from-top-2 duration-200">
+                <div className="text-sm text-purple-700">
+                  <ul className="space-y-1 text-xs">
+                    <li>• Auto-save keeps your registration safe</li>
+                    <li>• Password reset available via email OTP</li>
+                    <li>• Use unified password (Malawi@1976) for admin access</li>
+                  </ul>
+                </div>
+              </div>
+            )}
+          </div>
         </div>
       )}
     </div>
