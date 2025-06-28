@@ -85,7 +85,7 @@ const PortalTabs = ({
   }
 
   const getTabClassName = (tabValue: string, color: string) => {
-    let baseClass = "flex flex-col items-center gap-1 p-3 rounded-xl transition-all duration-300 min-h-[65px] flex-1 border text-xs shadow-sm relative overflow-hidden";
+    let baseClass = "flex flex-col items-center gap-1 p-2 sm:p-3 rounded-xl transition-all duration-300 min-h-[60px] sm:min-h-[65px] flex-1 border text-xs shadow-sm relative overflow-hidden";
     
     const allowed = isTabAllowed(tabValue);
     
@@ -109,11 +109,11 @@ const PortalTabs = ({
   return (
     <div className="w-full max-w-6xl mx-auto pt-4">
       <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full">
-        {/* Mobile-Optimized Tab Navigation - Improved Spacing */}
+        {/* Mobile-Optimized Tab Navigation */}
         <div className="w-full mb-6">
-          <TabsList className="w-full max-w-full bg-gradient-to-r from-gray-50 to-gray-100 p-1.5">
+          <TabsList className="w-full max-w-full bg-gradient-to-r from-gray-50 to-gray-100 p-1 sm:p-1.5">
             {/* Mobile: 2x3 Grid with better spacing */}
-            <div className="grid grid-cols-2 gap-1.5 w-full sm:hidden">
+            <div className="grid grid-cols-2 gap-1 w-full sm:hidden">
               {tabs.slice(0, 4).map((tab) => (
                 <TabsTrigger 
                   key={tab.value}
@@ -121,7 +121,7 @@ const PortalTabs = ({
                   className={getTabClassName(tab.value, tab.color)}
                   disabled={!isTabAllowed(tab.value) && !isUnifiedProfile}
                 >
-                  <span className="text-lg">{tab.icon}</span>
+                  <span className="text-base sm:text-lg">{tab.icon}</span>
                   <div className="text-center">
                     <div className="font-semibold leading-tight text-xs">{tab.label}</div>
                     <div className="text-xs opacity-75 leading-tight">{tab.description}</div>
@@ -136,7 +136,7 @@ const PortalTabs = ({
                   className={getTabClassName(tab.value, tab.color)}
                   disabled={!isTabAllowed(tab.value) && !isUnifiedProfile}
                 >
-                  <span className="text-lg">{tab.icon}</span>
+                  <span className="text-base sm:text-lg">{tab.icon}</span>
                   <div className="text-center">
                     <div className="font-semibold leading-tight text-xs">{tab.label}</div>
                     <div className="text-xs opacity-75 leading-tight">{tab.description}</div>
@@ -145,7 +145,7 @@ const PortalTabs = ({
               ))}
             </div>
 
-            {/* Tablet: Responsive grid with improved spacing */}
+            {/* Tablet: Responsive grid */}
             <div className="hidden sm:grid sm:grid-cols-3 lg:hidden gap-1.5 w-full">
               {tabs.map((tab) => (
                 <TabsTrigger 
@@ -163,7 +163,7 @@ const PortalTabs = ({
               ))}
             </div>
 
-            {/* Desktop: Single Row with optimal spacing */}
+            {/* Desktop: Single Row */}
             <div className={`hidden lg:grid gap-1.5 w-full ${showAdminTab ? 'grid-cols-7' : 'grid-cols-6'}`}>
               {tabs.map((tab) => (
                 <TabsTrigger 
@@ -183,34 +183,36 @@ const PortalTabs = ({
           </TabsList>
         </div>
         
-        {/* Tab Content */}
+        {/* Tab Content - Mobile Optimized */}
         <div className="w-full">
-          <TabsContent value="deals" className="p-2 sm:p-4 lg:p-6 animate-fade-in">
+          <TabsContent value="deals" className="p-1 sm:p-2 md:p-4 lg:p-6 animate-fade-in">
             <AirtimeDealsSystem />
           </TabsContent>
           
-          <TabsContent value="onecard" className="p-2 sm:p-4 lg:p-6 animate-fade-in">
+          <TabsContent value="onecard" className="p-1 sm:p-2 md:p-4 lg:p-6 animate-fade-in">
             <OneCardDashboard />
           </TabsContent>
           
-          <TabsContent value="registration" className="p-2 sm:p-4 lg:p-6 animate-fade-in">
-            <CustomerRegistration />
+          <TabsContent value="registration" className="p-1 sm:p-2 md:p-4 lg:p-6 animate-fade-in">
+            <div className="w-full max-w-4xl mx-auto">
+              <CustomerRegistration />
+            </div>
           </TabsContent>
           
-          <TabsContent value="vendor" className="p-2 sm:p-4 lg:p-6 animate-fade-in">
+          <TabsContent value="vendor" className="p-1 sm:p-2 md:p-4 lg:p-6 animate-fade-in">
             <VendorRegistration />
           </TabsContent>
 
-          <TabsContent value="unified-reports" className="p-2 sm:p-4 lg:p-6 animate-fade-in">
+          <TabsContent value="unified-reports" className="p-1 sm:p-2 md:p-4 lg:p-6 animate-fade-in">
             <ReportsTabContent />
           </TabsContent>
           
-          <TabsContent value="admin-reg" className="p-2 sm:p-4 lg:p-6 animate-fade-in">
+          <TabsContent value="admin-reg" className="p-1 sm:p-2 md:p-4 lg:p-6 animate-fade-in">
             <AdminRegistration />
           </TabsContent>
           
           {showAdminTab && (
-            <TabsContent value="admin" className="p-2 sm:p-4 lg:p-6 animate-fade-in">
+            <TabsContent value="admin" className="p-1 sm:p-2 md:p-4 lg:p-6 animate-fade-in">
               <AdminPortal onAuthSuccess={() => setIsAdminAuthenticated(true)} />
             </TabsContent>
           )}

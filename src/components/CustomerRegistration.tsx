@@ -1,10 +1,10 @@
 
 import React from 'react';
-import CustomerRegistration from './registration/CustomerRegistration';
+import CustomerRegistrationForm from './registration/CustomerRegistration';
 
 // Main export component that wraps the registration
-const CustomerRegistrationWrapper = () => {
-  return <CustomerRegistration />;
+const CustomerRegistration = () => {
+  return <CustomerRegistrationForm />;
 };
 
-export default CustomerRegistrationWrapper;
+export default CustomerRegistration;
