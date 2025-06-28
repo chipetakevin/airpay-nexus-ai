@@ -5,18 +5,31 @@ export const useWhatsAppForwarding = () => {
   const { toast } = useToast();
 
   const generateWhatsAppForwardingInstructions = (receiptMessage: string, recipientPhone: string) => {
-    return `📱 *FORWARDING INSTRUCTIONS*
+    return `📱 *RECEIPT FORWARDING INSTRUCTIONS*
 
-Since ${recipientPhone} is not in your contacts, please:
+🎯 *FOR:* ${recipientPhone}
 
-1️⃣ Copy the receipt message below
-2️⃣ Open WhatsApp 
-3️⃣ Send to ${recipientPhone}
-4️⃣ Forward this receipt:
+Since this number may not be in your contacts or on WhatsApp, please follow these steps:
+
+1️⃣ *COPY* the receipt message below
+2️⃣ *OPEN* WhatsApp 
+3️⃣ *SEARCH* for ${recipientPhone} or *ADD* as new contact
+4️⃣ *SEND* the receipt message:
+
+━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ${receiptMessage}
 
-*Thank you for helping us deliver receipts!*`;
+━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✅ *If number is not on WhatsApp:*
+- Use SMS/Email to share the receipt
+- Keep this receipt for your records
+
+*Thank you for helping us deliver receipts!*
+
+🌐 https://myonecard.co.za
+📞 Support: +27 100 2827`;
   };
 
   const autoRedirectToSmartDeals = () => {

@@ -15,11 +15,18 @@ export const useReceiptSender = () => {
 
       console.log(`✅ Receipt sent successfully to ${recipientType}:`, data);
 
-      // Auto-redirect to WhatsApp with receipt ONLY after successful payment and for customer
-      if (data?.whatsappUrl && recipientType === 'customer') {
-        setTimeout(() => {
-          window.open(data.whatsappUrl, '_blank');
-        }, 2000);
+      // Enhanced WhatsApp handling for all user types
+      if (data?.whatsappUrl) {
+        // For customers and recipients, auto-open WhatsApp
+        if (recipientType === 'customer' || recipientType === 'recipient') {
+          setTimeout(() => {
+            window.open(data.whatsappUrl, '_blank');
+          }, 1500);
+        }
+        // For admin notifications, just log (admin gets email notification)
+        else if (recipientType === 'admin') {
+          console.log('📧 Admin notification sent for unknown recipient');
+        }
       }
 
     } catch (error) {

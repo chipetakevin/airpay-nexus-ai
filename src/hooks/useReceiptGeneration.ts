@@ -1,4 +1,3 @@
-
 import { useToast } from '@/hooks/use-toast';
 import { useReceiptStorage } from './useReceiptStorage';
 import { useReceiptFormatter } from './receipt/useReceiptFormatter';
@@ -55,27 +54,59 @@ export const useReceiptGeneration = () => {
       if (purchaseMode === 'other') {
         const recipientPhoneNumber = recipientData.phone;
         
-        // FIXED: Always treat numbers as unknown to ensure proper receipt handling
-        console.log('📧 Treating all recipient numbers as unknown - sending to admin and providing forwarding instructions');
+        // ENHANCED: Check if number is in user's contacts before treating as unknown
+        const isKnownNumber = await checkIfNumberInContacts(recipientPhoneNumber);
+        
+        if (isKnownNumber) {
+          console.log('📱 Number found in contacts - sending direct receipt');
+          
+          // Send receipt directly to known recipient
+          const recipientReceiptData = {
+            ...baseReceiptData,
+            customerEmail: '', // No email for recipient
+            recipientPhone: recipientPhoneNumber,
+            recipientName: capitalizeWords(recipientData.name),
+            cashbackEarned: 0,
+            purchaseType: 'recipient' as const
+          };
 
-        // Send receipt to admin
-        const adminReceiptData = {
-          ...baseReceiptData,
-          customerEmail: adminEmail,
-          recipientPhone: recipientPhoneNumber,
-          recipientName: capitalizeWords(recipientData.name),
-          cashbackEarned: profitSharing.registeredCustomerReward || 0,
-          purchaseType: 'admin_notification' as const,
-          isUnknownRecipient: true
-        };
+          await sendReceiptToCustomer(recipientReceiptData, 'recipient');
+          
+          // Also send confirmation to sender
+          const senderReceiptData = {
+            ...baseReceiptData,
+            recipientPhone: recipientPhoneNumber,
+            recipientName: capitalizeWords(recipientData.name),
+            cashbackEarned: profitSharing.registeredCustomerReward || 0,
+            purchaseType: 'sender' as const
+          };
 
-        await sendReceiptToCustomer(adminReceiptData, 'admin');
+          await sendReceiptToCustomer(senderReceiptData, 'customer');
+          
+          toast({
+            title: "📧 Receipts Delivered",
+            description: `Receipt sent to ${recipientPhoneNumber} and confirmation sent to you`,
+            duration: 4000
+          });
+          
+        } else {
+          console.log('📧 Unknown number - providing forwarding instructions for all user types');
 
-        // SAVE RECEIPT TO USER PROFILE
-        await saveReceipt(adminReceiptData, currentUserInfo.userType, currentUserInfo.userId);
+          // Send receipt to admin for record keeping
+          const adminReceiptData = {
+            ...baseReceiptData,
+            customerEmail: adminEmail,
+            recipientPhone: recipientPhoneNumber,
+            recipientName: capitalizeWords(recipientData.name),
+            cashbackEarned: profitSharing.registeredCustomerReward || 0,
+            purchaseType: 'admin_notification' as const,
+            isUnknownRecipient: true
+          };
 
-        // Generate WhatsApp receipt message for customer to forward
-        const whatsappReceiptMessage = `🟢 *DIVINELY MOBILE RECEIPT* 📱
+          await sendReceiptToCustomer(adminReceiptData, 'admin');
+
+          // Generate WhatsApp receipt message for forwarding
+          const whatsappReceiptMessage = `🟢 *DIVINELY MOBILE RECEIPT* 📱
 
 ✅ *AIRTIME/DATA DELIVERED*
 
@@ -92,25 +123,29 @@ export const useReceiptGeneration = () => {
 
 _Thank you for using OneCard!_`;
 
-        // Send forwarding instructions to customer
-        const forwardingInstructions = generateWhatsAppForwardingInstructions(whatsappReceiptMessage, recipientPhoneNumber);
-        
-        // Show instructions to customer
-        toast({
-          title: "📱 Receipt Ready to Forward",
-          description: `WhatsApp will open with forwarding instructions for ${recipientPhoneNumber}`,
-          duration: 6000
-        });
+          // Generate forwarding instructions
+          const forwardingInstructions = generateWhatsAppForwardingInstructions(whatsappReceiptMessage, recipientPhoneNumber);
+          
+          // Show instructions to user
+          toast({
+            title: "📱 Receipt Ready to Forward",
+            description: `WhatsApp will open with instructions to forward receipt to ${recipientPhoneNumber}`,
+            duration: 6000
+          });
 
-        // Auto-open WhatsApp with forwarding instructions
-        const encodedInstructions = encodeURIComponent(forwardingInstructions);
-        const whatsappUrl = `https://wa.me/?text=${encodedInstructions}`;
-        
-        setTimeout(() => {
-          window.open(whatsappUrl, '_blank');
-        }, 2000);
+          // Auto-open WhatsApp with forwarding instructions
+          const encodedInstructions = encodeURIComponent(forwardingInstructions);
+          const whatsappUrl = `https://wa.me/?text=${encodedInstructions}`;
+          
+          setTimeout(() => {
+            window.open(whatsappUrl, '_blank');
+          }, 2000);
+        }
 
-        // Auto-redirect to smart deals after WhatsApp process
+        // SAVE RECEIPT TO USER PROFILE
+        await saveReceipt(baseReceiptData, currentUserInfo.userType, currentUserInfo.userId);
+
+        // Auto-redirect to smart deals after process
         setTimeout(() => {
           autoRedirectToSmartDeals();
         }, 8000);
@@ -154,6 +189,24 @@ _Thank you for using OneCard!_`;
       setTimeout(() => {
         autoRedirectToSmartDeals();
       }, 3000);
+    }
+  };
+
+  // Helper function to check if number is in user's contacts
+  const checkIfNumberInContacts = async (phoneNumber: string): Promise<boolean> => {
+    try {
+      // Check if browser supports contacts API
+      if ('contacts' in navigator && 'ContactsManager' in window) {
+        // This is a future enhancement - for now, we'll use a simpler approach
+        // In a real implementation, this would check the user's contacts
+      }
+      
+      // For now, we'll check if the number is saved in our recipient memory
+      const savedRecipients = JSON.parse(localStorage.getItem('recipientMemory') || '[]');
+      return savedRecipients.some((recipient: any) => recipient.phone === phoneNumber);
+    } catch (error) {
+      console.error('Error checking contacts:', error);
+      return false;
     }
   };
 
