@@ -28,22 +28,48 @@ const VendorBankingSection: React.FC<VendorBankingProps> = ({
   const [lastSaved, setLastSaved] = useState<Date | null>(null);
   const [isCollapsed, setIsCollapsed] = useState(false);
 
-  // Check if banking form is complete
+  // Enhanced function to check if banking form is complete and valid
   const isBankingComplete = () => {
-    return formData.bankName && 
-           formData.accountNumber && 
-           formData.accountNumber.length >= 8 && 
-           formData.branchCode && 
-           !errors.bankName && 
-           !errors.accountNumber;
+    const hasValidBankName = formData.bankName && formData.bankName.trim().length > 0 && !errors.bankName;
+    const hasValidAccountNumber = formData.accountNumber && 
+                                 formData.accountNumber.length >= 8 && 
+                                 !errors.accountNumber;
+    const hasValidBranchCode = formData.branchCode && formData.branchCode.trim().length > 0;
+
+    return hasValidBankName && hasValidAccountNumber && hasValidBranchCode;
   };
 
-  // Auto-collapse when banking is complete
+  // Intelligent auto-collapse with immediate trigger
   useEffect(() => {
-    if (isBankingComplete()) {
+    const bankingComplete = isBankingComplete();
+    
+    if (bankingComplete && !isCollapsed) {
+      console.log('🏦 Banking form complete - auto-collapsing...');
+      
+      // Show completion toast
+      toast({
+        title: "Business Banking Secured! 🔒",
+        description: "Banking details completed and auto-collapsed for better navigation.",
+        duration: 3000
+      });
+      
+      // Immediate collapse
       setIsCollapsed(true);
     }
-  }, [formData.bankName, formData.accountNumber, formData.branchCode, errors.bankName, errors.accountNumber]);
+    
+    // Expand if form becomes incomplete
+    if (!bankingComplete && isCollapsed) {
+      console.log('⚠️ Banking form incomplete - expanding...');
+      setIsCollapsed(false);
+    }
+  }, [
+    formData.bankName, 
+    formData.accountNumber, 
+    formData.branchCode, 
+    errors.bankName, 
+    errors.accountNumber,
+    isCollapsed
+  ]);
 
   // Auto-fill banking information on component mount
   useEffect(() => {
@@ -99,16 +125,6 @@ const VendorBankingSection: React.FC<VendorBankingProps> = ({
     
     saveBankingInfo(bankingData);
     setLastSaved(new Date());
-    
-    // Show success message when both bank and account are complete
-    if (formData.accountNumber && formData.accountNumber.length >= 8) {
-      setTimeout(() => {
-        toast({
-          title: "Business Banking Secured! 🔒",
-          description: "Your complete business banking details have been permanently saved and secured.",
-        });
-      }, 1000);
-    }
   };
 
   const handleAccountNumberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -118,21 +134,24 @@ const VendorBankingSection: React.FC<VendorBankingProps> = ({
     // Auto-save account number after user stops typing
     if (value.length >= 8) {
       autoSaveBankingField('accountNumber', value);
-      
-      // Show success message when both bank and account are complete
-      if (formData.bankName && formData.branchCode) {
-        setTimeout(() => {
-          toast({
-            title: "Business Banking Secured! 🔒",
-            description: "Your complete business banking details have been permanently saved and secured.",
-          });
-        }, 1000);
-      }
     }
   };
 
   const toggleCollapse = () => {
     setIsCollapsed(!isCollapsed);
+  };
+
+  // Force expand if manually toggled and form is incomplete
+  const handleManualToggle = () => {
+    if (isCollapsed && !isBankingComplete()) {
+      toast({
+        title: "Complete Banking Details",
+        description: "Please fill all banking information before collapsing.",
+        variant: "destructive"
+      });
+      return;
+    }
+    toggleCollapse();
   };
 
   return (
@@ -149,17 +168,24 @@ const VendorBankingSection: React.FC<VendorBankingProps> = ({
                 <div className="w-3 h-3 border-2 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
                 Saving...
               </div>
-            ) : lastSaved ? (
+            ) : isBankingComplete() ? (
               <div className="flex items-center gap-1 text-xs text-green-600">
                 <Check className="w-3 h-3" />
+                Complete
+              </div>
+            ) : lastSaved ? (
+              <div className="flex items-center gap-1 text-xs text-orange-600">
+                <Save className="w-3 h-3" />
                 Saved
               </div>
             ) : null}
+            
+            {/* Only show collapse toggle when banking is complete */}
             {isBankingComplete() && (
               <Button
                 variant="ghost"
                 size="sm"
-                onClick={toggleCollapse}
+                onClick={handleManualToggle}
                 className="p-1 h-auto text-yellow-700 hover:text-yellow-800"
               >
                 {isCollapsed ? <ChevronDown className="w-4 h-4" /> : <ChevronUp className="w-4 h-4" />}
@@ -169,27 +195,29 @@ const VendorBankingSection: React.FC<VendorBankingProps> = ({
         </CardTitle>
       </CardHeader>
 
-      {/* Collapsed State - Show only confirmation */}
+      {/* Collapsed State - Minimal and clean */}
       {isCollapsed && isBankingComplete() ? (
-        <CardContent className="pt-0">
-          <div className="bg-green-50 p-4 rounded-lg border border-green-200">
+        <CardContent className="pt-0 pb-4">
+          <div className="bg-green-50 p-3 rounded-lg border border-green-200">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <Check className="w-5 h-5 text-green-600" />
+                <div className="w-6 h-6 bg-green-600 rounded-full flex items-center justify-center">
+                  <Check className="w-4 h-4 text-white" />
+                </div>
                 <div>
                   <span className="text-sm font-medium text-green-800">
-                    Business Banking Secured ✅
+                    Banking Secured
                   </span>
-                  <p className="text-xs text-green-700 mt-1">
-                    {formData.bankName} • Account ending in {formData.accountNumber.slice(-4)}
+                  <p className="text-xs text-green-700 mt-0.5">
+                    {formData.bankName} • ****{formData.accountNumber.slice(-4)}
                   </p>
                 </div>
               </div>
               <Button
                 variant="ghost"
                 size="sm"
-                onClick={toggleCollapse}
-                className="text-green-700 hover:text-green-800 p-2"
+                onClick={handleManualToggle}
+                className="text-green-700 hover:text-green-800 p-1 h-auto"
               >
                 <Eye className="w-4 h-4" />
               </Button>
@@ -197,8 +225,8 @@ const VendorBankingSection: React.FC<VendorBankingProps> = ({
           </div>
         </CardContent>
       ) : (
-        // Expanded State - Show full form
-        <CardContent className="space-y-4">
+        // Expanded State - Full form
+        <CardContent className="space-y-4 pb-6">
           <BankAutocomplete 
             onBankSelect={handleBankSelect}
             error={errors.bankName}
@@ -212,14 +240,14 @@ const VendorBankingSection: React.FC<VendorBankingProps> = ({
               autoComplete="off"
               value={formData.accountNumber}
               onChange={handleAccountNumberChange}
-              placeholder="Enter business account number"
+              placeholder="Enter business account number (min 8 digits)"
               className={errors.accountNumber ? 'border-red-500' : 'border-yellow-300 focus:border-yellow-500'}
             />
             {errors.accountNumber && <p className="text-red-500 text-sm">{errors.accountNumber}</p>}
-            {formData.accountNumber && formData.accountNumber.length >= 8 && (
+            {formData.accountNumber && formData.accountNumber.length >= 8 && !errors.accountNumber && (
               <p className="text-green-600 text-xs flex items-center gap-1">
                 <Check className="w-3 h-3" />
-                Account number saved permanently
+                Valid account number
               </p>
             )}
           </div>
@@ -229,17 +257,17 @@ const VendorBankingSection: React.FC<VendorBankingProps> = ({
             <Input
               id="branchCode"
               value={formData.branchCode}
-              placeholder="Auto-detected branch code"
+              placeholder="Auto-detected from bank selection"
               readOnly
               className="bg-gray-50 border-yellow-200"
             />
             <p className="text-xs text-yellow-600">
-              ℹ️ South African banks use branch codes for transactions
+              ℹ️ Branch code auto-fills when you select your bank
             </p>
           </div>
 
-          {/* Confirmation Message - Show when data exists but not complete */}
-          {(formData.bankName || formData.accountNumber) && !isBankingComplete() && (
+          {/* Progress indicator for incomplete forms */}
+          {!isBankingComplete() && (formData.bankName || formData.accountNumber) && (
             <div className="bg-yellow-50 p-3 rounded-lg border border-yellow-200">
               <div className="flex items-center gap-2 mb-1">
                 <div className="w-4 h-4 border-2 border-yellow-600 border-t-transparent rounded-full animate-spin"></div>
@@ -248,7 +276,7 @@ const VendorBankingSection: React.FC<VendorBankingProps> = ({
                 </span>
               </div>
               <p className="text-xs text-yellow-700">
-                Please complete all banking fields to secure your business details.
+                Fill all banking fields to secure and auto-collapse this section.
               </p>
             </div>
           )}
