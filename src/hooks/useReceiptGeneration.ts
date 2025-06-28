@@ -1,8 +1,11 @@
+
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
+import { useReceiptStorage } from './useReceiptStorage';
 
 export const useReceiptGeneration = () => {
   const { toast } = useToast();
+  const { saveReceipt } = useReceiptStorage();
 
   const generateTransactionId = (timestamp: string) => {
     return 'AP' + timestamp.replace(/[^0-9]/g, '').slice(-8);
@@ -51,6 +54,51 @@ export const useReceiptGeneration = () => {
     }
     
     return displayName;
+  };
+
+  const getCurrentUserInfo = () => {
+    try {
+      const credentials = localStorage.getItem('userCredentials');
+      if (credentials) {
+        const parsedCredentials = JSON.parse(credentials);
+        let userData = null;
+        let userId = '';
+        
+        if (parsedCredentials.userType === 'customer') {
+          userData = localStorage.getItem('onecardUser');
+          if (userData) {
+            const parsedUserData = JSON.parse(userData);
+            userId = parsedUserData.cardNumber || 'customer_' + Date.now();
+          }
+        } else if (parsedCredentials.userType === 'vendor') {
+          userData = localStorage.getItem('onecardVendor');
+          if (userData) {
+            const parsedUserData = JSON.parse(userData);
+            userId = parsedUserData.vendorId || 'vendor_' + Date.now();
+          }
+        } else if (parsedCredentials.userType === 'admin') {
+          userData = localStorage.getItem('onecardAdmin');
+          if (userData) {
+            const parsedUserData = JSON.parse(userData);
+            userId = parsedUserData.adminId || 'admin_' + Date.now();
+          }
+        }
+        
+        return {
+          userType: parsedCredentials.userType,
+          userId: userId,
+          email: parsedCredentials.email
+        };
+      }
+    } catch (error) {
+      console.error('Error getting current user info:', error);
+    }
+    
+    return {
+      userType: 'customer',
+      userId: 'anonymous_' + Date.now(),
+      email: ''
+    };
   };
 
   const isPhoneNumberSaved = (phoneNumber: string) => {
@@ -110,6 +158,7 @@ ${receiptMessage}
       }
 
       const customerName = getCustomerDisplayName();
+      const currentUserInfo = getCurrentUserInfo();
       const adminEmail = 'admin@myonecard.co.za';
 
       // Enhanced receipt data - ONLY created after payment completion
@@ -146,6 +195,9 @@ ${receiptMessage}
         };
 
         await sendReceiptToCustomer(adminReceiptData, 'admin');
+
+        // SAVE RECEIPT TO USER PROFILE
+        await saveReceipt(adminReceiptData, currentUserInfo.userType, currentUserInfo.userId);
 
         // Generate WhatsApp receipt message for customer to forward
         const whatsappReceiptMessage = `🟢 *DIVINELY MOBILE RECEIPT* 📱
@@ -200,6 +252,9 @@ _Thank you for using OneCard!_`;
 
         console.log('📧 Sending receipt after payment completion...');
         await sendReceiptToCustomer(receiptData, 'customer');
+
+        // SAVE RECEIPT TO USER PROFILE
+        await saveReceipt(receiptData, currentUserInfo.userType, currentUserInfo.userId);
 
         toast({
           title: "📧 Receipts Delivered",
