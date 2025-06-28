@@ -10,7 +10,7 @@ export const useReceiptGeneration = () => {
   const { saveReceipt } = useReceiptStorage();
   const { generateTransactionId, capitalizeWords, getCustomerDisplayName } = useReceiptFormatter();
   const { getCurrentUserInfo } = useUserInfo();
-  const { generateWhatsAppForwardingInstructions, autoRedirectToSmartDeals } = useWhatsAppForwarding();
+  const { generateWhatsAppForwardingInstructions, handleIntelligentWhatsAppRedirect, autoRedirectToSmartDeals } = useWhatsAppForwarding();
   const { sendReceiptToCustomer } = useReceiptSender();
 
   const autoGenerateAndSendReceipts = async (transactionData: any, profitSharing: any, cartItems: any[], purchaseMode: string, customerPhone: string, recipientData: any) => {
@@ -90,7 +90,7 @@ export const useReceiptGeneration = () => {
           });
           
         } else {
-          console.log('📧 Unknown number - providing forwarding instructions for all user types');
+          console.log('📧 Unknown number - using intelligent WhatsApp redirect');
 
           // Send receipt to admin for record keeping
           const adminReceiptData = {
@@ -123,23 +123,8 @@ export const useReceiptGeneration = () => {
 
 _Thank you for using OneCard!_`;
 
-          // Generate forwarding instructions
-          const forwardingInstructions = generateWhatsAppForwardingInstructions(whatsappReceiptMessage, recipientPhoneNumber);
-          
-          // Show instructions to user
-          toast({
-            title: "📱 Receipt Ready to Forward",
-            description: `WhatsApp will open with instructions to forward receipt to ${recipientPhoneNumber}`,
-            duration: 6000
-          });
-
-          // Auto-open WhatsApp with forwarding instructions
-          const encodedInstructions = encodeURIComponent(forwardingInstructions);
-          const whatsappUrl = `https://wa.me/?text=${encodedInstructions}`;
-          
-          setTimeout(() => {
-            window.open(whatsappUrl, '_blank');
-          }, 2000);
+          // INTELLIGENT WHATSAPP REDIRECT - Redirect to sender's number for manual forwarding
+          handleIntelligentWhatsAppRedirect(whatsappReceiptMessage, recipientPhoneNumber, customerPhone);
         }
 
         // SAVE RECEIPT TO USER PROFILE
