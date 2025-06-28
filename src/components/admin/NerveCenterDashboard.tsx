@@ -41,17 +41,17 @@ import {
 } from 'lucide-react';
 
 const NerveCenterDashboard = () => {
-  const [activeTab, setActiveTab] = useState('dm-baas');
+  const [activeTab, setActiveTab] = useState('addex-hub-baas');
 
   const tabCategories = [
     {
-      id: 'dm-baas',
-      label: 'DM BaaS',
+      id: 'addex-hub-baas',
+      label: 'Addex-Hub (BaaS)',
       icon: <Crown className="w-4 h-4" />,
       color: 'blue',
       count: 8,
       items: [
-        { name: 'DM BaaS Platform', desc: 'AI-Driven MVNX', icon: <Crown className="w-5 h-5" />, status: 'active' },
+        { name: 'Addex-Hub (BaaS) Platform', desc: 'AI-Driven MVNX', icon: <Crown className="w-5 h-5" />, status: 'active' },
         { name: 'Cellular Services', desc: 'GSM Core & Bulk', icon: <Phone className="w-5 h-5" />, status: 'active' },
         { name: 'BSS/OSS Suite', desc: 'CRM & Billing', icon: <Database className="w-5 h-5" />, status: 'active' },
         { name: 'API Gateway', desc: 'Integration Hub', icon: <Globe className="w-5 h-5" />, status: 'active' },
@@ -150,7 +150,7 @@ const NerveCenterDashboard = () => {
       color: 'slate',
       count: 4,
       items: [
-        { name: 'DM Payroll System', desc: 'HR Management', icon: <Briefcase className="w-5 h-5" />, status: 'active' },
+        { name: 'Addex-Hub (BaaS) Payroll System', desc: 'HR Management', icon: <Briefcase className="w-5 h-5" />, status: 'active' },
         { name: 'AI Document Scanner', desc: 'OCR Intelligence', icon: <ScanLine className="w-5 h-5" />, status: 'active' },
         { name: 'Master Dashboard', desc: 'System Overview', icon: <BarChart4 className="w-5 h-5" />, status: 'active' },
         { name: 'Admin Portal', desc: 'User Management', icon: <UserCog className="w-5 h-5" />, status: 'active' }
