@@ -57,11 +57,16 @@ const VendorRegistrationAlerts = () => {
             </AlertDescription>
           </Alert>
 
-          {/* Password Management */}
+          {/* Enhanced Password Management - Now Collapsible */}
           <Alert className="border-purple-200 bg-purple-50">
             <Shield className="w-5 h-5 text-purple-600" />
             <AlertDescription className="text-purple-800">
-              <strong>🔐 Enhanced Security:</strong> Password reset via email OTP available. Use special password (Malawi@1976) for unified admin access.
+              <strong>🔐 Enhanced Password Management:</strong>
+              <ul className="mt-2 space-y-1 text-sm">
+                <li>• Auto-save keeps your registration safe</li>
+                <li>• Password reset available via email OTP</li>
+                <li>• Use unified password (Malawi@1976) for admin access</li>
+              </ul>
             </AlertDescription>
           </Alert>
         </div>
