@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { useToast } from '@/hooks/use-toast';
 
@@ -42,7 +43,7 @@ export const useEnhancedReceiptGenerator = () => {
   const { toast } = useToast();
 
   const generateReceiptNumber = () => {
-    return 'DM' + Date.now().toString(36).toUpperCase() + Math.random().toString(36).substr(2, 5).toUpperCase();
+    return 'AH' + Date.now().toString(36).toUpperCase() + Math.random().toString(36).substr(2, 5).toUpperCase();
   };
 
   const formatDateTime = (timestamp: string) => {
@@ -60,15 +61,15 @@ export const useEnhancedReceiptGenerator = () => {
 
   const generateComprehensiveWhatsAppReceipt = (data: EnhancedReceiptData): string => {
     const itemsSection = data.items.map(item => 
-      `• **${item.name.replace('DIVINELY', 'DIVINE')}**
-  📱 Network: ${item.network.toUpperCase().replace('DIVINELY', 'DIVINE')}
+      `• **${item.name.replace('DIVINELY', 'ADDEX-HUB').replace('Divinely', 'Addex-Hub')}**
+  📱 Network: ${item.network.toUpperCase().replace('DIVINELY', 'ADDEX-HUB').replace('Divinely', 'Addex-Hub')}
   💎 Service: ${item.type.toUpperCase()}
   💰 Amount: R${item.subtotal.toFixed(2)}`
     ).join('\n\n');
 
     const loyaltyPoints = Math.round(data.totalPaid * 2);
 
-    return `🌟 **DIVINE MOBILE** 📱
+    return `🌟 **ADDEX-HUB MOBILE** 📱
 ✨ **Premium Digital Receipt** ✨
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -82,8 +83,8 @@ export const useEnhancedReceiptGenerator = () => {
 **Customer**: ${data.customer.name}
 **Mobile**: ${data.customer.mobile}${data.customer.email ? `\n**Email**: ${data.customer.email}` : ''}
 
-**Provider**: Divine Mobile
-**Website**: www.divinemobile.co.za
+**Provider**: Addex-Hub Mobile
+**Website**: www.addex-hub.co.za
 **Support**: +27 100 2827
 **Platform**: Addex-Hub
 
@@ -122,11 +123,11 @@ ${data.vendor ? `━━━━━━━━━━━━━━━━━━━━━
 
 • Keep this receipt for records
 • 24/7 Support: +27 100 2827
-• Help: www.divinemobile.co.za/support
+• Help: www.addex-hub.co.za/support
 • Live Chat: On website
 • Refunds: T&Cs apply
 
-🌟 **Thank you for choosing Divine Mobile!** 🌟
+🌟 **Thank you for choosing Addex-Hub Mobile!** 🌟
 ⚡ Fast • 🔒 Secure • 🎯 Reliable
 
 🔐 **Digital Verification**
@@ -138,7 +139,7 @@ ${data.vendor ? `━━━━━━━━━━━━━━━━━━━━━
   const generateProfessionalEmailReceipt = (data: EnhancedReceiptData): string => {
     const itemsRows = data.items.map(item => `
       <tr>
-        <td style="padding: 12px; border-bottom: 1px solid #e5e7eb;">${item.name.replace('DIVINELY', 'DIVINE')}</td>
+        <td style="padding: 12px; border-bottom: 1px solid #e5e7eb;">${item.name.replace('DIVINELY', 'ADDEX-HUB').replace('Divinely', 'Addex-Hub')}</td>
         <td style="padding: 12px; border-bottom: 1px solid #e5e7eb; text-align: center;">${item.quantity}</td>
         <td style="padding: 12px; border-bottom: 1px solid #e5e7eb; text-align: right;">R${item.unitPrice.toFixed(2)}</td>
         <td style="padding: 12px; border-bottom: 1px solid #e5e7eb; text-align: right; font-weight: bold;">R${item.subtotal.toFixed(2)}</td>
@@ -153,7 +154,7 @@ ${data.vendor ? `━━━━━━━━━━━━━━━━━━━━━
       <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Divine Mobile Receipt</title>
+        <title>Addex-Hub Mobile Receipt</title>
       </head>
       <body style="font-family: 'Segoe UI', Arial, sans-serif; line-height: 1.6; color: #333; margin: 0; padding: 20px; background-color: #f8fafc;">
         <div style="max-width: 600px; margin: 0 auto; background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 10px 25px rgba(0,0,0,0.1);">
@@ -164,7 +165,7 @@ ${data.vendor ? `━━━━━━━━━━━━━━━━━━━━━
               <div style="width: 24px; height: 24px; background: white; border-radius: 6px; margin-right: 12px; display: flex; align-items: center; justify-content: center;">
                 <span style="color: #4F46E5; font-size: 16px;">📱</span>
               </div>
-              <span style="font-size: 18px; font-weight: bold;">DIVINE MOBILE</span>
+              <span style="font-size: 18px; font-weight: bold;">ADDEX-HUB MOBILE</span>
             </div>
             <h1 style="margin: 0; font-size: 28px; font-weight: bold;">Premium Digital Receipt</h1>
             <p style="margin: 10px 0 0 0; opacity: 0.9;">Transaction Confirmed</p>
@@ -192,8 +193,8 @@ ${data.vendor ? `━━━━━━━━━━━━━━━━━━━━━
           <div style="padding: 20px 30px; background: white; border-bottom: 1px solid #e5e7eb;">
             <h3 style="color: #4F46E5; margin: 0 0 10px 0; font-size: 16px;">Service Provider</h3>
             <div style="display: flex; flex-wrap: wrap; gap: 20px; font-size: 14px;">
-              <span><strong>Provider:</strong> Divine Mobile</span>
-              <span><strong>Website:</strong> www.divinemobile.co.za</span>
+              <span><strong>Provider:</strong> Addex-Hub Mobile</span>
+              <span><strong>Website:</strong> www.addex-hub.co.za</span>
               <span><strong>Support:</strong> +27 100 2827</span>
             </div>
           </div>
@@ -263,12 +264,12 @@ ${data.vendor ? `━━━━━━━━━━━━━━━━━━━━━
 
           <!-- Footer -->
           <div style="background: #1f2937; color: white; padding: 30px; text-align: center;">
-            <h3 style="margin: 0 0 15px 0; color: white;">Thank you for choosing Divine Mobile!</h3>
+            <h3 style="margin: 0 0 15px 0; color: white;">Thank you for choosing Addex-Hub Mobile!</h3>
             <p style="margin: 0 0 15px 0; opacity: 0.8; font-style: italic;">⚡ Fast • 🔒 Secure • 🎯 Reliable</p>
             
             <div style="border-top: 1px solid #374151; padding-top: 20px; margin-top: 20px;">
               <p style="margin: 5px 0; font-size: 14px; opacity: 0.7;">📋 Keep this receipt for your records</p>
-              <p style="margin: 5px 0; font-size: 14px; opacity: 0.7;">📞 Support: +27 100 2827 | 🌐 www.divinemobile.co.za</p>
+              <p style="margin: 5px 0; font-size: 14px; opacity: 0.7;">📞 Support: +27 100 2827 | 🌐 www.addex-hub.co.za</p>
               <p style="margin: 5px 0; font-size: 12px; opacity: 0.6;">Digital Verification: ${new Date().toISOString()}</p>
             </div>
           </div>

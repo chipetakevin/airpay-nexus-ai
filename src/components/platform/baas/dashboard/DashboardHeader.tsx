@@ -12,7 +12,7 @@ const DashboardHeader = () => {
         </div>
       </div>
       <h1 className="text-2xl md:text-4xl lg:text-5xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 bg-clip-text text-transparent px-4">
-        Divine Mobile Agentic BaaS Platform
+        Addex-Hub Mobile Agentic BaaS Platform
       </h1>
       <p className="text-sm md:text-lg text-gray-600 max-w-3xl mx-auto leading-relaxed px-4">
         Revolutionary Backend-as-a-Service platform with autonomous AI agents, powered by advanced data mesh architecture for telecommunications excellence
