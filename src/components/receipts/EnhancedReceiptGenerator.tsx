@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { useToast } from '@/hooks/use-toast';
 
@@ -84,9 +83,9 @@ export const useEnhancedReceiptGenerator = () => {
 **Mobile**: ${data.customer.mobile}${data.customer.email ? `\n**Email**: ${data.customer.email}` : ''}
 
 **Provider**: Divine Mobile
-**Website**: myonecard.co.za
+**Website**: www.divinemobile.co.za
 **Support**: +27 100 2827
-**Platform**: OneCard Digital Services
+**Platform**: Addex-Hub
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 🛒 **PURCHASE SUMMARY**
@@ -123,7 +122,7 @@ ${data.vendor ? `━━━━━━━━━━━━━━━━━━━━━
 
 • Keep this receipt for records
 • 24/7 Support: +27 100 2827
-• Help: myonecard.co.za/support
+• Help: www.divinemobile.co.za/support
 • Live Chat: On website
 • Refunds: T&Cs apply
 
@@ -132,7 +131,7 @@ ${data.vendor ? `━━━━━━━━━━━━━━━━━━━━━
 
 🔐 **Digital Verification**
 • Verified: ${new Date().toISOString()}
-• Platform: OneCard Secure
+• Platform: Addex-Hub Secure
 • Trusted by thousands daily`;
   };
 
@@ -194,7 +193,7 @@ ${data.vendor ? `━━━━━━━━━━━━━━━━━━━━━
             <h3 style="color: #4F46E5; margin: 0 0 10px 0; font-size: 16px;">Service Provider</h3>
             <div style="display: flex; flex-wrap: wrap; gap: 20px; font-size: 14px;">
               <span><strong>Provider:</strong> Divine Mobile</span>
-              <span><strong>Website:</strong> myonecard.co.za</span>
+              <span><strong>Website:</strong> www.divinemobile.co.za</span>
               <span><strong>Support:</strong> +27 100 2827</span>
             </div>
           </div>
@@ -269,7 +268,7 @@ ${data.vendor ? `━━━━━━━━━━━━━━━━━━━━━
             
             <div style="border-top: 1px solid #374151; padding-top: 20px; margin-top: 20px;">
               <p style="margin: 5px 0; font-size: 14px; opacity: 0.7;">📋 Keep this receipt for your records</p>
-              <p style="margin: 5px 0; font-size: 14px; opacity: 0.7;">📞 Support: +27 100 2827 | 🌐 myonecard.co.za</p>
+              <p style="margin: 5px 0; font-size: 14px; opacity: 0.7;">📞 Support: +27 100 2827 | 🌐 www.divinemobile.co.za</p>
               <p style="margin: 5px 0; font-size: 12px; opacity: 0.6;">Digital Verification: ${new Date().toISOString()}</p>
             </div>
           </div>

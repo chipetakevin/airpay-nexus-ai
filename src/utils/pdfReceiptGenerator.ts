@@ -110,7 +110,7 @@ export const generateMobilePDFReceipt = (receiptData: ReceiptData): jsPDF => {
   doc.setFontSize(10);
   doc.setFont('helvetica', 'normal');
   doc.text('Provider: Divine Mobile', margin, yPos);
-  doc.text('Website: myonecard.co.za', margin, yPos + 7);
+  doc.text('Website: www.divinemobile.co.za', margin, yPos + 7);
   doc.text('Support: +27 100 2827', margin, yPos + 14);
 
   // Items Section
@@ -189,7 +189,7 @@ export const generateMobilePDFReceipt = (receiptData: ReceiptData): jsPDF => {
   doc.setFont('helvetica', 'normal');
   doc.text('Thank you for choosing Divine Mobile!', margin, yPos);
   doc.text('⚡ Fast • 🔒 Secure • 🎯 Reliable', margin, yPos + 7);
-  doc.text('Support: +27 100 2827 | myonecard.co.za', margin, yPos + 14);
+  doc.text('Support: +27 100 2827 | www.divinemobile.co.za', margin, yPos + 14);
 
   return doc;
 };

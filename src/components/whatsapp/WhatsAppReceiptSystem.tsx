@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { useToast } from '@/hooks/use-toast';
 
@@ -45,9 +44,9 @@ export const useWhatsAppReceipt = () => {
 **Mobile**: ${data.customerPhone}
 
 **Provider**: Divine Mobile
-**Website**: myonecard.co.za
+**Website**: www.divinemobile.co.za
 **Support**: +27 100 2827
-**Platform**: OneCard Digital Services
+**Platform**: Addex-Hub
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 🛒 **PURCHASE SUMMARY**
@@ -75,7 +74,7 @@ ${itemsList}
 
 • Keep this receipt for records
 • 24/7 Support: +27 100 2827
-• Help: myonecard.co.za/support
+• Help: www.divinemobile.co.za/support
 • Live Chat: On website
 • Refunds: T&Cs apply
 
@@ -84,7 +83,7 @@ ${itemsList}
 
 🔐 **Digital Verification**
 • Verified: ${new Date().toISOString()}
-• Platform: OneCard Secure
+• Platform: Addex-Hub Secure
 • Trusted by thousands daily`;
   };
 

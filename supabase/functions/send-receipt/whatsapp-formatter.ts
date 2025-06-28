@@ -27,7 +27,7 @@ ${data.items.map(item =>
 📱 **ACTION REQUIRED**:
 Customer instructed to forward receipt to ${data.recipientPhone}
 
-🌐 myonecard.co.za | 📞 +27 100 2827
+🌐 www.divinemobile.co.za | 📞 +27 100 2827
 
 *Admin notification for unknown recipient*`;
   }
@@ -59,7 +59,7 @@ ${data.items.map(item =>
 🌟 **Thank you for choosing Divine Mobile!**
 ⚡ Fast • 🔒 Secure • 🎯 Reliable
 
-🌐 myonecard.co.za | 📞 +27 100 2827`;
+🌐 www.divinemobile.co.za | 📞 +27 100 2827`;
   }
 
   // Regular recipient receipt formatting
@@ -94,13 +94,13 @@ ${data.customerPhone !== data.recipientPhone ?
 
 • Keep this receipt for records
 • 24/7 Support: +27 100 2827
-• Help: myonecard.co.za/support
+• Help: www.divinemobile.co.za/support
 • Refunds: T&Cs apply
 
 🌟 **Thank you for using Divine Mobile!** 🌟
 ⚡ Fast • 🔒 Secure • 🎯 Reliable
 
 🔐 **Digital Verification**
-• Platform: OneCard Secure
+• Platform: Addex-Hub Secure
 • Trusted by thousands daily`;
 };
