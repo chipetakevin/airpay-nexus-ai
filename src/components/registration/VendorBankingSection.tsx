@@ -21,7 +21,7 @@ const VendorBankingSection: React.FC<VendorBankingProps> = ({
   onInputChange,
   onBankSelect
 }) => {
-  const { saveBankingInfo, getBankingInfo, autoSaveBankingField } = useBankingAutoSave();
+  const { saveBankingInfo, getBankingInfo } = useBankingAutoSave();
   const { toast } = useToast();
   const [isAutoSaving, setIsAutoSaving] = useState(false);
   const [lastSaved, setLastSaved] = useState<Date | null>(null);
@@ -30,36 +30,29 @@ const VendorBankingSection: React.FC<VendorBankingProps> = ({
   const validation = validateBankingForm(formData, errors);
   const isBankingComplete = validation.isComplete;
 
-  // Intelligent auto-collapse with immediate trigger
+  // Enhanced auto-collapse with immediate response
   useEffect(() => {
     if (isBankingComplete && !isCollapsed) {
-      console.log('🏦 Banking form complete - auto-collapsing...');
+      console.log('🏦 Banking complete - triggering auto-collapse');
+      
+      // Immediate collapse without delay
+      setIsCollapsed(true);
       
       toast({
-        title: "Business Banking Secured! 🔒",
-        description: "Banking details completed and auto-collapsed for better navigation.",
-        duration: 3000
+        title: "Banking Secured! 🔒",
+        description: "Banking details saved and collapsed for better navigation.",
+        duration: 2000
       });
-      
-      setIsCollapsed(true);
     }
     
+    // Auto-expand if form becomes incomplete
     if (!isBankingComplete && isCollapsed) {
-      console.log('⚠️ Banking form incomplete - expanding...');
+      console.log('⚠️ Banking incomplete - expanding for completion');
       setIsCollapsed(false);
     }
-  }, [
-    formData.bankName, 
-    formData.accountNumber, 
-    formData.branchCode, 
-    errors.bankName, 
-    errors.accountNumber,
-    isBankingComplete,
-    isCollapsed,
-    toast
-  ]);
+  }, [isBankingComplete, isCollapsed, toast]);
 
-  // Auto-fill banking information on component mount
+  // Auto-fill on mount with enhanced detection
   useEffect(() => {
     const savedBankingInfo = getBankingInfo();
     
@@ -70,61 +63,68 @@ const VendorBankingSection: React.FC<VendorBankingProps> = ({
     if (savedBankingInfo.accountNumber && !formData.accountNumber) {
       onInputChange('accountNumber', savedBankingInfo.accountNumber);
     }
+    if (savedBankingInfo.branchCode && !formData.branchCode) {
+      onInputChange('branchCode', savedBankingInfo.branchCode);
+    }
 
-    if (savedBankingInfo.bankName || savedBankingInfo.accountNumber) {
+    if (savedBankingInfo.bankName && savedBankingInfo.accountNumber && savedBankingInfo.branchCode) {
       toast({
-        title: "Business Banking Auto-filled! 🏢",
-        description: "Your saved banking information has been restored.",
+        title: "Banking Auto-filled! 🏢",
+        description: "Complete banking information restored from secure storage.",
       });
     }
   }, []);
 
-  // Auto-save banking information when fields change
+  // Optimized auto-save with reduced frequency
   useEffect(() => {
     if (formData.bankName || formData.accountNumber || formData.branchCode) {
       setIsAutoSaving(true);
       
-      const timeoutId = setTimeout(() => {
-        saveBankingInfo({
-          bankName: formData.bankName,
-          accountNumber: formData.accountNumber,
-          branchCode: formData.branchCode,
-          routingNumber: formData.routingNumber
-        });
-        
-        setIsAutoSaving(false);
-        setLastSaved(new Date());
-      }, 500);
+      const timeoutId = setTimeout(async () => {
+        try {
+          await saveBankingInfo({
+            bankName: formData.bankName,
+            accountNumber: formData.accountNumber,
+            branchCode: formData.branchCode,
+            routingNumber: formData.routingNumber
+          });
+          
+          setIsAutoSaving(false);
+          setLastSaved(new Date());
+          console.log('✅ Banking info saved successfully');
+        } catch (error) {
+          console.error('❌ Failed to save banking info:', error);
+          setIsAutoSaving(false);
+        }
+      }, 1000); // Increased delay to reduce excessive saving
 
       return () => clearTimeout(timeoutId);
     }
   }, [formData.bankName, formData.accountNumber, formData.branchCode, formData.routingNumber, saveBankingInfo]);
 
-  const handleBankSelect = (bankName: string, routing: string, branchCode: string) => {
+  const handleBankSelect = async (bankName: string, routing: string, branchCode: string) => {
     onBankSelect(bankName, routing, branchCode);
     
-    const bankingData = {
-      bankName,
-      branchCode,
-      routingNumber: routing,
-      accountNumber: formData.accountNumber
-    };
-    
-    saveBankingInfo(bankingData);
-    setLastSaved(new Date());
+    try {
+      await saveBankingInfo({
+        bankName,
+        branchCode,
+        routingNumber: routing,
+        accountNumber: formData.accountNumber
+      });
+      setLastSaved(new Date());
+    } catch (error) {
+      console.error('Failed to save bank selection:', error);
+    }
   };
 
   const handleAccountNumberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     onInputChange('accountNumber', value);
-    
-    if (value.length >= 8) {
-      autoSaveBankingField('accountNumber', value);
-    }
   };
 
   const handleManualToggle = () => {
-    if (isCollapsed && !isBankingComplete) {
+    if (!isBankingComplete && isCollapsed) {
       toast({
         title: "Complete Banking Details",
         description: "Please fill all banking information before collapsing.",
@@ -136,7 +136,7 @@ const VendorBankingSection: React.FC<VendorBankingProps> = ({
   };
 
   return (
-    <Card className="border-yellow-200 bg-yellow-50/30">
+    <Card className="border-yellow-200 bg-yellow-50/30 mb-4">
       <BankingCardHeader
         isAutoSaving={isAutoSaving}
         isBankingComplete={isBankingComplete}
