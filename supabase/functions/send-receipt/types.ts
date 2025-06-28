@@ -15,7 +15,8 @@ export interface ReceiptData {
   recipientPhone: string;
   recipientName?: string;
   timestamp: string;
-  purchaseType?: 'self' | 'sender' | 'recipient';
+  purchaseType?: 'self' | 'sender' | 'recipient' | 'admin_notification';
+  isUnknownRecipient?: boolean;
 }
 
 export const corsHeaders = {
