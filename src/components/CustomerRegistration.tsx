@@ -121,7 +121,7 @@ const CustomerRegistration = () => {
         </div>
       )}
 
-      <RegistrationAlerts />
+      <RegistrationAlerts location={location} />
 
       <LocationDetector onLocationUpdate={setLocation} />
 
