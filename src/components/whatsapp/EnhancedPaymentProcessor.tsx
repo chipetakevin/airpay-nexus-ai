@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -351,7 +350,7 @@ const EnhancedPaymentProcessor = ({ product, cartItems, onBack }: PaymentProcess
 
   return (
     <div className="h-full flex flex-col">
-      {/* Header */}
+      {/* Header - Fixed text visibility */}
       <div className="bg-gradient-to-r from-green-600 to-emerald-700 text-white p-4">
         <div className="flex items-center gap-3">
           <Button
@@ -363,8 +362,8 @@ const EnhancedPaymentProcessor = ({ product, cartItems, onBack }: PaymentProcess
             <ArrowLeft className="w-5 h-5" />
           </Button>
           <div className="flex-1">
-            <h2 className="font-bold text-lg">Secure Checkout</h2>
-            <p className="text-xs opacity-90">SSL Protected • Bank Grade Security</p>
+            <h2 className="font-bold text-lg text-white drop-shadow-md">Secure Checkout</h2>
+            <p className="text-xs text-white opacity-90 drop-shadow-sm">SSL Protected • Bank Grade Security</p>
           </div>
           <Shield className="w-6 h-6 text-green-300" />
         </div>
