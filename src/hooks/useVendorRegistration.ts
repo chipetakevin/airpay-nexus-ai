@@ -17,7 +17,7 @@ export const useVendorRegistration = () => {
     lastName: '',
     email: '',
     phoneNumber: '',
-    countryCode: '+27', // Preset South Africa country code
+    countryCode: '+27',
     password: '',
     confirmPassword: '',
     companyName: '',
@@ -51,15 +51,12 @@ export const useVendorRegistration = () => {
   const handleInputChange = (field: keyof VendorFormData, value: any) => {
     // Special handling for phone number to ensure proper formatting
     if (field === 'phoneNumber') {
-      // Remove any non-numeric characters
       let cleanValue = value.replace(/\D/g, '');
       
-      // Remove leading zero if present
       if (cleanValue.startsWith('0')) {
         cleanValue = cleanValue.substring(1);
       }
       
-      // Limit to 9 digits
       if (cleanValue.length > 9) {
         cleanValue = cleanValue.substring(0, 9);
       }
@@ -70,7 +67,7 @@ export const useVendorRegistration = () => {
     setFormData(prev => ({ 
       ...prev, 
       [field]: value,
-      rememberPassword: true // Always keep remember password enabled
+      rememberPassword: true
     }));
     
     // Clear field-specific errors
@@ -94,22 +91,37 @@ export const useVendorRegistration = () => {
     }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
     const newErrors = validateVendorForm(formData);
     setErrors(newErrors);
 
     if (Object.keys(newErrors).length === 0) {
+      // Complete the registration process
       const { vendorId, successMessage } = handleVendorRegistrationSubmit(formData);
+      
+      // Store registration completion flag
+      localStorage.setItem('registrationCompleted', 'true');
+      localStorage.setItem('userAuthenticated', 'true');
       
       toast({
         title: "Vendor Registration Successful! 🎉",
         description: successMessage,
       });
 
-      // Redirect to Smart Deals with enhanced session persistence
-      window.location.replace('/portal?tab=onecard&verified=true&autosave=enabled');
+      // Return success - redirection will be handled by the component
+      return Promise.resolve(true);
+    } else {
+      // Show validation errors
+      const errorFields = Object.keys(newErrors);
+      toast({
+        title: "Please Complete Required Fields",
+        description: `Missing: ${errorFields.join(', ')}`,
+        variant: "destructive"
+      });
+      
+      return Promise.reject(new Error('Validation failed'));
     }
   };
 

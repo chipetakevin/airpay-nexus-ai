@@ -12,7 +12,8 @@ import { useToast } from '@/hooks/use-toast';
 
 const VendorRegistration = () => {
   const [location, setLocation] = useState('Detecting location...');
-  const [isAlertsCollapsed, setIsAlertsCollapsed] = useState(true); // Start collapsed for better UX
+  const [isAlertsCollapsed, setIsAlertsCollapsed] = useState(true);
+  const [isRegistering, setIsRegistering] = useState(false);
   const { toast } = useToast();
   
   const { 
@@ -25,12 +26,11 @@ const VendorRegistration = () => {
     handleSubmit 
   } = useVendorRegistration();
 
-  // Stable effect for marketing consent changes - prevent infinite loops
+  // Stable effect for marketing consent changes
   useEffect(() => {
     let timeoutId: NodeJS.Timeout;
 
     if (formData.marketingConsent && !isAlertsCollapsed) {
-      // Delay collapse to prevent race conditions
       timeoutId = setTimeout(() => {
         setIsAlertsCollapsed(true);
         toast({
@@ -40,7 +40,6 @@ const VendorRegistration = () => {
         });
       }, 300);
     } else if (!formData.marketingConsent && isAlertsCollapsed) {
-      // Only expand if user explicitly unchecked consent
       timeoutId = setTimeout(() => {
         setIsAlertsCollapsed(false);
         toast({
@@ -56,27 +55,81 @@ const VendorRegistration = () => {
         clearTimeout(timeoutId);
       }
     };
-  }, [formData.marketingConsent]); // Simplified dependency
+  }, [formData.marketingConsent]);
 
   const handleAlertsToggle = () => {
     setIsAlertsCollapsed(!isAlertsCollapsed);
   };
 
-  // Enhanced form submit with better error handling
-  const handleFormSubmit = (e: React.FormEvent) => {
+  // Enhanced form submit with privilege-based redirection
+  const handleFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     e.stopPropagation();
     
+    setIsRegistering(true);
+    
     try {
-      handleSubmit(e);
+      await handleSubmit(e);
+      
+      // After successful registration, determine redirect based on user type
+      const userCredentials = localStorage.getItem('userCredentials');
+      if (userCredentials) {
+        const credentials = JSON.parse(userCredentials);
+        const userType = credentials.userType;
+        const isUnified = credentials.password === 'Malawi@1976';
+        
+        toast({
+          title: "Registration Successful! 🎉",
+          description: `Redirecting to your ${userType} dashboard...`,
+        });
+
+        // Privilege-based redirection logic
+        setTimeout(() => {
+          if (isUnified) {
+            // Unified profiles get full admin access
+            window.location.href = '/portal?tab=admin-reg&verified=true';
+          } else if (userType === 'vendor') {
+            // Vendors get access to deals with vendor privileges
+            window.location.href = '/portal?tab=deals&user=vendor&verified=true';
+          } else if (userType === 'admin') {
+            // Admins get admin registration access
+            window.location.href = '/portal?tab=admin-reg&verified=true';
+          } else {
+            // Customers get standard deals access
+            window.location.href = '/portal?tab=deals&user=customer&verified=true';
+          }
+        }, 2000);
+      } else {
+        // Fallback to deals tab if no user type detected
+        setTimeout(() => {
+          window.location.href = '/portal?tab=deals&verified=true';
+        }, 2000);
+      }
+      
     } catch (error) {
       console.error('Form submission error:', error);
       toast({
-        title: "Submission Error",
+        title: "Registration Error",
         description: "Please check all fields and try again.",
         variant: "destructive"
       });
+    } finally {
+      setIsRegistering(false);
     }
+  };
+
+  // Check if form is ready for submission
+  const isFormValid = () => {
+    const hasRequiredFields = formData.firstName && 
+                             formData.lastName && 
+                             formData.email && 
+                             formData.phoneNumber && 
+                             formData.companyName &&
+                             formData.agreeTerms;
+    
+    const hasNoErrors = Object.keys(errors).length === 0;
+    
+    return hasRequiredFields && hasNoErrors;
   };
 
   return (
@@ -131,17 +184,36 @@ const VendorRegistration = () => {
         </form>
       </div>
 
-      {/* Enhanced fixed register button - always visible */}
+      {/* Enhanced functional register button with privilege-based redirection */}
       <div className="fixed-register-button">
         <div className="register-button-container">
           <Button 
             onClick={handleFormSubmit}
             type="submit"
-            className="mobile-submit-button bg-gradient-to-r from-yellow-600 to-yellow-700 hover:from-yellow-700 hover:to-yellow-800"
-            disabled={Object.keys(errors).length > 0}
+            className={`mobile-submit-button transition-all duration-300 ${
+              isFormValid() 
+                ? 'bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800' 
+                : 'bg-gradient-to-r from-yellow-600 to-yellow-700 hover:from-yellow-700 hover:to-yellow-800'
+            }`}
+            disabled={isRegistering}
           >
-            Register & Start Shopping 🛒
+            {isRegistering ? (
+              <div className="flex items-center gap-2">
+                <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                Completing Registration...
+              </div>
+            ) : (
+              <>
+                {isFormValid() ? 'Register & Start Shopping 🛒' : 'Complete Form to Continue 📝'}
+              </>
+            )}
           </Button>
+          
+          {isFormValid() && !isRegistering && (
+            <div className="text-xs text-center mt-2 text-green-600 bg-green-50 p-2 rounded-lg">
+              ✅ Ready to register! You'll be redirected to your personalized shopping experience.
+            </div>
+          )}
         </div>
       </div>
     </div>
