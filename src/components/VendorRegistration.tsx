@@ -23,9 +23,15 @@ const VendorRegistration = () => {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h2 className="text-2xl font-bold mb-2">Vendor Registration</h2>
-        <p className="text-gray-600">Join AirPay as a business partner and start earning with OneCard Gold rewards!</p>
+      {/* Mobile-optimized header */}
+      <div className="bg-gradient-to-r from-yellow-600 to-yellow-700 text-white p-4 sm:p-6 rounded-lg shadow-lg">
+        <div className="flex items-center gap-3">
+          <div className="text-2xl sm:text-3xl">🛒</div>
+          <div>
+            <h2 className="text-xl sm:text-2xl font-bold mb-1">Register & Start Shopping</h2>
+            <p className="text-yellow-100 text-sm sm:text-base">Join AirPay as a business partner and start earning with OneCard Gold rewards!</p>
+          </div>
+        </div>
       </div>
 
       <VendorRegistrationAlerts />
@@ -61,7 +67,7 @@ const VendorRegistration = () => {
           onInputChange={handleInputChange}
         />
 
-        <Button type="submit" className="w-full bg-gradient-to-r from-yellow-600 to-yellow-700 hover:from-yellow-700 hover:to-yellow-800">
+        <Button type="submit" className="w-full bg-gradient-to-r from-yellow-600 to-yellow-700 hover:from-yellow-700 hover:to-yellow-800 text-lg py-6">
           Register & Start Shopping 🛒
         </Button>
       </form>

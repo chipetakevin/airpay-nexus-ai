@@ -1,5 +1,5 @@
 
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState, useCallback, useRef } from 'react';
 import { Card } from '@/components/ui/card';
 import { useBankingAutoSave } from '@/hooks/useBankingAutoSave';
 import { useToast } from '@/hooks/use-toast';
@@ -28,28 +28,59 @@ const VendorBankingSection: React.FC<VendorBankingProps> = ({
   const [isAutoSaving, setIsAutoSaving] = useState(false);
   const [lastSaved, setLastSaved] = useState<Date | null>(null);
   const [isCollapsed, setIsCollapsed] = useState(false);
-  const [prevMarketingConsent, setPrevMarketingConsent] = useState(marketingConsent);
+  
+  // Use refs to prevent infinite loops
+  const prevMarketingConsentRef = useRef(marketingConsent);
+  const prevIsBankingCompleteRef = useRef(false);
+  const autoCollapseTimeoutRef = useRef<NodeJS.Timeout>();
 
   const validation = validateBankingForm(formData, errors);
   const isBankingComplete = validation.isComplete;
 
-  // Memoized collapse handler to prevent unnecessary re-renders
-  const handleAutoCollapse = useCallback(() => {
+  // Auto-collapse logic with improved state management
+  const handleAutoCollapse = useCallback(async () => {
     if (isBankingComplete && !isCollapsed) {
       console.log('🏦 Banking complete - triggering auto-collapse');
-      setIsCollapsed(true);
       
-      toast({
-        title: "Banking Secured! 🔒",
-        description: "Banking details saved and collapsed for better navigation.",
-        duration: 2000
-      });
+      // Clear any existing timeout
+      if (autoCollapseTimeoutRef.current) {
+        clearTimeout(autoCollapseTimeoutRef.current);
+      }
+      
+      // Save banking info immediately
+      setIsAutoSaving(true);
+      try {
+        await saveBankingInfo({
+          bankName: formData.bankName,
+          accountNumber: formData.accountNumber,
+          branchCode: formData.branchCode,
+          routingNumber: formData.routingNumber
+        });
+        setLastSaved(new Date());
+      } catch (error) {
+        console.error('❌ Failed to save banking info:', error);
+      } finally {
+        setIsAutoSaving(false);
+      }
+      
+      // Collapse with slight delay for smooth UX
+      autoCollapseTimeoutRef.current = setTimeout(() => {
+        setIsCollapsed(true);
+        toast({
+          title: "Banking Secured! 🔒",
+          description: "Banking details saved and collapsed for better navigation.",
+          duration: 2000
+        });
+      }, 500);
     }
-  }, [isBankingComplete, isCollapsed, toast]);
+  }, [isBankingComplete, isCollapsed, formData, saveBankingInfo, toast]);
 
-  // Handle banking completion auto-collapse (only when banking becomes complete)
+  // Handle banking completion changes
   useEffect(() => {
-    if (isBankingComplete && !isCollapsed) {
+    const wasIncomplete = prevIsBankingCompleteRef.current === false;
+    const isNowComplete = isBankingComplete === true;
+    
+    if (wasIncomplete && isNowComplete && !isCollapsed) {
       handleAutoCollapse();
     }
     
@@ -58,48 +89,25 @@ const VendorBankingSection: React.FC<VendorBankingProps> = ({
       console.log('⚠️ Banking incomplete - expanding for completion');
       setIsCollapsed(false);
     }
+    
+    prevIsBankingCompleteRef.current = isBankingComplete;
   }, [isBankingComplete, isCollapsed, handleAutoCollapse]);
 
-  // Handle marketing consent changes (prevent infinite loop)
+  // Handle marketing consent changes
   useEffect(() => {
-    // Only process if marketing consent actually changed
-    if (marketingConsent !== prevMarketingConsent) {
-      setPrevMarketingConsent(marketingConsent);
+    const prevConsent = prevMarketingConsentRef.current;
+    const currentConsent = marketingConsent;
+
+    if (prevConsent !== currentConsent) {
+      prevMarketingConsentRef.current = currentConsent;
       
-      if (marketingConsent && isBankingComplete && !isCollapsed) {
+      if (currentConsent && isBankingComplete && !isCollapsed) {
         console.log('📧 Marketing consent given - auto-collapsing banking section');
-        
-        // Force save banking info immediately and collapse
-        const saveAndCollapse = async () => {
-          setIsAutoSaving(true);
-          try {
-            await saveBankingInfo({
-              bankName: formData.bankName,
-              accountNumber: formData.accountNumber,
-              branchCode: formData.branchCode,
-              routingNumber: formData.routingNumber
-            });
-            
-            setLastSaved(new Date());
-            setIsCollapsed(true);
-            
-            toast({
-              title: "Banking Auto-Secured! 🔒✉️",
-              description: "Banking details saved and collapsed after consent confirmation.",
-              duration: 3000
-            });
-          } catch (error) {
-            console.error('❌ Failed to save banking info on consent:', error);
-          } finally {
-            setIsAutoSaving(false);
-          }
-        };
-        
-        saveAndCollapse();
+        handleAutoCollapse();
       }
       
       // Handle unchecking the marketing consent - expand banking section
-      if (!marketingConsent && isCollapsed && isBankingComplete) {
+      if (!currentConsent && isCollapsed && isBankingComplete) {
         console.log('📧 Marketing consent removed - expanding banking section');
         setIsCollapsed(false);
         
@@ -110,9 +118,9 @@ const VendorBankingSection: React.FC<VendorBankingProps> = ({
         });
       }
     }
-  }, [marketingConsent, prevMarketingConsent, isBankingComplete, isCollapsed, formData.bankName, formData.accountNumber, formData.branchCode, formData.routingNumber, saveBankingInfo, toast]);
+  }, [marketingConsent, isBankingComplete, isCollapsed, handleAutoCollapse, toast]);
 
-  // Auto-fill on mount with enhanced detection
+  // Auto-fill on mount
   useEffect(() => {
     const savedBankingInfo = getBankingInfo();
     
@@ -133,9 +141,9 @@ const VendorBankingSection: React.FC<VendorBankingProps> = ({
         description: "Complete banking information restored from secure storage.",
       });
     }
-  }, []); // Empty dependency array - only run once on mount
+  }, []); // Only run once on mount
 
-  // Optimized auto-save with reduced frequency and debouncing
+  // Optimized auto-save with debouncing
   useEffect(() => {
     if (formData.bankName || formData.accountNumber || formData.branchCode) {
       setIsAutoSaving(true);
@@ -156,11 +164,20 @@ const VendorBankingSection: React.FC<VendorBankingProps> = ({
           console.error('❌ Failed to save banking info:', error);
           setIsAutoSaving(false);
         }
-      }, 1500); // Increased delay to reduce excessive saving
+      }, 2000); // Increased delay for better performance
 
       return () => clearTimeout(timeoutId);
     }
   }, [formData.bankName, formData.accountNumber, formData.branchCode, formData.routingNumber, saveBankingInfo]);
+
+  // Cleanup timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (autoCollapseTimeoutRef.current) {
+        clearTimeout(autoCollapseTimeoutRef.current);
+      }
+    };
+  }, []);
 
   const handleBankSelect = async (bankName: string, routing: string, branchCode: string) => {
     onBankSelect(bankName, routing, branchCode);

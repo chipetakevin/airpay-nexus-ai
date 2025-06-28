@@ -23,6 +23,94 @@
     padding: 0 4px;
   }
 
+  /* Enhanced mobile registration header */
+  .mobile-registration-header {
+    background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 16px;
+    box-shadow: 0 4px 12px rgba(251, 191, 36, 0.3);
+  }
+
+  .mobile-registration-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: white;
+    margin-bottom: 4px;
+    line-height: 1.2;
+  }
+
+  .mobile-registration-subtitle {
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.9);
+    line-height: 1.3;
+  }
+
+  /* Enhanced collapsible sections */
+  .collapsible-trigger {
+    transition: all 0.2s ease-in-out;
+    border-radius: 8px;
+    padding: 12px 16px;
+    font-size: 14px;
+    line-height: 1.4;
+  }
+
+  .collapsible-trigger:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  .collapsible-content {
+    animation: slideDown 0.3s ease-out;
+  }
+
+  @keyframes slideDown {
+    from {
+      opacity: 0;
+      max-height: 0;
+      transform: translateY(-10px);
+    }
+    to {
+      opacity: 1;
+      max-height: 1000px;
+      transform: translateY(0);
+    }
+  }
+
+  /* Mobile banking section improvements */
+  .banking-section-mobile {
+    border-radius: 12px;
+    overflow: hidden;
+    margin-bottom: 16px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  .banking-header-mobile {
+    padding: 16px;
+    background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+    border-bottom: 1px solid #f3e8ab;
+  }
+
+  .banking-collapsed-view {
+    background: #f0fdf4;
+    border: 2px solid #bbf7d0;
+    border-radius: 8px;
+    padding: 12px 16px;
+    margin: 16px;
+  }
+
+  .banking-secured-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: #10b981;
+    color: white;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 600;
+  }
+
   /* Get Started button alignment fixes */
   .get-started-button {
     min-width: 120px;
@@ -53,345 +141,68 @@
     overflow: hidden;
   }
 
-  .service-card-mobile-header {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    margin-bottom: 12px;
-  }
-
-  .service-card-mobile-icon {
-    width: 56px;
-    height: 56px;
-    flex-shrink: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 8px;
-  }
-
-  .service-card-mobile-content {
-    flex: 1;
-    min-width: 0;
-  }
-
-  .service-card-mobile-title {
-    font-size: 16px;
-    font-weight: 600;
-    color: #1f2937;
-    margin-bottom: 4px;
-    line-height: 1.2;
-  }
-
-  .service-card-mobile-subtitle {
-    font-size: 13px;
-    color: #6b7280;
-    line-height: 1.3;
-  }
-
-  .service-card-mobile-footer {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-top: 12px;
-    gap: 8px;
-  }
-
-  .service-card-mobile-badge {
-    background: #10b981;
-    color: white;
-    padding: 4px 8px;
-    border-radius: 16px;
-    font-size: 11px;
-    font-weight: 500;
-    white-space: nowrap;
-    flex-shrink: 0;
-  }
-
-  .service-card-mobile-button {
-    background: #3b82f6;
-    color: white;
-    padding: 8px 16px;
-    border-radius: 8px;
-    font-size: 13px;
-    font-weight: 500;
-    border: none;
-    cursor: pointer;
-    white-space: nowrap;
-    min-width: 100px;
-    flex-shrink: 0;
-    transition: background-color 0.2s;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 36px;
-  }
-
-  .service-card-mobile-button:hover {
-    background: #2563eb;
-  }
-
-  /* Enhanced grid layout for service cards */
-  .service-cards-grid {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    width: 100%;
-    padding: 0 16px;
-    box-sizing: border-box;
-  }
-
-  /* Featured services card layout improvements */
-  .featured-service-card {
-    display: grid;
-    grid-template-columns: auto 1fr auto;
-    gap: 16px;
-    align-items: center;
-    padding: 20px 16px;
-    width: 100%;
-    box-sizing: border-box;
-    min-height: 100px;
-  }
-
-  .featured-service-content {
-    min-width: 0;
-    flex: 1;
-  }
-
-  .featured-service-action {
-    flex-shrink: 0;
-    margin-left: auto;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  /* Enhanced service card styles for ICASA compliance type cards */
-  .service-compliance-card {
-    display: grid;
-    grid-template-columns: 80px 1fr auto;
-    gap: 12px;
-    align-items: center;
-    padding: 20px 16px;
-    width: 100%;
-    box-sizing: border-box;
-    background: white;
-    border-radius: 12px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    margin: 8px 0;
-  }
-
-  .service-compliance-icon {
-    width: 64px;
-    height: 64px;
-    flex-shrink: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: #3b82f6;
-    border-radius: 8px;
-  }
-
-  .service-compliance-content {
-    min-width: 0;
-    flex: 1;
-  }
-
-  .service-compliance-title {
-    font-size: 18px;
-    font-weight: 600;
-    color: #1f2937;
-    margin-bottom: 4px;
-    line-height: 1.2;
-  }
-
-  .service-compliance-subtitle {
-    font-size: 14px;
-    color: #6b7280;
-    line-height: 1.3;
-  }
-
-  .service-compliance-badge {
-    background: #10b981;
-    color: white;
-    padding: 6px 12px;
-    border-radius: 20px;
-    font-size: 12px;
-    font-weight: 500;
-    white-space: nowrap;
-    margin-right: 8px;
-  }
-
-  /* Hide the Get Started button for compliance cards */
-  .service-compliance-button {
-    display: none;
-  }
-
   /* Mobile responsive breakpoints */
   @media (max-width: 640px) {
-    .featured-services-grid {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      width: 100%;
-      padding: 0 12px;
-      box-sizing: border-box;
-      max-width: 100vw;
-      overflow-x: hidden;
-    }
-    
-    .featured-service-card {
-      display: flex;
-      flex-direction: column;
-      width: 100%;
-      max-width: 100%;
-      padding: 16px;
-      gap: 12px;
-      border-radius: 12px;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-      background: white;
-      margin: 0;
-      box-sizing: border-box;
-      overflow: hidden;
+    .mobile-registration-header {
+      padding: 12px;
+      margin: 8px 0 16px 0;
     }
 
-    .featured-service-header {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .featured-service-icon {
-      width: 48px;
-      height: 48px;
-      flex-shrink: 0;
-    }
-
-    .featured-service-content {
-      flex: 1;
-      min-width: 0;
-    }
-
-    .featured-service-title {
+    .mobile-registration-title {
       font-size: 16px;
-      font-weight: 600;
-      line-height: 1.2;
-      margin-bottom: 4px;
-      color: #1f2937;
     }
 
-    .featured-service-description {
-      font-size: 14px;
-      line-height: 1.3;
-      color: #6b7280;
-    }
-
-    .featured-service-footer {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-top: 12px;
-      gap: 8px;
-    }
-
-    .featured-service-badge {
-      background: #10b981;
-      color: white;
-      padding: 4px 8px;
-      border-radius: 16px;
-      font-size: 11px;
-      font-weight: 500;
-      white-space: nowrap;
-      flex-shrink: 0;
-    }
-
-    /* Hide Get Started button on mobile for all cards */
-    .get-started-button {
-      display: none;
-    }
-
-    .featured-service-action {
-      display: none;
-    }
-
-    .service-compliance-card {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      padding: 16px;
-      margin: 8px 0;
-      width: 100%;
-      box-sizing: border-box;
-    }
-
-    .service-compliance-header {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .service-compliance-icon {
-      width: 48px;
-      height: 48px;
-    }
-
-    .service-compliance-title {
-      font-size: 16px;
-      margin-bottom: 2px;
-    }
-
-    .service-compliance-subtitle {
+    .mobile-registration-subtitle {
       font-size: 13px;
     }
 
-    .service-compliance-footer {
-      display: flex;
-      align-items: center;
-      justify-content: flex-start;
-      gap: 8px;
+    .collapsible-trigger {
+      padding: 10px 12px;
+      font-size: 13px;
     }
 
-    .service-compliance-badge {
+    .banking-header-mobile {
+      padding: 12px;
+    }
+
+    .banking-collapsed-view {
+      margin: 12px;
+      padding: 10px 12px;
+    }
+
+    .banking-secured-badge {
+      font-size: 13px;
       padding: 4px 8px;
-      font-size: 11px;
-      flex-shrink: 0;
     }
 
-    /* Ensure button remains hidden on mobile */
-    .service-compliance-button {
-      display: none;
+    /* Enhanced form spacing on mobile */
+    .mobile-form-section {
+      margin-bottom: 20px;
     }
 
-    .mobile-responsive-tabs {
-      flex-direction: column;
-      gap: 0.5rem;
+    .mobile-form-section:last-child {
+      margin-bottom: 0;
     }
-    
-    .mobile-responsive-tabs .tab-item {
-      flex: 1;
-      text-align: center;
-      padding: 0.75rem 0.5rem;
-      font-size: 0.875rem;
+
+    /* Mobile button improvements */
+    .mobile-submit-button {
+      padding: 16px 24px;
+      font-size: 16px;
+      font-weight: 600;
+      border-radius: 12px;
+      width: 100%;
+      margin-top: 24px;
     }
   }
 
   /* Tablet responsive adjustments */
   @media (min-width: 641px) and (max-width: 768px) {
-    .featured-service-card {
-      grid-template-columns: 60px 1fr;
-      gap: 16px;
-      padding: 18px 16px;
+    .mobile-registration-title {
+      font-size: 20px;
     }
 
-    /* Hide Get Started button on tablet as well */
-    .get-started-button {
-      display: none;
-    }
-
-    .tablet-responsive-tabs {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-      gap: 0.5rem;
+    .mobile-registration-subtitle {
+      font-size: 15px;
     }
   }
 }
