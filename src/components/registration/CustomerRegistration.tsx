@@ -1,304 +1,342 @@
-
 import React, { useState, useEffect } from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
-import { Eye, EyeOff, Mail, Clock } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
+import { 
+  User, Clock, Shield, ChevronDown, ChevronUp, 
+  CheckCircle, AlertCircle, Smartphone, CreditCard 
+} from 'lucide-react';
+import { useCustomerRegistration } from '@/hooks/useCustomerRegistration';
 import { useToast } from '@/hooks/use-toast';
-import EnhancedForgotPassword from '../auth/EnhancedForgotPassword';
-import { useEnhancedAuth } from '@/hooks/useEnhancedAuth';
-import { useDeviceStorage } from '@/hooks/useDeviceStorage';
 
 const CustomerRegistration = () => {
-  const [formData, setFormData] = useState({
-    firstName: '',
-    lastName: '',
-    email: '',
-    phoneNumber: '',
-    password: '',
-    confirmPassword: '',
-    agreeTerms: false,
-    marketingConsent: false
-  });
-  
-  const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [showForgotPassword, setShowForgotPassword] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isFormCollapsed, setIsFormCollapsed] = useState(false);
+  const [existingRegistration, setExistingRegistration] = useState(null);
   const { toast } = useToast();
-  const { createPersistentSession } = useEnhancedAuth();
-  const { getDeviceProfiles } = useDeviceStorage();
+  const { formData, errors, handleInputChange, handleSubmit } = useCustomerRegistration();
 
   useEffect(() => {
-    // Load any existing profile data for this device
-    const profiles = getDeviceProfiles();
-    const customerProfile = profiles.find(p => p.userType === 'customer');
-    
-    if (customerProfile) {
-      setFormData(prev => ({
-        ...prev,
-        firstName: customerProfile.firstName,
-        lastName: customerProfile.lastName,
-        email: customerProfile.email,
-        phoneNumber: customerProfile.phoneNumber
-      }));
+    // Check for existing customer registration
+    const checkExistingRegistration = () => {
+      const credentials = localStorage.getItem('userCredentials');
+      const userData = localStorage.getItem('onecardUser');
       
-      toast({
-        title: "Profile Data Loaded",
-        description: "Your previous registration data has been loaded from this device.",
-      });
-    }
+      if (credentials && userData) {
+        try {
+          const parsedCredentials = JSON.parse(credentials);
+          const parsedUserData = JSON.parse(userData);
+          
+          if (parsedCredentials.userType === 'customer' && parsedUserData.firstName) {
+            setExistingRegistration({
+              firstName: parsedUserData.firstName,
+              lastName: parsedUserData.lastName,
+              email: parsedUserData.email,
+              cardNumber: parsedUserData.cardNumber,
+              registrationDate: parsedUserData.registrationDate || new Date().toISOString()
+            });
+            setIsFormCollapsed(true);
+          }
+        } catch (error) {
+          console.error('Error checking existing registration:', error);
+        }
+      }
+    };
+
+    checkExistingRegistration();
   }, []);
 
-  const handleInputChange = (field: string, value: any) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
+  const handleNewRegistration = () => {
+    setIsFormCollapsed(false);
+    setExistingRegistration(null);
+    toast({
+      title: "New Registration",
+      description: "Starting fresh customer registration process.",
+    });
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    if (!formData.firstName || !formData.lastName || !formData.email || !formData.phoneNumber || !formData.password) {
-      toast({
-        title: "All Fields Required",
-        description: "Please fill in all required fields.",
-        variant: "destructive"
-      });
-      return;
-    }
-
-    if (formData.password !== formData.confirmPassword) {
-      toast({
-        title: "Passwords Don't Match",
-        description: "Please ensure both passwords are identical.",
-        variant: "destructive"
-      });
-      return;
-    }
-
-    if (!formData.agreeTerms) {
-      toast({
-        title: "Terms Required",
-        description: "Please agree to the terms and conditions.",
-        variant: "destructive"
-      });
-      return;
-    }
-
-    setIsSubmitting(true);
-    
-    setTimeout(() => {
-      const cardNumber = `OC${Math.random().toString().substr(2, 8)}`;
-      
-      const userData = {
-        firstName: formData.firstName,
-        lastName: formData.lastName,
-        email: formData.email,
-        cardNumber,
-        registeredPhone: formData.phoneNumber,
-        balance: 0,
-        registrationDate: new Date().toISOString()
-      };
-      
-      const userCredentials = {
-        email: formData.email,
-        password: formData.password,
-        userType: 'customer' as const,
-        firstName: formData.firstName,
-        lastName: formData.lastName,
-        phone: formData.phoneNumber
-      };
-      
-      // Store in legacy format for compatibility
-      localStorage.setItem('userCredentials', JSON.stringify(userCredentials));
-      localStorage.setItem('onecardUser', JSON.stringify(userData));
-      
-      // Create persistent session (this will also save profile permanently)
-      createPersistentSession(userData, userCredentials);
-      
-      toast({
-        title: "Registration Successful! 🎉",
-        description: "Your profile is permanently saved on this device for seamless future access.",
-      });
-      
-      setTimeout(() => {
-        window.location.href = '/portal?tab=onecard&registered=true';
-      }, 2000);
-      
-      setIsSubmitting(false);
-    }, 1500);
+  const handleFormToggle = () => {
+    setIsFormCollapsed(!isFormCollapsed);
   };
+
+  if (existingRegistration && isFormCollapsed) {
+    return (
+      <div className="max-w-2xl mx-auto space-y-4">
+        {/* Existing Registration Summary */}
+        <Card className="border-green-200 bg-green-50">
+          <CardHeader className="pb-3">
+            <div className="flex items-center justify-between">
+              <CardTitle className="text-lg flex items-center gap-2 text-green-800">
+                <CheckCircle className="w-5 h-5" />
+                Customer Registration Complete
+              </CardTitle>
+              <Badge className="bg-green-100 text-green-700">
+                <CreditCard className="w-3 h-3 mr-1" />
+                Active
+              </Badge>
+            </div>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label className="text-xs text-gray-600">Customer Name</Label>
+                <p className="font-semibold text-gray-900">
+                  {existingRegistration.firstName} {existingRegistration.lastName}
+                </p>
+              </div>
+              <div className="space-y-2">
+                <Label className="text-xs text-gray-600">OneCard Number</Label>
+                <p className="font-mono text-sm text-blue-600 font-semibold">
+                  {existingRegistration.cardNumber}
+                </p>
+              </div>
+              <div className="space-y-2">
+                <Label className="text-xs text-gray-600">Email Address</Label>
+                <p className="text-sm text-gray-700">
+                  {existingRegistration.email}
+                </p>
+              </div>
+              <div className="space-y-2">
+                <Label className="text-xs text-gray-600">Registration Date</Label>
+                <p className="text-sm text-gray-700">
+                  {new Date(existingRegistration.registrationDate).toLocaleDateString()}
+                </p>
+              </div>
+            </div>
+
+            <div className="flex flex-col sm:flex-row gap-2 pt-4 border-t border-green-200">
+              <Button
+                onClick={handleFormToggle}
+                variant="outline"
+                className="flex items-center gap-2 border-green-300 text-green-700 hover:bg-green-100"
+              >
+                <ChevronDown className="w-4 h-4" />
+                Edit Registration Details
+              </Button>
+              <Button
+                onClick={handleNewRegistration}
+                variant="outline"
+                className="flex items-center gap-2 border-blue-300 text-blue-700 hover:bg-blue-100"
+              >
+                <User className="w-4 h-4" />
+                Register New Customer
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
 
   return (
-    <>
-      <div className="max-w-md mx-auto bg-white p-6 rounded-lg shadow-sm border">
-        <div className="mb-6">
-          <h2 className="text-xl font-bold text-gray-900 mb-2">Customer Registration</h2>
-          <p className="text-sm text-gray-600">Create your OneCard account with persistent login</p>
-        </div>
-
-        {/* Persistent Session Info */}
-        <div className="bg-green-50 border border-green-200 rounded-lg p-3 mb-4">
-          <div className="flex items-center gap-2 text-green-700">
-            <Clock className="w-4 h-4" />
-            <span className="text-sm font-medium">Device Registration</span>
-          </div>
-          <p className="text-xs text-green-600 mt-1">
-            Your profile will be permanently saved on this device for seamless future access and 24-hour persistent login.
-          </p>
-        </div>
-
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="grid grid-cols-2 gap-3">
-            <div className="space-y-2">
-              <Label htmlFor="firstName">First Name *</Label>
-              <Input
-                id="firstName"
-                value={formData.firstName}
-                onChange={(e) => handleInputChange('firstName', e.target.value)}
-                placeholder="John"
-                required
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="lastName">Last Name *</Label>
-              <Input
-                id="lastName"
-                value={formData.lastName}
-                onChange={(e) => handleInputChange('lastName', e.target.value)}
-                placeholder="Doe"
-                required
-              />
-            </div>
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="email">Email Address *</Label>
-            <Input
-              id="email"
-              type="email"
-              value={formData.email}
-              onChange={(e) => handleInputChange('email', e.target.value)}
-              placeholder="john@example.com"
-              required
-            />
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="phoneNumber">Phone Number *</Label>
-            <Input
-              id="phoneNumber"
-              type="tel"
-              value={formData.phoneNumber}
-              onChange={(e) => handleInputChange('phoneNumber', e.target.value)}
-              placeholder="+27 123 456 789"
-              required
-            />
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="password">Password *</Label>
-            <div className="relative">
-              <Input
-                id="password"
-                type={showPassword ? 'text' : 'password'}
-                value={formData.password}
-                onChange={(e) => handleInputChange('password', e.target.value)}
-                placeholder="Minimum 8 characters"
-                className="pr-10"
-                required
-              />
-              <button
-                type="button"
-                onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+    <div className="max-w-2xl mx-auto space-y-4">
+      {/* Header */}
+      <Card className="border-blue-200 bg-blue-50">
+        <CardHeader className="pb-3">
+          <div className="flex items-center justify-between">
+            <CardTitle className="text-lg flex items-center gap-2 text-blue-800">
+              <User className="w-5 h-5" />
+              Customer Registration
+            </CardTitle>
+            {existingRegistration && (
+              <Button
+                onClick={handleFormToggle}
+                variant="ghost"
+                size="sm"
+                className="text-blue-600 hover:text-blue-800"
               >
-                {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-              </button>
-            </div>
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="confirmPassword">Confirm Password *</Label>
-            <div className="relative">
-              <Input
-                id="confirmPassword"
-                type={showConfirmPassword ? 'text' : 'password'}
-                value={formData.confirmPassword}
-                onChange={(e) => handleInputChange('confirmPassword', e.target.value)}
-                placeholder="Confirm your password"
-                className="pr-10"
-                required
-              />
-              <button
-                type="button"
-                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
-              >
-                {showConfirmPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-              </button>
-            </div>
-          </div>
-
-          <div className="space-y-3">
-            <div className="flex items-start space-x-2">
-              <Checkbox
-                id="agreeTerms"
-                checked={formData.agreeTerms}
-                onCheckedChange={(checked) => handleInputChange('agreeTerms', checked)}
-              />
-              <Label htmlFor="agreeTerms" className="text-sm leading-5">
-                I agree to the Terms and Conditions and Privacy Policy *
-              </Label>
-            </div>
-
-            <div className="flex items-start space-x-2">
-              <Checkbox
-                id="marketingConsent"
-                checked={formData.marketingConsent}
-                onCheckedChange={(checked) => handleInputChange('marketingConsent', checked)}
-              />
-              <Label htmlFor="marketingConsent" className="text-sm leading-5">
-                I consent to receiving marketing communications and offers
-              </Label>
-            </div>
-          </div>
-
-          {/* Forgot Password Link */}
-          <div className="flex justify-center pt-2">
-            <button
-              type="button"
-              onClick={() => setShowForgotPassword(true)}
-              className="flex items-center gap-2 text-sm text-blue-600 hover:text-blue-700 font-medium bg-blue-50 hover:bg-blue-100 px-3 py-2 rounded-lg transition-colors"
-            >
-              <Mail className="w-4 h-4" />
-              Already registered? Reset Password
-            </button>
-          </div>
-
-          <Button
-            type="submit"
-            disabled={isSubmitting}
-            className="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-3"
-          >
-            {isSubmitting ? (
-              <div className="flex items-center gap-2">
-                <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                Creating Account...
-              </div>
-            ) : (
-              'Create OneCard Account'
+                <ChevronUp className="w-4 h-4" />
+                Collapse Form
+              </Button>
             )}
-          </Button>
-        </form>
-      </div>
+          </div>
+          <p className="text-sm text-blue-700">
+            Create your OneCard account with persistent login
+          </p>
+        </CardHeader>
+      </Card>
 
-      <EnhancedForgotPassword 
-        isOpen={showForgotPassword}
-        onClose={() => setShowForgotPassword(false)}
-        userType="customer"
-      />
-    </>
+      {/* Device Registration Notice */}
+      <Card className="border-green-200 bg-green-50">
+        <CardContent className="p-4">
+          <div className="flex items-start gap-3">
+            <Clock className="w-5 h-5 text-green-600 mt-0.5 flex-shrink-0" />
+            <div>
+              <h3 className="font-semibold text-green-800 mb-1">Device Registration</h3>
+              <p className="text-sm text-green-700">
+                Your profile will be permanently saved on this device for seamless future access and 24-hour persistent login.
+              </p>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Registration Form */}
+      <Card>
+        <CardContent className="p-6">
+          <form onSubmit={handleSubmit} className="space-y-6">
+            {/* Personal Information */}
+            <div className="space-y-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="firstName">First Name *</Label>
+                  <Input
+                    id="firstName"
+                    value={formData.firstName}
+                    onChange={(e) => handleInputChange('firstName', e.target.value)}
+                    className={errors.firstName ? 'border-red-500' : ''}
+                    placeholder="John"
+                  />
+                  {errors.firstName && (
+                    <p className="text-red-500 text-sm flex items-center gap-1">
+                      <AlertCircle className="w-3 h-3" />
+                      {errors.firstName}
+                    </p>
+                  )}
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="lastName">Last Name *</Label>
+                  <Input
+                    id="lastName"
+                    value={formData.lastName}
+                    onChange={(e) => handleInputChange('lastName', e.target.value)}
+                    className={errors.lastName ? 'border-red-500' : ''}
+                    placeholder="Doe"
+                  />
+                  {errors.lastName && (
+                    <p className="text-red-500 text-sm flex items-center gap-1">
+                      <AlertCircle className="w-3 h-3" />
+                      {errors.lastName}
+                    </p>
+                  )}
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="email">Email Address *</Label>
+                <Input
+                  id="email"
+                  type="email"
+                  value={formData.email}
+                  onChange={(e) => handleInputChange('email', e.target.value)}
+                  className={errors.email ? 'border-red-500' : ''}
+                  placeholder="john@example.com"
+                />
+                {errors.email && (
+                  <p className="text-red-500 text-sm flex items-center gap-1">
+                    <AlertCircle className="w-3 h-3" />
+                    {errors.email}
+                  </p>
+                )}
+                <p className="text-xs text-gray-600 flex items-center gap-1">
+                  <Shield className="w-3 h-3" />
+                  Used for password reset via OTP
+                </p>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="phoneNumber">Phone Number *</Label>
+                <div className="flex space-x-2">
+                  <Input
+                    value={formData.countryCode}
+                    className="w-20"
+                    readOnly
+                  />
+                  <Input
+                    id="phoneNumber"
+                    value={formData.phoneNumber}
+                    onChange={(e) => handleInputChange('phoneNumber', e.target.value)}
+                    placeholder="123 456 789"
+                    className={`flex-1 ${errors.phoneNumber ? 'border-red-500' : ''}`}
+                  />
+                </div>
+                {errors.phoneNumber && (
+                  <p className="text-red-500 text-sm flex items-center gap-1">
+                    <AlertCircle className="w-3 h-3" />
+                    {errors.phoneNumber}
+                  </p>
+                )}
+              </div>
+            </div>
+
+            {/* Banking Information (Optional) */}
+            <div className="space-y-4 pt-6 border-t border-gray-200">
+              <h3 className="font-semibold text-gray-900 flex items-center gap-2">
+                <CreditCard className="w-4 h-4" />
+                Banking Information (Optional)
+              </h3>
+              
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="bankName">Bank Name</Label>
+                  <Input
+                    id="bankName"
+                    value={formData.bankName}
+                    onChange={(e) => handleInputChange('bankName', e.target.value)}
+                    placeholder="Select your bank"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="accountNumber">Account Number</Label>
+                  <Input
+                    id="accountNumber"
+                    value={formData.accountNumber}
+                    onChange={(e) => handleInputChange('accountNumber', e.target.value)}
+                    placeholder="Account number"
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Terms and Conditions */}
+            <div className="space-y-4 pt-6 border-t border-gray-200">
+              <div className="flex items-start space-x-2">
+                <Checkbox
+                  id="agreeTerms"
+                  checked={formData.agreeTerms}
+                  onCheckedChange={(checked) => handleInputChange('agreeTerms', checked)}
+                />
+                <Label htmlFor="agreeTerms" className="text-sm leading-relaxed">
+                  I agree to the Terms of Service and Privacy Policy *
+                </Label>
+              </div>
+              {errors.agreeTerms && (
+                <p className="text-red-500 text-sm flex items-center gap-1">
+                  <AlertCircle className="w-3 h-3" />
+                  {errors.agreeTerms}
+                </p>
+              )}
+
+              <div className="flex items-start space-x-2">
+                <Checkbox
+                  id="marketingConsent"
+                  checked={formData.marketingConsent}
+                  onCheckedChange={(checked) => handleInputChange('marketingConsent', checked)}
+                />
+                <Label htmlFor="marketingConsent" className="text-sm leading-relaxed">
+                  I consent to receiving marketing communications and promotional offers
+                </Label>
+              </div>
+            </div>
+
+            {/* Submit Button */}
+            <div className="pt-6">
+              <Button
+                type="submit"
+                className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300"
+              >
+                <Smartphone className="w-4 h-4 mr-2" />
+                Create OneCard Account
+              </Button>
+            </div>
+          </form>
+        </CardContent>
+      </Card>
+    </div>
   );
 };
 
