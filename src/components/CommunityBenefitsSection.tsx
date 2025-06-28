@@ -33,7 +33,7 @@ const CommunityBenefitsSection = () => {
     {
       icon: <Shield className="w-6 h-6 text-blue-600" />,
       title: "Admin profits are strategically complex",
-      description: "2% visible fee plus hidden markup optimization from deals",
+      description: "2% visible fee with strategic optimization",
       badge: "Strategic",
       color: "from-blue-500 to-cyan-600",
       textColor: "text-blue-800",
