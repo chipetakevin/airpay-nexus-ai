@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState, useCallback, useRef } from 'react';
 import { Card } from '@/components/ui/card';
 import { useBankingAutoSave } from '@/hooks/useBankingAutoSave';
@@ -28,81 +29,64 @@ const VendorBankingSection: React.FC<VendorBankingProps> = ({
   const [lastSaved, setLastSaved] = useState<Date | null>(null);
   const [isCollapsed, setIsCollapsed] = useState(false);
   
-  // Use refs to prevent infinite loops
+  // Use refs to prevent infinite loops and track previous values
+  const autoSaveTimeoutRef = useRef<NodeJS.Timeout>();
+  const isInitializedRef = useRef(false);
+  const prevFormDataRef = useRef(formData);
   const prevMarketingConsentRef = useRef(marketingConsent);
-  const prevIsBankingCompleteRef = useRef(false);
-  const autoCollapseTimeoutRef = useRef<NodeJS.Timeout>();
 
   const validation = validateBankingForm(formData, errors);
   const isBankingComplete = validation.isComplete;
 
-  // Enhanced auto-collapse logic with marketing consent integration
-  const handleAutoCollapse = useCallback(async () => {
-    if (isBankingComplete && !isCollapsed && marketingConsent) {
-      console.log('🏦 Banking complete with marketing consent - triggering intelligent collapse');
-      
-      // Save banking info immediately
-      setIsAutoSaving(true);
-      try {
-        await saveBankingInfo({
-          bankName: formData.bankName,
-          accountNumber: formData.accountNumber,
-          branchCode: formData.branchCode,
-          routingNumber: formData.routingNumber
-        });
-        setLastSaved(new Date());
-      } catch (error) {
-        console.error('❌ Failed to save banking info:', error);
-      } finally {
-        setIsAutoSaving(false);
-      }
-      
-      // Intelligent collapse with smooth animation
-      setTimeout(() => {
-        setIsCollapsed(true);
-        toast({
-          title: "Banking Secured & Collapsed! 🔒",
-          description: "Banking details saved and intelligently collapsed for better navigation.",
-          duration: 3000
-        });
-      }, 800);
+  // Stable auto-save function using useCallback
+  const performAutoSave = useCallback(async () => {
+    if (!formData.bankName && !formData.accountNumber && !formData.branchCode) {
+      return;
     }
-  }, [isBankingComplete, isCollapsed, marketingConsent, formData, saveBankingInfo, toast]);
 
-  // Handle marketing consent changes with intelligent expand/collapse
-  useEffect(() => {
-    if (marketingConsent && isBankingComplete && !isCollapsed) {
-      console.log('📧 Marketing consent given - intelligently collapsing banking section');
-      handleAutoCollapse();
-    } else if (!marketingConsent && isCollapsed) {
-      console.log('📧 Marketing consent removed - intelligently expanding banking section');
-      setIsCollapsed(false);
+    setIsAutoSaving(true);
+    try {
+      await saveBankingInfo({
+        bankName: formData.bankName || '',
+        accountNumber: formData.accountNumber || '',
+        branchCode: formData.branchCode || '',
+        routingNumber: formData.routingNumber || ''
+      });
+      setLastSaved(new Date());
+      console.log('✅ Banking info auto-saved successfully');
+    } catch (error) {
+      console.error('❌ Auto-save failed:', error);
+    } finally {
+      setIsAutoSaving(false);
+    }
+  }, [formData.bankName, formData.accountNumber, formData.branchCode, formData.routingNumber, saveBankingInfo]);
+
+  // Intelligent collapse logic
+  const handleIntelligentCollapse = useCallback(() => {
+    if (isBankingComplete && marketingConsent && !isCollapsed) {
+      console.log('🔄 Intelligent collapse triggered');
+      setIsCollapsed(true);
       
       toast({
-        title: "Banking Section Expanded 📋",
-        description: "Banking details are now visible for review or editing.",
+        title: "Banking Secured & Collapsed! 🔒",
+        description: "Banking details saved and collapsed for better navigation.",
         duration: 2000
       });
+      
+      // Auto-save when collapsing
+      performAutoSave();
     }
-  }, [marketingConsent, isBankingComplete, isCollapsed, handleAutoCollapse, toast]);
+  }, [isBankingComplete, marketingConsent, isCollapsed, toast, performAutoSave]);
 
-  // Handle banking completion changes
+  // Auto-fill on mount (only once)
   useEffect(() => {
-    if (isBankingComplete && marketingConsent && !isCollapsed) {
-      handleAutoCollapse();
-    } else if (!isBankingComplete && isCollapsed) {
-      console.log('⚠️ Banking incomplete - expanding for completion');
-      setIsCollapsed(false);
-    }
-  }, [isBankingComplete, marketingConsent, isCollapsed, handleAutoCollapse]);
-
-  // Auto-fill on mount
-  useEffect(() => {
+    if (isInitializedRef.current) return;
+    
     const savedBankingInfo = getBankingInfo();
     
     if (savedBankingInfo.bankName && !formData.bankName) {
       onInputChange('bankName', savedBankingInfo.bankName);
-      onBankSelect(savedBankingInfo.bankName, savedBankingInfo.routingNumber || '', savedBankingInfo.branchCode);
+      onBankSelect(savedBankingInfo.bankName, savedBankingInfo.routingNumber || '', savedBankingInfo.branchCode || '');
     }
     if (savedBankingInfo.accountNumber && !formData.accountNumber) {
       onInputChange('accountNumber', savedBankingInfo.accountNumber);
@@ -111,46 +95,82 @@ const VendorBankingSection: React.FC<VendorBankingProps> = ({
       onInputChange('branchCode', savedBankingInfo.branchCode);
     }
 
-    if (savedBankingInfo.bankName && savedBankingInfo.accountNumber && savedBankingInfo.branchCode) {
+    if (savedBankingInfo.bankName && savedBankingInfo.accountNumber) {
       toast({
         title: "Banking Auto-filled! 🏢",
-        description: "Complete banking information restored from secure storage.",
+        description: "Banking information restored from secure storage.",
+        duration: 2000
       });
     }
-  }, []); // Only run once on mount
+    
+    isInitializedRef.current = true;
+  }, [getBankingInfo, onInputChange, onBankSelect, toast]);
 
-  // Optimized auto-save with debouncing
+  // Debounced auto-save effect
   useEffect(() => {
-    if (formData.bankName || formData.accountNumber || formData.branchCode) {
-      setIsAutoSaving(true);
-      
-      const timeoutId = setTimeout(async () => {
-        try {
-          await saveBankingInfo({
-            bankName: formData.bankName,
-            accountNumber: formData.accountNumber,
-            branchCode: formData.branchCode,
-            routingNumber: formData.routingNumber
-          });
-          
-          setIsAutoSaving(false);
-          setLastSaved(new Date());
-          console.log('✅ Banking info saved successfully');
-        } catch (error) {
-          console.error('❌ Failed to save banking info:', error);
-          setIsAutoSaving(false);
-        }
-      }, 2000); // Increased delay for better performance
+    // Only auto-save if form data has actually changed
+    const hasDataChanged = 
+      prevFormDataRef.current.bankName !== formData.bankName ||
+      prevFormDataRef.current.accountNumber !== formData.accountNumber ||
+      prevFormDataRef.current.branchCode !== formData.branchCode ||
+      prevFormDataRef.current.routingNumber !== formData.routingNumber;
 
-      return () => clearTimeout(timeoutId);
+    if (!hasDataChanged) return;
+
+    // Clear existing timeout
+    if (autoSaveTimeoutRef.current) {
+      clearTimeout(autoSaveTimeoutRef.current);
     }
-  }, [formData.bankName, formData.accountNumber, formData.branchCode, formData.routingNumber, saveBankingInfo]);
 
-  // Cleanup timeout on unmount
+    // Set new timeout for debounced save
+    autoSaveTimeoutRef.current = setTimeout(() => {
+      performAutoSave();
+    }, 2500); // Increased debounce time
+
+    // Update previous form data
+    prevFormDataRef.current = { ...formData };
+
+    return () => {
+      if (autoSaveTimeoutRef.current) {
+        clearTimeout(autoSaveTimeoutRef.current);
+      }
+    };
+  }, [formData, performAutoSave]);
+
+  // Handle marketing consent changes
+  useEffect(() => {
+    const consentChanged = prevMarketingConsentRef.current !== marketingConsent;
+    
+    if (consentChanged) {
+      if (marketingConsent && isBankingComplete) {
+        // Delay collapse to avoid race conditions
+        setTimeout(handleIntelligentCollapse, 500);
+      } else if (!marketingConsent && isCollapsed) {
+        setIsCollapsed(false);
+        toast({
+          title: "Banking Section Expanded 📋",
+          description: "Banking details are now visible for review.",
+          duration: 1500
+        });
+      }
+      
+      prevMarketingConsentRef.current = marketingConsent;
+    }
+  }, [marketingConsent, isBankingComplete, isCollapsed, handleIntelligentCollapse, toast]);
+
+  // Handle banking completion changes
+  useEffect(() => {
+    if (!isBankingComplete && isCollapsed) {
+      console.log('⚠️ Banking incomplete - expanding for completion');
+      setIsCollapsed(false);
+    }
+  }, [isBankingComplete, isCollapsed]);
+
+  // Cleanup on unmount
   useEffect(() => {
     return () => {
-      if (autoCollapseTimeoutRef.current) {
-        clearTimeout(autoCollapseTimeoutRef.current);
+      if (autoSaveTimeoutRef.current) {
+        clearTimeout(autoSaveTimeoutRef.current);
       }
     };
   }, []);
@@ -158,12 +178,13 @@ const VendorBankingSection: React.FC<VendorBankingProps> = ({
   const handleBankSelect = async (bankName: string, routing: string, branchCode: string) => {
     onBankSelect(bankName, routing, branchCode);
     
+    // Immediate save for bank selection
     try {
       await saveBankingInfo({
         bankName,
         branchCode,
         routingNumber: routing,
-        accountNumber: formData.accountNumber
+        accountNumber: formData.accountNumber || ''
       });
       setLastSaved(new Date());
     } catch (error) {

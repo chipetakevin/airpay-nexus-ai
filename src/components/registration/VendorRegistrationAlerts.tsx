@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useState, useCallback } from 'react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 import { Trophy, ShoppingCart, MapPin, Shield, ChevronDown, ChevronUp, Info } from 'lucide-react';
@@ -10,26 +10,33 @@ interface VendorRegistrationAlertsProps {
 }
 
 const VendorRegistrationAlerts: React.FC<VendorRegistrationAlertsProps> = ({ 
-  isCollapsed = false, 
+  isCollapsed = true, // Default to collapsed for better mobile UX
   onToggle 
 }) => {
-  const [isPasswordExpanded, setIsPasswordExpanded] = React.useState(false);
+  const [isPasswordExpanded, setIsPasswordExpanded] = useState(false);
 
-  const togglePasswordExpanded = () => {
-    setIsPasswordExpanded(!isPasswordExpanded);
-  };
+  // Stable toggle function
+  const togglePasswordExpanded = useCallback(() => {
+    setIsPasswordExpanded(prev => !prev);
+  }, []);
+
+  const handleMainToggle = useCallback(() => {
+    if (onToggle) {
+      onToggle();
+    }
+  }, [onToggle]);
 
   return (
     <div className="space-y-3">
-      {/* Collapsible trigger button - Mobile optimized */}
+      {/* Enhanced collapsible trigger button */}
       <Button
-        onClick={onToggle}
+        onClick={handleMainToggle}
         variant="outline"
-        className="w-full flex items-center justify-between p-3 sm:p-4 h-auto border-blue-200 bg-blue-50/50 hover:bg-blue-50 text-xs sm:text-sm"
+        className="collapsible-trigger w-full flex items-center justify-between border-blue-200 bg-blue-50/50 hover:bg-blue-50"
       >
         <div className="flex items-center gap-2">
           <Info className="w-4 h-4 sm:w-5 sm:h-5 text-blue-600 flex-shrink-0" />
-          <span className="font-medium text-blue-800 text-left">
+          <span className="font-medium text-blue-800 text-left text-xs sm:text-sm">
             {isCollapsed ? 'Show Registration Info & Benefits' : 'Hide Registration Info & Benefits'}
           </span>
         </div>
@@ -40,9 +47,9 @@ const VendorRegistrationAlerts: React.FC<VendorRegistrationAlertsProps> = ({
         )}
       </Button>
 
-      {/* Collapsible content */}
+      {/* Collapsible content with better animation */}
       {!isCollapsed && (
-        <div className="space-y-3 animate-in slide-in-from-top-2 duration-200">
+        <div className="collapsible-content space-y-3">
           {/* Smart Business Registration Alert */}
           <Alert className="border-yellow-200 bg-yellow-50">
             <Trophy className="w-4 h-4 sm:w-5 sm:h-5 text-yellow-600" />
@@ -67,7 +74,7 @@ const VendorRegistrationAlerts: React.FC<VendorRegistrationAlertsProps> = ({
             </AlertDescription>
           </Alert>
 
-          {/* Enhanced Password Management - Collapsible Toggle */}
+          {/* Enhanced Password Management - Stable collapsible toggle */}
           <div className="space-y-2">
             <Button
               onClick={togglePasswordExpanded}
@@ -86,7 +93,7 @@ const VendorRegistrationAlerts: React.FC<VendorRegistrationAlertsProps> = ({
             </Button>
 
             {isPasswordExpanded && (
-              <div className="bg-purple-50 border border-purple-200 rounded-lg p-2 sm:p-3 animate-in slide-in-from-top-2 duration-200">
+              <div className="bg-purple-50 border border-purple-200 rounded-lg p-2 sm:p-3 collapsible-content">
                 <div className="text-xs sm:text-sm text-purple-700">
                   <ul className="space-y-1 text-xs">
                     <li>• Auto-save keeps your registration safe</li>
