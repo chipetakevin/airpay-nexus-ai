@@ -9,7 +9,7 @@ import {
   MessageCircle, CreditCard, Wifi, Phone
 } from 'lucide-react';
 
-const DivinelyBaaSPlatform = () => {
+const DivineBaaSPlatform = () => {
   const features = [
     {
       icon: <Zap className="w-8 h-8 text-blue-600" />,
@@ -50,7 +50,7 @@ const DivinelyBaaSPlatform = () => {
                 <Smartphone className="w-6 h-6 text-white" />
               </div>
               <div>
-                <h1 className="text-xl font-bold text-gray-900">Divinely BaaS Platform</h1>
+                <h1 className="text-xl font-bold text-gray-900">Divine BaaS Platform</h1>
                 <p className="text-sm text-gray-600">Intelligent Porting & RICA Platform</p>
               </div>
             </div>
@@ -199,4 +199,4 @@ const DivinelyBaaSPlatform = () => {
   );
 };
 
-export default DivinelyBaaSPlatform;
+export default DivineBaaSPlatform;

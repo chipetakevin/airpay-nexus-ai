@@ -17,7 +17,7 @@ const DashboardHeader = () => {
             </div>
             <div>
               <h1 className="text-lg md:text-xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-700 bg-clip-text text-transparent">
-                Divinely Mobile
+                Divine Mobile
               </h1>
               <p className="text-xs md:text-sm text-gray-600 font-medium">Customer Shopping Hub</p>
               <p className="text-xs text-gray-500 hidden sm:block">Smart Deals • Instant Service • Cashback Rewards</p>

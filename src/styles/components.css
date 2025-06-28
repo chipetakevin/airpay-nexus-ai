@@ -32,13 +32,13 @@
     overflow-scrolling: touch;
   }
 
-  /* Divinely Mobile special styling */
-  .divinely-mobile-default {
+  /* Divine Mobile special styling */
+  .divine-mobile-default {
     @apply bg-gradient-to-r from-blue-500 to-blue-700 text-white font-bold animate-blue-flash;
   }
 
-  .divinely-mobile-form {
-    @apply border-2 animate-divinely-glow rounded-lg p-4;
+  .divine-mobile-form {
+    @apply border-2 animate-divine-glow rounded-lg p-4;
   }
 
   /* DM Default - Special catchy styling */

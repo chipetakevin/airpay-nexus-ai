@@ -6,7 +6,7 @@ export const formatWhatsAppMessage = (data: ReceiptData): string => {
   if (data.purchaseType === 'admin_notification' && data.isUnknownRecipient) {
     return `🚨 *ADMIN NOTIFICATION* - Unknown Recipient
 
-🟢 *DIVINELY MOBILE TRANSACTION*
+🟢 *DIVINE MOBILE TRANSACTION*
 
 ⚠️ *UNKNOWN RECIPIENT PHONE:* ${data.recipientPhone}
 👤 *Purchaser:* ${data.customerName || data.customerPhone}
@@ -33,7 +33,7 @@ Customer has been instructed to forward receipt to ${data.recipientPhone} via Wh
 
   // Handle sender confirmation receipts
   if (data.purchaseType === 'sender_confirmation') {
-    return `✅ *DIVINELY MOBILE* - Purchase Confirmation
+    return `✅ *DIVINE MOBILE* - Purchase Confirmation
 
 🟢 *TRANSACTION COMPLETED*
 
@@ -55,12 +55,12 @@ ${data.items.map(item =>
 🌐 https://myonecard.co.za
 📞 Support: +27 100 2827
 
-*Thank you for choosing Divinely Mobile!*
+*Thank you for choosing Divine Mobile!*
 _Fast • Secure • Reliable_`;
   }
 
   // Regular recipient receipt formatting
-  return `🟢 *DIVINELY MOBILE* 📱
+  return `🟢 *DIVINE MOBILE* 📱
 
 ✅ *SERVICES DELIVERED*
 
@@ -85,6 +85,6 @@ ${data.customerPhone !== data.recipientPhone ?
 🌐 https://myonecard.co.za
 📞 Support: +27 100 2827
 
-*Thank you for using Divinely Mobile!*
+*Thank you for using Divine Mobile!*
 _Fast • Secure • Reliable_`;
 };
