@@ -13,7 +13,7 @@ const WhatsAppAssistant = () => {
     {
       id: 1,
       type: 'bot',
-      message: `👋 Welcome to Divinely Mobile!
+      message: `👋 Welcome to Divine Mobile!
 
 🛍️ Shop instantly below or chat for assistance!
 

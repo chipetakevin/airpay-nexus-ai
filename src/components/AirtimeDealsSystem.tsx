@@ -12,8 +12,8 @@ import RegistrationGate from './auth/RegistrationGate';
 
 const AirtimeDealsSystem = () => {
   const { deals, isLoading, lastRefresh, scrapingStatus, handleManualRefresh } = useDealsData();
-  // Set defaults: Divinely Mobile as default network, airtime as default deal type
-  const [selectedNetwork, setSelectedNetwork] = useState('divinely mobile');
+  // Set defaults: Divine Mobile as default network, airtime as default deal type
+  const [selectedNetwork, setSelectedNetwork] = useState('divine mobile');
   const [selectedAmount, setSelectedAmount] = useState('all');
   const [selectedDealType, setSelectedDealType] = useState('airtime');
   const [showCart, setShowCart] = useState(false);
@@ -32,8 +32,8 @@ const AirtimeDealsSystem = () => {
   };
 
   const handleClearFilters = () => {
-    // Reset to defaults: Divinely Mobile and airtime
-    setSelectedNetwork('divinely mobile');
+    // Reset to defaults: Divine Mobile and airtime
+    setSelectedNetwork('divine mobile');
     setSelectedAmount('all');
     setSelectedDealType('airtime');
   };

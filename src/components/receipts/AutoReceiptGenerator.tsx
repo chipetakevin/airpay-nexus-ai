@@ -21,7 +21,7 @@ export const useAutoReceiptGenerator = () => {
   const { toast } = useToast();
 
   const generateWhatsAppReceipt = (data: ReceiptData) => {
-    const message = `🟢 *DIVINELY MOBILE* 📱
+    const message = `🟢 *DIVINE MOBILE* 📱
 
 ✅ *PAYMENT SUCCESSFUL*
 
@@ -39,10 +39,10 @@ export const useAutoReceiptGenerator = () => {
 
 ✅ *${data.deal.type === 'airtime' ? 'Airtime' : 'Data'} delivered instantly!*
 
-🌐 https://divinely-mobile.com
+🌐 https://divine-mobile.com
 📞 Support: +27 100 2827
 
-*Thank you for choosing Divinely Mobile!*
+*Thank you for choosing Divine Mobile!*
 _Fast • Secure • Reliable_`;
 
     const whatsappUrl = `https://wa.me/${data.customerPhone.replace('+', '')}?text=${encodeURIComponent(message)}`;
@@ -59,7 +59,7 @@ _Fast • Secure • Reliable_`;
     const emailContent = `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #f9fafb;">
         <div style="background: linear-gradient(135deg, #10b981, #059669); color: white; padding: 30px; text-align: center; border-radius: 15px 15px 0 0;">
-          <h1 style="margin: 0; font-size: 28px;">🟢 DIVINELY MOBILE</h1>
+          <h1 style="margin: 0; font-size: 28px;">🟢 DIVINE MOBILE</h1>
           <h2 style="margin: 10px 0 0 0; font-size: 18px;">Digital Receipt</h2>
         </div>
         
@@ -95,8 +95,8 @@ _Fast • Secure • Reliable_`;
         </div>
         
         <div style="background: #374151; color: white; padding: 20px; text-align: center; border-radius: 0 0 15px 15px;">
-          <p style="margin: 0 0 10px 0;">Thank you for choosing Divinely Mobile!</p>
-          <p style="margin: 0;">🌐 divinely-mobile.com | 📞 +27 100 2827</p>
+          <p style="margin: 0 0 10px 0;">Thank you for choosing Divine Mobile!</p>
+          <p style="margin: 0;">🌐 divine-mobile.com | 📞 +27 100 2827</p>
         </div>
       </div>
     `;

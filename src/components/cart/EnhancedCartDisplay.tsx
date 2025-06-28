@@ -58,11 +58,11 @@ const EnhancedCartDisplay = ({ isVisible, onClose, userName = "Kevin Chipeta" }:
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     <Badge className="bg-blue-600 text-white font-semibold px-3 py-1">
-                      Divinely Mobile
+                      Divine Mobile
                     </Badge>
                     <div>
                       <p className="font-bold text-gray-900 text-base">R100 airtime</p>
-                      <p className="text-sm text-gray-600 font-medium">from Divinely Mobile</p>
+                      <p className="text-sm text-gray-600 font-medium">from Divine Mobile</p>
                     </div>
                   </div>
                   
