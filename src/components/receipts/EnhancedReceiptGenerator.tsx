@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { useToast } from '@/hooks/use-toast';
 
@@ -42,7 +43,7 @@ export const useEnhancedReceiptGenerator = () => {
   const { toast } = useToast();
 
   const generateReceiptNumber = () => {
-    return 'DM' + Date.now().toString(36).toUpperCase() + Math.random().toString(36).substr(2, 3).toUpperCase();
+    return 'DM' + Date.now().toString(36).toUpperCase() + Math.random().toString(36).substr(2, 5).toUpperCase();
   };
 
   const formatDateTime = (timestamp: string) => {
@@ -54,99 +55,98 @@ export const useEnhancedReceiptGenerator = () => {
       hour: '2-digit',
       minute: '2-digit',
       second: '2-digit',
-      timeZoneName: 'short'
-    });
+      timeZone: 'Africa/Johannesburg'
+    }) + ' SAST';
   };
 
   const generateComprehensiveWhatsAppReceipt = (data: EnhancedReceiptData): string => {
-    // Enhanced WhatsApp receipt with better formatting
-    const itemsSection = data.items.map((item, index) => 
-      `${index + 1}. *${item.name}*
-   📱 Network: ${item.network.toUpperCase()}
-   💎 Service: ${item.type.toUpperCase()}
-   💰 Amount: R${item.subtotal.toFixed(2)}
-   ════════════════════════════`
-    ).join('\n');
+    const itemsSection = data.items.map(item => 
+      `• **${item.name.replace('DIVINELY', 'DIVINE')}**
+  📱 Network: ${item.network.toUpperCase().replace('DIVINELY', 'DIVINE')}
+  💎 Service: ${item.type.toUpperCase()}
+  💰 Amount: R${item.subtotal.toFixed(2)}`
+    ).join('\n\n');
 
-    return `🌟 *DIVINELY MOBILE* 📱
-✨ *Premium Digital Receipt* ✨
+    const loyaltyPoints = Math.round(data.totalPaid * 2);
 
-┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
-┃ 🎯 *TRANSACTION CONFIRMED* ✅          ┃
-┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+    return `🌟 **DIVINE MOBILE** 📱
+✨ **Premium Digital Receipt** ✨
 
-📋 *RECEIPT DETAILS*
-🧾 Receipt No: *${data.receiptNo}*
-🆔 Transaction ID: *${data.transactionId}*
-📅 Date & Time: ${data.dateTime}
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🎯 **TRANSACTION: CONFIRMED** ✅
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-👤 *CUSTOMER INFORMATION*
-🏷️ Name: *${data.customer.name}*
-📞 Mobile: ${data.customer.mobile}${data.customer.email ? `\n📧 Email: ${data.customer.email}` : ''}
+**Receipt #**: ${data.receiptNo}
+**Transaction ID**: ${data.transactionId}
+**Date**: ${data.dateTime}
 
-🏢 *SERVICE PROVIDER*
-🌟 Business: *Divinely Mobile*
-🌐 Website: myonecard.co.za
-📞 Support: +27 100 2827
-💼 Platform: OneCard Digital Services
+**Customer**: ${data.customer.name}
+**Mobile**: ${data.customer.mobile}${data.customer.email ? `\n**Email**: ${data.customer.email}` : ''}
 
-┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
-┃ 🛒 *PURCHASE SUMMARY*                  ┃
-┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+**Provider**: Divine Mobile
+**Website**: myonecard.co.za
+**Support**: +27 100 2827
+**Platform**: OneCard Digital Services
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🛒 **PURCHASE SUMMARY**
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ${itemsSection}
 
-💸 *PAYMENT BREAKDOWN*
-💰 Subtotal: R${data.subtotal.toFixed(2)}${data.discounts > 0 ? `\n🎁 Discounts: -R${data.discounts.toFixed(2)}` : ''}${data.tax > 0 ? `\n📊 Tax: R${data.tax.toFixed(2)}` : ''}
+**Subtotal**: R${data.subtotal.toFixed(2)}${data.discounts > 0 ? `\n**Discount**: -R${data.discounts.toFixed(2)}` : ''}
+**Total Paid**: R${data.totalPaid.toFixed(2)}
+**Payment**: ${data.paymentMethod}
+**Status**: Payment Successful ✅
 
-🏆 *TOTAL PAID: R${data.totalPaid.toFixed(2)}*
-💳 Payment Method: ${data.paymentMethod}
-✅ Status: *PAYMENT SUCCESSFUL* ✅
+**Rewards**:
+• Cashback: R${data.cashbackEarned.toFixed(2)}
+• Loyalty: ${loyaltyPoints} pts
+• VIP: Active
 
-🎁 *REWARDS & BENEFITS*
-💎 Cashback Earned: R${data.cashbackEarned.toFixed(2)}
-⭐ Loyalty Points: +${Math.round(data.totalPaid * 2)}
-🔥 VIP Status: Active Customer
+**Delivery**:
+• To: ${data.deliveryPhone.replace('+27', '0')}
+• Status: Instantly Delivered ⚡
+• Confirmation: 100% Success
 
-📱 *INSTANT DELIVERY*  
-🚀 Delivered To: ${data.deliveryPhone}
-⚡ Status: *INSTANTLY DELIVERED* ⚡
-🎯 Confirmation: 100% Successful
+${data.vendor ? `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+👔 **AGENT DETAILS**
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-${data.vendor ? `┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
-┃ 👔 *AGENT INFORMATION*                 ┃
-┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
-🏷️ Agent: ${data.vendor.name}
-🆔 Agent ID: ${data.vendor.id}
-💰 Commission: R${data.vendor.commission.toFixed(2)}` : ''}
+• Name: ${data.vendor.name}
+• Agent ID: ${data.vendor.id}
+• Commission: R${data.vendor.commission.toFixed(2)}` : ''}
 
-┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
-┃ 📋 *CUSTOMER SUPPORT & POLICIES*       ┃
-┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
-📂 Keep this receipt for your records
-📞 24/7 Support: +27 100 2827
-🌐 Help Center: myonecard.co.za/support
-💬 Live Chat: Available on website
-🔄 Refunds: Subject to T&Cs
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📋 **SUPPORT & POLICIES**
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-🌟 *Thank you for choosing Divinely Mobile!* 🌟
-_⚡ Fast • 🔒 Secure • 🎯 Reliable_
+• Keep this receipt for records
+• 24/7 Support: +27 100 2827
+• Help: myonecard.co.za/support
+• Live Chat: On website
+• Refunds: T&Cs apply
 
-🔐 *Digital Verification*
-✅ Verified: ${new Date().toISOString()}
-🛡️ Platform: OneCard Secure Payment System
-🌟 Trusted by thousands of customers daily`;
+🌟 **Thank you for choosing Divine Mobile!** 🌟
+⚡ Fast • 🔒 Secure • 🎯 Reliable
+
+🔐 **Digital Verification**
+• Verified: ${new Date().toISOString()}
+• Platform: OneCard Secure
+• Trusted by thousands daily`;
   };
 
   const generateProfessionalEmailReceipt = (data: EnhancedReceiptData): string => {
     const itemsRows = data.items.map(item => `
       <tr>
-        <td style="padding: 12px; border-bottom: 1px solid #e5e7eb;">${item.name}</td>
+        <td style="padding: 12px; border-bottom: 1px solid #e5e7eb;">${item.name.replace('DIVINELY', 'DIVINE')}</td>
         <td style="padding: 12px; border-bottom: 1px solid #e5e7eb; text-align: center;">${item.quantity}</td>
         <td style="padding: 12px; border-bottom: 1px solid #e5e7eb; text-align: right;">R${item.unitPrice.toFixed(2)}</td>
         <td style="padding: 12px; border-bottom: 1px solid #e5e7eb; text-align: right; font-weight: bold;">R${item.subtotal.toFixed(2)}</td>
       </tr>
     `).join('');
+
+    const loyaltyPoints = Math.round(data.totalPaid * 2);
 
     return `
       <!DOCTYPE html>
@@ -154,7 +154,7 @@ _⚡ Fast • 🔒 Secure • 🎯 Reliable_
       <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Divinely Mobile Receipt</title>
+        <title>Divine Mobile Receipt</title>
       </head>
       <body style="font-family: 'Segoe UI', Arial, sans-serif; line-height: 1.6; color: #333; margin: 0; padding: 20px; background-color: #f8fafc;">
         <div style="max-width: 600px; margin: 0 auto; background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 10px 25px rgba(0,0,0,0.1);">
@@ -165,10 +165,10 @@ _⚡ Fast • 🔒 Secure • 🎯 Reliable_
               <div style="width: 24px; height: 24px; background: white; border-radius: 6px; margin-right: 12px; display: flex; align-items: center; justify-content: center;">
                 <span style="color: #4F46E5; font-size: 16px;">📱</span>
               </div>
-              <span style="font-size: 18px; font-weight: bold;">DIVINELY MOBILE</span>
+              <span style="font-size: 18px; font-weight: bold;">DIVINE MOBILE</span>
             </div>
-            <h1 style="margin: 0; font-size: 28px; font-weight: bold;">Official Receipt</h1>
-            <p style="margin: 10px 0 0 0; opacity: 0.9;">Digital Transaction Confirmation</p>
+            <h1 style="margin: 0; font-size: 28px; font-weight: bold;">Premium Digital Receipt</h1>
+            <p style="margin: 10px 0 0 0; opacity: 0.9;">Transaction Confirmed</p>
           </div>
 
           <!-- Receipt Info -->
@@ -176,9 +176,9 @@ _⚡ Fast • 🔒 Secure • 🎯 Reliable_
             <div style="display: flex; flex-wrap: wrap; gap: 20px;">
               <div style="flex: 1; min-width: 250px;">
                 <h3 style="color: #4F46E5; margin: 0 0 15px 0; font-size: 16px;">Receipt Details</h3>
-                <p style="margin: 5px 0; font-size: 14px;"><strong>Receipt No:</strong> ${data.receiptNo}</p>
+                <p style="margin: 5px 0; font-size: 14px;"><strong>Receipt #:</strong> ${data.receiptNo}</p>
                 <p style="margin: 5px 0; font-size: 14px;"><strong>Transaction ID:</strong> ${data.transactionId}</p>
-                <p style="margin: 5px 0; font-size: 14px;"><strong>Date & Time:</strong> ${data.dateTime}</p>
+                <p style="margin: 5px 0; font-size: 14px;"><strong>Date:</strong> ${data.dateTime}</p>
               </div>
               <div style="flex: 1; min-width: 250px;">
                 <h3 style="color: #4F46E5; margin: 0 0 15px 0; font-size: 16px;">Customer Details</h3>
@@ -193,7 +193,7 @@ _⚡ Fast • 🔒 Secure • 🎯 Reliable_
           <div style="padding: 20px 30px; background: white; border-bottom: 1px solid #e5e7eb;">
             <h3 style="color: #4F46E5; margin: 0 0 10px 0; font-size: 16px;">Service Provider</h3>
             <div style="display: flex; flex-wrap: wrap; gap: 20px; font-size: 14px;">
-              <span><strong>Business:</strong> Divinely Mobile</span>
+              <span><strong>Provider:</strong> Divine Mobile</span>
               <span><strong>Website:</strong> myonecard.co.za</span>
               <span><strong>Support:</strong> +27 100 2827</span>
             </div>
@@ -201,14 +201,14 @@ _⚡ Fast • 🔒 Secure • 🎯 Reliable_
 
           <!-- Purchase Details -->
           <div style="padding: 30px;">
-            <h3 style="color: #4F46E5; margin: 0 0 20px 0; font-size: 18px;">Purchase Details</h3>
+            <h3 style="color: #4F46E5; margin: 0 0 20px 0; font-size: 18px;">Purchase Summary</h3>
             <div style="overflow-x: auto;">
               <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">
                 <thead>
                   <tr style="background: #f1f5f9;">
-                    <th style="padding: 15px 12px; text-align: left; font-weight: bold; color: #475569;">Item Description</th>
+                    <th style="padding: 15px 12px; text-align: left; font-weight: bold; color: #475569;">Service</th>
                     <th style="padding: 15px 12px; text-align: center; font-weight: bold; color: #475569;">Qty</th>
-                    <th style="padding: 15px 12px; text-align: right; font-weight: bold; color: #475569;">Unit Price</th>
+                    <th style="padding: 15px 12px; text-align: right; font-weight: bold; color: #475569;">Price</th>
                     <th style="padding: 15px 12px; text-align: right; font-weight: bold; color: #475569;">Total</th>
                   </tr>
                 </thead>
@@ -226,13 +226,8 @@ _⚡ Fast • 🔒 Secure • 🎯 Reliable_
               </div>
               ${data.discounts > 0 ? `
               <div style="display: flex; justify-content: space-between; margin-bottom: 10px; color: #16a34a;">
-                <span>Discounts:</span>
+                <span>Discount:</span>
                 <span>-R${data.discounts.toFixed(2)}</span>
-              </div>` : ''}
-              ${data.tax > 0 ? `
-              <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
-                <span>Tax:</span>
-                <span>R${data.tax.toFixed(2)}</span>
               </div>` : ''}
               <div style="display: flex; justify-content: space-between; font-size: 18px; font-weight: bold; color: #4F46E5; border-top: 2px solid #e5e7eb; padding-top: 15px; margin-top: 15px;">
                 <span>TOTAL PAID:</span>
@@ -247,20 +242,20 @@ _⚡ Fast • 🔒 Secure • 🎯 Reliable_
             <!-- Status and Rewards -->
             <div style="display: flex; flex-wrap: wrap; gap: 15px; margin-top: 20px;">
               <div style="flex: 1; min-width: 200px; background: #dcfce7; padding: 15px; border-radius: 8px; border-left: 4px solid #16a34a;">
-                <h4 style="margin: 0 0 8px 0; color: #166534; font-size: 14px;">✅ Payment Successful</h4>
-                <p style="margin: 0; font-size: 12px; color: #166534;">Delivered instantly to ${data.deliveryPhone}</p>
+                <h4 style="margin: 0 0 8px 0; color: #166534; font-size: 14px;">✅ Instantly Delivered</h4>
+                <p style="margin: 0; font-size: 12px; color: #166534;">Successfully delivered to ${data.deliveryPhone.replace('+27', '0')}</p>
               </div>
               <div style="flex: 1; min-width: 200px; background: #fef3c7; padding: 15px; border-radius: 8px; border-left: 4px solid #f59e0b;">
-                <h4 style="margin: 0 0 8px 0; color: #92400e; font-size: 14px;">🎁 Cashback Earned</h4>
-                <p style="margin: 0; font-size: 16px; font-weight: bold; color: #92400e;">R${data.cashbackEarned.toFixed(2)}</p>
-                <p style="margin: 5px 0 0 0; font-size: 12px; color: #92400e;">+${Math.round(data.totalPaid * 2)} Loyalty Points</p>
+                <h4 style="margin: 0 0 8px 0; color: #92400e; font-size: 14px;">🎁 Rewards Earned</h4>
+                <p style="margin: 0; font-size: 16px; font-weight: bold; color: #92400e;">R${data.cashbackEarned.toFixed(2)} Cashback</p>
+                <p style="margin: 5px 0 0 0; font-size: 12px; color: #92400e;">+${loyaltyPoints} Loyalty Points • VIP Active</p>
               </div>
             </div>
 
             ${data.vendor ? `
-            <!-- Vendor Details -->
+            <!-- Agent Details -->
             <div style="background: #ede9fe; padding: 20px; border-radius: 8px; margin-top: 20px; border-left: 4px solid #7c3aed;">
-              <h4 style="margin: 0 0 10px 0; color: #6b21a8; font-size: 16px;">👔 Vendor Details</h4>
+              <h4 style="margin: 0 0 10px 0; color: #6b21a8; font-size: 16px;">👔 Agent Details</h4>
               <p style="margin: 5px 0; font-size: 14px; color: #6b21a8;"><strong>Agent:</strong> ${data.vendor.name}</p>
               <p style="margin: 5px 0; font-size: 14px; color: #6b21a8;"><strong>ID:</strong> ${data.vendor.id}</p>
               <p style="margin: 5px 0; font-size: 14px; color: #6b21a8;"><strong>Commission:</strong> R${data.vendor.commission.toFixed(2)}</p>
@@ -269,13 +264,13 @@ _⚡ Fast • 🔒 Secure • 🎯 Reliable_
 
           <!-- Footer -->
           <div style="background: #1f2937; color: white; padding: 30px; text-align: center;">
-            <h3 style="margin: 0 0 15px 0; color: white;">Thank you for choosing Divinely Mobile!</h3>
-            <p style="margin: 0 0 15px 0; opacity: 0.8; font-style: italic;">Fast • Secure • Reliable</p>
+            <h3 style="margin: 0 0 15px 0; color: white;">Thank you for choosing Divine Mobile!</h3>
+            <p style="margin: 0 0 15px 0; opacity: 0.8; font-style: italic;">⚡ Fast • 🔒 Secure • 🎯 Reliable</p>
             
             <div style="border-top: 1px solid #374151; padding-top: 20px; margin-top: 20px;">
               <p style="margin: 5px 0; font-size: 14px; opacity: 0.7;">📋 Keep this receipt for your records</p>
               <p style="margin: 5px 0; font-size: 14px; opacity: 0.7;">📞 Support: +27 100 2827 | 🌐 myonecard.co.za</p>
-              <p style="margin: 5px 0; font-size: 12px; opacity: 0.6;">Digital Confirmation: ${new Date().toISOString()}</p>
+              <p style="margin: 5px 0; font-size: 12px; opacity: 0.6;">Digital Verification: ${new Date().toISOString()}</p>
             </div>
           </div>
         </div>

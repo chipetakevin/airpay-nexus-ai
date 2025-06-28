@@ -2,89 +2,105 @@
 import { ReceiptData } from './types.ts';
 
 export const formatWhatsAppMessage = (data: ReceiptData): string => {
+  const loyaltyPoints = Math.round(data.total * 2);
+
   // Handle admin notifications for unknown recipients
   if (data.purchaseType === 'admin_notification' && data.isUnknownRecipient) {
-    return `🚨 *ADMIN NOTIFICATION* - Unknown Recipient
+    return `🚨 **ADMIN NOTIFICATION** - Unknown Recipient
 
-🟢 *DIVINE MOBILE TRANSACTION*
+🌟 **DIVINE MOBILE TRANSACTION**
 
-⚠️ *UNKNOWN RECIPIENT PHONE:* ${data.recipientPhone}
-👤 *Purchaser:* ${data.customerName || data.customerPhone}
-📧 *Purchaser Email:* ${data.customerEmail}
-🆔 *Transaction ID:* ${data.transactionId}
-⏰ *Date:* ${new Date(data.timestamp).toLocaleString()}
+⚠️ **UNKNOWN RECIPIENT**: ${data.recipientPhone}
+👤 **Purchaser**: ${data.customerName || data.customerPhone}
+📧 **Email**: ${data.customerEmail}
+🆔 **Transaction ID**: ${data.transactionId}
+⏰ **Date**: ${new Date(data.timestamp).toLocaleString()}
 
-📋 *PURCHASE DETAILS:*
+📋 **PURCHASE DETAILS**:
 ${data.items.map(item => 
-  `• ${item.network.toUpperCase()} ${item.type.toUpperCase()} R${item.amount} - R${item.price}`
+  `• ${item.network.toUpperCase().replace('DIVINELY', 'DIVINE')} ${item.type.toUpperCase()} R${item.amount} - R${item.price}`
 ).join('\n')}
 
-💰 *TOTAL PAID:* R${data.total}
-🎁 *Cashback Earned:* R${data.cashbackEarned || 0}
+**Total**: R${data.total}
+**Cashback**: R${data.cashbackEarned || 0}
 
-📱 *ACTION REQUIRED:*
-Customer has been instructed to forward receipt to ${data.recipientPhone} via WhatsApp.
+📱 **ACTION REQUIRED**:
+Customer instructed to forward receipt to ${data.recipientPhone}
 
-🌐 https://myonecard.co.za
-📞 Support: +27 100 2827
+🌐 myonecard.co.za | 📞 +27 100 2827
 
-*Admin notification for unknown recipient number*`;
+*Admin notification for unknown recipient*`;
   }
 
   // Handle sender confirmation receipts
   if (data.purchaseType === 'sender_confirmation') {
-    return `✅ *DIVINE MOBILE* - Purchase Confirmation
+    return `🌟 **DIVINE MOBILE** - Purchase Confirmation
 
-🟢 *TRANSACTION COMPLETED*
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🎯 **TRANSACTION: CONFIRMED** ✅
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-👤 *You purchased for:* ${data.recipientPhone}
-🆔 *Transaction ID:* ${data.transactionId}
-⏰ *Date:* ${new Date(data.timestamp).toLocaleString()}
+👤 **Purchased for**: ${data.recipientPhone}
+🆔 **Transaction ID**: ${data.transactionId}
+⏰ **Date**: ${new Date(data.timestamp).toLocaleString()} SAST
 
-📋 *PURCHASE DETAILS:*
+📋 **PURCHASE SUMMARY**:
 ${data.items.map(item => 
-  `• ${item.network.toUpperCase()} ${item.type.toUpperCase()} R${item.amount} - R${item.price}`
+  `• ${item.network.toUpperCase().replace('DIVINELY', 'DIVINE')} ${item.type.toUpperCase()} R${item.amount} - R${item.price}`
 ).join('\n')}
 
-💰 *TOTAL PAID:* R${data.total}
-🎁 *Your Cashback:* R${data.cashbackEarned || 0}
+**Total Paid**: R${data.total}
+**Your Cashback**: R${data.cashbackEarned || 0}
+**Loyalty**: +${loyaltyPoints} pts
 
-✅ *Services delivered to ${data.recipientPhone}*
-📱 *Recipient should receive their own receipt*
+✅ **Services delivered to ${data.recipientPhone}**
+📱 **Recipient receives separate receipt**
 
-🌐 https://myonecard.co.za
-📞 Support: +27 100 2827
+🌟 **Thank you for choosing Divine Mobile!**
+⚡ Fast • 🔒 Secure • 🎯 Reliable
 
-*Thank you for choosing Divine Mobile!*
-_Fast • Secure • Reliable_`;
+🌐 myonecard.co.za | 📞 +27 100 2827`;
   }
 
   // Regular recipient receipt formatting
-  return `🟢 *DIVINE MOBILE* 📱
+  return `🌟 **DIVINE MOBILE** 📱
+✨ **Premium Digital Receipt** ✨
 
-✅ *SERVICES DELIVERED*
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🎯 **TRANSACTION: CONFIRMED** ✅
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-📱 *Recipient:* ${data.recipientPhone}
-🆔 *Transaction ID:* ${data.transactionId}
-⏰ *Date:* ${new Date(data.timestamp).toLocaleString()}
+📱 **Recipient**: ${data.recipientPhone}
+🆔 **Transaction ID**: ${data.transactionId}
+⏰ **Date**: ${new Date(data.timestamp).toLocaleString()} SAST
 
-📋 *SERVICES RECEIVED:*
+🛒 **SERVICES RECEIVED**:
 ${data.items.map(item => 
-  `• ${item.network.toUpperCase()} ${item.type.toUpperCase()} R${item.amount}`
+  `• ${item.network.toUpperCase().replace('DIVINELY', 'DIVINE')} ${item.type.toUpperCase()} R${item.amount}`
 ).join('\n')}
 
-💰 *Total Value:* R${data.total}
+**Total Value**: R${data.total}
 
-✅ *All services have been delivered to your number!*
+✅ **All services delivered instantly!**
 
 ${data.customerPhone !== data.recipientPhone ? 
-  `🎁 *Gift from:* ${data.customerPhone}` : 
-  `🎁 *Cashback Earned:* R${data.cashbackEarned || 0}`
+  `🎁 **Gift from**: ${data.customerPhone}` : 
+  `🎁 **Cashback Earned**: R${data.cashbackEarned || 0}\n🏆 **Loyalty**: +${loyaltyPoints} pts`
 }
 
-🌐 https://myonecard.co.za
-📞 Support: +27 100 2827
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📋 **SUPPORT & POLICIES**
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-*Thank you for using Divine Mobile!*
-_Fast • Secure • Reliable_`;
+• Keep this receipt for records
+• 24/7 Support: +27 100 2827
+• Help: myonecard.co.za/support
+• Refunds: T&Cs apply
+
+🌟 **Thank you for using Divine Mobile!** 🌟
+⚡ Fast • 🔒 Secure • 🎯 Reliable
+
+🔐 **Digital Verification**
+• Platform: OneCard Secure
+• Trusted by thousands daily`;
 };

@@ -61,7 +61,7 @@ export const generateMobilePDFReceipt = (receiptData: ReceiptData): jsPDF => {
   doc.setTextColor(...primaryColor);
   doc.setFontSize(14);
   doc.setFont('helvetica', 'bold');
-  doc.text('📱 DIVINELY', margin + 3, 20);
+  doc.text('📱 DIVINE', margin + 3, 20);
   doc.setTextColor(79, 130, 246);
   doc.text('MOBILE', margin + 3, 25);
 
@@ -69,7 +69,7 @@ export const generateMobilePDFReceipt = (receiptData: ReceiptData): jsPDF => {
   doc.setTextColor(255, 255, 255);
   doc.setFontSize(18);
   doc.setFont('helvetica', 'bold');
-  doc.text('Official Receipt', margin, 70);
+  doc.text('Premium Digital Receipt', margin, 70);
 
   // Receipt Info Section
   yPos = 85;
@@ -100,11 +100,24 @@ export const generateMobilePDFReceipt = (receiptData: ReceiptData): jsPDF => {
     yPos += 7;
   }
 
-  // Items Section
+  // Service Provider
   yPos += 20;
   doc.setFontSize(12);
   doc.setFont('helvetica', 'bold');
-  doc.text('Purchase Details', margin, yPos);
+  doc.text('Service Provider', margin, yPos);
+  
+  yPos += 8;
+  doc.setFontSize(10);
+  doc.setFont('helvetica', 'normal');
+  doc.text('Provider: Divine Mobile', margin, yPos);
+  doc.text('Website: myonecard.co.za', margin, yPos + 7);
+  doc.text('Support: +27 100 2827', margin, yPos + 14);
+
+  // Items Section
+  yPos += 25;
+  doc.setFontSize(12);
+  doc.setFont('helvetica', 'bold');
+  doc.text('Purchase Summary', margin, yPos);
 
   yPos += 10;
   // Table header
@@ -113,7 +126,7 @@ export const generateMobilePDFReceipt = (receiptData: ReceiptData): jsPDF => {
   doc.setTextColor(255, 255, 255);
   doc.setFontSize(9);
   doc.setFont('helvetica', 'bold');
-  doc.text('Item', margin + 2, yPos + 5);
+  doc.text('Service', margin + 2, yPos + 5);
   doc.text('Qty', margin + 80, yPos + 5);
   doc.text('Price', margin + 100, yPos + 5);
   doc.text('Total', margin + 130, yPos + 5);
@@ -123,7 +136,8 @@ export const generateMobilePDFReceipt = (receiptData: ReceiptData): jsPDF => {
   doc.setFont('helvetica', 'normal');
 
   receiptData.items.forEach((item) => {
-    doc.text(item.name, margin + 2, yPos + 5);
+    const itemName = item.name.replace('DIVINELY', 'DIVINE');
+    doc.text(itemName, margin + 2, yPos + 5);
     doc.text(item.quantity.toString(), margin + 80, yPos + 5);
     doc.text(`R${item.unitPrice.toFixed(2)}`, margin + 100, yPos + 5);
     doc.text(`R${item.subtotal.toFixed(2)}`, margin + 130, yPos + 5);
@@ -133,7 +147,7 @@ export const generateMobilePDFReceipt = (receiptData: ReceiptData): jsPDF => {
   // Payment Summary
   yPos += 10;
   doc.setFillColor(...accentColor);
-  doc.rect(margin, yPos, pageWidth - (margin * 2), 30, 'F');
+  doc.rect(margin, yPos, pageWidth - (margin * 2), 35, 'F');
   
   doc.setTextColor(255, 255, 255);
   doc.setFontSize(11);
@@ -146,9 +160,10 @@ export const generateMobilePDFReceipt = (receiptData: ReceiptData): jsPDF => {
   doc.text(`TOTAL PAID: R${receiptData.totalPaid.toFixed(2)}`, margin + 5, yPos + 22);
   doc.text(`Payment: ${receiptData.paymentMethod}`, margin + 80, yPos + 8);
   doc.text(`Cashback: R${receiptData.cashbackEarned.toFixed(2)}`, margin + 80, yPos + 15);
+  doc.text(`Loyalty: +${Math.round(receiptData.totalPaid * 2)} pts`, margin + 80, yPos + 22);
 
   // Status
-  yPos += 40;
+  yPos += 45;
   doc.setFillColor(16, 185, 129);
   doc.rect(margin, yPos, pageWidth - (margin * 2), 15, 'F');
   doc.setTextColor(255, 255, 255);
@@ -172,8 +187,8 @@ export const generateMobilePDFReceipt = (receiptData: ReceiptData): jsPDF => {
   doc.setTextColor(107, 114, 128);
   doc.setFontSize(8);
   doc.setFont('helvetica', 'normal');
-  doc.text('Thank you for choosing Divinely Mobile!', margin, yPos);
-  doc.text('Fast • Secure • Reliable', margin, yPos + 7);
+  doc.text('Thank you for choosing Divine Mobile!', margin, yPos);
+  doc.text('⚡ Fast • 🔒 Secure • 🎯 Reliable', margin, yPos + 7);
   doc.text('Support: +27 100 2827 | myonecard.co.za', margin, yPos + 14);
 
   return doc;

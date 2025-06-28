@@ -25,28 +25,67 @@ export const useWhatsAppReceipt = () => {
 
   const generateWhatsAppReceipt = (data: ReceiptData): string => {
     const itemsList = data.items.map(item => 
-      `• ${item.name} (${item.network}) x${item.quantity} - R${item.price * item.quantity}`
+      `• ${item.network?.toUpperCase().replace('DIVINELY', 'DIVINE') || 'DIVINE'} ${item.type?.toUpperCase() || 'AIRTIME'} R${item.amount} - R${item.price * item.quantity}`
     ).join('\n');
 
-    return `🟢 *DIVINELY MOBILE RECEIPT*
+    const loyaltyPoints = Math.round(data.total * 2);
 
-✅ *PURCHASE COMPLETED*
+    return `🌟 **DIVINE MOBILE** 📱
+✨ **Premium Digital Receipt** ✨
 
-📋 *ORDER DETAILS:*
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🎯 **TRANSACTION: CONFIRMED** ✅
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+**Receipt #**: DM${Date.now().toString().slice(-8)}
+**Transaction ID**: ${data.transactionId}
+**Date**: ${new Date(data.timestamp).toLocaleString('en-ZA', { timeZone: 'Africa/Johannesburg' })} SAST
+
+**Customer**: ${data.customerName || 'Valued Customer'}
+**Mobile**: ${data.customerPhone}
+
+**Provider**: Divine Mobile
+**Website**: myonecard.co.za
+**Support**: +27 100 2827
+**Platform**: OneCard Digital Services
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🛒 **PURCHASE SUMMARY**
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
 ${itemsList}
 
-💰 *TOTAL PAID:* R${data.total}
-🆔 *Transaction ID:* ${data.transactionId}
-📱 *Customer:* ${data.customerPhone}
-⏰ *Date:* ${new Date(data.timestamp).toLocaleString()}
+**Total Paid**: R${data.total}
+**Payment**: OneCard Mobile
+**Status**: Payment Successful ✅
 
-✅ *All items delivered instantly!*
+**Rewards**:
+• Cashback: R${(data.total * 0.015).toFixed(2)}
+• Loyalty: ${loyaltyPoints} pts
+• VIP: Active
 
-🌐 divinely-mobile.com
-📞 Support: +27 100 2827
+**Delivery**:
+• To: ${data.customerPhone.replace('+27', '0')}
+• Status: Instantly Delivered ⚡
+• Confirmation: 100% Success
 
-*Thank you for shopping with us!*
-_Fast • Secure • Reliable_`;
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📋 **SUPPORT & POLICIES**
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+• Keep this receipt for records
+• 24/7 Support: +27 100 2827
+• Help: myonecard.co.za/support
+• Live Chat: On website
+• Refunds: T&Cs apply
+
+🌟 **Thank you for choosing Divine Mobile!** 🌟
+⚡ Fast • 🔒 Secure • 🎯 Reliable
+
+🔐 **Digital Verification**
+• Verified: ${new Date().toISOString()}
+• Platform: OneCard Secure
+• Trusted by thousands daily`;
   };
 
   const sendWhatsAppReceipt = (receiptData: ReceiptData) => {
