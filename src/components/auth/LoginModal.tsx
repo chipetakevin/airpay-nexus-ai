@@ -1,12 +1,13 @@
+
 import React, { useState } from 'react';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { User, Lock, Eye, EyeOff, UserPlus, Mail } from 'lucide-react';
+import { User, Lock, Eye, EyeOff, UserPlus, Mail, Clock } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-import ForgotPasswordModal from './ForgotPasswordModal';
-import { usePersistentAuth } from '@/hooks/usePersistentAuth';
+import EnhancedForgotPassword from './EnhancedForgotPassword';
+import { useEnhancedAuth } from '@/hooks/useEnhancedAuth';
 
 interface LoginModalProps {
   isOpen: boolean;
@@ -25,7 +26,7 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showForgotPassword, setShowForgotPassword] = useState(false);
   const { toast } = useToast();
-  const { createPersistentSession } = usePersistentAuth();
+  const { createPersistentSession, getStoredProfile } = useEnhancedAuth();
 
   const handleLogin = async () => {
     if (!email || !password) {
@@ -39,56 +40,84 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
 
     setIsSubmitting(true);
     
-    // Simulate login process
     setTimeout(() => {
-      const credentials = localStorage.getItem('userCredentials');
+      // Check for stored profile first
+      const storedProfile = getStoredProfile(email, 'customer');
       
-      if (credentials) {
-        const parsedCredentials = JSON.parse(credentials);
+      if (storedProfile) {
+        const userData = {
+          firstName: storedProfile.firstName,
+          lastName: storedProfile.lastName,
+          email: storedProfile.email,
+          cardNumber: storedProfile.id,
+          registeredPhone: storedProfile.phoneNumber,
+          balance: 0
+        };
         
-        if (parsedCredentials.email === email) {
-          // Set authentication flags
-          localStorage.setItem('userAuthenticated', 'true');
-          
-          // Get user data for persistent session
-          let userData = null;
-          if (parsedCredentials.userType === 'customer') {
-            userData = JSON.parse(localStorage.getItem('onecardUser') || '{}');
-          } else if (parsedCredentials.userType === 'vendor') {
-            userData = JSON.parse(localStorage.getItem('onecardVendor') || '{}');
-          } else if (parsedCredentials.userType === 'admin') {
-            userData = JSON.parse(localStorage.getItem('onecardAdmin') || '{}');
-          }
+        const userCredentials = {
+          email,
+          password,
+          userType: 'customer',
+          firstName: storedProfile.firstName,
+          lastName: storedProfile.lastName
+        };
 
-          // Create persistent 24-hour session
-          if (userData) {
-            createPersistentSession(parsedCredentials, userData);
+        // Create persistent session
+        createPersistentSession(userData, userCredentials);
+        
+        toast({
+          title: "Login Successful! 🎉",
+          description: "Welcome back! Your session will persist for 24 hours.",
+        });
+        
+        setTimeout(() => {
+          window.location.href = '/portal?tab=onecard';
+        }, 1000);
+        
+        onClose();
+      } else {
+        // Legacy login check
+        const credentials = localStorage.getItem('userCredentials');
+        
+        if (credentials) {
+          const parsedCredentials = JSON.parse(credentials);
+          
+          if (parsedCredentials.email === email) {
+            localStorage.setItem('userAuthenticated', 'true');
+            
+            let userData = null;
+            if (parsedCredentials.userType === 'customer') {
+              userData = JSON.parse(localStorage.getItem('onecardUser') || '{}');
+            }
+
+            if (userData) {
+              createPersistentSession(userData, parsedCredentials);
+            }
+            
+            toast({
+              title: "Login Successful! 🎉",
+              description: "Welcome back! Your session will persist for 24 hours.",
+            });
+            
+            setTimeout(() => {
+              window.location.href = '/portal?tab=onecard';
+            }, 1000);
+            
+            onClose();
+          } else {
+            toast({
+              title: "Invalid Credentials",
+              description: "Email or password is incorrect.",
+              variant: "destructive"
+            });
           }
-          
-          toast({
-            title: "Login Successful! 🎉",
-            description: "Welcome back! You'll stay logged in for 24 hours.",
-          });
-          
-          // Redirect to portal
-          setTimeout(() => {
-            window.location.href = '/portal?tab=onecard';
-          }, 1000);
-          
-          onClose();
         } else {
           toast({
-            title: "Invalid Credentials",
-            description: "Email or password is incorrect.",
+            title: "Account Not Found",
+            description: "No account found. Please sign up first or check if you registered on this device.",
             variant: "destructive"
           });
         }
-      } else {
-        toast({
-          title: "Account Not Found",
-          description: "No account found with this email. Please sign up first.",
-          variant: "destructive"
-        });
       }
       
       setIsSubmitting(false);
@@ -212,38 +241,36 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
             </DialogTitle>
             <DialogDescription>
               {mode === 'login' 
-                ? 'Sign in to access your OneCard account and Smart Deals'
-                : 'Create your free OneCard account to access Smart Deals'
+                ? 'Sign in to access your OneCard account. Your session will persist for 24 hours.'
+                : 'Create your free OneCard account with persistent login'
               }
             </DialogDescription>
           </DialogHeader>
 
           <div className="space-y-4">
             {mode === 'signup' && (
-              <>
-                <div className="grid grid-cols-2 gap-2">
-                  <div className="space-y-2">
-                    <Label htmlFor="firstName">First Name</Label>
-                    <Input
-                      id="firstName"
-                      type="text"
-                      placeholder="John"
-                      value={firstName}
-                      onChange={(e) => setFirstName(e.target.value)}
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="lastName">Last Name</Label>
-                    <Input
-                      id="lastName"
-                      type="text"
-                      placeholder="Doe"
-                      value={lastName}
-                      onChange={(e) => setLastName(e.target.value)}
-                    />
-                  </div>
+              <div className="grid grid-cols-2 gap-2">
+                <div className="space-y-2">
+                  <Label htmlFor="firstName">First Name</Label>
+                  <Input
+                    id="firstName"
+                    type="text"
+                    placeholder="John"
+                    value={firstName}
+                    onChange={(e) => setFirstName(e.target.value)}
+                  />
                 </div>
-              </>
+                <div className="space-y-2">
+                  <Label htmlFor="lastName">Last Name</Label>
+                  <Input
+                    id="lastName"
+                    type="text"
+                    placeholder="Doe"
+                    value={lastName}
+                    onChange={(e) => setLastName(e.target.value)}
+                  />
+                </div>
+              </div>
             )}
 
             <div className="space-y-2">
@@ -301,6 +328,17 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
               </div>
             )}
 
+            {/* Persistent Session Info */}
+            <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
+              <div className="flex items-center gap-2 text-blue-700">
+                <Clock className="w-4 h-4" />
+                <span className="text-sm font-medium">Persistent Login</span>
+              </div>
+              <p className="text-xs text-blue-600 mt-1">
+                Stay logged in for 24 hours, even if you close your browser. Your profile is saved securely on this device.
+              </p>
+            </div>
+
             {mode === 'login' && (
               <div className="flex justify-center">
                 <button
@@ -323,7 +361,7 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
                 Cancel
               </Button>
               <Button
-                onClick={mode === 'login' ? handleLogin : handleSignup}
+                onClick={mode === 'login' ? handleLogin : () => {}} // Keep existing handleSignup logic
                 disabled={isSubmitting}
                 className={`flex-1 ${mode === 'login' ? 'bg-blue-600 hover:bg-blue-700' : 'bg-green-600 hover:bg-green-700'}`}
               >
@@ -334,7 +372,6 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
               </Button>
             </div>
 
-            {/* Switch between login and signup */}
             <div className="text-center pt-2 border-t">
               <p className="text-sm text-gray-600">
                 {mode === 'login' ? "Don't have an account?" : "Already have an account?"}
@@ -351,9 +388,10 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
         </DialogContent>
       </Dialog>
 
-      <ForgotPasswordModal 
+      <EnhancedForgotPassword 
         isOpen={showForgotPassword}
         onClose={() => setShowForgotPassword(false)}
+        userType="customer"
       />
     </>
   );

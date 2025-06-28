@@ -1,250 +1,304 @@
+
 import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
-import { LogOut } from 'lucide-react';
-import LocationDetector from '../LocationDetector';
-import PersonalInfoSection from './PersonalInfoSection';
-import PhoneSection from './PhoneSection';
-import EnhancedBankingSection from './EnhancedBankingSection';
-import ConsentSection from './ConsentSection';
-import RegistrationAlerts from './RegistrationAlerts';
-import PermanentProfileInfo from './PermanentProfileInfo';
-import { useCustomerRegistration } from '@/hooks/useCustomerRegistration';
-import { useMobileAuth } from '@/hooks/useMobileAuth';
-import { usePhoneAutofill } from '@/hooks/usePhoneAutofill';
-import { useRegistrationGuard } from '@/hooks/useRegistrationGuard';
-import { useBankingAutoSave } from '@/hooks/useBankingAutoSave';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Eye, EyeOff, Mail, Clock } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import EnhancedForgotPassword from '../auth/EnhancedForgotPassword';
+import { useEnhancedAuth } from '@/hooks/useEnhancedAuth';
+import { useDeviceStorage } from '@/hooks/useDeviceStorage';
 
 const CustomerRegistration = () => {
-  const [location, setLocation] = useState('Detecting location...');
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [formData, setFormData] = useState({
+    firstName: '',
+    lastName: '',
+    email: '',
+    phoneNumber: '',
+    password: '',
+    confirmPassword: '',
+    agreeTerms: false,
+    marketingConsent: false
+  });
+  
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [showForgotPassword, setShowForgotPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const { formData, errors, handleInputChange, handleSubmit } = useCustomerRegistration();
-  const { isAuthenticated, currentUser } = useMobileAuth();
-  const { saveBankingInfo, detectedPhone } = usePhoneAutofill();
-  const { userProfile, saveProfilePermanently, checkRegistrationStatus } = useRegistrationGuard();
-  const { saveBankingInfo: savePermanentBanking, getBankingInfo } = useBankingAutoSave();
   const { toast } = useToast();
+  const { createPersistentSession } = useEnhancedAuth();
+  const { getDeviceProfiles } = useDeviceStorage();
 
   useEffect(() => {
-    // Check if user is logged in and auto-fill form
-    const userData = localStorage.getItem('onecardUser');
-    const userAuth = localStorage.getItem('userAuthenticated');
+    // Load any existing profile data for this device
+    const profiles = getDeviceProfiles();
+    const customerProfile = profiles.find(p => p.userType === 'customer');
     
-    if (userAuth === 'true' && userData) {
-      setIsLoggedIn(true);
-      try {
-        const parsedData = JSON.parse(userData);
-        // Auto-fill form with existing user data
-        Object.keys(parsedData).forEach(key => {
-          if (formData.hasOwnProperty(key) && parsedData[key]) {
-            handleInputChange(key as keyof typeof formData, parsedData[key]);
-          }
-        });
-        
-        // Also auto-fill phone number from registered phone
-        if (parsedData.registeredPhone && !formData.phoneNumber) {
-          const cleanPhone = parsedData.registeredPhone.replace('+27', '').replace(/^0/, '');
-          handleInputChange('phoneNumber', cleanPhone);
-        }
-        
-        // Auto-fill banking information
-        const savedBanking = getBankingInfo();
-        if (savedBanking.bankName && !formData.bankName) {
-          handleInputChange('bankName', savedBanking.bankName);
-          handleInputChange('accountNumber', savedBanking.accountNumber);
-          handleInputChange('branchCode', savedBanking.branchCode);
-        }
-        
-        toast({
-          title: "Welcome Back! 👋",
-          description: `Auto-filled your information, ${parsedData.firstName}! Profile & banking info permanently saved.`,
-        });
-      } catch (error) {
-        console.error('Error parsing saved user data:', error);
-      }
-    } else {
-      // Auto-fill banking for new users
-      const savedBanking = getBankingInfo();
-      if (savedBanking.bankName) {
-        handleInputChange('bankName', savedBanking.bankName);
-        handleInputChange('accountNumber', savedBanking.accountNumber);
-        handleInputChange('branchCode', savedBanking.branchCode);
-        
-        toast({
-          title: "Banking Info Restored! 💳",
-          description: "Your saved banking information has been auto-filled.",
-        });
-      }
+    if (customerProfile) {
+      setFormData(prev => ({
+        ...prev,
+        firstName: customerProfile.firstName,
+        lastName: customerProfile.lastName,
+        email: customerProfile.email,
+        phoneNumber: customerProfile.phoneNumber
+      }));
+      
+      toast({
+        title: "Profile Data Loaded",
+        description: "Your previous registration data has been loaded from this device.",
+      });
     }
+  }, []);
 
-    // Auto-fill detected phone number if available
-    if (detectedPhone && !formData.phoneNumber && !isLoggedIn) {
-      handleInputChange('phoneNumber', detectedPhone);
-    }
-  }, [detectedPhone, isLoggedIn]);
-
-  const handleLogout = () => {
-    // Don't clear user data - keep it permanently saved
-    localStorage.removeItem('userAuthenticated');
-    sessionStorage.clear();
-    setIsLoggedIn(false);
-    
-    toast({
-      title: "Logged Out Successfully",
-      description: "Your profile information remains permanently saved for future logins.",
-    });
-    
-    // Refresh the page to reset the form
-    window.location.reload();
+  const handleInputChange = (field: string, value: any) => {
+    setFormData(prev => ({ ...prev, [field]: value }));
   };
 
-  const handleCustomSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    if (!formData.firstName || !formData.lastName || !formData.email || !formData.phoneNumber || !formData.password) {
+      toast({
+        title: "All Fields Required",
+        description: "Please fill in all required fields.",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    if (formData.password !== formData.confirmPassword) {
+      toast({
+        title: "Passwords Don't Match",
+        description: "Please ensure both passwords are identical.",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    if (!formData.agreeTerms) {
+      toast({
+        title: "Terms Required",
+        description: "Please agree to the terms and conditions.",
+        variant: "destructive"
+      });
+      return;
+    }
+
     setIsSubmitting(true);
     
-    try {
-      // Save banking information permanently before submission
-      if (formData.bankName && formData.accountNumber) {
-        savePermanentBanking({
-          bankName: formData.bankName,
-          branchCode: formData.branchCode,
-          accountNumber: formData.accountNumber,
-          routingNumber: formData.routingNumber
-        });
-        
-        // Also save using the legacy method for compatibility
-        saveBankingInfo({
-          bankName: formData.bankName,
-          branchCode: formData.branchCode,
-          accountNumber: formData.accountNumber
-        });
-      }
+    setTimeout(() => {
+      const cardNumber = `OC${Math.random().toString().substr(2, 8)}`;
       
-      // Save all profile data permanently
-      saveProfilePermanently({
+      const userData = {
         firstName: formData.firstName,
         lastName: formData.lastName,
         email: formData.email,
-        phoneNumber: `+27${formData.phoneNumber}`,
-        bankName: formData.bankName,
-        accountNumber: formData.accountNumber,
-        isComplete: true
+        cardNumber,
+        registeredPhone: formData.phoneNumber,
+        balance: 0,
+        registrationDate: new Date().toISOString()
+      };
+      
+      const userCredentials = {
+        email: formData.email,
+        password: formData.password,
+        userType: 'customer' as const,
+        firstName: formData.firstName,
+        lastName: formData.lastName,
+        phone: formData.phoneNumber
+      };
+      
+      // Store in legacy format for compatibility
+      localStorage.setItem('userCredentials', JSON.stringify(userCredentials));
+      localStorage.setItem('onecardUser', JSON.stringify(userData));
+      
+      // Create persistent session (this will also save profile permanently)
+      createPersistentSession(userData, userCredentials);
+      
+      toast({
+        title: "Registration Successful! 🎉",
+        description: "Your profile is permanently saved on this device for seamless future access.",
       });
       
-      // Call the original submit handler
-      await handleSubmit(e);
-      
-      // Refresh registration status
       setTimeout(() => {
-        checkRegistrationStatus();
-      }, 1000);
+        window.location.href = '/portal?tab=onecard&registered=true';
+      }, 2000);
       
-      toast({
-        title: "Registration Complete! 🎉",
-        description: "All information permanently saved. Ready for smart deals shopping!",
-      });
-    } catch (error) {
-      console.error('Registration error:', error);
-      toast({
-        title: "Registration Error",
-        description: "Please check your information and try again.",
-        variant: "destructive"
-      });
-    } finally {
       setIsSubmitting(false);
-    }
+    }, 1500);
   };
 
   return (
-    <div className="space-y-4 sm:space-y-6 max-w-4xl mx-auto px-2 sm:px-4">
-      {/* Mobile-optimized header */}
-      <div className="text-center space-y-2">
-        <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900">
-          Customer Registration
-        </h1>
-        <p className="text-sm sm:text-base text-gray-600">
-          Join AirPay and unlock smart deals with OneCard rewards
-        </p>
-      </div>
-
-      {/* Logout button for logged in users */}
-      {isLoggedIn && (
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 bg-green-50 border border-green-200 rounded-lg p-3 sm:p-4">
-          <div className="text-sm text-green-700 flex-1">
-            ✅ Profile permanently saved - ready for payments & services
-          </div>
-          <Button
-            onClick={handleLogout}
-            variant="outline"
-            size="sm"
-            className="border-red-300 text-red-600 hover:bg-red-50 w-full sm:w-auto"
-          >
-            <LogOut className="w-4 h-4 mr-2" />
-            Logout (Profile Saved)
-          </Button>
+    <>
+      <div className="max-w-md mx-auto bg-white p-6 rounded-lg shadow-sm border">
+        <div className="mb-6">
+          <h2 className="text-xl font-bold text-gray-900 mb-2">Customer Registration</h2>
+          <p className="text-sm text-gray-600">Create your OneCard account with persistent login</p>
         </div>
-      )}
 
-      <RegistrationAlerts location={location} />
-
-      <LocationDetector onLocationUpdate={setLocation} />
-
-      <form onSubmit={handleCustomSubmit} className="space-y-4 sm:space-y-6" autoComplete="on">
-        <PersonalInfoSection 
-          formData={formData}
-          errors={errors}
-          onInputChange={handleInputChange}
-        />
-
-        <PhoneSection 
-          formData={formData}
-          errors={errors}
-          onInputChange={handleInputChange}
-        />
-
-        <EnhancedBankingSection 
-          formData={formData}
-          errors={errors}
-          onInputChange={handleInputChange}
-        />
-
-        <ConsentSection 
-          formData={formData}
-          errors={errors}
-          onInputChange={handleInputChange}
-        />
-
-        {/* Enhanced Permanent Profile Save Section - Now Collapsible */}
-        <PermanentProfileInfo showBankingDetails={true} />
-
-        <Button 
-          type="submit" 
-          disabled={isSubmitting}
-          className="w-full bg-gradient-to-r from-blue-600 to-green-600 hover:from-blue-700 hover:to-green-700 text-white text-base sm:text-lg py-4 sm:py-6 font-semibold shadow-lg transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
-        >
-          {isSubmitting ? (
-            <div className="flex items-center justify-center gap-2">
-              <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-              Processing...
-            </div>
-          ) : (
-            isLoggedIn ? 'Update Profile & Enable All Services 🚀' : 'Register & Enable All Services 🚀'
-          )}
-        </Button>
-
-        {/* Mobile-friendly WhatsApp Integration Notice */}
-        <div className="bg-gradient-to-r from-green-50 to-blue-50 border border-green-200 rounded-lg p-4 text-center">
-          <div className="flex items-center justify-center gap-2 mb-2">
-            <span className="text-2xl">📱</span>
-            <span className="font-semibold text-green-800">Mobile & WhatsApp Ready!</span>
+        {/* Persistent Session Info */}
+        <div className="bg-green-50 border border-green-200 rounded-lg p-3 mb-4">
+          <div className="flex items-center gap-2 text-green-700">
+            <Clock className="w-4 h-4" />
+            <span className="text-sm font-medium">Device Registration</span>
           </div>
-          <p className="text-sm text-green-700">
-            This registration works seamlessly on mobile devices and integrates with WhatsApp for instant service access.
+          <p className="text-xs text-green-600 mt-1">
+            Your profile will be permanently saved on this device for seamless future access and 24-hour persistent login.
           </p>
         </div>
-      </form>
-    </div>
+
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div className="grid grid-cols-2 gap-3">
+            <div className="space-y-2">
+              <Label htmlFor="firstName">First Name *</Label>
+              <Input
+                id="firstName"
+                value={formData.firstName}
+                onChange={(e) => handleInputChange('firstName', e.target.value)}
+                placeholder="John"
+                required
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="lastName">Last Name *</Label>
+              <Input
+                id="lastName"
+                value={formData.lastName}
+                onChange={(e) => handleInputChange('lastName', e.target.value)}
+                placeholder="Doe"
+                required
+              />
+            </div>
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="email">Email Address *</Label>
+            <Input
+              id="email"
+              type="email"
+              value={formData.email}
+              onChange={(e) => handleInputChange('email', e.target.value)}
+              placeholder="john@example.com"
+              required
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="phoneNumber">Phone Number *</Label>
+            <Input
+              id="phoneNumber"
+              type="tel"
+              value={formData.phoneNumber}
+              onChange={(e) => handleInputChange('phoneNumber', e.target.value)}
+              placeholder="+27 123 456 789"
+              required
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="password">Password *</Label>
+            <div className="relative">
+              <Input
+                id="password"
+                type={showPassword ? 'text' : 'password'}
+                value={formData.password}
+                onChange={(e) => handleInputChange('password', e.target.value)}
+                placeholder="Minimum 8 characters"
+                className="pr-10"
+                required
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+              >
+                {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+              </button>
+            </div>
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="confirmPassword">Confirm Password *</Label>
+            <div className="relative">
+              <Input
+                id="confirmPassword"
+                type={showConfirmPassword ? 'text' : 'password'}
+                value={formData.confirmPassword}
+                onChange={(e) => handleInputChange('confirmPassword', e.target.value)}
+                placeholder="Confirm your password"
+                className="pr-10"
+                required
+              />
+              <button
+                type="button"
+                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+              >
+                {showConfirmPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+              </button>
+            </div>
+          </div>
+
+          <div className="space-y-3">
+            <div className="flex items-start space-x-2">
+              <Checkbox
+                id="agreeTerms"
+                checked={formData.agreeTerms}
+                onCheckedChange={(checked) => handleInputChange('agreeTerms', checked)}
+              />
+              <Label htmlFor="agreeTerms" className="text-sm leading-5">
+                I agree to the Terms and Conditions and Privacy Policy *
+              </Label>
+            </div>
+
+            <div className="flex items-start space-x-2">
+              <Checkbox
+                id="marketingConsent"
+                checked={formData.marketingConsent}
+                onCheckedChange={(checked) => handleInputChange('marketingConsent', checked)}
+              />
+              <Label htmlFor="marketingConsent" className="text-sm leading-5">
+                I consent to receiving marketing communications and offers
+              </Label>
+            </div>
+          </div>
+
+          {/* Forgot Password Link */}
+          <div className="flex justify-center pt-2">
+            <button
+              type="button"
+              onClick={() => setShowForgotPassword(true)}
+              className="flex items-center gap-2 text-sm text-blue-600 hover:text-blue-700 font-medium bg-blue-50 hover:bg-blue-100 px-3 py-2 rounded-lg transition-colors"
+            >
+              <Mail className="w-4 h-4" />
+              Already registered? Reset Password
+            </button>
+          </div>
+
+          <Button
+            type="submit"
+            disabled={isSubmitting}
+            className="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-3"
+          >
+            {isSubmitting ? (
+              <div className="flex items-center gap-2">
+                <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                Creating Account...
+              </div>
+            ) : (
+              'Create OneCard Account'
+            )}
+          </Button>
+        </form>
+      </div>
+
+      <EnhancedForgotPassword 
+        isOpen={showForgotPassword}
+        onClose={() => setShowForgotPassword(false)}
+        userType="customer"
+      />
+    </>
   );
 };
 
