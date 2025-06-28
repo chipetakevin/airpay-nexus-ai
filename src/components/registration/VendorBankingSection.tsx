@@ -13,13 +13,15 @@ interface VendorBankingProps {
   errors: any;
   onInputChange: (field: string, value: any) => void;
   onBankSelect: (bankName: string, routing: string, branchCode: string) => void;
+  marketingConsent?: boolean;
 }
 
 const VendorBankingSection: React.FC<VendorBankingProps> = ({
   formData,
   errors,
   onInputChange,
-  onBankSelect
+  onBankSelect,
+  marketingConsent = false
 }) => {
   const { saveBankingInfo, getBankingInfo } = useBankingAutoSave();
   const { toast } = useToast();
@@ -51,6 +53,41 @@ const VendorBankingSection: React.FC<VendorBankingProps> = ({
       setIsCollapsed(false);
     }
   }, [isBankingComplete, isCollapsed, toast]);
+
+  // New effect: Auto-collapse when marketing consent is given and banking is complete
+  useEffect(() => {
+    if (marketingConsent && isBankingComplete && !isCollapsed) {
+      console.log('📧 Marketing consent given - auto-collapsing banking section');
+      
+      // Force save banking info immediately
+      const saveAndCollapse = async () => {
+        setIsAutoSaving(true);
+        try {
+          await saveBankingInfo({
+            bankName: formData.bankName,
+            accountNumber: formData.accountNumber,
+            branchCode: formData.branchCode,
+            routingNumber: formData.routingNumber
+          });
+          
+          setLastSaved(new Date());
+          setIsCollapsed(true);
+          
+          toast({
+            title: "Banking Auto-Secured! 🔒✉️",
+            description: "Banking details saved and collapsed after consent confirmation.",
+            duration: 3000
+          });
+        } catch (error) {
+          console.error('❌ Failed to save banking info on consent:', error);
+        } finally {
+          setIsAutoSaving(false);
+        }
+      };
+      
+      saveAndCollapse();
+    }
+  }, [marketingConsent, isBankingComplete, isCollapsed, formData, saveBankingInfo, toast]);
 
   // Auto-fill on mount with enhanced detection
   useEffect(() => {

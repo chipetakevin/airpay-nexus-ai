@@ -52,6 +52,7 @@ const VendorRegistration = () => {
           errors={errors}
           onInputChange={handleInputChange}
           onBankSelect={handleBankSelect}
+          marketingConsent={formData.marketingConsent}
         />
 
         <VendorConsentSection 
