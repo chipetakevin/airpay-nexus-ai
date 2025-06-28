@@ -1,11 +1,10 @@
-
 import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { LogOut } from 'lucide-react';
 import LocationDetector from '../LocationDetector';
 import PersonalInfoSection from './PersonalInfoSection';
 import PhoneSection from './PhoneSection';
-import BankingSection from './BankingSection';
+import EnhancedBankingSection from './EnhancedBankingSection';
 import ConsentSection from './ConsentSection';
 import RegistrationAlerts from './RegistrationAlerts';
 import PermanentProfileInfo from './PermanentProfileInfo';
@@ -13,6 +12,7 @@ import { useCustomerRegistration } from '@/hooks/useCustomerRegistration';
 import { useMobileAuth } from '@/hooks/useMobileAuth';
 import { usePhoneAutofill } from '@/hooks/usePhoneAutofill';
 import { useRegistrationGuard } from '@/hooks/useRegistrationGuard';
+import { useBankingAutoSave } from '@/hooks/useBankingAutoSave';
 import { useToast } from '@/hooks/use-toast';
 
 const CustomerRegistration = () => {
@@ -23,6 +23,7 @@ const CustomerRegistration = () => {
   const { isAuthenticated, currentUser } = useMobileAuth();
   const { saveBankingInfo, detectedPhone } = usePhoneAutofill();
   const { userProfile, saveProfilePermanently, checkRegistrationStatus } = useRegistrationGuard();
+  const { saveBankingInfo: savePermanentBanking, getBankingInfo } = useBankingAutoSave();
   const { toast } = useToast();
 
   useEffect(() => {
@@ -47,12 +48,33 @@ const CustomerRegistration = () => {
           handleInputChange('phoneNumber', cleanPhone);
         }
         
+        // Auto-fill banking information
+        const savedBanking = getBankingInfo();
+        if (savedBanking.bankName && !formData.bankName) {
+          handleInputChange('bankName', savedBanking.bankName);
+          handleInputChange('accountNumber', savedBanking.accountNumber);
+          handleInputChange('branchCode', savedBanking.branchCode);
+        }
+        
         toast({
           title: "Welcome Back! 👋",
-          description: `Auto-filled your information, ${parsedData.firstName}! Your profile is permanently saved.`,
+          description: `Auto-filled your information, ${parsedData.firstName}! Profile & banking info permanently saved.`,
         });
       } catch (error) {
         console.error('Error parsing saved user data:', error);
+      }
+    } else {
+      // Auto-fill banking for new users
+      const savedBanking = getBankingInfo();
+      if (savedBanking.bankName) {
+        handleInputChange('bankName', savedBanking.bankName);
+        handleInputChange('accountNumber', savedBanking.accountNumber);
+        handleInputChange('branchCode', savedBanking.branchCode);
+        
+        toast({
+          title: "Banking Info Restored! 💳",
+          description: "Your saved banking information has been auto-filled.",
+        });
       }
     }
 
@@ -84,6 +106,14 @@ const CustomerRegistration = () => {
     try {
       // Save banking information permanently before submission
       if (formData.bankName && formData.accountNumber) {
+        savePermanentBanking({
+          bankName: formData.bankName,
+          branchCode: formData.branchCode,
+          accountNumber: formData.accountNumber,
+          routingNumber: formData.routingNumber
+        });
+        
+        // Also save using the legacy method for compatibility
         saveBankingInfo({
           bankName: formData.bankName,
           branchCode: formData.branchCode,
@@ -109,6 +139,11 @@ const CustomerRegistration = () => {
       setTimeout(() => {
         checkRegistrationStatus();
       }, 1000);
+      
+      toast({
+        title: "Registration Complete! 🎉",
+        description: "All information permanently saved. Ready for smart deals shopping!",
+      });
     } catch (error) {
       console.error('Registration error:', error);
       toast({
@@ -168,7 +203,7 @@ const CustomerRegistration = () => {
           onInputChange={handleInputChange}
         />
 
-        <BankingSection 
+        <EnhancedBankingSection 
           formData={formData}
           errors={errors}
           onInputChange={handleInputChange}

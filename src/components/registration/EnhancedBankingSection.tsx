@@ -4,23 +4,23 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
+import { FormData, FormErrors } from '@/types/customerRegistration';
+import { validateAccountNumber } from '@/utils/formValidation';
 import { CreditCard, Save, Check, History } from 'lucide-react';
 import BankAutocomplete from '../BankAutocomplete';
 import { useBankingAutoSave } from '@/hooks/useBankingAutoSave';
 import { useToast } from '@/hooks/use-toast';
 
-interface VendorBankingProps {
-  formData: any;
-  errors: any;
-  onInputChange: (field: string, value: any) => void;
-  onBankSelect: (bankName: string, routing: string, branchCode: string) => void;
+interface EnhancedBankingSectionProps {
+  formData: FormData;
+  errors: FormErrors;
+  onInputChange: (field: keyof FormData, value: any) => void;
 }
 
-const VendorBankingSection: React.FC<VendorBankingProps> = ({
+const EnhancedBankingSection: React.FC<EnhancedBankingSectionProps> = ({
   formData,
   errors,
-  onInputChange,
-  onBankSelect
+  onInputChange
 }) => {
   const { saveBankingInfo, getBankingInfo, autoSaveBankingField } = useBankingAutoSave();
   const { toast } = useToast();
@@ -33,15 +33,17 @@ const VendorBankingSection: React.FC<VendorBankingProps> = ({
     
     if (savedBankingInfo.bankName && !formData.bankName) {
       onInputChange('bankName', savedBankingInfo.bankName);
-      onBankSelect(savedBankingInfo.bankName, savedBankingInfo.routingNumber || '', savedBankingInfo.branchCode);
     }
     if (savedBankingInfo.accountNumber && !formData.accountNumber) {
       onInputChange('accountNumber', savedBankingInfo.accountNumber);
     }
+    if (savedBankingInfo.branchCode && !formData.branchCode) {
+      onInputChange('branchCode', savedBankingInfo.branchCode);
+    }
 
     if (savedBankingInfo.bankName || savedBankingInfo.accountNumber) {
       toast({
-        title: "Business Banking Auto-filled! 🏢",
+        title: "Banking Info Auto-filled! 💳",
         description: "Your saved banking information has been restored.",
       });
     }
@@ -69,7 +71,9 @@ const VendorBankingSection: React.FC<VendorBankingProps> = ({
   }, [formData.bankName, formData.accountNumber, formData.branchCode, formData.routingNumber]);
 
   const handleBankSelect = (bankName: string, routing: string, branchCode: string) => {
-    onBankSelect(bankName, routing, branchCode);
+    onInputChange('bankName', bankName);
+    onInputChange('branchCode', branchCode);
+    onInputChange('routingNumber', routing);
     
     // Immediately save bank selection
     saveBankingInfo({
@@ -89,13 +93,30 @@ const VendorBankingSection: React.FC<VendorBankingProps> = ({
     }
   };
 
+  const handleManualSave = () => {
+    const success = saveBankingInfo({
+      bankName: formData.bankName,
+      accountNumber: formData.accountNumber,
+      branchCode: formData.branchCode,
+      routingNumber: formData.routingNumber
+    });
+
+    if (success) {
+      setLastSaved(new Date());
+      toast({
+        title: "Banking Information Saved! 💾",
+        description: "Your banking details are now permanently stored.",
+      });
+    }
+  };
+
   return (
-    <Card className="border-yellow-200 bg-yellow-50/30">
+    <Card className="border-green-200 bg-green-50/30">
       <CardHeader className="pb-3">
-        <CardTitle className="text-base sm:text-lg flex items-center justify-between gap-2 text-yellow-800">
+        <CardTitle className="text-base sm:text-lg flex items-center justify-between gap-2 text-green-800">
           <div className="flex items-center gap-2">
             <CreditCard className="w-4 h-4 sm:w-5 sm:h-5" />
-            Business Banking Information (Auto-Saved)
+            Banking Information (Auto-Saved)
           </div>
           <div className="flex items-center gap-2">
             {isAutoSaving ? (
@@ -119,50 +140,84 @@ const VendorBankingSection: React.FC<VendorBankingProps> = ({
         />
 
         <div className="space-y-2">
-          <Label htmlFor="accountNumber">Business Account Number *</Label>
+          <Label htmlFor="accountNumber" className="text-sm font-medium text-green-700">
+            Account Number *
+          </Label>
           <Input
             id="accountNumber"
             name="accountNumber"
             autoComplete="off"
             value={formData.accountNumber}
             onChange={handleAccountNumberChange}
-            placeholder="Enter business account number"
-            className={errors.accountNumber ? 'border-red-500' : 'border-yellow-300 focus:border-yellow-500'}
+            placeholder="Enter account number"
+            className={errors.accountNumber ? 'border-red-500' : 'border-green-300 focus:border-green-500'}
           />
-          {errors.accountNumber && <p className="text-red-500 text-sm">{errors.accountNumber}</p>}
-          {formData.accountNumber && formData.accountNumber.length >= 8 && (
+          {errors.accountNumber && (
+            <p className="text-red-500 text-xs mt-1 flex items-center gap-1">
+              <span className="text-red-500">⚠️</span>
+              {errors.accountNumber}
+            </p>
+          )}
+          {formData.accountNumber && validateAccountNumber(formData.accountNumber) && (
             <p className="text-green-600 text-xs flex items-center gap-1">
               <Check className="w-3 h-3" />
-              Account number saved permanently
+              Valid account number format · Auto-saved
             </p>
           )}
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="branchCode">Branch Code</Label>
+          <Label htmlFor="branchCode" className="text-sm font-medium text-green-700">
+            Branch Code
+          </Label>
           <Input
             id="branchCode"
             value={formData.branchCode}
-            placeholder="Auto-detected branch code"
+            placeholder="Auto-filled based on bank selection"
             readOnly
-            className="bg-gray-50 border-yellow-200"
+            className="bg-gray-50 border-green-200"
           />
-          <p className="text-xs text-yellow-600">
+          <p className="text-xs text-green-600">
             ℹ️ South African banks use branch codes for transactions
           </p>
         </div>
 
+        {/* Manual Save Button */}
+        <div className="flex items-center justify-between pt-2">
+          <div className="text-xs text-green-600">
+            {lastSaved ? (
+              <div className="flex items-center gap-1">
+                <History className="w-3 h-3" />
+                Last saved: {lastSaved.toLocaleTimeString()}
+              </div>
+            ) : (
+              "Banking info saves automatically"
+            )}
+          </div>
+          
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            onClick={handleManualSave}
+            className="border-green-300 text-green-700 hover:bg-green-50"
+          >
+            <Save className="w-3 h-3 mr-1" />
+            Save Now
+          </Button>
+        </div>
+
         {/* Confirmation Message */}
         {(formData.bankName || formData.accountNumber) && (
-          <div className="bg-yellow-50 p-3 rounded-lg border border-yellow-200">
+          <div className="bg-green-50 p-3 rounded-lg border border-green-200">
             <div className="flex items-center gap-2 mb-1">
-              <Check className="w-4 h-4 text-yellow-600" />
-              <span className="text-sm font-medium text-yellow-800">
-                Business Banking Secured
+              <Check className="w-4 h-4 text-green-600" />
+              <span className="text-sm font-medium text-green-800">
+                Banking Information Secured
               </span>
             </div>
-            <p className="text-xs text-yellow-700">
-              Your business banking details are automatically encrypted and saved permanently for vendor transactions and payouts.
+            <p className="text-xs text-green-700">
+              Your banking details are automatically encrypted and saved permanently for future transactions, payments, and services.
             </p>
           </div>
         )}
@@ -171,4 +226,4 @@ const VendorBankingSection: React.FC<VendorBankingProps> = ({
   );
 };
 
-export default VendorBankingSection;
+export default EnhancedBankingSection;
