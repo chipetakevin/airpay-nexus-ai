@@ -1,10 +1,9 @@
-
 import React, { useEffect, useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
-import { CreditCard, Save, Check, History } from 'lucide-react';
+import { CreditCard, Save, Check, History, Eye, EyeOff } from 'lucide-react';
 import BankAutocomplete from '../BankAutocomplete';
 import { useBankingAutoSave } from '@/hooks/useBankingAutoSave';
 import { useToast } from '@/hooks/use-toast';
@@ -26,6 +25,16 @@ const VendorBankingSection: React.FC<VendorBankingProps> = ({
   const { toast } = useToast();
   const [isAutoSaving, setIsAutoSaving] = useState(false);
   const [lastSaved, setLastSaved] = useState<Date | null>(null);
+  const [isBankingHidden, setIsBankingHidden] = useState(false);
+  const [showBankingDetails, setShowBankingDetails] = useState(true);
+
+  // Check if banking info should be hidden (when branch code exists)
+  useEffect(() => {
+    if (formData.branchCode && formData.bankName && formData.accountNumber) {
+      setIsBankingHidden(true);
+      setShowBankingDetails(false);
+    }
+  }, [formData.branchCode, formData.bankName, formData.accountNumber]);
 
   // Auto-fill banking information on component mount
   useEffect(() => {
@@ -62,7 +71,7 @@ const VendorBankingSection: React.FC<VendorBankingProps> = ({
         
         setIsAutoSaving(false);
         setLastSaved(new Date());
-      }, 1000);
+      }, 500);
 
       return () => clearTimeout(timeoutId);
     }
@@ -72,11 +81,27 @@ const VendorBankingSection: React.FC<VendorBankingProps> = ({
     onBankSelect(bankName, routing, branchCode);
     
     // Immediately save bank selection
-    saveBankingInfo({
+    const bankingData = {
       bankName,
       branchCode,
-      routingNumber: routing
-    });
+      routingNumber: routing,
+      accountNumber: formData.accountNumber
+    };
+    
+    saveBankingInfo(bankingData);
+    setLastSaved(new Date());
+    
+    // Auto-hide if account number also exists
+    if (formData.accountNumber && formData.accountNumber.length >= 8) {
+      setTimeout(() => {
+        setIsBankingHidden(true);
+        setShowBankingDetails(false);
+        toast({
+          title: "Business Banking Secured! 🔒",
+          description: "Your complete business banking details have been permanently saved and secured.",
+        });
+      }, 1000);
+    }
   };
 
   const handleAccountNumberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -86,8 +111,68 @@ const VendorBankingSection: React.FC<VendorBankingProps> = ({
     // Auto-save account number after user stops typing
     if (value.length >= 8) {
       autoSaveBankingField('accountNumber', value);
+      
+      // Auto-hide if bank and branch are also selected
+      if (formData.bankName && formData.branchCode) {
+        setTimeout(() => {
+          setIsBankingHidden(true);
+          setShowBankingDetails(false);
+          toast({
+            title: "Business Banking Secured! 🔒",
+            description: "Your complete business banking details have been permanently saved and secured.",
+          });
+        }, 1000);
+      }
     }
   };
+
+  const toggleBankingVisibility = () => {
+    setShowBankingDetails(!showBankingDetails);
+  };
+
+  // If banking is hidden, show compact summary
+  if (isBankingHidden && !showBankingDetails) {
+    return (
+      <Card className="border-yellow-200 bg-yellow-50/30">
+        <CardHeader className="pb-3">
+          <CardTitle className="text-base sm:text-lg flex items-center justify-between gap-2 text-yellow-800">
+            <div className="flex items-center gap-2">
+              <CreditCard className="w-4 h-4 sm:w-5 sm:h-5" />
+              Business Banking Secured
+            </div>
+            <Button
+              type="button"
+              variant="ghost"
+              size="sm"
+              onClick={toggleBankingVisibility}
+              className="text-yellow-700 hover:bg-yellow-100"
+            >
+              <Eye className="w-4 h-4 mr-1" />
+              Show Details
+            </Button>
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="bg-yellow-50 p-3 rounded-lg border border-yellow-200">
+            <div className="flex items-center gap-2 mb-2">
+              <Check className="w-4 h-4 text-yellow-600" />
+              <span className="text-sm font-medium text-yellow-800">
+                Complete Business Banking Saved
+              </span>
+            </div>
+            <div className="text-xs text-yellow-700 space-y-1">
+              <p>• Bank: {formData.bankName}</p>
+              <p>• Account: •••••{formData.accountNumber?.slice(-4)}</p>
+              <p>• Branch Code: {formData.branchCode}</p>
+              <p className="mt-2 text-yellow-600">
+                ✓ Permanently saved for vendor transactions and payouts
+              </p>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
 
   return (
     <Card className="border-yellow-200 bg-yellow-50/30">
@@ -98,6 +183,18 @@ const VendorBankingSection: React.FC<VendorBankingProps> = ({
             Business Banking Information (Auto-Saved)
           </div>
           <div className="flex items-center gap-2">
+            {isBankingHidden && (
+              <Button
+                type="button"
+                variant="ghost"
+                size="sm"
+                onClick={toggleBankingVisibility}
+                className="text-yellow-700 hover:bg-yellow-100"
+              >
+                <EyeOff className="w-4 h-4 mr-1" />
+                Hide Details
+              </Button>
+            )}
             {isAutoSaving ? (
               <div className="flex items-center gap-1 text-xs text-blue-600">
                 <div className="w-3 h-3 border-2 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
