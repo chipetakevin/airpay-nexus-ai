@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Mail } from 'lucide-react';
 import { Transaction } from '../types/admin';
 import { useToast } from '@/hooks/use-toast';
+import { useEnhancedReceiptGenerator } from '@/components/receipts/EnhancedReceiptGenerator';
 
 interface EmailHandlerProps {
   transaction?: Transaction;
@@ -11,77 +12,90 @@ interface EmailHandlerProps {
 
 export const EmailHandler = ({ transaction }: EmailHandlerProps) => {
   const { toast } = useToast();
+  const { generateProfessionalEmailReceipt, generateReceiptNumber, formatDateTime } = useEnhancedReceiptGenerator();
 
-  const handleEmailSend = () => {
+  const handleEmailReceipt = () => {
     if (!transaction) {
       toast({
-        title: "Error", 
-        description: "No transaction data available for email",
+        title: "Error",
+        description: "No transaction data available for email receipt",
         variant: "destructive"
       });
       return;
     }
 
     try {
-      // Get customer email from stored credentials
-      const credentials = localStorage.getItem('userCredentials');
-      let customerEmail = '';
+      // Get customer info
+      let customerInfo = { name: 'Valued Customer', mobile: '', email: '' };
       
-      if (credentials) {
-        const parsedCredentials = JSON.parse(credentials);
-        customerEmail = parsedCredentials.email || '';
+      try {
+        const userCredentials = localStorage.getItem('userCredentials');
+        const userData = localStorage.getItem('onecardUser');
+        
+        if (userCredentials) {
+          const credentials = JSON.parse(userCredentials);
+          customerInfo.email = credentials.email || '';
+        }
+        
+        if (userData) {
+          const user = JSON.parse(userData);
+          customerInfo.name = user.firstName && user.lastName ? 
+            `${user.firstName} ${user.lastName}` : 'Valued Customer';
+          customerInfo.mobile = user.registeredPhone || user.phone || '';
+        }
+      } catch (error) {
+        console.error('Error getting customer info:', error);
       }
 
-      if (!customerEmail) {
-        toast({
-          title: "Email Not Available",
-          description: "No email address found. Please ensure you're logged in.",
-          variant: "destructive"
-        });
-        return;
-      }
+      const receiptData = {
+        receiptNo: generateReceiptNumber(),
+        transactionId: `AP${transaction.timestamp?.replace(/[^0-9]/g, '').slice(-8) || 'N/A'}`,
+        dateTime: formatDateTime(transaction.timestamp || new Date().toISOString()),
+        customer: {
+          name: customerInfo.name,
+          mobile: transaction.recipient_phone || customerInfo.mobile,
+          email: customerInfo.email
+        },
+        items: [{
+          name: `${transaction.network?.toUpperCase() || 'DIVINELY'} MOBILE SERVICE`,
+          quantity: 1,
+          unitPrice: transaction.amount || 0,
+          subtotal: transaction.amount || 0
+        }],
+        subtotal: transaction.amount || 0,
+        discounts: 0,
+        tax: 0,
+        totalPaid: transaction.amount || 0,
+        paymentMethod: 'OneCard Mobile Payment',
+        cashbackEarned: transaction.cashback_earned || transaction.cashbackEarned || 0,
+        deliveryPhone: transaction.recipient_phone || customerInfo.mobile
+      };
 
-      // Generate email content
-      const transactionId = `AP${transaction.timestamp?.replace(/[^0-9]/g, '').slice(-8) || 'N/A'}`;
-      const emailSubject = `Divinely Mobile Transaction Receipt - ${transactionId}`;
-      const emailBody = `
-Dear Valued Customer,
-
-Thank you for choosing Divinely Mobile! Here are your transaction details:
-
-🧾 TRANSACTION RECEIPT
-━━━━━━━━━━━━━━━━━━━━━━━━━
-
-📱 Transaction ID: ${transactionId}
-📅 Date: ${transaction.timestamp ? new Date(transaction.timestamp).toLocaleDateString('en-ZA') : 'N/A'}
-🌐 Network: ${transaction.network || 'N/A'}
-💰 Amount: R${transaction.amount?.toFixed(2) || '0.00'}
-👤 Recipient: ${transaction.recipientName || transaction.recipient_name || 'N/A'}
-✅ Status: COMPLETED
-🎁 Cashback Earned: R${(transaction.cashbackEarned || transaction.cashback_earned || 0).toFixed(2)}
-
-━━━━━━━━━━━━━━━━━━━━━━━━━
-
-Thank you for using Divinely Mobile OneCard Platform!
-
-Best regards,
-The Divinely Mobile Team
-      `.trim();
-
-      // Create mailto link
-      const mailtoLink = `mailto:${customerEmail}?subject=${encodeURIComponent(emailSubject)}&body=${encodeURIComponent(emailBody)}`;
-      window.open(mailtoLink, '_blank');
-
+      const emailContent = generateProfessionalEmailReceipt(receiptData);
+      
+      // Create email with the generated content
+      const subject = `Divinely Mobile Receipt - ${receiptData.transactionId}`;
+      const body = `Please find your professional receipt attached.\n\nTransaction ID: ${receiptData.transactionId}\nDate: ${receiptData.dateTime}\nAmount: R${receiptData.totalPaid.toFixed(2)}\n\nThank you for choosing Divinely Mobile!`;
+      
+      const mailtoLink = `mailto:${customerInfo.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+      
+      // Open email client
+      window.location.href = mailtoLink;
+      
       toast({
-        title: "📧 Email Opened",
-        description: `Professional email receipt for ${transactionId} ready to send`,
+        title: "📧 Email Receipt Prepared",
+        description: "Professional email receipt opened in your email client",
         duration: 3000,
       });
+      
+      // Also log the HTML content for development/admin purposes
+      console.log('Professional Email Receipt Generated:', emailContent);
+      
     } catch (error) {
-      console.error('Error preparing email:', error);
+      console.error('Error generating email receipt:', error);
       toast({
-        title: "Email Error",
-        description: "There was an error preparing the email. Please try again.",
+        title: "Email Receipt Failed",
+        description: "There was an error generating the email receipt. Please try again.",
         variant: "destructive"
       });
     }
@@ -91,7 +105,7 @@ The Divinely Mobile Team
     <Button 
       size="sm" 
       variant="outline" 
-      onClick={handleEmailSend}
+      onClick={handleEmailReceipt}
       className="flex-1 text-xs px-2 py-1 h-8 min-w-0"
     >
       <Mail className="w-3 h-3 mr-1 flex-shrink-0" />

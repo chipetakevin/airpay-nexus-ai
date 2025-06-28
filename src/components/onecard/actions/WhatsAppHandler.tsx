@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { MessageCircle } from 'lucide-react';
 import { Transaction } from '../types/admin';
 import { useToast } from '@/hooks/use-toast';
+import { useComprehensiveReceipts } from '@/hooks/useComprehensiveReceipts';
 
 interface WhatsAppHandlerProps {
   transaction?: Transaction;
@@ -11,49 +12,63 @@ interface WhatsAppHandlerProps {
 
 export const WhatsAppHandler = ({ transaction }: WhatsAppHandlerProps) => {
   const { toast } = useToast();
+  const { createComprehensiveReceipt, getCustomerInfo } = useComprehensiveReceipts();
 
-  const handleWhatsAppSend = () => {
+  const handleWhatsAppReceipt = async () => {
     if (!transaction) {
       toast({
         title: "Error",
-        description: "No transaction data available for WhatsApp",
+        description: "No transaction data available for WhatsApp receipt",
         variant: "destructive"
       });
       return;
     }
 
     try {
-      // Format transaction details for WhatsApp with modern styling
-      const message = encodeURIComponent(
-        `🧾 *DIVINELY MOBILE RECEIPT*\n\n` +
-        `━━━━━━━━━━━━━━━━━━━━━━━━━\n` +
-        `📱 *Transaction ID:* AP${transaction.timestamp?.replace(/[^0-9]/g, '').slice(-8) || 'N/A'}\n` +
-        `🌐 *Network:* ${transaction.network || 'N/A'}\n` +
-        `💰 *Amount:* R${transaction.amount?.toFixed(2) || '0.00'}\n` +
-        `👤 *Recipient:* ${transaction.recipientName || transaction.recipient_name || 'N/A'}\n` +
-        `🎁 *Cashback:* R${(transaction.cashbackEarned || transaction.cashback_earned || 0).toFixed(2)}\n` +
-        `📅 *Date:* ${transaction.timestamp ? new Date(transaction.timestamp).toLocaleDateString('en-ZA') : 'N/A'}\n` +
-        `✅ *Status:* COMPLETED\n\n` +
-        `━━━━━━━━━━━━━━━━━━━━━━━━━\n` +
-        `Thank you for choosing *Divinely Mobile*! 🙏\n` +
-        `_OneCard Platform - Your trusted mobile partner_`
-      );
+      const customerInfo = getCustomerInfo();
       
-      // Use a default WhatsApp number for demo purposes
-      const phoneNumber = '27832466539';
-      const whatsappUrl = `https://wa.me/${phoneNumber}?text=${message}`;
-      window.open(whatsappUrl, '_blank');
+      // Convert transaction to cart items format
+      const cartItems = [{
+        network: transaction.network || 'DIVINELY',
+        amount: transaction.amount || 0,
+        discountedPrice: transaction.discounted_price || transaction.amount || 0,
+        dealType: transaction.transaction_type?.includes('airtime') ? 'airtime' : 'data'
+      }];
 
-      toast({
-        title: "📱 WhatsApp Opened",
-        description: "Professional WhatsApp receipt ready to send",
-        duration: 3000,
-      });
+      const profitSharing = {
+        customerCashback: transaction.cashback_earned || transaction.cashbackEarned || 0,
+        adminProfit: transaction.admin_fee || 0,
+        vendorProfit: transaction.vendor_commission || 0
+      };
+
+      const transactionData = {
+        ...transaction,
+        transactionId: `AP${transaction.timestamp?.replace(/[^0-9]/g, '').slice(-8) || 'N/A'}`,
+        status: 'completed',
+        customer_phone: transaction.recipient_phone || customerInfo.phone
+      };
+
+      console.log('📱 Generating comprehensive WhatsApp receipt...');
+      const result = await createComprehensiveReceipt(
+        transactionData,
+        customerInfo,
+        cartItems,
+        profitSharing,
+        'OneCard Mobile Payment'
+      );
+
+      if (result?.success) {
+        toast({
+          title: "📱 WhatsApp Receipt Sent!",
+          description: "Comprehensive receipt opened in WhatsApp",
+          duration: 3000,
+        });
+      }
     } catch (error) {
-      console.error('Error preparing WhatsApp message:', error);
+      console.error('Error generating WhatsApp receipt:', error);
       toast({
-        title: "WhatsApp Error",
-        description: "There was an error preparing the WhatsApp message. Please try again.",
+        title: "WhatsApp Receipt Failed",
+        description: "There was an error generating the WhatsApp receipt. Please try again.",
         variant: "destructive"
       });
     }
@@ -63,8 +78,8 @@ export const WhatsAppHandler = ({ transaction }: WhatsAppHandlerProps) => {
     <Button 
       size="sm" 
       variant="outline" 
-      onClick={handleWhatsAppSend}
-      className="flex-1 text-xs px-2 py-1 h-8 min-w-0 bg-green-50 hover:bg-green-100 text-green-700 border-green-200"
+      onClick={handleWhatsAppReceipt}
+      className="flex-1 text-xs px-2 py-1 h-8 min-w-0"
     >
       <MessageCircle className="w-3 h-3 mr-1 flex-shrink-0" />
       <span className="truncate">WhatsApp</span>

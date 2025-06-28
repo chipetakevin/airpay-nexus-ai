@@ -1,9 +1,11 @@
+
 import { useToast } from '@/hooks/use-toast';
 import { useReceiptStorage } from './useReceiptStorage';
 import { useReceiptFormatter } from './receipt/useReceiptFormatter';
 import { useUserInfo } from './receipt/useUserInfo';
 import { useWhatsAppForwarding } from './receipt/useWhatsAppForwarding';
 import { useReceiptSender } from './receipt/useReceiptSender';
+import { useComprehensiveReceipts } from './useComprehensiveReceipts';
 
 export const useReceiptGeneration = () => {
   const { toast } = useToast();
@@ -12,6 +14,7 @@ export const useReceiptGeneration = () => {
   const { getCurrentUserInfo } = useUserInfo();
   const { generateWhatsAppForwardingInstructions, handleIntelligentWhatsAppRedirect, autoRedirectToSmartDeals } = useWhatsAppForwarding();
   const { sendReceiptToCustomer } = useReceiptSender();
+  const { createComprehensiveReceipt, getCustomerInfo } = useComprehensiveReceipts();
 
   const autoGenerateAndSendReceipts = async (transactionData: any, profitSharing: any, cartItems: any[], purchaseMode: string, customerPhone: string, recipientData: any) => {
     try {
@@ -21,24 +24,93 @@ export const useReceiptGeneration = () => {
         return;
       }
 
-      console.log('✅ Transaction completed - generating receipts...');
+      console.log('✅ Transaction completed - generating comprehensive receipts...');
       
-      const credentials = localStorage.getItem('userCredentials');
-      let customerEmail = '';
+      const customerInfo = getCustomerInfo();
+      const currentUserInfo = getCurrentUserInfo();
       
-      if (credentials) {
-        const parsedCredentials = JSON.parse(credentials);
-        customerEmail = parsedCredentials.email || '';
+      // Get vendor info if applicable
+      let vendorInfo = null;
+      if (currentUserInfo.userType === 'vendor') {
+        const vendorData = localStorage.getItem('onecardVendor');
+        if (vendorData) {
+          vendorInfo = JSON.parse(vendorData);
+        }
       }
 
+      // Create comprehensive receipt with enhanced data
+      const enhancedTransactionData = {
+        ...transactionData,
+        transactionId: generateTransactionId(transactionData.timestamp),
+        customer_phone: customerPhone
+      };
+
+      console.log('📧 Generating comprehensive receipt...');
+      const receiptResult = await createComprehensiveReceipt(
+        enhancedTransactionData,
+        customerInfo,
+        cartItems,
+        profitSharing,
+        'OneCard Mobile Payment',
+        vendorInfo
+      );
+
+      if (receiptResult?.success) {
+        // Save receipt to user profile
+        const baseReceiptData = {
+          customerName: customerInfo.name,
+          customerEmail: customerInfo.email,
+          customerPhone: customerPhone,
+          transactionId: enhancedTransactionData.transactionId,
+          items: cartItems.map(item => ({
+            network: item.network,
+            amount: item.amount,
+            price: item.discountedPrice,
+            type: item.dealType || 'airtime'
+          })),
+          total: transactionData.amount,
+          timestamp: transactionData.timestamp,
+          recipientPhone: purchaseMode === 'self' ? customerPhone : recipientData.phone,
+          recipientName: purchaseMode === 'self' ? 'Self' : capitalizeWords(recipientData.name),
+          cashbackEarned: profitSharing.registeredCustomerReward || profitSharing.customerCashback || 0,
+          purchaseType: purchaseMode === 'self' ? 'self' : 'sender'
+        };
+
+        await saveReceipt(baseReceiptData, currentUserInfo.userType, currentUserInfo.userId);
+
+        toast({
+          title: "📱 Professional Receipt Delivered!",
+          description: "Comprehensive receipt sent via WhatsApp & Email with full transaction details",
+          duration: 5000
+        });
+
+        // Auto-redirect to smart deals after successful receipt delivery
+        setTimeout(() => {
+          autoRedirectToSmartDeals();
+        }, 6000);
+      } else {
+        // Fallback to basic receipt system if comprehensive fails
+        console.log('⚠️ Comprehensive receipt failed, using fallback system...');
+        await fallbackToBasicReceipt(transactionData, profitSharing, cartItems, purchaseMode, customerPhone, recipientData);
+      }
+
+    } catch (error) {
+      console.error('❌ Error in autoGenerateAndSendReceipts:', error);
+      
+      // Fallback to basic receipt system
+      console.log('⚠️ Using fallback receipt system due to error...');
+      await fallbackToBasicReceipt(transactionData, profitSharing, cartItems, purchaseMode, customerPhone, recipientData);
+    }
+  };
+
+  const fallbackToBasicReceipt = async (transactionData: any, profitSharing: any, cartItems: any[], purchaseMode: string, customerPhone: string, recipientData: any) => {
+    try {
       const customerName = getCustomerDisplayName();
       const currentUserInfo = getCurrentUserInfo();
-      const adminEmail = 'admin@myonecard.co.za';
-
-      // Enhanced receipt data - ONLY created after payment completion
+      
       const baseReceiptData = {
         customerName: customerName,
-        customerEmail: customerEmail,
+        customerEmail: getCustomerInfo().email,
         customerPhone: customerPhone,
         transactionId: generateTransactionId(transactionData.timestamp),
         items: cartItems.map(item => ({
@@ -54,89 +126,37 @@ export const useReceiptGeneration = () => {
       if (purchaseMode === 'other') {
         const recipientPhoneNumber = recipientData.phone;
         
-        // ENHANCED: Check if number is in user's contacts before treating as unknown
-        const isKnownNumber = await checkIfNumberInContacts(recipientPhoneNumber);
+        // Send basic receipt to recipient
+        const recipientReceiptData = {
+          ...baseReceiptData,
+          customerEmail: '',
+          recipientPhone: recipientPhoneNumber,
+          recipientName: capitalizeWords(recipientData.name),
+          cashbackEarned: 0,
+          purchaseType: 'recipient' as const
+        };
+
+        await sendReceiptToCustomer(recipientReceiptData, 'recipient');
         
-        if (isKnownNumber) {
-          console.log('📱 Number found in contacts - sending direct receipt');
-          
-          // Send receipt directly to known recipient
-          const recipientReceiptData = {
-            ...baseReceiptData,
-            customerEmail: '', // No email for recipient
-            recipientPhone: recipientPhoneNumber,
-            recipientName: capitalizeWords(recipientData.name),
-            cashbackEarned: 0,
-            purchaseType: 'recipient' as const
-          };
+        // Send confirmation to sender
+        const senderReceiptData = {
+          ...baseReceiptData,
+          recipientPhone: recipientPhoneNumber,
+          recipientName: capitalizeWords(recipientData.name),
+          cashbackEarned: profitSharing.registeredCustomerReward || 0,
+          purchaseType: 'sender' as const
+        };
 
-          await sendReceiptToCustomer(recipientReceiptData, 'recipient');
-          
-          // Also send confirmation to sender
-          const senderReceiptData = {
-            ...baseReceiptData,
-            recipientPhone: recipientPhoneNumber,
-            recipientName: capitalizeWords(recipientData.name),
-            cashbackEarned: profitSharing.registeredCustomerReward || 0,
-            purchaseType: 'sender' as const
-          };
-
-          await sendReceiptToCustomer(senderReceiptData, 'customer');
-          
-          toast({
-            title: "📧 Receipts Delivered",
-            description: `Receipt sent to ${recipientPhoneNumber} and confirmation sent to you`,
-            duration: 4000
-          });
-          
-        } else {
-          console.log('📧 Unknown number - using intelligent WhatsApp redirect');
-
-          // Send receipt to admin for record keeping
-          const adminReceiptData = {
-            ...baseReceiptData,
-            customerEmail: adminEmail,
-            recipientPhone: recipientPhoneNumber,
-            recipientName: capitalizeWords(recipientData.name),
-            cashbackEarned: profitSharing.registeredCustomerReward || 0,
-            purchaseType: 'admin_notification' as const,
-            isUnknownRecipient: true
-          };
-
-          await sendReceiptToCustomer(adminReceiptData, 'admin');
-
-          // Generate WhatsApp receipt message for forwarding
-          const whatsappReceiptMessage = `🟢 *DIVINELY MOBILE RECEIPT* 📱
-
-✅ *AIRTIME/DATA DELIVERED*
-
-🎁 *Gift from:* ${customerName}
-📱 *To:* ${recipientPhoneNumber}
-💰 *Amount:* R${transactionData.amount}
-🆔 *Transaction ID:* ${generateTransactionId(transactionData.timestamp)}
-⏰ *Date:* ${new Date(transactionData.timestamp).toLocaleString()}
-
-*Your airtime/data has been loaded successfully!*
-
-🌐 https://myonecard.co.za
-📞 Support: +27 100 2827
-
-_Thank you for using OneCard!_`;
-
-          // INTELLIGENT WHATSAPP REDIRECT - Redirect to sender's number for manual forwarding
-          handleIntelligentWhatsAppRedirect(whatsappReceiptMessage, recipientPhoneNumber, customerPhone);
-        }
-
-        // SAVE RECEIPT TO USER PROFILE
-        await saveReceipt(baseReceiptData, currentUserInfo.userType, currentUserInfo.userId);
-
-        // Auto-redirect to smart deals after process
-        setTimeout(() => {
-          autoRedirectToSmartDeals();
-        }, 8000);
-
+        await sendReceiptToCustomer(senderReceiptData, 'customer');
+        
+        toast({
+          title: "📧 Basic Receipts Delivered",
+          description: `Receipt sent to ${recipientPhoneNumber} and confirmation sent to you`,
+          duration: 4000
+        });
+        
       } else {
-        // Self-purchase
+        // Self-purchase basic receipt
         const receiptData = {
           ...baseReceiptData,
           recipientPhone: customerPhone,
@@ -145,53 +165,34 @@ _Thank you for using OneCard!_`;
           purchaseType: 'self' as const
         };
 
-        console.log('📧 Sending receipt after payment completion...');
         await sendReceiptToCustomer(receiptData, 'customer');
-
-        // SAVE RECEIPT TO USER PROFILE
-        await saveReceipt(receiptData, currentUserInfo.userType, currentUserInfo.userId);
-
+        
         toast({
-          title: "📧 Receipts Delivered",
-          description: customerEmail ? `WhatsApp & Email receipts sent to ${customerEmail}` : "WhatsApp receipt delivered successfully",
+          title: "📧 Basic Receipt Delivered",
+          description: "WhatsApp receipt sent successfully",
         });
-
-        // Auto-redirect to smart deals after self-purchase
-        setTimeout(() => {
-          autoRedirectToSmartDeals();
-        }, 4000);
       }
 
+      // Save receipt to user profile
+      await saveReceipt(baseReceiptData, currentUserInfo.userType, currentUserInfo.userId);
+
+      // Auto-redirect to smart deals
+      setTimeout(() => {
+        autoRedirectToSmartDeals();
+      }, 4000);
+
     } catch (error) {
-      console.error('❌ Error in autoGenerateAndSendReceipts:', error);
+      console.error('❌ Fallback receipt system failed:', error);
       toast({
-        title: "Receipt Error",
-        description: "Payment successful but receipt generation failed. Check transaction history.",
+        title: "Receipt System Error",
+        description: "Payment successful but receipt delivery failed. Check transaction history.",
         variant: "destructive"
       });
 
-      // Still redirect to smart deals even if receipt fails
+      // Still redirect even if receipt fails
       setTimeout(() => {
         autoRedirectToSmartDeals();
       }, 3000);
-    }
-  };
-
-  // Helper function to check if number is in user's contacts
-  const checkIfNumberInContacts = async (phoneNumber: string): Promise<boolean> => {
-    try {
-      // Check if browser supports contacts API
-      if ('contacts' in navigator && 'ContactsManager' in window) {
-        // This is a future enhancement - for now, we'll use a simpler approach
-        // In a real implementation, this would check the user's contacts
-      }
-      
-      // For now, we'll check if the number is saved in our recipient memory
-      const savedRecipients = JSON.parse(localStorage.getItem('recipientMemory') || '[]');
-      return savedRecipients.some((recipient: any) => recipient.phone === phoneNumber);
-    } catch (error) {
-      console.error('Error checking contacts:', error);
-      return false;
     }
   };
 
