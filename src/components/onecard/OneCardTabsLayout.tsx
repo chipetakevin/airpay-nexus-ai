@@ -3,7 +3,7 @@ import React from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { OverviewTabContent } from './OverviewTabContent';
 import { HistoryTabContent } from './HistoryTabContent';
-import { ReportsTabContent } from './ReportsTabContent';
+import ReportsTabContent from './ReportsTabContent';
 import UserReceiptsTab from './UserReceiptsTab';
 
 interface OneCardTabsLayoutProps {

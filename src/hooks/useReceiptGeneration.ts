@@ -1,143 +1,18 @@
 
 import { useToast } from '@/hooks/use-toast';
-import { supabase } from '@/integrations/supabase/client';
 import { useReceiptStorage } from './useReceiptStorage';
+import { useReceiptFormatter } from './receipt/useReceiptFormatter';
+import { useUserInfo } from './receipt/useUserInfo';
+import { useWhatsAppForwarding } from './receipt/useWhatsAppForwarding';
+import { useReceiptSender } from './receipt/useReceiptSender';
 
 export const useReceiptGeneration = () => {
   const { toast } = useToast();
   const { saveReceipt } = useReceiptStorage();
-
-  const generateTransactionId = (timestamp: string) => {
-    return 'AP' + timestamp.replace(/[^0-9]/g, '').slice(-8);
-  };
-
-  const capitalizeWords = (str: string) => {
-    return str.split(' ').map(word => 
-      word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
-    ).join(' ');
-  };
-
-  const getCustomerDisplayName = () => {
-    const credentials = localStorage.getItem('userCredentials');
-    const userData = localStorage.getItem('onecardUser');
-    let displayName = 'Valued Customer';
-    
-    // First try to get name from user credentials (includes firstName and lastName from registration)
-    if (credentials) {
-      try {
-        const parsedCredentials = JSON.parse(credentials);
-        
-        if (parsedCredentials.firstName && parsedCredentials.lastName) {
-          displayName = `${capitalizeWords(parsedCredentials.firstName)} ${capitalizeWords(parsedCredentials.lastName)}`;
-          return displayName;
-        }
-      } catch (error) {
-        console.error('Error parsing credentials:', error);
-      }
-    }
-    
-    // Fallback to user data if credentials don't have name
-    if (userData) {
-      try {
-        const parsedUserData = JSON.parse(userData);
-        
-        if (parsedUserData.firstName && parsedUserData.lastName) {
-          displayName = `${capitalizeWords(parsedUserData.firstName)} ${capitalizeWords(parsedUserData.lastName)}`;
-        } else if (parsedUserData.firstName) {
-          displayName = capitalizeWords(parsedUserData.firstName);
-        } else if (parsedUserData.email) {
-          displayName = capitalizeWords(parsedUserData.email.split('@')[0]);
-        }
-      } catch (error) {
-        console.error('Error parsing user data:', error);
-      }
-    }
-    
-    return displayName;
-  };
-
-  const getCurrentUserInfo = () => {
-    try {
-      const credentials = localStorage.getItem('userCredentials');
-      if (credentials) {
-        const parsedCredentials = JSON.parse(credentials);
-        let userData = null;
-        let userId = '';
-        
-        if (parsedCredentials.userType === 'customer') {
-          userData = localStorage.getItem('onecardUser');
-          if (userData) {
-            const parsedUserData = JSON.parse(userData);
-            userId = parsedUserData.cardNumber || 'customer_' + Date.now();
-          }
-        } else if (parsedCredentials.userType === 'vendor') {
-          userData = localStorage.getItem('onecardVendor');
-          if (userData) {
-            const parsedUserData = JSON.parse(userData);
-            userId = parsedUserData.vendorId || 'vendor_' + Date.now();
-          }
-        } else if (parsedCredentials.userType === 'admin') {
-          userData = localStorage.getItem('onecardAdmin');
-          if (userData) {
-            const parsedUserData = JSON.parse(userData);
-            userId = parsedUserData.adminId || 'admin_' + Date.now();
-          }
-        }
-        
-        return {
-          userType: parsedCredentials.userType,
-          userId: userId,
-          email: parsedCredentials.email
-        };
-      }
-    } catch (error) {
-      console.error('Error getting current user info:', error);
-    }
-    
-    return {
-      userType: 'customer',
-      userId: 'anonymous_' + Date.now(),
-      email: ''
-    };
-  };
-
-  const isPhoneNumberSaved = (phoneNumber: string) => {
-    // FIXED: Always return false to trigger admin notification flow for unknown numbers
-    // This ensures receipts are handled properly for all unknown numbers
-    const savedNumbers = JSON.parse(localStorage.getItem('savedContacts') || '[]');
-    return false; // Force all numbers to be treated as unknown for proper receipt handling
-  };
-
-  const generateWhatsAppForwardingInstructions = (receiptMessage: string, recipientPhone: string) => {
-    return `📱 *FORWARDING INSTRUCTIONS*
-
-Since ${recipientPhone} is not in your contacts, please:
-
-1️⃣ Copy the receipt message below
-2️⃣ Open WhatsApp 
-3️⃣ Send to ${recipientPhone}
-4️⃣ Forward this receipt:
-
-${receiptMessage}
-
-*Thank you for helping us deliver receipts!*`;
-  };
-
-  const autoRedirectToSmartDeals = () => {
-    console.log('🚀 Auto-redirecting to Smart Deals...');
-    
-    // Show redirect notification
-    toast({
-      title: "✅ Receipt Process Complete",
-      description: "Redirecting to Smart Deals for your next purchase...",
-      duration: 3000
-    });
-
-    // Redirect to smart deals after a short delay
-    setTimeout(() => {
-      window.location.href = '/portal?tab=deals';
-    }, 3000);
-  };
+  const { generateTransactionId, capitalizeWords, getCustomerDisplayName } = useReceiptFormatter();
+  const { getCurrentUserInfo } = useUserInfo();
+  const { generateWhatsAppForwardingInstructions, autoRedirectToSmartDeals } = useWhatsAppForwarding();
+  const { sendReceiptToCustomer } = useReceiptSender();
 
   const autoGenerateAndSendReceipts = async (transactionData: any, profitSharing: any, cartItems: any[], purchaseMode: string, customerPhone: string, recipientData: any) => {
     try {
@@ -279,31 +154,6 @@ _Thank you for using OneCard!_`;
       setTimeout(() => {
         autoRedirectToSmartDeals();
       }, 3000);
-    }
-  };
-
-  const sendReceiptToCustomer = async (receiptData: any, recipientType: string) => {
-    try {
-      const { data, error } = await supabase.functions.invoke('send-receipt', {
-        body: receiptData
-      });
-
-      if (error) {
-        console.error(`❌ Error sending receipt to ${recipientType}:`, error);
-        return;
-      }
-
-      console.log(`✅ Receipt sent successfully to ${recipientType}:`, data);
-
-      // Auto-redirect to WhatsApp with receipt ONLY after successful payment and for customer
-      if (data?.whatsappUrl && recipientType === 'customer') {
-        setTimeout(() => {
-          window.open(data.whatsappUrl, '_blank');
-        }, 2000);
-      }
-
-    } catch (error) {
-      console.error(`❌ Error sending receipt to ${recipientType}:`, error);
     }
   };
 
