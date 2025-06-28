@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
-import { Crown, Shield, Settings, BarChart3 } from 'lucide-react';
+import { Crown, Shield, Settings, BarChart3, LogOut, CheckCircle, User } from 'lucide-react';
 import AdminPersonalInfoSection from './registration/AdminPersonalInfoSection';
 import AdminBankingSection from './registration/AdminBankingSection';
 import AdminConsentSection from './registration/AdminConsentSection';
@@ -17,8 +17,10 @@ const AdminRegistration = () => {
   const { toast } = useToast();
   const [activeTab, setActiveTab] = useState('nerve-center');
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isFirstTimeSetup, setIsFirstTimeSetup] = useState(false);
   const [authCode, setAuthCode] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [adminProfile, setAdminProfile] = useState<any>(null);
 
   // Form state for admin registration
   const [formData, setFormData] = useState<AdminFormData>({
@@ -45,7 +47,71 @@ const AdminRegistration = () => {
 
   const [errors, setErrors] = useState<AdminFormErrors>({});
 
-  const adminEmail = 'one***rd@myonecard.io';
+  // Check authentication status and admin profile on component mount
+  useEffect(() => {
+    const checkAuthStatus = () => {
+      const persistentAuth = localStorage.getItem('adminPermanentAuth');
+      const adminData = localStorage.getItem('onecardAdmin');
+      const deviceFingerprint = getDeviceFingerprint();
+      const lastDeviceFingerprint = localStorage.getItem('adminDeviceFingerprint');
+
+      if (adminData) {
+        const parsedAdminData = JSON.parse(adminData);
+        setAdminProfile(parsedAdminData);
+
+        // Check if this is the same device or if admin has permanent auth
+        if (persistentAuth === 'true' && deviceFingerprint === lastDeviceFingerprint) {
+          setIsAuthenticated(true);
+          setIsFirstTimeSetup(false);
+          
+          toast({
+            title: "Admin Session Restored 🔐",
+            description: `Welcome back, ${parsedAdminData.firstName}! Your admin session has been restored.`,
+          });
+        } else if (deviceFingerprint !== lastDeviceFingerprint) {
+          // New device detected - require authentication for security
+          setIsAuthenticated(false);
+          setIsFirstTimeSetup(false);
+          
+          toast({
+            title: "New Device Detected 🚨",
+            description: "For security, please authenticate on this new device.",
+            variant: "destructive"
+          });
+        } else {
+          // Admin exists but not permanently authenticated
+          setIsAuthenticated(false);
+          setIsFirstTimeSetup(false);
+        }
+      } else {
+        // No admin profile exists - first time setup
+        setIsAuthenticated(false);
+        setIsFirstTimeSetup(true);
+      }
+    };
+
+    checkAuthStatus();
+  }, []);
+
+  // Generate a simple device fingerprint
+  const getDeviceFingerprint = () => {
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
+    ctx.textBaseline = 'top';
+    ctx.font = '14px Arial';
+    ctx.fillText('Device fingerprint', 2, 2);
+    
+    return btoa(
+      navigator.userAgent + 
+      navigator.language + 
+      screen.width + 
+      screen.height + 
+      new Date().getTimezoneOffset() +
+      canvas.toDataURL()
+    ).slice(0, 32);
+  };
+
+  const adminEmail = adminProfile?.email || 'one***rd@myonecard.io';
 
   const handleInputChange = (field: string, value: any) => {
     setFormData(prev => ({
@@ -76,7 +142,7 @@ const AdminRegistration = () => {
     
     setTimeout(() => {
       const code = 'OC2024';
-      setAuthCode(code); // Automatically set the code
+      setAuthCode(code);
       setIsLoading(false);
       
       toast({
@@ -98,12 +164,23 @@ const AdminRegistration = () => {
     
     if (authCode.toUpperCase() === storedCode || authCode === 'OC2024') {
       setIsAuthenticated(true);
+      
+      // Set permanent authentication and device fingerprint
+      localStorage.setItem('adminPermanentAuth', 'true');
+      localStorage.setItem('adminDeviceFingerprint', getDeviceFingerprint());
       localStorage.setItem('adminAuthenticated', 'true');
       
       toast({
         title: "Admin Access Granted 🚀",
-        description: "Welcome to The Nerve Center - OneCard Platform Control Hub",
+        description: isFirstTimeSetup 
+          ? "Welcome to The Nerve Center - Complete your admin setup below"
+          : "Welcome back to The Nerve Center - OneCard Platform Control Hub",
       });
+
+      // If first time setup, show registration tab
+      if (isFirstTimeSetup) {
+        setActiveTab('registration');
+      }
     } else {
       toast({
         title: "Invalid Code",
@@ -113,6 +190,24 @@ const AdminRegistration = () => {
     }
   };
 
+  const handleLogout = () => {
+    // Clear all authentication data
+    localStorage.removeItem('adminPermanentAuth');
+    localStorage.removeItem('adminDeviceFingerprint');
+    localStorage.removeItem('adminAuthenticated');
+    localStorage.removeItem('adminAuthCode');
+    sessionStorage.clear();
+    
+    setIsAuthenticated(false);
+    setAuthCode('');
+    
+    toast({
+      title: "Admin Logged Out 👋",
+      description: "You have been successfully logged out. Authentication will be required on next access.",
+    });
+  };
+
+  // If not authenticated, show authentication form or logged-in status
   if (!isAuthenticated) {
     return (
       <div className="space-y-6">
@@ -123,7 +218,9 @@ const AdminRegistration = () => {
             </div>
             <div>
               <h2 className="text-2xl font-bold text-gray-900">🔐 Admin Access Portal</h2>
-              <p className="text-gray-600">The Nerve Center - OneCard Platform Control</p>
+              <p className="text-gray-600">
+                {isFirstTimeSetup ? "First-time Admin Setup" : "The Nerve Center - OneCard Platform Control"}
+              </p>
             </div>
           </div>
         </div>
@@ -132,7 +229,7 @@ const AdminRegistration = () => {
           <CardHeader>
             <CardTitle className="text-center text-purple-600 flex items-center justify-center gap-2">
               <Shield className="w-5 h-5" />
-              Administrator Authentication
+              {isFirstTimeSetup ? "Initial Administrator Setup" : "Administrator Authentication"}
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
@@ -175,7 +272,10 @@ const AdminRegistration = () => {
             </Button>
 
             <div className="text-xs text-gray-500 text-center mt-4">
-              ⚠️ Authorized OneCard administrators only
+              {isFirstTimeSetup 
+                ? "⚠️ First-time admin setup - complete registration after authentication"
+                : "⚠️ Authorized OneCard administrators only"
+              }
             </div>
           </CardContent>
         </Card>
@@ -183,8 +283,37 @@ const AdminRegistration = () => {
     );
   }
 
+  // If authenticated, show admin dashboard with logout option
   return (
     <div className="space-y-6">
+      {/* Admin Status Header */}
+      <Card className="border-green-200 bg-gradient-to-r from-green-50 to-emerald-50">
+        <CardContent className="p-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <CheckCircle className="w-6 h-6 text-green-600" />
+              <div>
+                <h3 className="font-semibold text-green-800">
+                  Admin Authenticated ✅
+                </h3>
+                <p className="text-sm text-green-600">
+                  {adminProfile ? `Welcome, ${adminProfile.firstName} ${adminProfile.lastName}` : 'Administrator Access Active'}
+                </p>
+              </div>
+            </div>
+            <Button
+              onClick={handleLogout}
+              variant="outline"
+              size="sm"
+              className="border-red-200 text-red-600 hover:bg-red-50"
+            >
+              <LogOut className="w-4 h-4 mr-1" />
+              Logout
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
         <div className="w-full mb-6">
           <TabsList className="w-full max-w-full bg-gradient-to-r from-purple-50 to-blue-50 p-2">
