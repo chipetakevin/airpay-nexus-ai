@@ -6,6 +6,7 @@ import HeroSection from '@/components/HeroSection';
 import RicaServicesSection from '@/components/RicaServicesSection';
 import FeaturesSection from '@/components/FeaturesSection';
 import BenefitsSection from '@/components/BenefitsSection';
+import CommunityBenefitsSection from '@/components/CommunityBenefitsSection';
 import TestimonialsCarousel from '@/components/TestimonialsCarousel';
 import StatsGrid from '@/components/StatsGrid';
 import CTASection from '@/components/CTASection';
@@ -39,6 +40,9 @@ const Index = () => {
           
           {/* RICA Services Section - Added right after hero */}
           <RicaServicesSection />
+          
+          {/* Community Benefits Section - New addition */}
+          <CommunityBenefitsSection />
           
           {/* WhatsApp Shopping Section */}
           <WhatsAppShoppingSection />

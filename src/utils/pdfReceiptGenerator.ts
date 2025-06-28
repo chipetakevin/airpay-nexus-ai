@@ -38,11 +38,11 @@ export const generateMobilePDFReceipt = (receiptData: ReceiptData): jsPDF => {
     unit: 'mm'
   });
 
-  // Colors
-  const primaryColor = [79, 70, 229]; // Indigo
-  const accentColor = [16, 185, 129]; // Green
-  const darkGray = [31, 41, 55];
-  const lightGray = [243, 244, 246];
+  // Colors - Fixed tuple types
+  const primaryColor: [number, number, number] = [79, 70, 229]; // Indigo
+  const accentColor: [number, number, number] = [16, 185, 129]; // Green
+  const darkGray: [number, number, number] = [31, 41, 55];
+  const lightGray: [number, number, number] = [243, 244, 246];
 
   // Page settings
   const pageWidth = doc.internal.pageSize.getWidth();

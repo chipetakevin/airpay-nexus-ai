@@ -86,7 +86,7 @@ export const MobileTransactionList = ({ transactions, title = "Recent Transactio
                     <div className="flex justify-between py-1 border-b border-gray-100">
                       <span className="text-gray-600">Type:</span>
                       <span className="font-medium capitalize">
-                        {transaction.transaction_type || transaction.type || 'Airtime'}
+                        {transaction.transaction_type || 'Airtime'}
                       </span>
                     </div>
                     <div className="flex justify-between py-1 border-b border-gray-100">

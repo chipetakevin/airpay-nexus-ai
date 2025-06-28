@@ -93,7 +93,7 @@ const ShoppingCartContent = ({ initialDeal }: ShoppingCartContentProps) => {
     cartItems.length === 0;
 
   return (
-    <CardContent className="space-y-4 p-4">
+    <CardContent className="space-y-4 p-4 bg-white">
       <CartItems 
         cartItems={cartItems} 
         onClearCart={() => setCartItems([])} 
