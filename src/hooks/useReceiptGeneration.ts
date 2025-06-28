@@ -77,6 +77,22 @@ ${receiptMessage}
 *Thank you for helping us deliver receipts!*`;
   };
 
+  const autoRedirectToSmartDeals = () => {
+    console.log('🚀 Auto-redirecting to Smart Deals...');
+    
+    // Show redirect notification
+    toast({
+      title: "✅ Receipt Process Complete",
+      description: "Redirecting to Smart Deals for your next purchase...",
+      duration: 3000
+    });
+
+    // Redirect to smart deals after a short delay
+    setTimeout(() => {
+      window.location.href = '/portal?tab=deals';
+    }, 3000);
+  };
+
   const autoGenerateAndSendReceipts = async (transactionData: any, profitSharing: any, cartItems: any[], purchaseMode: string, customerPhone: string, recipientData: any) => {
     try {
       // CRITICAL: Only generate receipts if transaction status is 'completed'
@@ -171,6 +187,11 @@ _Thank you for using OneCard!_`;
             window.open(whatsappUrl, '_blank');
           }, 2000);
 
+          // Auto-redirect to smart deals after WhatsApp process
+          setTimeout(() => {
+            autoRedirectToSmartDeals();
+          }, 8000);
+
         } else {
           // Recipient phone is saved - send receipts normally
           // Send receipt to SENDER
@@ -204,6 +225,11 @@ _Thank you for using OneCard!_`;
             title: "📱 Dual Receipts Sent",
             description: `WhatsApp & Email receipts delivered to both you and ${recipientData.name}`,
           });
+
+          // Auto-redirect to smart deals after receipt delivery
+          setTimeout(() => {
+            autoRedirectToSmartDeals();
+          }, 4000);
         }
 
       } else {
@@ -223,6 +249,11 @@ _Thank you for using OneCard!_`;
           title: "📧 Receipts Delivered",
           description: customerEmail ? `WhatsApp & Email receipts sent to ${customerEmail}` : "WhatsApp receipt delivered successfully",
         });
+
+        // Auto-redirect to smart deals after self-purchase
+        setTimeout(() => {
+          autoRedirectToSmartDeals();
+        }, 4000);
       }
 
     } catch (error) {
@@ -232,6 +263,11 @@ _Thank you for using OneCard!_`;
         description: "Payment successful but receipt generation failed. Check transaction history.",
         variant: "destructive"
       });
+
+      // Still redirect to smart deals even if receipt fails
+      setTimeout(() => {
+        autoRedirectToSmartDeals();
+      }, 3000);
     }
   };
 
