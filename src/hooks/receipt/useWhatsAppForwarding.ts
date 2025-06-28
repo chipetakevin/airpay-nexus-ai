@@ -1,5 +1,6 @@
 
 import { useToast } from '@/hooks/use-toast';
+import { ToastAction } from '@/components/ui/toast';
 
 export const useWhatsAppForwarding = () => {
   const { toast } = useToast();
@@ -73,22 +74,25 @@ ${receiptMessage}
 
       const senderWhatsAppUrl = `https://wa.me/${senderPhone.replace('+', '')}?text=${encodeURIComponent(fallbackMessage)}`;
       
-      // Show option to get backup receipt
+      // Show option to get backup receipt with proper ToastAction component
+      const handleBackupClick = () => {
+        window.open(senderWhatsAppUrl, '_blank');
+        toast({
+          title: "📱 Backup Receipt Sent",
+          description: "Forwarding instructions sent to your WhatsApp",
+          duration: 3000
+        });
+      };
+
       toast({
         title: "📋 Backup Available",
         description: "Click here if recipient didn't receive the receipt",
         duration: 10000,
-        action: {
-          label: "Get Backup",
-          onClick: () => {
-            window.open(senderWhatsAppUrl, '_blank');
-            toast({
-              title: "📱 Backup Receipt Sent",
-              description: "Forwarding instructions sent to your WhatsApp",
-              duration: 3000
-            });
-          }
-        }
+        action: (
+          <ToastAction altText="Get backup receipt" onClick={handleBackupClick}>
+            Get Backup
+          </ToastAction>
+        )
       });
     }, 5000);
   };
