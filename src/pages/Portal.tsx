@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import PortalHeader from '@/components/PortalHeader';
@@ -6,7 +5,7 @@ import PortalTabs from '@/components/PortalTabs';
 import { useToast } from "@/hooks/use-toast"
 import WhatsAppFloatingButton from '@/components/WhatsAppFloatingButton';
 import { useSessionManager } from '@/hooks/useSessionManager';
-import { usePersistentAuth } from '@/hooks/usePersistentAuth';
+import { usePersistentAuth } from '@/components/auth/PersistentAuthProvider';
 
 type UserType = 'customer' | 'vendor' | 'admin' | null;
 
@@ -17,13 +16,12 @@ const Portal = () => {
   const [showAdminTab, setShowAdminTab] = useState(false);
   const [isAdminAuthenticated, setIsAdminAuthenticated] = useState(false);
   const [isUnifiedProfile, setIsUnifiedProfile] = useState(false);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
   
   // Initialize session managers
   useSessionManager();
-  const { isSessionValid } = usePersistentAuth();
+  const { isAuthenticated, currentUser } = usePersistentAuth();
 
   useEffect(() => {
     // Update document title
@@ -31,25 +29,29 @@ const Portal = () => {
   }, []);
 
   useEffect(() => {
-    try {
-      const storedUserCredentials = localStorage.getItem('userCredentials');
-      const authStatus = localStorage.getItem('userAuthenticated') === 'true';
-      setIsAuthenticated(authStatus);
-      
-      if (storedUserCredentials) {
-        const userCredentials = JSON.parse(storedUserCredentials);
-        setUserType(userCredentials.userType || null);
-        setIsUnifiedProfile(userCredentials.password === 'Malawi@1976');
-      } else {
+    if (currentUser) {
+      setUserType(currentUser.userType);
+      setIsUnifiedProfile(currentUser.isUnifiedProfile);
+    } else {
+      // Fallback to legacy auth check
+      try {
+        const storedUserCredentials = localStorage.getItem('userCredentials');
+        
+        if (storedUserCredentials) {
+          const userCredentials = JSON.parse(storedUserCredentials);
+          setUserType(userCredentials.userType || null);
+          setIsUnifiedProfile(userCredentials.password === 'Malawi@1976');
+        } else {
+          setUserType(null);
+          setIsUnifiedProfile(false);
+        }
+      } catch (error) {
+        console.error("Error parsing user credentials:", error);
         setUserType(null);
         setIsUnifiedProfile(false);
       }
-    } catch (error) {
-      console.error("Error parsing user credentials:", error);
-      setUserType(null);
-      setIsUnifiedProfile(false);
     }
-  }, []);
+  }, [currentUser, isAuthenticated]);
 
   useEffect(() => {
     try {
@@ -87,7 +89,6 @@ const Portal = () => {
   const resetUserType = () => {
     setUserType(null);
     setIsUnifiedProfile(false);
-    setIsAuthenticated(false);
     setActiveTab('deals');
     navigate('?tab=deals', { replace: true });
   };

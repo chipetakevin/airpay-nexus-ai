@@ -4,6 +4,7 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { PersistentAuthProvider } from "@/components/auth/PersistentAuthProvider";
 import Index from "./pages/Index";
 import Portal from "./pages/Portal";
 import DealsHub from "./pages/DealsHub";
@@ -20,33 +21,42 @@ import DMPayroll from "./pages/DMPayroll";
 import DGXStation from "./pages/DGXStation";
 import NotFound from "./pages/NotFound";
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: 1,
+      refetchOnWindowFocus: false,
+    },
+  },
+});
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Index />} />
-          <Route path="/portal" element={<Portal />} />
-          <Route path="/deals" element={<DealsHub />} />
-          <Route path="/whatsapp-assistant" element={<WhatsAppAssistant />} />
-          <Route path="/scan-to-text-ai" element={<ScanToTextAI />} />
-          <Route path="/spaza-ai" element={<SpazaAI />} />
-          <Route path="/platform-dashboard" element={<PlatformDashboard />} />
-          <Route path="/baas-platform" element={<BaaSPlatform />} />
-          <Route path="/devine-baas" element={<DevineBaaS />} />
-          <Route path="/mvnx-baas" element={<MVNXBaaS />} />
-          <Route path="/master-dashboard" element={<MasterDashboard />} />
-          <Route path="/ussd-system" element={<USSDSystem />} />
-          <Route path="/dm-payroll" element={<DMPayroll />} />
-          <Route path="/dgx-station" element={<DGXStation />} />
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </BrowserRouter>
-    </TooltipProvider>
+    <PersistentAuthProvider>
+      <TooltipProvider>
+        <Toaster />
+        <Sonner />
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<Index />} />
+            <Route path="/portal" element={<Portal />} />
+            <Route path="/deals" element={<DealsHub />} />
+            <Route path="/whatsapp-assistant" element={<WhatsAppAssistant />} />
+            <Route path="/scan-to-text-ai" element={<ScanToTextAI />} />
+            <Route path="/spaza-ai" element={<SpazaAI />} />
+            <Route path="/platform-dashboard" element={<PlatformDashboard />} />
+            <Route path="/baas-platform" element={<BaaSPlatform />} />
+            <Route path="/devine-baas" element={<DevineBaaS />} />
+            <Route path="/mvnx-baas" element={<MVNXBaaS />} />
+            <Route path="/master-dashboard" element={<MasterDashboard />} />
+            <Route path="/ussd-system" element={<USSDSystem />} />
+            <Route path="/dm-payroll" element={<DMPayroll />} />
+            <Route path="/dgx-station" element={<DGXStation />} />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </BrowserRouter>
+      </TooltipProvider>
+    </PersistentAuthProvider>
   </QueryClientProvider>
 );
 
