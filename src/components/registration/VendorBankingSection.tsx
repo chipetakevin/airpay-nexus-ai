@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState, useCallback, useRef } from 'react';
 import { Card } from '@/components/ui/card';
 import { useBankingAutoSave } from '@/hooks/useBankingAutoSave';
@@ -37,15 +36,10 @@ const VendorBankingSection: React.FC<VendorBankingProps> = ({
   const validation = validateBankingForm(formData, errors);
   const isBankingComplete = validation.isComplete;
 
-  // Auto-collapse logic with improved state management
+  // Enhanced auto-collapse logic with marketing consent integration
   const handleAutoCollapse = useCallback(async () => {
-    if (isBankingComplete && !isCollapsed) {
-      console.log('🏦 Banking complete - triggering auto-collapse');
-      
-      // Clear any existing timeout
-      if (autoCollapseTimeoutRef.current) {
-        clearTimeout(autoCollapseTimeoutRef.current);
-      }
+    if (isBankingComplete && !isCollapsed && marketingConsent) {
+      console.log('🏦 Banking complete with marketing consent - triggering intelligent collapse');
       
       // Save banking info immediately
       setIsAutoSaving(true);
@@ -63,62 +57,44 @@ const VendorBankingSection: React.FC<VendorBankingProps> = ({
         setIsAutoSaving(false);
       }
       
-      // Collapse with slight delay for smooth UX
-      autoCollapseTimeoutRef.current = setTimeout(() => {
+      // Intelligent collapse with smooth animation
+      setTimeout(() => {
         setIsCollapsed(true);
         toast({
-          title: "Banking Secured! 🔒",
-          description: "Banking details saved and collapsed for better navigation.",
-          duration: 2000
+          title: "Banking Secured & Collapsed! 🔒",
+          description: "Banking details saved and intelligently collapsed for better navigation.",
+          duration: 3000
         });
-      }, 500);
+      }, 800);
     }
-  }, [isBankingComplete, isCollapsed, formData, saveBankingInfo, toast]);
+  }, [isBankingComplete, isCollapsed, marketingConsent, formData, saveBankingInfo, toast]);
+
+  // Handle marketing consent changes with intelligent expand/collapse
+  useEffect(() => {
+    if (marketingConsent && isBankingComplete && !isCollapsed) {
+      console.log('📧 Marketing consent given - intelligently collapsing banking section');
+      handleAutoCollapse();
+    } else if (!marketingConsent && isCollapsed) {
+      console.log('📧 Marketing consent removed - intelligently expanding banking section');
+      setIsCollapsed(false);
+      
+      toast({
+        title: "Banking Section Expanded 📋",
+        description: "Banking details are now visible for review or editing.",
+        duration: 2000
+      });
+    }
+  }, [marketingConsent, isBankingComplete, isCollapsed, handleAutoCollapse, toast]);
 
   // Handle banking completion changes
   useEffect(() => {
-    const wasIncomplete = prevIsBankingCompleteRef.current === false;
-    const isNowComplete = isBankingComplete === true;
-    
-    if (wasIncomplete && isNowComplete && !isCollapsed) {
+    if (isBankingComplete && marketingConsent && !isCollapsed) {
       handleAutoCollapse();
-    }
-    
-    // Auto-expand if form becomes incomplete
-    if (!isBankingComplete && isCollapsed) {
+    } else if (!isBankingComplete && isCollapsed) {
       console.log('⚠️ Banking incomplete - expanding for completion');
       setIsCollapsed(false);
     }
-    
-    prevIsBankingCompleteRef.current = isBankingComplete;
-  }, [isBankingComplete, isCollapsed, handleAutoCollapse]);
-
-  // Handle marketing consent changes
-  useEffect(() => {
-    const prevConsent = prevMarketingConsentRef.current;
-    const currentConsent = marketingConsent;
-
-    if (prevConsent !== currentConsent) {
-      prevMarketingConsentRef.current = currentConsent;
-      
-      if (currentConsent && isBankingComplete && !isCollapsed) {
-        console.log('📧 Marketing consent given - auto-collapsing banking section');
-        handleAutoCollapse();
-      }
-      
-      // Handle unchecking the marketing consent - expand banking section
-      if (!currentConsent && isCollapsed && isBankingComplete) {
-        console.log('📧 Marketing consent removed - expanding banking section');
-        setIsCollapsed(false);
-        
-        toast({
-          title: "Banking Section Expanded",
-          description: "Banking details are now visible for review or editing.",
-          duration: 2000
-        });
-      }
-    }
-  }, [marketingConsent, isBankingComplete, isCollapsed, handleAutoCollapse, toast]);
+  }, [isBankingComplete, marketingConsent, isCollapsed, handleAutoCollapse]);
 
   // Auto-fill on mount
   useEffect(() => {
@@ -213,7 +189,7 @@ const VendorBankingSection: React.FC<VendorBankingProps> = ({
   };
 
   return (
-    <Card className="border-yellow-200 bg-yellow-50/30 mb-4">
+    <Card className={`border-yellow-200 bg-yellow-50/30 mb-4 banking-section-mobile ${isCollapsed ? 'collapsed' : ''}`}>
       <BankingCardHeader
         isAutoSaving={isAutoSaving}
         isBankingComplete={isBankingComplete}

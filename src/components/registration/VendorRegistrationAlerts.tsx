@@ -1,16 +1,19 @@
 
-import React, { useState } from 'react';
+import React from 'react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 import { Trophy, ShoppingCart, MapPin, Shield, ChevronDown, ChevronUp, Info } from 'lucide-react';
 
-const VendorRegistrationAlerts = () => {
-  const [isExpanded, setIsExpanded] = useState(false);
-  const [isPasswordExpanded, setIsPasswordExpanded] = useState(false);
+interface VendorRegistrationAlertsProps {
+  isCollapsed?: boolean;
+  onToggle?: () => void;
+}
 
-  const toggleExpanded = () => {
-    setIsExpanded(!isExpanded);
-  };
+const VendorRegistrationAlerts: React.FC<VendorRegistrationAlertsProps> = ({ 
+  isCollapsed = false, 
+  onToggle 
+}) => {
+  const [isPasswordExpanded, setIsPasswordExpanded] = React.useState(false);
 
   const togglePasswordExpanded = () => {
     setIsPasswordExpanded(!isPasswordExpanded);
@@ -20,23 +23,25 @@ const VendorRegistrationAlerts = () => {
     <div className="space-y-3">
       {/* Collapsible trigger button - Mobile optimized */}
       <Button
-        onClick={toggleExpanded}
+        onClick={onToggle}
         variant="outline"
         className="w-full flex items-center justify-between p-3 sm:p-4 h-auto border-blue-200 bg-blue-50/50 hover:bg-blue-50 text-xs sm:text-sm"
       >
         <div className="flex items-center gap-2">
           <Info className="w-4 h-4 sm:w-5 sm:h-5 text-blue-600 flex-shrink-0" />
-          <span className="font-medium text-blue-800 text-left">Registration Info & Benefits</span>
+          <span className="font-medium text-blue-800 text-left">
+            {isCollapsed ? 'Show Registration Info & Benefits' : 'Hide Registration Info & Benefits'}
+          </span>
         </div>
-        {isExpanded ? (
-          <ChevronUp className="w-4 h-4 sm:w-5 sm:h-5 text-blue-600 flex-shrink-0" />
-        ) : (
+        {isCollapsed ? (
           <ChevronDown className="w-4 h-4 sm:w-5 sm:h-5 text-blue-600 flex-shrink-0" />
+        ) : (
+          <ChevronUp className="w-4 h-4 sm:w-5 sm:h-5 text-blue-600 flex-shrink-0" />
         )}
       </Button>
 
       {/* Collapsible content */}
-      {isExpanded && (
+      {!isCollapsed && (
         <div className="space-y-3 animate-in slide-in-from-top-2 duration-200">
           {/* Smart Business Registration Alert */}
           <Alert className="border-yellow-200 bg-yellow-50">
