@@ -14,7 +14,16 @@ export const useCashbackAutomation = () => {
     recipientData: any
   ) => {
     try {
-      const customerCardNumber = currentUser?.cardNumber || currentUser?.id;
+      console.log('🔄 Starting automated cashback processing:', {
+        transactionData,
+        profitSharing,
+        currentUser,
+        isVendor,
+        purchaseMode,
+        recipientData
+      });
+
+      const customerCardNumber = currentUser?.cardNumber || currentUser?.id || currentUser?.registeredPhone;
       const vendorId = isVendor ? (currentUser?.vendorId || currentUser?.id) : null;
       
       const cashbackUpdate: CashbackUpdate = {
@@ -38,6 +47,8 @@ export const useCashbackAutomation = () => {
         cashbackUpdate.recipientReward = profitSharing.unregisteredRecipientReward || 0;
       }
 
+      console.log('💰 Cashback update details:', cashbackUpdate);
+
       // Process the cashback updates
       const result = await updateCashbackBalances(cashbackUpdate);
       
@@ -58,11 +69,17 @@ export const useCashbackAutomation = () => {
           description: message,
         });
 
-        console.log('Automated cashback processing completed:', result);
+        console.log('✅ Automated cashback processing completed:', result);
+        
+        // Force a page refresh to update the display
+        setTimeout(() => {
+          window.location.reload();
+        }, 1000);
+        
         return result;
         
       } else {
-        console.error('Cashback processing failed:', result);
+        console.error('❌ Cashback processing failed:', result);
         toast({
           title: "Cashback Processing Warning",
           description: "Transaction successful but cashback update failed. Contact support if balance doesn't reflect.",
@@ -72,7 +89,7 @@ export const useCashbackAutomation = () => {
       }
       
     } catch (error) {
-      console.error('Error in automated cashback processing:', error);
+      console.error('❌ Error in automated cashback processing:', error);
       toast({
         title: "Cashback Error",
         description: "Transaction successful but cashback automation failed.",

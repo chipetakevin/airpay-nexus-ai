@@ -13,7 +13,7 @@ export interface CashbackUpdate {
 
 export const updateCashbackBalances = async (update: CashbackUpdate) => {
   try {
-    console.log('Processing enhanced cashback allocation:', update);
+    console.log('🔄 Processing enhanced cashback allocation:', update);
     const updates = [];
 
     // Update customer OneCard balance with privilege-based allocation
@@ -65,7 +65,12 @@ export const updateCashbackBalances = async (update: CashbackUpdate) => {
 };
 
 const updateCustomerBalance = async (cardNumber: string, cashbackAmount: number, transactionId: string) => {
+  console.log('💰 Updating customer balance:', { cardNumber, cashbackAmount, transactionId });
+  
+  // Update both possible localStorage keys to ensure consistency
   const storedUser = localStorage.getItem('onecardUser');
+  const storedCredentials = localStorage.getItem('userCredentials');
+  
   if (storedUser) {
     const userData = JSON.parse(storedUser);
     
@@ -86,6 +91,7 @@ const updateCustomerBalance = async (cardNumber: string, cashbackAmount: number,
     userData.cashbackBalance = newCashbackBalance;
     userData.totalEarned = newTotalEarned;
     userData.lastCashbackDate = new Date().toISOString();
+    
     localStorage.setItem('onecardUser', JSON.stringify(userData));
     
     console.log(`✅ Customer ${cardNumber} enhanced cashback: +R${enhancedCashback.toFixed(2)} (Multiplier: ${bonusMultiplier}x, New balance: R${newCashbackBalance.toFixed(2)})`);
@@ -100,6 +106,32 @@ const updateCustomerBalance = async (cardNumber: string, cashbackAmount: number,
     };
   }
   
+  // Also update userCredentials if it exists
+  if (storedCredentials) {
+    const credentials = JSON.parse(storedCredentials);
+    const enhancedCashback = cashbackAmount;
+    const newCashbackBalance = (credentials.cashbackBalance || 0) + enhancedCashback;
+    const newTotalEarned = (credentials.totalEarned || 0) + enhancedCashback;
+    
+    credentials.cashbackBalance = newCashbackBalance;
+    credentials.totalEarned = newTotalEarned;
+    credentials.lastCashbackDate = new Date().toISOString();
+    
+    localStorage.setItem('userCredentials', JSON.stringify(credentials));
+    
+    console.log(`✅ Customer credentials updated: +R${enhancedCashback.toFixed(2)}, New balance: R${newCashbackBalance.toFixed(2)}`);
+    
+    return {
+      type: 'customer',
+      cardNumber,
+      amount: enhancedCashback,
+      newBalance: newCashbackBalance,
+      bonusMultiplier: 1,
+      transactionId
+    };
+  }
+  
+  console.log('⚠️ No user data found in localStorage for cashback update');
   return null;
 };
 
@@ -183,7 +215,7 @@ const handleRecipientReward = async (recipientPhone: string, rewardAmount: numbe
 
 export const getPendingRecipientRewards = (phone: string): number => {
   const pendingRewards = JSON.parse(localStorage.getItem('pendingRecipientRewards') || '{}');
-  return pendingRewards[phone] || 0;
+  return pendingRewards[phone]?.amount || 0;
 };
 
 export const claimRecipientRewards = async (phone: string, customerCardNumber: string) => {
