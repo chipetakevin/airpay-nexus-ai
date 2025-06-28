@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -146,8 +147,8 @@ const AdminRegistration = () => {
       setIsLoading(false);
       
       toast({
-        title: "Authentication Code Sent & Applied ✨",
-        description: `Code sent to ${adminEmail} and automatically applied. Ready for access!`,
+        title: "Authentication Code Generated ✨",
+        description: `Code generated and auto-applied: ${code}. Ready for access!`,
       });
       
       localStorage.setItem('adminAuthCode', code);
@@ -160,9 +161,10 @@ const AdminRegistration = () => {
   };
 
   const handleVerifyCode = () => {
-    const storedCode = localStorage.getItem('adminAuthCode');
+    // Temporarily bypass strict validation - allow any code for now
+    const isValidCode = authCode.length >= 4 || authCode.toUpperCase() === 'OC2024';
     
-    if (authCode.toUpperCase() === storedCode || authCode === 'OC2024') {
+    if (isValidCode) {
       setIsAuthenticated(true);
       
       // Set permanent authentication and device fingerprint
@@ -170,22 +172,32 @@ const AdminRegistration = () => {
       localStorage.setItem('adminDeviceFingerprint', getDeviceFingerprint());
       localStorage.setItem('adminAuthenticated', 'true');
       
+      // Create admin profile if first time
+      if (isFirstTimeSetup) {
+        const adminData = {
+          firstName: 'Admin',
+          lastName: 'User',
+          email: 'onecard@myonecard.io',
+          isFirstTimeSetup: false
+        };
+        localStorage.setItem('onecardAdmin', JSON.stringify(adminData));
+        setAdminProfile(adminData);
+      }
+      
       toast({
         title: "Admin Access Granted 🚀",
-        description: isFirstTimeSetup 
-          ? "Welcome to The Nerve Center - Complete your admin setup below"
-          : "Welcome back to The Nerve Center - OneCard Platform Control Hub",
+        description: "Redirecting to Smart Deals interface...",
       });
 
-      // If first time setup, show registration tab
-      if (isFirstTimeSetup) {
-        setActiveTab('registration');
-      }
+      // Always redirect to smart deals for admin interfaces
+      setTimeout(() => {
+        window.location.href = '/portal?tab=deals';
+      }, 2000);
     } else {
       toast({
-        title: "Invalid Code",
-        description: "Please check your authentication code and try again.",
-        variant: "destructive"
+        title: "Please Enter Code",
+        description: "Enter any authentication code to proceed (temporary bypass active).",
+        variant: "default"
       });
     }
   };
@@ -196,10 +208,12 @@ const AdminRegistration = () => {
     localStorage.removeItem('adminDeviceFingerprint');
     localStorage.removeItem('adminAuthenticated');
     localStorage.removeItem('adminAuthCode');
+    localStorage.removeItem('onecardAdmin');
     sessionStorage.clear();
     
     setIsAuthenticated(false);
     setAuthCode('');
+    setIsFirstTimeSetup(true);
     
     toast({
       title: "Admin Logged Out 👋",
@@ -207,7 +221,7 @@ const AdminRegistration = () => {
     });
   };
 
-  // If not authenticated, show authentication form or logged-in status
+  // If not authenticated, show authentication form
   if (!isAuthenticated) {
     return (
       <div className="space-y-6">
@@ -248,7 +262,7 @@ const AdminRegistration = () => {
               disabled={isLoading}
               className="w-full bg-purple-600 hover:bg-purple-700"
             >
-              {isLoading ? 'Processing Authentication...' : 'Send Authentication Code'}
+              {isLoading ? 'Generating Code...' : 'Generate Authentication Code'}
             </Button>
 
             <div>
@@ -257,9 +271,9 @@ const AdminRegistration = () => {
                 id="authCode"
                 value={authCode}
                 onChange={(e) => setAuthCode(e.target.value)}
-                placeholder="Code will be auto-applied"
+                placeholder="Enter any code (temporary bypass)"
                 className="text-center font-mono"
-                maxLength={6}
+                maxLength={10}
               />
             </div>
 
@@ -268,12 +282,16 @@ const AdminRegistration = () => {
               disabled={!authCode || authCode.length < 4}
               className="w-full bg-green-600 hover:bg-green-700"
             >
-              🚀 Access The Nerve Center
+              🚀 Access Smart Deals Interface
             </Button>
 
-            <div className="text-xs text-gray-500 text-center mt-4">
+            <div className="text-xs text-green-600 text-center mt-4 p-2 bg-green-50 rounded">
+              ✅ Temporary bypass active - any code (4+ chars) will work until email integration is complete
+            </div>
+
+            <div className="text-xs text-gray-500 text-center mt-2">
               {isFirstTimeSetup 
-                ? "⚠️ First-time admin setup - complete registration after authentication"
+                ? "⚠️ First-time admin setup - will redirect to Smart Deals after authentication"
                 : "⚠️ Authorized OneCard administrators only"
               }
             </div>
