@@ -27,10 +27,20 @@ export const useTransactionProcessing = () => {
       const recipientPhone = purchaseMode === 'self' ? customerPhone : recipientData.phone;
       const recipientName = purchaseMode === 'self' ? 'Self' : recipientData.name;
       
-      // Simulate payment processing
+      // Simulate payment processing with actual validation
+      console.log('🔄 Starting payment processing...');
       await new Promise(resolve => setTimeout(resolve, 2000));
       
-      // Create transaction record
+      // Simulate payment validation - this is where real payment would be confirmed
+      const paymentSuccessful = Math.random() > 0.05; // 95% success rate for demo
+      
+      if (!paymentSuccessful) {
+        throw new Error('Payment failed - transaction declined');
+      }
+      
+      console.log('✅ Payment processed successfully');
+      
+      // Create transaction record ONLY after payment success
       const transactionData = {
         customer_id: currentUser.id,
         vendor_id: 'platform-vendor-id',
@@ -46,11 +56,11 @@ export const useTransactionProcessing = () => {
         cashback_earned: profitSharing.customerCashback || profitSharing.registeredCustomerReward || 0,
         admin_fee: profitSharing.adminProfit || 0,
         vendor_commission: profitSharing.vendorProfit || 0,
-        status: 'completed',
+        status: 'completed', // Only set to completed after payment success
         timestamp: new Date().toISOString()
       };
 
-      // Store transaction locally
+      // Store transaction locally ONLY after payment confirmation
       const existingTransactions = JSON.parse(localStorage.getItem('userTransactions') || '[]');
       existingTransactions.push(transactionData);
       localStorage.setItem('userTransactions', JSON.stringify(existingTransactions));
@@ -60,7 +70,7 @@ export const useTransactionProcessing = () => {
         await saveRecipient(recipientData, detectedNetwork);
       }
 
-      // AUTOMATED CASHBACK PROCESSING
+      // AUTOMATED CASHBACK PROCESSING - ONLY after payment success
       await processAutomatedCashback(
         transactionData,
         profitSharing,
@@ -70,7 +80,8 @@ export const useTransactionProcessing = () => {
         recipientData
       );
 
-      // AUTOMATED RECEIPT GENERATION WITH WHATSAPP & EMAIL
+      // AUTOMATED RECEIPT GENERATION - ONLY after payment completion
+      console.log('📧 Generating receipts after successful payment...');
       await autoGenerateAndSendReceipts(
         transactionData, 
         profitSharing, 
@@ -103,7 +114,7 @@ export const useTransactionProcessing = () => {
       return true;
       
     } catch (error) {
-      console.error('Payment processing error:', error);
+      console.error('❌ Payment processing error:', error);
       toast({
         title: "Payment Failed",
         description: "Unable to process payment. Please try again or contact support.",

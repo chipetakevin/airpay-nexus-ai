@@ -56,6 +56,14 @@ export const useReceiptGeneration = () => {
 
   const autoGenerateAndSendReceipts = async (transactionData: any, profitSharing: any, cartItems: any[], purchaseMode: string, customerPhone: string, recipientData: any) => {
     try {
+      // CRITICAL: Only generate receipts if transaction status is 'completed'
+      if (transactionData.status !== 'completed') {
+        console.log('⚠️ Receipt generation skipped - transaction not completed');
+        return;
+      }
+
+      console.log('✅ Transaction completed - generating receipts...');
+      
       const credentials = localStorage.getItem('userCredentials');
       let customerEmail = '';
       
@@ -66,7 +74,7 @@ export const useReceiptGeneration = () => {
 
       const customerName = getCustomerDisplayName();
 
-      // Enhanced receipt data WITHOUT session ID
+      // Enhanced receipt data - ONLY created after payment completion
       const baseReceiptData = {
         customerName: customerName,
         customerEmail: customerEmail,
@@ -103,7 +111,8 @@ export const useReceiptGeneration = () => {
           purchaseType: 'recipient' as const
         };
 
-        // Send receipts to both parties
+        // Send receipts to both parties ONLY after payment completion
+        console.log('📧 Sending dual receipts after payment completion...');
         await Promise.all([
           sendReceiptToCustomer(senderReceiptData, 'sender'),
           sendReceiptToCustomer(recipientReceiptData, 'recipient')
@@ -124,6 +133,7 @@ export const useReceiptGeneration = () => {
           purchaseType: 'self' as const
         };
 
+        console.log('📧 Sending receipt after payment completion...');
         await sendReceiptToCustomer(receiptData, 'customer');
 
         toast({
@@ -133,7 +143,7 @@ export const useReceiptGeneration = () => {
       }
 
     } catch (error) {
-      console.error('Error in autoGenerateAndSendReceipts:', error);
+      console.error('❌ Error in autoGenerateAndSendReceipts:', error);
       toast({
         title: "Receipt Error",
         description: "Payment successful but receipt generation failed. Check transaction history.",
@@ -149,13 +159,13 @@ export const useReceiptGeneration = () => {
       });
 
       if (error) {
-        console.error(`Error sending receipt to ${recipientType}:`, error);
+        console.error(`❌ Error sending receipt to ${recipientType}:`, error);
         return;
       }
 
       console.log(`✅ Receipt sent successfully to ${recipientType}:`, data);
 
-      // Auto-redirect to WhatsApp with receipt
+      // Auto-redirect to WhatsApp with receipt ONLY after successful payment
       if (data?.whatsappUrl && recipientType === 'customer') {
         setTimeout(() => {
           window.open(data.whatsappUrl, '_blank');
@@ -163,7 +173,7 @@ export const useReceiptGeneration = () => {
       }
 
     } catch (error) {
-      console.error(`Error sending receipt to ${recipientType}:`, error);
+      console.error(`❌ Error sending receipt to ${recipientType}:`, error);
     }
   };
 

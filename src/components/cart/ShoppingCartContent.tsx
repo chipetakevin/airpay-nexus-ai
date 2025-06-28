@@ -4,7 +4,6 @@ import { CardContent } from '@/components/ui/card';
 import { CartItem } from '@/types/deals';
 import { useShoppingCart } from '@/hooks/useShoppingCart';
 import { usePhoneValidation } from '@/hooks/usePhoneValidation';
-import { useAutoReceiptGenerator } from '@/components/receipts/AutoReceiptGenerator';
 import { useRegistrationGuard } from '@/hooks/useRegistrationGuard';
 import CartItems from './CartItems';
 import UserTypeIndicator from './UserTypeIndicator';
@@ -19,7 +18,6 @@ interface ShoppingCartContentProps {
 
 const ShoppingCartContent = ({ initialDeal }: ShoppingCartContentProps) => {
   const [acceptedSATerms, setAcceptedSATerms] = useState(false);
-  const { sendReceiptNotifications } = useAutoReceiptGenerator();
   const { getStoredPhoneNumber, userProfile } = useRegistrationGuard();
 
   const {
@@ -66,31 +64,16 @@ const ShoppingCartContent = ({ initialDeal }: ShoppingCartContentProps) => {
 
     const effectiveValidationError = acceptedUnknownNumber ? '' : validationError;
     
-    // Enhanced purchase processing with automated receipt delivery
+    // Process purchase - receipts will ONLY be generated after payment completion
+    console.log('🔄 Starting purchase process...');
     const success = await processPurchase(effectiveValidationError, detectedNetwork);
     
+    // NO manual receipt generation here - it's handled in processTransaction ONLY after payment success
     if (success) {
-      // Automatically generate and send receipts via WhatsApp and Email
-      const receiptData = {
-        sessionId: `DM${Date.now()}${Math.random().toString(36).substr(2, 5).toUpperCase()}`,
-        customerPhone: customerPhone,
-        customerEmail: userProfile?.email || currentUser?.email || '',
-        recipientPhone: purchaseMode === 'self' ? customerPhone : recipientData.phone,
-        recipientName: purchaseMode === 'self' ? 'Self' : recipientData.name,
-        deal: {
-          network: cartItems[0]?.network || detectedNetwork,
-          amount: cartItems[0]?.amount || 0,
-          price: total,
-          type: cartItems[0]?.dealType || 'airtime'
-        },
-        timestamp: new Date().toISOString(),
-        paymentMethod: 'card' as const
-      };
-
-      // Send automated receipts
-      await sendReceiptNotifications(receiptData);
-      
+      console.log('✅ Purchase completed successfully - receipts sent automatically');
       // Cart will be closed by parent component
+    } else {
+      console.log('❌ Purchase failed - no receipts generated');
     }
   };
 
