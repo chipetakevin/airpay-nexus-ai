@@ -17,6 +17,8 @@ import WhatsAppShoppingSection from '@/components/WhatsAppShoppingSection';
 import SmoothScrollNav from '@/components/SmoothScrollNav';
 import MobileLayout from '@/components/navigation/MobileLayout';
 import { useMobileAuth } from '@/hooks/useMobileAuth';
+import StaticWhatsAppAssistant from '@/components/whatsapp/StaticWhatsAppAssistant';
+import { Card, CardContent } from '@/components/ui/card';
 
 const Index = () => {
   const { isAuthenticated } = useMobileAuth();
@@ -38,7 +40,27 @@ const Index = () => {
             <HeroSection />
           </div>
           
-          {/* RICA Services Section - Added right after hero */}
+          {/* Devine Mobile Assistant - Added right after hero */}
+          <section className="py-8 bg-gradient-to-br from-green-50 via-white to-blue-50">
+            <div className="container mx-auto px-4">
+              <div className="text-center mb-6">
+                <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2">
+                  Devine Mobile Assistant
+                </h2>
+                <p className="text-gray-600 max-w-2xl mx-auto">
+                  Your intelligent shopping companion - get instant help with airtime, data, and mobile services
+                </p>
+              </div>
+              
+              <Card className="max-w-md mx-auto shadow-xl border-2 border-green-200">
+                <CardContent className="p-0">
+                  <StaticWhatsAppAssistant />
+                </CardContent>
+              </Card>
+            </div>
+          </section>
+          
+          {/* RICA Services Section */}
           <RicaServicesSection />
           
           {/* Community Benefits Section */}
