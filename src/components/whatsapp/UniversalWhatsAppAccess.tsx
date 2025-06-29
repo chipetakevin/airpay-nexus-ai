@@ -38,7 +38,7 @@ const UniversalWhatsAppAccess = () => {
 
     const phoneNumber = "27832466539";
     const userName = `${currentUser.firstName || ''} ${currentUser.lastName || ''}`.trim();
-    const userPhone = currentUser.registeredPhone || '';
+    const userPhone = currentUser.registeredPhone || currentUser.phone || '';
     
     const message = encodeURIComponent(
       `👋 Hi Devine Mobile!\n\n` +
