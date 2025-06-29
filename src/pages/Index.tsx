@@ -19,6 +19,7 @@ import EnhancedWhatsAppAssistant from '@/components/whatsapp/EnhancedWhatsAppAss
 import RegistrationGate from '@/components/auth/RegistrationGate';
 import { useMobileAuth } from '@/hooks/useMobileAuth';
 import CompressedWhatsAppInterface from '@/components/whatsapp/CompressedWhatsAppInterface';
+import { MessageCircle } from 'lucide-react';
 
 const Index = () => {
   const { isAuthenticated } = useMobileAuth();
