@@ -19,6 +19,11 @@ const Header = ({ onQuickShopToggle, isQuickShopOpen }: HeaderProps) => {
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
   const isHomePage = location.pathname === '/';
 
+  const handleQuickShopClick = () => {
+    // Redirect to WhatsApp Shopping Assistant page
+    window.location.href = '/whatsapp-assistant';
+  };
+
   const navigationItems = [
     { 
       path: '/', 
@@ -78,12 +83,8 @@ const Header = ({ onQuickShopToggle, isQuickShopOpen }: HeaderProps) => {
             {/* Buy Airtime & Data Tab - Always show on home page */}
             {isHomePage && (
               <button
-                onClick={onQuickShopToggle}
-                className={`relative px-4 py-2 rounded-lg transition-all duration-200 flex items-center gap-2 font-medium ${
-                  isQuickShopOpen
-                    ? 'bg-gradient-to-r from-green-600 to-emerald-600 text-white shadow-lg'
-                    : 'bg-white text-green-600 hover:bg-green-50 border-2 border-green-200'
-                }`}
+                onClick={handleQuickShopClick}
+                className="relative px-4 py-2 rounded-lg transition-all duration-200 flex items-center gap-2 font-medium bg-white text-green-600 hover:bg-green-50 border-2 border-green-200"
               >
                 <CreditCard className="w-4 h-4" />
                 <span>Buy Airtime & Data</span>
@@ -143,16 +144,10 @@ const Header = ({ onQuickShopToggle, isQuickShopOpen }: HeaderProps) => {
               {isHomePage && (
                 <button
                   onClick={() => {
-                    if (onQuickShopToggle) {
-                      onQuickShopToggle();
-                    }
+                    handleQuickShopClick();
                     setIsMenuOpen(false);
                   }}
-                  className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 ${
-                    isQuickShopOpen
-                      ? 'bg-gradient-to-r from-green-600 to-emerald-600 text-white font-semibold'
-                      : 'text-green-600 hover:bg-green-50 font-medium border-2 border-green-200'
-                  }`}
+                  className="w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 text-green-600 hover:bg-green-50 font-medium border-2 border-green-200"
                 >
                   <CreditCard className="w-4 h-4" />
                   <span>Buy Airtime & Data</span>
