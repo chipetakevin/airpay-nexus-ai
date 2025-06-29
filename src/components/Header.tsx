@@ -51,7 +51,9 @@ const Header = ({ onQuickShopToggle, isQuickShopOpen }: HeaderProps) => {
 
   const isActive = (path: string) => location.pathname === path;
 
-  const toggleMenu = () => {
+  const toggleMenu = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
     setIsMenuOpen(prev => !prev);
   };
 
@@ -59,9 +61,33 @@ const Header = ({ onQuickShopToggle, isQuickShopOpen }: HeaderProps) => {
     setIsMenuOpen(false);
   };
 
+  // Close menu when clicking outside
+  React.useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (isMenuOpen) {
+        const target = event.target as Element;
+        if (!target.closest('[data-mobile-menu]')) {
+          setIsMenuOpen(false);
+        }
+      }
+    };
+
+    if (isMenuOpen) {
+      document.addEventListener('click', handleClickOutside);
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+
+    return () => {
+      document.removeEventListener('click', handleClickOutside);
+      document.body.style.overflow = '';
+    };
+  }, [isMenuOpen]);
+
   return (
     <>
-      <header className="bg-[#75B8FA] sticky top-0 z-50">
+      <header className="bg-[#75B8FA] sticky top-0 z-40 relative">
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between h-16">
             {/* Logo */}
@@ -118,10 +144,15 @@ const Header = ({ onQuickShopToggle, isQuickShopOpen }: HeaderProps) => {
             {/* Mobile Menu Button */}
             <button
               onClick={toggleMenu}
-              className="md:hidden p-2 rounded-lg hover:bg-white/20 transition-colors z-[60] relative"
+              data-mobile-menu="trigger"
+              className="md:hidden p-3 rounded-lg hover:bg-white/20 transition-colors z-50 relative touch-manipulation"
               aria-label="Toggle menu"
+              type="button"
             >
-              {isMenuOpen ? <X className="w-6 h-6 text-white" /> : <Menu className="w-6 h-6 text-white" />}
+              {isMenuOpen ? 
+                <X className="w-6 h-6 text-white" /> : 
+                <Menu className="w-6 h-6 text-white" />
+              }
             </button>
           </div>
         </div>
@@ -132,22 +163,25 @@ const Header = ({ onQuickShopToggle, isQuickShopOpen }: HeaderProps) => {
         <>
           {/* Backdrop */}
           <div 
-            className="md:hidden fixed inset-0 bg-black/20 z-[45]"
+            className="md:hidden fixed inset-0 bg-black/50 z-[60] backdrop-blur-sm"
             onClick={closeMenu}
           />
           
           {/* Mobile Menu */}
-          <div className="md:hidden fixed left-0 right-0 top-16 bg-white shadow-xl border-t-2 border-[#75B8FA]/20 z-[50] max-h-[calc(100vh-4rem)] overflow-y-auto">
-            <nav className="p-4 space-y-2">
+          <div 
+            data-mobile-menu="content"
+            className="md:hidden fixed left-0 right-0 top-16 bg-white shadow-2xl border-t-2 border-[#75B8FA]/20 z-[70] max-h-[calc(100vh-4rem)] overflow-y-auto animate-slide-down"
+          >
+            <nav className="p-6 space-y-3">
               {navigationItems.map((item) => (
                 <Link
                   key={item.path}
                   to={item.path}
                   onClick={closeMenu}
-                  className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 ${
+                  className={`flex items-center gap-4 px-4 py-4 rounded-xl transition-all duration-200 text-lg ${
                     isActive(item.path)
-                      ? 'bg-[#75B8FA]/10 text-[#75B8FA] font-semibold'
-                      : 'text-[#75B8FA] hover:bg-[#75B8FA]/5 font-medium'
+                      ? 'bg-[#75B8FA] text-white font-semibold shadow-lg'
+                      : 'text-[#75B8FA] hover:bg-[#75B8FA]/10 font-medium border border-[#75B8FA]/20'
                   }`}
                 >
                   {item.icon}
@@ -167,9 +201,9 @@ const Header = ({ onQuickShopToggle, isQuickShopOpen }: HeaderProps) => {
                     handleQuickShopClick();
                     closeMenu();
                   }}
-                  className="w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 text-green-600 hover:bg-green-50 font-medium border-2 border-green-200"
+                  className="w-full flex items-center gap-4 px-4 py-4 rounded-xl transition-all duration-200 text-lg text-green-600 hover:bg-green-50 font-medium border-2 border-green-200 bg-green-50/50"
                 >
-                  <CreditCard className="w-4 h-4" />
+                  <CreditCard className="w-5 h-5" />
                   <span>Buy Airtime & Data</span>
                   <Badge className="bg-green-600 text-white text-xs ml-auto">
                     Quick
@@ -177,15 +211,15 @@ const Header = ({ onQuickShopToggle, isQuickShopOpen }: HeaderProps) => {
                 </button>
               )}
               
-              <div className="pt-4">
+              <div className="pt-4 border-t border-gray-200 mt-6">
                 <Button
                   onClick={() => {
                     window.open('https://wa.me/27832466539', '_blank');
                     closeMenu();
                   }}
-                  className="w-full bg-[#75B8FA] hover:bg-[#75B8FA]/90 text-white font-semibold"
+                  className="w-full bg-[#25D366] hover:bg-[#25D366]/90 text-white font-semibold text-lg py-4 h-auto"
                 >
-                  <MessageCircle className="w-4 h-4 mr-2" />
+                  <MessageCircle className="w-5 h-5 mr-3" />
                   WhatsApp Support
                 </Button>
               </div>
@@ -193,6 +227,23 @@ const Header = ({ onQuickShopToggle, isQuickShopOpen }: HeaderProps) => {
           </div>
         </>
       )}
+
+      <style jsx>{`
+        @keyframes slide-down {
+          from {
+            opacity: 0;
+            transform: translateY(-10px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+        
+        .animate-slide-down {
+          animation: slide-down 0.2s ease-out;
+        }
+      `}</style>
     </>
   );
 };
