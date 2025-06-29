@@ -7,7 +7,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { PersistentAuthProvider } from "@/components/auth/PersistentAuthProvider";
 import Index from "./pages/Index";
 import Portal from "./pages/Portal";
-import WhatsAppAssistant from './pages/WhatsAppAssistant';
+import WhatsAppAssistant from "./pages/WhatsAppAssistant";
 import ScanToTextAI from "./pages/ScanToTextAI";
 import SpazaAI from "./pages/SpazaAI";
 import MasterDashboard from "./pages/MasterDashboard";
@@ -25,15 +25,16 @@ import AIPoweredDeals from "./pages/AIPoweredDeals";
 
 const queryClient = new QueryClient();
 
-function App() {
-  return (
-    <QueryClientProvider client={queryClient}>
+const App = () => (
+  <QueryClientProvider client={queryClient}>
+    <PersistentAuthProvider>
       <TooltipProvider>
         <Toaster />
         <Sonner />
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<Index />} />
+            <Route path="/portal" element={<Portal />} />
             <Route path="/whatsapp-assistant" element={<WhatsAppAssistant />} />
             <Route path="/scan-to-text-ai" element={<ScanToTextAI />} />
             <Route path="/spaza-ai" element={<SpazaAI />} />
@@ -52,8 +53,8 @@ function App() {
           </Routes>
         </BrowserRouter>
       </TooltipProvider>
-    </QueryClientProvider>
-  );
-}
+    </PersistentAuthProvider>
+  </QueryClientProvider>
+);
 
 export default App;
