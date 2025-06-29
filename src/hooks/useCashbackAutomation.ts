@@ -9,55 +9,62 @@ export const useCashbackAutomation = () => {
     transactionData: any,
     profitSharing: any,
     currentUser: any,
-    isVendor: boolean,
+    userType: 'customer' | 'vendor' | 'admin',
     purchaseMode: string,
     recipientData: any
   ) => {
     try {
-      console.log('🔄 Starting automated cashback processing:', {
+      console.log('🔄 Starting automated cashback processing for all user types:', {
         transactionData,
         profitSharing,
         currentUser,
-        isVendor,
+        userType,
         purchaseMode,
         recipientData
       });
 
-      const customerCardNumber = currentUser?.cardNumber || currentUser?.id || currentUser?.registeredPhone;
-      const vendorId = isVendor ? (currentUser?.vendorId || currentUser?.id) : null;
+      const userIdentifier = currentUser?.cardNumber || currentUser?.id || currentUser?.registeredPhone || currentUser?.email;
       
       const cashbackUpdate: CashbackUpdate = {
-        customerCardNumber,
-        transactionId: transactionData.timestamp || Date.now().toString()
+        customerCardNumber: userIdentifier,
+        transactionId: transactionData.timestamp || Date.now().toString(),
+        userType
       };
 
-      // Determine cashback based on purchase type and user type
-      if (isVendor) {
+      // Universal cashback processing for all user types
+      if (userType === 'vendor') {
         // Vendor purchase - vendor gets profit, customer gets cashback
         cashbackUpdate.vendorProfit = profitSharing.vendorProfit || 0;
         cashbackUpdate.customerCashback = profitSharing.customerCashback || 0;
-        cashbackUpdate.vendorId = vendorId;
-      } else if (purchaseMode === 'self') {
-        // Customer self-purchase - customer gets cashback
-        cashbackUpdate.customerCashback = profitSharing.customerCashback || 0;
+        cashbackUpdate.vendorId = currentUser?.vendorId || currentUser?.id;
+      } else if (userType === 'admin') {
+        // Admin purchase - admin gets special rates
+        cashbackUpdate.customerCashback = profitSharing.adminCashback || profitSharing.customerCashback || 0;
+        cashbackUpdate.adminBonus = profitSharing.adminBonus || 0;
       } else {
-        // Customer third-party purchase - both customer and recipient get rewards
-        cashbackUpdate.customerCashback = profitSharing.registeredCustomerReward || 0;
-        cashbackUpdate.recipientPhone = recipientData.phone;
-        cashbackUpdate.recipientReward = profitSharing.unregisteredRecipientReward || 0;
+        // Customer purchase logic
+        if (purchaseMode === 'self') {
+          cashbackUpdate.customerCashback = profitSharing.customerCashback || 0;
+        } else {
+          cashbackUpdate.customerCashback = profitSharing.registeredCustomerReward || 0;
+          cashbackUpdate.recipientPhone = recipientData.phone;
+          cashbackUpdate.recipientReward = profitSharing.unregisteredRecipientReward || 0;
+        }
       }
 
-      console.log('💰 Cashback update details:', cashbackUpdate);
+      console.log('💰 Universal cashback update details:', cashbackUpdate);
 
-      // Process the cashback updates
+      // Process the cashback updates for all user types
       const result = await updateCashbackBalances(cashbackUpdate);
       
       if (result.success) {
-        // Show success notification with details
+        // Show success notification with user-type specific details
         let message = 'Cashback rewards processed successfully!';
         
-        if (isVendor) {
+        if (userType === 'vendor') {
           message = `Vendor profit: R${cashbackUpdate.vendorProfit?.toFixed(2)} + Customer cashback: R${cashbackUpdate.customerCashback?.toFixed(2)}`;
+        } else if (userType === 'admin') {
+          message = `Admin cashback: R${cashbackUpdate.customerCashback?.toFixed(2)} + Admin bonus: R${(cashbackUpdate.adminBonus || 0).toFixed(2)}`;
         } else if (purchaseMode === 'self') {
           message = `Your cashback: R${cashbackUpdate.customerCashback?.toFixed(2)} added to OneCard balance`;
         } else {
@@ -69,12 +76,7 @@ export const useCashbackAutomation = () => {
           description: message,
         });
 
-        console.log('✅ Automated cashback processing completed:', result);
-        
-        // Force a page refresh to update the display
-        setTimeout(() => {
-          window.location.reload();
-        }, 1000);
+        console.log('✅ Universal cashback processing completed:', result);
         
         return result;
         

@@ -1,5 +1,4 @@
-
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -20,23 +19,56 @@ const CustomerRegistration = () => {
   const [showBankingSection, setShowBankingSection] = useState(false);
   const [showCardSection, setShowCardSection] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [bankingDataLoaded, setBankingDataLoaded] = useState(false);
   
-  const { bankingData, saveBankingProfile } = useUniversalBankingStorage('customer');
+  const { bankingData, saveBankingProfile, loadBankingData } = useUniversalBankingStorage('customer');
 
-  // Auto-show banking section if customer wants to add banking info
-  useEffect(() => {
-    if (formData.agreeTerms && formData.firstName && formData.lastName) {
-      setShowBankingSection(true);
-    }
+  // Prevent flickering by memoizing conditional rendering logic
+  const shouldShowBankingSection = useMemo(() => {
+    return formData.agreeTerms && formData.firstName && formData.lastName;
   }, [formData.agreeTerms, formData.firstName, formData.lastName]);
+
+  // Stable banking data loading
+  useEffect(() => {
+    let isMounted = true;
+    
+    const loadData = async () => {
+      if (!bankingDataLoaded) {
+        await loadBankingData();
+        if (isMounted) {
+          setBankingDataLoaded(true);
+        }
+      }
+    };
+    
+    loadData();
+    
+    return () => {
+      isMounted = false;
+    };
+  }, [loadBankingData, bankingDataLoaded]);
+
+  // Stable banking section visibility
+  useEffect(() => {
+    if (shouldShowBankingSection && !showBankingSection) {
+      // Add small delay to prevent flickering
+      const timer = setTimeout(() => {
+        setShowBankingSection(true);
+      }, 100);
+      
+      return () => clearTimeout(timer);
+    } else if (!shouldShowBankingSection && showBankingSection) {
+      setShowBankingSection(false);
+    }
+  }, [shouldShowBankingSection, showBankingSection]);
 
   const handleBankSelect = async (bankName: string, routing: string, branchCode: string, bankDetails?: any) => {
     handleInputChange('bankName', bankName);
     handleInputChange('branchCode', branchCode);
     handleInputChange('routingNumber', routing);
 
-    // Auto-save banking profile
-    if (bankName && branchCode) {
+    // Auto-save banking profile without causing flicker
+    if (bankName && branchCode && bankingDataLoaded) {
       try {
         await saveBankingProfile({
           bankName,
@@ -181,7 +213,7 @@ const CustomerRegistration = () => {
           </CardContent>
         </Card>
 
-        {/* Banking Information */}
+        {/* Banking Information - Conditionally rendered without flickering */}
         {showBankingSection && (
           <Card className="border-green-200 bg-green-50/30">
             <CardHeader className="pb-3">
@@ -229,7 +261,7 @@ const CustomerRegistration = () => {
                 </p>
               </div>
 
-              {bankingData?.bankingProfiles && bankingData.bankingProfiles.length > 0 && (
+              {bankingDataLoaded && bankingData?.bankingProfiles && bankingData.bankingProfiles.length > 0 && (
                 <div className="bg-white p-3 rounded-lg border border-green-200">
                   <div className="flex items-center gap-2 mb-2">
                     <CheckCircle className="w-4 h-4 text-green-600" />
@@ -246,7 +278,7 @@ const CustomerRegistration = () => {
           </Card>
         )}
 
-        {/* Card Details Section */}
+        {/* Card Details Section - Stable rendering */}
         {showBankingSection && (
           <div>
             <div className="flex items-center justify-between mb-4">

@@ -1,4 +1,3 @@
-
 import { supabase } from '@/integrations/supabase/client';
 
 export interface CashbackUpdate {
@@ -9,34 +8,57 @@ export interface CashbackUpdate {
   recipientPhone?: string;
   recipientReward?: number;
   transactionId: string;
+  userType?: 'customer' | 'vendor' | 'admin';
+  adminBonus?: number;
 }
 
 export const updateCashbackBalances = async (update: CashbackUpdate) => {
   try {
-    console.log('🔄 Processing enhanced cashback allocation:', update);
+    console.log('🔄 Processing universal cashback allocation for all user types:', update);
     const updates = [];
 
-    // Update customer OneCard balance with privilege-based allocation
-    if (update.customerCashback && update.customerCashback > 0) {
-      const customerUpdate = await updateCustomerBalance(
-        update.customerCardNumber, 
-        update.customerCashback,
-        update.transactionId
-      );
-      updates.push(customerUpdate);
+    // Universal balance updates based on user type
+    if (update.userType === 'customer') {
+      if (update.customerCashback && update.customerCashback > 0) {
+        const customerUpdate = await updateCustomerBalance(
+          update.customerCardNumber, 
+          update.customerCashback,
+          update.transactionId
+        );
+        updates.push(customerUpdate);
+      }
+    } else if (update.userType === 'vendor') {
+      if (update.vendorProfit && update.vendorProfit > 0) {
+        const vendorUpdate = await updateVendorBalance(
+          update.vendorId || update.customerCardNumber, 
+          update.vendorProfit,
+          update.transactionId
+        );
+        updates.push(vendorUpdate);
+      }
+      
+      // Vendor purchases also give customer cashback
+      if (update.customerCashback && update.customerCashback > 0) {
+        const customerUpdate = await updateCustomerBalance(
+          update.customerCardNumber, 
+          update.customerCashback,
+          update.transactionId
+        );
+        updates.push(customerUpdate);
+      }
+    } else if (update.userType === 'admin') {
+      if (update.customerCashback && update.customerCashback > 0) {
+        const adminUpdate = await updateAdminBalance(
+          update.customerCardNumber, 
+          update.customerCashback,
+          update.adminBonus || 0,
+          update.transactionId
+        );
+        updates.push(adminUpdate);
+      }
     }
 
-    // Update vendor balance with commission tracking
-    if (update.vendorProfit && update.vendorProfit > 0 && update.vendorId) {
-      const vendorUpdate = await updateVendorBalance(
-        update.vendorId, 
-        update.vendorProfit,
-        update.transactionId
-      );
-      updates.push(vendorUpdate);
-    }
-
-    // Handle recipient reward for third-party purchases
+    // Handle recipient reward for third-party purchases (all user types)
     if (update.recipientReward && update.recipientReward > 0 && update.recipientPhone) {
       const recipientUpdate = await handleRecipientReward(
         update.recipientPhone,
@@ -46,20 +68,20 @@ export const updateCashbackBalances = async (update: CashbackUpdate) => {
       updates.push(recipientUpdate);
     }
 
-    console.log('✅ Enhanced cashback allocation completed:', updates);
+    console.log('✅ Universal cashback allocation completed for all user types:', updates);
 
     return {
       success: true,
       updates,
-      message: 'Enhanced cashback balances updated successfully'
+      message: 'Universal cashback balances updated successfully for all user types'
     };
 
   } catch (error) {
-    console.error('❌ Error in enhanced cashback allocation:', error);
+    console.error('❌ Error in universal cashback allocation:', error);
     return {
       success: false,
       error: error.message,
-      message: 'Failed to update enhanced cashback balances'
+      message: 'Failed to update universal cashback balances'
     };
   }
 };
@@ -240,4 +262,67 @@ export const claimRecipientRewards = async (phone: string, customerCardNumber: s
     success: false,
     message: 'No pending rewards to claim'
   };
+};
+
+const updateAdminBalance = async (adminId: string, cashbackAmount: number, bonusAmount: number, transactionId: string) => {
+  console.log('👑 Updating admin balance:', { adminId, cashbackAmount, bonusAmount, transactionId });
+  
+  const storedAdmin = localStorage.getItem('onecardAdmin');
+  if (storedAdmin) {
+    const adminData = JSON.parse(storedAdmin);
+    
+    // Admin gets enhanced cashback rates
+    const adminMultiplier = 2.5; // 2.5x cashback for admins
+    const enhancedCashback = cashbackAmount * adminMultiplier;
+    const totalReward = enhancedCashback + bonusAmount;
+    
+    const newCashbackBalance = (adminData.cashbackBalance || 0) + totalReward;
+    const newTotalEarned = (adminData.totalEarned || 0) + totalReward;
+    
+    adminData.cashbackBalance = newCashbackBalance;
+    adminData.totalEarned = newTotalEarned;
+    adminData.lastCashbackDate = new Date().toISOString();
+    
+    localStorage.setItem('onecardAdmin', JSON.stringify(adminData));
+    
+    console.log(`✅ Admin ${adminId} enhanced cashback: +R${totalReward.toFixed(2)} (Multiplier: ${adminMultiplier}x, New balance: R${newCashbackBalance.toFixed(2)})`);
+    
+    return {
+      type: 'admin',
+      adminId,
+      amount: totalReward,
+      newBalance: newCashbackBalance,
+      multiplier: adminMultiplier,
+      bonus: bonusAmount,
+      transactionId
+    };
+  }
+  
+  // Also update userCredentials if it exists
+  const storedCredentials = localStorage.getItem('userCredentials');
+  if (storedCredentials) {
+    const credentials = JSON.parse(storedCredentials);
+    const totalReward = cashbackAmount + bonusAmount;
+    const newCashbackBalance = (credentials.cashbackBalance || 0) + totalReward;
+    const newTotalEarned = (credentials.totalEarned || 0) + totalReward;
+    
+    credentials.cashbackBalance = newCashbackBalance;
+    credentials.totalEarned = newTotalEarned;
+    credentials.lastCashbackDate = new Date().toISOString();
+    
+    localStorage.setItem('userCredentials', JSON.stringify(credentials));
+    
+    console.log(`✅ Admin credentials updated: +R${totalReward.toFixed(2)}, New balance: R${newCashbackBalance.toFixed(2)}`);
+    
+    return {
+      type: 'admin',
+      adminId,
+      amount: totalReward,
+      newBalance: newCashbackBalance,
+      bonus: bonusAmount,
+      transactionId
+    };
+  }
+  
+  return null;
 };
