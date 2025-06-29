@@ -8,6 +8,7 @@ import { ShoppingCart, CreditCard, User, Users, Gift } from 'lucide-react';
 import { CartItem } from '@/types/deals';
 import PaymentMethodSelector from './PaymentMethodSelector';
 import { useToast } from '@/hooks/use-toast';
+import { useShoppingCart } from '@/hooks/useShoppingCart';
 
 interface ShoppingCartContentProps {
   initialDeal?: CartItem;
@@ -15,17 +16,28 @@ interface ShoppingCartContentProps {
 
 const ShoppingCartContent: React.FC<ShoppingCartContentProps> = ({ initialDeal }) => {
   const { toast } = useToast();
-  const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<any>(null);
-  const [isProcessing, setIsProcessing] = useState(false);
   const [userType, setUserType] = useState<'customer' | 'vendor' | 'admin'>('customer');
+
+  const {
+    cartItems,
+    setCartItems,
+    purchaseMode,
+    setPurchaseMode,
+    recipientData,
+    setRecipientData,
+    customerPhone,
+    setCustomerPhone,
+    isProcessing,
+    currentUser,
+    isVendor,
+    isAuthenticated,
+    calculateTotals,
+    processPurchase
+  } = useShoppingCart(initialDeal);
 
   // Initialize cart and detect user type
   useEffect(() => {
-    if (initialDeal) {
-      setCartItems([initialDeal]);
-    }
-
     // Detect user type from stored credentials
     const credentials = localStorage.getItem('userCredentials');
     if (credentials) {
@@ -36,17 +48,7 @@ const ShoppingCartContent: React.FC<ShoppingCartContentProps> = ({ initialDeal }
         console.error('Error parsing credentials:', error);
       }
     }
-  }, [initialDeal]);
-
-  const calculateTotals = () => {
-    const subtotal = cartItems.reduce((sum, item) => sum + item.discountedPrice, 0);
-    const tax = subtotal * 0.15; // 15% VAT
-    const total = subtotal + tax;
-    const savings = cartItems.reduce((sum, item) => sum + (item.originalPrice - item.discountedPrice), 0);
-    const cashback = total * 0.02; // 2% cashback
-
-    return { subtotal, tax, total, savings, cashback };
-  };
+  }, []);
 
   const handlePaymentMethodSelect = (method: any) => {
     setSelectedPaymentMethod(method);
@@ -56,7 +58,7 @@ const ShoppingCartContent: React.FC<ShoppingCartContentProps> = ({ initialDeal }
     });
   };
 
-  const handleCheckout = async () => {
+  const handleCompletePurchase = async () => {
     if (!selectedPaymentMethod) {
       toast({
         title: "Payment Method Required",
@@ -66,36 +68,33 @@ const ShoppingCartContent: React.FC<ShoppingCartContentProps> = ({ initialDeal }
       return;
     }
 
-    setIsProcessing(true);
-    
-    try {
-      // Simulate checkout process
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      
-      const totals = calculateTotals();
-      
+    if (!isAuthenticated || !currentUser) {
       toast({
-        title: "Purchase Successful! 🎉",
-        description: `Your order of R${totals.total.toFixed(2)} has been processed successfully. You earned R${totals.cashback.toFixed(2)} cashback!`,
-      });
-
-      // Clear cart
-      setCartItems([]);
-      
-      // Auto-redirect to success page or close modal
-      setTimeout(() => {
-        window.location.href = '/portal?tab=onecard';
-      }, 2000);
-      
-    } catch (error) {
-      console.error('Checkout error:', error);
-      toast({
-        title: "Checkout Failed",
-        description: "There was an error processing your payment. Please try again.",
+        title: "Authentication Required",
+        description: "Please log in to complete your purchase.",
         variant: "destructive"
       });
-    } finally {
-      setIsProcessing(false);
+      return;
+    }
+
+    // Validate required fields
+    let validationError = '';
+    
+    if (cartItems.length === 0) {
+      validationError = 'Your cart is empty';
+    } else if (purchaseMode === 'other' && (!recipientData.name || !recipientData.phone)) {
+      validationError = 'Please provide recipient details for third-party purchases';
+    } else if (!customerPhone) {
+      validationError = 'Customer phone number is required';
+    }
+
+    // Process the purchase using the existing shopping cart logic
+    const success = await processPurchase(validationError, 'Auto-detected');
+    
+    if (success) {
+      // Clear cart and selected payment method on success
+      setCartItems([]);
+      setSelectedPaymentMethod(null);
     }
   };
 
@@ -170,24 +169,20 @@ const ShoppingCartContent: React.FC<ShoppingCartContentProps> = ({ initialDeal }
           <div className="space-y-2">
             <div className="flex justify-between text-sm">
               <span>Subtotal:</span>
-              <span>R{totals.subtotal.toFixed(2)}</span>
+              <span>R{totals.customerPrice.toFixed(2)}</span>
             </div>
             <div className="flex justify-between text-sm text-green-600">
               <span>You Save:</span>
-              <span>-R{totals.savings.toFixed(2)}</span>
-            </div>
-            <div className="flex justify-between text-sm">
-              <span>VAT (15%):</span>
-              <span>R{totals.tax.toFixed(2)}</span>
+              <span>-R{(totals.total - totals.customerPrice).toFixed(2)}</span>
             </div>
             <Separator />
             <div className="flex justify-between font-medium">
               <span>Total:</span>
-              <span>R{totals.total.toFixed(2)}</span>
+              <span>R{totals.customerPrice.toFixed(2)}</span>
             </div>
             <div className="flex justify-between text-sm text-blue-600">
               <span>Cashback Earned:</span>
-              <span>R{totals.cashback.toFixed(2)}</span>
+              <span>R{(totals.profitSharing.customerCashback || totals.profitSharing.adminCashback || totals.profitSharing.vendorProfit || 0).toFixed(2)}</span>
             </div>
           </div>
 
@@ -207,8 +202,8 @@ const ShoppingCartContent: React.FC<ShoppingCartContentProps> = ({ initialDeal }
           </div>
 
           <Button
-            onClick={handleCheckout}
-            disabled={!selectedPaymentMethod || isProcessing}
+            onClick={handleCompletePurchase}
+            disabled={!selectedPaymentMethod || isProcessing || !isAuthenticated}
             className="w-full bg-blue-600 hover:bg-blue-700 py-3"
           >
             {isProcessing ? (
@@ -219,7 +214,7 @@ const ShoppingCartContent: React.FC<ShoppingCartContentProps> = ({ initialDeal }
             ) : (
               <>
                 <CreditCard className="w-4 h-4 mr-2" />
-                Complete Purchase - R{totals.total.toFixed(2)}
+                Complete Purchase - R{totals.customerPrice.toFixed(2)}
               </>
             )}
           </Button>
