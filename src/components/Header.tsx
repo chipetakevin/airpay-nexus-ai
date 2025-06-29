@@ -9,9 +9,15 @@ import {
 } from 'lucide-react';
 import HeaderLogo from './header/HeaderLogo';
 
-const Header = () => {
+interface HeaderProps {
+  onQuickShopToggle?: () => void;
+  isQuickShopOpen?: boolean;
+}
+
+const Header = ({ onQuickShopToggle, isQuickShopOpen }: HeaderProps) => {
   const location = useLocation();
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
+  const isHomePage = location.pathname === '/';
 
   const navigationItems = [
     { 
@@ -68,6 +74,24 @@ const Header = () => {
                 )}
               </Link>
             ))}
+            
+            {/* Quick Shop Tab - Only show on home page */}
+            {isHomePage && (
+              <button
+                onClick={onQuickShopToggle}
+                className={`relative px-4 py-2 rounded-lg transition-all duration-200 flex items-center gap-2 font-medium ${
+                  isQuickShopOpen
+                    ? 'bg-green-600 text-white shadow-lg'
+                    : 'bg-white text-green-600 hover:bg-green-50'
+                }`}
+              >
+                <CreditCard className="w-4 h-4" />
+                <span>Buy Airtime & Data</span>
+                <Badge className="bg-green-600 text-white text-xs">
+                  Quick
+                </Badge>
+              </button>
+            )}
           </nav>
 
           {/* WhatsApp Quick Access */}
@@ -114,6 +138,27 @@ const Header = () => {
                   )}
                 </Link>
               ))}
+              
+              {/* Mobile Quick Shop Tab - Only show on home page */}
+              {isHomePage && (
+                <button
+                  onClick={() => {
+                    onQuickShopToggle?.();
+                    setIsMenuOpen(false);
+                  }}
+                  className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 ${
+                    isQuickShopOpen
+                      ? 'bg-green-600 text-white font-semibold'
+                      : 'text-green-600 hover:bg-green-50 font-medium'
+                  }`}
+                >
+                  <CreditCard className="w-4 h-4" />
+                  <span>Buy Airtime & Data</span>
+                  <Badge className="bg-green-600 text-white text-xs ml-auto">
+                    Quick
+                  </Badge>
+                </button>
+              )}
               
               <div className="pt-4">
                 <Button
