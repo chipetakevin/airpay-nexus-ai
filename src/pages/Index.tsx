@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
@@ -21,6 +20,7 @@ import StaticWhatsAppAssistant from '@/components/whatsapp/StaticWhatsAppAssista
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { X, MessageCircle } from 'lucide-react';
+import UniversalWhatsAppAccess from '@/components/whatsapp/UniversalWhatsAppAccess';
 
 const Index = () => {
   const { isAuthenticated } = useMobileAuth();
@@ -110,23 +110,21 @@ const Index = () => {
           <BenefitsSection />
           <StatsGrid />
           
-          {/* Devine Mobile Assistant - Positioned just below StatsGrid */}
+          {/* Universal WhatsApp Access - Always available for authenticated users */}
           <section className="py-8 bg-gradient-to-br from-green-50 via-white to-blue-50">
             <div className="container mx-auto px-4">
               <div className="text-center mb-6">
                 <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2">
-                  Devine Mobile Assistant
+                  WhatsApp Shopping Assistant
                 </h2>
                 <p className="text-gray-600 max-w-2xl mx-auto">
-                  Your intelligent shopping companion - get instant help with airtime, data, and mobile services
+                  Your intelligent mobile commerce companion - always accessible when you're logged in
                 </p>
               </div>
               
-              <Card className="max-w-md mx-auto shadow-xl border-2 border-green-200">
-                <CardContent className="p-0">
-                  <StaticWhatsAppAssistant />
-                </CardContent>
-              </Card>
+              <div className="max-w-md mx-auto">
+                <UniversalWhatsAppAccess />
+              </div>
             </div>
           </section>
           

@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -7,7 +6,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { PersistentAuthProvider } from "@/components/auth/PersistentAuthProvider";
 import Index from "./pages/Index";
 import Portal from "./pages/Portal";
-import WhatsAppAssistant from "./pages/WhatsAppAssistant";
+import WhatsAppAssistant from './pages/WhatsAppAssistant';
 import ScanToTextAI from "./pages/ScanToTextAI";
 import SpazaAI from "./pages/SpazaAI";
 import MasterDashboard from "./pages/MasterDashboard";
@@ -25,16 +24,14 @@ import AIPoweredDeals from "./pages/AIPoweredDeals";
 
 const queryClient = new QueryClient();
 
-const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <PersistentAuthProvider>
+function App() {
+  return (
+    <QueryClient>
       <TooltipProvider>
         <Toaster />
-        <Sonner />
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<Index />} />
-            <Route path="/portal" element={<Portal />} />
             <Route path="/whatsapp-assistant" element={<WhatsAppAssistant />} />
             <Route path="/scan-to-text-ai" element={<ScanToTextAI />} />
             <Route path="/spaza-ai" element={<SpazaAI />} />
@@ -53,8 +50,8 @@ const App = () => (
           </Routes>
         </BrowserRouter>
       </TooltipProvider>
-    </PersistentAuthProvider>
-  </QueryClientProvider>
-);
+    </QueryClient>
+  );
+}
 
 export default App;

@@ -6,8 +6,8 @@ import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { FormData, FormErrors } from '@/types/customerRegistration';
 import { validateAccountNumber } from '@/utils/formValidation';
-import { CreditCard, Save, Check, History, EyeOff, Eye } from 'lucide-react';
-import BankAutocomplete from '../BankAutocomplete';
+import { CreditCard, Check, Eye, EyeOff } from 'lucide-react';
+import EnhancedSouthAfricanBankAutocomplete from '../banking/EnhancedSouthAfricanBankAutocomplete';
 import { useBankingAutoSave } from '@/hooks/useBankingAutoSave';
 import { useToast } from '@/hooks/use-toast';
 
@@ -22,123 +22,111 @@ const EnhancedBankingSection: React.FC<EnhancedBankingSectionProps> = ({
   errors,
   onInputChange
 }) => {
-  const { saveBankingInfo, getBankingInfo, autoSaveBankingField } = useBankingAutoSave();
+  const { saveBankingInfo, getBankingInfo } = useBankingAutoSave();
   const { toast } = useToast();
   const [isAutoSaving, setIsAutoSaving] = useState(false);
   const [lastSaved, setLastSaved] = useState<Date | null>(null);
   const [isBankingHidden, setIsBankingHidden] = useState(false);
   const [showBankingDetails, setShowBankingDetails] = useState(true);
-
-  // Check if banking info should be hidden (when branch code exists)
-  useEffect(() => {
-    if (formData.branchCode && formData.bankName && formData.accountNumber) {
-      setIsBankingHidden(true);
-      setShowBankingDetails(false);
-    }
-  }, [formData.branchCode, formData.bankName, formData.accountNumber]);
+  const [isInitialized, setIsInitialized] = useState(false);
 
   // Auto-fill banking information on component mount
   useEffect(() => {
-    const savedBankingInfo = getBankingInfo();
+    if (isInitialized) return;
     
-    if (savedBankingInfo.bankName && !formData.bankName) {
-      onInputChange('bankName', savedBankingInfo.bankName);
-    }
-    if (savedBankingInfo.accountNumber && !formData.accountNumber) {
-      onInputChange('accountNumber', savedBankingInfo.accountNumber);
-    }
-    if (savedBankingInfo.branchCode && !formData.branchCode) {
-      onInputChange('branchCode', savedBankingInfo.branchCode);
-    }
+    const initializeBanking = async () => {
+      try {
+        const savedBankingInfo = getBankingInfo();
+        
+        if (savedBankingInfo.bankName && !formData.bankName) {
+          onInputChange('bankName', savedBankingInfo.bankName);
+        }
+        if (savedBankingInfo.accountNumber && !formData.accountNumber) {
+          onInputChange('accountNumber', savedBankingInfo.accountNumber);
+        }
+        if (savedBankingInfo.branchCode && !formData.branchCode) {
+          onInputChange('branchCode', savedBankingInfo.branchCode);
+        }
 
-    if (savedBankingInfo.bankName || savedBankingInfo.accountNumber) {
-      toast({
-        title: "Banking Info Auto-filled! 💳",
-        description: "Your saved banking information has been restored.",
-      });
-    }
-  }, []);
+        if (savedBankingInfo.bankName || savedBankingInfo.accountNumber) {
+          setLastSaved(new Date());
+          toast({
+            title: "Banking Info Restored! 💳",
+            description: "Your saved banking information has been loaded.",
+            duration: 2000,
+          });
+        }
+      } catch (error) {
+        console.error('Failed to initialize banking:', error);
+      } finally {
+        setIsInitialized(true);
+      }
+    };
 
-  // Auto-save banking information when fields change
+    initializeBanking();
+  }, [formData.bankName, formData.accountNumber, formData.branchCode, getBankingInfo, onInputChange, toast, isInitialized]);
+
+  // Check if banking should be collapsed
   useEffect(() => {
-    if (formData.bankName || formData.accountNumber || formData.branchCode) {
-      setIsAutoSaving(true);
-      
-      const timeoutId = setTimeout(() => {
+    const isComplete = formData.branchCode && formData.bankName && formData.accountNumber;
+    if (isComplete && !isBankingHidden) {
+      setIsBankingHidden(true);
+      setShowBankingDetails(false);
+    }
+  }, [formData.branchCode, formData.bankName, formData.accountNumber, isBankingHidden]);
+
+  // Auto-save banking information
+  useEffect(() => {
+    if (!isInitialized) return;
+    
+    const saveTimeout = setTimeout(() => {
+      if (formData.bankName || formData.accountNumber || formData.branchCode) {
+        setIsAutoSaving(true);
+        
         saveBankingInfo({
-          bankName: formData.bankName,
-          accountNumber: formData.accountNumber,
-          branchCode: formData.branchCode,
-          routingNumber: formData.routingNumber
+          bankName: formData.bankName || '',
+          accountNumber: formData.accountNumber || '',
+          branchCode: formData.branchCode || '',
+          routingNumber: formData.routingNumber || ''
         });
         
         setIsAutoSaving(false);
         setLastSaved(new Date());
-      }, 500);
+      }
+    }, 1000);
 
-      return () => clearTimeout(timeoutId);
-    }
-  }, [formData.bankName, formData.accountNumber, formData.branchCode, formData.routingNumber]);
+    return () => clearTimeout(saveTimeout);
+  }, [formData.bankName, formData.accountNumber, formData.branchCode, formData.routingNumber, saveBankingInfo, isInitialized]);
 
-  const handleBankSelect = (bankName: string, routing: string, branchCode: string) => {
+  const handleBankSelect = (bankName: string, routing: string, branchCode: string, bankDetails?: any) => {
     onInputChange('bankName', bankName);
     onInputChange('branchCode', branchCode);
     onInputChange('routingNumber', routing);
     
-    // Immediately save bank selection
-    const bankingData = {
+    // Immediate save for bank selection
+    saveBankingInfo({
       bankName,
       branchCode,
       routingNumber: routing,
-      accountNumber: formData.accountNumber
-    };
+      accountNumber: formData.accountNumber || ''
+    });
     
-    saveBankingInfo(bankingData);
     setLastSaved(new Date());
-    
-    // Auto-hide if account number also exists
-    if (formData.accountNumber && formData.accountNumber.length >= 8) {
-      setTimeout(() => {
-        setIsBankingHidden(true);
-        setShowBankingDetails(false);
-        toast({
-          title: "Banking Information Secured! 🔒",
-          description: "Your complete banking details have been permanently saved and secured.",
-        });
-      }, 1000);
-    }
   };
 
   const handleAccountNumberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     onInputChange('accountNumber', value);
-    
-    // Auto-save account number after user stops typing
-    if (value.length >= 8) {
-      autoSaveBankingField('accountNumber', value);
-      
-      // Auto-hide if bank and branch are also selected
-      if (formData.bankName && formData.branchCode) {
-        setTimeout(() => {
-          setIsBankingHidden(true);
-          setShowBankingDetails(false);
-          toast({
-            title: "Banking Information Secured! 🔒",
-            description: "Your complete banking details have been permanently saved and secured.",
-          });
-        }, 1000);
-      }
-    }
   };
 
   const toggleBankingVisibility = () => {
     setShowBankingDetails(!showBankingDetails);
   };
 
-  // If banking is hidden, show compact summary
+  // Collapsed view
   if (isBankingHidden && !showBankingDetails) {
     return (
-      <Card className="border-green-200 bg-green-50/30">
+      <Card className="border-green-200 bg-green-50/30 animate-fade-in">
         <CardHeader className="pb-3">
           <CardTitle className="text-base sm:text-lg flex items-center justify-between gap-2 text-green-800">
             <div className="flex items-center gap-2">
@@ -162,7 +150,7 @@ const EnhancedBankingSection: React.FC<EnhancedBankingSectionProps> = ({
             <div className="flex items-center gap-2 mb-2">
               <Check className="w-4 h-4 text-green-600" />
               <span className="text-sm font-medium text-green-800">
-                Complete Banking Information Saved
+                Banking Information Saved
               </span>
             </div>
             <div className="text-xs text-green-700 space-y-1">
@@ -170,7 +158,7 @@ const EnhancedBankingSection: React.FC<EnhancedBankingSectionProps> = ({
               <p>• Account: •••••{formData.accountNumber?.slice(-4)}</p>
               <p>• Branch Code: {formData.branchCode}</p>
               <p className="mt-2 text-green-600">
-                ✓ Permanently saved and encrypted for all transactions
+                ✓ Auto-saved and encrypted for secure transactions
               </p>
             </div>
           </div>
@@ -180,12 +168,12 @@ const EnhancedBankingSection: React.FC<EnhancedBankingSectionProps> = ({
   }
 
   return (
-    <Card className="border-green-200 bg-green-50/30">
+    <Card className="border-green-200 bg-green-50/30 animate-fade-in">
       <CardHeader className="pb-3">
         <CardTitle className="text-base sm:text-lg flex items-center justify-between gap-2 text-green-800">
           <div className="flex items-center gap-2">
             <CreditCard className="w-4 h-4 sm:w-5 sm:h-5" />
-            Banking Information (Auto-Saved)
+            Banking Information (Optional)
           </div>
           <div className="flex items-center gap-2">
             {isBankingHidden && (
@@ -208,29 +196,36 @@ const EnhancedBankingSection: React.FC<EnhancedBankingSectionProps> = ({
             ) : lastSaved ? (
               <div className="flex items-center gap-1 text-xs text-green-600">
                 <Check className="w-3 h-3" />
-                Saved
+                Auto-Saved
               </div>
             ) : null}
           </div>
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
-        <BankAutocomplete 
+        <div className="text-sm text-green-700 mb-4">
+          Add your banking details for seamless transactions and payments
+        </div>
+
+        <EnhancedSouthAfricanBankAutocomplete 
           onBankSelect={handleBankSelect}
           error={errors.bankName}
+          defaultValue={formData.bankName}
+          showBranchDetails={true}
+          compact={false}
         />
 
         <div className="space-y-2">
           <Label htmlFor="accountNumber" className="text-sm font-medium text-green-700">
-            Account Number *
+            Account Number
           </Label>
           <Input
             id="accountNumber"
             name="accountNumber"
             autoComplete="off"
-            value={formData.accountNumber}
+            value={formData.accountNumber || ''}
             onChange={handleAccountNumberChange}
-            placeholder="Enter account number"
+            placeholder="Enter your account number"
             className={errors.accountNumber ? 'border-red-500' : 'border-green-300 focus:border-green-500'}
           />
           {errors.accountNumber && (
@@ -242,7 +237,7 @@ const EnhancedBankingSection: React.FC<EnhancedBankingSectionProps> = ({
           {formData.accountNumber && validateAccountNumber(formData.accountNumber) && (
             <p className="text-green-600 text-xs flex items-center gap-1">
               <Check className="w-3 h-3" />
-              Valid account number format · Auto-saved
+              Valid account number format
             </p>
           )}
         </div>
@@ -253,17 +248,16 @@ const EnhancedBankingSection: React.FC<EnhancedBankingSectionProps> = ({
           </Label>
           <Input
             id="branchCode"
-            value={formData.branchCode}
-            placeholder="Auto-filled based on bank selection"
+            value={formData.branchCode || ''}
+            placeholder="Auto-detected from bank selection"
             readOnly
             className="bg-gray-50 border-green-200"
           />
           <p className="text-xs text-green-600">
-            ℹ️ South African banks use branch codes for transactions
+            ℹ️ This information will be securely saved for future use
           </p>
         </div>
 
-        {/* Confirmation Message */}
         {(formData.bankName || formData.accountNumber) && (
           <div className="bg-green-50 p-3 rounded-lg border border-green-200">
             <div className="flex items-center gap-2 mb-1">
@@ -273,13 +267,8 @@ const EnhancedBankingSection: React.FC<EnhancedBankingSectionProps> = ({
               </span>
             </div>
             <p className="text-xs text-green-700">
-              Your banking details are automatically encrypted and saved permanently for future transactions, payments, and services.
+              Your banking details are automatically encrypted and saved for future transactions.
             </p>
-            {formData.branchCode && formData.accountNumber && (
-              <p className="text-xs text-green-600 mt-1">
-                ✓ Complete banking setup will be automatically secured in a moment...
-              </p>
-            )}
           </div>
         )}
       </CardContent>
