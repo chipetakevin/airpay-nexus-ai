@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -16,6 +15,7 @@ const MobileCustomerLanding = () => {
   const { currentUser, isAuthenticated } = useMobileAuth();
   const [isAccountExpanded, setIsAccountExpanded] = useState(false);
   const [showPhoneNumber, setShowPhoneNumber] = useState(false);
+  const [isFeaturesExpanded, setIsFeaturesExpanded] = useState(false);
 
   if (!isAuthenticated || !currentUser) {
     return null;
@@ -27,6 +27,10 @@ const MobileCustomerLanding = () => {
 
   const togglePhoneVisibility = () => {
     setShowPhoneNumber(!showPhoneNumber);
+  };
+
+  const toggleFeaturesExpanded = () => {
+    setIsFeaturesExpanded(!isFeaturesExpanded);
   };
 
   const quickShopActions = [
@@ -245,44 +249,64 @@ const MobileCustomerLanding = () => {
         </div>
       </div>
 
-      {/* Exclusive Features */}
-      <div className="space-y-4">
-        <h3 className="text-lg font-semibold text-gray-900">Why Choose Smart Deals Shopping?</h3>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          {[
-            {
-              icon: <Shield className="w-5 h-5 text-green-600" />,
-              title: 'Secure Smart Shopping',
-              description: 'Bank-grade security for all transactions'
-            },
-            {
-              icon: <Clock className="w-5 h-5 text-blue-600" />,
-              title: 'Instant Delivery',
-              description: 'Airtime loaded within 30 seconds'
-            },
-            {
-              icon: <Star className="w-5 h-5 text-yellow-600" />,
-              title: 'VIP Customer Benefits',
-              description: 'Exclusive deals and cashback rewards'
-            },
-            {
-              icon: <Users className="w-5 h-5 text-purple-600" />,
-              title: '24/7 Smart Support',
-              description: 'Always available intelligent assistance'
-            }
-          ].map((feature, index) => (
-            <div key={index} className="flex items-start gap-3 p-4 bg-white rounded-lg border border-gray-200 hover:border-blue-200 transition-colors">
-              <div className="p-2 bg-gray-50 rounded-lg">
-                {feature.icon}
-              </div>
-              <div>
-                <h4 className="font-semibold text-gray-900 text-sm mb-1">{feature.title}</h4>
-                <p className="text-gray-600 text-xs">{feature.description}</p>
-              </div>
+      {/* Collapsible Exclusive Features */}
+      <Card className="bg-gradient-to-r from-purple-50 to-blue-50 border border-purple-200">
+        <CardHeader 
+          className="cursor-pointer hover:bg-purple-50/50 transition-colors"
+          onClick={toggleFeaturesExpanded}
+        >
+          <CardTitle className="flex items-center justify-between text-gray-900">
+            <div className="flex items-center gap-2">
+              <Star className="w-5 h-5 text-purple-600" />
+              Why Choose Smart Deals Shopping?
             </div>
-          ))}
-        </div>
-      </div>
+            {isFeaturesExpanded ? (
+              <ChevronUp className="w-5 h-5 text-gray-400" />
+            ) : (
+              <ChevronDown className="w-5 h-5 text-gray-400" />
+            )}
+          </CardTitle>
+        </CardHeader>
+        
+        {isFeaturesExpanded && (
+          <CardContent className="space-y-4 animate-fade-in">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {[
+                {
+                  icon: <Shield className="w-5 h-5 text-green-600" />,
+                  title: 'Secure Smart Shopping',
+                  description: 'Bank-grade security for all transactions'
+                },
+                {
+                  icon: <Clock className="w-5 h-5 text-blue-600" />,
+                  title: 'Instant Delivery',
+                  description: 'Airtime loaded within 30 seconds'
+                },
+                {
+                  icon: <Star className="w-5 h-5 text-yellow-600" />,
+                  title: 'VIP Customer Benefits',
+                  description: 'Exclusive deals and cashback rewards'
+                },
+                {
+                  icon: <Users className="w-5 h-5 text-purple-600" />,
+                  title: '24/7 Smart Support',
+                  description: 'Always available intelligent assistance'
+                }
+              ].map((feature, index) => (
+                <div key={index} className="flex items-start gap-3 p-4 bg-white rounded-lg border border-gray-200 hover:border-blue-200 transition-colors">
+                  <div className="p-2 bg-gray-50 rounded-lg">
+                    {feature.icon}
+                  </div>
+                  <div>
+                    <h4 className="font-semibold text-gray-900 text-sm mb-1">{feature.title}</h4>
+                    <p className="text-gray-600 text-xs">{feature.description}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        )}
+      </Card>
     </div>
   );
 };
