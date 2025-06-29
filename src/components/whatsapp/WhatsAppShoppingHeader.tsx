@@ -8,6 +8,11 @@ interface WhatsAppShoppingHeaderProps {
 }
 
 const WhatsAppShoppingHeader: React.FC<WhatsAppShoppingHeaderProps> = ({ onExit }) => {
+  const handleExit = () => {
+    // Always redirect to home page
+    window.location.href = '/';
+  };
+
   return (
     <div className="bg-green-600 text-white p-3 flex items-center justify-between">
       <div className="flex items-center gap-2">
@@ -15,11 +20,11 @@ const WhatsAppShoppingHeader: React.FC<WhatsAppShoppingHeaderProps> = ({ onExit 
         <h2 className="text-lg font-semibold">WhatsApp Shopping</h2>
       </div>
       <Button
-        onClick={onExit}
+        onClick={handleExit}
         variant="ghost"
         size="sm"
         className="w-8 h-8 p-0 rounded-full bg-white/10 hover:bg-white/20 transition-all duration-200"
-        title="Exit to AI Deals"
+        title="Exit to Home"
       >
         <X className="w-4 h-4 text-white" />
       </Button>

@@ -30,6 +30,12 @@ const Index = () => {
     setIsQuickShopOpen(!isQuickShopOpen);
   };
 
+  const handleQuickShopExit = () => {
+    setIsQuickShopOpen(false);
+    // Seamlessly redirect to home page
+    window.location.href = '/';
+  };
+
   return (
     <MobileLayout showTopNav={false} showBottomNav={true}>
       <div className="min-h-screen bg-white">
@@ -66,8 +72,9 @@ const Index = () => {
                   <Button
                     variant="outline"
                     size="sm"
-                    onClick={toggleQuickShop}
+                    onClick={handleQuickShopExit}
                     className="ml-4 hover:bg-red-50 hover:border-red-300"
+                    title="Exit to Home"
                   >
                     <X className="w-4 h-4" />
                   </Button>
