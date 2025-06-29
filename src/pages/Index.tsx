@@ -1,4 +1,6 @@
+
 import React from 'react';
+import { MessageCircle } from 'lucide-react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import HeroSection from '@/components/HeroSection';
