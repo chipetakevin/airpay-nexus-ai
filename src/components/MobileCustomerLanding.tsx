@@ -7,7 +7,7 @@ import {
   MessageCircle, Zap, CreditCard, Gift, TrendingUp, 
   Star, Smartphone, Shield, Clock, CheckCircle,
   ArrowRight, Sparkles, Users, ChevronDown, ChevronUp,
-  Phone, Eye, EyeOff
+  Phone, Eye, EyeOff, Activity
 } from 'lucide-react';
 import { useMobileAuth } from '@/hooks/useMobileAuth';
 import { Link } from 'react-router-dom';
@@ -107,6 +107,39 @@ const MobileCustomerLanding = () => {
                   )}
                 </div>
                 <p className="text-xs text-blue-600">Click to {showPhoneNumber ? 'hide' : 'reveal'}</p>
+              </div>
+            </div>
+
+            {/* Platform Statistics */}
+            <div className="space-y-3">
+              <h4 className="text-sm font-semibold text-gray-700 flex items-center gap-2">
+                <Activity className="w-4 h-4" />
+                Platform Statistics
+              </h4>
+              <div className="grid grid-cols-1 gap-3">
+                {/* Happy Customers */}
+                <div className="bg-gradient-to-r from-purple-500/10 to-blue-500/10 rounded-xl p-4 border border-purple-200">
+                  <div className="text-center">
+                    <div className="text-2xl font-bold text-yellow-600 mb-1">50K+</div>
+                    <div className="text-sm text-gray-600">Happy Customers</div>
+                  </div>
+                </div>
+                
+                {/* Rewards Earned */}
+                <div className="bg-gradient-to-r from-green-500/10 to-emerald-500/10 rounded-xl p-4 border border-green-200">
+                  <div className="text-center">
+                    <div className="text-2xl font-bold text-green-600 mb-1">R2.5M+</div>
+                    <div className="text-sm text-gray-600">Rewards Earned</div>
+                  </div>
+                </div>
+                
+                {/* Uptime */}
+                <div className="bg-gradient-to-r from-purple-500/10 to-pink-500/10 rounded-xl p-4 border border-purple-200">
+                  <div className="text-center">
+                    <div className="text-2xl font-bold text-purple-600 mb-1">99.9%</div>
+                    <div className="text-sm text-gray-600">Uptime</div>
+                  </div>
+                </div>
               </div>
             </div>
 
