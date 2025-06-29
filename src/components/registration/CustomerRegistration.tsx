@@ -1,341 +1,345 @@
+
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
-import { 
-  User, Clock, Shield, ChevronDown, ChevronUp, 
-  CheckCircle, AlertCircle, Smartphone, CreditCard 
-} from 'lucide-react';
-import { useCustomerRegistration } from '@/hooks/useCustomerRegistration';
 import { useToast } from '@/hooks/use-toast';
+import { useCustomerRegistration } from '@/hooks/useCustomerRegistration';
+import { User, Phone, Mail, Shield, CheckCircle } from 'lucide-react';
+import EnhancedSouthAfricanBankAutocomplete from '@/components/banking/EnhancedSouthAfricanBankAutocomplete';
+import UniversalCardDetailsForm from '@/components/banking/UniversalCardDetailsForm';
+import { useUniversalBankingStorage } from '@/hooks/useUniversalBankingStorage';
 
 const CustomerRegistration = () => {
-  const [isFormCollapsed, setIsFormCollapsed] = useState(false);
-  const [existingRegistration, setExistingRegistration] = useState(null);
   const { toast } = useToast();
   const { formData, errors, handleInputChange, handleSubmit } = useCustomerRegistration();
+  const [showBankingSection, setShowBankingSection] = useState(false);
+  const [showCardSection, setShowCardSection] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  
+  const { bankingData, saveBankingProfile } = useUniversalBankingStorage('customer');
 
+  // Auto-show banking section if customer wants to add banking info
   useEffect(() => {
-    // Check for existing customer registration
-    const checkExistingRegistration = () => {
-      const credentials = localStorage.getItem('userCredentials');
-      const userData = localStorage.getItem('onecardUser');
-      
-      if (credentials && userData) {
-        try {
-          const parsedCredentials = JSON.parse(credentials);
-          const parsedUserData = JSON.parse(userData);
-          
-          if (parsedCredentials.userType === 'customer' && parsedUserData.firstName) {
-            setExistingRegistration({
-              firstName: parsedUserData.firstName,
-              lastName: parsedUserData.lastName,
-              email: parsedUserData.email,
-              cardNumber: parsedUserData.cardNumber,
-              registrationDate: parsedUserData.registrationDate || new Date().toISOString()
-            });
-            setIsFormCollapsed(true);
-          }
-        } catch (error) {
-          console.error('Error checking existing registration:', error);
-        }
+    if (formData.agreeTerms && formData.firstName && formData.lastName) {
+      setShowBankingSection(true);
+    }
+  }, [formData.agreeTerms, formData.firstName, formData.lastName]);
+
+  const handleBankSelect = async (bankName: string, routing: string, branchCode: string, bankDetails?: any) => {
+    handleInputChange('bankName', bankName);
+    handleInputChange('branchCode', branchCode);
+    handleInputChange('routingNumber', routing);
+
+    // Auto-save banking profile
+    if (bankName && branchCode) {
+      try {
+        await saveBankingProfile({
+          bankName,
+          branchCode,
+          routingNumber: routing,
+          accountNumber: formData.accountNumber || '',
+          accountType: 'savings',
+          isPrimary: true
+        });
+      } catch (error) {
+        console.error('Error auto-saving banking profile:', error);
       }
-    };
-
-    checkExistingRegistration();
-  }, []);
-
-  const handleNewRegistration = () => {
-    setIsFormCollapsed(false);
-    setExistingRegistration(null);
-    toast({
-      title: "New Registration",
-      description: "Starting fresh customer registration process.",
-    });
+    }
   };
 
-  const handleFormToggle = () => {
-    setIsFormCollapsed(!isFormCollapsed);
+  const handlePhoneChange = (value: string) => {
+    // Format South African phone number
+    let cleanValue = value.replace(/\D/g, '');
+    
+    if (cleanValue.startsWith('0')) {
+      cleanValue = cleanValue.substring(1);
+    }
+    
+    if (cleanValue.length > 9) {
+      cleanValue = cleanValue.substring(0, 9);
+    }
+    
+    handleInputChange('phoneNumber', cleanValue);
   };
 
-  if (existingRegistration && isFormCollapsed) {
-    return (
-      <div className="max-w-2xl mx-auto space-y-4">
-        {/* Existing Registration Summary */}
-        <Card className="border-green-200 bg-green-50">
-          <CardHeader className="pb-3">
-            <div className="flex items-center justify-between">
-              <CardTitle className="text-lg flex items-center gap-2 text-green-800">
-                <CheckCircle className="w-5 h-5" />
-                Customer Registration Complete
-              </CardTitle>
-              <Badge className="bg-green-100 text-green-700">
-                <CreditCard className="w-3 h-3 mr-1" />
-                Active
-              </Badge>
-            </div>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label className="text-xs text-gray-600">Customer Name</Label>
-                <p className="font-semibold text-gray-900">
-                  {existingRegistration.firstName} {existingRegistration.lastName}
-                </p>
-              </div>
-              <div className="space-y-2">
-                <Label className="text-xs text-gray-600">OneCard Number</Label>
-                <p className="font-mono text-sm text-blue-600 font-semibold">
-                  {existingRegistration.cardNumber}
-                </p>
-              </div>
-              <div className="space-y-2">
-                <Label className="text-xs text-gray-600">Email Address</Label>
-                <p className="text-sm text-gray-700">
-                  {existingRegistration.email}
-                </p>
-              </div>
-              <div className="space-y-2">
-                <Label className="text-xs text-gray-600">Registration Date</Label>
-                <p className="text-sm text-gray-700">
-                  {new Date(existingRegistration.registrationDate).toLocaleDateString()}
-                </p>
-              </div>
-            </div>
-
-            <div className="flex flex-col sm:flex-row gap-2 pt-4 border-t border-green-200">
-              <Button
-                onClick={handleFormToggle}
-                variant="outline"
-                className="flex items-center gap-2 border-green-300 text-green-700 hover:bg-green-100"
-              >
-                <ChevronDown className="w-4 h-4" />
-                Edit Registration Details
-              </Button>
-              <Button
-                onClick={handleNewRegistration}
-                variant="outline"
-                className="flex items-center gap-2 border-blue-300 text-blue-700 hover:bg-blue-100"
-              >
-                <User className="w-4 h-4" />
-                Register New Customer
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-    );
-  }
+  const handleFormSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    
+    try {
+      await handleSubmit(e);
+    } catch (error) {
+      console.error('Registration error:', error);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   return (
-    <div className="max-w-2xl mx-auto space-y-4">
+    <div className="max-w-2xl mx-auto space-y-6 p-4">
       {/* Header */}
-      <Card className="border-blue-200 bg-blue-50">
-        <CardHeader className="pb-3">
-          <div className="flex items-center justify-between">
-            <CardTitle className="text-lg flex items-center gap-2 text-blue-800">
-              <User className="w-5 h-5" />
-              Customer Registration
-            </CardTitle>
-            {existingRegistration && (
-              <Button
-                onClick={handleFormToggle}
-                variant="ghost"
-                size="sm"
-                className="text-blue-600 hover:text-blue-800"
-              >
-                <ChevronUp className="w-4 h-4" />
-                Collapse Form
-              </Button>
-            )}
-          </div>
-          <p className="text-sm text-blue-700">
-            Create your OneCard account with persistent login
+      <Card className="border-blue-200 bg-blue-50/30">
+        <CardHeader className="text-center pb-3">
+          <CardTitle className="text-2xl flex items-center justify-center gap-2 text-blue-800">
+            <User className="w-6 h-6" />
+            Customer Registration
+          </CardTitle>
+          <p className="text-blue-600">
+            Join Addex-Hub Mobile for exclusive deals and secure payments
           </p>
         </CardHeader>
       </Card>
 
-      {/* Device Registration Notice */}
-      <Card className="border-green-200 bg-green-50">
-        <CardContent className="p-4">
-          <div className="flex items-start gap-3">
-            <Clock className="w-5 h-5 text-green-600 mt-0.5 flex-shrink-0" />
-            <div>
-              <h3 className="font-semibold text-green-800 mb-1">Device Registration</h3>
-              <p className="text-sm text-green-700">
-                Your profile will be permanently saved on this device for seamless future access and 24-hour persistent login.
-              </p>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Registration Form */}
-      <Card>
-        <CardContent className="p-6">
-          <form onSubmit={handleSubmit} className="space-y-6">
-            {/* Personal Information */}
-            <div className="space-y-4">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="firstName">First Name *</Label>
-                  <Input
-                    id="firstName"
-                    value={formData.firstName}
-                    onChange={(e) => handleInputChange('firstName', e.target.value)}
-                    className={errors.firstName ? 'border-red-500' : ''}
-                    placeholder="John"
-                  />
-                  {errors.firstName && (
-                    <p className="text-red-500 text-sm flex items-center gap-1">
-                      <AlertCircle className="w-3 h-3" />
-                      {errors.firstName}
-                    </p>
-                  )}
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="lastName">Last Name *</Label>
-                  <Input
-                    id="lastName"
-                    value={formData.lastName}
-                    onChange={(e) => handleInputChange('lastName', e.target.value)}
-                    className={errors.lastName ? 'border-red-500' : ''}
-                    placeholder="Doe"
-                  />
-                  {errors.lastName && (
-                    <p className="text-red-500 text-sm flex items-center gap-1">
-                      <AlertCircle className="w-3 h-3" />
-                      {errors.lastName}
-                    </p>
-                  )}
-                </div>
+      <form onSubmit={handleFormSubmit} className="space-y-6">
+        {/* Personal Information */}
+        <Card className="border-gray-200">
+          <CardHeader className="pb-3">
+            <CardTitle className="text-lg flex items-center gap-2">
+              <User className="w-5 h-5" />
+              Personal Information
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="firstName">First Name *</Label>
+                <Input
+                  id="firstName"
+                  value={formData.firstName}
+                  onChange={(e) => handleInputChange('firstName', e.target.value)}
+                  placeholder="Enter your first name"
+                  className={errors.firstName ? 'border-red-500' : ''}
+                />
+                {errors.firstName && <p className="text-red-500 text-sm">{errors.firstName}</p>}
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="email">Email Address *</Label>
+                <Label htmlFor="lastName">Last Name *</Label>
+                <Input
+                  id="lastName"
+                  value={formData.lastName}
+                  onChange={(e) => handleInputChange('lastName', e.target.value)}
+                  placeholder="Enter your last name"
+                  className={errors.lastName ? 'border-red-500' : ''}
+                />
+                {errors.lastName && <p className="text-red-500 text-sm">{errors.lastName}</p>}
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="email">Email Address *</Label>
+              <div className="relative">
+                <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
                 <Input
                   id="email"
                   type="email"
                   value={formData.email}
                   onChange={(e) => handleInputChange('email', e.target.value)}
-                  className={errors.email ? 'border-red-500' : ''}
-                  placeholder="john@example.com"
+                  placeholder="your.email@example.com"
+                  className={`pl-10 ${errors.email ? 'border-red-500' : ''}`}
                 />
-                {errors.email && (
-                  <p className="text-red-500 text-sm flex items-center gap-1">
-                    <AlertCircle className="w-3 h-3" />
-                    {errors.email}
-                  </p>
-                )}
-                <p className="text-xs text-gray-600 flex items-center gap-1">
-                  <Shield className="w-3 h-3" />
-                  Used for password reset via OTP
-                </p>
               </div>
+              {errors.email && <p className="text-red-500 text-sm">{errors.email}</p>}
+            </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="phoneNumber">Phone Number *</Label>
-                <div className="flex space-x-2">
-                  <Input
-                    value={formData.countryCode}
-                    className="w-20"
-                    readOnly
-                  />
+            <div className="space-y-2">
+              <Label htmlFor="phoneNumber">Mobile Number *</Label>
+              <div className="flex gap-2">
+                <Select value={formData.countryCode} onValueChange={(value) => handleInputChange('countryCode', value)}>
+                  <SelectTrigger className="w-24">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="+27">🇿🇦 +27</SelectItem>
+                  </SelectContent>
+                </Select>
+                <div className="relative flex-1">
+                  <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
                   <Input
                     id="phoneNumber"
                     value={formData.phoneNumber}
-                    onChange={(e) => handleInputChange('phoneNumber', e.target.value)}
-                    placeholder="123 456 789"
-                    className={`flex-1 ${errors.phoneNumber ? 'border-red-500' : ''}`}
-                  />
-                </div>
-                {errors.phoneNumber && (
-                  <p className="text-red-500 text-sm flex items-center gap-1">
-                    <AlertCircle className="w-3 h-3" />
-                    {errors.phoneNumber}
-                  </p>
-                )}
-              </div>
-            </div>
-
-            {/* Banking Information (Optional) */}
-            <div className="space-y-4 pt-6 border-t border-gray-200">
-              <h3 className="font-semibold text-gray-900 flex items-center gap-2">
-                <CreditCard className="w-4 h-4" />
-                Banking Information (Optional)
-              </h3>
-              
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="bankName">Bank Name</Label>
-                  <Input
-                    id="bankName"
-                    value={formData.bankName}
-                    onChange={(e) => handleInputChange('bankName', e.target.value)}
-                    placeholder="Select your bank"
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="accountNumber">Account Number</Label>
-                  <Input
-                    id="accountNumber"
-                    value={formData.accountNumber}
-                    onChange={(e) => handleInputChange('accountNumber', e.target.value)}
-                    placeholder="Account number"
+                    onChange={(e) => handlePhoneChange(e.target.value)}
+                    placeholder="812345678"
+                    className={`pl-10 ${errors.phoneNumber ? 'border-red-500' : ''}`}
+                    maxLength={9}
                   />
                 </div>
               </div>
-            </div>
-
-            {/* Terms and Conditions */}
-            <div className="space-y-4 pt-6 border-t border-gray-200">
-              <div className="flex items-start space-x-2">
-                <Checkbox
-                  id="agreeTerms"
-                  checked={formData.agreeTerms}
-                  onCheckedChange={(checked) => handleInputChange('agreeTerms', checked)}
-                />
-                <Label htmlFor="agreeTerms" className="text-sm leading-relaxed">
-                  I agree to the Terms of Service and Privacy Policy *
-                </Label>
-              </div>
-              {errors.agreeTerms && (
-                <p className="text-red-500 text-sm flex items-center gap-1">
-                  <AlertCircle className="w-3 h-3" />
-                  {errors.agreeTerms}
+              {errors.phoneNumber && <p className="text-red-500 text-sm">{errors.phoneNumber}</p>}
+              {formData.phoneNumber && formData.phoneNumber.length === 9 && (
+                <p className="text-green-600 text-sm flex items-center gap-1">
+                  <CheckCircle className="w-3 h-3" />
+                  Valid South African mobile number: +27{formData.phoneNumber}
                 </p>
               )}
-
-              <div className="flex items-start space-x-2">
-                <Checkbox
-                  id="marketingConsent"
-                  checked={formData.marketingConsent}
-                  onCheckedChange={(checked) => handleInputChange('marketingConsent', checked)}
-                />
-                <Label htmlFor="marketingConsent" className="text-sm leading-relaxed">
-                  I consent to receiving marketing communications and promotional offers
-                </Label>
-              </div>
             </div>
+          </CardContent>
+        </Card>
 
-            {/* Submit Button */}
-            <div className="pt-6">
+        {/* Banking Information */}
+        {showBankingSection && (
+          <Card className="border-green-200 bg-green-50/30">
+            <CardHeader className="pb-3">
+              <CardTitle className="text-lg flex items-center justify-between gap-2 text-green-800">
+                <div className="flex items-center gap-2">
+                  <Shield className="w-5 h-5" />
+                  Banking Information (Optional)
+                </div>
+                <Badge className="bg-green-100 text-green-700">Auto-Saved</Badge>
+              </CardTitle>
+              <p className="text-sm text-green-600">
+                Add your banking details for seamless transactions and payments
+              </p>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <EnhancedSouthAfricanBankAutocomplete
+                onBankSelect={handleBankSelect}
+                error={errors.bankName}
+                defaultValue={formData.bankName}
+              />
+
+              <div className="space-y-2">
+                <Label htmlFor="accountNumber">Account Number</Label>
+                <Input
+                  id="accountNumber"
+                  value={formData.accountNumber}
+                  onChange={(e) => handleInputChange('accountNumber', e.target.value)}
+                  placeholder="Enter your account number"
+                  className={errors.accountNumber ? 'border-red-500' : ''}
+                />
+                {errors.accountNumber && <p className="text-red-500 text-sm">{errors.accountNumber}</p>}
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="branchCode">Branch Code</Label>
+                <Input
+                  id="branchCode"
+                  value={formData.branchCode}
+                  placeholder="Auto-filled from bank selection"
+                  readOnly
+                  className="bg-gray-50"
+                />
+                <p className="text-xs text-green-600">
+                  ℹ️ Branch code automatically detected from your bank selection
+                </p>
+              </div>
+
+              {bankingData?.bankingProfiles && bankingData.bankingProfiles.length > 0 && (
+                <div className="bg-white p-3 rounded-lg border border-green-200">
+                  <div className="flex items-center gap-2 mb-2">
+                    <CheckCircle className="w-4 h-4 text-green-600" />
+                    <span className="text-sm font-medium text-green-800">
+                      Banking Information Saved
+                    </span>
+                  </div>
+                  <p className="text-xs text-green-700">
+                    Your banking details are permanently saved and will be available for all future transactions.
+                  </p>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        )}
+
+        {/* Card Details Section */}
+        {showBankingSection && (
+          <div>
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-lg font-medium">Payment Card Details (Optional)</h3>
               <Button
-                type="submit"
-                className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300"
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={() => setShowCardSection(!showCardSection)}
               >
-                <Smartphone className="w-4 h-4 mr-2" />
-                Create OneCard Account
+                {showCardSection ? 'Hide' : 'Add'} Card Details
               </Button>
             </div>
-          </form>
-        </CardContent>
-      </Card>
+            
+            {showCardSection && (
+              <UniversalCardDetailsForm
+                userType="customer"
+                onCardSaved={(card) => {
+                  toast({
+                    title: "Card Added Successfully! 💳",
+                    description: `Your ${card.cardType.toUpperCase()} ending in ${card.lastFourDigits} has been saved securely.`,
+                  });
+                }}
+              />
+            )}
+          </div>
+        )}
+
+        {/* Terms and Conditions */}
+        <Card className="border-gray-200">
+          <CardContent className="p-4 space-y-4">
+            <div className="flex items-start space-x-2">
+              <Checkbox
+                id="agreeTerms"
+                checked={formData.agreeTerms}
+                onCheckedChange={(checked) => handleInputChange('agreeTerms', checked)}
+                className="mt-1"
+              />
+              <div className="space-y-1">
+                <Label htmlFor="agreeTerms" className="text-sm cursor-pointer">
+                  I agree to the Terms of Service and Privacy Policy *
+                </Label>
+                <p className="text-xs text-gray-600">
+                  By checking this box, you agree to our terms and allow us to securely store your information for seamless future transactions.
+                </p>
+              </div>
+            </div>
+            {errors.agreeTerms && <p className="text-red-500 text-sm">{errors.agreeTerms}</p>}
+
+            <div className="flex items-start space-x-2">
+              <Checkbox
+                id="marketingConsent"
+                checked={formData.marketingConsent}
+                onCheckedChange={(checked) => handleInputChange('marketingConsent', checked)}
+                className="mt-1"
+              />
+              <Label htmlFor="marketingConsent" className="text-sm cursor-pointer">
+                I would like to receive promotional offers and updates about exclusive deals
+              </Label>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Submit Button */}
+        <Card className="border-blue-200 bg-blue-50/30">
+          <CardContent className="p-4">
+            <Button
+              type="submit"
+              disabled={isSubmitting}
+              className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3"
+            >
+              {isSubmitting ? (
+                <>
+                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
+                  Creating Your Account...
+                </>
+              ) : (
+                <>
+                  <User className="w-4 h-4 mr-2" />
+                  Create Customer Account
+                </>
+              )}
+            </Button>
+            
+            {formData.agreeTerms && (
+              <p className="text-xs text-blue-600 text-center mt-2">
+                <Shield className="w-3 h-3 inline mr-1" />
+                Your information will be permanently saved for future convenience and security
+              </p>
+            )}
+          </CardContent>
+        </Card>
+      </form>
     </div>
   );
 };
