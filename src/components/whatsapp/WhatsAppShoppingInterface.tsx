@@ -1,13 +1,10 @@
-
 import React, { useState } from 'react';
-import { CreditCard } from 'lucide-react';
 import { useMobileAuth } from '@/hooks/useMobileAuth';
-import { useLocation } from 'react-router-dom';
 import WhatsAppShoppingHeader from './WhatsAppShoppingHeader';
 import WhatsAppTabNavigation from './WhatsAppTabNavigation';
 import WhatsAppCategoryGrid from './WhatsAppCategoryGrid';  
 import WhatsAppProductsList from './WhatsAppProductsList';
-import WhatsAppBottomNavigation from './WhatsAppBottomNavigation';
+import { CreditCard } from 'lucide-react';
 
 interface Product {
   id: number;
@@ -25,14 +22,12 @@ interface CartItem extends Product {
 }
 
 const WhatsAppShoppingInterface = () => {
-  const { currentUser, isAuthenticated } = useMobileAuth();
-  const location = useLocation();
+  const { isAuthenticated } = useMobileAuth();
   const [activeTab, setActiveTab] = useState('shop');
   const [activeCategory, setActiveCategory] = useState('airtime');
   const [cart, setCart] = useState<CartItem[]>([]);
 
   const handleExitToDeals = () => {
-    // Intelligent exit to AI-Powered Deals page
     window.location.href = '/ai-powered-deals';
   };
 
@@ -91,7 +86,6 @@ const WhatsAppShoppingInterface = () => {
         activeCategory={activeCategory} 
         onAddToCart={addToCart} 
       />
-      <WhatsAppBottomNavigation />
     </div>
   );
 };

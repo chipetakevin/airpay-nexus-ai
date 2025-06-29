@@ -1,6 +1,4 @@
-
 import React, { useState, useEffect } from 'react';
-import { Button } from '@/components/ui/button';
 import { useMobileAuth } from '@/hooks/useMobileAuth';
 import { useMobileProductData } from '@/hooks/useMobileProductData';
 import EnhancedPaymentProcessor from './EnhancedPaymentProcessor';
@@ -78,78 +76,72 @@ const MobileOptimizedShoppingInterface = () => {
 
   const getCartCount = () => cart.reduce((sum, item) => sum + item.quantity, 0);
 
-  if (showPayment) {
-    return (
-      <div className="max-w-md mx-auto bg-white rounded-3xl overflow-hidden shadow-2xl border-4 border-green-100">
+  return (
+    <div className="max-w-md mx-auto bg-white rounded-3xl overflow-hidden shadow-2xl border-4 border-green-100">
+      {showPayment ? (
         <EnhancedPaymentProcessor 
           product={selectedProduct}
           cartItems={selectedProduct ? [{ ...selectedProduct, quantity: 1 }] : cart}
           onBack={() => setShowPayment(false)}
         />
-      </div>
-    );
-  }
+      ) : (
+        <>
+          <MobileShoppingHeader 
+            isAuthenticated={isAuthenticated}
+            onExit={handleExitToDeals}
+          />
 
-  return (
-    <div className="max-w-md mx-auto bg-white rounded-3xl overflow-hidden shadow-2xl border-4 border-green-100">
-      <MobileShoppingHeader 
-        isAuthenticated={isAuthenticated}
-        onExit={handleExitToDeals}
-      />
+          <MobileTabNavigation 
+            activeTab={activeTab}
+            cartCount={getCartCount()}
+            onTabChange={setActiveTab}
+          />
 
-      <MobileTabNavigation 
-        activeTab={activeTab}
-        cartCount={getCartCount()}
-        onTabChange={setActiveTab}
-      />
-
-      {/* Tab Content */}
-      <div className="max-h-[70vh] overflow-y-auto bg-gray-50">
-        {activeTab !== 'cart' && (
-          <div className="p-4 space-y-6">
-            {/* Header for current tab */}
-            <div className="text-center">
-              <div className="text-5xl mb-3">
-                {activeTab === 'featured' ? '⭐' : activeTab === 'airtime' ? '📞' : '📊'}
+          <div className="max-h-[70vh] overflow-y-auto bg-gray-50">
+            {activeTab !== 'cart' && (
+              <div className="p-4 space-y-6">
+                <div className="text-center">
+                  <div className="text-5xl mb-3">
+                    {activeTab === 'featured' ? '⭐' : activeTab === 'airtime' ? '📞' : '📊'}
+                  </div>
+                  <h2 className="text-2xl font-bold text-gray-900 mb-2">
+                    {activeTab === 'featured' ? 'Featured Deals' : 
+                     activeTab === 'airtime' ? 'Airtime Top-ups' : 'Data Bundles'}
+                  </h2>
+                  <p className="text-gray-600 text-sm px-4">
+                    {activeTab === 'featured' ? 'Best value mobile services for you' :
+                     activeTab === 'airtime' ? 'Quick airtime top-ups for all networks' :
+                     'High-speed data bundles with great value'}
+                  </p>
+                </div>
+                
+                <div className="space-y-4">
+                  {getProductsByCategory(activeTab).map((product) => (
+                    <MobileProductCard 
+                      key={product.id} 
+                      product={product}
+                      onAddToCart={addToCart}
+                      onQuickCheckout={quickCheckout}
+                    />
+                  ))}
+                </div>
               </div>
-              <h2 className="text-2xl font-bold text-gray-900 mb-2">
-                {activeTab === 'featured' ? 'Featured Deals' : 
-                 activeTab === 'airtime' ? 'Airtime Top-ups' : 'Data Bundles'}
-              </h2>
-              <p className="text-gray-600 text-sm px-4">
-                {activeTab === 'featured' ? 'Best value mobile services for you' :
-                 activeTab === 'airtime' ? 'Quick airtime top-ups for all networks' :
-                 'High-speed data bundles with great value'}
-              </p>
-            </div>
-            
-            {/* Products Grid */}
-            <div className="space-y-4">
-              {getProductsByCategory(activeTab).map((product) => (
-                <MobileProductCard 
-                  key={product.id} 
-                  product={product}
-                  onAddToCart={addToCart}
-                  onQuickCheckout={quickCheckout}
-                />
-              ))}
-            </div>
-          </div>
-        )}
+            )}
 
-        {/* Cart Tab */}
-        {activeTab === 'cart' && (
-          <div className="p-4">
-            <MobileCart 
-              cart={cart}
-              cartTotal={cartTotal}
-              onQuantityUpdate={updateQuantity}
-              onCheckout={() => setShowPayment(true)}
-              onBrowseServices={() => setActiveTab('featured')}
-            />
+            {activeTab === 'cart' && (
+              <div className="p-4">
+                <MobileCart 
+                  cart={cart}
+                  cartTotal={cartTotal}
+                  onQuantityUpdate={updateQuantity}
+                  onCheckout={() => setShowPayment(true)}
+                  onBrowseServices={() => setActiveTab('featured')}
+                />
+              </div>
+            )}
           </div>
-        )}
-      </div>
+        </>
+      )}
     </div>
   );
 };
