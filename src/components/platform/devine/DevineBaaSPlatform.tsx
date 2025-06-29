@@ -9,7 +9,7 @@ import {
   MessageCircle, CreditCard, Wifi, Phone
 } from 'lucide-react';
 
-const DivineBaaSPlatform = () => {
+const DivinelyBaaSPlatform = () => {
   const features = [
     {
       icon: <Zap className="w-8 h-8 text-blue-600" />,
@@ -32,149 +32,144 @@ const DivineBaaSPlatform = () => {
   ];
 
   const stats = [
-    { label: "Success Rate", value: "99.7%", icon: <CheckCircle className="w-4 h-4" /> },
-    { label: "Avg Processing", value: "5 Min", icon: <Clock className="w-4 h-4" /> },
-    { label: "Active Users", value: "50K+", icon: <Users className="w-4 h-4" /> },
-    { label: "Monthly Growth", value: "45%", icon: <BarChart3 className="w-4 h-4" /> }
+    { label: "Success Rate", value: "99.7%", icon: <CheckCircle className="w-5 h-5" /> },
+    { label: "Avg Processing", value: "5 Min", icon: <Clock className="w-5 h-5" /> },
+    { label: "Active Users", value: "50K+", icon: <Users className="w-5 h-5" /> },
+    { label: "Monthly Growth", value: "45%", icon: <BarChart3 className="w-5 h-5" /> }
   ];
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
-      {/* Compact Header */}
-      <div className="bg-white/95 backdrop-blur-sm border-b border-gray-200/50 shadow-sm sticky top-0 z-50">
-        <div className="container mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
-            {/* Logo and Title - Updated */}
-            <div className="flex items-center gap-3">
-              <div className="w-12 h-12 bg-gradient-to-br from-blue-600 to-purple-600 rounded-xl flex items-center justify-center shadow-md">
-                <Smartphone className="w-6 h-6 text-white" />
-              </div>
-              <div>
-                <h1 className="text-xl font-bold text-gray-900">Addex-Hub BaaS Platform</h1>
-                <p className="text-sm text-gray-600">Intelligent Porting & RICA Platform</p>
-              </div>
+      {/* Hero Section */}
+      <div className="container mx-auto px-4 py-16">
+        {/* Header with Logo */}
+        <div className="text-center mb-12">
+          <div className="flex justify-center items-center gap-4 mb-8">
+            <div className="w-16 h-16 bg-gradient-to-br from-blue-600 to-purple-600 rounded-2xl flex items-center justify-center shadow-lg">
+              <Smartphone className="w-10 h-10 text-white" />
             </div>
-
-            {/* Compact Badges */}
-            <div className="flex items-center gap-2">
-              <Badge className="bg-green-100 text-green-800 font-semibold text-xs">
+            <div className="text-left">
+              <h1 className="text-3xl font-bold text-gray-900">
+                Divinely Mobile BaaS
+              </h1>
+              <p className="text-gray-600">Intelligent Porting & RICA Platform</p>
+            </div>
+            <div className="flex gap-2">
+              <Badge className="bg-green-100 text-green-800 font-semibold">
                 <CheckCircle className="w-3 h-3 mr-1" />
                 ICASA Compliant
               </Badge>
-              <Badge className="bg-blue-100 text-blue-800 text-xs">English</Badge>
+              <Badge className="bg-blue-100 text-blue-800">English</Badge>
             </div>
           </div>
 
-          {/* Compact Stats Row */}
-          <div className="grid grid-cols-4 gap-3 mt-4">
-            {stats.map((stat, index) => (
-              <div key={index} className="text-center">
-                <div className="flex justify-center mb-1 text-blue-600">
-                  {stat.icon}
-                </div>
-                <div className="text-lg font-bold text-gray-900">{stat.value}</div>
-                <div className="text-xs text-gray-600">{stat.label}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      {/* Main Content Area - Maximized */}
-      <div className="container mx-auto px-4 py-8">
-        {/* Main Headline - More Compact */}
-        <div className="text-center mb-8">
-          <h2 className="text-3xl md:text-5xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-blue-800 bg-clip-text text-transparent mb-4">
-            Port Your Number in 5 Minutes
-          </h2>
-          
-          <p className="text-base text-gray-600 max-w-3xl mx-auto mb-6">
-            Experience South Africa's most advanced autonomous SIM porting and RICA registration platform. 
-            AI-powered processing with 99.7% accuracy and full ICASA compliance.
-          </p>
-
-          {/* Feature Badges - Inline */}
-          <div className="flex justify-center gap-3 mb-6">
-            <Badge className="bg-green-600 text-white px-3 py-1">
-              <Star className="w-3 h-3 mr-1" />
+          {/* Feature Badges */}
+          <div className="flex flex-wrap justify-center gap-4 mb-8">
+            <Badge className="bg-green-600 text-white px-4 py-2 text-sm">
+              <Star className="w-4 h-4 mr-2" />
               #1 Fastest Porting
             </Badge>
-            <Badge className="bg-blue-600 text-white px-3 py-1">
-              <Zap className="w-3 h-3 mr-1" />
+            <Badge className="bg-blue-600 text-white px-4 py-2 text-sm">
+              <Zap className="w-4 h-4 mr-2" />
               AI-Powered
             </Badge>
           </div>
+
+          {/* Main Headline */}
+          <h2 className="text-4xl md:text-6xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-blue-800 bg-clip-text text-transparent mb-6">
+            Port Your Number in 5 Minutes
+          </h2>
+          
+          <p className="text-lg text-gray-600 max-w-4xl mx-auto mb-8">
+            Experience South Africa's most advanced autonomous SIM porting and RICA registration platform. 
+            AI-powered processing with 99.7% accuracy and full ICASA compliance.
+          </p>
         </div>
 
-        {/* Main Feature Card - Streamlined */}
-        <Card className="bg-gradient-to-r from-green-50 to-blue-50 border-2 border-green-200 shadow-xl mb-8">
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-4">
-                <div className="w-14 h-14 bg-green-600 rounded-xl flex items-center justify-center">
-                  <Zap className="w-7 h-7 text-white" />
+        {/* Stats Grid */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-12">
+          {stats.map((stat, index) => (
+            <Card key={index} className="text-center border-2 hover:border-blue-200 transition-all">
+              <CardContent className="p-6">
+                <div className="flex justify-center mb-2 text-blue-600">
+                  {stat.icon}
                 </div>
-                <div>
-                  <Badge className="bg-yellow-500 text-yellow-900 font-bold mb-2">
-                    <Star className="w-3 h-3 mr-1" />
-                    Most Popular
-                  </Badge>
-                  <h3 className="text-xl font-bold text-gray-900 mb-1">
-                    Port & RICA in 5 Minutes
-                  </h3>
-                  <p className="text-gray-700 text-sm">
-                    Complete SIM porting and RICA registration instantly
-                  </p>
-                </div>
-              </div>
-              <Button className="bg-green-600 hover:bg-green-700 text-white">
-                Start Process
-                <ArrowRight className="w-4 h-4 ml-2" />
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Features Grid - More Compact */}
-        <div className="grid md:grid-cols-3 gap-6 mb-8">
-          {features.map((feature, index) => (
-            <Card key={index} className="hover:shadow-lg transition-all duration-300 border-2 hover:border-blue-200">
-              <CardHeader className="text-center pb-4">
-                <div className="w-12 h-12 mx-auto mb-3 bg-gray-100 rounded-full flex items-center justify-center">
-                  {feature.icon}
-                </div>
-                <Badge className="mb-2 bg-blue-100 text-blue-800 text-xs">{feature.badge}</Badge>
-                <CardTitle className="text-lg">{feature.title}</CardTitle>
-              </CardHeader>
-              <CardContent className="text-center pt-0">
-                <p className="text-gray-600 text-sm">{feature.description}</p>
+                <div className="text-2xl font-bold text-gray-900 mb-1">{stat.value}</div>
+                <div className="text-sm text-gray-600">{stat.label}</div>
               </CardContent>
             </Card>
           ))}
         </div>
 
-        {/* Quick Services - More Compact */}
+        {/* Main Feature Card */}
+        <Card className="bg-gradient-to-r from-green-50 to-blue-50 border-2 border-green-200 shadow-xl mb-12">
+          <CardContent className="p-8">
+            <div className="flex items-start gap-6">
+              <div className="w-16 h-16 bg-green-600 rounded-2xl flex items-center justify-center flex-shrink-0">
+                <Zap className="w-8 h-8 text-white" />
+              </div>
+              <div className="flex-1">
+                <div className="flex items-center gap-2 mb-2">
+                  <Badge className="bg-yellow-500 text-yellow-900 font-bold">
+                    <Star className="w-3 h-3 mr-1" />
+                    Most Popular
+                  </Badge>
+                </div>
+                <h3 className="text-2xl font-bold text-gray-900 mb-2">
+                  Port & RICA in 5 Minutes
+                </h3>
+                <p className="text-gray-700 mb-4">
+                  Complete SIM porting and RICA registration instantly
+                </p>
+                <Button className="bg-green-600 hover:bg-green-700 text-white">
+                  Start Process
+                  <ArrowRight className="w-4 h-4 ml-2" />
+                </Button>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Features Grid */}
+        <div className="grid md:grid-cols-3 gap-8 mb-12">
+          {features.map((feature, index) => (
+            <Card key={index} className="hover:shadow-lg transition-all duration-300 border-2 hover:border-blue-200">
+              <CardHeader className="text-center">
+                <div className="w-16 h-16 mx-auto mb-4 bg-gray-100 rounded-full flex items-center justify-center">
+                  {feature.icon}
+                </div>
+                <Badge className="mb-2 bg-blue-100 text-blue-800">{feature.badge}</Badge>
+                <CardTitle className="text-xl">{feature.title}</CardTitle>
+              </CardHeader>
+              <CardContent className="text-center">
+                <p className="text-gray-600">{feature.description}</p>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+
+        {/* Quick Services */}
         <Card className="bg-white shadow-xl">
-          <CardHeader className="pb-4">
-            <CardTitle className="text-center text-xl">Quick Mobile Services</CardTitle>
+          <CardHeader>
+            <CardTitle className="text-center text-2xl">Quick Mobile Services</CardTitle>
           </CardHeader>
-          <CardContent className="pt-0">
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-              <Button variant="outline" className="h-16 flex flex-col items-center justify-center">
-                <CreditCard className="w-5 h-5 mb-1 text-blue-600" />
-                <span className="text-xs">Airtime</span>
+          <CardContent className="p-6">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              <Button variant="outline" className="h-20 flex flex-col items-center justify-center">
+                <CreditCard className="w-6 h-6 mb-2 text-blue-600" />
+                <span className="text-sm">Airtime</span>
               </Button>
-              <Button variant="outline" className="h-16 flex flex-col items-center justify-center">
-                <Wifi className="w-5 h-5 mb-1 text-green-600" />
-                <span className="text-xs">Data</span>
+              <Button variant="outline" className="h-20 flex flex-col items-center justify-center">
+                <Wifi className="w-6 h-6 mb-2 text-green-600" />
+                <span className="text-sm">Data</span>
               </Button>
-              <Button variant="outline" className="h-16 flex flex-col items-center justify-center">
-                <Phone className="w-5 h-5 mb-1 text-purple-600" />
-                <span className="text-xs">Porting</span>
+              <Button variant="outline" className="h-20 flex flex-col items-center justify-center">
+                <Phone className="w-6 h-6 mb-2 text-purple-600" />
+                <span className="text-sm">Porting</span>
               </Button>
-              <Button variant="outline" className="h-16 flex flex-col items-center justify-center">
-                <MessageCircle className="w-5 h-5 mb-1 text-orange-600" />
-                <span className="text-xs">Support</span>
+              <Button variant="outline" className="h-20 flex flex-col items-center justify-center">
+                <MessageCircle className="w-6 h-6 mb-2 text-orange-600" />
+                <span className="text-sm">Support</span>
               </Button>
             </div>
           </CardContent>
@@ -199,4 +194,4 @@ const DivineBaaSPlatform = () => {
   );
 };
 
-export default DivineBaaSPlatform;
+export default DivinelyBaaSPlatform;

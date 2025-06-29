@@ -1,103 +1,122 @@
 
-import React, { useState, useEffect } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import React, { useState } from 'react';
+import { Card, CardContent } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { MessageCircle, Smartphone, Star, UserPlus } from 'lucide-react';
-import { useMobileAuth } from '@/hooks/useMobileAuth';
-import { useSearchParams } from 'react-router-dom';
 import WhatsAppAssistant from './WhatsAppAssistant';
-import MobileShoppingInterface from '../mobile/MobileShoppingInterface';
+import WhatsAppBusinessPlatform from './WhatsAppBusinessPlatform';
 import WhatsAppHeader from './WhatsAppHeader';
-import WhatsAppQuickActions from './WhatsAppQuickActions';
-import WhatsAppFeatures from './WhatsAppFeatures';
-import WhatsAppRegistration from './WhatsAppRegistration';
+import WhatsAppMetrics from './WhatsAppMetrics';
+import RecentConversations from './RecentConversations';
+import WhatsAppAnalytics from './WhatsAppAnalytics';
+import WhatsAppSettings from './WhatsAppSettings';
+import WhatsAppShoppingTab from './WhatsAppShoppingTab';
 
 const WhatsAppIntegration = () => {
-  const { currentUser, isAuthenticated } = useMobileAuth();
-  const [activeTab, setActiveTab] = useState('assistant');
-  const [showQuickActions, setShowQuickActions] = useState(false);
-  const [searchParams] = useSearchParams();
-
-  useEffect(() => {
-    const startShopping = searchParams.get('start-shopping');
-    const register = searchParams.get('register');
-    
-    if (startShopping === 'true') {
-      setActiveTab('mobile');
-    } else if (register === 'true') {
-      setActiveTab('registration');
-    }
-  }, [searchParams]);
+  const [activeTab, setActiveTab] = useState('shopping');
 
   return (
-    <div className="max-w-4xl mx-auto space-y-4 sm:space-y-6 p-2 sm:p-4">
-      <WhatsAppHeader 
-        isAuthenticated={isAuthenticated} 
-        currentUser={currentUser} 
-      />
+    <div className="space-y-6">
+      {/* Header */}
+      <WhatsAppHeader />
 
+      {/* Metrics Overview */}
+      <WhatsAppMetrics />
+
+      {/* Main Content Tabs - Enhanced Mobile First Design */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <TabsList className="grid w-full grid-cols-2 sm:grid-cols-4 h-auto p-1">
-          <TabsTrigger value="assistant" className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm p-2">
-            <MessageCircle className="w-3 h-3 sm:w-4 sm:h-4" />
-            <span className="hidden sm:inline">WhatsApp AI</span>
-            <span className="sm:hidden">AI</span>
-          </TabsTrigger>
-          <TabsTrigger value="registration" className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm p-2">
-            <UserPlus className="w-3 h-3 sm:w-4 sm:h-4" />
-            <span className="hidden sm:inline">Register</span>
-            <span className="sm:hidden">Sign Up</span>
-          </TabsTrigger>
-          <TabsTrigger value="mobile" className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm p-2">
-            <Smartphone className="w-3 h-3 sm:w-4 sm:h-4" />
-            <span className="hidden sm:inline">Shopping</span>
-            <span className="sm:hidden">Shop</span>
-          </TabsTrigger>
-          <TabsTrigger value="features" className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm p-2">
-            <Star className="w-3 h-3 sm:w-4 sm:h-4" />
-            <span className="hidden sm:inline">Features</span>
-            <span className="sm:hidden">Info</span>
-          </TabsTrigger>
-        </TabsList>
+        <div className="mb-8">
+          <TabsList className="w-full h-auto bg-gradient-to-r from-gray-50 to-white border-2 border-gray-100 shadow-xl rounded-2xl p-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 w-full">
+              <TabsTrigger 
+                value="shopping" 
+                className="flex flex-col items-center gap-3 p-6 rounded-xl transition-all duration-500 data-[state=active]:bg-gradient-to-br data-[state=active]:from-green-500 data-[state=active]:to-emerald-600 data-[state=active]:text-white data-[state=active]:shadow-2xl data-[state=active]:scale-105 hover:bg-gray-50 hover:shadow-lg group"
+              >
+                <div className="text-3xl group-data-[state=active]:animate-bounce">🛒</div>
+                <div className="text-center">
+                  <div className="text-sm font-bold">Shopping</div>
+                  <div className="text-xs opacity-75 mt-1">Mobile Services</div>
+                </div>
+                <div className="w-full h-1 bg-gray-200 rounded-full group-data-[state=active]:bg-white/30 transition-all duration-300"></div>
+              </TabsTrigger>
+              
+              <TabsTrigger 
+                value="business" 
+                className="flex flex-col items-center gap-3 p-6 rounded-xl transition-all duration-500 data-[state=active]:bg-gradient-to-br data-[state=active]:from-blue-500 data-[state=active]:to-cyan-600 data-[state=active]:text-white data-[state=active]:shadow-2xl data-[state=active]:scale-105 hover:bg-gray-50 hover:shadow-lg group"
+              >
+                <div className="text-3xl group-data-[state=active]:animate-pulse">🏢</div>
+                <div className="text-center">
+                  <div className="text-sm font-bold">Business</div>
+                  <div className="text-xs opacity-75 mt-1">Platform</div>
+                </div>
+                <div className="w-full h-1 bg-gray-200 rounded-full group-data-[state=active]:bg-white/30 transition-all duration-300"></div>
+              </TabsTrigger>
+              
+              <TabsTrigger 
+                value="assistant" 
+                className="flex flex-col items-center gap-3 p-6 rounded-xl transition-all duration-500 data-[state=active]:bg-gradient-to-br data-[state=active]:from-purple-500 data-[state=active]:to-pink-600 data-[state=active]:text-white data-[state=active]:shadow-2xl data-[state=active]:scale-105 hover:bg-gray-50 hover:shadow-lg group"
+              >
+                <div className="text-3xl group-data-[state=active]:animate-spin">🤖</div>
+                <div className="text-center">
+                  <div className="text-sm font-bold">AI Assistant</div>
+                  <div className="text-xs opacity-75 mt-1">Smart Help</div>
+                </div>
+                <div className="w-full h-1 bg-gray-200 rounded-full group-data-[state=active]:bg-white/30 transition-all duration-300"></div>
+              </TabsTrigger>
+              
+              <TabsTrigger 
+                value="analytics" 
+                className="flex flex-col items-center gap-3 p-6 rounded-xl transition-all duration-500 data-[state=active]:bg-gradient-to-br data-[state=active]:from-orange-500 data-[state=active]:to-red-600 data-[state=active]:text-white data-[state=active]:shadow-2xl data-[state=active]:scale-105 hover:bg-gray-50 hover:shadow-lg group"
+              >
+                <div className="text-3xl group-data-[state=active]:animate-pulse">📊</div>
+                <div className="text-center">
+                  <div className="text-sm font-bold">Analytics</div>
+                  <div className="text-xs opacity-75 mt-1">Insights</div>
+                </div>
+                <div className="w-full h-1 bg-gray-200 rounded-full group-data-[state=active]:bg-white/30 transition-all duration-300"></div>
+              </TabsTrigger>
+              
+              <TabsTrigger 
+                value="settings" 
+                className="flex flex-col items-center gap-3 p-6 rounded-xl transition-all duration-500 data-[state=active]:bg-gradient-to-br data-[state=active]:from-gray-500 data-[state=active]:to-slate-600 data-[state=active]:text-white data-[state=active]:shadow-2xl data-[state=active]:scale-105 hover:bg-gray-50 hover:shadow-lg group"
+              >
+                <div className="text-3xl group-data-[state=active]:animate-spin">⚙️</div>
+                <div className="text-center">
+                  <div className="text-sm font-bold">Settings</div>
+                  <div className="text-xs opacity-75 mt-1">Configure</div>
+                </div>
+                <div className="w-full h-1 bg-gray-200 rounded-full group-data-[state=active]:bg-white/30 transition-all duration-300"></div>
+              </TabsTrigger>
+            </div>
+          </TabsList>
+        </div>
 
-        <TabsContent value="assistant" className="space-y-4 sm:space-y-6 mt-4">
-          <WhatsAppQuickActions
-            showQuickActions={showQuickActions}
-            onToggleQuickActions={setShowQuickActions}
-            onTabChange={setActiveTab}
-          />
-
-          <Card className="max-w-md mx-auto">
-            <CardContent className="p-0">
-              <WhatsAppAssistant />
-            </CardContent>
-          </Card>
+        <TabsContent value="shopping" className="space-y-6 animate-fade-in">
+          <WhatsAppShoppingTab />
         </TabsContent>
 
-        <TabsContent value="registration" className="space-y-4 sm:space-y-6 mt-4">
-          <div className="max-w-md mx-auto">
-            <WhatsAppRegistration />
+        <TabsContent value="business" className="space-y-6 animate-fade-in">
+          <WhatsAppBusinessPlatform />
+        </TabsContent>
+
+        <TabsContent value="assistant" className="space-y-6 animate-fade-in">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div className="lg:col-span-2">
+              <Card className="h-[600px] shadow-xl border-2 border-purple-100">
+                <CardContent className="p-0 h-full">
+                  <WhatsAppAssistant />
+                </CardContent>
+              </Card>
+            </div>
+            <RecentConversations />
           </div>
         </TabsContent>
 
-        <TabsContent value="mobile" className="space-y-4 sm:space-y-6 mt-4">
-          <Card>
-            <CardHeader className="pb-3">
-              <CardTitle className="flex items-center gap-2 text-lg">
-                <Smartphone className="w-5 h-5 text-blue-600" />
-                Mobile Shopping Interface
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="max-w-md mx-auto">
-                <MobileShoppingInterface />
-              </div>
-            </CardContent>
-          </Card>
+        <TabsContent value="analytics" className="space-y-6 animate-fade-in">
+          <WhatsAppAnalytics />
         </TabsContent>
 
-        <TabsContent value="features" className="space-y-4 sm:space-y-6 mt-4">
-          <WhatsAppFeatures />
+        <TabsContent value="settings" className="space-y-6 animate-fade-in">
+          <WhatsAppSettings />
         </TabsContent>
       </Tabs>
     </div>

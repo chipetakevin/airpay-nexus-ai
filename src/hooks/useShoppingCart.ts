@@ -1,16 +1,14 @@
 
 import { useState, useEffect } from 'react';
 import { useToast } from '@/hooks/use-toast';
+import { supabase } from '@/integrations/supabase/client';
+import { calculateProfitSharing } from '@/services/dealsService';
 import { CartItem } from '@/types/deals';
 import { useMobileAuth } from './useMobileAuth';
-import { useTransactionProcessing } from './useTransactionProcessing';
-import { calculateCartTotals } from '@/utils/cartCalculations';
 
 export const useShoppingCart = (initialDeal?: CartItem) => {
   const { toast } = useToast();
   const { currentUser, isAuthenticated, userType } = useMobileAuth();
-  const { processTransaction } = useTransactionProcessing();
-  
   const [cartItems, setCartItems] = useState<CartItem[]>(initialDeal ? [initialDeal] : []);
   const [purchaseMode, setPurchaseMode] = useState<'self' | 'other'>('self');
   const [recipientData, setRecipientData] = useState({
@@ -22,92 +20,50 @@ export const useShoppingCart = (initialDeal?: CartItem) => {
   const [isProcessing, setIsProcessing] = useState(false);
   const [isVendor, setIsVendor] = useState(false);
 
-  // Enhanced phone number retrieval for all user types
-  const getRegisteredPhoneNumber = () => {
-    // Try multiple sources for phone number based on user type
-    const credentials = localStorage.getItem('userCredentials');
-    const onecardUser = localStorage.getItem('onecardUser');
-    const onecardVendor = localStorage.getItem('onecardVendor');
-    const onecardAdmin = localStorage.getItem('onecardAdmin');
-    
-    let phoneNumber = '';
-    
-    try {
-      // Check userCredentials first (primary source)
-      if (credentials) {
-        const parsedCredentials = JSON.parse(credentials);
-        phoneNumber = parsedCredentials.phone || parsedCredentials.registeredPhone || parsedCredentials.phoneNumber;
-      }
-      
-      // Check user-type specific storage
-      if (!phoneNumber && userType === 'customer' && onecardUser) {
-        const userData = JSON.parse(onecardUser);
-        phoneNumber = userData.registeredPhone || userData.phone || userData.phoneNumber;
-      } else if (!phoneNumber && userType === 'vendor' && onecardVendor) {
-        const vendorData = JSON.parse(onecardVendor);
-        phoneNumber = vendorData.registeredPhone || vendorData.phone || vendorData.phoneNumber;
-      } else if (!phoneNumber && userType === 'admin' && onecardAdmin) {
-        const adminData = JSON.parse(onecardAdmin);
-        phoneNumber = adminData.registeredPhone || adminData.phone || adminData.phoneNumber;
-      }
-      
-      // Normalize phone number format (remove country code/leading zero)
-      if (phoneNumber) {
-        const cleanPhone = phoneNumber.replace(/\D/g, '');
-        if (cleanPhone.startsWith('27')) {
-          phoneNumber = cleanPhone.substring(2);
-        } else if (cleanPhone.startsWith('0')) {
-          phoneNumber = cleanPhone.substring(1);
-        } else {
-          phoneNumber = cleanPhone;
-        }
-        
-        // Ensure it's exactly 9 digits for SA mobile numbers
-        if (phoneNumber.length === 9) {
-          return phoneNumber;
-        }
-      }
-    } catch (error) {
-      console.error('Error retrieving registered phone number:', error);
-    }
-    
-    return '';
-  };
-
   useEffect(() => {
     // Set vendor status based on user type
     setIsVendor(userType === 'vendor');
     
-    // Auto-fill customer phone from registration data
-    const registeredPhone = getRegisteredPhoneNumber();
-    if (registeredPhone && !customerPhone) {
-      setCustomerPhone(registeredPhone);
-      console.log('✅ Phone number auto-filled from registration:', registeredPhone);
+    // Set customer phone from stored credentials (the actual registered phone number)
+    const credentials = localStorage.getItem('userCredentials');
+    if (credentials) {
+      try {
+        const parsedCredentials = JSON.parse(credentials);
+        if (parsedCredentials.phone) {
+          setCustomerPhone(parsedCredentials.phone); // Use the registered phone number
+        }
+      } catch (error) {
+        console.error('Error parsing credentials:', error);
+      }
     }
-  }, [currentUser, userType, customerPhone]);
+  }, [currentUser, userType]);
 
   const calculateTotals = () => {
-    return calculateCartTotals(cartItems, isVendor, purchaseMode);
+    const networkCost = cartItems.reduce((sum, item) => sum + (item.networkPrice || 0), 0);
+    const totalMarkup = cartItems.reduce((sum, item) => sum + (item.markupAmount || 0), 0);
+    const customerPrice = cartItems.reduce((sum, item) => sum + item.discountedPrice, 0);
+    
+    // Calculate profit sharing based on purchase type and user type
+    let profitSharing;
+    
+    if (isVendor) {
+      profitSharing = calculateProfitSharing(totalMarkup, 'vendor', true);
+    } else if (purchaseMode === 'self') {
+      profitSharing = calculateProfitSharing(totalMarkup, 'self', false);
+    } else {
+      profitSharing = calculateProfitSharing(totalMarkup, 'third_party', false);
+    }
+    
+    return { 
+      networkCost, 
+      customerPrice, 
+      totalMarkup, 
+      profitSharing,
+      total: customerPrice 
+    };
   };
 
   const processPurchase = async (validationError: string, detectedNetwork: string) => {
-    // Ensure phone number is set before validation
-    const phoneToUse = customerPhone || getRegisteredPhoneNumber();
-    
-    if (!phoneToUse) {
-      toast({
-        title: "Phone Number Required",
-        description: "Please ensure your phone number is properly saved in your profile.",
-        variant: "destructive"
-      });
-      return false;
-    }
-
-    // Update customerPhone if it was empty
-    if (!customerPhone && phoneToUse) {
-      setCustomerPhone(phoneToUse);
-    }
-
     if (validationError) {
       toast({
         title: "Validation Error",
@@ -117,6 +73,7 @@ export const useShoppingCart = (initialDeal?: CartItem) => {
       return false;
     }
 
+    // Skip authentication check since user is already authenticated after registration
     if (!isAuthenticated || !currentUser) {
       toast({
         title: "Session Expired",
@@ -129,26 +86,54 @@ export const useShoppingCart = (initialDeal?: CartItem) => {
     setIsProcessing(true);
     
     try {
-      const { networkCost, customerPrice, profitSharing } = calculateTotals();
+      const { networkCost, customerPrice, totalMarkup, profitSharing } = calculateTotals();
+      const recipientPhone = purchaseMode === 'self' ? customerPhone : recipientData.phone;
+      const recipientName = purchaseMode === 'self' ? 'Self' : recipientData.name;
       
-      const success = await processTransaction(
-        cartItems,
-        currentUser,
-        phoneToUse, // Use the guaranteed phone number
-        purchaseMode,
-        recipientData,
-        userType,
-        profitSharing,
-        customerPrice,
-        networkCost,
-        detectedNetwork
-      );
+      // Simulate transaction processing (replace with actual API call)
+      await new Promise(resolve => setTimeout(resolve, 1500));
+      
+      // Create transaction record
+      const transactionData = {
+        customer_id: currentUser.id,
+        vendor_id: 'platform-vendor-id',
+        deal_id: cartItems[0]?.id,
+        recipient_phone: recipientPhone,
+        recipient_name: recipientName,
+        recipient_relationship: purchaseMode === 'other' ? recipientData.relationship : null,
+        amount: customerPrice,
+        original_price: networkCost,
+        discounted_price: customerPrice,
+        network: cartItems[0]?.network || detectedNetwork,
+        transaction_type: isVendor ? 'vendor_purchase' : (purchaseMode === 'self' ? 'self_purchase' : 'third_party_purchase'),
+        cashback_earned: profitSharing.customerCashback || profitSharing.registeredCustomerReward || 0,
+        admin_fee: profitSharing.adminProfit || 0,
+        vendor_commission: profitSharing.vendorProfit || 0,
+        status: 'completed',
+        timestamp: new Date().toISOString()
+      };
 
-      if (success) {
-        setCartItems([]);
+      // Store transaction locally for demo purposes
+      const existingTransactions = JSON.parse(localStorage.getItem('userTransactions') || '[]');
+      existingTransactions.push(transactionData);
+      localStorage.setItem('userTransactions', JSON.stringify(existingTransactions));
+
+      let successMessage = "Purchase Successful! 🎉";
+      if (isVendor) {
+        successMessage = `Vendor purchase completed! R${profitSharing.vendorProfit?.toFixed(2)} profit earned!`;
+      } else if (purchaseMode === 'other') {
+        successMessage = `Gift purchase completed! Both you and recipient earn R${profitSharing.registeredCustomerReward?.toFixed(2)} each!`;
+      } else {
+        successMessage = `Purchase completed! R${profitSharing.customerCashback?.toFixed(2)} cashback earned!`;
       }
 
-      return success;
+      toast({
+        title: successMessage,
+        description: "Airtime loaded successfully. No need to login again!"
+      });
+
+      setCartItems([]);
+      return true;
       
     } catch (error) {
       console.error('Purchase error:', error);

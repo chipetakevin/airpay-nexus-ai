@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -24,7 +25,7 @@ const NetworkStatus = () => {
       statusColor: "bg-green-100 text-green-800"
     },
     {
-      name: "Divinely Mobile",
+      name: "Devine Mobile",
       status: "Operational",
       uptime: "99.89%",
       transactions: "21,456",

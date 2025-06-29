@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
@@ -71,7 +72,7 @@ const HeroSection = () => {
           <div className="relative mb-8">
             <div className="absolute inset-0 bg-white/5 backdrop-blur-sm rounded-2xl border border-white/10"></div>
             <p className="relative text-xl sm:text-2xl py-6 px-6 text-blue-100 max-w-3xl mx-auto">
-              Best airtime and data deals with our AI-driven platform. 
+              Discover the best airtime and data deals with our AI-driven platform. 
               Earn OneCard rewards on every purchase and save more with recommendations.
             </p>
           </div>

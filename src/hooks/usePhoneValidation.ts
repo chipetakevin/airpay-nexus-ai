@@ -55,20 +55,11 @@ export const usePhoneValidation = () => {
     setRequiresTermsAcceptance(false);
     
     try {
-      // Basic format validation
-      const cleanPhone = phoneNumber.replace(/\D/g, '');
-      if (cleanPhone.length < 10) {
-        setValidationError('Phone number must be at least 10 digits');
-        setIsValidating(false);
-        return;
-      }
-
       // For registered numbers, assume valid and skip RICA validation
       if (isRegisteredNumber(phoneNumber)) {
         const networkFromPrefix = detectNetworkFromPrefix(phoneNumber);
         setDetectedNetwork(networkFromPrefix);
         setRequiresTermsAcceptance(true); // Always require terms for SA regulations
-        setIsValidating(false);
         return;
       }
 
@@ -94,12 +85,23 @@ export const usePhoneValidation = () => {
         networkFromPrefix = detectNetworkFromPrefix(phoneNumber);
         setDetectedNetwork(networkFromPrefix);
         
-        // FIXED: Don't show error for unknown numbers - just require terms acceptance
-        setRequiresTermsAcceptance(true); // Always require terms, even for unknown numbers
+        if (networkFromPrefix === 'Unknown') {
+          setValidationError('Phone number not found in RICA database or invalid format.');
+          setRequiresTermsAcceptance(true); // Still require terms even for unknown numbers
+        } else {
+          setRequiresTermsAcceptance(true); // Always require terms
+        }
       }
       
-      // FIXED: Remove network mismatch validation - allow all numbers when terms are accepted
+      const networkMismatch = cartItems.some(item => 
+        item.network.toLowerCase() !== networkFromPrefix.toLowerCase()
+      );
       
+      if (networkMismatch && cartItems.length > 0 && !acceptedUnknownNumber) {
+        setValidationError(
+          `This number belongs to ${networkFromPrefix}. Please select a ${networkFromPrefix} deal or use a different number.`
+        );
+      }
     } catch (error) {
       console.error('Validation error:', error);
       setValidationError('Unable to validate number. Please try again.');

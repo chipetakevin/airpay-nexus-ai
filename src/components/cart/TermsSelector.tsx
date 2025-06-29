@@ -32,10 +32,6 @@ const TermsSelector = ({
   useEffect(() => {
     if (hasAcceptedTerms) {
       setShouldPulse(false);
-      // Auto-close terms section after accepting
-      setTimeout(() => {
-        setShowTerms(false);
-      }, 1000);
     }
   }, [hasAcceptedTerms]);
 
@@ -69,7 +65,6 @@ const TermsSelector = ({
         variant="outline"
         onClick={() => setShowTerms(!showTerms)}
         className={getTermsButtonStyles()}
-        disabled={hasAcceptedTerms}
       >
         <div className="flex items-center gap-2">
           {validationError && !hasAcceptedTerms ? (
@@ -89,10 +84,10 @@ const TermsSelector = ({
             </div>
           </div>
         </div>
-        {!hasAcceptedTerms && (showTerms ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />)}
+        {showTerms ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
       </Button>
 
-      {showTerms && !hasAcceptedTerms && (
+      {showTerms && (
         <Card className={`transition-all duration-300 ease-in-out animate-fade-in ${hasAcceptedTerms ? 'border-green-200 bg-green-50' : 'border-blue-200 bg-blue-50'}`}>
           <CardContent className="p-4 space-y-4">
             <div className="flex items-center gap-2">

@@ -1,3 +1,4 @@
+
 import { supabase } from '@/integrations/supabase/client';
 import { Deal } from '@/types/deals';
 
@@ -56,96 +57,33 @@ const calculateProfitSharing = (markupAmount: number, purchaseType: string, isVe
 
 export const getSampleDeals = (): Deal[] => {
   const networkDeals = [
-    // Divinely Mobile deals - Always better pricing than MTN
     {
-      id: 'dm-1',
-      network: 'Divinely Mobile',
-      amount: 50,
-      network_price: 45, // Better base price than MTN
-      verified: true,
-      deal_type: 'airtime'
-    },
-    {
-      id: 'dm-2',
-      network: 'Divinely Mobile',
-      amount: 100,
-      network_price: 85, // Better base price than MTN
-      verified: true,
-      deal_type: 'airtime'
-    },
-    {
-      id: 'dm-3',
-      network: 'Divinely Mobile',
-      amount: 25,
-      network_price: 20, // Better base price than MTN
-      verified: true,
-      deal_type: 'airtime'
-    },
-    {
-      id: 'dm-4',
-      network: 'Divinely Mobile',
-      amount: 200,
-      network_price: 175, // Better base price than MTN
-      verified: true,
-      deal_type: 'airtime'
-    },
-    // MTN deals - Standard pricing
-    {
-      id: 'mtn-1',
+      id: '1',
       network: 'MTN',
       amount: 50,
-      network_price: 50, // Standard MTN price
-      verified: true,
-      deal_type: 'airtime'
+      network_price: 50, // Original network price
+      verified: true
     },
     {
-      id: 'mtn-2',
-      network: 'MTN',
-      amount: 100,
-      network_price: 100, // Standard MTN price
-      verified: true,
-      deal_type: 'airtime'
-    },
-    {
-      id: 'mtn-3',
-      network: 'MTN',
-      amount: 25,
-      network_price: 25, // Standard MTN price
-      verified: true,
-      deal_type: 'airtime'
-    },
-    {
-      id: 'mtn-4',
-      network: 'MTN',
-      amount: 200,
-      network_price: 200, // Standard MTN price
-      verified: true,
-      deal_type: 'airtime'
-    },
-    // Other networks
-    {
-      id: '3',
+      id: '2',
       network: 'Vodacom',
       amount: 100,
       network_price: 100,
-      verified: true,
-      deal_type: 'airtime'
+      verified: true
     },
     {
-      id: '4',
+      id: '3',
       network: 'Cell C',
       amount: 25,
       network_price: 25,
-      verified: true,
-      deal_type: 'airtime'
+      verified: true
     },
     {
-      id: '5',
+      id: '4',
       network: 'Telkom',
       amount: 200,
       network_price: 200,
-      verified: true,
-      deal_type: 'airtime'
+      verified: true
     }
   ];
 
@@ -153,39 +91,19 @@ export const getSampleDeals = (): Deal[] => {
     const markedUpPrice = calculateMarkupPrice(deal.network_price);
     const markupAmount = markedUpPrice - deal.network_price;
     
-    // Calculate discount for display - Divinely Mobile gets better discount percentages
-    let discountPercentage = 0;
-    let discountedPrice = markedUpPrice;
-    
-    if (deal.network === 'Divinely Mobile') {
-      // Divinely Mobile always shows better value
-      discountPercentage = Math.floor(Math.random() * 15) + 20; // 20-35% discount
-      discountedPrice = markedUpPrice * (1 - discountPercentage / 100);
-    } else if (deal.network === 'MTN') {
-      // MTN shows moderate discounts
-      discountPercentage = Math.floor(Math.random() * 10) + 10; // 10-20% discount
-      discountedPrice = markedUpPrice * (1 - discountPercentage / 100);
-    } else {
-      // Other networks get variable discounts
-      discountPercentage = Math.floor(Math.random() * 15) + 5; // 5-20% discount
-      discountedPrice = markedUpPrice * (1 - discountPercentage / 100);
-    }
-    
     return {
       id: deal.id,
       network: deal.network,
       amount: deal.amount,
-      original_price: markedUpPrice,
-      discounted_price: Math.round(discountedPrice),
-      discount_percentage: discountPercentage,
-      vendor_name: deal.network === 'Divinely Mobile' ? 'Divinely Mobile' : 'AirPay Platform',
+      original_price: markedUpPrice, // This is now the marked-up price shown to users
+      discounted_price: markedUpPrice, // No "discount" shown - just the final price
+      discount_percentage: 0, // Hide discount to conceal markup
+      vendor_name: 'AirPay Platform',
       availability: 'available',
-      demand_level: deal.network === 'Divinely Mobile' ? 'very_high' : 'normal',
+      demand_level: 'normal',
       verified: deal.verified,
-      network_price: deal.network_price,
-      markup_amount: markupAmount,
-      deal_type: deal.deal_type,
-      bonus: deal.network === 'Divinely Mobile' ? '🎁 EXCLUSIVE: Extra cashback + instant delivery' : undefined
+      network_price: deal.network_price, // Hidden from users
+      markup_amount: markupAmount // Hidden profit pool
     };
   });
 };
@@ -207,47 +125,27 @@ export const loadDealsFromSupabase = async (): Promise<Deal[]> => {
     throw error;
   }
 
-  // If no data from Supabase, return sample deals
-  if (!dealsData || dealsData.length === 0) {
-    return getSampleDeals();
-  }
-
   return dealsData.map(deal => {
     // Apply markup to network prices
     const networkPrice = typeof deal.original_price === 'string' ? parseFloat(deal.original_price) : deal.original_price;
     const markedUpPrice = calculateMarkupPrice(networkPrice);
     const markupAmount = markedUpPrice - networkPrice;
 
-    // Ensure Divinely Mobile always has better pricing than MTN
-    let finalPrice = markedUpPrice;
-    let discountPercentage = deal.discount_percentage || 0;
-    
-    if (deal.network === 'Divinely Mobile') {
-      // Ensure Divinely Mobile has at least 20% better value than standard
-      discountPercentage = Math.max(discountPercentage, 25);
-      finalPrice = markedUpPrice * (1 - discountPercentage / 100);
-    } else if (deal.network === 'MTN') {
-      // MTN gets moderate discounts
-      discountPercentage = Math.min(discountPercentage, 20);
-      finalPrice = markedUpPrice * (1 - discountPercentage / 100);
-    }
-
     return {
       id: deal.id,
       network: deal.network,
       amount: deal.amount,
-      original_price: markedUpPrice,
-      discounted_price: Math.round(finalPrice),
-      discount_percentage: discountPercentage,
+      original_price: markedUpPrice, // Show marked-up price as the "original"
+      discounted_price: markedUpPrice, // Same as original to hide markup
+      discount_percentage: 0, // Hide any discount to conceal markup
       vendor_name: deal.vendors?.business_name || 'AirPay Platform',
       availability: deal.availability,
-      demand_level: deal.network === 'Divinely Mobile' ? 'very_high' : deal.demand_level,
-      bonus: deal.network === 'Divinely Mobile' ? '🎁 EXCLUSIVE: Premium network benefits' : deal.bonus,
+      demand_level: deal.demand_level,
+      bonus: deal.bonus,
       expires_at: deal.expires_at,
       verified: deal.verified,
-      network_price: networkPrice,
-      markup_amount: markupAmount,
-      deal_type: deal.deal_type || 'airtime'
+      network_price: networkPrice, // Hidden from users
+      markup_amount: markupAmount // Hidden profit pool
     };
   });
 };

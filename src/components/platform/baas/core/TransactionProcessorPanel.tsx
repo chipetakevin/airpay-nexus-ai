@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -107,7 +108,7 @@ const TransactionProcessorPanel = () => {
       id: 'TXN-8474',
       type: 'Airtime',
       amount: 'R 25.00',
-      network: 'Divinely Mobile',
+      network: 'Devine Mobile',
       status: 'completed',
       timestamp: '5 mins ago',
       customer: 'client@example.com'

@@ -1,224 +1,299 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import { 
-  Smartphone, Wifi, Zap, Star, TrendingUp, 
-  ShoppingCart, Gift, Clock, CheckCircle 
+  Star, Zap, Crown, TrendingUp, Award, 
+  Smartphone, Wifi, Clock, Shield
 } from 'lucide-react';
-import USSDPaymentProcessor from '../ussd/USSDPaymentProcessor';
-
-interface Deal {
-  id: string;
-  network: string;
-  amount: number;
-  price: number;
-  original_price: number;
-  deal_type: 'airtime' | 'data';
-  discount_percentage: number;
-  validity?: string;
-  features: string[];
-  popular?: boolean;
-  limited_time?: boolean;
-}
+import { Deal } from '@/types/deals';
 
 interface EnhancedDealsGridProps {
   deals: Deal[];
-  onDealSelect: (deal: Deal) => void;
+  onAddToCart: (deal: Deal) => void;
+  isLoading?: boolean;
 }
 
-const EnhancedDealsGrid = ({ deals, onDealSelect }: EnhancedDealsGridProps) => {
-  const [selectedDeal, setSelectedDeal] = useState<Deal | null>(null);
-  const [showUSSDPayment, setShowUSSDPayment] = useState(false);
-  const [recipientPhone, setRecipientPhone] = useState('');
+const EnhancedDealsGrid: React.FC<EnhancedDealsGridProps> = ({ 
+  deals, 
+  onAddToCart, 
+  isLoading = false 
+}) => {
+  const [selectedNetwork, setSelectedNetwork] = useState<string>('all');
 
-  const handleQuickBuy = (deal: Deal) => {
-    setSelectedDeal(deal);
-    setRecipientPhone('+27123456789'); // Default or from user input
-    setShowUSSDPayment(true);
-  };
+  // Enhanced deals with Devine Mobile priority
+  const enhancedDeals = useMemo(() => {
+    const devineMobileDeals = [
+      {
+        id: 'dm-001',
+        vendor_id: 'devine-mobile',
+        vendor_name: 'Devine Mobile',
+        network: 'Devine Mobile',
+        deal_type: 'airtime',
+        amount: 50,
+        original_price: 50,
+        discounted_price: 40,
+        discount_percentage: 20,
+        bonus: '🔥 EXCLUSIVE: Extra 25% airtime + 100MB data',
+        demand_level: 'high',
+        availability: 'available',
+        active: true,
+        verified: true,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+        expires_at: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString()
+      },
+      {
+        id: 'dm-002',
+        vendor_id: 'devine-mobile',
+        vendor_name: 'Devine Mobile',
+        network: 'Devine Mobile',
+        deal_type: 'data',
+        amount: 1000,
+        original_price: 149,
+        discounted_price: 99,
+        discount_percentage: 34,
+        bonus: '🎁 EXCLUSIVE: 2GB for 1GB price + WhatsApp free',
+        demand_level: 'very_high',
+        availability: 'available',
+        active: true,
+        verified: true,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+        expires_at: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString()
+      },
+      {
+        id: 'dm-003',
+        vendor_id: 'devine-mobile',
+        vendor_name: 'Devine Mobile',
+        network: 'Devine Mobile',
+        deal_type: 'data',
+        amount: 5000,
+        original_price: 599,
+        discounted_price: 399,
+        discount_percentage: 33,
+        bonus: '💎 VIP DEAL: 5GB + 2GB bonus + unlimited WhatsApp',
+        demand_level: 'very_high',
+        availability: 'available',
+        active: true,
+        verified: true,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+        expires_at: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString()
+      }
+    ];
 
-  const handlePaymentComplete = (success: boolean, sessionId: string) => {
-    setShowUSSDPayment(false);
-    setSelectedDeal(null);
-    if (success) {
-      // Trigger receipt generation and WhatsApp/Email sending
-      generateReceipts(sessionId);
+    // Combine Devine Mobile deals (priority) with regular deals
+    const allDeals = [...devineMobileDeals, ...deals];
+    
+    // Sort by priority: Devine Mobile first, then by discount percentage
+    return allDeals.sort((a, b) => {
+      if (a.network === 'Devine Mobile' && b.network !== 'Devine Mobile') return -1;
+      if (a.network !== 'Devine Mobile' && b.network === 'Devine Mobile') return 1;
+      return (b.discount_percentage || 0) - (a.discount_percentage || 0);
+    });
+  }, [deals]);
+
+  const filteredDeals = useMemo(() => {
+    if (selectedNetwork === 'all') return enhancedDeals;
+    return enhancedDeals.filter(deal => deal.network === selectedNetwork);
+  }, [enhancedDeals, selectedNetwork]);
+
+  const networks = useMemo(() => {
+    const networkSet = new Set(enhancedDeals.map(deal => deal.network));
+    return ['all', ...Array.from(networkSet)];
+  }, [enhancedDeals]);
+
+  const getDealIcon = (dealType: string) => {
+    switch (dealType) {
+      case 'airtime': return <Smartphone className="w-4 h-4" />;
+      case 'data': return <Wifi className="w-4 h-4" />;
+      default: return <Zap className="w-4 h-4" />;
     }
   };
 
-  const generateReceipts = async (sessionId: string) => {
-    // This would typically call your receipt generation service
-    console.log('Generating receipts for session:', sessionId);
+  const getDemandColor = (demandLevel: string) => {
+    switch (demandLevel) {
+      case 'very_high': return 'bg-red-500';
+      case 'high': return 'bg-orange-500';
+      case 'medium': return 'bg-yellow-500';
+      default: return 'bg-green-500';
+    }
   };
 
-  if (showUSSDPayment && selectedDeal) {
-    // Transform deal to match USSDPaymentProcessor expected format
-    const ussdDeal = {
-      id: selectedDeal.id,
-      network: selectedDeal.network,
-      amount: selectedDeal.amount,
-      price: selectedDeal.price,
-      type: selectedDeal.deal_type // Map deal_type to type
-    };
+  const isDevineExclusive = (network: string) => network === 'Devine Mobile';
 
+  if (isLoading) {
     return (
-      <div className="space-y-4">
-        <Button 
-          onClick={() => setShowUSSDPayment(false)}
-          variant="outline"
-          className="mb-4"
-        >
-          ← Back to Deals
-        </Button>
-        <USSDPaymentProcessor 
-          deal={ussdDeal}
-          recipientPhone={recipientPhone}
-          onPaymentComplete={handlePaymentComplete}
-        />
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {Array.from({ length: 6 }).map((_, index) => (
+          <Card key={index} className="animate-pulse">
+            <CardContent className="p-6">
+              <div className="space-y-4">
+                <div className="h-4 bg-gray-200 rounded w-3/4"></div>
+                <div className="h-8 bg-gray-200 rounded"></div>
+                <div className="h-4 bg-gray-200 rounded w-1/2"></div>
+              </div>
+            </CardContent>
+          </Card>
+        ))}
       </div>
     );
   }
 
-  const getNetworkIcon = (network: string) => {
-    const icons = {
-      'mtn': '🟡',
-      'vodacom': '🔴',
-      'divinely mobile': '💎',
-      'telkom': '🟣'
-    };
-    return icons[network.toLowerCase() as keyof typeof icons] || '📱';
-  };
-
-  const sortedDeals = [...deals].sort((a, b) => {
-    if (a.popular && !b.popular) return -1;
-    if (!a.popular && b.popular) return 1;
-    return b.discount_percentage - a.discount_percentage;
-  });
-
   return (
     <div className="space-y-6">
-      {/* Featured Deals Banner */}
-      <Card className="bg-gradient-to-r from-blue-600 via-purple-600 to-blue-700 text-white overflow-hidden relative">
-        <CardContent className="p-6">
-          <div className="flex items-center justify-between">
-            <div>
-              <h2 className="text-2xl font-bold mb-2 flex items-center gap-2">
-                <Star className="w-6 h-6 text-yellow-300" />
-                Featured Deals
-              </h2>
-              <p className="text-blue-100 mb-4">Best value airtime & data packages</p>
-              <Badge className="bg-yellow-500 text-yellow-900 font-bold">
-                <Zap className="w-3 h-3 mr-1" />
-                USSD Payment Available
-              </Badge>
-            </div>
-            <div className="text-6xl opacity-20">
-              📱
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Deals Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {sortedDeals.map((deal) => (
-          <Card 
-            key={deal.id} 
-            className={`hover:shadow-xl transition-all duration-300 hover:scale-[1.02] border-2 relative overflow-hidden ${
-              deal.popular ? 'border-yellow-400 bg-gradient-to-br from-yellow-50 to-orange-50' : 'border-gray-200 hover:border-blue-300'
+      {/* Network Filter */}
+      <div className="flex flex-wrap gap-2">
+        {networks.map((network) => (
+          <button
+            key={network}
+            onClick={() => setSelectedNetwork(network)}
+            className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+              selectedNetwork === network
+                ? 'bg-blue-600 text-white shadow-lg'
+                : 'bg-white text-gray-600 hover:bg-gray-50 border border-gray-200'
             }`}
           >
-            {/* Popular Badge */}
-            {deal.popular && (
-              <div className="absolute top-0 right-0 bg-gradient-to-r from-red-500 to-pink-500 text-white px-3 py-1 text-xs font-bold clip-path-badge">
-                <Star className="w-3 h-3 inline mr-1" />
-                POPULAR
+            {network === 'all' ? 'All Networks' : network}
+            {network === 'Devine Mobile' && (
+              <Crown className="w-3 h-3 ml-1 inline" />
+            )}
+          </button>
+        ))}
+      </div>
+
+      {/* Deals Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {filteredDeals.map((deal, index) => (
+          <Card 
+            key={deal.id} 
+            className={`relative overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:scale-[1.02] ${
+              isDevineExclusive(deal.network) 
+                ? 'ring-2 ring-yellow-400 bg-gradient-to-br from-yellow-50 to-orange-50' 
+                : 'hover:shadow-lg'
+            }`}
+          >
+            {/* Exclusive Badge */}
+            {isDevineExclusive(deal.network) && (
+              <div className="absolute top-0 left-0 right-0 bg-gradient-to-r from-yellow-400 to-orange-500 text-white text-center py-1 z-10">
+                <div className="flex items-center justify-center gap-1 text-xs font-bold">
+                  <Crown className="w-3 h-3" />
+                  DEVINE EXCLUSIVE
+                  <Crown className="w-3 h-3" />
+                </div>
               </div>
             )}
 
-            {/* Limited Time Badge */}
-            {deal.limited_time && (
-              <div className="absolute top-0 left-0 bg-gradient-to-r from-green-500 to-emerald-500 text-white px-3 py-1 text-xs font-bold">
-                <Clock className="w-3 h-3 inline mr-1" />
-                LIMITED
-              </div>
-            )}
+            {/* Top Badges */}
+            <div className={`absolute top-3 right-3 z-10 space-y-1 ${isDevineExclusive(deal.network) ? 'top-8' : ''}`}>
+              {deal.demand_level === 'very_high' && (
+                <Badge className="bg-red-500 text-white animate-pulse">
+                  <TrendingUp className="w-3 h-3 mr-1" />
+                  HOT
+                </Badge>
+              )}
+              {deal.discount_percentage && deal.discount_percentage >= 30 && (
+                <Badge className="bg-green-500 text-white">
+                  <Award className="w-3 h-3 mr-1" />
+                  BEST VALUE
+                </Badge>
+              )}
+            </div>
 
-            <CardContent className="p-6">
-              {/* Network Header */}
+            <CardContent className={`p-6 ${isDevineExclusive(deal.network) ? 'pt-8' : ''}`}>
+              {/* Header */}
               <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-2">
-                  <span className="text-2xl">{getNetworkIcon(deal.network)}</span>
+                  <div className={`p-2 rounded-lg ${
+                    isDevineExclusive(deal.network) 
+                      ? 'bg-gradient-to-r from-yellow-400 to-orange-500 text-white' 
+                      : 'bg-blue-100 text-blue-600'
+                  }`}>
+                    {getDealIcon(deal.deal_type)}
+                  </div>
                   <div>
-                    <h3 className="font-bold text-gray-900 capitalize">{deal.network}</h3>
-                    <Badge variant="outline" className="text-xs">
-                      {deal.deal_type === 'airtime' ? <Smartphone className="w-3 h-3 mr-1" /> : <Wifi className="w-3 h-3 mr-1" />}
-                      {deal.deal_type}
-                    </Badge>
+                    <h3 className="font-semibold text-gray-900">{deal.network}</h3>
+                    <div className="flex items-center gap-1 text-xs text-gray-600">
+                      {getDealIcon(deal.deal_type)}
+                      <span className="capitalize">{deal.deal_type}</span>
+                    </div>
                   </div>
                 </div>
-                <div className="text-right">
-                  <div className="text-2xl font-bold text-green-600">R{deal.amount}</div>
-                  {deal.validity && (
-                    <div className="text-xs text-gray-500">{deal.validity}</div>
-                  )}
+                
+                <div className={`w-3 h-3 rounded-full ${getDemandColor(deal.demand_level)} animate-pulse`}></div>
+              </div>
+
+              {/* Amount & Type */}
+              <div className="text-center mb-4">
+                <div className="text-2xl font-bold text-gray-900">
+                  {deal.deal_type === 'data' ? `${deal.amount}MB` : `R${deal.amount}`}
                 </div>
+                {deal.deal_type === 'data' && deal.amount >= 1000 && (
+                  <div className="text-sm text-gray-600">
+                    ({(deal.amount / 1000).toFixed(1)}GB)
+                  </div>
+                )}
               </div>
 
               {/* Pricing */}
-              <div className="mb-4">
-                <div className="flex items-center gap-2 mb-2">
-                  <span className="text-lg font-bold text-gray-900">R{deal.price}</span>
-                  {deal.original_price > deal.price && (
-                    <span className="text-sm text-gray-400 line-through">R{deal.original_price}</span>
-                  )}
-                  <Badge className="bg-green-100 text-green-800 text-xs">
-                    {deal.discount_percentage}% OFF
-                  </Badge>
+              <div className="text-center mb-4">
+                <div className="flex items-center justify-center gap-2">
+                  <span className="text-lg line-through text-gray-400">R{deal.original_price}</span>
+                  <span className={`text-2xl font-bold ${
+                    isDevineExclusive(deal.network) ? 'text-orange-600' : 'text-green-600'
+                  }`}>
+                    R{deal.discounted_price}
+                  </span>
                 </div>
-                <div className="text-xs text-gray-600">
-                  You save R{deal.original_price - deal.price}
+                <div className={`text-sm font-medium ${
+                  isDevineExclusive(deal.network) ? 'text-orange-600' : 'text-green-600'
+                }`}>
+                  Save {deal.discount_percentage}%
                 </div>
               </div>
 
-              {/* Features */}
-              <div className="space-y-2 mb-4">
-                {deal.features.slice(0, 3).map((feature, index) => (
-                  <div key={index} className="flex items-center gap-2 text-sm text-gray-600">
-                    <CheckCircle className="w-4 h-4 text-green-500 flex-shrink-0" />
-                    <span>{feature}</span>
-                  </div>
-                ))}
-              </div>
+              {/* Bonus */}
+              {deal.bonus && (
+                <div className={`p-3 rounded-lg mb-4 text-sm ${
+                  isDevineExclusive(deal.network)
+                    ? 'bg-gradient-to-r from-yellow-100 to-orange-100 text-orange-800 border border-orange-200'
+                    : 'bg-blue-50 text-blue-800 border border-blue-200'
+                }`}>
+                  {deal.bonus}
+                </div>
+              )}
 
-              {/* Action Buttons */}
-              <div className="space-y-2">
-                <Button 
-                  onClick={() => handleQuickBuy(deal)}
-                  className="w-full bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 h-11 font-semibold"
-                >
-                  <Smartphone className="w-4 h-4 mr-2" />
-                  Quick USSD Buy
-                </Button>
-                
-                <Button 
-                  onClick={() => onDealSelect(deal)}
-                  variant="outline"
-                  className="w-full border-2 hover:bg-blue-50 h-11"
-                >
-                  <ShoppingCart className="w-4 h-4 mr-2" />
-                  Add to Cart
-                </Button>
-              </div>
+              {/* Expires */}
+              {deal.expires_at && (
+                <div className="flex items-center gap-1 text-xs text-gray-500 mb-4">
+                  <Clock className="w-3 h-3" />
+                  <span>Expires: {new Date(deal.expires_at).toLocaleDateString()}</span>
+                </div>
+              )}
 
-              {/* USSD Code Preview */}
-              <div className="mt-3 p-2 bg-gray-50 rounded text-center">
-                <div className="text-xs text-gray-500 mb-1">Quick USSD Code:</div>
-                <div className="text-sm font-mono font-bold text-blue-600">
-                  {deal.network.toLowerCase() === 'mtn' ? '*141#' : 
-                   deal.network.toLowerCase() === 'vodacom' ? '*136#' :
-                   deal.network.toLowerCase() === 'divinely mobile' ? '*180*2827#' : '*180#'}
+              {/* Action Button */}
+              <Button 
+                onClick={() => onAddToCart(deal)}
+                className={`w-full ${
+                  isDevineExclusive(deal.network)
+                    ? 'bg-gradient-to-r from-yellow-500 to-orange-600 hover:from-yellow-600 hover:to-orange-700 text-white'
+                    : 'bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700'
+                }`}
+              >
+                <Star className="w-4 h-4 mr-2" />
+                {isDevineExclusive(deal.network) ? 'Get Exclusive Deal' : 'Add to Cart'}
+              </Button>
+
+              {/* Trust Indicators */}
+              <div className="flex items-center justify-center gap-4 mt-3 text-xs text-gray-500">
+                <div className="flex items-center gap-1">
+                  <Shield className="w-3 h-3" />
+                  <span>Verified</span>
+                </div>
+                <div className="flex items-center gap-1">
+                  <Zap className="w-3 h-3" />
+                  <span>Instant</span>
                 </div>
               </div>
             </CardContent>
@@ -226,18 +301,12 @@ const EnhancedDealsGrid = ({ deals, onDealSelect }: EnhancedDealsGridProps) => {
         ))}
       </div>
 
-      {/* Mobile Optimization Notice */}
-      <Card className="bg-blue-50 border-blue-200">
-        <CardContent className="p-4 text-center">
-          <div className="flex items-center justify-center gap-2 mb-2">
-            <Smartphone className="w-5 h-5 text-blue-600" />
-            <span className="font-semibold text-blue-800">Mobile Optimized Experience</span>
-          </div>
-          <p className="text-sm text-blue-700">
-            All purchases include instant WhatsApp & Email receipts for better customer service
-          </p>
-        </CardContent>
-      </Card>
+      {filteredDeals.length === 0 && (
+        <div className="text-center py-12">
+          <div className="text-gray-500 mb-2">No deals available</div>
+          <div className="text-sm text-gray-400">Try selecting a different network</div>
+        </div>
+      )}
     </div>
   );
 };

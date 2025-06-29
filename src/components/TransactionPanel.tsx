@@ -68,77 +68,58 @@ const TransactionPanel = () => {
   };
 
   return (
-    <Card className="w-full">
-      <CardHeader className="pb-4">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-          <CardTitle className="text-lg">Real-time Transactions</CardTitle>
-          <div className="flex flex-wrap gap-2">
-            <Button variant="outline" size="sm" className="text-xs">
-              <Search className="w-3 h-3 mr-1" />
+    <Card>
+      <CardHeader>
+        <div className="flex items-center justify-between">
+          <CardTitle>Real-time Transactions</CardTitle>
+          <div className="flex space-x-2">
+            <Button variant="outline" size="sm">
+              <Search className="w-4 h-4 mr-1" />
               Search
             </Button>
-            <Button variant="outline" size="sm" className="text-xs">
-              <Filter className="w-3 h-3 mr-1" />
+            <Button variant="outline" size="sm">
+              <Filter className="w-4 h-4 mr-1" />
               Filter
             </Button>
-            <Button variant="outline" size="sm" className="text-xs">
-              <Download className="w-3 h-3 mr-1" />
+            <Button variant="outline" size="sm">
+              <Download className="w-4 h-4 mr-1" />
               Export
             </Button>
-            <Button variant="outline" size="sm" className="text-xs">
-              <RefreshCw className="w-3 h-3" />
+            <Button variant="outline" size="sm">
+              <RefreshCw className="w-4 h-4" />
             </Button>
           </div>
         </div>
       </CardHeader>
-      <CardContent className="p-3 sm:p-6">
-        {/* Mobile-First Vertical Layout */}
-        <div className="space-y-3">
+      <CardContent>
+        <div className="space-y-4">
           {recentTransactions.map((transaction, index) => (
-            <Card key={index} className="border border-gray-200 bg-white shadow-sm hover:shadow-md transition-shadow">
-              <CardContent className="p-4">
-                {/* Vertical Stack for Mobile */}
-                <div className="space-y-3">
-                  {/* Transaction Header */}
-                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-                    <div className="flex items-center gap-2">
-                      <span className="font-semibold text-sm text-blue-600">{transaction.id}</span>
-                      <Badge className={getStatusColor(transaction.status)} variant="secondary">
-                        {transaction.status}
-                      </Badge>
-                    </div>
-                    <span className="text-xs text-gray-500">{transaction.time}</span>
-                  </div>
-                  
-                  {/* Transaction Details - Vertical Stack */}
-                  <div className="grid grid-cols-1 gap-2 text-sm">
-                    <div className="flex justify-between items-center py-1 border-b border-gray-100">
-                      <span className="text-gray-600">Amount:</span>
-                      <span className="font-semibold text-green-600">{transaction.amount}</span>
-                    </div>
-                    <div className="flex justify-between items-center py-1 border-b border-gray-100">
-                      <span className="text-gray-600">Network:</span>
-                      <span className="font-medium">{transaction.network}</span>
-                    </div>
-                    <div className="flex justify-between items-center py-1 border-b border-gray-100">
-                      <span className="text-gray-600">Type:</span>
-                      <span className="font-medium">{transaction.type}</span>
-                    </div>
-                    <div className="flex justify-between items-center py-1">
-                      <span className="text-gray-600">Agent:</span>
-                      <span className="font-medium text-xs text-right">{transaction.agent}</span>
-                    </div>
-                  </div>
+            <div key={index} className="flex items-center justify-between p-4 border rounded-lg hover:bg-gray-50 transition-colors">
+              <div className="flex items-center space-x-4">
+                <div className="text-sm">
+                  <div className="font-medium text-gray-900">{transaction.id}</div>
+                  <div className="text-gray-500">{transaction.agent}</div>
                 </div>
-              </CardContent>
-            </Card>
+                <div className="text-sm">
+                  <div className="font-medium">{transaction.amount}</div>
+                  <div className="text-gray-500">{transaction.network} - {transaction.type}</div>
+                </div>
+              </div>
+              
+              <div className="flex items-center space-x-4">
+                <Badge className={getStatusColor(transaction.status)}>
+                  {transaction.status}
+                </Badge>
+                <div className="text-sm text-gray-500 text-right">
+                  {transaction.time}
+                </div>
+              </div>
+            </div>
           ))}
         </div>
         
         <div className="mt-6 flex justify-center">
-          <Button variant="outline" className="w-full sm:w-auto">
-            View All Transactions
-          </Button>
+          <Button variant="outline">View All Transactions</Button>
         </div>
       </CardContent>
     </Card>

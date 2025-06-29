@@ -7,7 +7,6 @@ import { Badge } from '@/components/ui/badge';
 import { User, Phone } from 'lucide-react';
 import NetworkDetector from '../NetworkDetector';
 import TermsSelector from './TermsSelector';
-import SmartRecipientInput from './SmartRecipientInput';
 
 interface StreamlinedRecipientDetailsProps {
   purchaseMode: 'self' | 'other';
@@ -87,12 +86,63 @@ const StreamlinedRecipientDetails = ({
             </div>
           </div>
         ) : (
-          <SmartRecipientInput
-            recipientData={recipientData}
-            onRecipientDataChange={onRecipientDataChange}
-            onPhoneValidation={onPhoneValidation}
-            detectedNetwork={detectedNetwork}
-          />
+          <div className="space-y-3">
+            <div className="space-y-2">
+              <Label htmlFor="recipientName" className="text-sm font-medium">
+                Recipient Name
+              </Label>
+              <Input
+                id="recipientName"
+                value={recipientData.name}
+                onChange={(e) => onRecipientDataChange({ ...recipientData, name: e.target.value })}
+                placeholder="Enter recipient's name"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="recipientPhone" className="text-sm font-medium">
+                Recipient Phone Number
+              </Label>
+              <div className="relative">
+                <Phone className="absolute left-3 top-3 w-4 h-4 text-gray-400" />
+                <Input
+                  id="recipientPhone"
+                  value={recipientData.phone}
+                  onChange={(e) => {
+                    const newPhone = e.target.value;
+                    onRecipientDataChange({ ...recipientData, phone: newPhone });
+                    onPhoneValidation(newPhone);
+                  }}
+                  placeholder="Enter recipient's phone number"
+                  className="pl-10"
+                />
+              </div>
+              
+              {detectedNetwork && (
+                <div className="flex items-center gap-2">
+                  <Badge variant="outline" className="text-xs">
+                    {detectedNetwork}
+                  </Badge>
+                  <NetworkDetector
+                    phoneNumber={recipientData.phone}
+                    onNetworkDetected={() => {}}
+                  />
+                </div>
+              )}
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="relationship" className="text-sm font-medium">
+                Relationship
+              </Label>
+              <Input
+                id="relationship"
+                value={recipientData.relationship}
+                onChange={(e) => onRecipientDataChange({ ...recipientData, relationship: e.target.value })}
+                placeholder="e.g., Family, Friend, Colleague"
+              />
+            </div>
+          </div>
         )}
 
         <TermsSelector

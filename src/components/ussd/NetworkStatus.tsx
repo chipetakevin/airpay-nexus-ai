@@ -1,9 +1,10 @@
+
 import React from 'react';
 import { Shield, CheckCircle, AlertTriangle } from 'lucide-react';
 
 const NetworkStatus = () => {
   const networks = [
-    { name: 'Divinely Mobile', status: 'active', uptime: '99.9%', color: 'bg-green-500' },
+    { name: 'Devine Mobile', status: 'active', uptime: '99.9%', color: 'bg-green-500' },
     { name: 'MTN', status: 'active', uptime: '99.8%', color: 'bg-yellow-500' },
     { name: 'Vodacom', status: 'maintenance', uptime: '98.5%', color: 'bg-orange-500' },
     { name: 'Telkom', status: 'active', uptime: '99.2%', color: 'bg-blue-500' }

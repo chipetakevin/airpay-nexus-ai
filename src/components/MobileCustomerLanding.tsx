@@ -24,8 +24,15 @@ const MobileCustomerLanding = () => {
       description: 'Shop instantly via WhatsApp - No app needed!',
       icon: <MessageCircle className="w-6 h-6" />,
       action: () => {
-        // Redirect to smart deals for logged-in users
-        window.location.href = '/portal?tab=deals';
+        const phoneNumber = currentUser.registeredPhone?.replace('+', '') || '27832466539';
+        const message = encodeURIComponent(
+          `🛒 Express Shopping Request\n\n` +
+          `Customer: ${currentUser.firstName} ${currentUser.lastName}\n` +
+          `OneCard: ${currentUser.cardNumber}\n` +
+          `Phone: ${currentUser.registeredPhone}\n\n` +
+          `Show me today's hottest deals! 🔥`
+        );
+        window.open(`https://wa.me/${phoneNumber}?text=${message}`, '_blank');
       },
       gradient: 'from-green-500 to-emerald-600',
       badge: 'Instant',
@@ -35,7 +42,7 @@ const MobileCustomerLanding = () => {
       title: 'Smart Deals Portal',
       description: 'Browse exclusive customer deals',
       icon: <Zap className="w-6 h-6" />,
-      action: () => window.location.href = '/portal?tab=deals',
+      action: () => window.location.href = '/portal?tab=onecard',
       gradient: 'from-blue-500 to-purple-600',
       badge: 'VIP Only'
     },
@@ -43,7 +50,16 @@ const MobileCustomerLanding = () => {
       title: 'Gift & Share',
       description: 'Send airtime/data to loved ones',
       icon: <Gift className="w-6 h-6" />,
-      action: () => window.location.href = '/portal?tab=deals',
+      action: () => {
+        const phoneNumber = currentUser.registeredPhone?.replace('+', '') || '27832466539';
+        const message = encodeURIComponent(
+          `🎁 Gift Purchase\n\n` +
+          `From: ${currentUser.firstName} ${currentUser.lastName}\n` +
+          `OneCard: ${currentUser.cardNumber}\n\n` +
+          `I want to gift airtime/data. Please help! 💝`
+        );
+        window.open(`https://wa.me/${phoneNumber}?text=${message}`, '_blank');
+      },
       gradient: 'from-pink-500 to-rose-600',
       badge: 'Social'
     }
@@ -83,14 +99,14 @@ const MobileCustomerLanding = () => {
           </Badge>
           <Badge className="bg-gradient-to-r from-blue-500 to-purple-600 text-white">
             <Sparkles className="w-3 h-3 mr-1" />
-            Smart Deals Ready
+            WhatsApp Ready
           </Badge>
         </div>
         <h2 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
           Welcome back, {currentUser.firstName}!
         </h2>
         <p className="text-gray-600">
-          Your exclusive smart deals shopping experience is ready
+          Your exclusive WhatsApp shopping experience is ready
         </p>
       </div>
 
@@ -98,7 +114,7 @@ const MobileCustomerLanding = () => {
       <div className="space-y-4">
         <h3 className="text-lg font-semibold text-gray-900 flex items-center gap-2">
           <Smartphone className="w-5 h-5 text-blue-600" />
-          Smart Deals Shopping
+          Mobile-First Shopping
         </h3>
         
         <div className="grid grid-cols-1 gap-4">
@@ -134,7 +150,7 @@ const MobileCustomerLanding = () => {
                     
                     <div className="flex items-center justify-between">
                       <span className="text-sm font-medium text-gray-700">
-                        Tap to access smart deals
+                        Tap to start shopping
                       </span>
                       <ArrowRight className="w-4 h-4 text-gray-400" />
                     </div>
@@ -155,15 +171,21 @@ const MobileCustomerLanding = () => {
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-3">
-          <div className="text-center p-3 bg-white rounded-lg border">
-            <p className="text-xs text-gray-600 mb-1">Registered Phone</p>
-            <p className="font-bold text-gray-900">{currentUser.registeredPhone}</p>
+          <div className="grid grid-cols-2 gap-4">
+            <div className="text-center p-3 bg-white rounded-lg border">
+              <p className="text-xs text-gray-600 mb-1">OneCard Number</p>
+              <p className="font-bold text-gray-900">****{currentUser.cardNumber?.slice(-4)}</p>
+            </div>
+            <div className="text-center p-3 bg-white rounded-lg border">
+              <p className="text-xs text-gray-600 mb-1">Registered Phone</p>
+              <p className="font-bold text-gray-900">{currentUser.registeredPhone}</p>
+            </div>
           </div>
           
-          <Link to="/portal?tab=deals">
+          <Link to="/portal?tab=onecard">
             <Button className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 mt-4">
               <TrendingUp className="w-4 h-4 mr-2" />
-              Access Smart Deals
+              View Full Dashboard
             </Button>
           </Link>
         </CardContent>
@@ -171,30 +193,9 @@ const MobileCustomerLanding = () => {
 
       {/* Exclusive Features */}
       <div className="space-y-4">
-        <h3 className="text-lg font-semibold text-gray-900">Why Choose Smart Deals Shopping?</h3>
+        <h3 className="text-lg font-semibold text-gray-900">Why Choose WhatsApp Shopping?</h3>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          {[
-            {
-              icon: <Shield className="w-5 h-5 text-green-600" />,
-              title: 'Secure Smart Shopping',
-              description: 'Bank-grade security for all transactions'
-            },
-            {
-              icon: <Clock className="w-5 h-5 text-blue-600" />,
-              title: 'Instant Delivery',
-              description: 'Airtime loaded within 30 seconds'
-            },
-            {
-              icon: <Star className="w-5 h-5 text-yellow-600" />,
-              title: 'VIP Customer Benefits',
-              description: 'Exclusive deals and cashback rewards'
-            },
-            {
-              icon: <Users className="w-5 h-5 text-purple-600" />,
-              title: '24/7 Smart Support',
-              description: 'Always available intelligent assistance'
-            }
-          ].map((feature, index) => (
+          {exclusiveFeatures.map((feature, index) => (
             <div key={index} className="flex items-start gap-3 p-4 bg-white rounded-lg border border-gray-200 hover:border-blue-200 transition-colors">
               <div className="p-2 bg-gray-50 rounded-lg">
                 {feature.icon}
