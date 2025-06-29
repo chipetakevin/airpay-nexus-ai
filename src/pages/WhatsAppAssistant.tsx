@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -44,26 +45,6 @@ const WhatsAppAssistantPage = () => {
 
           <WhatsAppRegistrationGuard showPreview={!isAuthenticated}>
             <Card className="max-w-md mx-auto shadow-2xl border-2 border-green-200 rounded-3xl overflow-hidden">
-              <div className="bg-gradient-to-r from-green-600 to-emerald-700 text-white p-4">
-                <div className="flex items-center gap-3">
-                  <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center">
-                    <Smartphone className="w-7 h-7 text-green-600" />
-                  </div>
-                  <div className="flex-1">
-                    <h2 className="font-bold text-lg">
-                      Devine Mobile Shopping
-                    </h2>
-                    <div className="flex items-center gap-2 text-sm opacity-90">
-                      <div className="w-2 h-2 bg-green-300 rounded-full animate-pulse"></div>
-                      <span>Personalized for {currentUser?.firstName || 'You'}</span>
-                    </div>
-                  </div>
-                  <Badge className="bg-green-800 text-green-100 px-3 py-1">
-                    Full Interface
-                  </Badge>
-                </div>
-              </div>
-              
               <CardContent className="p-0">
                 <WhatsAppAssistant />
               </CardContent>
