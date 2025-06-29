@@ -91,26 +91,7 @@ const WhatsAppShoppingInterface = () => {
   ];
 
   return (
-    <div className="flex flex-col h-full max-w-md mx-auto bg-white rounded-2xl overflow-hidden">
-      {/* WhatsApp Header */}
-      <div className="bg-gradient-to-r from-green-600 to-emerald-700 text-white p-4 rounded-t-2xl">
-        <div className="flex items-center gap-3">
-          <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center">
-            <MessageCircle className="w-7 h-7 text-green-600" />
-          </div>
-          <div className="flex-1">
-            <h3 className="font-bold text-lg">Devine Mobile Shopping</h3>
-            <div className="text-sm opacity-90 flex items-center gap-1">
-              <div className="w-2 h-2 bg-green-300 rounded-full"></div>
-              <span>Personalized for {currentUser?.firstName || 'You'}</span>
-            </div>
-          </div>
-          <Badge className="bg-green-800 text-green-100 px-3 py-1 font-medium">
-            Full Interface
-          </Badge>
-        </div>
-      </div>
-
+    <div className="flex flex-col h-full bg-white">
       {/* Tab Navigation */}
       <div className="flex bg-gray-100 border-b">
         <button
