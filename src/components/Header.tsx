@@ -72,8 +72,15 @@ const Header = ({ onQuickShopToggle, isQuickShopOpen }: HeaderProps) => {
       }
     };
 
+    const handleEscapeKey = (event: KeyboardEvent) => {
+      if (event.key === 'Escape' && isMenuOpen) {
+        setIsMenuOpen(false);
+      }
+    };
+
     if (isMenuOpen) {
       document.addEventListener('click', handleClickOutside);
+      document.addEventListener('keydown', handleEscapeKey);
       document.body.style.overflow = 'hidden';
     } else {
       document.body.style.overflow = '';
@@ -81,6 +88,7 @@ const Header = ({ onQuickShopToggle, isQuickShopOpen }: HeaderProps) => {
 
     return () => {
       document.removeEventListener('click', handleClickOutside);
+      document.removeEventListener('keydown', handleEscapeKey);
       document.body.style.overflow = '';
     };
   }, [isMenuOpen]);
@@ -145,7 +153,7 @@ const Header = ({ onQuickShopToggle, isQuickShopOpen }: HeaderProps) => {
             <button
               onClick={toggleMenu}
               data-mobile-menu="trigger"
-              className="md:hidden p-3 rounded-lg hover:bg-white/20 transition-colors z-50 relative touch-manipulation"
+              className="md:hidden p-3 rounded-lg hover:bg-white/20 transition-colors z-[100] relative touch-manipulation"
               aria-label="Toggle menu"
               type="button"
             >
@@ -163,14 +171,14 @@ const Header = ({ onQuickShopToggle, isQuickShopOpen }: HeaderProps) => {
         <>
           {/* Backdrop */}
           <div 
-            className="md:hidden fixed inset-0 bg-black/50 z-[60] backdrop-blur-sm"
+            className="md:hidden fixed inset-0 bg-black/60 z-[90] backdrop-blur-sm"
             onClick={closeMenu}
           />
           
           {/* Mobile Menu */}
           <div 
             data-mobile-menu="content"
-            className="md:hidden fixed left-0 right-0 top-16 bg-white shadow-2xl border-t-2 border-[#75B8FA]/20 z-[70] max-h-[calc(100vh-4rem)] overflow-y-auto animate-slide-down"
+            className="md:hidden fixed left-0 right-0 top-16 bg-white shadow-2xl border-t-2 border-[#75B8FA]/20 z-[95] max-h-[calc(100vh-4rem)] overflow-y-auto animate-in slide-in-from-top-2 duration-200"
           >
             <nav className="p-6 space-y-3">
               {navigationItems.map((item) => (
@@ -227,23 +235,6 @@ const Header = ({ onQuickShopToggle, isQuickShopOpen }: HeaderProps) => {
           </div>
         </>
       )}
-
-      <style jsx>{`
-        @keyframes slide-down {
-          from {
-            opacity: 0;
-            transform: translateY(-10px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-        
-        .animate-slide-down {
-          animation: slide-down 0.2s ease-out;
-        }
-      `}</style>
     </>
   );
 };
