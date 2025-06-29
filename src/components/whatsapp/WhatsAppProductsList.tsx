@@ -3,23 +3,25 @@ import React from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Plus, CreditCard } from 'lucide-react';
+import { Plus } from 'lucide-react';
 
 interface Product {
-  id: number;
+  id: string;
   name: string;
+  type: string;
+  network: string;
+  amount: string;
   price: number;
-  category: 'airtime' | 'data' | 'bundle' | 'gift';
+  category: string;
   icon: React.ReactNode;
   description: string;
-  network?: string;
   popular?: boolean;
 }
 
 interface WhatsAppProductsListProps {
   products: Product[];
   activeCategory: string;
-  onAddToCart: (product: Product) => void;
+  onAddToCart: (product: Omit<Product, 'category'> & { quantity?: number }) => void;
 }
 
 const WhatsAppProductsList: React.FC<WhatsAppProductsListProps> = ({ 
@@ -56,8 +58,19 @@ const WhatsAppProductsList: React.FC<WhatsAppProductsListProps> = ({
                   <div className="text-xl font-bold text-green-600">R{product.price}</div>
                 </div>
                 <Button
-                  onClick={() => onAddToCart(product)}
-                  className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-xl font-medium"
+                  onClick={() => onAddToCart({
+                    id: product.id,
+                    name: product.name,
+                    type: product.type,
+                    network: product.network,
+                    amount: product.amount,
+                    price: product.price,
+                    icon: product.icon,
+                    description: product.description,
+                    popular: product.popular
+                  })}
+                  className="bg-green-600 hover:bg-green-700 text-white rounded-xl px-4 py-2"
+                  size="sm"
                 >
                   <Plus className="w-4 h-4 mr-1" />
                   Add

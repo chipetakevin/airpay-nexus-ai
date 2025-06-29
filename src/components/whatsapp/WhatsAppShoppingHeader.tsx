@@ -1,33 +1,50 @@
 
 import React from 'react';
 import { Button } from '@/components/ui/button';
-import { MessageCircle, X } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
+import { X, Smartphone, ArrowLeft } from 'lucide-react';
 
 interface WhatsAppShoppingHeaderProps {
+  isAuthenticated: boolean;
   onExit: () => void;
 }
 
-const WhatsAppShoppingHeader: React.FC<WhatsAppShoppingHeaderProps> = ({ onExit }) => {
-  const handleExit = () => {
-    // Always redirect to home page
-    window.location.href = '/';
-  };
-
+const WhatsAppShoppingHeader: React.FC<WhatsAppShoppingHeaderProps> = ({ 
+  isAuthenticated, 
+  onExit 
+}) => {
   return (
-    <div className="bg-green-600 text-white p-3 flex items-center justify-between">
-      <div className="flex items-center gap-2">
-        <MessageCircle className="w-6 h-6" />
-        <h2 className="text-lg font-semibold">WhatsApp Shopping</h2>
+    <div className="bg-gradient-to-r from-green-600 to-emerald-700 text-white p-4">
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center">
+            <Smartphone className="w-6 h-6 text-green-600" />
+          </div>
+          <div>
+            <h2 className="font-bold text-lg">Divine Mobile Shop</h2>
+            <div className="flex items-center gap-2 text-sm opacity-90">
+              <div className="w-2 h-2 bg-green-300 rounded-full animate-pulse"></div>
+              <span>WhatsApp Shopping</span>
+            </div>
+          </div>
+        </div>
+        
+        <div className="flex items-center gap-2">
+          {isAuthenticated && (
+            <Badge className="bg-green-800 text-green-100 px-2 py-1 text-xs">
+              Registered ✓
+            </Badge>
+          )}
+          <Button
+            onClick={onExit}
+            variant="ghost"
+            size="sm"
+            className="text-white hover:bg-white/20 p-2"
+          >
+            <ArrowLeft className="w-4 h-4" />
+          </Button>
+        </div>
       </div>
-      <Button
-        onClick={handleExit}
-        variant="ghost"
-        size="sm"
-        className="w-8 h-8 p-0 rounded-full bg-white/10 hover:bg-white/20 transition-all duration-200"
-        title="Exit to Home"
-      >
-        <X className="w-4 h-4 text-white" />
-      </Button>
     </div>
   );
 };
