@@ -8,17 +8,19 @@ import DealsGrid from './deals/DealsGrid';
 import SystemInfo from './deals/SystemInfo';
 import ShoppingCart from './ShoppingCart';
 import AuthenticationIndicator from './deals/AuthenticationIndicator';
-import RegistrationGate from './auth/RegistrationGate';
+import ServiceAccessGate from './auth/ServiceAccessGate';
 import CrossPlatformNavigation from './navigation/CrossPlatformNavigation';
 
 const AirtimeDealsSystem = () => {
   const { deals, isLoading, lastRefresh, scrapingStatus, handleManualRefresh } = useDealsData();
-  // Set defaults: Divine Mobile as default network, airtime as default deal type
   const [selectedNetwork, setSelectedNetwork] = useState('divine mobile');
   const [selectedAmount, setSelectedAmount] = useState('all');
   const [selectedDealType, setSelectedDealType] = useState('airtime');
   const [showCart, setShowCart] = useState(false);
   const [selectedDeal, setSelectedDeal] = useState<CartItem | null>(null);
+
+  // Check authentication status
+  const isAuthenticated = localStorage.getItem('userAuthenticated') === 'true';
 
   const filteredDeals = deals.filter(deal => {
     const networkMatch = selectedNetwork === 'all' || deal.network.toLowerCase() === selectedNetwork.toLowerCase();
@@ -28,70 +30,78 @@ const AirtimeDealsSystem = () => {
   });
 
   const handleGrabDeal = (cartItem: CartItem) => {
+    if (!isAuthenticated) {
+      // Redirect to registration instead of showing cart
+      window.location.href = '/portal?tab=registration';
+      return;
+    }
     setSelectedDeal(cartItem);
     setShowCart(true);
   };
 
+  const handleNavigateToRegistration = () => {
+    window.location.href = '/portal?tab=registration';
+  };
+
   const handleClearFilters = () => {
-    // Reset to defaults: Divine Mobile and airtime
     setSelectedNetwork('divine mobile');
     setSelectedAmount('all');
     setSelectedDealType('airtime');
   };
 
   return (
-    <RegistrationGate 
-      serviceName="airtime deals and payments"
-      requireBankingInfo={true}
-      allowedPaths={['/portal?tab=registration', '/portal?tab=deals']}
-    >
-      <div className="space-y-6">
-        {/* Cross-Platform Navigation */}
-        <CrossPlatformNavigation currentPlatform="portal" />
+    <div className="space-y-6">
+      {/* Cross-Platform Navigation */}
+      <CrossPlatformNavigation currentPlatform="portal" />
 
-        {/* Authentication Indicator - but NO session management */}
-        <AuthenticationIndicator />
+      {/* Authentication Indicator */}
+      <AuthenticationIndicator />
 
-        {/* Header Section */}
-        <DealsHeader
-          lastRefresh={lastRefresh}
-          scrapingStatus={scrapingStatus}
-          isLoading={isLoading}
-          onManualRefresh={handleManualRefresh}
-        />
+      {/* Header Section */}
+      <DealsHeader
+        lastRefresh={lastRefresh}
+        scrapingStatus={scrapingStatus}
+        isLoading={isLoading}
+        onManualRefresh={handleManualRefresh}
+      />
 
-        {/* Enhanced Filters */}
-        <DealsFiltersSection
-          selectedDealType={selectedDealType}
-          selectedNetwork={selectedNetwork}
-          selectedAmount={selectedAmount}
-          onDealTypeChange={setSelectedDealType}
-          onNetworkChange={setSelectedNetwork}
-          onAmountChange={setSelectedAmount}
-          onClearFilters={handleClearFilters}
-        />
+      {/* Enhanced Filters */}
+      <DealsFiltersSection
+        selectedDealType={selectedDealType}
+        selectedNetwork={selectedNetwork}
+        selectedAmount={selectedAmount}
+        onDealTypeChange={setSelectedDealType}
+        onNetworkChange={setSelectedNetwork}
+        onAmountChange={setSelectedAmount}
+        onClearFilters={handleClearFilters}
+      />
 
-        {/* Deals Grid */}
+      {/* Service Access Gate for Deals Grid */}
+      <ServiceAccessGate
+        serviceName="airtime deals and payments"
+        onNavigateToRegistration={handleNavigateToRegistration}
+        isAuthenticated={isAuthenticated}
+      >
         <DealsGrid
           deals={filteredDeals}
           isLoading={isLoading}
           onGrabDeal={handleGrabDeal}
         />
+      </ServiceAccessGate>
 
-        <SystemInfo />
+      <SystemInfo />
 
-        {/* Shopping Cart Modal - NO session management */}
-        {showCart && (
-          <ShoppingCart 
-            initialDeal={selectedDeal}
-            onClose={() => {
-              setShowCart(false);
-              setSelectedDeal(null);
-            }}
-          />
-        )}
-      </div>
-    </RegistrationGate>
+      {/* Shopping Cart Modal - Only for authenticated users */}
+      {showCart && isAuthenticated && (
+        <ShoppingCart 
+          initialDeal={selectedDeal}
+          onClose={() => {
+            setShowCart(false);
+            setSelectedDeal(null);
+          }}
+        />
+      )}
+    </div>
   );
 };
 

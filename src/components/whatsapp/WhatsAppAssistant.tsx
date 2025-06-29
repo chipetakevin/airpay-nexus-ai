@@ -1,6 +1,7 @@
 
 import React, { useState } from 'react';
 import { useWhatsAppShopping } from '@/hooks/useWhatsAppShopping';
+import ServiceAccessGate from '@/components/auth/ServiceAccessGate';
 import WhatsAppShoppingHeader from './WhatsAppShoppingHeader';
 import WhatsAppTabNavigation from './WhatsAppTabNavigation';
 import WhatsAppCategoryGrid from './WhatsAppCategoryGrid';
@@ -26,6 +27,10 @@ const WhatsAppAssistant = () => {
 
   const handleExitToDeals = () => {
     window.location.href = '/ai-powered-deals';
+  };
+
+  const handleNavigateToRegistration = () => {
+    window.location.href = '/portal?tab=registration';
   };
 
   const products = [
@@ -68,13 +73,25 @@ const WhatsAppAssistant = () => {
   ];
 
   const handleCheckout = async () => {
+    if (!isAuthenticated) {
+      handleNavigateToRegistration();
+      return;
+    }
+    
     const success = await processCheckout();
     if (success) {
-      // Auto-switch back to shop tab after successful checkout
       setTimeout(() => {
         setActiveTab('shop');
       }, 3000);
     }
+  };
+
+  const protectedAddToCart = (product: any) => {
+    if (!isAuthenticated) {
+      handleNavigateToRegistration();
+      return;
+    }
+    addToCart(product);
   };
 
   return (
@@ -91,7 +108,11 @@ const WhatsAppAssistant = () => {
       />
       
       {activeTab === 'shop' && (
-        <>
+        <ServiceAccessGate
+          serviceName="WhatsApp shopping services"
+          onNavigateToRegistration={handleNavigateToRegistration}
+          isAuthenticated={isAuthenticated}
+        >
           <WhatsAppCategoryGrid 
             activeCategory={activeCategory} 
             onCategoryChange={setActiveCategory} 
@@ -99,21 +120,33 @@ const WhatsAppAssistant = () => {
           <WhatsAppProductsList 
             products={products} 
             activeCategory={activeCategory} 
-            onAddToCart={addToCart} 
+            onAddToCart={protectedAddToCart} 
           />
-        </>
+        </ServiceAccessGate>
       )}
 
       {activeTab === 'cart' && (
         <div className="flex-1 p-4">
-          <WhatsAppCart 
-            items={cart}
-            onUpdateQuantity={updateQuantity}
-            onRemoveItem={removeFromCart}
-            onCheckout={handleCheckout}
-            onBackToShopping={() => setActiveTab('shop')}
-            isProcessing={isProcessing}
-          />
+          {isAuthenticated ? (
+            <WhatsAppCart 
+              items={cart}
+              onUpdateQuantity={updateQuantity}
+              onRemoveItem={removeFromCart}
+              onCheckout={handleCheckout}
+              onBackToShopping={() => setActiveTab('shop')}
+              isProcessing={isProcessing}
+            />
+          ) : (
+            <ServiceAccessGate
+              serviceName="shopping cart"
+              onNavigateToRegistration={handleNavigateToRegistration}
+              isAuthenticated={false}
+            >
+              <div className="text-center p-8">
+                <p>Your cart is empty</p>
+              </div>
+            </ServiceAccessGate>
+          )}
         </div>
       )}
 
