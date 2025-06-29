@@ -1,7 +1,5 @@
 
-
 import React from 'react';
-import { MessageCircle } from 'lucide-react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import HeroSection from '@/components/HeroSection';
@@ -19,7 +17,6 @@ import WhatsAppShoppingSection from '@/components/WhatsAppShoppingSection';
 import SmoothScrollNav from '@/components/SmoothScrollNav';
 import MobileLayout from '@/components/navigation/MobileLayout';
 import { useMobileAuth } from '@/hooks/useMobileAuth';
-import CompressedWhatsAppInterface from '@/components/whatsapp/CompressedWhatsAppInterface';
 
 const Index = () => {
   const { isAuthenticated } = useMobileAuth();
@@ -67,13 +64,9 @@ const Index = () => {
         <Footer />
         <WhatsAppFloatingButton />
         <SmoothScrollNav />
-        
-        {/* Compressed Mobile Assistant - Only on Mobile */}
-        <CompressedWhatsAppInterface />
       </div>
     </MobileLayout>
   );
 };
 
 export default Index;
-
