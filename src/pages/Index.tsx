@@ -40,7 +40,7 @@ const Index = () => {
             <HeroSection />
           </div>
           
-          {/* Devine Mobile Assistant - Placed above RICA Services */}
+          {/* Devine Mobile Assistant - Positioned just above RICA Services */}
           <section className="py-8 bg-gradient-to-br from-green-50 via-white to-blue-50">
             <div className="container mx-auto px-4">
               <div className="text-center mb-6">
