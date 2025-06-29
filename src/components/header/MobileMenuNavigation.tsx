@@ -2,7 +2,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { 
-  Crown, Zap, Brain, MessageCircle, Scan, FileCheck, Flame, Database, Sparkles, Globe
+  Crown, Zap, Brain, Scan, FileCheck, Flame, Database, Sparkles, Globe
 } from 'lucide-react';
 
 interface MobileMenuNavigationProps {
@@ -46,12 +46,7 @@ const MobileMenuNavigation = ({ toggleMenu }: MobileMenuNavigationProps) => {
         <span className="font-medium text-xs">Mobile Porting & RICA</span>
       </Link>
       
-      {/* AI & Assistant Services */}
-      <Link to="/whatsapp-assistant" className="flex items-center gap-2 p-1.5 rounded-md hover:bg-green-50 active:bg-green-100 transition-all duration-200 min-h-[32px] touch-manipulation" onClick={toggleMenu}>
-        <MessageCircle className="w-3 h-3 text-green-600 flex-shrink-0" />
-        <span className="font-medium text-xs">WhatsApp Business Assistant</span>
-      </Link>
-      
+      {/* AI & Assistant Services - WhatsApp Business Assistant removed */}
       <Link to="/scan-to-text-ai" className="flex items-center gap-2 p-1.5 rounded-md hover:bg-purple-50 active:bg-purple-100 transition-all duration-200 min-h-[32px] touch-manipulation" onClick={toggleMenu}>
         <Scan className="w-3 h-3 text-purple-600 flex-shrink-0" />
         <span className="font-medium text-xs">AI Document Scanner</span>
