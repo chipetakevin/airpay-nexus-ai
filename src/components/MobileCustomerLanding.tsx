@@ -1,22 +1,33 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { 
   MessageCircle, Zap, CreditCard, Gift, TrendingUp, 
   Star, Smartphone, Shield, Clock, CheckCircle,
-  ArrowRight, Sparkles, Users
+  ArrowRight, Sparkles, Users, ChevronDown, ChevronUp,
+  Phone, Eye, EyeOff
 } from 'lucide-react';
 import { useMobileAuth } from '@/hooks/useMobileAuth';
 import { Link } from 'react-router-dom';
 
 const MobileCustomerLanding = () => {
   const { currentUser, isAuthenticated } = useMobileAuth();
+  const [isAccountExpanded, setIsAccountExpanded] = useState(false);
+  const [showPhoneNumber, setShowPhoneNumber] = useState(false);
 
   if (!isAuthenticated || !currentUser) {
     return null;
   }
+
+  const toggleAccountExpanded = () => {
+    setIsAccountExpanded(!isAccountExpanded);
+  };
+
+  const togglePhoneVisibility = () => {
+    setShowPhoneNumber(!showPhoneNumber);
+  };
 
   const quickShopActions = [
     {
@@ -24,51 +35,11 @@ const MobileCustomerLanding = () => {
       description: 'Shop instantly via WhatsApp - No app needed!',
       icon: <MessageCircle className="w-6 h-6" />,
       action: () => {
-        // Redirect to smart deals for logged-in users
         window.location.href = '/portal?tab=deals';
       },
       gradient: 'from-green-500 to-emerald-600',
       badge: 'Instant',
       popular: true
-    },
-    {
-      title: 'Smart Deals Portal',
-      description: 'Browse exclusive customer deals',
-      icon: <Zap className="w-6 h-6" />,
-      action: () => window.location.href = '/portal?tab=deals',
-      gradient: 'from-blue-500 to-purple-600',
-      badge: 'VIP Only'
-    },
-    {
-      title: 'Gift & Share',
-      description: 'Send airtime/data to loved ones',
-      icon: <Gift className="w-6 h-6" />,
-      action: () => window.location.href = '/portal?tab=deals',
-      gradient: 'from-pink-500 to-rose-600',
-      badge: 'Social'
-    }
-  ];
-
-  const exclusiveFeatures = [
-    {
-      icon: <Shield className="w-5 h-5 text-green-600" />,
-      title: 'Secure WhatsApp Shopping',
-      description: 'Bank-grade security for all transactions'
-    },
-    {
-      icon: <Clock className="w-5 h-5 text-blue-600" />,
-      title: 'Instant Delivery',
-      description: 'Airtime loaded within 30 seconds'
-    },
-    {
-      icon: <Star className="w-5 h-5 text-yellow-600" />,
-      title: 'VIP Customer Benefits',
-      description: 'Exclusive deals and cashback rewards'
-    },
-    {
-      icon: <Users className="w-5 h-5 text-purple-600" />,
-      title: '24/7 AI Assistant',
-      description: 'Always available WhatsApp support'
     }
   ];
 
@@ -94,11 +65,106 @@ const MobileCustomerLanding = () => {
         </p>
       </div>
 
+      {/* Collapsible Account Summary */}
+      <Card className="bg-gradient-to-r from-gray-50 to-blue-50 border border-blue-200">
+        <CardHeader 
+          className="cursor-pointer hover:bg-blue-50/50 transition-colors"
+          onClick={toggleAccountExpanded}
+        >
+          <CardTitle className="flex items-center justify-between text-gray-900">
+            <div className="flex items-center gap-2">
+              <CreditCard className="w-5 h-5 text-blue-600" />
+              Your OneCard Account
+            </div>
+            {isAccountExpanded ? (
+              <ChevronUp className="w-5 h-5 text-gray-400" />
+            ) : (
+              <ChevronDown className="w-5 h-5 text-gray-400" />
+            )}
+          </CardTitle>
+        </CardHeader>
+        
+        {isAccountExpanded && (
+          <CardContent className="space-y-4 animate-fade-in">
+            {/* Registered Phone */}
+            <div className="bg-white rounded-lg p-4 border border-blue-200">
+              <div className="text-center space-y-3">
+                <div className="flex items-center justify-center gap-2 text-blue-600 mb-2">
+                  <Phone className="w-4 h-4" />
+                  <span className="text-sm font-medium">Registered Phone</span>
+                </div>
+                <div 
+                  className="flex items-center justify-center gap-2 cursor-pointer hover:bg-blue-50 rounded-lg p-2 transition-colors"
+                  onClick={togglePhoneVisibility}
+                >
+                  <div className="text-xl font-bold text-blue-800">
+                    {showPhoneNumber ? '+27832466659' : '•••••••••••••'}
+                  </div>
+                  {showPhoneNumber ? (
+                    <EyeOff className="w-4 h-4 text-blue-600" />
+                  ) : (
+                    <Eye className="w-4 h-4 text-blue-600" />
+                  )}
+                </div>
+                <p className="text-xs text-blue-600">Click to {showPhoneNumber ? 'hide' : 'reveal'}</p>
+              </div>
+            </div>
+
+            {/* Smart Deals Portal */}
+            <div className="bg-white rounded-lg p-4 border border-purple-200">
+              <div className="flex items-center gap-4">
+                <div className="p-3 rounded-xl bg-gradient-to-r from-blue-500 to-purple-600 text-white">
+                  <Zap className="w-6 h-6" />
+                </div>
+                <div className="flex-1">
+                  <div className="flex items-center gap-2 mb-1">
+                    <h4 className="font-semibold text-gray-900">Smart Deals Portal</h4>
+                    <Badge className="bg-purple-100 text-purple-700 text-xs">VIP Only</Badge>
+                  </div>
+                  <p className="text-sm text-gray-600 mb-2">Browse exclusive customer deals</p>
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm text-gray-500">Tap to access smart deals</span>
+                    <ArrowRight className="w-4 h-4 text-gray-400" />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Gift & Share */}
+            <div className="bg-white rounded-lg p-4 border border-pink-200">
+              <div className="flex items-center gap-4">
+                <div className="p-3 rounded-xl bg-gradient-to-r from-pink-500 to-rose-600 text-white">
+                  <Gift className="w-6 h-6" />
+                </div>
+                <div className="flex-1">
+                  <div className="flex items-center gap-2 mb-1">
+                    <h4 className="font-semibold text-gray-900">Gift & Share</h4>
+                    <Badge className="bg-pink-100 text-pink-700 text-xs">Social</Badge>
+                  </div>
+                  <p className="text-sm text-gray-600 mb-2">Send airtime/data to loved ones</p>
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm text-gray-500">Tap to access smart deals</span>
+                    <ArrowRight className="w-4 h-4 text-gray-400" />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <Link to="/portal?tab=deals">
+              <Button className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 mt-4">
+                <TrendingUp className="w-4 h-4 mr-2" />
+                Access Smart Deals
+              </Button>
+            </Link>
+          </CardContent>
+        )}
+      </Card>
+
       {/* Quick Shop Actions */}
       <div className="space-y-4">
         <h3 className="text-lg font-semibold text-gray-900 flex items-center gap-2">
           <Smartphone className="w-5 h-5 text-blue-600" />
-          Smart Deals Shopping
+          Quick Shopping
         </h3>
         
         <div className="grid grid-cols-1 gap-4">
@@ -145,29 +211,6 @@ const MobileCustomerLanding = () => {
           ))}
         </div>
       </div>
-
-      {/* Account Summary */}
-      <Card className="bg-gradient-to-r from-gray-50 to-blue-50 border border-blue-200">
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2 text-gray-900">
-            <CreditCard className="w-5 h-5 text-blue-600" />
-            Your OneCard Account
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-3">
-          <div className="text-center p-3 bg-white rounded-lg border">
-            <p className="text-xs text-gray-600 mb-1">Registered Phone</p>
-            <p className="font-bold text-gray-900">{currentUser.registeredPhone}</p>
-          </div>
-          
-          <Link to="/portal?tab=deals">
-            <Button className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 mt-4">
-              <TrendingUp className="w-4 h-4 mr-2" />
-              Access Smart Deals
-            </Button>
-          </Link>
-        </CardContent>
-      </Card>
 
       {/* Exclusive Features */}
       <div className="space-y-4">
