@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -18,15 +17,9 @@ const WhatsAppNavigation: React.FC<WhatsAppNavigationProps> = ({
 }) => {
   const location = useLocation();
 
-  const handleExitToHome = () => {
-    // Seamless navigation to landing homepage
-    if (location.pathname === '/') {
-      // Already on home page, scroll to top smoothly
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    } else {
-      // Navigate to homepage
-      window.location.href = '/';
-    }
+  const handleExitToDeals = () => {
+    // Intelligent exit to AI-Powered Deals page
+    window.location.href = '/ai-powered-deals';
   };
 
   return (
@@ -65,17 +58,17 @@ const WhatsAppNavigation: React.FC<WhatsAppNavigationProps> = ({
         </div>
       </div>
       
-      {/* Exit to Home Button positioned below navigation tabs */}
+      {/* Exit to AI Deals Button positioned below navigation tabs */}
       <div className="px-2 pb-2">
         <Button
-          onClick={handleExitToHome}
+          onClick={handleExitToDeals}
           variant="outline"
           size="sm"
           className="w-full h-8 rounded-full bg-white/90 backdrop-blur-sm border-gray-300 shadow-sm hover:bg-gray-50 hover:shadow-md transition-all duration-200"
-          title="Exit to Home"
+          title="Exit to AI Deals"
         >
           <X className="w-4 h-4 text-gray-600 mr-2" />
-          <span className="text-xs text-gray-600">Exit to Home</span>
+          <span className="text-xs text-gray-600">Exit to AI Deals</span>
         </Button>
       </div>
     </div>

@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { 
@@ -13,15 +12,9 @@ const MobileMenuDropdowns = ({ toggleMenu }: MobileMenuDropdownsProps) => {
   const [showPortalDropdown, setShowPortalDropdown] = useState(false);
   const [showAdminDropdown, setShowAdminDropdown] = useState(false);
 
-  const handleExitToHome = () => {
-    // Seamless navigation to landing homepage
-    if (window.location.pathname === '/') {
-      // Already on home page, scroll to top smoothly
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    } else {
-      // Navigate to homepage
-      window.location.href = '/';
-    }
+  const handleExitToDeals = () => {
+    // Intelligent exit to AI-Powered Deals page
+    window.location.href = '/ai-powered-deals';
     toggleMenu(); // Close the menu
   };
 
@@ -30,9 +23,9 @@ const MobileMenuDropdowns = ({ toggleMenu }: MobileMenuDropdownsProps) => {
       {/* Exit Button at the top */}
       <div className="flex justify-end mb-2">
         <button
-          onClick={handleExitToHome}
+          onClick={handleExitToDeals}
           className="w-8 h-8 p-0 rounded-full bg-gray-100 hover:bg-gray-200 transition-all duration-200 flex items-center justify-center"
-          title="Exit to Home"
+          title="Exit to AI Deals"
         >
           <X className="w-4 h-4 text-gray-600" />
         </button>

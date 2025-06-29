@@ -7,28 +7,23 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { PersistentAuthProvider } from "@/components/auth/PersistentAuthProvider";
 import Index from "./pages/Index";
 import Portal from "./pages/Portal";
-import DealsHub from "./pages/DealsHub";
 import WhatsAppAssistant from "./pages/WhatsAppAssistant";
 import ScanToTextAI from "./pages/ScanToTextAI";
 import SpazaAI from "./pages/SpazaAI";
-import PlatformDashboard from "./pages/PlatformDashboard";
-import BaaSPlatform from "./pages/BaaSPlatform";
-import DevineBaaS from "./pages/DevineBaaS";
-import MVNXBaaS from "./pages/MVNXBaaS";
 import MasterDashboard from "./pages/MasterDashboard";
 import USSDSystem from "./pages/USSDSystem";
-import DMPayroll from "./pages/DMPayroll";
-import DGXStation from "./pages/DGXStation";
+import DealsHub from "./pages/DealsHub";
 import NotFound from "./pages/NotFound";
+import DevineBaaS from "./pages/DevineBaaS";
+import DivineBaaS from "./pages/DivineBaaS";
+import BaaSPlatform from "./pages/BaaSPlatform";
+import PlatformDashboard from "./pages/PlatformDashboard";
+import MVNXBaaS from "./pages/MVNXBaaS";
+import DGXStation from "./pages/DGXStation";
+import DMPayroll from "./pages/DMPayroll";
+import AIPoweredDeals from "./pages/AIPoweredDeals";
 
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      retry: 1,
-      refetchOnWindowFocus: false,
-    },
-  },
-});
+const queryClient = new QueryClient();
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
@@ -40,18 +35,20 @@ const App = () => (
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/portal" element={<Portal />} />
-            <Route path="/deals" element={<DealsHub />} />
             <Route path="/whatsapp-assistant" element={<WhatsAppAssistant />} />
             <Route path="/scan-to-text-ai" element={<ScanToTextAI />} />
             <Route path="/spaza-ai" element={<SpazaAI />} />
-            <Route path="/platform-dashboard" element={<PlatformDashboard />} />
-            <Route path="/baas-platform" element={<BaaSPlatform />} />
-            <Route path="/devine-baas" element={<DevineBaaS />} />
-            <Route path="/mvnx-baas" element={<MVNXBaaS />} />
             <Route path="/master-dashboard" element={<MasterDashboard />} />
             <Route path="/ussd-system" element={<USSDSystem />} />
-            <Route path="/dm-payroll" element={<DMPayroll />} />
+            <Route path="/deals-hub" element={<DealsHub />} />
+            <Route path="/devine-baas" element={<DevineBaaS />} />
+            <Route path="/divine-baas" element={<DivineBaaS />} />
+            <Route path="/baas-platform" element={<BaaSPlatform />} />
+            <Route path="/platform-dashboard" element={<PlatformDashboard />} />
+            <Route path="/mvnx-baas" element={<MVNXBaaS />} />
             <Route path="/dgx-station" element={<DGXStation />} />
+            <Route path="/dm-payroll" element={<DMPayroll />} />
+            <Route path="/ai-powered-deals" element={<AIPoweredDeals />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>

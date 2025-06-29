@@ -38,15 +38,9 @@ const MobileOptimizedShoppingInterface = () => {
   const [showPayment, setShowPayment] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
 
-  const handleExitToHome = () => {
-    // Seamless navigation to landing homepage
-    if (location.pathname === '/') {
-      // Already on home page, scroll to top smoothly
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    } else {
-      // Navigate to homepage
-      window.location.href = '/';
-    }
+  const handleExitToDeals = () => {
+    // Intelligent exit to AI-Powered Deals page
+    window.location.href = '/ai-powered-deals';
   };
 
   const featuredProducts: Product[] = [
@@ -324,11 +318,11 @@ const MobileOptimizedShoppingInterface = () => {
               </Badge>
             )}
             <Button
-              onClick={handleExitToHome}
+              onClick={handleExitToDeals}
               variant="ghost"
               size="sm"
               className="w-8 h-8 p-0 rounded-full bg-white/10 hover:bg-white/20 transition-all duration-200"
-              title="Exit to Home"
+              title="Exit to AI Deals"
             >
               <X className="w-4 h-4 text-white" />
             </Button>

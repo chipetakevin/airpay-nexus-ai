@@ -31,6 +31,11 @@ const WhatsAppShoppingInterface = () => {
   const [activeCategory, setActiveCategory] = useState('airtime');
   const [cart, setCart] = useState<CartItem[]>([]);
 
+  const handleExitToDeals = () => {
+    // Intelligent exit to AI-Powered Deals page
+    window.location.href = '/ai-powered-deals';
+  };
+
   const handleExitToHome = () => {
     // Seamless navigation to landing homepage
     if (location.pathname === '/') {
@@ -111,11 +116,11 @@ const WhatsAppShoppingInterface = () => {
           <h2 className="text-lg font-semibold">WhatsApp Shopping</h2>
         </div>
         <Button
-          onClick={handleExitToHome}
+          onClick={handleExitToDeals}
           variant="ghost"
           size="sm"
           className="w-8 h-8 p-0 rounded-full bg-white/10 hover:bg-white/20 transition-all duration-200"
-          title="Exit to Home"
+          title="Exit to AI Deals"
         >
           <X className="w-4 h-4 text-white" />
         </Button>
