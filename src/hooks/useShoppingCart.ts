@@ -74,7 +74,7 @@ export const useShoppingCart = (initialDeal?: CartItem) => {
         customerPhone,
         purchaseMode,
         recipientData,
-        isVendor,
+        userType, // Use userType instead of isVendor
         profitSharing,
         customerPrice,
         networkCost,
