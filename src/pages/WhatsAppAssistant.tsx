@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -6,6 +5,8 @@ import { MessageCircle, Smartphone } from 'lucide-react';
 import WhatsAppAssistant from '@/components/whatsapp/WhatsAppAssistant';
 import WhatsAppRegistrationGuard from '@/components/whatsapp/WhatsAppRegistrationGuard';
 import MobileLayout from '@/components/navigation/MobileLayout';
+import CrossPlatformNavigation from '@/components/navigation/CrossPlatformNavigation';
+import FloatingPlatformSwitcher from '@/components/navigation/FloatingPlatformSwitcher';
 import { useMobileAuth } from '@/hooks/useMobileAuth';
 
 const WhatsAppAssistantPage = () => {
@@ -15,6 +16,9 @@ const WhatsAppAssistantPage = () => {
     <MobileLayout showTopNav={true} showBottomNav={true}>
       <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-blue-50">
         <div className="container mx-auto px-4 py-8">
+          {/* Cross-Platform Navigation */}
+          <CrossPlatformNavigation currentPlatform="whatsapp" />
+          
           <div className="text-center mb-8">
             <div className="flex items-center justify-center gap-2 mb-4">
               <MessageCircle className="w-8 h-8 text-green-600" />
@@ -66,6 +70,9 @@ const WhatsAppAssistantPage = () => {
             </Card>
           </WhatsAppRegistrationGuard>
         </div>
+        
+        {/* Add Floating Platform Switcher */}
+        <FloatingPlatformSwitcher currentPlatform="whatsapp" />
       </div>
     </MobileLayout>
   );

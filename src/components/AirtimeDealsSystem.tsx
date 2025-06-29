@@ -9,6 +9,7 @@ import SystemInfo from './deals/SystemInfo';
 import ShoppingCart from './ShoppingCart';
 import AuthenticationIndicator from './deals/AuthenticationIndicator';
 import RegistrationGate from './auth/RegistrationGate';
+import CrossPlatformNavigation from './navigation/CrossPlatformNavigation';
 
 const AirtimeDealsSystem = () => {
   const { deals, isLoading, lastRefresh, scrapingStatus, handleManualRefresh } = useDealsData();
@@ -45,6 +46,9 @@ const AirtimeDealsSystem = () => {
       allowedPaths={['/portal?tab=registration', '/portal?tab=deals']}
     >
       <div className="space-y-6">
+        {/* Cross-Platform Navigation */}
+        <CrossPlatformNavigation currentPlatform="portal" />
+
         {/* Authentication Indicator - but NO session management */}
         <AuthenticationIndicator />
 

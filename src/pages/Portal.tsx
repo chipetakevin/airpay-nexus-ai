@@ -4,6 +4,7 @@ import PortalHeader from '@/components/PortalHeader';
 import PortalTabs from '@/components/PortalTabs';
 import { useToast } from "@/hooks/use-toast"
 import WhatsAppFloatingButton from '@/components/WhatsAppFloatingButton';
+import FloatingPlatformSwitcher from '@/components/navigation/FloatingPlatformSwitcher';
 import { useSessionManager } from '@/hooks/useSessionManager';
 import { usePersistentAuth } from '@/components/auth/PersistentAuthProvider';
 
@@ -183,6 +184,11 @@ const Portal = () => {
       </main>
       
       <WhatsAppFloatingButton />
+      
+      {/* Add Floating Platform Switcher */}
+      {activeTab === 'deals' && (
+        <FloatingPlatformSwitcher currentPlatform="portal" />
+      )}
     </div>
   );
 };
