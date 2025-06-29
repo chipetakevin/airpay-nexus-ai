@@ -99,12 +99,23 @@ export const useWhatsAppShopping = () => {
       const total = getCartTotal();
       const customerPhone = currentUser.registeredPhone;
 
-      // Create receipt data
+      // Create serializable cart items (without React components)
+      const serializableItems = cart.map(item => ({
+        id: item.id,
+        name: item.name,
+        type: item.type,
+        network: item.network,
+        amount: item.amount,
+        price: item.price,
+        quantity: item.quantity
+      }));
+
+      // Create receipt data without circular references
       const receiptData = {
         transactionId,
         customerName: `${currentUser.firstName} ${currentUser.lastName}`,
         customerPhone,
-        items: cart,
+        items: serializableItems,
         total,
         timestamp: new Date().toISOString(),
         paymentMethod: 'WhatsApp Payment'
@@ -145,7 +156,7 @@ export const useWhatsAppShopping = () => {
   const sendWhatsAppReceipt = async (receiptData: any) => {
     const { transactionId, customerName, customerPhone, items, total, timestamp } = receiptData;
 
-    const itemsList = items.map((item: CartItem) => 
+    const itemsList = items.map((item: any) => 
       `• ${item.network?.toUpperCase() || 'DIVINE'} ${item.type?.toUpperCase() || 'AIRTIME'} R${item.amount} (${item.quantity}x) - R${item.price * item.quantity}`
     ).join('\n');
 
