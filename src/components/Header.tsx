@@ -51,6 +51,10 @@ const Header = ({ onQuickShopToggle, isQuickShopOpen }: HeaderProps) => {
 
   const isActive = (path: string) => location.pathname === path;
 
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen);
+  };
+
   return (
     <header className="bg-[#75B8FA] sticky top-0 z-50">
       <div className="container mx-auto px-4">
@@ -108,8 +112,9 @@ const Header = ({ onQuickShopToggle, isQuickShopOpen }: HeaderProps) => {
 
           {/* Mobile Menu Button */}
           <button
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="md:hidden p-2 rounded-lg hover:bg-white/20 transition-colors"
+            onClick={toggleMenu}
+            className="md:hidden p-2 rounded-lg hover:bg-white/20 transition-colors z-50 relative"
+            aria-label="Toggle menu"
           >
             {isMenuOpen ? <X className="w-6 h-6 text-white" /> : <Menu className="w-6 h-6 text-white" />}
           </button>
@@ -117,8 +122,8 @@ const Header = ({ onQuickShopToggle, isQuickShopOpen }: HeaderProps) => {
 
         {/* Mobile Navigation */}
         {isMenuOpen && (
-          <div className="md:hidden py-4 bg-white rounded-b-lg mt-2">
-            <nav className="space-y-2">
+          <div className="md:hidden absolute left-0 right-0 top-16 bg-white rounded-b-lg shadow-lg border-t-2 border-[#75B8FA]/20 z-40">
+            <nav className="p-4 space-y-2">
               {navigationItems.map((item) => (
                 <Link
                   key={item.path}
