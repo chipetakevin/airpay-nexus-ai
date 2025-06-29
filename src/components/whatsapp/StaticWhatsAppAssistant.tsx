@@ -3,11 +3,12 @@ import React, { useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { MessageCircle, Smartphone, CreditCard, Wifi, Phone, Gift, Zap, Users } from 'lucide-react';
+import { MessageCircle, Smartphone, CreditCard, Wifi, Phone, Gift, Zap, Users, ChevronDown, ChevronUp } from 'lucide-react';
 
 const StaticWhatsAppAssistant = () => {
   const [selectedOption, setSelectedOption] = useState<number | null>(null);
   const [showWelcome, setShowWelcome] = useState(true);
+  const [isExpanded, setIsExpanded] = useState(false);
 
   const quickActions = [
     {
@@ -57,6 +58,7 @@ const StaticWhatsAppAssistant = () => {
   const handleOptionSelect = (optionId: number) => {
     setSelectedOption(optionId);
     setShowWelcome(false);
+    setIsExpanded(true);
   };
 
   const handleStartWhatsApp = () => {
@@ -71,6 +73,11 @@ const StaticWhatsAppAssistant = () => {
   const handleBackToOptions = () => {
     setSelectedOption(null);
     setShowWelcome(true);
+    setIsExpanded(false);
+  };
+
+  const toggleExpanded = () => {
+    setIsExpanded(!isExpanded);
   };
 
   return (
@@ -112,6 +119,23 @@ const StaticWhatsAppAssistant = () => {
         </div>
       </div>
 
+      {/* Collapsible Toggle Button for Options */}
+      {!showWelcome && (
+        <div className="px-4 py-2 bg-gray-50 border-b">
+          <button
+            onClick={toggleExpanded}
+            className="w-full flex items-center justify-between p-2 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-lg transition-colors"
+          >
+            <span>Service Options</span>
+            {isExpanded ? (
+              <ChevronUp className="w-4 h-4" />
+            ) : (
+              <ChevronDown className="w-4 h-4" />
+            )}
+          </button>
+        </div>
+      )}
+
       {/* Chat Content */}
       <div className="px-4 py-4 min-h-[400px] max-h-[400px] overflow-hidden">
         {showWelcome && !selectedOption && (
@@ -134,7 +158,7 @@ const StaticWhatsAppAssistant = () => {
                 </div>
                 
                 <div className="space-y-2">
-                  {quickActions.map((action) => (
+                  {quickActions.slice(0, 4).map((action) => (
                     <button
                       key={action.id}
                       onClick={() => handleOptionSelect(action.id)}
@@ -162,8 +186,8 @@ const StaticWhatsAppAssistant = () => {
           </div>
         )}
 
-        {selectedOption && (
-          <div className="space-y-4">
+        {selectedOption && isExpanded && (
+          <div className="space-y-4 animate-fade-in">
             <div className="bg-blue-600 text-white rounded-2xl p-3 ml-8">
               <p className="text-sm">
                 {quickActions.find(action => action.id === selectedOption)?.title}
@@ -191,6 +215,15 @@ const StaticWhatsAppAssistant = () => {
                   ← Back to options
                 </button>
               </div>
+            </div>
+          </div>
+        )}
+
+        {selectedOption && !isExpanded && (
+          <div className="flex items-center justify-center h-full">
+            <div className="text-center text-gray-500">
+              <MessageCircle className="w-12 h-12 mx-auto mb-2 opacity-50" />
+              <p className="text-sm">Click "Service Options" above to view details</p>
             </div>
           </div>
         )}

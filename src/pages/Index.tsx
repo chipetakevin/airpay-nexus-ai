@@ -40,7 +40,7 @@ const Index = () => {
             <HeroSection />
           </div>
           
-          {/* Devine Mobile Assistant - Added right after hero */}
+          {/* Devine Mobile Assistant - Placed above RICA Services */}
           <section className="py-8 bg-gradient-to-br from-green-50 via-white to-blue-50">
             <div className="container mx-auto px-4">
               <div className="text-center mb-6">
@@ -60,7 +60,7 @@ const Index = () => {
             </div>
           </section>
           
-          {/* RICA Services Section */}
+          {/* RICA Services Section - This shows the registration gate */}
           <RicaServicesSection />
           
           {/* Community Benefits Section */}
