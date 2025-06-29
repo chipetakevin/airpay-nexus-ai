@@ -70,6 +70,12 @@ const BottomNavigation = () => {
   };
 
   const handleNavigation = (path: string) => {
+    // Seamless navigation to landing homepage for home button
+    if (path === '/' && location.pathname === '/') {
+      // Already on home page, scroll to top or refresh if needed
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      return;
+    }
     navigate(path);
   };
 
