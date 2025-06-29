@@ -4,6 +4,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { MessageCircle, Smartphone, CreditCard, Wifi, Phone, Gift, Zap, Users, ChevronDown, ChevronUp } from 'lucide-react';
+import SmartWhatsAppButton from './SmartWhatsAppButton';
 
 const StaticWhatsAppAssistant = () => {
   const [selectedOption, setSelectedOption] = useState<number | null>(null);
@@ -59,15 +60,6 @@ const StaticWhatsAppAssistant = () => {
     setSelectedOption(optionId);
     setShowWelcome(false);
     setIsExpanded(true);
-  };
-
-  const handleStartWhatsApp = () => {
-    const message = encodeURIComponent(
-      `👋 Hi Devine Mobile!\n\n` +
-      `I'm interested in your mobile services. Can you help me get started?\n\n` +
-      `What services do you offer?`
-    );
-    window.open(`https://wa.me/27832466539?text=${message}`, '_blank');
   };
 
   const handleBackToOptions = () => {
@@ -229,15 +221,17 @@ const StaticWhatsAppAssistant = () => {
         )}
       </div>
 
-      {/* Action Button */}
-      <div className="p-4 bg-gray-50 border-t">
-        <Button 
-          onClick={handleStartWhatsApp}
-          className="w-full bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 h-12 text-base font-semibold"
-        >
-          <MessageCircle className="w-4 h-4 mr-2" />
-          Continue on WhatsApp
-        </Button>
+      {/* Smart Action Buttons */}
+      <div className="p-4 bg-gray-50 border-t space-y-2">
+        <SmartWhatsAppButton className="w-full h-12 text-base font-semibold" />
+        
+        <div className="text-center">
+          <p className="text-xs text-gray-500 mb-2">Or explore our full interface:</p>
+          <SmartWhatsAppButton 
+            variant="interface" 
+            className="w-full h-10 text-sm"
+          />
+        </div>
       </div>
     </div>
   );

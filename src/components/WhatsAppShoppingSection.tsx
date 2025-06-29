@@ -9,6 +9,7 @@ import {
   ArrowRight, Users, Clock, Shield
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import SmartWhatsAppButton from './whatsapp/SmartWhatsAppButton';
 
 const WhatsAppShoppingSection = () => {
   const quickActions = [
@@ -72,15 +73,6 @@ const WhatsAppShoppingSection = () => {
       description: "Designed specifically for smartphone users"
     }
   ];
-
-  const handleWhatsAppStart = () => {
-    const message = encodeURIComponent(
-      `👋 Hi Divinely Mobile!\n\n` +
-      `I'm interested in your WhatsApp shopping services. Can you help me get started?\n\n` +
-      `What services do you offer?`
-    );
-    window.open(`https://wa.me/27832466539?text=${message}`, '_blank');
-  };
 
   return (
     <section className="py-16 bg-gradient-to-br from-green-50 via-white to-blue-50">
@@ -178,14 +170,7 @@ const WhatsAppShoppingSection = () => {
               </div>
 
               <div className="text-center">
-                <Button 
-                  onClick={handleWhatsAppStart}
-                  className="w-full bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 h-12 text-base font-semibold"
-                >
-                  <MessageCircle className="w-5 h-5 mr-2" />
-                  Start Shopping on WhatsApp
-                  <ArrowRight className="w-4 h-4 ml-2" />
-                </Button>
+                <SmartWhatsAppButton className="w-full h-12 text-base font-semibold" />
               </div>
             </CardContent>
           </Card>
@@ -262,13 +247,10 @@ const WhatsAppShoppingSection = () => {
                 </div>
               </div>
 
-              <Link to="/whatsapp-assistant">
-                <Button className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 h-12 text-base font-semibold">
-                  <ShoppingCart className="w-5 h-5 mr-2" />
-                  Open Full Shopping Experience
-                  <ArrowRight className="w-4 h-4 ml-2" />
-                </Button>
-              </Link>
+              <SmartWhatsAppButton 
+                variant="interface" 
+                className="w-full h-12 text-base font-semibold"
+              />
             </CardContent>
           </Card>
         </div>
@@ -298,22 +280,11 @@ const WhatsAppShoppingSection = () => {
               Fast, secure, and convenient - shop the way you want!
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button 
-                onClick={handleWhatsAppStart}
-                className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 h-12 px-8"
-              >
-                <MessageCircle className="w-5 h-5 mr-2" />
-                Start on WhatsApp
-              </Button>
-              <Link to="/whatsapp-assistant">
-                <Button 
-                  variant="outline" 
-                  className="h-12 px-8 border-2 border-green-600 text-green-600 hover:bg-green-50"
-                >
-                  <Smartphone className="w-5 h-5 mr-2" />
-                  Full Platform
-                </Button>
-              </Link>
+              <SmartWhatsAppButton className="h-12 px-8" />
+              <SmartWhatsAppButton 
+                variant="interface" 
+                className="h-12 px-8 border-2 border-green-600 text-green-600 hover:bg-green-50"
+              />
             </div>
           </div>
         </div>
