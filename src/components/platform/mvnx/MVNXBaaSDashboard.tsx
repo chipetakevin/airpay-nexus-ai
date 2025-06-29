@@ -172,7 +172,7 @@ const AgenticBaaSDashboard = () => {
               </div>
             </div>
             <h1 className="text-xl md:text-5xl font-bold bg-gradient-to-r from-white via-blue-100 to-purple-100 bg-clip-text text-transparent">
-              Divinely Mobile Agentic BaaS Platform
+              Divine Mobile Agentic BaaS Platform
             </h1>
             <p className="text-sm md:text-xl text-blue-100 max-w-3xl mx-auto leading-relaxed">
               Autonomous AI-Powered Backend-as-a-Service Command Center for Telecommunications Excellence

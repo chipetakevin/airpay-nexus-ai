@@ -2,29 +2,15 @@
 import { useState, useEffect } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { useNavigate } from 'react-router-dom';
-import { validateEmail, validateAccountNumber } from '@/utils/formValidation';
-
-interface VendorFormData {
-  firstName: string;
-  lastName: string;
-  email: string;
-  phoneNumber: string;
-  countryCode: string;
-  companyName: string;
-  businessType: string;
-  bankName: string;
-  accountNumber: string;
-  routingNumber: string;
-  branchCode: string;
-  promoCode: string;
-  rememberPassword: boolean;
-  agreeTerms: boolean;
-  marketingConsent: boolean;
-}
+import { VendorFormData, VendorFormErrors } from '@/types/vendorRegistration';
+import { validateVendorForm, validateField } from '@/utils/vendorValidation';
+import { useVendorAutoSave } from '@/hooks/useVendorAutoSave';
+import { handleVendorRegistrationSubmit } from '@/utils/vendorRegistrationSubmit';
 
 export const useVendorRegistration = () => {
   const { toast } = useToast();
   const navigate = useNavigate();
+  const [showPassword, setShowPassword] = useState(false);
   
   const [formData, setFormData] = useState<VendorFormData>({
     firstName: '',
@@ -32,6 +18,8 @@ export const useVendorRegistration = () => {
     email: '',
     phoneNumber: '',
     countryCode: '+27',
+    password: '',
+    confirmPassword: '',
     companyName: '',
     businessType: '',
     bankName: '',
@@ -44,55 +32,53 @@ export const useVendorRegistration = () => {
     marketingConsent: false
   });
 
-  const [errors, setErrors] = useState<any>({});
+  const [errors, setErrors] = useState<VendorFormErrors>({});
 
-  // Auto-save functionality
+  const { loadSavedData } = useVendorAutoSave(formData);
+
+  // Load saved data on component mount
   useEffect(() => {
-    const savedData = localStorage.getItem('vendorRegistrationDraft');
+    const savedData = loadSavedData();
     if (savedData) {
-      try {
-        const parsedData = JSON.parse(savedData);
-        setFormData(prev => ({
-          ...prev,
-          ...parsedData,
-          rememberPassword: true
-        }));
-      } catch (error) {
-        console.log('Failed to load saved registration data');
-      }
+      setFormData(prev => ({ ...prev, ...savedData }));
     }
   }, []);
 
-  // Auto-save on form changes
-  useEffect(() => {
-    const timeoutId = setTimeout(() => {
-      localStorage.setItem('vendorRegistrationDraft', JSON.stringify(formData));
-    }, 1000);
-
-    return () => clearTimeout(timeoutId);
-  }, [formData]);
+  const togglePasswordVisibility = () => {
+    setShowPassword(prev => !prev);
+  };
 
   const handleInputChange = (field: keyof VendorFormData, value: any) => {
+    // Special handling for phone number to ensure proper formatting
+    if (field === 'phoneNumber') {
+      let cleanValue = value.replace(/\D/g, '');
+      
+      if (cleanValue.startsWith('0')) {
+        cleanValue = cleanValue.substring(1);
+      }
+      
+      if (cleanValue.length > 9) {
+        cleanValue = cleanValue.substring(0, 9);
+      }
+      
+      value = cleanValue;
+    }
+    
     setFormData(prev => ({ 
       ...prev, 
       [field]: value,
       rememberPassword: true
     }));
     
+    // Clear field-specific errors
     if (errors[field]) {
-      setErrors((prev: any) => ({ ...prev, [field]: '' }));
+      setErrors((prev: VendorFormErrors) => ({ ...prev, [field]: '' }));
     }
 
-    if (field === 'email' && value) {
-      if (!validateEmail(value)) {
-        setErrors((prev: any) => ({ ...prev, email: 'Please enter a valid email address' }));
-      }
-    }
-
-    if (field === 'accountNumber' && value) {
-      if (!validateAccountNumber(value)) {
-        setErrors((prev: any) => ({ ...prev, accountNumber: 'Account number must be 8-12 digits' }));
-      }
+    // Real-time validation
+    const fieldError = validateField(field, value, formData);
+    if (fieldError) {
+      setErrors((prev: VendorFormErrors) => ({ ...prev, [field]: fieldError }));
     }
   };
 
@@ -105,73 +91,63 @@ export const useVendorRegistration = () => {
     }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    const newErrors: any = {};
-    if (!formData.firstName) newErrors.firstName = 'First name is required';
-    if (!formData.lastName) newErrors.lastName = 'Last name is required';
-    if (!formData.companyName) newErrors.companyName = 'Company name is required';
-    if (!formData.email) newErrors.email = 'Email is required';
-    if (!validateEmail(formData.email)) newErrors.email = 'Invalid email format';
-    if (!formData.phoneNumber) newErrors.phoneNumber = 'Phone number is required';
-    if (!formData.bankName) newErrors.bankName = 'Bank selection is required';
-    if (!formData.accountNumber) newErrors.accountNumber = 'Account number is required';
-    if (!validateAccountNumber(formData.accountNumber)) newErrors.accountNumber = 'Invalid account number';
-    if (!formData.agreeTerms) newErrors.agreeTerms = 'You must agree to terms and conditions';
-
+    const newErrors = validateVendorForm(formData);
     setErrors(newErrors);
 
     if (Object.keys(newErrors).length === 0) {
-      const vendorId = 'VND' + Math.random().toString(36).substr(2, 8).toUpperCase();
+      // Normalize phone number for consistent storage
+      const normalizedPhone = formData.phoneNumber.replace(/\D/g, '');
+      let finalPhone = normalizedPhone;
       
-      const vendorData = {
+      if (normalizedPhone.startsWith('27')) {
+        finalPhone = normalizedPhone.substring(2);
+      } else if (normalizedPhone.startsWith('0')) {
+        finalPhone = normalizedPhone.substring(1);
+      }
+
+      // Update formData with normalized phone before submission
+      const updatedFormData = {
         ...formData,
-        vendorId,
-        registeredPhone: `${formData.countryCode}${formData.phoneNumber}`,
-        cardType: 'OneCard Gold',
-        cashbackBalance: 0,
-        totalEarned: 0,
-        totalSpent: 0,
-        commissionRate: 10.00,
-        rememberPassword: true
+        phoneNumber: finalPhone
       };
 
-      localStorage.setItem('onecardVendor', JSON.stringify(vendorData));
+      // Complete the registration process with consistent phone storage
+      const { vendorId, successMessage } = handleVendorRegistrationSubmit(updatedFormData);
       
-      localStorage.setItem('userCredentials', JSON.stringify({
-        email: formData.email,
-        phone: `${formData.countryCode}${formData.phoneNumber}`,
-        rememberPassword: true,
-        userType: 'vendor'
-      }));
-
+      // Store registration completion flag
+      localStorage.setItem('registrationCompleted', 'true');
       localStorage.setItem('userAuthenticated', 'true');
-      sessionStorage.setItem('userAuth', JSON.stringify({
-        userId: vendorId,
-        cardNumber: vendorId,
-        userName: `${formData.firstName} ${formData.lastName}`,
-        accountType: 'Vendor',
-        companyName: formData.companyName,
-        authVerified: true,
-        timestamp: new Date().toISOString()
-      }));
       
-      localStorage.removeItem('vendorRegistrationDraft');
+      console.log('✅ Vendor registration completed with phone:', finalPhone);
       
       toast({
         title: "Vendor Registration Successful! 🎉",
-        description: `OneCard Gold created: ****${vendorId.slice(-4)}. Redirecting to Smart Deals now!`,
+        description: successMessage,
       });
 
-      // Direct redirect to Smart Deals tab - fastest shopping experience
-      window.location.replace('/portal?tab=onecard&verified=true');
+      // Return success - redirection will be handled by the component
+      return Promise.resolve(true);
+    } else {
+      // Show validation errors
+      const errorFields = Object.keys(newErrors);
+      toast({
+        title: "Please Complete Required Fields",
+        description: `Missing: ${errorFields.join(', ')}`,
+        variant: "destructive"
+      });
+      
+      return Promise.reject(new Error('Validation failed'));
     }
   };
 
   return {
     formData,
     errors,
+    showPassword,
+    togglePasswordVisibility,
     handleInputChange,
     handleBankSelect,
     handleSubmit

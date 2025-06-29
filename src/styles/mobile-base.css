@@ -1,0 +1,77 @@
+
+@layer utilities {
+  /* Mobile responsive breakpoints and core utilities */
+  @media (max-width: 640px) {
+    .mobile-form-section {
+      margin-bottom: 20px;
+    }
+
+    .mobile-form-section:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  /* Tablet responsive adjustments */
+  @media (min-width: 641px) and (max-width: 768px) {
+    .mobile-registration-title {
+      font-size: 20px;
+    }
+
+    .mobile-registration-subtitle {
+      font-size: 15px;
+    }
+  }
+
+  /* Smooth scroll behavior for mobile */
+  .registration-scroll-container {
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+    overflow-x: hidden;
+  }
+
+  /* Enhanced form sections for better mobile experience */
+  .mobile-form-section {
+    margin-bottom: 24px;
+  }
+
+  .mobile-form-section:last-child {
+    margin-bottom: 100px; /* Extra space for fixed button */
+  }
+
+  /* Prevent layout shifts during collapse/expand */
+  .banking-section-mobile,
+  .collapsible-trigger,
+  .collapsible-content {
+    will-change: transform, opacity;
+    backface-visibility: hidden;
+  }
+
+  /* Enhanced focus states for better accessibility */
+  .mobile-submit-button:focus,
+  .collapsible-trigger:focus {
+    outline: 2px solid #3b82f6;
+    outline-offset: 2px;
+  }
+
+  /* Ensure content doesn't get hidden behind fixed button */
+  .registration-content-wrapper {
+    padding-bottom: 100px;
+    min-height: calc(100vh - 100px);
+  }
+
+  @media (max-width: 640px) {
+    .registration-content-wrapper {
+      padding-bottom: 85px;
+    }
+
+    .mobile-form-section:last-child {
+      margin-bottom: 85px;
+    }
+  }
+
+  @media (min-width: 641px) and (max-width: 768px) {
+    .registration-content-wrapper {
+      padding-bottom: 120px;
+    }
+  }
+}

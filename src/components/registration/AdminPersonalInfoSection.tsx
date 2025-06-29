@@ -83,10 +83,41 @@ const AdminPersonalInfoSection: React.FC<AdminPersonalInfoProps> = ({
       </div>
 
       <div className="space-y-2">
+        <Label htmlFor="password">Admin Access Password *</Label>
+        <Input
+          id="password"
+          name="password"
+          type="password"
+          autoComplete="new-password"
+          value={formData.password}
+          onChange={(e) => onInputChange('password', e.target.value)}
+          className={`font-mono ${errors.password ? 'border-red-500' : ''}`}
+          placeholder="Enter authorized admin password"
+        />
+        {errors.password && <p className="text-red-500 text-sm">{errors.password}</p>}
+        <p className="text-xs text-gray-600">🔐 Required for full admin privileges and system access</p>
+      </div>
+
+      <div className="space-y-2">
+        <Label htmlFor="confirmPassword">Confirm Admin Password *</Label>
+        <Input
+          id="confirmPassword"
+          name="confirmPassword"
+          type="password"
+          autoComplete="new-password"
+          value={formData.confirmPassword}
+          onChange={(e) => onInputChange('confirmPassword', e.target.value)}
+          className={`font-mono ${errors.confirmPassword ? 'border-red-500' : ''}`}
+          placeholder="Confirm admin password"
+        />
+        {errors.confirmPassword && <p className="text-red-500 text-sm">{errors.confirmPassword}</p>}
+      </div>
+
+      <div className="space-y-2">
         <Label htmlFor="adminRole">Administrator Role</Label>
         <Input
           id="adminRole"
-          value={formData.adminRole}
+          value="Super Administrator"
           readOnly
           className="bg-gray-50 font-semibold"
         />

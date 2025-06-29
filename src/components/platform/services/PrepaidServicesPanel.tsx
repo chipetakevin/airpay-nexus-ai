@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -53,7 +52,7 @@ const PrepaidServicesPanel = () => {
   const networkStats = [
     { network: 'MTN', uptime: '99.8%', transactions: 5847 },
     { network: 'Vodacom', uptime: '99.5%', transactions: 4923 },
-    { network: 'Devine Mobile', uptime: '98.9%', transactions: 2847 },
+    { network: 'Divinely Mobile', uptime: '98.9%', transactions: 2847 },
     { network: 'Telkom', uptime: '99.1%', transactions: 1847 }
   ];
 

@@ -8,12 +8,14 @@ import DealsGrid from './deals/DealsGrid';
 import SystemInfo from './deals/SystemInfo';
 import ShoppingCart from './ShoppingCart';
 import AuthenticationIndicator from './deals/AuthenticationIndicator';
+import RegistrationGate from './auth/RegistrationGate';
 
 const AirtimeDealsSystem = () => {
   const { deals, isLoading, lastRefresh, scrapingStatus, handleManualRefresh } = useDealsData();
-  const [selectedNetwork, setSelectedNetwork] = useState('all');
+  // Set defaults: Divine Mobile as default network, airtime as default deal type
+  const [selectedNetwork, setSelectedNetwork] = useState('divine mobile');
   const [selectedAmount, setSelectedAmount] = useState('all');
-  const [selectedDealType, setSelectedDealType] = useState('all');
+  const [selectedDealType, setSelectedDealType] = useState('airtime');
   const [showCart, setShowCart] = useState(false);
   const [selectedDeal, setSelectedDeal] = useState<CartItem | null>(null);
 
@@ -30,55 +32,62 @@ const AirtimeDealsSystem = () => {
   };
 
   const handleClearFilters = () => {
-    setSelectedNetwork('all');
+    // Reset to defaults: Divine Mobile and airtime
+    setSelectedNetwork('divine mobile');
     setSelectedAmount('all');
-    setSelectedDealType('all');
+    setSelectedDealType('airtime');
   };
 
   return (
-    <div className="space-y-6">
-      {/* Authentication Indicator */}
-      <AuthenticationIndicator />
+    <RegistrationGate 
+      serviceName="airtime deals and payments"
+      requireBankingInfo={true}
+      allowedPaths={['/portal?tab=registration', '/portal?tab=deals']}
+    >
+      <div className="space-y-6">
+        {/* Authentication Indicator - but NO session management */}
+        <AuthenticationIndicator />
 
-      {/* Header Section */}
-      <DealsHeader
-        lastRefresh={lastRefresh}
-        scrapingStatus={scrapingStatus}
-        isLoading={isLoading}
-        onManualRefresh={handleManualRefresh}
-      />
-
-      {/* Enhanced Filters */}
-      <DealsFiltersSection
-        selectedDealType={selectedDealType}
-        selectedNetwork={selectedNetwork}
-        selectedAmount={selectedAmount}
-        onDealTypeChange={setSelectedDealType}
-        onNetworkChange={setSelectedNetwork}
-        onAmountChange={setSelectedAmount}
-        onClearFilters={handleClearFilters}
-      />
-
-      {/* Deals Grid */}
-      <DealsGrid
-        deals={filteredDeals}
-        isLoading={isLoading}
-        onGrabDeal={handleGrabDeal}
-      />
-
-      <SystemInfo />
-
-      {/* Shopping Cart Modal */}
-      {showCart && (
-        <ShoppingCart 
-          initialDeal={selectedDeal}
-          onClose={() => {
-            setShowCart(false);
-            setSelectedDeal(null);
-          }}
+        {/* Header Section */}
+        <DealsHeader
+          lastRefresh={lastRefresh}
+          scrapingStatus={scrapingStatus}
+          isLoading={isLoading}
+          onManualRefresh={handleManualRefresh}
         />
-      )}
-    </div>
+
+        {/* Enhanced Filters */}
+        <DealsFiltersSection
+          selectedDealType={selectedDealType}
+          selectedNetwork={selectedNetwork}
+          selectedAmount={selectedAmount}
+          onDealTypeChange={setSelectedDealType}
+          onNetworkChange={setSelectedNetwork}
+          onAmountChange={setSelectedAmount}
+          onClearFilters={handleClearFilters}
+        />
+
+        {/* Deals Grid */}
+        <DealsGrid
+          deals={filteredDeals}
+          isLoading={isLoading}
+          onGrabDeal={handleGrabDeal}
+        />
+
+        <SystemInfo />
+
+        {/* Shopping Cart Modal - NO session management */}
+        {showCart && (
+          <ShoppingCart 
+            initialDeal={selectedDeal}
+            onClose={() => {
+              setShowCart(false);
+              setSelectedDeal(null);
+            }}
+          />
+        )}
+      </div>
+    </RegistrationGate>
   );
 };
 

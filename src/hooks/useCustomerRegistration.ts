@@ -1,144 +1,141 @@
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useToast } from '@/hooks/use-toast';
-import { useNavigate } from 'react-router-dom';
-import { FormData, FormErrors } from '@/types/customerRegistration';
-import { validateEmail, validateAccountNumber } from '@/utils/formValidation';
+import { usePersistentAuth } from './usePersistentAuth';
+import { FormData as CustomerFormData } from '@/types/customerRegistration';
 
 export const useCustomerRegistration = () => {
-  const { toast } = useToast();
-  const navigate = useNavigate();
-  const [formData, setFormData] = useState<FormData>({
+  const [formData, setFormData] = useState<CustomerFormData>({
     firstName: '',
     lastName: '',
     email: '',
     phoneNumber: '',
     countryCode: '+27',
     bankName: '',
+    branchCode: '',
     accountNumber: '',
     routingNumber: '',
-    branchCode: '',
     rememberPassword: true,
     agreeTerms: false,
-    marketingConsent: false
+    marketingConsent: false,
   });
 
-  const [errors, setErrors] = useState<FormErrors>({});
+  const [errors, setErrors] = useState<Partial<Record<keyof CustomerFormData, string>>>({});
+  const { toast } = useToast();
+  const { createPersistentSession } = usePersistentAuth();
 
-  // Auto-save functionality
-  useEffect(() => {
-    const savedData = localStorage.getItem('customerRegistrationDraft');
-    if (savedData) {
-      try {
-        const parsedData = JSON.parse(savedData);
-        setFormData(prev => ({
-          ...prev,
-          ...parsedData,
-          rememberPassword: true
-        }));
-      } catch (error) {
-        console.log('Failed to load saved registration data');
-      }
-    }
-  }, []);
-
-  // Auto-save on form changes
-  useEffect(() => {
-    const timeoutId = setTimeout(() => {
-      localStorage.setItem('customerRegistrationDraft', JSON.stringify(formData));
-    }, 1000);
-
-    return () => clearTimeout(timeoutId);
-  }, [formData]);
-
-  const handleInputChange = (field: keyof FormData, value: any) => {
-    setFormData(prev => ({ 
-      ...prev, 
-      [field]: value,
-      rememberPassword: true
+  const handleInputChange = (field: keyof CustomerFormData, value: any) => {
+    setFormData(prev => ({
+      ...prev,
+      [field]: value
     }));
     
-    // Clear errors when user starts typing
-    if (errors[field as keyof FormErrors]) {
-      setErrors(prev => ({ ...prev, [field]: '' }));
-    }
-
-    // Real-time validation
-    if (field === 'email' && value) {
-      if (!validateEmail(value)) {
-        setErrors(prev => ({ ...prev, email: 'Please enter a valid email address' }));
-      }
-    }
-
-    if (field === 'accountNumber' && value) {
-      if (!validateAccountNumber(value)) {
-        setErrors(prev => ({ ...prev, accountNumber: 'Account number must be 8-12 digits' }));
-      }
+    // Clear error when user starts typing
+    if (errors[field]) {
+      setErrors(prev => ({
+        ...prev,
+        [field]: undefined
+      }));
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    // Validation
-    const newErrors: FormErrors = {};
-    if (!formData.firstName) newErrors.firstName = 'First name is required';
-    if (!formData.lastName) newErrors.lastName = 'Last name is required';
-    if (!formData.email) newErrors.email = 'Email is required';
-    if (!validateEmail(formData.email)) newErrors.email = 'Invalid email format';
-    if (!formData.phoneNumber) newErrors.phoneNumber = 'Phone number is required';
-    if (!formData.bankName) newErrors.bankName = 'Bank selection is required';
-    if (!formData.accountNumber) newErrors.accountNumber = 'Account number is required';
-    if (!validateAccountNumber(formData.accountNumber)) newErrors.accountNumber = 'Invalid account number';
-    if (!formData.agreeTerms) newErrors.agreeTerms = 'You must agree to terms and conditions';
+  const validateForm = (): boolean => {
+    const newErrors: Partial<Record<keyof CustomerFormData, string>> = {};
+
+    if (!formData.firstName.trim()) newErrors.firstName = 'First name is required';
+    if (!formData.lastName.trim()) newErrors.lastName = 'Last name is required';
+    if (!formData.email.trim()) newErrors.email = 'Email is required';
+    if (!formData.phoneNumber.trim()) newErrors.phoneNumber = 'Phone number is required';
+    if (!formData.agreeTerms) newErrors.agreeTerms = 'Terms acceptance is required';
 
     setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
 
-    if (Object.keys(newErrors).length === 0) {
-      // Generate unique OneCard account number
-      const accountNumber = 'OC' + Math.random().toString(36).substr(2, 8).toUpperCase();
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!validateForm()) {
+      toast({
+        title: "Please fix the errors",
+        description: "Check the form for any missing or incorrect information.",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    try {
+      // Generate card number
+      const cardNumber = `OC${Math.random().toString().substr(2, 8)}`;
       
-      const userData = {
-        ...formData,
-        cardNumber: accountNumber,
-        registeredPhone: `${formData.countryCode}${formData.phoneNumber}`,
-        cashbackBalance: 0,
-        totalEarned: 0,
-        totalSpent: 0,
-        rememberPassword: true
+      // Normalize phone number for consistent storage
+      const normalizedPhone = formData.phoneNumber.replace(/\D/g, '');
+      let finalPhone = normalizedPhone;
+      
+      if (normalizedPhone.startsWith('27')) {
+        finalPhone = normalizedPhone.substring(2);
+      } else if (normalizedPhone.startsWith('0')) {
+        finalPhone = normalizedPhone.substring(1);
+      }
+      
+      // Create user credentials with consistent phone storage
+      const userCredentials = {
+        email: formData.email,
+        password: 'auto-generated-password',
+        userType: 'customer',
+        firstName: formData.firstName,
+        lastName: formData.lastName,
+        phone: finalPhone, // Store normalized phone number
+        registeredPhone: `+27${finalPhone}`, // Store full international format
+        phoneNumber: finalPhone // Additional fallback
       };
 
-      // Store user data
-      localStorage.setItem('onecardUser', JSON.stringify(userData));
-      
-      // Store credentials for authentication
-      localStorage.setItem('userCredentials', JSON.stringify({
+      // Create user data with consistent phone storage
+      const userData = {
+        firstName: formData.firstName,
+        lastName: formData.lastName,
         email: formData.email,
-        phone: `${formData.countryCode}${formData.phoneNumber}`,
-        rememberPassword: true,
-        userType: 'customer'
-      }));
+        cardNumber,
+        phone: finalPhone, // Store normalized phone number
+        registeredPhone: `+27${finalPhone}`, // Store full international format
+        phoneNumber: finalPhone, // Additional fallback
+        bankName: formData.bankName,
+        branchCode: formData.branchCode,
+        accountNumber: formData.accountNumber,
+        balance: 0,
+        cashbackBalance: 0,
+        totalEarned: 0,
+        registrationDate: new Date().toISOString()
+      };
 
-      // Set authentication flags and user session
+      // Store in localStorage for immediate access
+      localStorage.setItem('userCredentials', JSON.stringify(userCredentials));
+      localStorage.setItem('onecardUser', JSON.stringify(userData));
       localStorage.setItem('userAuthenticated', 'true');
-      sessionStorage.setItem('userAuth', JSON.stringify({
-        userId: accountNumber,
-        cardNumber: accountNumber,
-        userName: `${formData.firstName} ${formData.lastName}`,
-        accountType: 'Customer',
-        authVerified: true,
-        timestamp: new Date().toISOString()
-      }));
-      
-      localStorage.removeItem('customerRegistrationDraft');
-      
+
+      // Create persistent 24-hour session
+      createPersistentSession(userCredentials, userData);
+
+      console.log('✅ Customer registration completed with phone:', finalPhone);
+
       toast({
         title: "Registration Successful! 🎉",
-        description: `OneCard created: ****${accountNumber.slice(-4)}. Redirecting to Smart Deals now!`,
+        description: "Your OneCard has been created! You'll stay logged in for 24 hours.",
+        duration: 4000,
       });
 
-      // Direct redirect to Smart Deals tab - fastest shopping experience
-      window.location.replace('/portal?tab=onecard&verified=true');
+      // Auto redirect to OneCard dashboard
+      setTimeout(() => {
+        window.location.href = '/portal?tab=onecard';
+      }, 2000);
+
+    } catch (error) {
+      console.error('Registration error:', error);
+      toast({
+        title: "Registration Failed",
+        description: "An error occurred during registration. Please try again.",
+        variant: "destructive"
+      });
     }
   };
 
