@@ -40,7 +40,22 @@ const Index = () => {
             <HeroSection />
           </div>
           
-          {/* Devine Mobile Assistant - Positioned just above RICA Services */}
+          {/* RICA Services Section - This shows the registration gate */}
+          <RicaServicesSection />
+          
+          {/* Community Benefits Section */}
+          <CommunityBenefitsSection />
+          
+          {/* WhatsApp Shopping Section */}
+          <WhatsAppShoppingSection />
+          
+          <div id="features">
+            <FeaturesSection />
+          </div>
+          <BenefitsSection />
+          <StatsGrid />
+          
+          {/* Devine Mobile Assistant - Positioned just below StatsGrid */}
           <section className="py-8 bg-gradient-to-br from-green-50 via-white to-blue-50">
             <div className="container mx-auto px-4">
               <div className="text-center mb-6">
@@ -60,20 +75,6 @@ const Index = () => {
             </div>
           </section>
           
-          {/* RICA Services Section - This shows the registration gate */}
-          <RicaServicesSection />
-          
-          {/* Community Benefits Section */}
-          <CommunityBenefitsSection />
-          
-          {/* WhatsApp Shopping Section */}
-          <WhatsAppShoppingSection />
-          
-          <div id="features">
-            <FeaturesSection />
-          </div>
-          <BenefitsSection />
-          <StatsGrid />
           <div id="testimonials">
             <TestimonialsCarousel />
           </div>
