@@ -52,83 +52,98 @@ const Header = ({ onQuickShopToggle, isQuickShopOpen }: HeaderProps) => {
   const isActive = (path: string) => location.pathname === path;
 
   const toggleMenu = () => {
-    setIsMenuOpen(!isMenuOpen);
+    setIsMenuOpen(prev => !prev);
+  };
+
+  const closeMenu = () => {
+    setIsMenuOpen(false);
   };
 
   return (
-    <header className="bg-[#75B8FA] sticky top-0 z-50">
-      <div className="container mx-auto px-4">
-        <div className="flex items-center justify-between h-16">
-          {/* Logo */}
-          <HeaderLogo />
+    <>
+      <header className="bg-[#75B8FA] sticky top-0 z-50">
+        <div className="container mx-auto px-4">
+          <div className="flex items-center justify-between h-16">
+            {/* Logo */}
+            <HeaderLogo />
 
-          {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center space-x-1">
-            {navigationItems.map((item) => (
-              <Link
-                key={item.path}
-                to={item.path}
-                className={`relative px-4 py-2 rounded-lg transition-all duration-200 flex items-center gap-2 ${
-                  isActive(item.path)
-                    ? 'bg-white text-[#75B8FA] font-medium'
-                    : 'text-white hover:bg-white/20 hover:text-white font-medium'
-                }`}
-              >
-                {item.icon}
-                <span>{item.label}</span>
-                {item.badge && (
-                  <Badge className="bg-[#75B8FA] text-white text-xs border-white">
-                    {item.badge}
+            {/* Desktop Navigation */}
+            <nav className="hidden md:flex items-center space-x-1">
+              {navigationItems.map((item) => (
+                <Link
+                  key={item.path}
+                  to={item.path}
+                  className={`relative px-4 py-2 rounded-lg transition-all duration-200 flex items-center gap-2 ${
+                    isActive(item.path)
+                      ? 'bg-white text-[#75B8FA] font-medium'
+                      : 'text-white hover:bg-white/20 hover:text-white font-medium'
+                  }`}
+                >
+                  {item.icon}
+                  <span>{item.label}</span>
+                  {item.badge && (
+                    <Badge className="bg-[#75B8FA] text-white text-xs border-white">
+                      {item.badge}
+                    </Badge>
+                  )}
+                </Link>
+              ))}
+              
+              {/* Buy Airtime & Data Tab - Always show on home page */}
+              {isHomePage && (
+                <button
+                  onClick={handleQuickShopClick}
+                  className="relative px-4 py-2 rounded-lg transition-all duration-200 flex items-center gap-2 font-medium bg-white text-green-600 hover:bg-green-50 border-2 border-green-200"
+                >
+                  <CreditCard className="w-4 h-4" />
+                  <span>Buy Airtime & Data</span>
+                  <Badge className="bg-green-600 text-white text-xs">
+                    Quick
                   </Badge>
-                )}
-              </Link>
-            ))}
-            
-            {/* Buy Airtime & Data Tab - Always show on home page */}
-            {isHomePage && (
-              <button
-                onClick={handleQuickShopClick}
-                className="relative px-4 py-2 rounded-lg transition-all duration-200 flex items-center gap-2 font-medium bg-white text-green-600 hover:bg-green-50 border-2 border-green-200"
+                </button>
+              )}
+            </nav>
+
+            {/* WhatsApp Quick Access */}
+            <div className="hidden md:flex items-center gap-3">
+              <Button
+                onClick={() => window.open('https://wa.me/27832466539', '_blank')}
+                className="bg-white text-[#75B8FA] hover:bg-white/90 px-4 py-2 font-semibold"
               >
-                <CreditCard className="w-4 h-4" />
-                <span>Buy Airtime & Data</span>
-                <Badge className="bg-green-600 text-white text-xs">
-                  Quick
-                </Badge>
-              </button>
-            )}
-          </nav>
+                <MessageCircle className="w-4 h-4 mr-2" />
+                WhatsApp Support
+              </Button>
+            </div>
 
-          {/* WhatsApp Quick Access */}
-          <div className="hidden md:flex items-center gap-3">
-            <Button
-              onClick={() => window.open('https://wa.me/27832466539', '_blank')}
-              className="bg-white text-[#75B8FA] hover:bg-white/90 px-4 py-2 font-semibold"
+            {/* Mobile Menu Button */}
+            <button
+              onClick={toggleMenu}
+              className="md:hidden p-2 rounded-lg hover:bg-white/20 transition-colors z-[60] relative"
+              aria-label="Toggle menu"
             >
-              <MessageCircle className="w-4 h-4 mr-2" />
-              WhatsApp Support
-            </Button>
+              {isMenuOpen ? <X className="w-6 h-6 text-white" /> : <Menu className="w-6 h-6 text-white" />}
+            </button>
           </div>
-
-          {/* Mobile Menu Button */}
-          <button
-            onClick={toggleMenu}
-            className="md:hidden p-2 rounded-lg hover:bg-white/20 transition-colors z-50 relative"
-            aria-label="Toggle menu"
-          >
-            {isMenuOpen ? <X className="w-6 h-6 text-white" /> : <Menu className="w-6 h-6 text-white" />}
-          </button>
         </div>
+      </header>
 
-        {/* Mobile Navigation */}
-        {isMenuOpen && (
-          <div className="md:hidden absolute left-0 right-0 top-16 bg-white rounded-b-lg shadow-lg border-t-2 border-[#75B8FA]/20 z-40">
+      {/* Mobile Navigation Overlay */}
+      {isMenuOpen && (
+        <>
+          {/* Backdrop */}
+          <div 
+            className="md:hidden fixed inset-0 bg-black/20 z-[45]"
+            onClick={closeMenu}
+          />
+          
+          {/* Mobile Menu */}
+          <div className="md:hidden fixed left-0 right-0 top-16 bg-white shadow-xl border-t-2 border-[#75B8FA]/20 z-[50] max-h-[calc(100vh-4rem)] overflow-y-auto">
             <nav className="p-4 space-y-2">
               {navigationItems.map((item) => (
                 <Link
                   key={item.path}
                   to={item.path}
-                  onClick={() => setIsMenuOpen(false)}
+                  onClick={closeMenu}
                   className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 ${
                     isActive(item.path)
                       ? 'bg-[#75B8FA]/10 text-[#75B8FA] font-semibold'
@@ -150,7 +165,7 @@ const Header = ({ onQuickShopToggle, isQuickShopOpen }: HeaderProps) => {
                 <button
                   onClick={() => {
                     handleQuickShopClick();
-                    setIsMenuOpen(false);
+                    closeMenu();
                   }}
                   className="w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 text-green-600 hover:bg-green-50 font-medium border-2 border-green-200"
                 >
@@ -166,7 +181,7 @@ const Header = ({ onQuickShopToggle, isQuickShopOpen }: HeaderProps) => {
                 <Button
                   onClick={() => {
                     window.open('https://wa.me/27832466539', '_blank');
-                    setIsMenuOpen(false);
+                    closeMenu();
                   }}
                   className="w-full bg-[#75B8FA] hover:bg-[#75B8FA]/90 text-white font-semibold"
                 >
@@ -176,9 +191,9 @@ const Header = ({ onQuickShopToggle, isQuickShopOpen }: HeaderProps) => {
               </div>
             </nav>
           </div>
-        )}
-      </div>
-    </header>
+        </>
+      )}
+    </>
   );
 };
 
