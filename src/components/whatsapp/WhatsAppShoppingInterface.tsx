@@ -1,13 +1,13 @@
-
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { 
   ShoppingCart, Plus, MessageCircle, Star, 
-  CreditCard, Wifi, Gift, Globe, Home, MessageSquare
+  CreditCard, Wifi, Gift, Globe, Home, MessageSquare, X
 } from 'lucide-react';
 import { useMobileAuth } from '@/hooks/useMobileAuth';
+import { useLocation } from 'react-router-dom';
 
 interface Product {
   id: number;
@@ -26,9 +26,21 @@ interface CartItem extends Product {
 
 const WhatsAppShoppingInterface = () => {
   const { currentUser, isAuthenticated } = useMobileAuth();
+  const location = useLocation();
   const [activeTab, setActiveTab] = useState('shop');
   const [activeCategory, setActiveCategory] = useState('airtime');
   const [cart, setCart] = useState<CartItem[]>([]);
+
+  const handleExitToHome = () => {
+    // Seamless navigation to landing homepage
+    if (location.pathname === '/') {
+      // Already on home page, scroll to top smoothly
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else {
+      // Navigate to homepage
+      window.location.href = '/';
+    }
+  };
 
   const products: Product[] = [
     {
@@ -92,6 +104,23 @@ const WhatsAppShoppingInterface = () => {
 
   return (
     <div className="flex flex-col h-full bg-white">
+      {/* Header with Exit Button */}
+      <div className="bg-green-600 text-white p-3 flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          <MessageCircle className="w-6 h-6" />
+          <h2 className="text-lg font-semibold">WhatsApp Shopping</h2>
+        </div>
+        <Button
+          onClick={handleExitToHome}
+          variant="ghost"
+          size="sm"
+          className="w-8 h-8 p-0 rounded-full bg-white/10 hover:bg-white/20 transition-all duration-200"
+          title="Exit to Home"
+        >
+          <X className="w-4 h-4 text-white" />
+        </Button>
+      </div>
+
       {/* Tab Navigation */}
       <div className="flex bg-gray-100 border-b">
         <button

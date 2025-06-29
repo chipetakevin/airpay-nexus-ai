@@ -5,10 +5,10 @@ import { Badge } from '@/components/ui/badge';
 import { 
   ShoppingCart, Plus, Minus, MessageCircle, Star, 
   Zap, Gift, TrendingUp, CheckCircle, CreditCard,
-  Smartphone, Wifi, Phone, Send, ArrowRight
+  Smartphone, Wifi, Phone, Send, ArrowRight, X
 } from 'lucide-react';
 import { useMobileAuth } from '@/hooks/useMobileAuth';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import EnhancedPaymentProcessor from './EnhancedPaymentProcessor';
 
 interface Product {
@@ -31,11 +31,23 @@ interface CartItem extends Product {
 
 const MobileOptimizedShoppingInterface = () => {
   const { currentUser, isAuthenticated } = useMobileAuth();
+  const location = useLocation();
   const [activeTab, setActiveTab] = useState('featured');
   const [cart, setCart] = useState<CartItem[]>([]);
   const [cartTotal, setCartTotal] = useState(0);
   const [showPayment, setShowPayment] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+
+  const handleExitToHome = () => {
+    // Seamless navigation to landing homepage
+    if (location.pathname === '/') {
+      // Already on home page, scroll to top smoothly
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else {
+      // Navigate to homepage
+      window.location.href = '/';
+    }
+  };
 
   const featuredProducts: Product[] = [
     {
@@ -286,11 +298,11 @@ const MobileOptimizedShoppingInterface = () => {
 
   return (
     <div className="max-w-md mx-auto bg-white rounded-3xl overflow-hidden shadow-2xl border-4 border-green-100">
-      {/* WhatsApp-style Header with Divinely Mobile logo */}
+      {/* WhatsApp-style Header with Exit Button */}
       <div className="bg-gradient-to-r from-green-600 via-green-700 to-emerald-700 text-white p-4 relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-r from-green-400/20 to-emerald-400/20"></div>
         <div className="relative flex items-center gap-3">
-          <Link to="/" className="flex items-center gap-3 hover:opacity-80 transition-opacity">
+          <Link to="/" className="flex items-center gap-3 hover:opacity-80 transition-opacity flex-1">
             <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-lg">
               <Smartphone className="w-7 h-7 text-green-600" />
             </div>
@@ -302,14 +314,24 @@ const MobileOptimizedShoppingInterface = () => {
               </p>
             </div>
           </Link>
-          <div className="flex flex-col items-end">
+          
+          {/* Exit Button */}
+          <div className="flex flex-col items-end gap-2">
             {isAuthenticated && (
               <Badge className="bg-yellow-500 text-yellow-900 text-xs font-bold">
                 <Star className="w-3 h-3 mr-1" />
                 VIP
               </Badge>
             )}
-            <div className="text-xs opacity-75 mt-1">📱 Mobile Optimized</div>
+            <Button
+              onClick={handleExitToHome}
+              variant="ghost"
+              size="sm"
+              className="w-8 h-8 p-0 rounded-full bg-white/10 hover:bg-white/20 transition-all duration-200"
+              title="Exit to Home"
+            >
+              <X className="w-4 h-4 text-white" />
+            </Button>
           </div>
         </div>
       </div>
