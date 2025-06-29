@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
@@ -16,6 +15,7 @@ import MobileCustomerLanding from '@/components/MobileCustomerLanding';
 import WhatsAppShoppingSection from '@/components/WhatsAppShoppingSection';
 import SmoothScrollNav from '@/components/SmoothScrollNav';
 import MobileLayout from '@/components/navigation/MobileLayout';
+import ExitToHomeButton from '@/components/ExitToHomeButton';
 import { useMobileAuth } from '@/hooks/useMobileAuth';
 import StaticWhatsAppAssistant from '@/components/whatsapp/StaticWhatsAppAssistant';
 import { Card, CardContent } from '@/components/ui/card';
@@ -34,6 +34,9 @@ const Index = () => {
     <MobileLayout showTopNav={false} showBottomNav={true}>
       <div className="min-h-screen bg-white">
         <Header onQuickShopToggle={toggleQuickShop} isQuickShopOpen={isQuickShopOpen} />
+        
+        {/* Exit to Home Button */}
+        <ExitToHomeButton />
         
         {/* Mobile Customer Experience - Only show for authenticated users */}
         {isAuthenticated && (
