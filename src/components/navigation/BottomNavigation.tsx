@@ -55,10 +55,10 @@ const BottomNavigation = () => {
       badge: 'New'
     },
     {
-      id: 'explore',
-      label: 'Explore',
-      icon: Search,
-      path: '/platform-dashboard',
+      id: 'home',
+      label: 'Home',
+      icon: Home,
+      path: '/',
       badge: 'New'
     }
   ];
