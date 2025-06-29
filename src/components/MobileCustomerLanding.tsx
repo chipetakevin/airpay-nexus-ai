@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -6,7 +7,7 @@ import {
   MessageCircle, Zap, CreditCard, Gift, TrendingUp, 
   Star, Smartphone, Shield, Clock, CheckCircle,
   ArrowRight, Sparkles, Users, ChevronDown, ChevronUp,
-  Phone, Eye, EyeOff, Activity
+  Phone, Eye, EyeOff, Activity, Globe, Briefcase
 } from 'lucide-react';
 import { useMobileAuth } from '@/hooks/useMobileAuth';
 import { Link } from 'react-router-dom';
@@ -16,6 +17,9 @@ const MobileCustomerLanding = () => {
   const [isAccountExpanded, setIsAccountExpanded] = useState(false);
   const [showPhoneNumber, setShowPhoneNumber] = useState(false);
   const [isFeaturesExpanded, setIsFeaturesExpanded] = useState(false);
+  const [isPlatformExpanded, setIsPlatformExpanded] = useState(false);
+  const [isQuickAccessExpanded, setIsQuickAccessExpanded] = useState(false);
+  const [isEarningExpanded, setIsEarningExpanded] = useState(false);
 
   if (!isAuthenticated || !currentUser) {
     return null;
@@ -31,6 +35,18 @@ const MobileCustomerLanding = () => {
 
   const toggleFeaturesExpanded = () => {
     setIsFeaturesExpanded(!isFeaturesExpanded);
+  };
+
+  const togglePlatformExpanded = () => {
+    setIsPlatformExpanded(!isPlatformExpanded);
+  };
+
+  const toggleQuickAccessExpanded = () => {
+    setIsQuickAccessExpanded(!isQuickAccessExpanded);
+  };
+
+  const toggleEarningExpanded = () => {
+    setIsEarningExpanded(!isEarningExpanded);
   };
 
   const quickShopActions = [
@@ -193,6 +209,144 @@ const MobileCustomerLanding = () => {
                 Access Smart Deals
               </Button>
             </Link>
+          </CardContent>
+        )}
+      </Card>
+
+      {/* Collapsible Unified Mobile Platform */}
+      <Card className="bg-gradient-to-r from-orange-50 to-red-50 border border-orange-200">
+        <CardHeader 
+          className="cursor-pointer hover:bg-orange-50/50 transition-colors"
+          onClick={togglePlatformExpanded}
+        >
+          <CardTitle className="flex items-center justify-between text-gray-900">
+            <div className="flex items-center gap-2">
+              <Star className="w-5 h-5 text-orange-600" />
+              Unified Mobile Platform
+            </div>
+            {isPlatformExpanded ? (
+              <ChevronUp className="w-5 h-5 text-gray-400" />
+            ) : (
+              <ChevronDown className="w-5 h-5 text-gray-400" />
+            )}
+          </CardTitle>
+        </CardHeader>
+        
+        {isPlatformExpanded && (
+          <CardContent className="space-y-4 animate-fade-in">
+            <div className="text-center space-y-4">
+              <div className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-green-600 bg-clip-text text-transparent">
+                All-in-One Mobile Solutions
+              </div>
+              <p className="text-gray-600">
+                Complete mobile services ecosystem - from RICA to enterprise banking solutions
+              </p>
+              
+              <div className="bg-gradient-to-r from-purple-500 to-purple-600 rounded-2xl p-6 text-white">
+                <div className="flex items-center justify-between mb-4">
+                  <div className="text-2xl font-bold">Divinely BaaS Platform</div>
+                  <Badge className="bg-red-500 text-white">ENTERPRISE</Badge>
+                </div>
+                <p className="text-purple-100 mb-4">Complete Mobile & Banking Solutions</p>
+                <Button className="w-full bg-white text-purple-600 hover:bg-gray-100">
+                  Click to expand services
+                </Button>
+              </div>
+            </div>
+          </CardContent>
+        )}
+      </Card>
+
+      {/* Collapsible Quick Access Features */}
+      <Card className="bg-gradient-to-r from-blue-50 to-cyan-50 border border-blue-200">
+        <CardHeader 
+          className="cursor-pointer hover:bg-blue-50/50 transition-colors"
+          onClick={toggleQuickAccessExpanded}
+        >
+          <CardTitle className="flex items-center justify-between text-gray-900">
+            <div className="flex items-center gap-2">
+              <Zap className="w-5 h-5 text-blue-600" />
+              Quick Access Features
+            </div>
+            {isQuickAccessExpanded ? (
+              <ChevronUp className="w-5 h-5 text-gray-400" />
+            ) : (
+              <ChevronDown className="w-5 h-5 text-gray-400" />
+            )}
+          </CardTitle>
+        </CardHeader>
+        
+        {isQuickAccessExpanded && (
+          <CardContent className="space-y-4 animate-fade-in">
+            <div className="grid grid-cols-2 gap-4">
+              <div className="text-center p-4 bg-white rounded-xl border">
+                <Shield className="w-8 h-8 mx-auto mb-2 text-green-600" />
+                <div className="text-2xl font-bold text-gray-900">99.7%</div>
+                <div className="text-sm text-gray-600">Success</div>
+                <div className="text-xs text-gray-500 mt-1">RICA Rate</div>
+              </div>
+              
+              <div className="text-center p-4 bg-white rounded-xl border">
+                <Zap className="w-8 h-8 mx-auto mb-2 text-blue-600" />
+                <div className="text-2xl font-bold text-gray-900">5 Minutes</div>
+                <div className="text-sm text-gray-600">Avg Porting</div>
+              </div>
+              
+              <div className="text-center p-4 bg-white rounded-xl border">
+                <Globe className="w-8 h-8 mx-auto mb-2 text-purple-600" />
+                <div className="text-lg font-bold text-gray-900">Enterprise</div>
+                <div className="text-sm text-gray-600">BaaS Ready</div>
+              </div>
+              
+              <div className="text-center p-4 bg-white rounded-xl border">
+                <Sparkles className="w-8 h-8 mx-auto mb-2 text-yellow-600" />
+                <div className="text-lg font-bold text-gray-900">AI Powered</div>
+                <div className="text-sm text-gray-600">Platform</div>
+              </div>
+            </div>
+          </CardContent>
+        )}
+      </Card>
+
+      {/* Collapsible Earning Potential */}
+      <Card className="bg-gradient-to-r from-purple-50 to-blue-50 border border-purple-200">
+        <CardHeader 
+          className="cursor-pointer hover:bg-purple-50/50 transition-colors"
+          onClick={toggleEarningExpanded}
+        >
+          <CardTitle className="flex items-center justify-between text-gray-900">
+            <div className="flex items-center gap-2">
+              <Users className="w-5 h-5 text-purple-600" />
+              Join Our Thriving Community
+            </div>
+            {isEarningExpanded ? (
+              <ChevronUp className="w-5 h-5 text-gray-400" />
+            ) : (
+              <ChevronDown className="w-5 h-5 text-gray-400" />
+            )}
+          </CardTitle>
+        </CardHeader>
+        
+        {isEarningExpanded && (
+          <CardContent className="space-y-4 animate-fade-in">
+            <div className="text-center space-y-4">
+              <div className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                Discover Your Earning Potential
+              </div>
+              <p className="text-lg text-gray-600">
+                See how profitable the Divinely Mobile platform is for each user type when purchasing R100 weekly
+              </p>
+              
+              <div className="bg-gradient-to-r from-green-500/10 to-emerald-500/10 rounded-xl p-6 border border-green-200">
+                <div className="flex items-center gap-3 justify-center mb-3">
+                  <Briefcase className="w-6 h-6 text-green-600" />
+                  <span className="text-lg font-semibold text-green-800">Weekly R100 Potential</span>
+                </div>
+                <p className="text-sm text-gray-600">
+                  Experience consistent earnings through our platform ecosystem
+                </p>
+              </div>
+            </div>
           </CardContent>
         )}
       </Card>
