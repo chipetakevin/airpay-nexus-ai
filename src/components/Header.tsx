@@ -76,7 +76,7 @@ const Header = ({ onQuickShopToggle, isQuickShopOpen }: HeaderProps) => {
             ))}
             
             {/* Buy Airtime & Data Tab - Only show on home page */}
-            {isHomePage && (
+            {isHomePage && onQuickShopToggle && (
               <button
                 onClick={onQuickShopToggle}
                 className={`relative px-4 py-2 rounded-lg transition-all duration-200 flex items-center gap-2 font-medium ${
@@ -140,10 +140,10 @@ const Header = ({ onQuickShopToggle, isQuickShopOpen }: HeaderProps) => {
               ))}
               
               {/* Mobile Buy Airtime & Data Tab - Only show on home page */}
-              {isHomePage && (
+              {isHomePage && onQuickShopToggle && (
                 <button
                   onClick={() => {
-                    onQuickShopToggle?.();
+                    onQuickShopToggle();
                     setIsMenuOpen(false);
                   }}
                   className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 ${
