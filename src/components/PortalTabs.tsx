@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import CustomerRegistration from './CustomerRegistration';
@@ -8,6 +7,7 @@ import OneCardDashboard from './OneCardDashboard';
 import AdminPortal from './AdminPortal';
 import ReportsTabContent from './onecard/ReportsTabContent';
 import AirtimeDealsSystem from './AirtimeDealsSystem';
+import TabSwitcher from './navigation/TabSwitcher';
 
 interface PortalTabsProps {
   activeTab: string;
@@ -29,6 +29,26 @@ const PortalTabs = ({
   isAuthenticated = false
 }: PortalTabsProps) => {
   
+  // Get user data for tab switcher
+  const getUserData = () => {
+    try {
+      const credentials = localStorage.getItem('userCredentials');
+      if (credentials) {
+        const userCreds = JSON.parse(credentials);
+        const userData = localStorage.getItem('onecardUser');
+        if (userData) {
+          const user = JSON.parse(userData);
+          return { name: user.firstName, isAuth: true };
+        }
+      }
+    } catch (error) {
+      console.log('No user data found');
+    }
+    return { name: '', isAuth: false };
+  };
+
+  const { name: userName, isAuth: userAuthenticated } = getUserData();
+
   const tabs = [
     {
       value: 'deals',
@@ -109,6 +129,14 @@ const PortalTabs = ({
   return (
     <div className="w-full max-w-6xl mx-auto pt-4">
       <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full">
+        {/* Add Tab Switcher for seamless navigation */}
+        <TabSwitcher 
+          currentTab={activeTab}
+          onTabChange={handleTabChange}
+          isAuthenticated={userAuthenticated}
+          userName={userName}
+        />
+
         {/* Mobile-Optimized Tab Navigation */}
         <div className="w-full mb-6">
           <TabsList className="w-full max-w-full bg-gradient-to-r from-gray-50 to-gray-100 p-1 sm:p-1.5">

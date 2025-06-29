@@ -94,13 +94,14 @@ const Portal = () => {
     navigate('?tab=deals', { replace: true });
   };
 
+  // Enhanced isTabAllowed function for seamless navigation
   const isTabAllowed = (tabValue: string) => {
     try {
-      // Always allow deals tab - default landing page
-      if (tabValue === 'deals') return true;
+      // Always allow deals and registration tabs for seamless navigation
+      if (['deals', 'registration'].includes(tabValue)) return true;
       
       // Always allow registration tabs for all users
-      if (['registration', 'vendor', 'admin-reg'].includes(tabValue)) return true;
+      if (['vendor', 'admin-reg'].includes(tabValue)) return true;
       
       const isAuthenticated = localStorage.getItem('userAuthenticated') === 'true';
       const storedCredentials = localStorage.getItem('userCredentials');
@@ -139,12 +140,20 @@ const Portal = () => {
       return tabValue === 'deals';
     } catch (error) {
       console.error('Error checking tab permissions:', error);
-      return tabValue === 'deals';
+      return ['deals', 'registration'].includes(tabValue);
     }
   };
 
+  // Enhanced handleTabChange for seamless navigation
   const handleTabChange = (value: string) => {
     try {
+      // Always allow seamless navigation between deals and registration
+      if (['deals', 'registration'].includes(value)) {
+        setActiveTab(value);
+        navigate(`?tab=${value}`, { replace: true });
+        return;
+      }
+
       if (isTabAllowed(value)) {
         setActiveTab(value);
         navigate(`?tab=${value}`, { replace: true });
