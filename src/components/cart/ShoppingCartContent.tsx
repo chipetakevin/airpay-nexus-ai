@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
-import { ShoppingCart, CreditCard, User, Users, Gift } from 'lucide-react';
+import { ShoppingCart, CreditCard, User, Users, Gift, CheckCircle } from 'lucide-react';
 import { CartItem } from '@/types/deals';
 import PaymentMethodSelector from './PaymentMethodSelector';
 import { useToast } from '@/hooks/use-toast';
@@ -18,6 +18,7 @@ const ShoppingCartContent: React.FC<ShoppingCartContentProps> = ({ initialDeal }
   const { toast } = useToast();
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<any>(null);
   const [userType, setUserType] = useState<'customer' | 'vendor' | 'admin'>('customer');
+  const [hasAcceptedTerms, setHasAcceptedTerms] = useState(false);
 
   const {
     cartItems,
@@ -43,7 +44,9 @@ const ShoppingCartContent: React.FC<ShoppingCartContentProps> = ({ initialDeal }
     if (credentials) {
       try {
         const parsed = JSON.parse(credentials);
-        setUserType(parsed.userType || 'customer');
+        const detectedUserType = parsed.userType || 'customer';
+        setUserType(detectedUserType);
+        console.log('✅ User type detected:', detectedUserType);
       } catch (error) {
         console.error('Error parsing credentials:', error);
       }
@@ -52,6 +55,7 @@ const ShoppingCartContent: React.FC<ShoppingCartContentProps> = ({ initialDeal }
 
   const handlePaymentMethodSelect = (method: any) => {
     setSelectedPaymentMethod(method);
+    console.log('💳 Payment method selected:', method);
     toast({
       title: "Payment Method Selected",
       description: `${method.displayName} will be used for this purchase.`,
@@ -59,10 +63,22 @@ const ShoppingCartContent: React.FC<ShoppingCartContentProps> = ({ initialDeal }
   };
 
   const handleCompletePurchase = async () => {
+    console.log('🔄 Starting purchase process for user type:', userType);
+    
+    // Comprehensive validation
     if (!selectedPaymentMethod) {
       toast({
         title: "Payment Method Required",
         description: "Please select a payment method to continue.",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    if (!hasAcceptedTerms) {
+      toast({
+        title: "Terms Acceptance Required",
+        description: "Please accept the terms and conditions to continue.",
         variant: "destructive"
       });
       return;
@@ -77,7 +93,7 @@ const ShoppingCartContent: React.FC<ShoppingCartContentProps> = ({ initialDeal }
       return;
     }
 
-    // Validate required fields
+    // Enhanced validation for all user types
     let validationError = '';
     
     if (cartItems.length === 0) {
@@ -88,13 +104,27 @@ const ShoppingCartContent: React.FC<ShoppingCartContentProps> = ({ initialDeal }
       validationError = 'Customer phone number is required';
     }
 
-    // Process the purchase using the existing shopping cart logic
-    const success = await processPurchase(validationError, 'Auto-detected');
-    
-    if (success) {
-      // Clear cart and selected payment method on success
-      setCartItems([]);
-      setSelectedPaymentMethod(null);
+    console.log('📋 Validation check:', { validationError, customerPhone, userType });
+
+    // Process the purchase using the enhanced shopping cart logic
+    try {
+      const success = await processPurchase(validationError, 'Auto-detected');
+      
+      if (success) {
+        // Clear cart and selected payment method on success
+        setCartItems([]);
+        setSelectedPaymentMethod(null);
+        setHasAcceptedTerms(false);
+        
+        console.log('✅ Purchase completed successfully for user type:', userType);
+      }
+    } catch (error) {
+      console.error('❌ Purchase error:', error);
+      toast({
+        title: "Purchase Failed",
+        description: "Unable to complete purchase. Please try again.",
+        variant: "destructive"
+      });
     }
   };
 
@@ -157,6 +187,27 @@ const ShoppingCartContent: React.FC<ShoppingCartContentProps> = ({ initialDeal }
         selectedMethod={selectedPaymentMethod?.id}
       />
 
+      {/* Terms and Conditions */}
+      <Card className="border-orange-200 bg-orange-50/30">
+        <CardContent className="p-4">
+          <div className="flex items-start gap-3">
+            <input
+              type="checkbox"
+              id="acceptTerms"
+              checked={hasAcceptedTerms}
+              onChange={(e) => setHasAcceptedTerms(e.target.checked)}
+              className="mt-1 h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+            />
+            <label htmlFor="acceptTerms" className="text-sm text-gray-700 cursor-pointer">
+              I accept the{' '}
+              <span className="text-blue-600 underline">Terms and Conditions</span> and{' '}
+              <span className="text-blue-600 underline">Privacy Policy</span>.
+              I understand that this purchase will be processed using the selected payment method.
+            </label>
+          </div>
+        </CardContent>
+      </Card>
+
       {/* Order Summary */}
       <Card className="border-blue-200 bg-blue-50/30">
         <CardHeader>
@@ -201,26 +252,50 @@ const ShoppingCartContent: React.FC<ShoppingCartContentProps> = ({ initialDeal }
             )}
           </div>
 
+          {/* Enhanced Complete Purchase Button */}
           <Button
             onClick={handleCompletePurchase}
-            disabled={!selectedPaymentMethod || isProcessing || !isAuthenticated}
-            className="w-full bg-blue-600 hover:bg-blue-700 py-3"
+            disabled={!selectedPaymentMethod || !hasAcceptedTerms || isProcessing || !isAuthenticated}
+            className={`w-full py-4 text-base font-semibold transition-all duration-300 ${
+              hasAcceptedTerms && selectedPaymentMethod 
+                ? 'bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 shadow-lg' 
+                : 'bg-gray-400 cursor-not-allowed'
+            }`}
           >
             {isProcessing ? (
-              <>
-                <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
+              <div className="flex items-center gap-2">
+                <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
                 Processing Payment...
-              </>
+              </div>
             ) : (
-              <>
-                <CreditCard className="w-4 h-4 mr-2" />
-                Complete Purchase - R{totals.customerPrice.toFixed(2)}
-              </>
+              <div className="flex items-center gap-2">
+                {hasAcceptedTerms && selectedPaymentMethod ? (
+                  <>
+                    <CheckCircle className="w-5 h-5" />
+                    Complete Purchase - R{totals.customerPrice.toFixed(2)}
+                  </>
+                ) : (
+                  <>
+                    <CreditCard className="w-5 h-5" />
+                    {!selectedPaymentMethod ? 'Select Payment Method' : 'Accept Terms to Continue'}
+                  </>
+                )}
+              </div>
             )}
           </Button>
 
+          {hasAcceptedTerms && selectedPaymentMethod && (
+            <div className="text-xs text-center text-green-700 bg-green-50 p-3 rounded-lg border border-green-200">
+              <div className="flex items-center justify-center gap-2 mb-2">
+                <CheckCircle className="w-4 h-4" />
+                <span className="font-medium">Ready to Process</span>
+              </div>
+              <p>🔒 Secure payment • 📱 Instant WhatsApp receipt • 📧 Email confirmation</p>
+            </div>
+          )}
+
           <p className="text-xs text-center text-gray-600">
-            🔒 Your payment information is secure and encrypted. All transactions are processed safely.
+            🔒 Your payment information is secure and encrypted. All transactions are processed safely for all user types.
           </p>
         </CardContent>
       </Card>
