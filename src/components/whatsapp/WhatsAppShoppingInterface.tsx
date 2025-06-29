@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { useMobileAuth } from '@/hooks/useMobileAuth';
 import WhatsAppShoppingHeader from './WhatsAppShoppingHeader';
@@ -7,17 +8,19 @@ import WhatsAppProductsList from './WhatsAppProductsList';
 import { CreditCard } from 'lucide-react';
 
 interface Product {
-  id: number;
+  id: string;
   name: string;
+  type: string;
+  network: string;
+  amount: string;
   price: number;
-  category: 'airtime' | 'data' | 'bundle' | 'gift';
+  category: string;
   icon: React.ReactNode;
   description: string;
-  network?: string;
   popular?: boolean;
 }
 
-interface CartItem extends Product {
+interface CartItem extends Omit<Product, 'category'> {
   quantity: number;
 }
 
@@ -33,36 +36,42 @@ const WhatsAppShoppingInterface = () => {
 
   const products: Product[] = [
     {
-      id: 1,
+      id: '1',
       name: 'R10 Airtime',
+      type: 'airtime',
+      network: 'All Networks',
+      amount: '10',
       price: 10,
       category: 'airtime',
       icon: <CreditCard className="w-6 h-6" />,
-      description: 'All Networks • R10',
-      network: 'All Networks'
+      description: 'All Networks • R10'
     },
     {
-      id: 2,
+      id: '2',
       name: 'R20 Airtime',
+      type: 'airtime',
+      network: 'All Networks',
+      amount: '20',
       price: 20,
       category: 'airtime',
       icon: <CreditCard className="w-6 h-6" />,
       description: 'All Networks • R20',
-      network: 'All Networks',
       popular: true
     },
     {
-      id: 3,
+      id: '3',
       name: 'R50 Airtime',
+      type: 'airtime',
+      network: 'All Networks',
+      amount: '50',
       price: 50,
       category: 'airtime',
       icon: <CreditCard className="w-6 h-6" />,
-      description: 'All Networks • R50',
-      network: 'All Networks'
+      description: 'All Networks • R50'
     }
   ];
 
-  const addToCart = (product: Product) => {
+  const addToCart = (product: Omit<Product, 'category'> & { quantity?: number }) => {
     setCart(prev => {
       const existingItem = prev.find(item => item.id === product.id);
       if (existingItem) {
@@ -72,15 +81,29 @@ const WhatsAppShoppingInterface = () => {
             : item
         );
       }
-      return [...prev, { ...product, quantity: 1 }];
+      return [...prev, { ...product, quantity: product.quantity || 1 }];
     });
+  };
+
+  const getCartCount = () => {
+    return cart.reduce((total, item) => total + item.quantity, 0);
   };
 
   return (
     <div className="flex flex-col h-full bg-white">
-      <WhatsAppShoppingHeader onExit={handleExitToDeals} />
-      <WhatsAppTabNavigation activeTab={activeTab} onTabChange={setActiveTab} />
-      <WhatsAppCategoryGrid activeCategory={activeCategory} onCategoryChange={setActiveCategory} />
+      <WhatsAppShoppingHeader 
+        isAuthenticated={isAuthenticated}
+        onExit={handleExitToDeals} 
+      />
+      <WhatsAppTabNavigation 
+        activeTab={activeTab} 
+        cartCount={getCartCount()}
+        onTabChange={setActiveTab} 
+      />
+      <WhatsAppCategoryGrid 
+        activeCategory={activeCategory} 
+        onCategoryChange={setActiveCategory} 
+      />
       <WhatsAppProductsList 
         products={products} 
         activeCategory={activeCategory} 
