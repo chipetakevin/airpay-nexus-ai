@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -76,10 +77,10 @@ const MobileCustomerLanding = () => {
             Smart Deals Ready
           </Badge>
         </div>
-        <h2 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+        <h2 className="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
           Welcome back, {currentUser.firstName}!
         </h2>
-        <p className="text-gray-600">
+        <p className="text-sm text-gray-600">
           Your exclusive smart deals shopping experience is ready
         </p>
       </div>
@@ -90,15 +91,15 @@ const MobileCustomerLanding = () => {
           className="cursor-pointer hover:bg-blue-50/50 transition-colors"
           onClick={toggleAccountExpanded}
         >
-          <CardTitle className="flex items-center justify-between text-gray-900">
+          <CardTitle className="flex items-center justify-between text-gray-900 text-base">
             <div className="flex items-center gap-2">
-              <CreditCard className="w-5 h-5 text-blue-600" />
+              <CreditCard className="w-4 h-4 text-blue-600" />
               Your OneCard Account
             </div>
             {isAccountExpanded ? (
-              <ChevronUp className="w-5 h-5 text-gray-400" />
+              <ChevronUp className="w-4 h-4 text-gray-400" />
             ) : (
-              <ChevronDown className="w-5 h-5 text-gray-400" />
+              <ChevronDown className="w-4 h-4 text-gray-400" />
             )}
           </CardTitle>
         </CardHeader>
@@ -116,7 +117,7 @@ const MobileCustomerLanding = () => {
                   className="flex items-center justify-center gap-2 cursor-pointer hover:bg-blue-50 rounded-lg p-2 transition-colors"
                   onClick={togglePhoneVisibility}
                 >
-                  <div className="text-xl font-bold text-blue-800">
+                  <div className="text-lg font-bold text-blue-800">
                     {showPhoneNumber ? '+27832466659' : '•••••••••••••'}
                   </div>
                   {showPhoneNumber ? (
@@ -139,7 +140,7 @@ const MobileCustomerLanding = () => {
                 {/* Happy Customers */}
                 <div className="bg-gradient-to-r from-purple-500/10 to-blue-500/10 rounded-xl p-4 border border-purple-200">
                   <div className="text-center">
-                    <div className="text-2xl font-bold text-yellow-600 mb-1">50K+</div>
+                    <div className="text-xl font-bold text-yellow-600 mb-1">50K+</div>
                     <div className="text-sm text-gray-600">Happy Customers</div>
                   </div>
                 </div>
@@ -147,7 +148,7 @@ const MobileCustomerLanding = () => {
                 {/* Rewards Earned */}
                 <div className="bg-gradient-to-r from-green-500/10 to-emerald-500/10 rounded-xl p-4 border border-green-200">
                   <div className="text-center">
-                    <div className="text-2xl font-bold text-green-600 mb-1">R2.5M+</div>
+                    <div className="text-xl font-bold text-green-600 mb-1">R2.5M+</div>
                     <div className="text-sm text-gray-600">Rewards Earned</div>
                   </div>
                 </div>
@@ -155,7 +156,7 @@ const MobileCustomerLanding = () => {
                 {/* Uptime */}
                 <div className="bg-gradient-to-r from-purple-500/10 to-pink-500/10 rounded-xl p-4 border border-purple-200">
                   <div className="text-center">
-                    <div className="text-2xl font-bold text-purple-600 mb-1">99.9%</div>
+                    <div className="text-xl font-bold text-purple-600 mb-1">99.9%</div>
                     <div className="text-sm text-gray-600">Uptime</div>
                   </div>
                 </div>
@@ -166,17 +167,17 @@ const MobileCustomerLanding = () => {
             <div className="bg-white rounded-lg p-4 border border-purple-200">
               <div className="flex items-center gap-4">
                 <div className="p-3 rounded-xl bg-gradient-to-r from-blue-500 to-purple-600 text-white">
-                  <Zap className="w-6 h-6" />
+                  <Zap className="w-5 h-5" />
                 </div>
                 <div className="flex-1">
                   <div className="flex items-center gap-2 mb-1">
-                    <h4 className="font-semibold text-gray-900">Smart Deals Portal</h4>
+                    <h4 className="text-sm font-semibold text-gray-900">Smart Deals Portal</h4>
                     <Badge className="bg-purple-100 text-purple-700 text-xs">VIP Only</Badge>
                   </div>
-                  <p className="text-sm text-gray-600 mb-2">Browse exclusive customer deals</p>
+                  <p className="text-xs text-gray-600 mb-2">Browse exclusive customer deals</p>
                   <div className="flex items-center justify-between">
-                    <span className="text-sm text-gray-500">Tap to access smart deals</span>
-                    <ArrowRight className="w-4 h-4 text-gray-400" />
+                    <span className="text-xs text-gray-500">Tap to access smart deals</span>
+                    <ArrowRight className="w-3 h-3 text-gray-400" />
                   </div>
                 </div>
               </div>
@@ -186,17 +187,17 @@ const MobileCustomerLanding = () => {
             <div className="bg-white rounded-lg p-4 border border-pink-200">
               <div className="flex items-center gap-4">
                 <div className="p-3 rounded-xl bg-gradient-to-r from-pink-500 to-rose-600 text-white">
-                  <Gift className="w-6 h-6" />
+                  <Gift className="w-5 h-5" />
                 </div>
                 <div className="flex-1">
                   <div className="flex items-center gap-2 mb-1">
-                    <h4 className="font-semibold text-gray-900">Gift & Share</h4>
+                    <h4 className="text-sm font-semibold text-gray-900">Gift & Share</h4>
                     <Badge className="bg-pink-100 text-pink-700 text-xs">Social</Badge>
                   </div>
-                  <p className="text-sm text-gray-600 mb-2">Send airtime/data to loved ones</p>
+                  <p className="text-xs text-gray-600 mb-2">Send airtime/data to loved ones</p>
                   <div className="flex items-center justify-between">
-                    <span className="text-sm text-gray-500">Tap to access smart deals</span>
-                    <ArrowRight className="w-4 h-4 text-gray-400" />
+                    <span className="text-xs text-gray-500">Tap to access smart deals</span>
+                    <ArrowRight className="w-3 h-3 text-gray-400" />
                   </div>
                 </div>
               </div>
@@ -214,8 +215,8 @@ const MobileCustomerLanding = () => {
 
       {/* Quick Shop Actions */}
       <div className="space-y-4">
-        <h3 className="text-lg font-semibold text-gray-900 flex items-center gap-2">
-          <Smartphone className="w-5 h-5 text-blue-600" />
+        <h3 className="text-base font-semibold text-gray-900 flex items-center gap-2">
+          <Smartphone className="w-4 h-4 text-blue-600" />
           Quick Shopping
         </h3>
         
@@ -243,7 +244,7 @@ const MobileCustomerLanding = () => {
                   
                   <div className="flex-1">
                     <div className="flex items-center gap-2 mb-2">
-                      <h4 className="text-lg font-semibold text-gray-900">{action.title}</h4>
+                      <h4 className="text-base font-semibold text-gray-900">{action.title}</h4>
                       <Badge className="bg-gray-100 text-gray-700 text-xs">
                         {action.badge}
                       </Badge>
@@ -270,15 +271,15 @@ const MobileCustomerLanding = () => {
           className="cursor-pointer hover:bg-orange-50/50 transition-colors"
           onClick={togglePlatformExpanded}
         >
-          <CardTitle className="flex items-center justify-between text-gray-900">
+          <CardTitle className="flex items-center justify-between text-gray-900 text-base">
             <div className="flex items-center gap-2">
-              <Star className="w-5 h-5 text-orange-600" />
+              <Star className="w-4 h-4 text-orange-600" />
               Unified Mobile Platform
             </div>
             {isPlatformExpanded ? (
-              <ChevronUp className="w-5 h-5 text-gray-400" />
+              <ChevronUp className="w-4 h-4 text-gray-400" />
             ) : (
-              <ChevronDown className="w-5 h-5 text-gray-400" />
+              <ChevronDown className="w-4 h-4 text-gray-400" />
             )}
           </CardTitle>
         </CardHeader>
@@ -286,19 +287,19 @@ const MobileCustomerLanding = () => {
         {isPlatformExpanded && (
           <CardContent className="space-y-4 animate-fade-in">
             <div className="text-center space-y-4">
-              <div className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-green-600 bg-clip-text text-transparent">
+              <div className="text-xl font-bold bg-gradient-to-r from-blue-600 to-green-600 bg-clip-text text-transparent">
                 All-in-One Mobile Solutions
               </div>
-              <p className="text-gray-600">
+              <p className="text-sm text-gray-600">
                 Complete mobile services ecosystem - from RICA to enterprise banking solutions
               </p>
               
               <div className="bg-gradient-to-r from-purple-500 to-purple-600 rounded-2xl p-6 text-white">
                 <div className="flex items-center justify-between mb-4">
-                  <div className="text-2xl font-bold">Divinely BaaS Platform</div>
+                  <div className="text-lg font-bold">Divinely BaaS Platform</div>
                   <Badge className="bg-red-500 text-white">ENTERPRISE</Badge>
                 </div>
-                <p className="text-purple-100 mb-4">Complete Mobile & Banking Solutions</p>
+                <p className="text-purple-100 mb-4 text-sm">Complete Mobile & Banking Solutions</p>
                 <Button className="w-full bg-white text-purple-600 hover:bg-gray-100">
                   Click to expand services
                 </Button>
@@ -314,15 +315,15 @@ const MobileCustomerLanding = () => {
           className="cursor-pointer hover:bg-blue-50/50 transition-colors"
           onClick={toggleQuickAccessExpanded}
         >
-          <CardTitle className="flex items-center justify-between text-gray-900">
+          <CardTitle className="flex items-center justify-between text-gray-900 text-base">
             <div className="flex items-center gap-2">
-              <Zap className="w-5 h-5 text-blue-600" />
+              <Zap className="w-4 h-4 text-blue-600" />
               Quick Access Features
             </div>
             {isQuickAccessExpanded ? (
-              <ChevronUp className="w-5 h-5 text-gray-400" />
+              <ChevronUp className="w-4 h-4 text-gray-400" />
             ) : (
-              <ChevronDown className="w-5 h-5 text-gray-400" />
+              <ChevronDown className="w-4 h-4 text-gray-400" />
             )}
           </CardTitle>
         </CardHeader>
@@ -331,27 +332,27 @@ const MobileCustomerLanding = () => {
           <CardContent className="space-y-4 animate-fade-in">
             <div className="grid grid-cols-2 gap-4">
               <div className="text-center p-4 bg-white rounded-xl border">
-                <Shield className="w-8 h-8 mx-auto mb-2 text-green-600" />
-                <div className="text-2xl font-bold text-gray-900">99.7%</div>
+                <Shield className="w-6 h-6 mx-auto mb-2 text-green-600" />
+                <div className="text-lg font-bold text-gray-900">99.7%</div>
                 <div className="text-sm text-gray-600">Success</div>
                 <div className="text-xs text-gray-500 mt-1">RICA Rate</div>
               </div>
               
               <div className="text-center p-4 bg-white rounded-xl border">
-                <Zap className="w-8 h-8 mx-auto mb-2 text-blue-600" />
-                <div className="text-2xl font-bold text-gray-900">5 Minutes</div>
+                <Zap className="w-6 h-6 mx-auto mb-2 text-blue-600" />
+                <div className="text-lg font-bold text-gray-900">5 Minutes</div>
                 <div className="text-sm text-gray-600">Avg Porting</div>
               </div>
               
               <div className="text-center p-4 bg-white rounded-xl border">
-                <Globe className="w-8 h-8 mx-auto mb-2 text-purple-600" />
-                <div className="text-lg font-bold text-gray-900">Enterprise</div>
+                <Globe className="w-6 h-6 mx-auto mb-2 text-purple-600" />
+                <div className="text-sm font-bold text-gray-900">Enterprise</div>
                 <div className="text-sm text-gray-600">BaaS Ready</div>
               </div>
               
               <div className="text-center p-4 bg-white rounded-xl border">
-                <Sparkles className="w-8 h-8 mx-auto mb-2 text-yellow-600" />
-                <div className="text-lg font-bold text-gray-900">AI Powered</div>
+                <Sparkles className="w-6 h-6 mx-auto mb-2 text-yellow-600" />
+                <div className="text-sm font-bold text-gray-900">AI Powered</div>
                 <div className="text-sm text-gray-600">Platform</div>
               </div>
             </div>
@@ -365,15 +366,15 @@ const MobileCustomerLanding = () => {
           className="cursor-pointer hover:bg-purple-50/50 transition-colors"
           onClick={toggleEarningExpanded}
         >
-          <CardTitle className="flex items-center justify-between text-gray-900">
+          <CardTitle className="flex items-center justify-between text-gray-900 text-base">
             <div className="flex items-center gap-2">
-              <Users className="w-5 h-5 text-purple-600" />
+              <Users className="w-4 h-4 text-purple-600" />
               Join Our Thriving Community
             </div>
             {isEarningExpanded ? (
-              <ChevronUp className="w-5 h-5 text-gray-400" />
+              <ChevronUp className="w-4 h-4 text-gray-400" />
             ) : (
-              <ChevronDown className="w-5 h-5 text-gray-400" />
+              <ChevronDown className="w-4 h-4 text-gray-400" />
             )}
           </CardTitle>
         </CardHeader>
@@ -381,17 +382,17 @@ const MobileCustomerLanding = () => {
         {isEarningExpanded && (
           <CardContent className="space-y-4 animate-fade-in">
             <div className="text-center space-y-4">
-              <div className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+              <div className="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
                 Discover Your Earning Potential
               </div>
-              <p className="text-lg text-gray-600">
+              <p className="text-sm text-gray-600">
                 See how profitable the Divinely Mobile platform is for each user type when purchasing R100 weekly
               </p>
               
               <div className="bg-gradient-to-r from-green-500/10 to-emerald-500/10 rounded-xl p-6 border border-green-200">
                 <div className="flex items-center gap-3 justify-center mb-3">
-                  <Briefcase className="w-6 h-6 text-green-600" />
-                  <span className="text-lg font-semibold text-green-800">Weekly R100 Potential</span>
+                  <Briefcase className="w-5 h-5 text-green-600" />
+                  <span className="text-base font-semibold text-green-800">Weekly R100 Potential</span>
                 </div>
                 <p className="text-sm text-gray-600">
                   Experience consistent earnings through our platform ecosystem
@@ -408,15 +409,15 @@ const MobileCustomerLanding = () => {
           className="cursor-pointer hover:bg-purple-50/50 transition-colors"
           onClick={toggleFeaturesExpanded}
         >
-          <CardTitle className="flex items-center justify-between text-gray-900">
+          <CardTitle className="flex items-center justify-between text-gray-900 text-base">
             <div className="flex items-center gap-2">
-              <Star className="w-5 h-5 text-purple-600" />
+              <Star className="w-4 h-4 text-purple-600" />
               Why Choose Smart Deals Shopping?
             </div>
             {isFeaturesExpanded ? (
-              <ChevronUp className="w-5 h-5 text-gray-400" />
+              <ChevronUp className="w-4 h-4 text-gray-400" />
             ) : (
-              <ChevronDown className="w-5 h-5 text-gray-400" />
+              <ChevronDown className="w-4 h-4 text-gray-400" />
             )}
           </CardTitle>
         </CardHeader>
@@ -426,22 +427,22 @@ const MobileCustomerLanding = () => {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {[
                 {
-                  icon: <Shield className="w-5 h-5 text-green-600" />,
+                  icon: <Shield className="w-4 h-4 text-green-600" />,
                   title: 'Secure Smart Shopping',
                   description: 'Bank-grade security for all transactions'
                 },
                 {
-                  icon: <Clock className="w-5 h-5 text-blue-600" />,
+                  icon: <Clock className="w-4 h-4 text-blue-600" />,
                   title: 'Instant Delivery',
                   description: 'Airtime loaded within 30 seconds'
                 },
                 {
-                  icon: <Star className="w-5 h-5 text-yellow-600" />,
+                  icon: <Star className="w-4 h-4 text-yellow-600" />,
                   title: 'VIP Customer Benefits',
                   description: 'Exclusive deals and cashback rewards'
                 },
                 {
-                  icon: <Users className="w-5 h-5 text-purple-600" />,
+                  icon: <Users className="w-4 h-4 text-purple-600" />,
                   title: '24/7 Smart Support',
                   description: 'Always available intelligent assistance'
                 }
