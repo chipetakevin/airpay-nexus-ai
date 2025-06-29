@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -213,6 +212,58 @@ const MobileCustomerLanding = () => {
         )}
       </Card>
 
+      {/* Quick Shop Actions */}
+      <div className="space-y-4">
+        <h3 className="text-lg font-semibold text-gray-900 flex items-center gap-2">
+          <Smartphone className="w-5 h-5 text-blue-600" />
+          Quick Shopping
+        </h3>
+        
+        <div className="grid grid-cols-1 gap-4">
+          {quickShopActions.map((action, index) => (
+            <Card 
+              key={index} 
+              className="relative overflow-hidden hover:shadow-lg transition-all duration-300 transform hover:scale-[1.02] cursor-pointer border-2 hover:border-blue-200"
+              onClick={action.action}
+            >
+              {action.popular && (
+                <div className="absolute top-2 right-2 z-10">
+                  <Badge className="bg-gradient-to-r from-yellow-400 to-orange-500 text-white animate-pulse">
+                    <Star className="w-3 h-3 mr-1" />
+                    Most Popular
+                  </Badge>
+                </div>
+              )}
+              
+              <CardContent className="p-6">
+                <div className="flex items-center gap-4">
+                  <div className={`p-4 rounded-xl bg-gradient-to-r ${action.gradient} text-white shadow-lg`}>
+                    {action.icon}
+                  </div>
+                  
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2 mb-2">
+                      <h4 className="text-lg font-semibold text-gray-900">{action.title}</h4>
+                      <Badge className="bg-gray-100 text-gray-700 text-xs">
+                        {action.badge}
+                      </Badge>
+                    </div>
+                    <p className="text-gray-600 text-sm mb-3">{action.description}</p>
+                    
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm font-medium text-gray-700">
+                        Tap to access smart deals
+                      </span>
+                      <ArrowRight className="w-4 h-4 text-gray-400" />
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      </div>
+
       {/* Collapsible Unified Mobile Platform */}
       <Card className="bg-gradient-to-r from-orange-50 to-red-50 border border-orange-200">
         <CardHeader 
@@ -350,58 +401,6 @@ const MobileCustomerLanding = () => {
           </CardContent>
         )}
       </Card>
-
-      {/* Quick Shop Actions */}
-      <div className="space-y-4">
-        <h3 className="text-lg font-semibold text-gray-900 flex items-center gap-2">
-          <Smartphone className="w-5 h-5 text-blue-600" />
-          Quick Shopping
-        </h3>
-        
-        <div className="grid grid-cols-1 gap-4">
-          {quickShopActions.map((action, index) => (
-            <Card 
-              key={index} 
-              className="relative overflow-hidden hover:shadow-lg transition-all duration-300 transform hover:scale-[1.02] cursor-pointer border-2 hover:border-blue-200"
-              onClick={action.action}
-            >
-              {action.popular && (
-                <div className="absolute top-2 right-2 z-10">
-                  <Badge className="bg-gradient-to-r from-yellow-400 to-orange-500 text-white animate-pulse">
-                    <Star className="w-3 h-3 mr-1" />
-                    Most Popular
-                  </Badge>
-                </div>
-              )}
-              
-              <CardContent className="p-6">
-                <div className="flex items-center gap-4">
-                  <div className={`p-4 rounded-xl bg-gradient-to-r ${action.gradient} text-white shadow-lg`}>
-                    {action.icon}
-                  </div>
-                  
-                  <div className="flex-1">
-                    <div className="flex items-center gap-2 mb-2">
-                      <h4 className="text-lg font-semibold text-gray-900">{action.title}</h4>
-                      <Badge className="bg-gray-100 text-gray-700 text-xs">
-                        {action.badge}
-                      </Badge>
-                    </div>
-                    <p className="text-gray-600 text-sm mb-3">{action.description}</p>
-                    
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm font-medium text-gray-700">
-                        Tap to access smart deals
-                      </span>
-                      <ArrowRight className="w-4 h-4 text-gray-400" />
-                    </div>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-      </div>
 
       {/* Collapsible Exclusive Features */}
       <Card className="bg-gradient-to-r from-purple-50 to-blue-50 border border-purple-200">
