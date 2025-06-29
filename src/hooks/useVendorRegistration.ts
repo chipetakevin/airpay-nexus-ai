@@ -98,12 +98,30 @@ export const useVendorRegistration = () => {
     setErrors(newErrors);
 
     if (Object.keys(newErrors).length === 0) {
-      // Complete the registration process
-      const { vendorId, successMessage } = handleVendorRegistrationSubmit(formData);
+      // Normalize phone number for consistent storage
+      const normalizedPhone = formData.phoneNumber.replace(/\D/g, '');
+      let finalPhone = normalizedPhone;
+      
+      if (normalizedPhone.startsWith('27')) {
+        finalPhone = normalizedPhone.substring(2);
+      } else if (normalizedPhone.startsWith('0')) {
+        finalPhone = normalizedPhone.substring(1);
+      }
+
+      // Update formData with normalized phone before submission
+      const updatedFormData = {
+        ...formData,
+        phoneNumber: finalPhone
+      };
+
+      // Complete the registration process with consistent phone storage
+      const { vendorId, successMessage } = handleVendorRegistrationSubmit(updatedFormData);
       
       // Store registration completion flag
       localStorage.setItem('registrationCompleted', 'true');
       localStorage.setItem('userAuthenticated', 'true');
+      
+      console.log('✅ Vendor registration completed with phone:', finalPhone);
       
       toast({
         title: "Vendor Registration Successful! 🎉",

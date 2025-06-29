@@ -1,150 +1,189 @@
 import { useState, useEffect } from 'react';
-import { useToast } from '@/hooks/use-toast';
 
 export const usePhoneAutofill = () => {
   const [detectedPhone, setDetectedPhone] = useState('');
   const [savedPhoneNumbers, setSavedPhoneNumbers] = useState<string[]>([]);
-  const [savedBankingInfo, setSavedBankingInfo] = useState(null);
-  const { toast } = useToast();
+  const [savedBankingInfo, setSavedBankingInfo] = useState<any>(null);
+
+  // Enhanced phone detection for all user types
+  const detectRegisteredPhone = () => {
+    const userCredentials = localStorage.getItem('userCredentials');
+    const onecardUser = localStorage.getItem('onecardUser');
+    const onecardVendor = localStorage.getItem('onecardVendor');
+    const onecardAdmin = localStorage.getItem('onecardAdmin');
+    
+    let phoneNumber = '';
+    
+    try {
+      // Check userCredentials first
+      if (userCredentials) {
+        const credentials = JSON.parse(userCredentials);
+        phoneNumber = credentials.phone || credentials.registeredPhone || credentials.phoneNumber;
+        
+        // If still no phone, check userType and get from appropriate storage
+        if (!phoneNumber && credentials.userType) {
+          if (credentials.userType === 'customer' && onecardUser) {
+            const userData = JSON.parse(onecardUser);
+            phoneNumber = userData.registeredPhone || userData.phone || userData.phoneNumber;
+          } else if (credentials.userType === 'vendor' && onecardVendor) {
+            const vendorData = JSON.parse(onecardVendor);
+            phoneNumber = vendorData.registeredPhone || vendorData.phone || vendorData.phoneNumber;
+          } else if (credentials.userType === 'admin' && onecardAdmin) {
+            const adminData = JSON.parse(onecardAdmin);
+            phoneNumber = adminData.registeredPhone || adminData.phone || adminData.phoneNumber;
+          }
+        }
+      }
+      
+      // Fallback: check each user type storage directly
+      if (!phoneNumber) {
+        [onecardUser, onecardVendor, onecardAdmin].forEach(storage => {
+          if (storage && !phoneNumber) {
+            try {
+              const data = JSON.parse(storage);
+              phoneNumber = data.registeredPhone || data.phone || data.phoneNumber;
+            } catch (e) {
+              console.error('Error parsing storage data:', e);
+            }
+          }
+        });
+      }
+      
+      return normalizePhoneNumber(phoneNumber);
+    } catch (error) {
+      console.error('Error detecting registered phone:', error);
+      return '';
+    }
+  };
+
+  // Load saved banking information
+  const loadSavedBankingInfo = () => {
+    try {
+      const credentials = localStorage.getItem('userCredentials');
+      if (credentials) {
+        const parsed = JSON.parse(credentials);
+        const userType = parsed.userType || 'customer';
+        
+        let bankingData = null;
+        
+        if (userType === 'customer') {
+          const userData = localStorage.getItem('onecardUser');
+          if (userData) {
+            const user = JSON.parse(userData);
+            if (user.bankName && user.accountNumber) {
+              bankingData = {
+                bankName: user.bankName,
+                accountNumber: user.accountNumber.slice(-4),
+                branchCode: user.branchCode
+              };
+            }
+          }
+        } else if (userType === 'vendor') {
+          const vendorData = localStorage.getItem('onecardVendor');
+          if (vendorData) {
+            const vendor = JSON.parse(vendorData);
+            if (vendor.bankName && vendor.accountNumber) {
+              bankingData = {
+                bankName: vendor.bankName,
+                accountNumber: vendor.accountNumber.slice(-4),
+                branchCode: vendor.branchCode
+              };
+            }
+          }
+        } else if (userType === 'admin') {
+          const adminData = localStorage.getItem('onecardAdmin');
+          if (adminData) {
+            const admin = JSON.parse(adminData);
+            if (admin.bankName && admin.accountNumber) {
+              bankingData = {
+                bankName: admin.bankName,
+                accountNumber: admin.accountNumber.slice(-4),
+                branchCode: admin.branchCode
+              };
+            }
+          }
+        }
+        
+        setSavedBankingInfo(bankingData);
+      }
+    } catch (error) {
+      console.error('Error loading banking info:', error);
+    }
+  };
 
   useEffect(() => {
-    // Load all saved phone numbers
-    const savedNumbers = localStorage.getItem('savedPhoneNumbers');
-    if (savedNumbers) {
-      try {
-        const parsedNumbers = JSON.parse(savedNumbers);
-        setSavedPhoneNumbers(parsedNumbers);
-        // Set the most recent number as detected
-        if (parsedNumbers.length > 0) {
-          setDetectedPhone(parsedNumbers[0]);
-        }
-      } catch (error) {
-        console.error('Error parsing saved phone numbers:', error);
-      }
+    const phone = detectRegisteredPhone();
+    if (phone) {
+      setDetectedPhone(phone);
+      console.log('📱 Phone auto-detected for all user types:', phone);
     }
-
-    // Auto-detect and fill phone number from various sources
-    const credentials = localStorage.getItem('userCredentials');
-    const userData = localStorage.getItem('onecardUser');
     
-    if (credentials) {
-      try {
-        const parsedCredentials = JSON.parse(credentials);
-        if (parsedCredentials.phone) {
-          const normalizedPhone = normalizePhoneNumber(parsedCredentials.phone);
-          setDetectedPhone(normalizedPhone);
-          savePhoneNumber(normalizedPhone);
-        }
-      } catch (error) {
-        console.error('Error parsing credentials:', error);
-      }
-    }
-
-    if (userData) {
-      try {
-        const parsedUserData = JSON.parse(userData);
-        if (parsedUserData.phone || parsedUserData.registeredPhone) {
-          const phone = parsedUserData.phone || parsedUserData.registeredPhone;
-          const normalizedPhone = normalizePhoneNumber(phone);
-          setDetectedPhone(normalizedPhone);
-          savePhoneNumber(normalizedPhone);
-        }
-      } catch (error) {
-        console.error('Error parsing user data:', error);
-      }
-    }
-
-    // Load saved banking information
-    const bankingInfo = localStorage.getItem('savedBankingInfo');
-    if (bankingInfo) {
-      try {
-        setSavedBankingInfo(JSON.parse(bankingInfo));
-      } catch (error) {
-        console.error('Error parsing banking info:', error);
-      }
-    }
+    loadSavedBankingInfo();
+    loadSavedPhoneNumbers();
   }, []);
 
   const normalizePhoneNumber = (phone: string): string => {
     if (!phone) return '';
     
-    // Remove all non-numeric characters
-    let cleanPhone = phone.replace(/\D/g, '');
+    const cleanPhone = phone.replace(/\D/g, '');
     
-    // Handle different formats
-    if (cleanPhone.startsWith('27')) {
-      // Remove country code to get local format
-      cleanPhone = cleanPhone.substring(2);
-    } else if (cleanPhone.startsWith('0')) {
-      // Remove leading zero
-      cleanPhone = cleanPhone.substring(1);
+    // Remove country code (27) if present
+    if (cleanPhone.startsWith('27') && cleanPhone.length === 11) {
+      return cleanPhone.substring(2);
     }
     
-    // Ensure it's a valid 9-digit SA mobile number
+    // Remove leading zero if present
+    if (cleanPhone.startsWith('0') && cleanPhone.length === 10) {
+      return cleanPhone.substring(1);
+    }
+    
+    // Return as-is if it's already 9 digits
     if (cleanPhone.length === 9) {
       return cleanPhone;
     }
     
-    return phone; // Return original if can't normalize
+    return cleanPhone;
   };
 
-  const savePhoneNumber = (phoneNumber: string) => {
-    if (!phoneNumber) return;
-    
-    const normalizedPhone = normalizePhoneNumber(phoneNumber);
-    
-    // Get existing saved numbers
-    const existingNumbers = JSON.parse(localStorage.getItem('savedPhoneNumbers') || '[]');
-    
-    // Add new number if not already saved (move to front if exists)
-    const updatedNumbers = [normalizedPhone, ...existingNumbers.filter((num: string) => num !== normalizedPhone)];
-    
-    // Keep only the last 5 numbers
-    const numbersToSave = updatedNumbers.slice(0, 5);
-    
-    localStorage.setItem('savedPhoneNumbers', JSON.stringify(numbersToSave));
-    setSavedPhoneNumbers(numbersToSave);
-    
-    toast({
-      title: "Phone Number Saved",
-      description: "Your phone number has been permanently saved for future use.",
-    });
+  const formatPhoneForDisplay = (phone: string): string => {
+    const normalized = normalizePhoneNumber(phone);
+    return normalized ? `+27${normalized}` : phone;
   };
 
-  const saveBankingInfo = (bankInfo: any) => {
-    const sanitizedInfo = {
-      bankName: bankInfo.bankName,
-      branchCode: bankInfo.branchCode,
-      accountNumber: bankInfo.accountNumber ? '****' + bankInfo.accountNumber.slice(-4) : '',
-      hasFullInfo: true
-    };
-    
-    localStorage.setItem('savedBankingInfo', JSON.stringify(sanitizedInfo));
-    setSavedBankingInfo(sanitizedInfo);
-    
-    toast({
-      title: "Banking Info Saved",
-      description: "Your banking details have been securely saved for future use.",
-    });
+  const savePhoneNumber = (phone: string) => {
+    const normalized = normalizePhoneNumber(phone);
+    if (normalized && normalized.length === 9) {
+      const saved = JSON.parse(localStorage.getItem('savedPhoneNumbers') || '[]');
+      if (!saved.includes(normalized)) {
+        saved.unshift(normalized);
+        // Keep only last 5 numbers
+        if (saved.length > 5) saved.pop();
+        localStorage.setItem('savedPhoneNumbers', JSON.stringify(saved));
+        setSavedPhoneNumbers(saved);
+      }
+    }
+  };
+
+  const loadSavedPhoneNumbers = () => {
+    try {
+      const saved = JSON.parse(localStorage.getItem('savedPhoneNumbers') || '[]');
+      setSavedPhoneNumbers(saved);
+    } catch (error) {
+      console.error('Error loading saved phone numbers:', error);
+    }
   };
 
   const autoFillPhone = () => {
     return detectedPhone;
   };
 
-  const formatPhoneForDisplay = (phone: string): string => {
-    const normalized = normalizePhoneNumber(phone);
-    return `+27${normalized}`;
-  };
-
   return {
     detectedPhone,
     savedPhoneNumbers,
     savedBankingInfo,
-    saveBankingInfo,
-    savePhoneNumber,
-    autoFillPhone,
     normalizePhoneNumber,
-    formatPhoneForDisplay
+    formatPhoneForDisplay,
+    savePhoneNumber,
+    autoFillPhone
   };
 };

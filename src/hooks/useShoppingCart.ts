@@ -22,29 +22,92 @@ export const useShoppingCart = (initialDeal?: CartItem) => {
   const [isProcessing, setIsProcessing] = useState(false);
   const [isVendor, setIsVendor] = useState(false);
 
+  // Enhanced phone number retrieval for all user types
+  const getRegisteredPhoneNumber = () => {
+    // Try multiple sources for phone number based on user type
+    const credentials = localStorage.getItem('userCredentials');
+    const onecardUser = localStorage.getItem('onecardUser');
+    const onecardVendor = localStorage.getItem('onecardVendor');
+    const onecardAdmin = localStorage.getItem('onecardAdmin');
+    
+    let phoneNumber = '';
+    
+    try {
+      // Check userCredentials first (primary source)
+      if (credentials) {
+        const parsedCredentials = JSON.parse(credentials);
+        phoneNumber = parsedCredentials.phone || parsedCredentials.registeredPhone || parsedCredentials.phoneNumber;
+      }
+      
+      // Check user-type specific storage
+      if (!phoneNumber && userType === 'customer' && onecardUser) {
+        const userData = JSON.parse(onecardUser);
+        phoneNumber = userData.registeredPhone || userData.phone || userData.phoneNumber;
+      } else if (!phoneNumber && userType === 'vendor' && onecardVendor) {
+        const vendorData = JSON.parse(onecardVendor);
+        phoneNumber = vendorData.registeredPhone || vendorData.phone || vendorData.phoneNumber;
+      } else if (!phoneNumber && userType === 'admin' && onecardAdmin) {
+        const adminData = JSON.parse(onecardAdmin);
+        phoneNumber = adminData.registeredPhone || adminData.phone || adminData.phoneNumber;
+      }
+      
+      // Normalize phone number format (remove country code/leading zero)
+      if (phoneNumber) {
+        const cleanPhone = phoneNumber.replace(/\D/g, '');
+        if (cleanPhone.startsWith('27')) {
+          phoneNumber = cleanPhone.substring(2);
+        } else if (cleanPhone.startsWith('0')) {
+          phoneNumber = cleanPhone.substring(1);
+        } else {
+          phoneNumber = cleanPhone;
+        }
+        
+        // Ensure it's exactly 9 digits for SA mobile numbers
+        if (phoneNumber.length === 9) {
+          return phoneNumber;
+        }
+      }
+    } catch (error) {
+      console.error('Error retrieving registered phone number:', error);
+    }
+    
+    return '';
+  };
+
   useEffect(() => {
     // Set vendor status based on user type
     setIsVendor(userType === 'vendor');
     
-    // Set customer phone from stored credentials (the actual registered phone number)
-    const credentials = localStorage.getItem('userCredentials');
-    if (credentials) {
-      try {
-        const parsedCredentials = JSON.parse(credentials);
-        if (parsedCredentials.phone) {
-          setCustomerPhone(parsedCredentials.phone); // Use the registered phone number
-        }
-      } catch (error) {
-        console.error('Error parsing credentials:', error);
-      }
+    // Auto-fill customer phone from registration data
+    const registeredPhone = getRegisteredPhoneNumber();
+    if (registeredPhone && !customerPhone) {
+      setCustomerPhone(registeredPhone);
+      console.log('✅ Phone number auto-filled from registration:', registeredPhone);
     }
-  }, [currentUser, userType]);
+  }, [currentUser, userType, customerPhone]);
 
   const calculateTotals = () => {
     return calculateCartTotals(cartItems, isVendor, purchaseMode);
   };
 
   const processPurchase = async (validationError: string, detectedNetwork: string) => {
+    // Ensure phone number is set before validation
+    const phoneToUse = customerPhone || getRegisteredPhoneNumber();
+    
+    if (!phoneToUse) {
+      toast({
+        title: "Phone Number Required",
+        description: "Please ensure your phone number is properly saved in your profile.",
+        variant: "destructive"
+      });
+      return false;
+    }
+
+    // Update customerPhone if it was empty
+    if (!customerPhone && phoneToUse) {
+      setCustomerPhone(phoneToUse);
+    }
+
     if (validationError) {
       toast({
         title: "Validation Error",
@@ -71,10 +134,10 @@ export const useShoppingCart = (initialDeal?: CartItem) => {
       const success = await processTransaction(
         cartItems,
         currentUser,
-        customerPhone,
+        phoneToUse, // Use the guaranteed phone number
         purchaseMode,
         recipientData,
-        userType, // Use userType instead of isVendor
+        userType,
         profitSharing,
         customerPrice,
         networkCost,

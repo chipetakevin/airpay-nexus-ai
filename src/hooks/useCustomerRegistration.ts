@@ -68,26 +68,43 @@ export const useCustomerRegistration = () => {
       // Generate card number
       const cardNumber = `OC${Math.random().toString().substr(2, 8)}`;
       
-      // Create user credentials
+      // Normalize phone number for consistent storage
+      const normalizedPhone = formData.phoneNumber.replace(/\D/g, '');
+      let finalPhone = normalizedPhone;
+      
+      if (normalizedPhone.startsWith('27')) {
+        finalPhone = normalizedPhone.substring(2);
+      } else if (normalizedPhone.startsWith('0')) {
+        finalPhone = normalizedPhone.substring(1);
+      }
+      
+      // Create user credentials with consistent phone storage
       const userCredentials = {
         email: formData.email,
         password: 'auto-generated-password',
         userType: 'customer',
         firstName: formData.firstName,
-        lastName: formData.lastName
+        lastName: formData.lastName,
+        phone: finalPhone, // Store normalized phone number
+        registeredPhone: `+27${finalPhone}`, // Store full international format
+        phoneNumber: finalPhone // Additional fallback
       };
 
-      // Create user data
+      // Create user data with consistent phone storage
       const userData = {
         firstName: formData.firstName,
         lastName: formData.lastName,
         email: formData.email,
         cardNumber,
-        registeredPhone: `${formData.countryCode}${formData.phoneNumber}`,
+        phone: finalPhone, // Store normalized phone number
+        registeredPhone: `+27${finalPhone}`, // Store full international format
+        phoneNumber: finalPhone, // Additional fallback
         bankName: formData.bankName,
         branchCode: formData.branchCode,
         accountNumber: formData.accountNumber,
         balance: 0,
+        cashbackBalance: 0,
+        totalEarned: 0,
         registrationDate: new Date().toISOString()
       };
 
@@ -98,6 +115,8 @@ export const useCustomerRegistration = () => {
 
       // Create persistent 24-hour session
       createPersistentSession(userCredentials, userData);
+
+      console.log('✅ Customer registration completed with phone:', finalPhone);
 
       toast({
         title: "Registration Successful! 🎉",
