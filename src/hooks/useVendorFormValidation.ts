@@ -60,7 +60,7 @@ export const useVendorFormValidation = (formData: VendorFormData) => {
   const validateCompleteForm = useCallback(() => {
     console.log('🔍 Validating complete form with data:', formData);
     
-    // Enhanced validation including phone number and banking
+    // Start with basic form validation
     const newErrors = validateVendorForm(formData);
     
     // Additional phone validation - only if phone number exists
@@ -73,28 +73,17 @@ export const useVendorFormValidation = (formData: VendorFormData) => {
       newErrors.phoneNumber = 'Phone number is required';
     }
 
-    // Enhanced banking validation - only validate if account number is provided
-    if (formData.accountNumber && formData.accountNumber.trim()) {
-      const bankValidation = validateSouthAfricanBankAccount(formData.accountNumber);
-      if (!bankValidation.isValid) {
-        newErrors.accountNumber = bankValidation.error || 'Invalid South African bank account number';
+    // Enhanced banking validation - only validate if any banking field has data
+    const hasBankingData = formData.bankName || formData.accountNumber || formData.branchCode;
+    
+    if (hasBankingData) {
+      // Only validate account number if it has data
+      if (formData.accountNumber && formData.accountNumber.trim()) {
+        const bankValidation = validateSouthAfricanBankAccount(formData.accountNumber);
+        if (!bankValidation.isValid) {
+          newErrors.accountNumber = bankValidation.error || 'Invalid South African bank account number';
+        }
       }
-      // Only require other banking fields if account number is provided
-      if (!formData.bankName || !formData.bankName.trim()) {
-        newErrors.bankName = 'Bank selection is required';
-      }
-      if (!formData.branchCode || !formData.branchCode.trim()) {
-        newErrors.branchCode = 'Branch code is required';
-      }
-    } else {
-      // If no account number, all banking fields are required
-      if (!formData.bankName || !formData.bankName.trim()) {
-        newErrors.bankName = 'Bank selection is required';
-      }
-      if (!formData.branchCode || !formData.branchCode.trim()) {
-        newErrors.branchCode = 'Branch code is required';
-      }
-      newErrors.accountNumber = 'Account number is required';
     }
     
     console.log('❌ Validation errors found:', newErrors);

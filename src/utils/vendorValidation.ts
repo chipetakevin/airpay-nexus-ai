@@ -52,7 +52,7 @@ export const validateVendorForm = (formData: VendorFormData): VendorFormErrors =
     errors.confirmPassword = 'Passwords do not match';
   }
   
-  // Enhanced banking validation - only validate if any banking field is provided
+  // Simplified banking validation - only require fields if any banking info is provided
   const hasBankingData = formData.bankName || formData.accountNumber || formData.branchCode;
   
   if (hasBankingData) {
@@ -69,11 +69,6 @@ export const validateVendorForm = (formData: VendorFormData): VendorFormErrors =
     if (!formData.branchCode || !formData.branchCode.trim()) {
       errors.branchCode = 'Branch code is required';
     }
-  } else {
-    // If no banking data at all, require the essential fields
-    errors.bankName = 'Bank selection is required';
-    errors.accountNumber = 'Account number is required';
-    errors.branchCode = 'Branch code is required';
   }
   
   // Terms agreement validation

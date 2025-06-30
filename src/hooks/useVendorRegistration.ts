@@ -38,46 +38,50 @@ export const useVendorRegistration = () => {
     
     console.log('🚀 Form submission started with data:', formData);
     
-    const validationErrors = validateCompleteForm();
-    const errorCount = Object.keys(validationErrors).length;
-    
-    console.log(`📋 Validation completed: ${errorCount} errors found`);
+    try {
+      const validationErrors = validateCompleteForm();
+      const errorCount = Object.keys(validationErrors).length;
+      
+      console.log(`📋 Validation completed: ${errorCount} errors found`);
 
-    if (errorCount === 0) {
-      console.log('✅ Form is valid, proceeding with submission');
-      try {
+      if (errorCount === 0) {
+        console.log('✅ Form is valid, proceeding with submission');
         await processFormSubmission(formData, savePermanently);
         return true;
-      } catch (error) {
-        console.error('❌ Form submission failed:', error);
+      } else {
+        // Show validation errors with specific field information
+        const errorFields = Object.keys(validationErrors);
+        const firstErrorField = errorFields[0];
+        
+        console.log('❌ Form validation failed:', validationErrors);
+        
+        // Show specific error message
+        const errorMessage = validationErrors[firstErrorField] || 'Please check the form fields';
+        
         toast({
-          title: "Registration Failed",
-          description: "An error occurred during registration. Please try again.",
+          title: "Please Complete Required Fields",
+          description: errorMessage,
           variant: "destructive"
         });
+        
+        // Focus on first error field with better error handling
+        setTimeout(() => {
+          const firstErrorElement = document.getElementById(firstErrorField);
+          if (firstErrorElement) {
+            firstErrorElement.focus();
+            firstErrorElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          }
+        }, 100);
+        
         return false;
       }
-    } else {
-      // Show validation errors with specific field information
-      const errorFields = Object.keys(validationErrors);
-      const errorMessages = Object.values(validationErrors);
-      
-      console.log('❌ Form validation failed:', validationErrors);
-      
+    } catch (error) {
+      console.error('❌ Form submission failed:', error);
       toast({
-        title: "Please Complete Required Fields",
-        description: `Missing or invalid fields: ${errorFields.join(', ')}`,
+        title: "Registration Failed",
+        description: "An unexpected error occurred. Please try again.",
         variant: "destructive"
       });
-      
-      // Focus on first error field
-      const firstErrorField = errorFields[0];
-      const firstErrorElement = document.getElementById(firstErrorField);
-      if (firstErrorElement) {
-        firstErrorElement.focus();
-        firstErrorElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      }
-      
       return false;
     }
   }, [formData, validateCompleteForm, processFormSubmission, savePermanently, toast]);
