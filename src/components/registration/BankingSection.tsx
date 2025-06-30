@@ -48,15 +48,11 @@ const BankingSection: React.FC<BankingSectionProps> = ({
     console.log(`🏦 Bank selected in BankingSection: ${bank}, Branch Code: ${branchCode}`);
     onInputChange('bankName', bank);
     
-    // Immediately get and set the correct branch code
+    // Get the correct branch code for the selected bank
     const correctBranchCode = getBranchCodeForBank(bank) || branchCode;
-    console.log(`✅ Setting branch code immediately: ${correctBranchCode} for ${bank}`);
     onInputChange('branchCode', correctBranchCode);
     
-    // Force re-render by triggering a small delay to ensure state updates
-    setTimeout(() => {
-      console.log(`🔄 Branch code verification: ${correctBranchCode}`);
-    }, 100);
+    console.log(`✅ Branch code immediately set: ${correctBranchCode} for ${bank}`);
   };
 
   const accountValidation = formData.accountNumber ? validateSouthAfricanBankAccount(formData.accountNumber) : null;
@@ -100,20 +96,15 @@ const BankingSection: React.FC<BankingSectionProps> = ({
           value={formData.branchCode || ''}
           placeholder="Branch code will auto-assign when you select a bank"
           readOnly
-          className="bg-gray-50 font-mono text-sm"
+          className="bg-gray-50"
         />
-        <div className="bg-green-50 p-3 rounded border border-green-200">
+        <div className="bg-green-50 p-2 rounded border border-green-200">
           <p className="text-xs text-green-600">
             ℹ️ Branch code automatically assigned from your bank selection
             {formData.branchCode && (
-              <>
-                <span className="block mt-2 font-semibold text-sm">
-                  ✅ Current Branch Code: <span className="font-mono bg-white px-2 py-1 rounded border">{formData.branchCode}</span>
-                </span>
-                <span className="block mt-1 text-xs opacity-75">
-                  This code is automatically saved and will be used for all transactions
-                </span>
-              </>
+              <span className="block mt-1 font-semibold">
+                Current Branch Code: {formData.branchCode}
+              </span>
             )}
           </p>
         </div>

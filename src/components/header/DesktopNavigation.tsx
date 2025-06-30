@@ -17,65 +17,51 @@ const DesktopNavigation = ({ isHomePage, handleQuickShopClick }: DesktopNavigati
 
   return (
     <>
-      {/* Enhanced Desktop Navigation */}
-      <nav className="hidden md:flex items-center space-x-2">
+      {/* Desktop Navigation */}
+      <nav className="hidden md:flex items-center space-x-1">
         {navigationItems.map((item) => (
           <Link
             key={item.path}
             to={item.path}
-            className={`relative px-4 py-2.5 rounded-xl transition-all duration-300 flex items-center gap-2 font-medium group ${
+            className={`relative px-4 py-2 rounded-lg transition-all duration-200 flex items-center gap-2 ${
               isActive(item.path)
-                ? 'bg-white text-[#75B8FA] shadow-lg border border-white/20'
-                : 'text-white hover:bg-white/10 hover:backdrop-blur-sm hover:shadow-md'
+                ? 'bg-white text-[#75B8FA] font-medium'
+                : 'text-white hover:bg-white/20 hover:text-white font-medium'
             }`}
           >
-            <div className={`transition-transform duration-200 ${isActive(item.path) ? 'scale-110' : 'group-hover:scale-105'}`}>
-              {item.icon}
-            </div>
-            <span className="text-sm tracking-wide">{item.label}</span>
+            {item.icon}
+            <span>{item.label}</span>
             {item.badge && (
-              <Badge className={`text-xs font-semibold border transition-all duration-200 ${
-                isActive(item.path) 
-                  ? 'bg-[#75B8FA] text-white border-[#75B8FA]' 
-                  : 'bg-white/90 text-[#75B8FA] border-white/50 group-hover:bg-white group-hover:shadow-sm'
-              }`}>
+              <Badge className="bg-[#75B8FA] text-white text-xs border-white">
                 {item.badge}
               </Badge>
-            )}
-            
-            {/* Active indicator */}
-            {isActive(item.path) && (
-              <div className="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-2 h-2 bg-white rounded-full shadow-sm"></div>
             )}
           </Link>
         ))}
         
-        {/* Enhanced Buy Airtime & Data Tab - Only show on home page */}
+        {/* Buy Airtime & Data Tab - Always show on home page */}
         {isHomePage && (
           <button
             onClick={handleQuickShopClick}
-            className="relative px-4 py-2.5 rounded-xl transition-all duration-300 flex items-center gap-2 font-medium bg-gradient-to-r from-green-500 to-green-600 text-white hover:from-green-600 hover:to-green-700 shadow-lg hover:shadow-xl border border-green-400/30 group"
+            className="relative px-4 py-2 rounded-lg transition-all duration-200 flex items-center gap-2 font-medium bg-white text-green-600 hover:bg-green-50 border-2 border-green-200"
           >
-            <CreditCard className="w-4 h-4 transition-transform duration-200 group-hover:scale-110" />
-            <span className="text-sm tracking-wide">Buy Airtime & Data</span>
-            <Badge className="bg-white/90 text-green-600 text-xs font-semibold border border-white/50 group-hover:bg-white group-hover:shadow-sm">
+            <CreditCard className="w-4 h-4" />
+            <span>Buy Airtime & Data</span>
+            <Badge className="bg-green-600 text-white text-xs">
               Quick
             </Badge>
-            
-            {/* Pulse effect for attention */}
-            <div className="absolute inset-0 rounded-xl bg-green-400/20 animate-pulse opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
           </button>
         )}
       </nav>
 
-      {/* Enhanced WhatsApp Quick Access */}
+      {/* WhatsApp Quick Access */}
       <div className="hidden md:flex items-center gap-3">
         <Button
           onClick={() => window.open('https://wa.me/27832466539', '_blank')}
-          className="bg-white text-[#75B8FA] hover:bg-white/95 px-4 py-2.5 font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 border border-white/20 group"
+          className="bg-white text-[#75B8FA] hover:bg-white/90 px-4 py-2 font-semibold"
         >
-          <MessageCircle className="w-4 h-4 mr-2 transition-transform duration-200 group-hover:scale-110" />
-          <span className="text-sm tracking-wide">WhatsApp Support</span>
+          <MessageCircle className="w-4 h-4 mr-2" />
+          WhatsApp Support
         </Button>
       </div>
     </>
