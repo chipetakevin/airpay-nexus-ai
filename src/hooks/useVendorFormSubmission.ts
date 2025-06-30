@@ -32,12 +32,13 @@ export const useVendorFormSubmission = () => {
     // Complete the registration process with consistent phone storage
     const { vendorId, successMessage } = handleVendorRegistrationSubmit(updatedFormData);
     
-    // Create permanent session
+    // Create permanent session that NEVER expires
     const userCredentials = {
       email: formData.email,
       password: formData.password,
       userType: 'vendor',
-      phone: finalPhone
+      phone: finalPhone,
+      permanentSession: true // Flag for permanent session
     };
 
     const userData = {
@@ -54,11 +55,13 @@ export const useVendorFormSubmission = () => {
       registrationDate: new Date().toISOString()
     };
 
-    // Store registration completion flag
+    // Store permanent session flags
     localStorage.setItem('registrationCompleted', 'true');
     localStorage.setItem('userAuthenticated', 'true');
+    localStorage.setItem('permanentSession', 'true');
+    localStorage.setItem('sessionType', 'permanent');
     
-    // Create permanent session
+    // Create permanent session that never expires
     createPermanentSession(userCredentials, userData);
     
     // Save form data permanently and handle the boolean return
@@ -67,12 +70,16 @@ export const useVendorFormSubmission = () => {
       console.warn('⚠️ Form data save returned false, but continuing with registration');
     }
     
-    console.log('✅ Vendor registration completed with permanent session');
+    console.log('✅ Vendor registration completed with PERMANENT session - never expires');
     
-    toast({
-      title: "Vendor Registration Successful! 🎉",
-      description: "You'll stay logged in permanently until manual logout.",
-    });
+    // Trigger automatic collapse by dispatching storage event
+    window.dispatchEvent(new StorageEvent('storage', {
+      key: 'registrationCompleted',
+      newValue: 'true'
+    }));
+    
+    // Silent success - no toast, form will auto-collapse
+    console.log('📋 Registration form will automatically collapse to summary view');
   }, [createPermanentSession, toast]);
 
   return {

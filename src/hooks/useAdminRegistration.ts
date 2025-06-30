@@ -127,6 +127,7 @@ export const useAdminRegistration = () => {
         finalPhone = normalizedPhone.substring(1);
       }
       
+      // Create user credentials with permanent session flag
       const userCredentials = {
         email: formData.email,
         password: formData.password,
@@ -135,7 +136,8 @@ export const useAdminRegistration = () => {
         lastName: formData.lastName,
         phone: finalPhone,
         registeredPhone: `+27${finalPhone}`,
-        phoneNumber: finalPhone
+        phoneNumber: finalPhone,
+        permanentSession: true // Flag for permanent session
       };
 
       const adminData = {
@@ -153,23 +155,33 @@ export const useAdminRegistration = () => {
         registrationDate: new Date().toISOString()
       };
 
+      // Store permanent session flags
       localStorage.setItem('userCredentials', JSON.stringify(userCredentials));
       localStorage.setItem('onecardAdmin', JSON.stringify(adminData));
       localStorage.setItem('userAuthenticated', 'true');
       localStorage.setItem('adminAuthenticated', 'true');
+      localStorage.setItem('registrationCompleted', 'true');
+      localStorage.setItem('permanentSession', 'true');
+      localStorage.setItem('sessionType', 'permanent');
 
+      // Create permanent session that NEVER expires
       createPermanentSession(userCredentials, adminData);
       await savePermanently(formData);
 
-      console.log('✅ Admin registration completed with permanent session');
+      console.log('✅ Admin registration completed with PERMANENT session - never expires');
 
-      // Trigger storage event for automatic collapse
-      window.dispatchEvent(new Event('storage'));
+      // Trigger automatic collapse by dispatching storage event
+      window.dispatchEvent(new StorageEvent('storage', {
+        key: 'registrationCompleted',
+        newValue: 'true'
+      }));
 
-      // Silent success - form will auto-collapse
+      console.log('📋 Registration form will automatically collapse to summary view');
+
+      // Silent success - form will auto-collapse and redirect
       setTimeout(() => {
         window.location.href = '/portal?tab=admin';
-      }, 2000);
+      }, 1500);
 
     } catch (error) {
       console.error('Admin registration error:', error);

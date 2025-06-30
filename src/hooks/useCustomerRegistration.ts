@@ -136,7 +136,7 @@ export const useCustomerRegistration = () => {
         finalPhone = normalizedPhone.substring(1);
       }
       
-      // Create user credentials with consistent phone storage
+      // Create user credentials with permanent session flag
       const userCredentials = {
         email: formData.email,
         password: 'auto-generated-password',
@@ -145,7 +145,8 @@ export const useCustomerRegistration = () => {
         lastName: formData.lastName,
         phone: finalPhone,
         registeredPhone: `+27${finalPhone}`,
-        phoneNumber: finalPhone
+        phoneNumber: finalPhone,
+        permanentSession: true // Flag for permanent session
       };
 
       // Create user data with consistent phone storage
@@ -166,29 +167,34 @@ export const useCustomerRegistration = () => {
         registrationDate: new Date().toISOString()
       };
 
-      // Store in localStorage for immediate access
+      // Store permanent session flags
       localStorage.setItem('userCredentials', JSON.stringify(userCredentials));
       localStorage.setItem('onecardUser', JSON.stringify(userData));
       localStorage.setItem('userAuthenticated', 'true');
+      localStorage.setItem('registrationCompleted', 'true');
+      localStorage.setItem('permanentSession', 'true');
+      localStorage.setItem('sessionType', 'permanent');
 
-      // Create permanent session that never expires
+      // Create permanent session that NEVER expires
       createPermanentSession(userCredentials, userData);
 
       // Save form data permanently
       await savePermanently(formData);
 
-      console.log('✅ Customer registration completed with permanent session');
+      console.log('✅ Customer registration completed with PERMANENT session - never expires');
 
-      // Trigger storage event for automatic collapse
-      window.dispatchEvent(new Event('storage'));
+      // Trigger automatic collapse by dispatching storage event
+      window.dispatchEvent(new StorageEvent('storage', {
+        key: 'registrationCompleted',
+        newValue: 'true'
+      }));
 
-      // Silent success - no toast notification
-      // The form will automatically collapse showing the summary
+      console.log('📋 Registration form will automatically collapse to summary view');
 
-      // Auto redirect to OneCard dashboard after collapse
+      // Silent success - no toast, form will auto-collapse and redirect
       setTimeout(() => {
         window.location.href = '/portal?tab=onecard';
-      }, 2000);
+      }, 1500);
 
     } catch (error) {
       console.error('Registration error:', error);
