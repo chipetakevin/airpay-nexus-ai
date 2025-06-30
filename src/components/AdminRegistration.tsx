@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -12,7 +13,6 @@ const AdminRegistration = () => {
   const { toast } = useToast();
 
   useEffect(() => {
-    // Check for existing admin registration
     const checkExistingRegistration = () => {
       const credentials = localStorage.getItem('userCredentials');
       const adminData = localStorage.getItem('onecardAdmin');
@@ -27,11 +27,12 @@ const AdminRegistration = () => {
               firstName: parsedAdminData.firstName,
               lastName: parsedAdminData.lastName,
               email: parsedAdminData.email,
-              phone: parsedAdminData.phone,
+              phone: parsedAdminData.phone || parsedAdminData.phoneNumber,
               adminId: parsedAdminData.adminId,
-              department: parsedAdminData.department,
+              department: parsedAdminData.department || 'System Administration',
               registrationDate: parsedAdminData.registrationDate || new Date().toISOString()
             });
+            // Automatically collapse when existing registration is found
             setIsFormCollapsed(true);
           }
         } catch (error) {
@@ -41,9 +42,28 @@ const AdminRegistration = () => {
     };
 
     checkExistingRegistration();
+
+    // Listen for successful registration events
+    const handleRegistrationSuccess = () => {
+      setTimeout(() => {
+        checkExistingRegistration();
+      }, 1000);
+    };
+
+    // Listen for storage changes (registration completion)
+    window.addEventListener('storage', handleRegistrationSuccess);
+    
+    return () => {
+      window.removeEventListener('storage', handleRegistrationSuccess);
+    };
   }, []);
 
   const handleNewRegistration = () => {
+    // Clear existing data and expand form
+    localStorage.removeItem('userCredentials');
+    localStorage.removeItem('onecardAdmin');
+    localStorage.removeItem('userAuthenticated');
+    localStorage.removeItem('adminAuthenticated');
     setIsFormCollapsed(false);
     setExistingRegistration(null);
     toast({
@@ -56,11 +76,11 @@ const AdminRegistration = () => {
     setIsFormCollapsed(!isFormCollapsed);
   };
 
+  // Auto-collapse interface after successful registration
   if (existingRegistration && isFormCollapsed) {
     return (
       <div className="max-w-2xl mx-auto space-y-4">
-        {/* Existing Registration Summary */}
-        <Card className="border-red-200 bg-red-50">
+        <Card className="border-red-200 bg-red-50/30">
           <CardHeader className="pb-3">
             <div className="flex items-center justify-between">
               <CardTitle className="text-lg flex items-center gap-2 text-red-800">

@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -6,14 +7,12 @@ import { User, ChevronDown, ChevronUp, CheckCircle } from 'lucide-react';
 import CustomerRegistrationForm from './registration/CustomerRegistration';
 import { useToast } from '@/hooks/use-toast';
 
-// Main export component that wraps the registration form
 const CustomerRegistration = () => {
   const [isFormCollapsed, setIsFormCollapsed] = useState(false);
   const [existingRegistration, setExistingRegistration] = useState(null);
   const { toast } = useToast();
 
   useEffect(() => {
-    // Check for existing customer registration
     const checkExistingRegistration = () => {
       const credentials = localStorage.getItem('userCredentials');
       const customerData = localStorage.getItem('onecardUser');
@@ -28,10 +27,11 @@ const CustomerRegistration = () => {
               firstName: parsedCustomerData.firstName,
               lastName: parsedCustomerData.lastName,
               email: parsedCustomerData.email,
-              phone: parsedCustomerData.phone,
-              customerId: parsedCustomerData.customerId,
+              phone: parsedCustomerData.phone || parsedCustomerData.phoneNumber,
+              cardNumber: parsedCustomerData.cardNumber,
               registrationDate: parsedCustomerData.registrationDate || new Date().toISOString()
             });
+            // Automatically collapse when existing registration is found
             setIsFormCollapsed(true);
           }
         } catch (error) {
@@ -41,9 +41,28 @@ const CustomerRegistration = () => {
     };
 
     checkExistingRegistration();
+
+    // Listen for successful registration events
+    const handleRegistrationSuccess = () => {
+      // Small delay to ensure data is saved before checking
+      setTimeout(() => {
+        checkExistingRegistration();
+      }, 1000);
+    };
+
+    // Listen for storage changes (registration completion)
+    window.addEventListener('storage', handleRegistrationSuccess);
+    
+    return () => {
+      window.removeEventListener('storage', handleRegistrationSuccess);
+    };
   }, []);
 
   const handleNewRegistration = () => {
+    // Clear existing data and expand form
+    localStorage.removeItem('userCredentials');
+    localStorage.removeItem('onecardUser');
+    localStorage.removeItem('userAuthenticated');
     setIsFormCollapsed(false);
     setExistingRegistration(null);
     toast({
@@ -56,11 +75,11 @@ const CustomerRegistration = () => {
     setIsFormCollapsed(!isFormCollapsed);
   };
 
+  // Auto-collapse interface after successful registration
   if (existingRegistration && isFormCollapsed) {
     return (
       <div className="max-w-2xl mx-auto space-y-4">
-        {/* Existing Registration Summary */}
-        <Card className="border-blue-200 bg-blue-50">
+        <Card className="border-blue-200 bg-blue-50/30">
           <CardHeader className="pb-3">
             <div className="flex items-center justify-between">
               <CardTitle className="text-lg flex items-center gap-2 text-blue-800">
@@ -82,9 +101,9 @@ const CustomerRegistration = () => {
                 </p>
               </div>
               <div className="space-y-2">
-                <label className="text-xs text-gray-600">Customer ID</label>
+                <label className="text-xs text-gray-600">OneCard Number</label>
                 <p className="font-mono text-sm text-blue-600 font-semibold">
-                  {existingRegistration.customerId}
+                  {existingRegistration.cardNumber}
                 </p>
               </div>
               <div className="space-y-2">

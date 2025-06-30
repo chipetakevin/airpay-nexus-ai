@@ -162,19 +162,20 @@ export const useCustomerRegistration = () => {
 
       console.log('✅ Customer registration completed with permanent session');
 
-      toast({
-        title: "Registration Successful! 🎉",
-        description: "Your OneCard has been created! You'll stay logged in permanently until manual logout.",
-        duration: 4000,
-      });
+      // Trigger storage event for automatic collapse
+      window.dispatchEvent(new Event('storage'));
 
-      // Auto redirect to OneCard dashboard
+      // Silent success - no toast notification
+      // The form will automatically collapse showing the summary
+
+      // Auto redirect to OneCard dashboard after collapse
       setTimeout(() => {
         window.location.href = '/portal?tab=onecard';
       }, 2000);
 
     } catch (error) {
       console.error('Registration error:', error);
+      // Only show error toasts, not success
       toast({
         title: "Registration Failed",
         description: "An error occurred during registration. Please try again.",
