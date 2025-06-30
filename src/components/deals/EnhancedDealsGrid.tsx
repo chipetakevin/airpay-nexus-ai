@@ -84,7 +84,7 @@ const EnhancedDealsGrid = ({ deals, onDealSelect }: EnhancedDealsGridProps) => {
     const icons = {
       'mtn': '🟡',
       'vodacom': '🔴',
-      'divinely mobile': '💎',
+      'divine mobile': '💎',
       'telkom': '🟣'
     };
     return icons[network.toLowerCase() as keyof typeof icons] || '📱';
@@ -218,7 +218,7 @@ const EnhancedDealsGrid = ({ deals, onDealSelect }: EnhancedDealsGridProps) => {
                 <div className="text-sm font-mono font-bold text-blue-600">
                   {deal.network.toLowerCase() === 'mtn' ? '*141#' : 
                    deal.network.toLowerCase() === 'vodacom' ? '*136#' :
-                   deal.network.toLowerCase() === 'divinely mobile' ? '*180*2827#' : '*180#'}
+                   deal.network.toLowerCase() === 'divine mobile' ? '*180*2827#' : '*180#'}
                 </div>
               </div>
             </CardContent>
