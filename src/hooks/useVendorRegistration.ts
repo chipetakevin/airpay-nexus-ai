@@ -1,5 +1,5 @@
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { useNavigate } from 'react-router-dom';
 import { usePhoneValidation } from '@/hooks/usePhoneValidation';
@@ -39,84 +39,102 @@ export const useVendorRegistration = () => {
   });
 
   const [errors, setErrors] = useState<VendorFormErrors>({});
+  const [isInitialized, setIsInitialized] = useState(false);
 
-  // Load saved data on component mount
+  // Load saved data on component mount with stability
   useEffect(() => {
-    const savedData = loadPermanentData();
-    if (savedData) {
-      setFormData(prev => ({ ...prev, ...savedData }));
-      toast({
-        title: "Vendor Form Auto-filled! ✨",
-        description: "Your previously saved information has been restored.",
-        duration: 2000
-      });
+    if (!isInitialized) {
+      const savedData = loadPermanentData();
+      if (savedData) {
+        setFormData(prev => ({ ...prev, ...savedData }));
+        toast({
+          title: "Vendor Form Auto-filled! ✨",
+          description: "Your previously saved information has been restored.",
+          duration: 2000
+        });
+      }
+      setIsInitialized(true);
     }
+  }, [isInitialized, loadPermanentData, toast]);
+
+  const togglePasswordVisibility = useCallback(() => {
+    setShowPassword(prev => !prev);
   }, []);
 
-  const togglePasswordVisibility = () => {
-    setShowPassword(prev => !prev);
-  };
-
-  const handleInputChange = (field: keyof VendorFormData, value: any) => {
+  const handleInputChange = useCallback((field: keyof VendorFormData, value: any) => {
     // Special handling for phone number to ensure proper formatting
     if (field === 'phoneNumber') {
       value = value.replace(/[^\d+\s]/g, '');
     }
     
-    const updatedFormData = { 
-      ...formData, 
-      [field]: value,
-      rememberPassword: true
-    };
+    setFormData(prev => {
+      const updatedFormData = { 
+        ...prev, 
+        [field]: value,
+        rememberPassword: true
+      };
+      
+      // Auto-save with debouncing
+      autoSave(updatedFormData, 2000);
+      
+      return updatedFormData;
+    });
     
-    setFormData(updatedFormData);
-    
-    // Clear field-specific errors
-    if (errors[field]) {
-      setErrors((prev: VendorFormErrors) => ({ ...prev, [field]: '' }));
-    }
-
-    // Real-time validation for phone number
-    if (field === 'phoneNumber' && value) {
-      const phoneValidation = validateSouthAfricanMobile(value);
-      if (!phoneValidation.isValid && phoneValidation.error) {
-        setErrors((prev: VendorFormErrors) => ({ ...prev, phoneNumber: phoneValidation.error }));
+    // Clear field-specific errors immediately
+    setErrors(prev => {
+      if (prev[field]) {
+        const newErrors = { ...prev };
+        delete newErrors[field];
+        return newErrors;
       }
-    }
+      return prev;
+    });
 
-    // Real-time validation for banking
-    if (field === 'accountNumber' && value) {
-      const bankValidation = validateSouthAfricanBankAccount(value);
-      if (!bankValidation.isValid && bankValidation.error) {
-        setErrors((prev: VendorFormErrors) => ({ ...prev, accountNumber: bankValidation.error }));
+    // Debounced validation to prevent flickering
+    const timeoutId = setTimeout(() => {
+      // Real-time validation for phone number
+      if (field === 'phoneNumber' && value) {
+        const phoneValidation = validateSouthAfricanMobile(value);
+        if (!phoneValidation.isValid && phoneValidation.error) {
+          setErrors(prev => ({ ...prev, phoneNumber: phoneValidation.error }));
+        }
       }
-    }
 
-    // Real-time validation for other fields
-    const fieldError = validateField(field, value, formData);
-    if (fieldError) {
-      setErrors((prev: VendorFormErrors) => ({ ...prev, [field]: fieldError }));
-    }
+      // Real-time validation for banking
+      if (field === 'accountNumber' && value) {
+        const bankValidation = validateSouthAfricanBankAccount(value);
+        if (!bankValidation.isValid && bankValidation.error) {
+          setErrors(prev => ({ ...prev, accountNumber: bankValidation.error }));
+        }
+      }
 
-    // Auto-save permanently with debouncing
-    autoSave(updatedFormData, 2000);
-  };
+      // Real-time validation for other fields
+      const fieldError = validateField(field, value, formData);
+      if (fieldError) {
+        setErrors(prev => ({ ...prev, [field]: fieldError }));
+      }
+    }, 300);
 
-  const handleBankSelect = (bankName: string, routing: string, branchCode: string) => {
-    const updatedFormData = { 
-      ...formData, 
-      bankName, 
-      routingNumber: routing,
-      branchCode 
-    };
-    
-    setFormData(updatedFormData);
-    
-    // Immediately save bank selection
-    savePermanently(updatedFormData);
-  };
+    return () => clearTimeout(timeoutId);
+  }, [formData, autoSave, validateSouthAfricanMobile]);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleBankSelect = useCallback((bankName: string, routing: string, branchCode: string) => {
+    setFormData(prev => {
+      const updatedFormData = { 
+        ...prev, 
+        bankName, 
+        routingNumber: routing,
+        branchCode 
+      };
+      
+      // Immediately save bank selection
+      savePermanently(updatedFormData);
+      
+      return updatedFormData;
+    });
+  }, [savePermanently]);
+
+  const handleSubmit = useCallback(async (e: React.FormEvent) => {
     e.preventDefault();
     
     // Enhanced validation including phone number and banking
@@ -211,7 +229,7 @@ export const useVendorRegistration = () => {
       
       return Promise.reject(new Error('Validation failed'));
     }
-  };
+  }, [formData, validateSouthAfricanMobile, createPermanentSession, savePermanently, toast]);
 
   return {
     formData,

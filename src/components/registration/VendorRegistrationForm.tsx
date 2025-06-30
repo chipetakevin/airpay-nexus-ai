@@ -6,10 +6,9 @@ import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Badge } from '@/components/ui/badge';
 import { Eye, EyeOff, User, Building, Phone, Mail, MapPin, Shield } from 'lucide-react';
-import VendorBankingSection from './VendorBankingSection';
-import EnhancedSouthAfricanBankAutocomplete from '@/components/banking/EnhancedSouthAfricanBankAutocomplete';
+import EnhancedVendorBankingSection from './EnhancedVendorBankingSection';
+import VendorPhoneSection from '@/components/forms/VendorPhoneSection';
 import UniversalCardDetailsForm from '@/components/banking/UniversalCardDetailsForm';
 import { useToast } from '@/hooks/use-toast';
 
@@ -39,32 +38,6 @@ const VendorRegistrationForm: React.FC<VendorRegistrationFormProps> = ({
   const { toast } = useToast();
   const [showCardSection, setShowCardSection] = useState(false);
 
-  const handlePhoneChange = (value: string) => {
-    let cleanValue = value.replace(/\D/g, '');
-    
-    if (cleanValue.startsWith('0')) {
-      cleanValue = cleanValue.substring(1);
-    }
-    
-    if (cleanValue.length > 9) {
-      cleanValue = cleanValue.substring(0, 9);
-    }
-    
-    handleInputChange('phoneNumber', cleanValue);
-  };
-
-  const handleEnhancedBankSelect = (bankName: string, routing: string, branchCode: string, bankDetails?: any) => {
-    handleBankSelect(bankName, routing, branchCode);
-    
-    if (bankDetails) {
-      toast({
-        title: "Bank Selected! 🏦",
-        description: `${bankName} with branch code ${branchCode} has been selected and will be auto-saved.`,
-        duration: 3000
-      });
-    }
-  };
-
   return (
     <form onSubmit={onSubmit} className="space-y-6">
       {/* Personal Information */}
@@ -81,7 +54,7 @@ const VendorRegistrationForm: React.FC<VendorRegistrationFormProps> = ({
               <Label htmlFor="firstName">First Name *</Label>
               <Input
                 id="firstName"
-                value={formData.firstName}
+                value={formData.firstName || ''}
                 onChange={(e) => handleInputChange('firstName', e.target.value)}
                 placeholder="Enter your first name"
                 className={errors.firstName ? 'border-red-500' : ''}
@@ -93,7 +66,7 @@ const VendorRegistrationForm: React.FC<VendorRegistrationFormProps> = ({
               <Label htmlFor="lastName">Last Name *</Label>
               <Input
                 id="lastName"
-                value={formData.lastName}
+                value={formData.lastName || ''}
                 onChange={(e) => handleInputChange('lastName', e.target.value)}
                 placeholder="Enter your last name"
                 className={errors.lastName ? 'border-red-500' : ''}
@@ -109,7 +82,7 @@ const VendorRegistrationForm: React.FC<VendorRegistrationFormProps> = ({
               <Input
                 id="email"
                 type="email"
-                value={formData.email}
+                value={formData.email || ''}
                 onChange={(e) => handleInputChange('email', e.target.value)}
                 placeholder="your.email@example.com"
                 className={`pl-10 ${errors.email ? 'border-red-500' : ''}`}
@@ -117,34 +90,15 @@ const VendorRegistrationForm: React.FC<VendorRegistrationFormProps> = ({
             </div>
             {errors.email && <p className="text-red-500 text-sm">{errors.email}</p>}
           </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="phoneNumber">Mobile Number *</Label>
-            <div className="flex gap-2">
-              <Select value={formData.countryCode} onValueChange={(value) => handleInputChange('countryCode', value)}>
-                <SelectTrigger className="w-24">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="+27">🇿🇦 +27</SelectItem>
-                </SelectContent>
-              </Select>
-              <div className="relative flex-1">
-                <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
-                <Input
-                  id="phoneNumber"
-                  value={formData.phoneNumber}
-                  onChange={(e) => handlePhoneChange(e.target.value)}
-                  placeholder="812345678"
-                  className={`pl-10 ${errors.phoneNumber ? 'border-red-500' : ''}`}
-                  maxLength={9}
-                />
-              </div>
-            </div>
-            {errors.phoneNumber && <p className="text-red-500 text-sm">{errors.phoneNumber}</p>}
-          </div>
         </CardContent>
       </Card>
+
+      {/* Phone Section */}
+      <VendorPhoneSection
+        formData={formData}
+        errors={errors}
+        onInputChange={handleInputChange}
+      />
 
       {/* Business Information */}
       <Card className="border-orange-200 bg-orange-50/30">
@@ -159,7 +113,7 @@ const VendorRegistrationForm: React.FC<VendorRegistrationFormProps> = ({
             <Label htmlFor="companyName">Company/Business Name *</Label>
             <Input
               id="companyName"
-              value={formData.companyName}
+              value={formData.companyName || ''}
               onChange={(e) => handleInputChange('companyName', e.target.value)}
               placeholder="Enter your business name"
               className={errors.companyName ? 'border-red-500' : ''}
@@ -169,7 +123,7 @@ const VendorRegistrationForm: React.FC<VendorRegistrationFormProps> = ({
 
           <div className="space-y-2">
             <Label htmlFor="businessType">Business Type</Label>
-            <Select value={formData.businessType} onValueChange={(value) => handleInputChange('businessType', value)}>
+            <Select value={formData.businessType || ''} onValueChange={(value) => handleInputChange('businessType', value)}>
               <SelectTrigger>
                 <SelectValue placeholder="Select business type" />
               </SelectTrigger>
@@ -199,57 +153,15 @@ const VendorRegistrationForm: React.FC<VendorRegistrationFormProps> = ({
         </CardContent>
       </Card>
 
-      {/* Banking Information */}
-      <Card className="border-green-200 bg-green-50/30">
-        <CardHeader className="pb-3">
-          <CardTitle className="text-lg flex items-center justify-between gap-2 text-green-800">
-            <div className="flex items-center gap-2">
-              <Shield className="w-5 h-5" />
-              Business Banking Information
-            </div>
-            <Badge className="bg-green-100 text-green-700">Auto-Saved</Badge>
-          </CardTitle>
-          <p className="text-sm text-green-600">
-            Add your business banking details for commission payments and transactions
-          </p>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <EnhancedSouthAfricanBankAutocomplete
-            onBankSelect={handleEnhancedBankSelect}
-            error={errors.bankName}
-            defaultValue={formData.bankName}
-            showBranchDetails={true}
-          />
+      {/* Enhanced Banking Section */}
+      <EnhancedVendorBankingSection
+        formData={formData}
+        errors={errors}
+        onBankSelect={handleBankSelect}
+        onInputChange={handleInputChange}
+      />
 
-          <div className="space-y-2">
-            <Label htmlFor="accountNumber">Business Account Number *</Label>
-            <Input
-              id="accountNumber"
-              value={formData.accountNumber}
-              onChange={(e) => handleInputChange('accountNumber', e.target.value)}
-              placeholder="Enter business account number"
-              className={errors.accountNumber ? 'border-red-500' : ''}
-            />
-            {errors.accountNumber && <p className="text-red-500 text-sm">{errors.accountNumber}</p>}
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="branchCode">Branch Code</Label>
-            <Input
-              id="branchCode"
-              value={formData.branchCode}
-              placeholder="Auto-filled from bank selection"
-              readOnly
-              className="bg-gray-50"
-            />
-            <p className="text-xs text-green-600">
-              ℹ️ Branch code automatically detected from your bank selection
-            </p>
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Payment Card Section */}
+      {/* Optional Payment Card Section */}
       <div>
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-lg font-medium">Business Payment Card (Optional)</h3>
@@ -269,7 +181,7 @@ const VendorRegistrationForm: React.FC<VendorRegistrationFormProps> = ({
             onCardSaved={(card) => {
               toast({
                 title: "Business Card Added! 💳",
-                description: `Your ${card.cardType.toUpperCase()} ending in ${card.lastFourDigits} has been saved securely for business transactions.`,
+                description: `Your ${card.cardType.toUpperCase()} ending in ${card.lastFourDigits} has been saved securely.`,
               });
             }}
           />
@@ -291,7 +203,7 @@ const VendorRegistrationForm: React.FC<VendorRegistrationFormProps> = ({
               <Input
                 id="password"
                 type={showPassword ? 'text' : 'password'}
-                value={formData.password}
+                value={formData.password || ''}
                 onChange={(e) => handleInputChange('password', e.target.value)}
                 placeholder="Create a strong password"
                 className={errors.password ? 'border-red-500' : ''}
@@ -314,7 +226,7 @@ const VendorRegistrationForm: React.FC<VendorRegistrationFormProps> = ({
             <Input
               id="confirmPassword"
               type="password"
-              value={formData.confirmPassword}
+              value={formData.confirmPassword || ''}
               onChange={(e) => handleInputChange('confirmPassword', e.target.value)}
               placeholder="Confirm your password"
               className={errors.confirmPassword ? 'border-red-500' : ''}
@@ -330,7 +242,7 @@ const VendorRegistrationForm: React.FC<VendorRegistrationFormProps> = ({
           <div className="flex items-start space-x-2">
             <Checkbox
               id="agreeTerms"
-              checked={formData.agreeTerms}
+              checked={formData.agreeTerms || false}
               onCheckedChange={(checked) => handleInputChange('agreeTerms', checked)}
               className="mt-1"
             />
@@ -348,7 +260,7 @@ const VendorRegistrationForm: React.FC<VendorRegistrationFormProps> = ({
           <div className="flex items-start space-x-2">
             <Checkbox
               id="marketingConsent"
-              checked={formData.marketingConsent}
+              checked={formData.marketingConsent || false}
               onCheckedChange={(checked) => handleInputChange('marketingConsent', checked)}
               className="mt-1"
             />
