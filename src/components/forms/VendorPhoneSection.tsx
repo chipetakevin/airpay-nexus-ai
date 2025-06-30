@@ -2,22 +2,22 @@
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Phone } from 'lucide-react';
-import { FormData } from '@/types/customerRegistration';
+import { VendorFormData } from '@/types/vendorRegistration';
 import EnhancedPhoneInput from '@/components/forms/EnhancedPhoneInput';
 
-interface RefactoredPhoneSectionProps {
-  formData: FormData;
-  errors: Partial<Record<keyof FormData, string>>;
-  onInputChange: (field: keyof FormData, value: any) => void;
+interface VendorPhoneSectionProps {
+  formData: VendorFormData;
+  errors: Partial<Record<keyof VendorFormData, string>>;
+  onInputChange: (field: keyof VendorFormData, value: any) => void;
 }
 
-const RefactoredPhoneSection = ({ formData, errors, onInputChange }: RefactoredPhoneSectionProps) => {
+const VendorPhoneSection = ({ formData, errors, onInputChange }: VendorPhoneSectionProps) => {
   return (
-    <Card className="border-blue-200 bg-blue-50/30">
+    <Card className="border-green-200 bg-green-50/30">
       <CardHeader className="pb-3">
-        <CardTitle className="text-base sm:text-lg flex items-center gap-2 text-blue-800">
+        <CardTitle className="text-base sm:text-lg flex items-center gap-2 text-green-800">
           <Phone className="w-4 h-4 sm:w-5 sm:h-5" />
-          South African Mobile Number (Required)
+          Business Contact Number (Required)
         </CardTitle>
       </CardHeader>
       <CardContent>
@@ -25,15 +25,17 @@ const RefactoredPhoneSection = ({ formData, errors, onInputChange }: RefactoredP
           value={formData.phoneNumber}
           onChange={(value) => onInputChange('phoneNumber', value)}
           onCountryCodeChange={(code) => onInputChange('countryCode', code)}
-          userType="customer"
+          userType="vendor"
           error={errors.phoneNumber}
           countryCode={formData.countryCode}
           autoFill={true}
           showSuggestions={true}
+          label="Business Phone Number *"
+          placeholder="Enter business contact number"
         />
       </CardContent>
     </Card>
   );
 };
 
-export default RefactoredPhoneSection;
+export default VendorPhoneSection;

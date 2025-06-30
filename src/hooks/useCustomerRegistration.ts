@@ -4,6 +4,7 @@ import { useToast } from '@/hooks/use-toast';
 import { usePermanentAuth } from './usePermanentAuth';
 import { usePhoneValidation } from '@/hooks/usePhoneValidation';
 import { usePermanentFormStorage } from './usePermanentFormStorage';
+import { usePhoneStorage } from './usePhoneStorage';
 import { validateSouthAfricanBankAccount } from '@/utils/bankingValidation';
 import { FormData as CustomerFormData } from '@/types/customerRegistration';
 
@@ -28,6 +29,7 @@ export const useCustomerRegistration = () => {
   const { createPermanentSession } = usePermanentAuth();
   const { validateSouthAfricanMobile } = usePhoneValidation();
   const { savePermanently, loadPermanentData, autoSave } = usePermanentFormStorage('customer');
+  const { savePhoneNumber, autoFillPhone } = usePhoneStorage();
 
   // Load saved data on mount
   useState(() => {
@@ -39,6 +41,16 @@ export const useCustomerRegistration = () => {
         description: "Your previously saved information has been restored.",
         duration: 2000
       });
+    } else {
+      // Try to auto-fill phone if no saved data
+      const autoFilled = autoFillPhone('customer');
+      if (autoFilled) {
+        setFormData(prev => ({
+          ...prev,
+          phoneNumber: autoFilled.phoneNumber,
+          countryCode: autoFilled.countryCode
+        }));
+      }
     }
   });
 
@@ -56,6 +68,11 @@ export const useCustomerRegistration = () => {
         ...prev,
         [field]: undefined
       }));
+    }
+
+    // Save phone number when it's updated
+    if (field === 'phoneNumber' && value) {
+      savePhoneNumber(value, formData.countryCode, 'customer');
     }
 
     // Auto-save permanently with debouncing

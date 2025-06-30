@@ -1,15 +1,15 @@
 
-import React, { useState, useEffect, useRef } from 'react';
-import { Input } from '@/components/ui/input';
+import React, { useState, useEffect } from 'react';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { 
-  User, Phone, Heart, Clock, Star, 
-  Check, X, UserPlus, Smartphone 
+  User, Heart, Star, Check, X, UserPlus
 } from 'lucide-react';
 import { useRecipientMemory } from '@/hooks/useRecipientMemory';
+import EnhancedPhoneInput from '@/components/forms/EnhancedPhoneInput';
+import { Input } from '@/components/ui/input';
 
 interface SmartRecipientInputProps {
   recipientData: {
@@ -32,15 +32,11 @@ const SmartRecipientInput = ({
     detectRecipient,
     getSuggestions,
     saveRecipient,
-    getFrequentRecipients,
-    removeRecipient
+    getFrequentRecipients
   } = useRecipientMemory();
 
-  const [showSuggestions, setShowSuggestions] = useState(false);
-  const [suggestions, setSuggestions] = useState<any[]>([]);
   const [frequentRecipients, setFrequentRecipients] = useState<any[]>([]);
   const [autoDetectedRecipient, setAutoDetectedRecipient] = useState<any>(null);
-  const inputRef = useRef<HTMLInputElement>(null);
 
   // Load frequent recipients on mount
   useEffect(() => {
@@ -58,27 +54,6 @@ const SmartRecipientInput = ({
       setAutoDetectedRecipient(null);
     }
   }, [recipientData.phone, detectRecipient, autoDetectedRecipient]);
-
-  // Handle input changes and show suggestions
-  const handleInputChange = (field: string, value: string) => {
-    onRecipientDataChange({
-      ...recipientData,
-      [field]: value
-    });
-
-    if (field === 'phone' && onPhoneValidation) {
-      onPhoneValidation(value);
-    }
-
-    // Show suggestions for phone and name fields
-    if ((field === 'phone' || field === 'name') && value.length >= 2) {
-      const newSuggestions = getSuggestions(value);
-      setSuggestions(newSuggestions);
-      setShowSuggestions(newSuggestions.length > 0);
-    } else {
-      setShowSuggestions(false);
-    }
-  };
 
   // Apply auto-detected recipient
   const applyDetectedRecipient = () => {
@@ -99,7 +74,6 @@ const SmartRecipientInput = ({
       phone: suggestion.phone,
       relationship: suggestion.relationship
     });
-    setShowSuggestions(false);
     setAutoDetectedRecipient(null);
   };
 
@@ -194,7 +168,7 @@ const SmartRecipientInput = ({
       )}
 
       {/* Recipient Name Input */}
-      <div className="space-y-2 relative">
+      <div className="space-y-2">
         <Label htmlFor="recipientName" className="text-sm font-medium">
           Recipient Name
         </Label>
@@ -202,9 +176,8 @@ const SmartRecipientInput = ({
           <User className="absolute left-3 top-3 w-4 h-4 text-gray-400" />
           <Input
             id="recipientName"
-            ref={inputRef}
             value={recipientData.name}
-            onChange={(e) => handleInputChange('name', e.target.value)}
+            onChange={(e) => onRecipientDataChange({ ...recipientData, name: e.target.value })}
             onBlur={handleAutoSave}
             placeholder="Enter recipient's name"
             className="pl-10"
@@ -212,35 +185,24 @@ const SmartRecipientInput = ({
         </div>
       </div>
 
-      {/* Recipient Phone Input */}
-      <div className="space-y-2 relative">
-        <Label htmlFor="recipientPhone" className="text-sm font-medium">
-          Recipient Phone Number
-        </Label>
-        <div className="relative">
-          <Phone className="absolute left-3 top-3 w-4 h-4 text-gray-400" />
-          <Input
-            id="recipientPhone"
-            value={recipientData.phone}
-            onChange={(e) => handleInputChange('phone', e.target.value)}
-            onBlur={handleAutoSave}
-            placeholder="Enter recipient's phone number"
-            className="pl-10"
-          />
-          {detectedNetwork && (
-            <Badge 
-              variant="outline" 
-              className="absolute right-2 top-2 text-xs bg-white"
-            >
-              <Smartphone className="w-3 h-3 mr-1" />
-              {detectedNetwork}
-            </Badge>
-          )}
-        </div>
-      </div>
+      {/* Enhanced Phone Input */}
+      <EnhancedPhoneInput
+        value={recipientData.phone}
+        onChange={(value) => {
+          onRecipientDataChange({ ...recipientData, phone: value });
+          if (onPhoneValidation) {
+            onPhoneValidation(value);
+          }
+        }}
+        userType="guest"
+        label="Recipient Phone Number"
+        placeholder="Enter recipient's phone number"
+        autoFill={false}
+        showSuggestions={true}
+      />
 
       {/* Relationship Input */}
-      <div className="space-y-2 relative">
+      <div className="space-y-2">
         <Label htmlFor="relationship" className="text-sm font-medium">
           Relationship
         </Label>
@@ -249,47 +211,13 @@ const SmartRecipientInput = ({
           <Input
             id="relationship"
             value={recipientData.relationship}
-            onChange={(e) => handleInputChange('relationship', e.target.value)}
+            onChange={(e) => onRecipientDataChange({ ...recipientData, relationship: e.target.value })}
             onBlur={handleAutoSave}
             placeholder="e.g., Family, Friend, Colleague"
             className="pl-10"
           />
         </div>
       </div>
-
-      {/* Suggestions Dropdown */}
-      {showSuggestions && suggestions.length > 0 && (
-        <Card className="absolute z-50 w-full mt-1 border-gray-200 shadow-lg">
-          <CardContent className="p-2">
-            <div className="text-xs text-gray-600 mb-2 flex items-center gap-1">
-              <Clock className="w-3 h-3" />
-              Recent Recipients
-            </div>
-            {suggestions.map((suggestion) => (
-              <Button
-                key={suggestion.id}
-                variant="ghost"
-                size="sm"
-                onClick={() => applySuggestion(suggestion)}
-                className="w-full justify-start h-auto p-2 mb-1"
-              >
-                <div className="flex items-center gap-2 w-full">
-                  <User className="w-3 h-3 text-gray-400" />
-                  <div className="flex-1 text-left">
-                    <div className="text-xs font-medium">{suggestion.name}</div>
-                    <div className="text-xs text-gray-500">
-                      {suggestion.phone} • {suggestion.relationship}
-                    </div>
-                  </div>
-                  <Badge variant="secondary" className="text-xs">
-                    {suggestion.frequency}x
-                  </Badge>
-                </div>
-              </Button>
-            ))}
-          </CardContent>
-        </Card>
-      )}
 
       {/* Manual Save Button */}
       {recipientData.name && recipientData.phone && recipientData.relationship && (
