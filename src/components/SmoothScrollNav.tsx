@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
-import { ChevronUp, Menu } from 'lucide-react';
+import { ChevronUp } from 'lucide-react';
 
 const SmoothScrollNav = () => {
   const [isVisible, setIsVisible] = useState(false);
@@ -26,54 +26,8 @@ const SmoothScrollNav = () => {
     });
   };
 
-  const scrollToSection = (sectionId: string) => {
-    const element = document.getElementById(sectionId);
-    if (element) {
-      element.scrollIntoView({ 
-        behavior: 'smooth',
-        block: 'start'
-      });
-    }
-  };
-
   return (
     <>
-      {/* Floating Navigation - Hidden on mobile to avoid clutter */}
-      <div className="fixed right-6 top-1/2 transform -translate-y-1/2 z-40 hidden lg:flex flex-col space-y-2">
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => scrollToSection('hero')}
-          className="bg-white/90 hover:bg-white text-gray-700 text-xs px-3 py-1 backdrop-blur-sm"
-        >
-          Home
-        </Button>
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => scrollToSection('features')}
-          className="bg-white/90 hover:bg-white text-gray-700 text-xs px-3 py-1 backdrop-blur-sm"
-        >
-          Features
-        </Button>
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => scrollToSection('testimonials')}
-          className="bg-white/90 hover:bg-white text-gray-700 text-xs px-3 py-1 backdrop-blur-sm"
-        >
-          Reviews
-        </Button>
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => scrollToSection('faq')}
-          className="bg-white/90 hover:bg-white text-gray-700 text-xs px-3 py-1 backdrop-blur-sm"
-        >
-          FAQ
-        </Button>
-      </div>
-
       {/* Back to Top Button with enhanced mobile experience */}
       {isVisible && (
         <Button
