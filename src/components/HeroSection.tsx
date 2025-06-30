@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
@@ -57,14 +56,6 @@ const HeroSection = () => {
       
       <div className="container mx-auto px-4 sm:px-6 relative z-10">
         <div className="max-w-4xl mx-auto text-center text-white">
-          {/* Welcome message with elegant styling */}
-          <div className="relative mb-4">
-            <div className="absolute inset-0 bg-white/5 backdrop-blur-sm rounded-full border border-white/10"></div>
-            <p className="relative text-sm sm:text-base font-light tracking-wide py-2 px-6 text-blue-100/90 italic">
-              Welcome to Divine Mobile
-            </p>
-          </div>
-          
           {/* Main headline with enhanced glassmorphism background */}
           <div className="relative mb-6">
             <div className="absolute inset-0 bg-white/10 backdrop-blur-sm rounded-3xl border border-white/20 shadow-2xl"></div>

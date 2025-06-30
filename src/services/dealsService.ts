@@ -1,15 +1,12 @@
 
 import { supabase } from '@/integrations/supabase/client';
-import { Deal, ProfitAllocation } from '@/types/deals';
+import { Deal } from '@/types/deals';
 
 export const loadDealsFromSupabase = async (): Promise<Deal[]> => {
   try {
     const { data, error } = await supabase
       .from('deals')
-      .select(`
-        *,
-        vendors!inner(business_name)
-      `)
+      .select('*')
       .order('created_at', { ascending: false });
 
     if (error) {
@@ -17,65 +14,11 @@ export const loadDealsFromSupabase = async (): Promise<Deal[]> => {
       return [];
     }
 
-    console.log('Raw Supabase data:', data);
-
-    // Transform the data to match our Deal interface
-    const transformedDeals: Deal[] = (data || []).map(deal => {
-      // Handle the joined vendor data properly - ensure we get the business_name
-      let vendorName = 'Unknown Vendor';
-      
-      if (deal.vendors) {
-        if (Array.isArray(deal.vendors) && deal.vendors.length > 0) {
-          vendorName = deal.vendors[0].business_name || 'Unknown Vendor';
-        } else if (typeof deal.vendors === 'object' && deal.vendors.business_name) {
-          vendorName = deal.vendors.business_name;
-        }
-      }
-
-      return {
-        id: deal.id,
-        network: deal.network,
-        amount: deal.amount,
-        original_price: deal.original_price,
-        discounted_price: deal.discounted_price,
-        discount_percentage: deal.discount_percentage,
-        vendor_name: vendorName,
-        availability: deal.availability,
-        demand_level: deal.demand_level,
-        deal_type: deal.deal_type,
-        bonus: deal.bonus,
-        expires_at: deal.expires_at,
-        verified: deal.verified,
-        network_price: deal.original_price,
-        markup_amount: deal.original_price - deal.discounted_price
-      };
-    });
-
-    return transformedDeals;
+    return data || [];
   } catch (error) {
     console.error('Error loading deals from Supabase:', error);
     return [];
   }
-};
-
-export const calculateProfitSharing = (totalMarkup: number, purchaseType: string, isVendor: boolean): ProfitAllocation => {
-  const allocation: ProfitAllocation = {};
-  
-  if (isVendor) {
-    // Vendor gets majority of the profit
-    allocation.vendorProfit = totalMarkup * 0.7;
-    allocation.adminProfit = totalMarkup * 0.3;
-  } else if (purchaseType === 'self') {
-    // Self-purchase: customer gets cashback
-    allocation.customerCashback = totalMarkup * 0.6;
-    allocation.adminProfit = totalMarkup * 0.4;
-  } else {
-    // Third-party purchase: split between recipient and admin
-    allocation.unregisteredRecipientReward = totalMarkup * 0.5;
-    allocation.adminProfit = totalMarkup * 0.5;
-  }
-  
-  return allocation;
 };
 
 export const getSampleDeals = (): Deal[] => {

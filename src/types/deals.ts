@@ -9,12 +9,12 @@ export interface Deal {
   vendor_name: string;
   availability: string;
   demand_level: string;
-  deal_type?: string;
+  deal_type?: string; // Added missing deal_type property
   bonus?: string;
   expires_at?: string;
   verified: boolean;
-  network_price?: number;
-  markup_amount?: number;
+  network_price?: number; // Hidden network cost
+  markup_amount?: number; // Hidden markup profit pool
 }
 
 export interface CartItem {
@@ -25,10 +25,10 @@ export interface CartItem {
   discountedPrice: number;
   discount: number;
   vendor: string;
-  dealType: string;
+  dealType: string; // Updated to be more generic (not just 'airtime')
   bonus?: string;
-  networkPrice?: number;
-  markupAmount?: number;
+  networkPrice?: number; // Hidden network cost
+  markupAmount?: number; // Hidden markup profit pool
 }
 
 export interface ProfitAllocation {
