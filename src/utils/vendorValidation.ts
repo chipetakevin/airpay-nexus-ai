@@ -52,18 +52,27 @@ export const validateVendorForm = (formData: VendorFormData): VendorFormErrors =
     errors.confirmPassword = 'Passwords do not match';
   }
   
-  // Banking validation
-  if (!formData.bankName || !formData.bankName.trim()) {
+  // Enhanced banking validation - only validate if any banking field is provided
+  const hasBankingData = formData.bankName || formData.accountNumber || formData.branchCode;
+  
+  if (hasBankingData) {
+    if (!formData.bankName || !formData.bankName.trim()) {
+      errors.bankName = 'Bank selection is required';
+    }
+    
+    if (!formData.accountNumber || !formData.accountNumber.trim()) {
+      errors.accountNumber = 'Account number is required';
+    } else if (!validateAccountNumber(formData.accountNumber)) {
+      errors.accountNumber = 'Invalid account number format';
+    }
+    
+    if (!formData.branchCode || !formData.branchCode.trim()) {
+      errors.branchCode = 'Branch code is required';
+    }
+  } else {
+    // If no banking data at all, require the essential fields
     errors.bankName = 'Bank selection is required';
-  }
-  
-  if (!formData.accountNumber || !formData.accountNumber.trim()) {
     errors.accountNumber = 'Account number is required';
-  } else if (!validateAccountNumber(formData.accountNumber)) {
-    errors.accountNumber = 'Invalid account number format';
-  }
-  
-  if (!formData.branchCode || !formData.branchCode.trim()) {
     errors.branchCode = 'Branch code is required';
   }
   
@@ -88,7 +97,7 @@ export const validateField = (field: keyof VendorFormData, value: any, formData:
     return 'Passwords do not match';
   }
 
-  if (field === 'accountNumber' && value && !validateAccountNumber(value)) {
+  if (field === 'accountNumber' && value && value.trim() && !validateAccountNumber(value)) {
     return 'Account number must be 8-12 digits';
   }
 

@@ -13,6 +13,10 @@ const CollapsedBankingView: React.FC<CollapsedBankingViewProps> = ({
   formData,
   onToggle
 }) => {
+  const accountDisplay = formData.accountNumber ? 
+    `****${formData.accountNumber.slice(-3)}` : 
+    '****';
+
   return (
     <CardContent className="pt-0 pb-4">
       <div className="bg-green-50 p-3 rounded-lg border border-green-200">
@@ -23,10 +27,10 @@ const CollapsedBankingView: React.FC<CollapsedBankingViewProps> = ({
             </div>
             <div>
               <span className="text-sm font-medium text-green-800">
-                Banking Secured
+                Banking Complete
               </span>
               <p className="text-xs text-green-700 mt-0.5">
-                {formData.bankName} • ****{formData.accountNumber.slice(-4)}
+                {formData.bankName} • {accountDisplay} • Branch: {formData.branchCode}
               </p>
             </div>
           </div>
