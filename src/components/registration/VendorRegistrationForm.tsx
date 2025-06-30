@@ -51,7 +51,9 @@ const VendorRegistrationForm: React.FC<VendorRegistrationFormProps> = ({
         <CardContent className="space-y-4">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="firstName">First Name *</Label>
+              <Label htmlFor="firstName" className="text-sm font-medium text-gray-700">
+                First Name *
+              </Label>
               <Input
                 id="firstName"
                 value={formData.firstName || ''}
@@ -63,7 +65,9 @@ const VendorRegistrationForm: React.FC<VendorRegistrationFormProps> = ({
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="lastName">Last Name *</Label>
+              <Label htmlFor="lastName" className="text-sm font-medium text-gray-700">
+                Last Name *
+              </Label>
               <Input
                 id="lastName"
                 value={formData.lastName || ''}
@@ -76,7 +80,9 @@ const VendorRegistrationForm: React.FC<VendorRegistrationFormProps> = ({
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="email">Email Address *</Label>
+            <Label htmlFor="email" className="text-sm font-medium text-gray-700">
+              Email Address *
+            </Label>
             <div className="relative">
               <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
               <Input
@@ -110,7 +116,9 @@ const VendorRegistrationForm: React.FC<VendorRegistrationFormProps> = ({
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="companyName">Company/Business Name *</Label>
+            <Label htmlFor="companyName" className="text-sm font-medium text-gray-700">
+              Company/Business Name *
+            </Label>
             <Input
               id="companyName"
               value={formData.companyName || ''}
@@ -122,7 +130,9 @@ const VendorRegistrationForm: React.FC<VendorRegistrationFormProps> = ({
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="businessType">Business Type</Label>
+            <Label htmlFor="businessType" className="text-sm font-medium text-gray-700">
+              Business Type
+            </Label>
             <Select value={formData.businessType || ''} onValueChange={(value) => handleInputChange('businessType', value)}>
               <SelectTrigger>
                 <SelectValue placeholder="Select business type" />
@@ -138,7 +148,9 @@ const VendorRegistrationForm: React.FC<VendorRegistrationFormProps> = ({
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="location">Business Location</Label>
+            <Label htmlFor="location" className="text-sm font-medium text-gray-700">
+              Business Location
+            </Label>
             <div className="relative">
               <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
               <Input
@@ -164,7 +176,7 @@ const VendorRegistrationForm: React.FC<VendorRegistrationFormProps> = ({
       {/* Optional Payment Card Section */}
       <div>
         <div className="flex items-center justify-between mb-4">
-          <h3 className="text-lg font-medium">Business Payment Card (Optional)</h3>
+          <h3 className="text-lg font-medium text-gray-800">Business Payment Card (Optional)</h3>
           <Button
             type="button"
             variant="outline"
@@ -198,7 +210,9 @@ const VendorRegistrationForm: React.FC<VendorRegistrationFormProps> = ({
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="password">Password *</Label>
+            <Label htmlFor="password" className="text-sm font-medium text-gray-700">
+              Password *
+            </Label>
             <div className="relative">
               <Input
                 id="password"
@@ -222,7 +236,9 @@ const VendorRegistrationForm: React.FC<VendorRegistrationFormProps> = ({
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="confirmPassword">Confirm Password *</Label>
+            <Label htmlFor="confirmPassword" className="text-sm font-medium text-gray-700">
+              Confirm Password *
+            </Label>
             <Input
               id="confirmPassword"
               type="password"
@@ -236,35 +252,45 @@ const VendorRegistrationForm: React.FC<VendorRegistrationFormProps> = ({
         </CardContent>
       </Card>
 
-      {/* Terms and Marketing */}
-      <Card className="border-gray-200">
-        <CardContent className="p-4 space-y-4">
-          <div className="flex items-start space-x-2">
+      {/* Terms and Marketing with Improved Text Display */}
+      <Card className="border-gray-200 bg-white">
+        <CardContent className="p-6 space-y-6">
+          <div className="flex items-start space-x-3">
             <Checkbox
               id="agreeTerms"
               checked={formData.agreeTerms || false}
               onCheckedChange={(checked) => handleInputChange('agreeTerms', checked)}
-              className="mt-1"
+              className="mt-1 flex-shrink-0"
             />
-            <div className="space-y-1">
-              <Label htmlFor="agreeTerms" className="text-sm cursor-pointer">
+            <div className="space-y-2 flex-1">
+              <Label 
+                htmlFor="agreeTerms" 
+                className="text-base font-medium text-gray-900 cursor-pointer leading-relaxed"
+              >
                 I agree to the Vendor Terms of Service and Privacy Policy *
               </Label>
-              <p className="text-xs text-gray-600">
+              <p className="text-sm text-gray-600 leading-relaxed">
                 By checking this box, you agree to our vendor terms and allow us to securely store your business information.
               </p>
             </div>
           </div>
-          {errors.agreeTerms && <p className="text-red-500 text-sm">{errors.agreeTerms}</p>}
+          {errors.agreeTerms && (
+            <div className="ml-7 mt-2">
+              <p className="text-red-500 text-sm font-medium">{errors.agreeTerms}</p>
+            </div>
+          )}
 
-          <div className="flex items-start space-x-2">
+          <div className="flex items-start space-x-3">
             <Checkbox
               id="marketingConsent"
               checked={formData.marketingConsent || false}
               onCheckedChange={(checked) => handleInputChange('marketingConsent', checked)}
-              className="mt-1"
+              className="mt-1 flex-shrink-0"
             />
-            <Label htmlFor="marketingConsent" className="text-sm cursor-pointer">
+            <Label 
+              htmlFor="marketingConsent" 
+              className="text-base font-medium text-gray-900 cursor-pointer leading-relaxed flex-1"
+            >
               I would like to receive business updates and commission reports
             </Label>
           </div>
