@@ -3,7 +3,7 @@ import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { MessageCircle, CreditCard } from 'lucide-react';
+import { CreditCard } from 'lucide-react';
 import { navigationItems } from './NavigationConfig';
 
 interface MobileMenuOverlayProps {
@@ -76,20 +76,6 @@ const MobileMenuOverlay = ({ isMenuOpen, closeMenu, isHomePage, handleQuickShopC
               Quick
             </Badge>
           </button>
-          
-          {/* WhatsApp Support - Full width green button */}
-          <div className="pt-4 mt-4 border-t border-gray-100">
-            <Button
-              onClick={() => {
-                window.open('https://wa.me/27832466539', '_blank');
-                closeMenu();
-              }}
-              className="w-full bg-gradient-to-r from-[#25D366] to-[#128C7E] hover:from-[#25D366]/90 hover:to-[#128C7E]/90 text-white font-semibold text-lg py-6 h-auto rounded-2xl shadow-lg transform hover:scale-[1.02] transition-all duration-200"
-            >
-              <MessageCircle className="w-6 h-6 mr-3" />
-              WhatsApp Support
-            </Button>
-          </div>
         </nav>
       </div>
     </>
