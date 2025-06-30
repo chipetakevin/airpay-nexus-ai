@@ -211,7 +211,7 @@ const PortalTabs = ({
           </TabsList>
         </div>
         
-        {/* Tab Content - Mobile Optimized */}
+        {/* Tab Content - Optimized for top positioning */}
         <div className="w-full">
           <TabsContent value="deals" className="p-1 sm:p-2 md:p-4 lg:p-6 animate-fade-in">
             <AirtimeDealsSystem />
@@ -227,7 +227,7 @@ const PortalTabs = ({
             </div>
           </TabsContent>
           
-          <TabsContent value="vendor" className="p-1 sm:p-2 md:p-4 lg:p-6 animate-fade-in">
+          <TabsContent value="vendor" className="p-0 animate-fade-in">
             <VendorRegistration />
           </TabsContent>
 

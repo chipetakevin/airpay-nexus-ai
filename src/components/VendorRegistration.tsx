@@ -8,7 +8,11 @@ const VendorRegistrationContent: React.FC = () => {
   const { existingRegistration, isFormCollapsed } = useVendorRegistrationContext();
 
   if (existingRegistration && isFormCollapsed) {
-    return <ExistingVendorSummary />;
+    return (
+      <div className="w-full pt-4">
+        <ExistingVendorSummary />
+      </div>
+    );
   }
 
   return <VendorRegistrationLayout />;
@@ -16,9 +20,11 @@ const VendorRegistrationContent: React.FC = () => {
 
 const VendorRegistration: React.FC = () => {
   return (
-    <VendorRegistrationProvider>
-      <VendorRegistrationContent />
-    </VendorRegistrationProvider>
+    <div className="w-full min-h-screen">
+      <VendorRegistrationProvider>
+        <VendorRegistrationContent />
+      </VendorRegistrationProvider>
+    </div>
   );
 };
 

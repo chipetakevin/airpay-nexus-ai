@@ -28,8 +28,8 @@ const VendorRegistrationLayout: React.FC = () => {
   } = useVendorRegistrationContext();
 
   return (
-    <div className="min-h-screen pb-32 relative registration-scroll-container">
-      <div className="space-y-6 registration-content-wrapper max-w-2xl mx-auto">
+    <div className="w-full">
+      <div className="space-y-6 max-w-2xl mx-auto pt-4">
         {/* Header with Collapse Option */}
         <Card className="border-blue-200 bg-blue-50">
           <CardHeader className="pb-3">
