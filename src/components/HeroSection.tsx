@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
@@ -22,18 +23,8 @@ const HeroSection = () => {
   };
 
   const handleBecomeVendor = () => {
-    // Check if user is already registered
-    const isAuthenticated = localStorage.getItem('userAuthenticated') === 'true';
-    const userType = localStorage.getItem('userCredentials') ? 
-      JSON.parse(localStorage.getItem('userCredentials') || '{}').userType : null;
-    
-    if (isAuthenticated && (userType === 'vendor' || userType === 'admin')) {
-      // Redirect to deals (onecard tab)
-      navigate('/portal?tab=onecard');
-    } else {
-      // Redirect to vendor registration
-      navigate('/portal?tab=vendor');
-    }
+    // Always redirect to vendor tab - let the vendor registration component handle the logic
+    navigate('/portal?tab=vendor');
   };
 
   return (

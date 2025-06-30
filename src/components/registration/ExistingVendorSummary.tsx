@@ -3,7 +3,7 @@ import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { CheckCircle, Store, ChevronDown } from 'lucide-react';
+import { Store, User, Calendar, IdCard, Edit, Plus } from 'lucide-react';
 import { useVendorRegistrationContext } from './VendorRegistrationProvider';
 
 const ExistingVendorSummary: React.FC = () => {
@@ -11,71 +11,124 @@ const ExistingVendorSummary: React.FC = () => {
 
   if (!existingRegistration) return null;
 
+  const formatDate = (dateString: string) => {
+    try {
+      return new Date(dateString).toLocaleDateString('en-ZA', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+      });
+    } catch {
+      return 'Recently';
+    }
+  };
+
   return (
-    <div className="max-w-2xl mx-auto space-y-4">
-      <Card className="border-blue-200 bg-blue-50">
-        <CardHeader className="pb-3">
-          <div className="flex items-center justify-between">
-            <CardTitle className="text-lg flex items-center gap-2 text-blue-800">
-              <CheckCircle className="w-5 h-5" />
-              Vendor Registration Complete
-            </CardTitle>
-            <Badge className="bg-blue-100 text-blue-700">
-              <Store className="w-3 h-3 mr-1" />
-              Active
+    <div className="max-w-2xl mx-auto space-y-6">
+      {/* Welcome Back Header */}
+      <Card className="border-green-200 bg-gradient-to-br from-green-50 to-emerald-50">
+        <CardHeader className="text-center pb-4">
+          <div className="flex items-center justify-center gap-2 mb-2">
+            <Store className="w-6 h-6 text-green-600" />
+            <Badge variant="outline" className="bg-green-100 text-green-800 border-green-300">
+              Vendor Active
             </Badge>
           </div>
+          <CardTitle className="text-2xl text-green-800">
+            Welcome Back, {existingRegistration.firstName}! 👋
+          </CardTitle>
+          <p className="text-green-700">
+            Your vendor registration is complete and active
+          </p>
+        </CardHeader>
+      </Card>
+
+      {/* Registration Summary */}
+      <Card className="border-blue-200 bg-blue-50/50">
+        <CardHeader>
+          <CardTitle className="text-lg flex items-center gap-2 text-blue-800">
+            <IdCard className="w-5 h-5" />
+            Vendor Registration Summary
+          </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="space-y-2">
-              <label className="text-xs text-gray-600">Business Owner</label>
-              <p className="font-semibold text-gray-900">
+              <div className="flex items-center gap-2">
+                <User className="w-4 h-4 text-gray-600" />
+                <span className="text-sm font-medium text-gray-700">Full Name</span>
+              </div>
+              <p className="text-gray-900 font-medium">
                 {existingRegistration.firstName} {existingRegistration.lastName}
               </p>
             </div>
+
             <div className="space-y-2">
-              <label className="text-xs text-gray-600">Vendor ID</label>
-              <p className="font-mono text-sm text-blue-600 font-semibold">
-                {existingRegistration.vendorId}
-              </p>
-            </div>
-            <div className="space-y-2">
-              <label className="text-xs text-gray-600">Company Name</label>
-              <p className="text-sm text-gray-700">
+              <div className="flex items-center gap-2">
+                <Store className="w-4 h-4 text-gray-600" />
+                <span className="text-sm font-medium text-gray-700">Company</span>
+              </div>
+              <p className="text-gray-900 font-medium">
                 {existingRegistration.companyName}
               </p>
             </div>
+
             <div className="space-y-2">
-              <label className="text-xs text-gray-600">Registration Date</label>
-              <p className="text-sm text-gray-700">
-                {new Date(existingRegistration.registrationDate).toLocaleDateString()}
+              <div className="flex items-center gap-2">
+                <IdCard className="w-4 h-4 text-gray-600" />
+                <span className="text-sm font-medium text-gray-700">Vendor ID</span>
+              </div>
+              <p className="text-gray-900 font-medium font-mono">
+                {existingRegistration.vendorId}
               </p>
             </div>
-            <div className="space-y-2 sm:col-span-2">
-              <label className="text-xs text-gray-600">Email Address</label>
-              <p className="text-sm text-gray-700">
-                {existingRegistration.email}
+
+            <div className="space-y-2">
+              <div className="flex items-center gap-2">
+                <Calendar className="w-4 h-4 text-gray-600" />
+                <span className="text-sm font-medium text-gray-700">Registered</span>
+              </div>
+              <p className="text-gray-900 font-medium">
+                {formatDate(existingRegistration.registrationDate)}
               </p>
             </div>
           </div>
+        </CardContent>
+      </Card>
 
-          <div className="flex flex-col sm:flex-row gap-2 pt-4 border-t border-blue-200">
+      {/* Action Buttons */}
+      <div className="flex flex-col sm:flex-row gap-4">
+        <Button
+          onClick={handleFormToggle}
+          variant="outline"
+          className="flex-1 flex items-center gap-2 border-blue-300 text-blue-700 hover:bg-blue-50"
+        >
+          <Edit className="w-4 h-4" />
+          View Registration Details
+        </Button>
+
+        <Button
+          onClick={handleNewRegistration}
+          variant="outline"
+          className="flex-1 flex items-center gap-2 border-purple-300 text-purple-700 hover:bg-purple-50"
+        >
+          <Plus className="w-4 h-4" />
+          New Registration
+        </Button>
+      </div>
+
+      {/* Quick Navigation */}
+      <Card className="border-orange-200 bg-orange-50/50">
+        <CardContent className="p-4">
+          <div className="text-center space-y-2">
+            <p className="text-sm text-orange-700">
+              Ready to start earning? Access your vendor dashboard now!
+            </p>
             <Button
-              onClick={handleFormToggle}
-              variant="outline"
-              className="flex items-center gap-2 border-blue-300 text-blue-700 hover:bg-blue-100"
+              onClick={() => window.location.href = '/portal?tab=onecard'}
+              className="bg-orange-500 hover:bg-orange-600 text-white"
             >
-              <ChevronDown className="w-4 h-4" />
-              Edit Registration Details
-            </Button>
-            <Button
-              onClick={handleNewRegistration}
-              variant="outline"
-              className="flex items-center gap-2 border-green-300 text-green-700 hover:bg-green-100"
-            >
-              <Store className="w-4 h-4" />
-              Register New Vendor
+              Go to Vendor Dashboard
             </Button>
           </div>
         </CardContent>
