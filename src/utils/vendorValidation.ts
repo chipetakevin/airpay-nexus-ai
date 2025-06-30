@@ -3,31 +3,74 @@ import { validateEmail, validateAccountNumber } from '@/utils/formValidation';
 import { VendorFormData, VendorFormErrors } from '@/types/vendorRegistration';
 
 const validatePassword = (password: string) => {
-  const minLength = password.length >= 8;
+  if (!password || password.length < 8) return false;
   const hasUpperCase = /[A-Z]/.test(password);
   const hasLowerCase = /[a-z]/.test(password);
   const hasNumber = /\d/.test(password);
   
-  return minLength && hasUpperCase && hasLowerCase && hasNumber;
+  return hasUpperCase && hasLowerCase && hasNumber;
 };
 
 export const validateVendorForm = (formData: VendorFormData): VendorFormErrors => {
   const errors: VendorFormErrors = {};
   
-  if (!formData.firstName) errors.firstName = 'First name is required';
-  if (!formData.lastName) errors.lastName = 'Last name is required';
-  if (!formData.companyName) errors.companyName = 'Company name is required';
-  if (!formData.email) errors.email = 'Email is required';
-  if (!validateEmail(formData.email)) errors.email = 'Invalid email format';
-  if (!formData.phoneNumber) errors.phoneNumber = 'Phone number is required';
-  if (!formData.password) errors.password = 'Password is required';
-  if (!validatePassword(formData.password)) errors.password = 'Password does not meet requirements';
-  if (!formData.confirmPassword) errors.confirmPassword = 'Please confirm your password';
-  if (formData.password !== formData.confirmPassword) errors.confirmPassword = 'Passwords do not match';
-  if (!formData.bankName) errors.bankName = 'Bank selection is required';
-  if (!formData.accountNumber) errors.accountNumber = 'Account number is required';
-  if (!validateAccountNumber(formData.accountNumber)) errors.accountNumber = 'Invalid account number';
-  if (!formData.agreeTerms) errors.agreeTerms = 'You must agree to terms and conditions';
+  // Personal information validation
+  if (!formData.firstName || !formData.firstName.trim()) {
+    errors.firstName = 'First name is required';
+  }
+  
+  if (!formData.lastName || !formData.lastName.trim()) {
+    errors.lastName = 'Last name is required';
+  }
+  
+  if (!formData.companyName || !formData.companyName.trim()) {
+    errors.companyName = 'Company name is required';
+  }
+  
+  // Email validation
+  if (!formData.email || !formData.email.trim()) {
+    errors.email = 'Email is required';
+  } else if (!validateEmail(formData.email)) {
+    errors.email = 'Invalid email format';
+  }
+  
+  // Phone validation
+  if (!formData.phoneNumber || !formData.phoneNumber.trim()) {
+    errors.phoneNumber = 'Phone number is required';
+  }
+  
+  // Password validation
+  if (!formData.password || !formData.password.trim()) {
+    errors.password = 'Password is required';
+  } else if (!validatePassword(formData.password)) {
+    errors.password = 'Password must be at least 8 characters with uppercase, lowercase, and number';
+  }
+  
+  if (!formData.confirmPassword || !formData.confirmPassword.trim()) {
+    errors.confirmPassword = 'Please confirm your password';
+  } else if (formData.password !== formData.confirmPassword) {
+    errors.confirmPassword = 'Passwords do not match';
+  }
+  
+  // Banking validation
+  if (!formData.bankName || !formData.bankName.trim()) {
+    errors.bankName = 'Bank selection is required';
+  }
+  
+  if (!formData.accountNumber || !formData.accountNumber.trim()) {
+    errors.accountNumber = 'Account number is required';
+  } else if (!validateAccountNumber(formData.accountNumber)) {
+    errors.accountNumber = 'Invalid account number format';
+  }
+  
+  if (!formData.branchCode || !formData.branchCode.trim()) {
+    errors.branchCode = 'Branch code is required';
+  }
+  
+  // Terms agreement validation
+  if (!formData.agreeTerms) {
+    errors.agreeTerms = 'You must agree to terms and conditions';
+  }
 
   return errors;
 };
@@ -38,7 +81,7 @@ export const validateField = (field: keyof VendorFormData, value: any, formData:
   }
 
   if (field === 'password' && value && !validatePassword(value)) {
-    return 'Password must meet security requirements';
+    return 'Password must be at least 8 characters with uppercase, lowercase, and number';
   }
 
   if (field === 'confirmPassword' && value && value !== formData.password) {

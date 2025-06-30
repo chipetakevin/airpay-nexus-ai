@@ -53,25 +53,41 @@ export const useVendorFormValidation = (formData: VendorFormData) => {
   }, [formData, validateSouthAfricanMobile, clearFieldError]);
 
   const validateCompleteForm = useCallback(() => {
+    console.log('🔍 Validating complete form with data:', formData);
+    
     // Enhanced validation including phone number and banking
     const newErrors = validateVendorForm(formData);
     
-    // Additional phone validation
-    if (formData.phoneNumber) {
+    // Additional phone validation - only if phone number exists
+    if (formData.phoneNumber && formData.phoneNumber.trim()) {
       const phoneValidation = validateSouthAfricanMobile(formData.phoneNumber);
       if (!phoneValidation.isValid) {
         newErrors.phoneNumber = phoneValidation.error || 'Invalid South African mobile number';
       }
+    } else {
+      newErrors.phoneNumber = 'Phone number is required';
     }
 
-    // Additional banking validation
-    if (formData.accountNumber) {
+    // Additional banking validation - only if account number exists
+    if (formData.accountNumber && formData.accountNumber.trim()) {
       const bankValidation = validateSouthAfricanBankAccount(formData.accountNumber);
       if (!bankValidation.isValid) {
         newErrors.accountNumber = bankValidation.error || 'Invalid South African bank account number';
       }
+    } else {
+      newErrors.accountNumber = 'Account number is required';
+    }
+
+    // Check required banking fields
+    if (!formData.bankName || !formData.bankName.trim()) {
+      newErrors.bankName = 'Bank selection is required';
+    }
+
+    if (!formData.branchCode || !formData.branchCode.trim()) {
+      newErrors.branchCode = 'Branch code is required';
     }
     
+    console.log('❌ Validation errors found:', newErrors);
     setErrors(newErrors);
     return newErrors;
   }, [formData, validateSouthAfricanMobile]);
