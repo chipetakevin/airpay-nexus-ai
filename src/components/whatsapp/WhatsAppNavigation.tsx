@@ -1,7 +1,8 @@
+
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { X } from 'lucide-react';
+import { ArrowRight, Zap } from 'lucide-react';
 import { useLocation } from 'react-router-dom';
 
 interface WhatsAppNavigationProps {
@@ -17,8 +18,8 @@ const WhatsAppNavigation: React.FC<WhatsAppNavigationProps> = ({
 }) => {
   const location = useLocation();
 
-  const handleExitToDeals = () => {
-    // Intelligent exit to AI-Powered Deals page
+  const handleExitToAIDeals = () => {
+    // Seamless exit to AI-Powered Deals using correct design
     window.location.href = '/ai-powered-deals';
   };
 
@@ -58,17 +59,16 @@ const WhatsAppNavigation: React.FC<WhatsAppNavigationProps> = ({
         </div>
       </div>
       
-      {/* Exit to AI Deals Button positioned below navigation tabs */}
+      {/* Seamless exit using correct design */}
       <div className="px-2 pb-2">
         <Button
-          onClick={handleExitToDeals}
-          variant="outline"
-          size="sm"
-          className="w-full h-8 rounded-full bg-white/90 backdrop-blur-sm border-gray-300 shadow-sm hover:bg-gray-50 hover:shadow-md transition-all duration-200"
-          title="Exit to AI Deals"
+          onClick={handleExitToAIDeals}
+          className="w-full bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-500 hover:to-orange-600 text-black font-bold rounded-2xl shadow-lg transition-all duration-300 transform hover:scale-105"
+          title="Instant Rewards"
         >
-          <X className="w-4 h-4 text-gray-600 mr-2" />
-          <span className="text-xs text-gray-600">Exit to AI Deals</span>
+          <Zap className="w-4 h-4 text-black mr-2" />
+          <span className="text-sm text-black font-bold">Instant Rewards</span>
+          <ArrowRight className="w-4 h-4 text-black ml-2" />
         </Button>
       </div>
     </div>

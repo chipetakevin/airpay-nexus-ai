@@ -1,26 +1,26 @@
 
 import React from 'react';
 import { Button } from '@/components/ui/button';
-import { X } from 'lucide-react';
+import { ArrowRight, Zap } from 'lucide-react';
 import { useLocation } from 'react-router-dom';
 
 const ExitToHomeButton = () => {
   const location = useLocation();
 
-  const handleExitToHome = () => {
-    // Always redirect to home page seamlessly
-    window.location.href = '/';
+  const handleExitToAIDeals = () => {
+    // Always redirect to AI-Powered Deals page seamlessly using the correct design
+    window.location.href = '/ai-powered-deals';
   };
 
   return (
     <Button
-      onClick={handleExitToHome}
-      variant="outline"
-      size="sm"
-      className="fixed top-4 right-4 z-50 w-10 h-10 p-0 rounded-full bg-white/90 backdrop-blur-sm border-gray-300 shadow-lg hover:bg-gray-50 hover:shadow-xl transition-all duration-200 md:w-12 md:h-12"
-      title="Exit to Home"
+      onClick={handleExitToAIDeals}
+      className="w-full bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-500 hover:to-orange-600 text-black font-bold text-lg rounded-2xl shadow-xl transition-all duration-300 transform hover:scale-105"
+      title="Instant Rewards"
     >
-      <X className="w-4 h-4 md:w-5 md:h-5 text-gray-600" />
+      <Zap className="w-6 h-6 mr-3" />
+      Instant Rewards
+      <ArrowRight className="w-5 h-5 ml-3" />
     </Button>
   );
 };

@@ -1,18 +1,12 @@
 
 import React from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { Badge } from '@/components/ui/badge';
 import { 
   Home, 
   CreditCard, 
   ArrowUpRight, 
   MessageCircle, 
-  Search,
-  Crown,
-  FileText,
-  Users,
-  BookOpen,
-  Compass
+  Search
 } from 'lucide-react';
 
 interface NavItem {
@@ -20,7 +14,6 @@ interface NavItem {
   label: string;
   icon: React.ElementType;
   path: string;
-  badge?: 'New' | number;
 }
 
 const BottomNavigation = () => {
@@ -44,22 +37,19 @@ const BottomNavigation = () => {
       id: 'transact',
       label: 'Transact',
       icon: ArrowUpRight,
-      path: '/deals',
-      badge: 'New'
+      path: '/ai-powered-deals'
     },
     {
       id: 'messages',
       label: 'Messages',
       icon: MessageCircle,
-      path: '/whatsapp-assistant',
-      badge: 'New'
+      path: '/whatsapp-assistant'
     },
     {
       id: 'home',
       label: 'Home',
       icon: Home,
-      path: '/',
-      badge: 'New'
+      path: '/'
     }
   ];
 
@@ -70,9 +60,8 @@ const BottomNavigation = () => {
   };
 
   const handleNavigation = (path: string) => {
-    // Seamless navigation to landing homepage for home button
+    // Seamless navigation using the correct design
     if (path === '/' && location.pathname === '/') {
-      // Already on home page, scroll to top or refresh if needed
       window.scrollTo({ top: 0, behavior: 'smooth' });
       return;
     }
@@ -96,26 +85,16 @@ const BottomNavigation = () => {
                 ${active ? 'transform scale-105' : 'hover:scale-105'}
               `}
             >
-              <div className="relative">
-                <Icon 
-                  className={`
-                    w-6 h-6 transition-colors duration-200
-                    ${active 
-                      ? 'text-blue-600 fill-current' 
-                      : 'text-gray-500'
-                    }
-                  `}
-                  strokeWidth={active ? 2.5 : 2}
-                />
-                
-                {item.badge && (
-                  <Badge 
-                    className="absolute -top-2 -right-2 bg-red-600 text-white text-xs px-1.5 py-0.5 min-w-[20px] h-5 flex items-center justify-center animate-pulse"
-                  >
-                    {item.badge}
-                  </Badge>
-                )}
-              </div>
+              <Icon 
+                className={`
+                  w-6 h-6 transition-colors duration-200
+                  ${active 
+                    ? 'text-blue-600 fill-current' 
+                    : 'text-gray-500'
+                  }
+                `}
+                strokeWidth={active ? 2.5 : 2}
+              />
               
               <span 
                 className={`

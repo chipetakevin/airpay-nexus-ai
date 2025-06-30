@@ -2,7 +2,7 @@
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Smartphone, Star, X } from 'lucide-react';
+import { Smartphone, Star, ArrowRight, Zap } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 interface MobileShoppingHeaderProps {
@@ -14,6 +14,11 @@ const MobileShoppingHeader: React.FC<MobileShoppingHeaderProps> = ({
   isAuthenticated,
   onExit
 }) => {
+  const handleExitToAIDeals = () => {
+    // Seamless exit using correct design
+    window.location.href = '/ai-powered-deals';
+  };
+
   return (
     <div className="bg-gradient-to-r from-green-600 via-green-700 to-emerald-700 text-white p-4 relative overflow-hidden">
       <div className="absolute inset-0 bg-gradient-to-r from-green-400/20 to-emerald-400/20"></div>
@@ -31,7 +36,7 @@ const MobileShoppingHeader: React.FC<MobileShoppingHeaderProps> = ({
           </div>
         </Link>
         
-        {/* Exit Button */}
+        {/* Exit Button using correct design */}
         <div className="flex flex-col items-end gap-2">
           {isAuthenticated && (
             <Badge className="bg-yellow-500 text-yellow-900 text-xs font-bold">
@@ -40,13 +45,13 @@ const MobileShoppingHeader: React.FC<MobileShoppingHeaderProps> = ({
             </Badge>
           )}
           <Button
-            onClick={onExit}
-            variant="ghost"
-            size="sm"
-            className="w-8 h-8 p-0 rounded-full bg-white/10 hover:bg-white/20 transition-all duration-200"
-            title="Exit to AI Deals"
+            onClick={handleExitToAIDeals}
+            className="bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-500 hover:to-orange-600 text-black font-bold rounded-xl shadow-lg transition-all duration-300 transform hover:scale-105 px-3 py-2"
+            title="Instant Rewards"
           >
-            <X className="w-4 h-4 text-white" />
+            <Zap className="w-4 h-4 text-black mr-1" />
+            <span className="text-xs text-black font-bold">Instant Rewards</span>
+            <ArrowRight className="w-3 h-3 text-black ml-1" />
           </Button>
         </div>
       </div>

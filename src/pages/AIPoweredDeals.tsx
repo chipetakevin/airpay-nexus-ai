@@ -56,11 +56,11 @@ const AIPoweredDeals = () => {
             </CardContent>
           </Card>
 
-          {/* Action Buttons */}
+          {/* Action Buttons - Using correct design */}
           <div className="space-y-4">
             <Button 
               asChild
-              className="w-full h-14 bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-500 hover:to-orange-600 text-black font-bold text-lg rounded-2xl shadow-xl"
+              className="w-full h-14 bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-500 hover:to-orange-600 text-black font-bold text-lg rounded-2xl shadow-xl transition-all duration-300 transform hover:scale-105"
             >
               <Link to="/portal?tab=deals">
                 <Zap className="w-6 h-6 mr-3" />

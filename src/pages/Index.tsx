@@ -20,7 +20,7 @@ import { useMobileAuth } from '@/hooks/useMobileAuth';
 import StaticWhatsAppAssistant from '@/components/whatsapp/StaticWhatsAppAssistant';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { X, MessageCircle } from 'lucide-react';
+import { ArrowRight, MessageCircle, Zap } from 'lucide-react';
 
 const Index = () => {
   const { isAuthenticated } = useMobileAuth();
@@ -32,8 +32,8 @@ const Index = () => {
 
   const handleQuickShopExit = () => {
     setIsQuickShopOpen(false);
-    // Seamlessly redirect to home page
-    window.location.href = '/';
+    // Seamlessly redirect to AI-Powered Deals using correct design
+    window.location.href = '/ai-powered-deals';
   };
 
   return (
@@ -70,13 +70,13 @@ const Index = () => {
                     </p>
                   </div>
                   <Button
-                    variant="outline"
-                    size="sm"
                     onClick={handleQuickShopExit}
-                    className="ml-4 hover:bg-red-50 hover:border-red-300"
-                    title="Exit to Home"
+                    className="ml-4 bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-500 hover:to-orange-600 text-black font-bold rounded-xl shadow-lg transition-all duration-300 transform hover:scale-105"
+                    title="Instant Rewards"
                   >
-                    <X className="w-4 h-4" />
+                    <Zap className="w-4 h-4 mr-1" />
+                    <span className="text-sm">Instant Rewards</span>
+                    <ArrowRight className="w-4 h-4 ml-1" />
                   </Button>
                 </div>
                 
