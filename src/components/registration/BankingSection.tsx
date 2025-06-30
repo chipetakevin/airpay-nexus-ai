@@ -1,5 +1,5 @@
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { FormData, FormErrors } from '@/types/customerRegistration';
@@ -21,6 +21,7 @@ const BankingSection: React.FC<BankingSectionProps> = ({
 }) => {
   const { getBranchCodeForBank, loadSavedBankingInfo } = useBranchCodeAutoAssign();
   const { toast } = useToast();
+  const [displayBranchCode, setDisplayBranchCode] = useState(formData.branchCode || '');
 
   // Auto-fill saved banking info on mount
   useEffect(() => {
@@ -29,6 +30,7 @@ const BankingSection: React.FC<BankingSectionProps> = ({
       onInputChange('bankName', savedInfo.bankName);
       const branchCode = getBranchCodeForBank(savedInfo.bankName) || savedInfo.branchCode;
       onInputChange('branchCode', branchCode);
+      setDisplayBranchCode(branchCode);
       if (savedInfo.accountNumber && !formData.accountNumber) {
         onInputChange('accountNumber', savedInfo.accountNumber);
       }
@@ -40,6 +42,13 @@ const BankingSection: React.FC<BankingSectionProps> = ({
     }
   }, [loadSavedBankingInfo, onInputChange, formData.bankName, formData.accountNumber, toast, getBranchCodeForBank]);
 
+  // Update display when formData.branchCode changes
+  useEffect(() => {
+    if (formData.branchCode) {
+      setDisplayBranchCode(formData.branchCode);
+    }
+  }, [formData.branchCode]);
+
   const handleAccountNumberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value.replace(/\D/g, ''); // Only allow digits
     onInputChange('accountNumber', value);
@@ -49,16 +58,17 @@ const BankingSection: React.FC<BankingSectionProps> = ({
     console.log(`🏦 Bank selected in BankingSection: ${bank}, Branch Code: ${branchCode}`);
     onInputChange('bankName', bank);
     
-    // Immediately get and set the correct branch code
-    const correctBranchCode = getBranchCodeForBank(bank) || branchCode;
-    onInputChange('branchCode', correctBranchCode);
+    // Immediately set the branch code in both form data and display
+    onInputChange('branchCode', branchCode);
+    setDisplayBranchCode(branchCode);
     
-    console.log(`✅ Branch code immediately set: ${correctBranchCode} for ${bank}`);
+    console.log(`✅ Branch code set: ${branchCode} for ${bank}`);
     
-    // Force a re-render to ensure the branch code is displayed
+    // Force another update to ensure it's displayed
     setTimeout(() => {
-      onInputChange('branchCode', correctBranchCode);
-    }, 100);
+      onInputChange('branchCode', branchCode);
+      setDisplayBranchCode(branchCode);
+    }, 50);
   };
 
   const accountValidation = formData.accountNumber ? validateSouthAfricanBankAccount(formData.accountNumber) : null;
@@ -69,7 +79,7 @@ const BankingSection: React.FC<BankingSectionProps> = ({
         onBankSelect={handleBankSelect}
         error={errors.bankName}
         selectedBankName={formData.bankName}
-        selectedBranchCode={formData.branchCode}
+        selectedBranchCode={displayBranchCode}
       />
 
       <div className="space-y-2">
@@ -99,17 +109,17 @@ const BankingSection: React.FC<BankingSectionProps> = ({
         <Label htmlFor="branchCode">Branch Code</Label>
         <Input
           id="branchCode"
-          value={formData.branchCode || ''}
+          value={displayBranchCode}
           placeholder="Branch code will auto-assign when you select a bank"
           readOnly
-          className="bg-gray-50 font-mono text-sm"
+          className="bg-gray-50 font-mono text-sm font-bold"
         />
         <div className="bg-green-50 p-2 rounded border border-green-200">
           <p className="text-xs text-green-600">
             ℹ️ Branch code automatically assigned from your bank selection
-            {formData.branchCode && (
-              <span className="block mt-1 font-semibold font-mono">
-                Current Branch Code: {formData.branchCode}
+            {displayBranchCode && (
+              <span className="block mt-1 font-semibold font-mono text-green-700">
+                ✅ Current Branch Code: {displayBranchCode}
               </span>
             )}
           </p>

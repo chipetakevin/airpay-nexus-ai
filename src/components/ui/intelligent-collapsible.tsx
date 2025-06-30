@@ -28,6 +28,7 @@ const IntelligentCollapsible: React.FC<IntelligentCollapsibleProps> = ({
   completedContent,
   className = ''
 }) => {
+  // Initialize with defaultCollapsed value immediately
   const [isCollapsed, setIsCollapsed] = useState(defaultCollapsed);
 
   // Auto-collapse when complete
@@ -74,7 +75,7 @@ const IntelligentCollapsible: React.FC<IntelligentCollapsibleProps> = ({
       </CardHeader>
       
       {!isCollapsed && (
-        <CardContent className="pt-0 pb-4">
+        <CardContent className="pt-0 pb-4 animate-fade-in">
           {isComplete && completedContent ? completedContent : children}
         </CardContent>
       )}

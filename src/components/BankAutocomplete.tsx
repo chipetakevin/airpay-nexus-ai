@@ -85,6 +85,7 @@ const BankAutocomplete: React.FC<BankAutocompleteProps> = ({
   const [showDropdown, setShowDropdown] = useState(false);
   const [selectedBank, setSelectedBank] = useState<Bank | null>(null);
   const [selectedBranch, setSelectedBranch] = useState<any>(null);
+  const [displayedBranchCode, setDisplayedBranchCode] = useState(selectedBranchCode);
   const { getBranchCodeForBank } = useBranchCodeAutoAssign();
 
   // Initialize with selected bank if provided
@@ -96,9 +97,15 @@ const BankAutocomplete: React.FC<BankAutocompleteProps> = ({
         setQuery(bank.name);
         const mainBranch = bank.branches[0];
         setSelectedBranch(mainBranch);
+        
+        // Immediately set and display the branch code
+        const branchCode = getBranchCodeForBank(bank.name) || bank.branchCode;
+        setDisplayedBranchCode(branchCode);
+        
+        console.log(`✅ Bank initialized: ${bank.name}, Branch Code: ${branchCode}`);
       }
     }
-  }, [selectedBankName, selectedBank]);
+  }, [selectedBankName, selectedBank, getBranchCodeForBank]);
 
   const filteredBanks = bankData.filter(bank => 
     bank.name.toLowerCase().includes(query.toLowerCase())
@@ -113,22 +120,25 @@ const BankAutocomplete: React.FC<BankAutocompleteProps> = ({
     const branchCode = getBranchCodeForBank(bank.name) || bank.branchCode;
     const mainBranch = bank.branches[0];
     setSelectedBranch(mainBranch);
+    setDisplayedBranchCode(branchCode);
     
     // Immediately call onBankSelect with the branch code
     onBankSelect(bank.name, '', branchCode);
     
     console.log(`✅ Bank selected: ${bank.name}, Branch Code: ${branchCode}`);
     
-    // Force another call to ensure the branch code is set
+    // Double-ensure the branch code is set with a slight delay
     setTimeout(() => {
+      setDisplayedBranchCode(branchCode);
       onBankSelect(bank.name, '', branchCode);
-    }, 50);
+    }, 100);
   };
 
   const handleBranchSelect = (branch: any) => {
     setSelectedBranch(branch);
     if (selectedBank) {
       const branchCodeToUse = getBranchCodeForBank(selectedBank.name) || branch.code;
+      setDisplayedBranchCode(branchCodeToUse);
       onBankSelect(selectedBank.name, '', branchCodeToUse);
       console.log(`✅ Branch selected: ${branch.name}, Branch Code: ${branchCodeToUse}`);
     }
@@ -140,6 +150,7 @@ const BankAutocomplete: React.FC<BankAutocompleteProps> = ({
     if (value.length === 0) {
       setSelectedBank(null);
       setSelectedBranch(null);
+      setDisplayedBranchCode('');
       onBankSelect('', '', '');
     }
   };
@@ -213,11 +224,11 @@ const BankAutocomplete: React.FC<BankAutocompleteProps> = ({
                 </p>
                 <p className="flex items-center gap-2">
                   <span className="text-green-600">✓</span>
-                  <strong>Branch Code:</strong> <span className="font-mono">{getBranchCodeForBank(selectedBank.name) || selectedBranch.code}</span>
+                  <strong>Branch Code:</strong> <span className="font-mono font-bold text-green-700">{displayedBranchCode}</span>
                 </p>
               </div>
               <p className="text-xs text-green-600 mt-2 border-t border-green-200 pt-2">
-                ℹ️ Branch code automatically assigned and will be saved
+                ✅ Branch code automatically assigned and ready for use
               </p>
             </div>
           )}
