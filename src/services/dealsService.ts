@@ -1,6 +1,6 @@
 
 import { supabase } from '@/integrations/supabase/client';
-import { Deal } from '@/types/deals';
+import { Deal, ProfitAllocation } from '@/types/deals';
 
 export const loadDealsFromSupabase = async (): Promise<Deal[]> => {
   try {
@@ -19,6 +19,26 @@ export const loadDealsFromSupabase = async (): Promise<Deal[]> => {
     console.error('Error loading deals from Supabase:', error);
     return [];
   }
+};
+
+export const calculateProfitSharing = (totalMarkup: number, purchaseType: string, isVendor: boolean): ProfitAllocation => {
+  const allocation: ProfitAllocation = {};
+  
+  if (isVendor) {
+    // Vendor gets majority of the profit
+    allocation.vendorProfit = totalMarkup * 0.7;
+    allocation.adminProfit = totalMarkup * 0.3;
+  } else if (purchaseType === 'self') {
+    // Self-purchase: customer gets cashback
+    allocation.customerCashback = totalMarkup * 0.6;
+    allocation.adminProfit = totalMarkup * 0.4;
+  } else {
+    // Third-party purchase: split between recipient and admin
+    allocation.unregisteredRecipientReward = totalMarkup * 0.5;
+    allocation.adminProfit = totalMarkup * 0.5;
+  }
+  
+  return allocation;
 };
 
 export const getSampleDeals = (): Deal[] => {
