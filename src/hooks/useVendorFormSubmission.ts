@@ -12,7 +12,7 @@ export const useVendorFormSubmission = () => {
   const processFormSubmission = useCallback(async (
     formData: VendorFormData,
     savePermanently: (data: VendorFormData) => Promise<void>
-  ) => {
+  ): Promise<void> => {
     // Normalize phone number for consistent storage
     const normalizedPhone = formData.phoneNumber.replace(/\D/g, '');
     let finalPhone = normalizedPhone;
@@ -70,8 +70,6 @@ export const useVendorFormSubmission = () => {
       title: "Vendor Registration Successful! 🎉",
       description: "You'll stay logged in permanently until manual logout.",
     });
-
-    return true;
   }, [createPermanentSession, toast]);
 
   return {

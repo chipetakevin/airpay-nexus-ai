@@ -1,6 +1,7 @@
 
 import { useCallback } from 'react';
 import { useToast } from '@/hooks/use-toast';
+import { VendorFormData } from '@/types/vendorRegistration';
 import { useVendorFormState } from './useVendorFormState';
 import { useVendorFormValidation } from './useVendorFormValidation';
 import { useVendorFormSubmission } from './useVendorFormSubmission';
@@ -26,7 +27,7 @@ export const useVendorRegistration = () => {
 
   const { processFormSubmission } = useVendorFormSubmission();
 
-  const handleInputChange = useCallback((field: string, value: any) => {
+  const handleInputChange = useCallback((field: keyof VendorFormData, value: any) => {
     baseHandleInputChange(field, value);
     clearFieldError(field);
     validateFieldWithDelay(field, value);
@@ -38,7 +39,8 @@ export const useVendorRegistration = () => {
     const validationErrors = validateCompleteForm();
 
     if (Object.keys(validationErrors).length === 0) {
-      return await processFormSubmission(formData, savePermanently);
+      await processFormSubmission(formData, savePermanently);
+      return true;
     } else {
       // Show validation errors
       const errorFields = Object.keys(validationErrors);
