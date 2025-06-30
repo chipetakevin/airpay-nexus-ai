@@ -84,9 +84,9 @@ const VendorPhoneSection: React.FC<VendorPhoneSectionProps> = ({
       {!isCollapsed && (
         <CardContent className="space-y-4">
           <EnhancedPhoneInput
-            formData={formData}
-            errors={errors}
-            onInputChange={onInputChange}
+            value={formData.phoneNumber || ''}
+            onChange={(value) => onInputChange('phoneNumber', value)}
+            error={errors.phoneNumber}
             userType="vendor"
           />
           
