@@ -51,8 +51,8 @@ const DealCard = ({ deal, onGrabDeal }: DealCardProps) => {
       originalPrice: deal.original_price,
       discountedPrice: deal.discounted_price,
       discount: deal.discount_percentage,
-      vendor: deal.vendor_name,
-      dealType: 'airtime',
+      vendor: deal.vendor_name, // Use vendor_name from Deal interface
+      dealType: deal.deal_type || 'airtime',
       bonus: deal.bonus,
       networkPrice: deal.network_price,
       markupAmount: deal.markup_amount
@@ -81,7 +81,7 @@ const DealCard = ({ deal, onGrabDeal }: DealCardProps) => {
         </div>
 
         <div className="mb-3">
-          <div className="text-xl font-bold">R{deal.amount} Airtime</div>
+          <div className="text-xl font-bold">R{deal.amount} {deal.deal_type || 'Airtime'}</div>
           <div className="flex items-center gap-2">
             <span className="text-lg font-bold text-green-600">
               R{deal.discounted_price.toFixed(2)}

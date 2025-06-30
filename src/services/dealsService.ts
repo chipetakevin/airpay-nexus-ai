@@ -17,14 +17,20 @@ export const loadDealsFromSupabase = async (): Promise<Deal[]> => {
       return [];
     }
 
-    console.log('Raw Supabase data:', data); // Debug log to see the actual structure
+    console.log('Raw Supabase data:', data);
 
     // Transform the data to match our Deal interface
     const transformedDeals: Deal[] = (data || []).map(deal => {
-      // Handle the joined vendor data properly
-      const vendorName = deal.vendors && Array.isArray(deal.vendors) 
-        ? deal.vendors[0]?.business_name 
-        : deal.vendors?.business_name || 'Unknown Vendor';
+      // Handle the joined vendor data properly - ensure we get the business_name
+      let vendorName = 'Unknown Vendor';
+      
+      if (deal.vendors) {
+        if (Array.isArray(deal.vendors) && deal.vendors.length > 0) {
+          vendorName = deal.vendors[0].business_name || 'Unknown Vendor';
+        } else if (typeof deal.vendors === 'object' && deal.vendors.business_name) {
+          vendorName = deal.vendors.business_name;
+        }
+      }
 
       return {
         id: deal.id,
@@ -40,8 +46,8 @@ export const loadDealsFromSupabase = async (): Promise<Deal[]> => {
         bonus: deal.bonus,
         expires_at: deal.expires_at,
         verified: deal.verified,
-        network_price: deal.original_price, // Using original_price as network_price fallback
-        markup_amount: deal.original_price - deal.discounted_price // Fixed calculation
+        network_price: deal.original_price,
+        markup_amount: deal.original_price - deal.discounted_price
       };
     });
 
