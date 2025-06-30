@@ -69,13 +69,13 @@ export const VendorRegistrationProvider: React.FC<{ children: React.ReactNode }>
   // Enhanced existing registration check with device recognition
   useEffect(() => {
     const checkExistingRegistration = () => {
-      const credentials = localStorage.getItem('userCredentials');
-      const vendorData = localStorage.getItem('onecardVendor');
-      const isAuthenticated = localStorage.getItem('userAuthenticated') === 'true';
-      const registrationCompleted = localStorage.getItem('registrationCompleted') === 'true';
-      
-      if (isAuthenticated && credentials && vendorData && registrationCompleted) {
-        try {
+      try {
+        const credentials = localStorage.getItem('userCredentials');
+        const vendorData = localStorage.getItem('onecardVendor');
+        const isAuthenticated = localStorage.getItem('userAuthenticated') === 'true';
+        const registrationCompleted = localStorage.getItem('registrationCompleted') === 'true';
+        
+        if (isAuthenticated && credentials && vendorData && registrationCompleted) {
           const parsedCredentials = JSON.parse(credentials);
           const parsedVendorData = JSON.parse(vendorData);
           
@@ -102,17 +102,17 @@ export const VendorRegistrationProvider: React.FC<{ children: React.ReactNode }>
               duration: 3000
             });
           }
-        } catch (error) {
-          console.error('Error checking existing vendor registration:', error);
-          // Reset states if there's an error parsing data
+        } else {
+          // No existing registration - show the form
           setExistingRegistration(null);
           setIsFormCollapsed(false);
+          console.log('📝 No existing vendor registration found - showing registration form');
         }
-      } else {
-        // No existing registration - show the form
+      } catch (error) {
+        console.error('Error checking existing vendor registration:', error);
+        // Reset states if there's an error parsing data
         setExistingRegistration(null);
         setIsFormCollapsed(false);
-        console.log('📝 No existing vendor registration found - showing registration form');
       }
     };
 

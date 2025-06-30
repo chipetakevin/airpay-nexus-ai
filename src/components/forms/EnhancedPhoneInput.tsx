@@ -34,6 +34,7 @@ const EnhancedPhoneInput = ({
   showSuggestions = true
 }: EnhancedPhoneInputProps) => {
   const [hasAutoFilled, setHasAutoFilled] = useState(false);
+  const [lastSavedValue, setLastSavedValue] = useState('');
   const inputRef = useRef<HTMLInputElement>(null);
   
   const { 
@@ -58,15 +59,16 @@ const EnhancedPhoneInput = ({
     }
   }, [autoFill, value, userType, autoFillPhone, onChange, onCountryCodeChange, hasAutoFilled]);
 
-  // Auto-save when user types a valid number
+  // Auto-save when user types a valid number (prevent duplicate saves)
   useEffect(() => {
-    if (value && value.length >= 9) {
+    if (value && value.length >= 9 && value !== lastSavedValue) {
       const validation = validateSouthAfricanMobile(value);
       if (validation.isValid) {
         savePhoneNumber(value, countryCode, userType);
+        setLastSavedValue(value);
       }
     }
-  }, [value, countryCode, userType, savePhoneNumber, validateSouthAfricanMobile]);
+  }, [value, countryCode, userType, savePhoneNumber, validateSouthAfricanMobile, lastSavedValue]);
 
   const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     let inputValue = e.target.value;
@@ -103,7 +105,10 @@ const EnhancedPhoneInput = ({
         displayNumber = cleanNumber.substring(1);
       }
       onChange(displayNumber);
-      savePhoneNumber(displayNumber, countryCode, userType);
+      if (displayNumber !== lastSavedValue) {
+        savePhoneNumber(displayNumber, countryCode, userType);
+        setLastSavedValue(displayNumber);
+      }
     }
   };
 

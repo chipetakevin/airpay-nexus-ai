@@ -17,7 +17,9 @@ const VendorRegistrationContent: React.FC = () => {
 const VendorRegistration: React.FC = () => {
   return (
     <VendorRegistrationProvider>
-      <VendorRegistrationContent />
+      <div className="min-h-screen bg-gray-50">
+        <VendorRegistrationContent />
+      </div>
     </VendorRegistrationProvider>
   );
 };
