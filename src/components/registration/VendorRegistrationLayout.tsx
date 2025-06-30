@@ -23,18 +23,11 @@ const VendorRegistrationLayout: React.FC = () => {
     handleBankSelect 
   } = useVendorFormState();
   
-  const { errors, isFormValid, validateField } = useVendorFormValidation(formData);
+  const { errors, isFormValid } = useVendorFormValidation(formData);
   const { isRegistering, handleFormSubmit } = useVendorRegistrationSubmit(async (e) => {
     e.preventDefault();
-    return isFormValid;
+    return isFormValid();
   });
-  
-  const { updateFormData } = useVendorRegistrationContext();
-
-  // Update context with form data changes
-  useEffect(() => {
-    updateFormData(formData);
-  }, [formData, updateFormData]);
 
   // Calculate progress
   const calculateProgress = () => {
@@ -138,7 +131,7 @@ const VendorRegistrationLayout: React.FC = () => {
         <VendorRegistrationButton
           onClick={handleFormSubmit}
           isRegistering={isRegistering}
-          isFormValid={isFormValid}
+          isFormValid={isFormValid()}
         />
       </div>
     </div>

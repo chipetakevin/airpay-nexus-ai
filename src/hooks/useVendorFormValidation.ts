@@ -91,11 +91,28 @@ export const useVendorFormValidation = (formData: VendorFormData) => {
     return newErrors;
   }, [formData, validateSouthAfricanMobile]);
 
+  const isFormValid = useCallback(() => {
+    const hasRequiredFields = formData.firstName && 
+                             formData.lastName && 
+                             formData.email && 
+                             formData.phoneNumber && 
+                             formData.companyName &&
+                             formData.password &&
+                             formData.confirmPassword &&
+                             formData.agreeTerms;
+    
+    const hasNoErrors = Object.keys(errors).length === 0;
+    
+    return hasRequiredFields && hasNoErrors;
+  }, [formData, errors]);
+
   return {
     errors,
     setErrors,
     clearFieldError,
     validateFieldWithDelay,
-    validateCompleteForm
+    validateCompleteForm,
+    validateField,
+    isFormValid
   };
 };

@@ -35,6 +35,7 @@ interface VendorRegistrationContextType {
   handleAlertsToggle: () => void;
   handleNewRegistration: () => void;
   handleFormToggle: () => void;
+  updateFormData: (data: any) => void;
 }
 
 const VendorRegistrationContext = createContext<VendorRegistrationContextType | undefined>(undefined);
@@ -197,6 +198,12 @@ export const VendorRegistrationProvider: React.FC<{ children: React.ReactNode }>
     return hasRequiredFields && hasNoErrors;
   };
 
+  const updateFormData = (data: any) => {
+    // This function can be used to update form data from external components
+    // Currently, form data is managed by the useVendorRegistration hook
+    console.log('Form data update requested:', data);
+  };
+
   const contextValue: VendorRegistrationContextType = {
     location,
     setLocation,
@@ -218,7 +225,8 @@ export const VendorRegistrationProvider: React.FC<{ children: React.ReactNode }>
     isFormValid,
     handleAlertsToggle,
     handleNewRegistration,
-    handleFormToggle
+    handleFormToggle,
+    updateFormData
   };
 
   return (
