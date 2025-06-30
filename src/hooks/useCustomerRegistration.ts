@@ -1,7 +1,10 @@
+
 import { useState } from 'react';
 import { useToast } from '@/hooks/use-toast';
-import { usePersistentAuth } from './usePersistentAuth';
+import { usePermanentAuth } from './usePermanentAuth';
 import { usePhoneValidation } from '@/hooks/usePhoneValidation';
+import { usePermanentFormStorage } from './usePermanentFormStorage';
+import { validateSouthAfricanBankAccount } from '@/utils/bankingValidation';
 import { FormData as CustomerFormData } from '@/types/customerRegistration';
 
 export const useCustomerRegistration = () => {
@@ -22,14 +25,30 @@ export const useCustomerRegistration = () => {
 
   const [errors, setErrors] = useState<Partial<Record<keyof CustomerFormData, string>>>({});
   const { toast } = useToast();
-  const { createPersistentSession } = usePersistentAuth();
+  const { createPermanentSession } = usePermanentAuth();
   const { validateSouthAfricanMobile } = usePhoneValidation();
+  const { savePermanently, loadPermanentData, autoSave } = usePermanentFormStorage('customer');
+
+  // Load saved data on mount
+  useState(() => {
+    const savedData = loadPermanentData();
+    if (savedData) {
+      setFormData(prev => ({ ...prev, ...savedData }));
+      toast({
+        title: "Form Auto-filled! 📝",
+        description: "Your previously saved information has been restored.",
+        duration: 2000
+      });
+    }
+  });
 
   const handleInputChange = (field: keyof CustomerFormData, value: any) => {
-    setFormData(prev => ({
-      ...prev,
+    const updatedFormData = {
+      ...formData,
       [field]: value
-    }));
+    };
+    
+    setFormData(updatedFormData);
     
     // Clear error when user starts typing
     if (errors[field]) {
@@ -38,6 +57,9 @@ export const useCustomerRegistration = () => {
         [field]: undefined
       }));
     }
+
+    // Auto-save permanently with debouncing
+    autoSave(updatedFormData, 1500);
   };
 
   const validateForm = (): boolean => {
@@ -54,6 +76,14 @@ export const useCustomerRegistration = () => {
       const phoneValidation = validateSouthAfricanMobile(formData.phoneNumber);
       if (!phoneValidation.isValid) {
         newErrors.phoneNumber = phoneValidation.error || 'Invalid South African mobile number';
+      }
+    }
+
+    // Enhanced banking validation
+    if (formData.accountNumber) {
+      const bankValidation = validateSouthAfricanBankAccount(formData.accountNumber);
+      if (!bankValidation.isValid) {
+        newErrors.accountNumber = bankValidation.error || 'Invalid South African bank account number';
       }
     }
     
@@ -96,9 +126,9 @@ export const useCustomerRegistration = () => {
         userType: 'customer',
         firstName: formData.firstName,
         lastName: formData.lastName,
-        phone: finalPhone, // Store normalized phone number
-        registeredPhone: `+27${finalPhone}`, // Store full international format
-        phoneNumber: finalPhone // Additional fallback
+        phone: finalPhone,
+        registeredPhone: `+27${finalPhone}`,
+        phoneNumber: finalPhone
       };
 
       // Create user data with consistent phone storage
@@ -107,9 +137,9 @@ export const useCustomerRegistration = () => {
         lastName: formData.lastName,
         email: formData.email,
         cardNumber,
-        phone: finalPhone, // Store normalized phone number
-        registeredPhone: `+27${finalPhone}`, // Store full international format
-        phoneNumber: finalPhone, // Additional fallback
+        phone: finalPhone,
+        registeredPhone: `+27${finalPhone}`,
+        phoneNumber: finalPhone,
         bankName: formData.bankName,
         branchCode: formData.branchCode,
         accountNumber: formData.accountNumber,
@@ -124,14 +154,17 @@ export const useCustomerRegistration = () => {
       localStorage.setItem('onecardUser', JSON.stringify(userData));
       localStorage.setItem('userAuthenticated', 'true');
 
-      // Create persistent 24-hour session
-      createPersistentSession(userCredentials, userData);
+      // Create permanent session that never expires
+      createPermanentSession(userCredentials, userData);
 
-      console.log('✅ Customer registration completed with phone:', finalPhone);
+      // Save form data permanently
+      await savePermanently(formData);
+
+      console.log('✅ Customer registration completed with permanent session');
 
       toast({
         title: "Registration Successful! 🎉",
-        description: "Your OneCard has been created! You'll stay logged in for 24 hours.",
+        description: "Your OneCard has been created! You'll stay logged in permanently until manual logout.",
         duration: 4000,
       });
 

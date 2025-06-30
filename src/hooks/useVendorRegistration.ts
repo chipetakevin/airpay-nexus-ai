@@ -3,9 +3,11 @@ import { useState, useEffect } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { useNavigate } from 'react-router-dom';
 import { usePhoneValidation } from '@/hooks/usePhoneValidation';
+import { usePermanentAuth } from './usePermanentAuth';
+import { usePermanentFormStorage } from './usePermanentFormStorage';
+import { validateSouthAfricanBankAccount } from '@/utils/bankingValidation';
 import { VendorFormData, VendorFormErrors } from '@/types/vendorRegistration';
 import { validateVendorForm, validateField } from '@/utils/vendorValidation';
-import { useVendorAutoSave } from '@/hooks/useVendorAutoSave';
 import { handleVendorRegistrationSubmit } from '@/utils/vendorRegistrationSubmit';
 
 export const useVendorRegistration = () => {
@@ -13,6 +15,8 @@ export const useVendorRegistration = () => {
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const { validateSouthAfricanMobile } = usePhoneValidation();
+  const { createPermanentSession } = usePermanentAuth();
+  const { savePermanently, loadPermanentData, autoSave } = usePermanentFormStorage('vendor');
   
   const [formData, setFormData] = useState<VendorFormData>({
     firstName: '',
@@ -36,13 +40,16 @@ export const useVendorRegistration = () => {
 
   const [errors, setErrors] = useState<VendorFormErrors>({});
 
-  const { loadSavedData } = useVendorAutoSave(formData);
-
   // Load saved data on component mount
   useEffect(() => {
-    const savedData = loadSavedData();
+    const savedData = loadPermanentData();
     if (savedData) {
       setFormData(prev => ({ ...prev, ...savedData }));
+      toast({
+        title: "Vendor Form Auto-filled! ✨",
+        description: "Your previously saved information has been restored.",
+        duration: 2000
+      });
     }
   }, []);
 
@@ -53,15 +60,16 @@ export const useVendorRegistration = () => {
   const handleInputChange = (field: keyof VendorFormData, value: any) => {
     // Special handling for phone number to ensure proper formatting
     if (field === 'phoneNumber') {
-      // Allow only digits, plus, and spaces for better UX
       value = value.replace(/[^\d+\s]/g, '');
     }
     
-    setFormData(prev => ({ 
-      ...prev, 
+    const updatedFormData = { 
+      ...formData, 
       [field]: value,
       rememberPassword: true
-    }));
+    };
+    
+    setFormData(updatedFormData);
     
     // Clear field-specific errors
     if (errors[field]) {
@@ -76,26 +84,42 @@ export const useVendorRegistration = () => {
       }
     }
 
+    // Real-time validation for banking
+    if (field === 'accountNumber' && value) {
+      const bankValidation = validateSouthAfricanBankAccount(value);
+      if (!bankValidation.isValid && bankValidation.error) {
+        setErrors((prev: VendorFormErrors) => ({ ...prev, accountNumber: bankValidation.error }));
+      }
+    }
+
     // Real-time validation for other fields
     const fieldError = validateField(field, value, formData);
     if (fieldError) {
       setErrors((prev: VendorFormErrors) => ({ ...prev, [field]: fieldError }));
     }
+
+    // Auto-save permanently with debouncing
+    autoSave(updatedFormData, 2000);
   };
 
   const handleBankSelect = (bankName: string, routing: string, branchCode: string) => {
-    setFormData(prev => ({ 
-      ...prev, 
+    const updatedFormData = { 
+      ...formData, 
       bankName, 
       routingNumber: routing,
       branchCode 
-    }));
+    };
+    
+    setFormData(updatedFormData);
+    
+    // Immediately save bank selection
+    savePermanently(updatedFormData);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    // Enhanced validation including phone number
+    // Enhanced validation including phone number and banking
     const newErrors = validateVendorForm(formData);
     
     // Additional phone validation
@@ -103,6 +127,14 @@ export const useVendorRegistration = () => {
       const phoneValidation = validateSouthAfricanMobile(formData.phoneNumber);
       if (!phoneValidation.isValid) {
         newErrors.phoneNumber = phoneValidation.error || 'Invalid South African mobile number';
+      }
+    }
+
+    // Additional banking validation
+    if (formData.accountNumber) {
+      const bankValidation = validateSouthAfricanBankAccount(formData.accountNumber);
+      if (!bankValidation.isValid) {
+        newErrors.accountNumber = bankValidation.error || 'Invalid South African bank account number';
       }
     }
     
@@ -128,18 +160,45 @@ export const useVendorRegistration = () => {
       // Complete the registration process with consistent phone storage
       const { vendorId, successMessage } = handleVendorRegistrationSubmit(updatedFormData);
       
+      // Create permanent session
+      const userCredentials = {
+        email: formData.email,
+        password: formData.password,
+        userType: 'vendor',
+        phone: finalPhone
+      };
+
+      const userData = {
+        firstName: formData.firstName,
+        lastName: formData.lastName,
+        email: formData.email,
+        vendorId,
+        companyName: formData.companyName,
+        phone: finalPhone,
+        registeredPhone: `+27${finalPhone}`,
+        bankName: formData.bankName,
+        accountNumber: formData.accountNumber,
+        balance: 0,
+        registrationDate: new Date().toISOString()
+      };
+
       // Store registration completion flag
       localStorage.setItem('registrationCompleted', 'true');
       localStorage.setItem('userAuthenticated', 'true');
       
-      console.log('✅ Vendor registration completed with phone:', finalPhone);
+      // Create permanent session
+      createPermanentSession(userCredentials, userData);
+      
+      // Save form data permanently
+      await savePermanently(updatedFormData);
+      
+      console.log('✅ Vendor registration completed with permanent session');
       
       toast({
         title: "Vendor Registration Successful! 🎉",
-        description: successMessage,
+        description: "You'll stay logged in permanently until manual logout.",
       });
 
-      // Return success - redirection will be handled by the component
       return Promise.resolve(true);
     } else {
       // Show validation errors

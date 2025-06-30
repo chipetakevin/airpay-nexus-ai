@@ -3,7 +3,7 @@ import React from 'react';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { FormData, FormErrors } from '@/types/customerRegistration';
-import { validateAccountNumber } from '@/utils/formValidation';
+import { validateSouthAfricanBankAccount } from '@/utils/bankingValidation';
 import BankAutocomplete from '../BankAutocomplete';
 
 interface BankingSectionProps {
@@ -17,6 +17,13 @@ const BankingSection: React.FC<BankingSectionProps> = ({
   errors,
   onInputChange
 }) => {
+  const handleAccountNumberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value.replace(/\D/g, ''); // Only allow digits
+    onInputChange('accountNumber', value);
+  };
+
+  const accountValidation = formData.accountNumber ? validateSouthAfricanBankAccount(formData.accountNumber) : null;
+
   return (
     <>
       <BankAutocomplete 
@@ -28,20 +35,26 @@ const BankingSection: React.FC<BankingSectionProps> = ({
       />
 
       <div className="space-y-2">
-        <Label htmlFor="accountNumber">Account Number *</Label>
+        <Label htmlFor="accountNumber">South African Bank Account Number *</Label>
         <Input
           id="accountNumber"
           name="accountNumber"
           autoComplete="off"
           value={formData.accountNumber}
-          onChange={(e) => onInputChange('accountNumber', e.target.value)}
-          placeholder="Enter account number"
-          className={errors.accountNumber ? 'border-red-500' : ''}
+          onChange={handleAccountNumberChange}
+          placeholder="Enter 9-11 digit account number"
+          className={errors.accountNumber ? 'border-red-500' : accountValidation?.isValid ? 'border-green-500' : ''}
+          maxLength={11}
         />
         {errors.accountNumber && <p className="text-red-500 text-sm">{errors.accountNumber}</p>}
-        {formData.accountNumber && validateAccountNumber(formData.accountNumber) && (
-          <p className="text-green-600 text-sm">✓ Valid account number format</p>
+        {accountValidation?.isValid && (
+          <p className="text-green-600 text-sm">✓ Valid South African bank account number</p>
         )}
+        <div className="bg-blue-50 p-2 rounded border border-blue-200">
+          <p className="text-xs text-blue-600">
+            <strong>🏦 SA Bank Account:</strong> Enter your 9-11 digit account number (no spaces or dashes)
+          </p>
+        </div>
       </div>
 
       <div className="space-y-2">
@@ -54,7 +67,7 @@ const BankingSection: React.FC<BankingSectionProps> = ({
           className="bg-gray-50"
         />
         <p className="text-xs text-gray-600">
-          ℹ️ South African banks use branch codes for transactions
+          ℹ️ South African banks use 6-digit branch codes for transactions
         </p>
       </div>
     </>

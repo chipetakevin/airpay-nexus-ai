@@ -1,21 +1,19 @@
 
 import React, { createContext, useContext, ReactNode } from 'react';
-import { useEnhancedAuth } from '@/hooks/useEnhancedAuth';
+import { usePermanentAuth } from '@/hooks/usePermanentAuth';
 
 interface AuthContextType {
   currentUser: any;
   isAuthenticated: boolean;
-  sessionExpiry: Date | null;
-  createPersistentSession: (userData: any, userCredentials: any) => void;
-  logout: () => void;
-  getStoredProfile: (email: string, userType: string) => any;
-  checkPersistentSession: () => boolean;
+  createPermanentSession: (userData: any, userCredentials: any) => void;
+  manualLogout: () => void;
+  checkPermanentSession: () => boolean;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const PersistentAuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const authHook = useEnhancedAuth();
+  const authHook = usePermanentAuth();
   
   return (
     <AuthContext.Provider value={authHook}>
