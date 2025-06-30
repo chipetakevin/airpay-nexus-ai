@@ -4,10 +4,8 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
-import { Checkbox } from '@/components/ui/checkbox';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Eye, EyeOff, User, Building, Phone, Mail, MapPin, Shield } from 'lucide-react';
-import EnhancedVendorBankingSection from './EnhancedVendorBankingSection';
 import VendorPhoneSection from '@/components/forms/VendorPhoneSection';
 import UniversalCardDetailsForm from '@/components/banking/UniversalCardDetailsForm';
 import { useToast } from '@/hooks/use-toast';
@@ -39,7 +37,7 @@ const VendorRegistrationForm: React.FC<VendorRegistrationFormProps> = ({
   const [showCardSection, setShowCardSection] = useState(false);
 
   return (
-    <form onSubmit={onSubmit} className="space-y-6">
+    <div className="space-y-6">
       {/* Personal Information */}
       <Card className="border-purple-200 bg-purple-50/30">
         <CardHeader className="pb-3">
@@ -165,14 +163,6 @@ const VendorRegistrationForm: React.FC<VendorRegistrationFormProps> = ({
         </CardContent>
       </Card>
 
-      {/* Enhanced Banking Section */}
-      <EnhancedVendorBankingSection
-        formData={formData}
-        errors={errors}
-        onBankSelect={handleBankSelect}
-        onInputChange={handleInputChange}
-      />
-
       {/* Optional Payment Card Section */}
       <div>
         <div className="flex items-center justify-between mb-4">
@@ -251,52 +241,7 @@ const VendorRegistrationForm: React.FC<VendorRegistrationFormProps> = ({
           </div>
         </CardContent>
       </Card>
-
-      {/* Terms and Marketing with Improved Text Display */}
-      <Card className="border-gray-200 bg-white">
-        <CardContent className="p-6 space-y-6">
-          <div className="flex items-start space-x-3">
-            <Checkbox
-              id="agreeTerms"
-              checked={formData.agreeTerms || false}
-              onCheckedChange={(checked) => handleInputChange('agreeTerms', checked)}
-              className="mt-1 flex-shrink-0"
-            />
-            <div className="space-y-2 flex-1">
-              <Label 
-                htmlFor="agreeTerms" 
-                className="text-base font-medium text-gray-900 cursor-pointer leading-relaxed"
-              >
-                I agree to the Vendor Terms of Service and Privacy Policy *
-              </Label>
-              <p className="text-sm text-gray-600 leading-relaxed">
-                By checking this box, you agree to our vendor terms and allow us to securely store your business information.
-              </p>
-            </div>
-          </div>
-          {errors.agreeTerms && (
-            <div className="ml-7 mt-2">
-              <p className="text-red-500 text-sm font-medium">{errors.agreeTerms}</p>
-            </div>
-          )}
-
-          <div className="flex items-start space-x-3">
-            <Checkbox
-              id="marketingConsent"
-              checked={formData.marketingConsent || false}
-              onCheckedChange={(checked) => handleInputChange('marketingConsent', checked)}
-              className="mt-1 flex-shrink-0"
-            />
-            <Label 
-              htmlFor="marketingConsent" 
-              className="text-base font-medium text-gray-900 cursor-pointer leading-relaxed flex-1"
-            >
-              I would like to receive business updates and commission reports
-            </Label>
-          </div>
-        </CardContent>
-      </Card>
-    </form>
+    </div>
   );
 };
 
