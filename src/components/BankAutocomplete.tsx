@@ -118,12 +118,17 @@ const BankAutocomplete: React.FC<BankAutocompleteProps> = ({
     onBankSelect(bank.name, '', branchCode);
     
     console.log(`✅ Bank selected: ${bank.name}, Branch Code: ${branchCode}`);
+    
+    // Force another call to ensure the branch code is set
+    setTimeout(() => {
+      onBankSelect(bank.name, '', branchCode);
+    }, 50);
   };
 
   const handleBranchSelect = (branch: any) => {
     setSelectedBranch(branch);
     if (selectedBank) {
-      const branchCodeToUse = branch.code || selectedBank.branchCode;
+      const branchCodeToUse = getBranchCodeForBank(selectedBank.name) || branch.code;
       onBankSelect(selectedBank.name, '', branchCodeToUse);
       console.log(`✅ Branch selected: ${branch.name}, Branch Code: ${branchCodeToUse}`);
     }
@@ -162,7 +167,7 @@ const BankAutocomplete: React.FC<BankAutocompleteProps> = ({
                   onClick={() => handleBankSelect(bank)}
                 >
                   <div className="font-medium">{bank.name}</div>
-                  <div className="text-sm text-gray-500">Branch Code: {bank.branchCode}</div>
+                  <div className="text-sm text-gray-500">Branch Code: {getBranchCodeForBank(bank.name) || bank.branchCode}</div>
                 </div>
               ))}
             </div>
@@ -208,7 +213,7 @@ const BankAutocomplete: React.FC<BankAutocompleteProps> = ({
                 </p>
                 <p className="flex items-center gap-2">
                   <span className="text-green-600">✓</span>
-                  <strong>Branch Code:</strong> {selectedBranch.code || selectedBank.branchCode}
+                  <strong>Branch Code:</strong> <span className="font-mono">{getBranchCodeForBank(selectedBank.name) || selectedBranch.code}</span>
                 </p>
               </div>
               <p className="text-xs text-green-600 mt-2 border-t border-green-200 pt-2">

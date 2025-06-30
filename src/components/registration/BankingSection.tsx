@@ -27,7 +27,8 @@ const BankingSection: React.FC<BankingSectionProps> = ({
     const savedInfo = loadSavedBankingInfo();
     if (savedInfo && savedInfo.bankName && !formData.bankName) {
       onInputChange('bankName', savedInfo.bankName);
-      onInputChange('branchCode', savedInfo.branchCode);
+      const branchCode = getBranchCodeForBank(savedInfo.bankName) || savedInfo.branchCode;
+      onInputChange('branchCode', branchCode);
       if (savedInfo.accountNumber && !formData.accountNumber) {
         onInputChange('accountNumber', savedInfo.accountNumber);
       }
@@ -37,7 +38,7 @@ const BankingSection: React.FC<BankingSectionProps> = ({
         description: "Your saved banking information has been restored.",
       });
     }
-  }, [loadSavedBankingInfo, onInputChange, formData.bankName, formData.accountNumber, toast]);
+  }, [loadSavedBankingInfo, onInputChange, formData.bankName, formData.accountNumber, toast, getBranchCodeForBank]);
 
   const handleAccountNumberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value.replace(/\D/g, ''); // Only allow digits
@@ -48,11 +49,16 @@ const BankingSection: React.FC<BankingSectionProps> = ({
     console.log(`🏦 Bank selected in BankingSection: ${bank}, Branch Code: ${branchCode}`);
     onInputChange('bankName', bank);
     
-    // Get the correct branch code for the selected bank
+    // Immediately get and set the correct branch code
     const correctBranchCode = getBranchCodeForBank(bank) || branchCode;
     onInputChange('branchCode', correctBranchCode);
     
     console.log(`✅ Branch code immediately set: ${correctBranchCode} for ${bank}`);
+    
+    // Force a re-render to ensure the branch code is displayed
+    setTimeout(() => {
+      onInputChange('branchCode', correctBranchCode);
+    }, 100);
   };
 
   const accountValidation = formData.accountNumber ? validateSouthAfricanBankAccount(formData.accountNumber) : null;
@@ -96,13 +102,13 @@ const BankingSection: React.FC<BankingSectionProps> = ({
           value={formData.branchCode || ''}
           placeholder="Branch code will auto-assign when you select a bank"
           readOnly
-          className="bg-gray-50"
+          className="bg-gray-50 font-mono text-sm"
         />
         <div className="bg-green-50 p-2 rounded border border-green-200">
           <p className="text-xs text-green-600">
             ℹ️ Branch code automatically assigned from your bank selection
             {formData.branchCode && (
-              <span className="block mt-1 font-semibold">
+              <span className="block mt-1 font-semibold font-mono">
                 Current Branch Code: {formData.branchCode}
               </span>
             )}

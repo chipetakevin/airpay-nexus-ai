@@ -16,6 +16,7 @@ import MobileCustomerLanding from '@/components/MobileCustomerLanding';
 import WhatsAppShoppingSection from '@/components/WhatsAppShoppingSection';
 import SmoothScrollNav from '@/components/SmoothScrollNav';
 import MobileLayout from '@/components/navigation/MobileLayout';
+import IntelligentCollapsibleSections from '@/components/home/IntelligentCollapsibleSections';
 import { useMobileAuth } from '@/hooks/useMobileAuth';
 import StaticWhatsAppAssistant from '@/components/whatsapp/StaticWhatsAppAssistant';
 import { Card, CardContent } from '@/components/ui/card';
@@ -93,6 +94,13 @@ const Index = () => {
               </div>
             </section>
           )}
+          
+          {/* Intelligent Collapsible Sections */}
+          <section className="py-8 bg-gray-50">
+            <div className="container mx-auto px-4">
+              <IntelligentCollapsibleSections />
+            </div>
+          </section>
           
           {/* RICA Services Section - This shows the registration gate */}
           <RicaServicesSection />
