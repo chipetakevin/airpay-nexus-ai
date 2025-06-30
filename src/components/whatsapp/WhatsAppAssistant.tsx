@@ -25,8 +25,8 @@ const WhatsAppAssistant = () => {
     isAuthenticated
   } = useWhatsAppShopping();
 
-  const handleExitToDeals = () => {
-    window.location.href = '/ai-powered-deals';
+  const handleExitToHome = () => {
+    window.location.href = '/';
   };
 
   const handleNavigateToRegistration = () => {
@@ -98,7 +98,7 @@ const WhatsAppAssistant = () => {
     <div className="flex flex-col h-full bg-white max-w-md mx-auto">
       <WhatsAppShoppingHeader 
         isAuthenticated={isAuthenticated}
-        onExit={handleExitToDeals}
+        onExit={handleExitToHome}
       />
       
       <WhatsAppTabNavigation 

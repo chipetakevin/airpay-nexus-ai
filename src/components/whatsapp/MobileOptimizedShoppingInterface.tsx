@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { useMobileAuth } from '@/hooks/useMobileAuth';
 import { useMobileProductData } from '@/hooks/useMobileProductData';
@@ -34,8 +35,8 @@ const MobileOptimizedShoppingInterface = () => {
   const [showPayment, setShowPayment] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
 
-  const handleExitToDeals = () => {
-    window.location.href = '/ai-powered-deals';
+  const handleExitToHome = () => {
+    window.location.href = '/';
   };
 
   useEffect(() => {
@@ -88,7 +89,7 @@ const MobileOptimizedShoppingInterface = () => {
         <>
           <MobileShoppingHeader 
             isAuthenticated={isAuthenticated}
-            onExit={handleExitToDeals}
+            onExit={handleExitToHome}
           />
 
           <MobileTabNavigation 

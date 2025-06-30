@@ -14,9 +14,9 @@ const MobileShoppingHeader: React.FC<MobileShoppingHeaderProps> = ({
   isAuthenticated,
   onExit
 }) => {
-  const handleExitToAIDeals = () => {
-    // Seamless exit using correct design
-    window.location.href = '/ai-powered-deals';
+  const handleExitToHome = () => {
+    // Redirect to home page instead of AI-Powered Deals
+    window.location.href = '/';
   };
 
   return (
@@ -36,7 +36,7 @@ const MobileShoppingHeader: React.FC<MobileShoppingHeaderProps> = ({
           </div>
         </Link>
         
-        {/* Exit Button using correct design */}
+        {/* Exit Button redirecting to home page */}
         <div className="flex flex-col items-end gap-2">
           {isAuthenticated && (
             <Badge className="bg-yellow-500 text-yellow-900 text-xs font-bold">
@@ -45,7 +45,7 @@ const MobileShoppingHeader: React.FC<MobileShoppingHeaderProps> = ({
             </Badge>
           )}
           <Button
-            onClick={handleExitToAIDeals}
+            onClick={handleExitToHome}
             className="bg-gradient-to-r from-green-400 to-blue-500 hover:from-green-500 hover:to-blue-600 text-white font-bold rounded-xl shadow-lg transition-all duration-300 transform hover:scale-105 px-3 py-2"
             title="Get Started"
           >

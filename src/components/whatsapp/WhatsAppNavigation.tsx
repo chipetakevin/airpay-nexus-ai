@@ -18,9 +18,9 @@ const WhatsAppNavigation: React.FC<WhatsAppNavigationProps> = ({
 }) => {
   const location = useLocation();
 
-  const handleExitToAIDeals = () => {
-    // Seamless exit to AI-Powered Deals using correct design
-    window.location.href = '/ai-powered-deals';
+  const handleExitToHome = () => {
+    // Redirect to home page instead of AI-Powered Deals
+    window.location.href = '/';
   };
 
   return (
@@ -59,10 +59,10 @@ const WhatsAppNavigation: React.FC<WhatsAppNavigationProps> = ({
         </div>
       </div>
       
-      {/* Seamless exit using correct design */}
+      {/* Exit button redirecting to home page */}
       <div className="px-2 pb-2">
         <Button
-          onClick={handleExitToAIDeals}
+          onClick={handleExitToHome}
           className="w-full bg-gradient-to-r from-green-400 to-blue-500 hover:from-green-500 hover:to-blue-600 text-white font-bold rounded-2xl shadow-lg transition-all duration-300 transform hover:scale-105"
           title="Get Started"
         >
