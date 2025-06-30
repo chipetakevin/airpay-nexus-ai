@@ -17,7 +17,7 @@ const AdminPhoneSection = ({ formData, errors, onInputChange }: AdminPhoneSectio
         <CardTitle className="text-base sm:text-lg flex items-center gap-2 text-purple-800">
           <Shield className="w-4 h-4 sm:w-5 sm:h-5" />
           <Phone className="w-4 h-4 sm:w-5 sm:h-5" />
-          Administrator Contact Number (Required)
+          Administrator Contact Number *
         </CardTitle>
       </CardHeader>
       <CardContent>
@@ -30,8 +30,8 @@ const AdminPhoneSection = ({ formData, errors, onInputChange }: AdminPhoneSectio
           countryCode={formData.countryCode || '+27'}
           autoFill={true}
           showSuggestions={true}
-          label="Admin Phone Number *"
-          placeholder="Enter administrator contact number"
+          label="Administrator Contact Number *"
+          placeholder="832466539"
         />
       </CardContent>
     </Card>

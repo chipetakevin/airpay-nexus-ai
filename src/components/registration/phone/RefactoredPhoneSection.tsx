@@ -17,7 +17,7 @@ const RefactoredPhoneSection = ({ formData, errors, onInputChange }: RefactoredP
       <CardHeader className="pb-3">
         <CardTitle className="text-base sm:text-lg flex items-center gap-2 text-blue-800">
           <Phone className="w-4 h-4 sm:w-5 sm:h-5" />
-          South African Mobile Number (Required)
+          Mobile Number *
         </CardTitle>
       </CardHeader>
       <CardContent>
@@ -30,6 +30,8 @@ const RefactoredPhoneSection = ({ formData, errors, onInputChange }: RefactoredP
           countryCode={formData.countryCode}
           autoFill={true}
           showSuggestions={true}
+          label="Mobile Number *"
+          placeholder="832466539"
         />
       </CardContent>
     </Card>

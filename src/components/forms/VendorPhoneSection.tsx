@@ -17,7 +17,7 @@ const VendorPhoneSection = ({ formData, errors, onInputChange }: VendorPhoneSect
       <CardHeader className="pb-3">
         <CardTitle className="text-base sm:text-lg flex items-center gap-2 text-green-800">
           <Phone className="w-4 h-4 sm:w-5 sm:h-5" />
-          Business Contact Number (Required)
+          Business Contact Number *
         </CardTitle>
       </CardHeader>
       <CardContent>
@@ -30,8 +30,8 @@ const VendorPhoneSection = ({ formData, errors, onInputChange }: VendorPhoneSect
           countryCode={formData.countryCode}
           autoFill={true}
           showSuggestions={true}
-          label="Business Phone Number *"
-          placeholder="Enter business contact number"
+          label="Business Contact Number *"
+          placeholder="832466539"
         />
       </CardContent>
     </Card>

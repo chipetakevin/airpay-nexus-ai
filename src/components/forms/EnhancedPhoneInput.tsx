@@ -31,13 +31,14 @@ const EnhancedPhoneInput = ({
   userType = 'guest',
   error,
   label = "Mobile Number *",
-  placeholder = "Enter your phone number",
+  placeholder = "832466539",
   countryCode = '+27',
   autoFill = true,
   showSuggestions = true
 }: EnhancedPhoneInputProps) => {
   const [showDropdown, setShowDropdown] = useState(false);
   const [hasAutoFilled, setHasAutoFilled] = useState(false);
+  const [showSuggestions, setShowSuggestionsState] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   
   const { 
@@ -76,10 +77,13 @@ const EnhancedPhoneInput = ({
   const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     let inputValue = e.target.value;
     
-    // Clean input - allow only digits, spaces, and common separators
-    inputValue = inputValue.replace(/[^\d\s\-\(\)]/g, '');
+    // Clean input - allow only digits
+    inputValue = inputValue.replace(/\D/g, '');
     
-    onChange(inputValue);
+    // Limit to 9 digits for SA mobile numbers (without country code)
+    if (inputValue.length <= 9) {
+      onChange(inputValue);
+    }
   };
 
   const handleSuggestionSelect = (phone: any) => {
@@ -87,7 +91,7 @@ const EnhancedPhoneInput = ({
     if (onCountryCodeChange) {
       onCountryCodeChange(phone.countryCode);
     }
-    setShowDropdown(false);
+    setShowSuggestionsState(false);
     inputRef.current?.focus();
   };
 
@@ -98,14 +102,24 @@ const EnhancedPhoneInput = ({
     if (validation.isValid) {
       e.preventDefault();
       const cleanNumber = pastedText.replace(/\D/g, '');
-      onChange(cleanNumber);
-      savePhoneNumber(cleanNumber, countryCode, userType);
+      // Extract 9 digits for display
+      let displayNumber = cleanNumber;
+      if (cleanNumber.startsWith('27')) {
+        displayNumber = cleanNumber.substring(2);
+      } else if (cleanNumber.startsWith('0')) {
+        displayNumber = cleanNumber.substring(1);
+      }
+      onChange(displayNumber);
+      savePhoneNumber(displayNumber, countryCode, userType);
     }
   };
 
   const validation = value ? validateSouthAfricanMobile(value) : null;
   const isValid = validation?.isValid || false;
-  const relevantPhones = getAllStoredPhones().slice(0, 5);
+  const relevantPhones = getAllStoredPhones().slice(0, 3);
+
+  // Format the full number for display in validation message
+  const fullNumber = value ? `${countryCode}${value}` : '';
 
   return (
     <div className="space-y-2">
@@ -132,16 +146,6 @@ const EnhancedPhoneInput = ({
                 <div className="flex items-center gap-2">
                   <Phone className="w-3 h-3" />
                   <span className="text-xs font-mono">{phone.fullNumber}</span>
-                  {phone.frequency > 1 && (
-                    <Badge variant="secondary" className="text-xs">
-                      {phone.frequency}x
-                    </Badge>
-                  )}
-                  {phone.userType !== 'guest' && (
-                    <Badge variant="outline" className="text-xs">
-                      {phone.userType}
-                    </Badge>
-                  )}
                 </div>
               </Button>
             ))}
@@ -149,18 +153,23 @@ const EnhancedPhoneInput = ({
         </div>
       )}
 
-      {/* Phone Input */}
-      <div className="relative">
-        <div className="flex">
-          {/* Country Code Selector */}
-          <div className="flex items-center px-3 py-2 bg-gray-100 border border-r-0 border-gray-300 rounded-l-md">
-            <span className="text-sm font-medium text-gray-700 flex items-center gap-1">
-              🇿🇦 {countryCode}
-            </span>
+      {/* Phone Input - Matching the attached image format */}
+      <div className="flex gap-2">
+        {/* Country Code Selector with SA Flag */}
+        <div className="relative">
+          <div className="flex items-center justify-between px-4 py-3 bg-white border border-gray-300 rounded-lg min-w-[120px] h-12">
+            <div className="flex items-center gap-2">
+              <span className="text-lg">🇿🇦</span>
+              <span className="font-medium text-gray-700">{countryCode}</span>
+            </div>
+            <ChevronDown className="w-4 h-4 text-gray-500" />
           </div>
-          
-          {/* Phone Number Input */}
-          <div className="relative flex-1">
+        </div>
+        
+        {/* Phone Number Input */}
+        <div className="relative flex-1">
+          <div className="flex items-center px-4 py-3 bg-white border border-gray-300 rounded-lg h-12">
+            <Phone className="w-5 h-5 text-gray-400 mr-3" />
             <Input
               ref={inputRef}
               id="phoneInput"
@@ -169,77 +178,45 @@ const EnhancedPhoneInput = ({
               onChange={handlePhoneChange}
               onPaste={handlePaste}
               placeholder={placeholder}
-              className={`rounded-l-none pr-10 ${
-                error ? 'border-red-500' : 
-                isValid ? 'border-green-500' : 'border-gray-300'
+              className={`border-0 bg-transparent p-0 focus:ring-0 text-lg font-medium ${
+                error ? 'text-red-600' : 
+                isValid ? 'text-green-600' : 'text-gray-900'
               }`}
-              maxLength={15}
+              maxLength={9}
               autoComplete="tel"
             />
-            
-            {/* Validation Icon */}
-            {isValid && (
-              <Check className="absolute right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-green-500" />
-            )}
           </div>
         </div>
-
-        {/* Dropdown for suggestions when typing */}
-        {showDropdown && relevantPhones.length > 0 && value.length >= 2 && (
-          <div className="absolute z-50 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg max-h-40 overflow-y-auto">
-            {relevantPhones
-              .filter(phone => phone.number.includes(value.replace(/\D/g, '')))
-              .map((phone, index) => (
-                <button
-                  key={index}
-                  type="button"
-                  className="w-full text-left px-3 py-2 hover:bg-gray-100 flex items-center gap-2"
-                  onClick={() => handleSuggestionSelect(phone)}
-                >
-                  <Phone className="w-3 h-3 text-gray-400" />
-                  <span className="flex-1 font-mono text-sm">{phone.fullNumber}</span>
-                  <div className="flex items-center gap-1">
-                    {phone.frequency > 1 && (
-                      <Badge variant="secondary" className="text-xs">
-                        {phone.frequency}x
-                      </Badge>
-                    )}
-                    <Badge variant="outline" className="text-xs">
-                      {phone.userType}
-                    </Badge>
-                  </div>
-                </button>
-              ))}
-          </div>
-        )}
       </div>
 
-      {/* Validation Messages */}
+      {/* Validation Messages - Matching the attached image */}
       {value && isValid && (
-        <div className="text-xs text-green-600 bg-green-50 p-2 rounded border border-green-200">
-          ✅ Valid SA Mobile: {countryCode}{value}
-          <br />
-          💾 Auto-saved for future use
+        <div className="flex items-center gap-2 text-green-600 bg-green-50 p-3 rounded-lg border border-green-200">
+          <Check className="w-4 h-4" />
+          <div>
+            <p className="font-medium">Valid South African mobile number:</p>
+            <p className="font-mono text-sm">{fullNumber}</p>
+          </div>
         </div>
       )}
       
       {error && (
-        <p className="text-red-500 text-xs mt-1 flex items-center gap-1">
-          <Phone className="w-3 h-3" />
+        <p className="text-red-500 text-sm mt-1 flex items-center gap-2 bg-red-50 p-2 rounded border border-red-200">
+          <Phone className="w-4 h-4" />
           {error}
         </p>
       )}
       
       {/* Usage Instructions */}
-      <div className="bg-blue-50 p-2 rounded border border-blue-200">
-        <p className="text-xs text-blue-600">
-          <strong>📱 SA Mobile Format:</strong> Enter in any format - we'll save it automatically
+      <div className="bg-blue-50 p-3 rounded-lg border border-blue-200">
+        <p className="text-sm text-blue-700 font-medium mb-1">
+          📱 Enter your 9-digit SA mobile number
         </p>
-        <ul className="text-xs text-blue-600 mt-1 space-y-1">
-          <li>• 832466539 (9 digits)</li>
-          <li>• 0832466539 (10 digits with 0)</li>
-          <li>• +27832466539 (with +27)</li>
-        </ul>
+        <div className="text-xs text-blue-600 space-y-1">
+          <p>• Without country code: <span className="font-mono">832466539</span></p>
+          <p>• System will save: <span className="font-mono">+27832466539</span></p>
+          <p>• Numbers are permanently stored for future use</p>
+        </div>
       </div>
     </div>
   );
