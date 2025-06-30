@@ -19,7 +19,7 @@ const BankingSection: React.FC<BankingSectionProps> = ({
   errors,
   onInputChange
 }) => {
-  const { autoAssignBranchCode, loadSavedBankingInfo } = useBranchCodeAutoAssign();
+  const { autoAssignBranchCode, loadSavedBankingInfo, getBranchCodeForBank } = useBranchCodeAutoAssign();
   const { toast } = useToast();
 
   // Auto-fill saved banking info on mount
@@ -47,14 +47,19 @@ const BankingSection: React.FC<BankingSectionProps> = ({
   const handleBankSelect = (bank: string, routing: string, branchCode: string) => {
     console.log(`🏦 Bank selected in BankingSection: ${bank}, Branch Code: ${branchCode}`);
     onInputChange('bankName', bank);
-    onInputChange('branchCode', branchCode);
     
-    // Auto-assign and save branch code
-    if (branchCode) {
+    // Get the correct branch code for the selected bank
+    const correctBranchCode = getBranchCodeForBank(bank) || branchCode;
+    onInputChange('branchCode', correctBranchCode);
+    
+    // Auto-assign and save branch code immediately
+    if (correctBranchCode) {
       autoAssignBranchCode(bank, (code) => {
         onInputChange('branchCode', code);
       });
     }
+    
+    console.log(`✅ Branch code set: ${correctBranchCode} for ${bank}`);
   };
 
   const accountValidation = formData.accountNumber ? validateSouthAfricanBankAccount(formData.accountNumber) : null;
@@ -93,19 +98,18 @@ const BankingSection: React.FC<BankingSectionProps> = ({
         <Label htmlFor="branchCode">Branch Code</Label>
         <Input
           id="branchCode"
-          value={formData.branchCode}
+          value={formData.branchCode || ''}
           placeholder={formData.branchCode ? formData.branchCode : "Select bank to auto-assign branch code"}
           readOnly
           className="bg-gray-50"
         />
         <div className="bg-green-50 p-2 rounded border border-green-200">
           <p className="text-xs text-green-600">
-            ℹ️ Branch code automatically assigned per SA banking standards and permanently saved
+            ℹ️ Branch code automatically detected from your bank selection
             {formData.branchCode && (
-              <>
-                <br />
+              <span className="block mt-1">
                 <strong>Current Branch Code: {formData.branchCode}</strong>
-              </>
+              </span>
             )}
           </p>
         </div>

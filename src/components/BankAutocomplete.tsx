@@ -91,7 +91,7 @@ const BankAutocomplete: React.FC<BankAutocompleteProps> = ({ onBankSelect, error
     const mainBranch = bank.branches[0];
     setSelectedBranch(mainBranch);
     
-    // Use the universal branch code for the bank
+    // Use the universal branch code for the bank and pass it immediately
     onBankSelect(bank.name, '', bank.branchCode);
     
     console.log(`✅ Bank selected: ${bank.name}, Branch Code: ${bank.branchCode}`);
@@ -190,7 +190,7 @@ const BankAutocomplete: React.FC<BankAutocompleteProps> = ({ onBankSelect, error
                 </p>
               </div>
               <p className="text-xs text-green-600 mt-2 border-t border-green-200 pt-2">
-                ℹ️ Branch code automatically assigned per South African banking standards
+                ℹ️ Branch code automatically detected from your bank selection
               </p>
             </div>
           )}
