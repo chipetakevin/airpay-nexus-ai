@@ -4,6 +4,8 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { AlertTriangle, Check } from 'lucide-react';
 import { usePhoneValidation } from '@/hooks/usePhoneValidation';
+import { useBranchCodeAutoAssign } from '@/hooks/useBranchCodeAutoAssign';
+import { useToast } from '@/hooks/use-toast';
 
 interface AdminPersonalInfoProps {
   formData: any;
@@ -18,6 +20,22 @@ const AdminPersonalInfoSection: React.FC<AdminPersonalInfoProps> = ({
 }) => {
   const [isValidPhone, setIsValidPhone] = useState(false);
   const { validateSouthAfricanMobile } = usePhoneValidation();
+  const { loadSavedBankingInfo } = useBranchCodeAutoAssign();
+  const { toast } = useToast();
+
+  // Auto-restore saved info on mount
+  useEffect(() => {
+    const savedInfo = loadSavedBankingInfo();
+    if (savedInfo && savedInfo.bankName && !formData.bankName) {
+      onInputChange('bankName', savedInfo.bankName);
+      onInputChange('branchCode', savedInfo.branchCode);
+      
+      toast({
+        title: "Admin Banking Auto-Restored! 🏦",
+        description: "Your saved banking information has been restored.",
+      });
+    }
+  }, [loadSavedBankingInfo, onInputChange, formData.bankName, toast]);
 
   // Validate phone number with South African standards
   useEffect(() => {

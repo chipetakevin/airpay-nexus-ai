@@ -1,10 +1,12 @@
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { FormData, FormErrors } from '@/types/customerRegistration';
 import { validateSouthAfricanBankAccount } from '@/utils/bankingValidation';
 import BankAutocomplete from '../BankAutocomplete';
+import { useBranchCodeAutoAssign } from '@/hooks/useBranchCodeAutoAssign';
+import { useToast } from '@/hooks/use-toast';
 
 interface BankingSectionProps {
   formData: FormData;
@@ -17,9 +19,43 @@ const BankingSection: React.FC<BankingSectionProps> = ({
   errors,
   onInputChange
 }) => {
+  const { autoAssignBranchCode, loadSavedBankingInfo } = useBranchCodeAutoAssign();
+  const { toast } = useToast();
+
+  // Auto-fill saved banking info on mount
+  useEffect(() => {
+    const savedInfo = loadSavedBankingInfo();
+    if (savedInfo && savedInfo.bankName && !formData.bankName) {
+      onInputChange('bankName', savedInfo.bankName);
+      onInputChange('branchCode', savedInfo.branchCode);
+      if (savedInfo.accountNumber && !formData.accountNumber) {
+        onInputChange('accountNumber', savedInfo.accountNumber);
+      }
+      
+      toast({
+        title: "Banking Auto-Restored! 🏦",
+        description: "Your saved banking information has been restored.",
+      });
+    }
+  }, [loadSavedBankingInfo, onInputChange, formData.bankName, formData.accountNumber, toast]);
+
   const handleAccountNumberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value.replace(/\D/g, ''); // Only allow digits
     onInputChange('accountNumber', value);
+  };
+
+  const handleBankSelect = (bank: string, routing: string, branchCode: string) => {
+    onInputChange('bankName', bank);
+    
+    // Auto-assign branch code based on SA banking rules
+    const assignedBranchCode = autoAssignBranchCode(bank, (code) => {
+      onInputChange('branchCode', code);
+    });
+    
+    // If no branch code was auto-assigned, use the provided one
+    if (!assignedBranchCode && branchCode) {
+      onInputChange('branchCode', branchCode);
+    }
   };
 
   const accountValidation = formData.accountNumber ? validateSouthAfricanBankAccount(formData.accountNumber) : null;
@@ -27,10 +63,7 @@ const BankingSection: React.FC<BankingSectionProps> = ({
   return (
     <>
       <BankAutocomplete 
-        onBankSelect={(bank, routing, branchCode) => {
-          onInputChange('bankName', bank);
-          onInputChange('branchCode', branchCode);
-        }}
+        onBankSelect={handleBankSelect}
         error={errors.bankName}
       />
 
@@ -62,13 +95,15 @@ const BankingSection: React.FC<BankingSectionProps> = ({
         <Input
           id="branchCode"
           value={formData.branchCode}
-          placeholder="Auto-filled based on bank selection"
+          placeholder="Auto-assigned based on South African banking rules"
           readOnly
           className="bg-gray-50"
         />
-        <p className="text-xs text-gray-600">
-          ℹ️ South African banks use 6-digit branch codes for transactions
-        </p>
+        <div className="bg-green-50 p-2 rounded border border-green-200">
+          <p className="text-xs text-green-600">
+            ℹ️ Branch code automatically assigned per SA banking standards and permanently saved
+          </p>
+        </div>
       </div>
     </>
   );
