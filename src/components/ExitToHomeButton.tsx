@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Button } from '@/components/ui/button';
-import { ArrowRight, Zap } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import { useLocation } from 'react-router-dom';
 
 const ExitToHomeButton = () => {
@@ -15,11 +15,10 @@ const ExitToHomeButton = () => {
   return (
     <Button
       onClick={handleExitToAIDeals}
-      className="w-full bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-500 hover:to-orange-600 text-black font-bold text-lg rounded-2xl shadow-xl transition-all duration-300 transform hover:scale-105"
-      title="Instant Rewards"
+      className="w-full bg-gradient-to-r from-green-400 to-blue-500 hover:from-green-500 hover:to-blue-600 text-white font-bold text-lg rounded-2xl shadow-xl transition-all duration-300 transform hover:scale-105"
+      title="Get Started"
     >
-      <Zap className="w-6 h-6 mr-3" />
-      Instant Rewards
+      Get Started
       <ArrowRight className="w-5 h-5 ml-3" />
     </Button>
   );

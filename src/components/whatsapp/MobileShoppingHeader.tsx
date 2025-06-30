@@ -2,7 +2,7 @@
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Smartphone, Star, ArrowRight, Zap } from 'lucide-react';
+import { Smartphone, Star, ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 interface MobileShoppingHeaderProps {
@@ -46,12 +46,11 @@ const MobileShoppingHeader: React.FC<MobileShoppingHeaderProps> = ({
           )}
           <Button
             onClick={handleExitToAIDeals}
-            className="bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-500 hover:to-orange-600 text-black font-bold rounded-xl shadow-lg transition-all duration-300 transform hover:scale-105 px-3 py-2"
-            title="Instant Rewards"
+            className="bg-gradient-to-r from-green-400 to-blue-500 hover:from-green-500 hover:to-blue-600 text-white font-bold rounded-xl shadow-lg transition-all duration-300 transform hover:scale-105 px-3 py-2"
+            title="Get Started"
           >
-            <Zap className="w-4 h-4 text-black mr-1" />
-            <span className="text-xs text-black font-bold">Instant Rewards</span>
-            <ArrowRight className="w-3 h-3 text-black ml-1" />
+            <span className="text-xs text-white font-bold">Get Started</span>
+            <ArrowRight className="w-3 h-3 text-white ml-1" />
           </Button>
         </div>
       </div>

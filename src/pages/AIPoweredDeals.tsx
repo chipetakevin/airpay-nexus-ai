@@ -2,7 +2,7 @@
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { Crown, Zap, Shield, ArrowRight } from 'lucide-react';
+import { Crown, Shield, ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import MobileLayout from '@/components/navigation/MobileLayout';
 
@@ -60,11 +60,10 @@ const AIPoweredDeals = () => {
           <div className="space-y-4">
             <Button 
               asChild
-              className="w-full h-14 bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-500 hover:to-orange-600 text-black font-bold text-lg rounded-2xl shadow-xl transition-all duration-300 transform hover:scale-105"
+              className="w-full h-14 bg-gradient-to-r from-green-400 to-blue-500 hover:from-green-500 hover:to-blue-600 text-white font-bold text-lg rounded-2xl shadow-xl transition-all duration-300 transform hover:scale-105"
             >
               <Link to="/portal?tab=deals">
-                <Zap className="w-6 h-6 mr-3" />
-                Instant Rewards
+                Get Started
                 <ArrowRight className="w-5 h-5 ml-3" />
               </Link>
             </Button>
@@ -96,7 +95,7 @@ const AIPoweredDeals = () => {
                 to="/whatsapp-assistant" 
                 className="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center hover:bg-white/30 transition-all"
               >
-                <Zap className="w-6 h-6 text-white" />
+                <Shield className="w-6 h-6 text-white" />
               </Link>
             </div>
           </div>

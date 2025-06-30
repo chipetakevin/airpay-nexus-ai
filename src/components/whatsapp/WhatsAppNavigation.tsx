@@ -2,7 +2,7 @@
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { ArrowRight, Zap } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import { useLocation } from 'react-router-dom';
 
 interface WhatsAppNavigationProps {
@@ -63,12 +63,11 @@ const WhatsAppNavigation: React.FC<WhatsAppNavigationProps> = ({
       <div className="px-2 pb-2">
         <Button
           onClick={handleExitToAIDeals}
-          className="w-full bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-500 hover:to-orange-600 text-black font-bold rounded-2xl shadow-lg transition-all duration-300 transform hover:scale-105"
-          title="Instant Rewards"
+          className="w-full bg-gradient-to-r from-green-400 to-blue-500 hover:from-green-500 hover:to-blue-600 text-white font-bold rounded-2xl shadow-lg transition-all duration-300 transform hover:scale-105"
+          title="Get Started"
         >
-          <Zap className="w-4 h-4 text-black mr-2" />
-          <span className="text-sm text-black font-bold">Instant Rewards</span>
-          <ArrowRight className="w-4 h-4 text-black ml-2" />
+          <span className="text-sm text-white font-bold">Get Started</span>
+          <ArrowRight className="w-4 h-4 text-white ml-2" />
         </Button>
       </div>
     </div>

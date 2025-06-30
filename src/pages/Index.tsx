@@ -20,7 +20,7 @@ import { useMobileAuth } from '@/hooks/useMobileAuth';
 import StaticWhatsAppAssistant from '@/components/whatsapp/StaticWhatsAppAssistant';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { ArrowRight, MessageCircle, Zap } from 'lucide-react';
+import { ArrowRight, MessageCircle } from 'lucide-react';
 
 const Index = () => {
   const { isAuthenticated } = useMobileAuth();
@@ -71,11 +71,10 @@ const Index = () => {
                   </div>
                   <Button
                     onClick={handleQuickShopExit}
-                    className="ml-4 bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-500 hover:to-orange-600 text-black font-bold rounded-xl shadow-lg transition-all duration-300 transform hover:scale-105"
-                    title="Instant Rewards"
+                    className="ml-4 bg-gradient-to-r from-green-400 to-blue-500 hover:from-green-500 hover:to-blue-600 text-white font-bold rounded-xl shadow-lg transition-all duration-300 transform hover:scale-105"
+                    title="Get Started"
                   >
-                    <Zap className="w-4 h-4 mr-1" />
-                    <span className="text-sm">Instant Rewards</span>
+                    <span className="text-sm">Get Started</span>
                     <ArrowRight className="w-4 h-4 ml-1" />
                   </Button>
                 </div>
