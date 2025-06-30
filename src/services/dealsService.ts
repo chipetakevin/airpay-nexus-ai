@@ -17,24 +17,33 @@ export const loadDealsFromSupabase = async (): Promise<Deal[]> => {
       return [];
     }
 
+    console.log('Raw Supabase data:', data); // Debug log to see the actual structure
+
     // Transform the data to match our Deal interface
-    const transformedDeals: Deal[] = (data || []).map(deal => ({
-      id: deal.id,
-      network: deal.network,
-      amount: deal.amount,
-      original_price: deal.original_price,
-      discounted_price: deal.discounted_price,
-      discount_percentage: deal.discount_percentage,
-      vendor_name: deal.vendors?.business_name || 'Unknown Vendor',
-      availability: deal.availability,
-      demand_level: deal.demand_level,
-      deal_type: deal.deal_type,
-      bonus: deal.bonus,
-      expires_at: deal.expires_at,
-      verified: deal.verified,
-      network_price: deal.original_price, // Using original_price as network_price fallback
-      markup_amount: deal.original_price - deal.discounted_price // Fixed calculation
-    }));
+    const transformedDeals: Deal[] = (data || []).map(deal => {
+      // Handle the joined vendor data properly
+      const vendorName = deal.vendors && Array.isArray(deal.vendors) 
+        ? deal.vendors[0]?.business_name 
+        : deal.vendors?.business_name || 'Unknown Vendor';
+
+      return {
+        id: deal.id,
+        network: deal.network,
+        amount: deal.amount,
+        original_price: deal.original_price,
+        discounted_price: deal.discounted_price,
+        discount_percentage: deal.discount_percentage,
+        vendor_name: vendorName,
+        availability: deal.availability,
+        demand_level: deal.demand_level,
+        deal_type: deal.deal_type,
+        bonus: deal.bonus,
+        expires_at: deal.expires_at,
+        verified: deal.verified,
+        network_price: deal.original_price, // Using original_price as network_price fallback
+        markup_amount: deal.original_price - deal.discounted_price // Fixed calculation
+      };
+    });
 
     return transformedDeals;
   } catch (error) {
