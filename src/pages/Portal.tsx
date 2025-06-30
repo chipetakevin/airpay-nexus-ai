@@ -5,6 +5,7 @@ import PortalTabs from '@/components/PortalTabs';
 import { useToast } from "@/hooks/use-toast"
 import WhatsAppFloatingButton from '@/components/WhatsAppFloatingButton';
 import FloatingPlatformSwitcher from '@/components/navigation/FloatingPlatformSwitcher';
+import PermanentAuthStatus from '@/components/auth/PermanentAuthStatus';
 import { useSessionManager } from '@/hooks/useSessionManager';
 import { usePersistentAuth } from '@/components/auth/PersistentAuthProvider';
 
@@ -198,6 +199,9 @@ const Portal = () => {
       {activeTab === 'deals' && (
         <FloatingPlatformSwitcher currentPlatform="portal" />
       )}
+
+      {/* Permanent Authentication Status */}
+      <PermanentAuthStatus />
     </div>
   );
 };

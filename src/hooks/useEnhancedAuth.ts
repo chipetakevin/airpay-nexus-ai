@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useCallback } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { useDeviceStorage } from './useDeviceStorage';
@@ -21,7 +20,7 @@ export const useEnhancedAuth = () => {
   const { toast } = useToast();
   const { saveProfilePermanently, getProfileByEmail } = useDeviceStorage();
 
-  const PERSISTENT_SESSION_HOURS = 24;
+  const PERSISTENT_SESSION_HOURS = 8760; // 1 year = permanent session
   const UNIFIED_PASSWORD = 'Malawi@1976';
 
   const createPersistentSession = useCallback((userData: any, userCredentials: any) => {
@@ -33,11 +32,13 @@ export const useEnhancedAuth = () => {
         user: userData,
         credentials: userCredentials,
         expiryTime: expiryTime.toISOString(),
-        deviceSession: true
+        deviceSession: true,
+        permanentSession: true
       };
 
       localStorage.setItem('persistentAuthSession', JSON.stringify(sessionData));
       localStorage.setItem('userAuthenticated', 'true');
+      localStorage.setItem('sessionType', 'permanent');
       setSessionExpiry(expiryTime);
       setIsAuthenticated(true);
 
@@ -53,14 +54,24 @@ export const useEnhancedAuth = () => {
         isComplete: true
       });
 
-      toast({
-        title: "Persistent Session Created",
-        description: `You'll stay logged in for ${PERSISTENT_SESSION_HOURS} hours, even if you close the browser.`,
-      });
+      // Set current user
+      const authUser: AuthUser = {
+        id: userData.cardNumber || userData.vendorId || userData.adminId,
+        email: userCredentials.email,
+        firstName: userData.firstName,
+        lastName: userData.lastName,
+        userType: userCredentials.userType,
+        isUnifiedProfile: userCredentials.password === UNIFIED_PASSWORD,
+        persistentSession: true
+      };
+
+      setCurrentUser(authUser);
+
+      console.log(`✅ Permanent ${userCredentials.userType} session created for:`, userCredentials.email);
     } catch (error) {
       console.error('Error creating persistent session:', error);
     }
-  }, [saveProfilePermanently, toast]);
+  }, [saveProfilePermanently]);
 
   const checkPersistentSession = useCallback(() => {
     try {
@@ -143,7 +154,7 @@ export const useEnhancedAuth = () => {
         const hasValidSession = checkPersistentSession();
         
         if (!hasValidSession) {
-          // Check legacy authentication
+          // Check legacy authentication and convert to permanent
           const authFlag = localStorage.getItem('userAuthenticated');
           const credentials = localStorage.getItem('userCredentials');
           
@@ -162,8 +173,13 @@ export const useEnhancedAuth = () => {
               
               if (userData) {
                 const parsedData = JSON.parse(userData);
-                // Convert legacy session to persistent session
+                // Convert legacy session to permanent session
                 createPersistentSession(parsedData, userCreds);
+                
+                toast({
+                  title: "Session Upgraded 🔒",
+                  description: "Your session is now permanent until manual logout.",
+                });
               }
             } catch (error) {
               console.error('Error converting legacy session:', error);
@@ -180,15 +196,15 @@ export const useEnhancedAuth = () => {
 
     initAuth();
 
-    // Set up session check interval
+    // Set up session check interval (check less frequently for permanent sessions)
     const intervalId = setInterval(() => {
       if (isInitialized) {
         checkPersistentSession();
       }
-    }, 60000); // Check every minute
+    }, 300000); // Check every 5 minutes instead of every minute
 
     return () => clearInterval(intervalId);
-  }, [isInitialized, checkPersistentSession, createPersistentSession]);
+  }, [isInitialized, checkPersistentSession, createPersistentSession, toast]);
 
   return {
     currentUser,
