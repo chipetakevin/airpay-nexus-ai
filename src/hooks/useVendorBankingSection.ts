@@ -30,17 +30,20 @@ export const useVendorBankingSection = ({
   const isInitializedRef = useRef(false);
   const prevFormDataRef = useRef(formData);
   const prevMarketingConsentRef = useRef(marketingConsent);
+  const processingRef = useRef(false);
 
   const validation = validateBankingForm(formData, errors);
   const isBankingComplete = validation.isComplete;
 
-  // Stable auto-save function using useCallback
+  // Debounced auto-save function
   const performAutoSave = useCallback(async () => {
-    if (!formData.bankName && !formData.accountNumber && !formData.branchCode) {
+    if (processingRef.current || (!formData.bankName && !formData.accountNumber && !formData.branchCode)) {
       return;
     }
 
+    processingRef.current = true;
     setIsAutoSaving(true);
+    
     try {
       await saveBankingInfo({
         bankName: formData.bankName || '',
@@ -54,12 +57,13 @@ export const useVendorBankingSection = ({
       console.error('❌ Auto-save failed:', error);
     } finally {
       setIsAutoSaving(false);
+      processingRef.current = false;
     }
   }, [formData.bankName, formData.accountNumber, formData.branchCode, formData.routingNumber, saveBankingInfo]);
 
-  // Intelligent collapse logic
+  // Intelligent collapse logic with debouncing
   const handleIntelligentCollapse = useCallback(() => {
-    if (isBankingComplete && marketingConsent && !isCollapsed) {
+    if (isBankingComplete && marketingConsent && !isCollapsed && !processingRef.current) {
       console.log('🔄 Intelligent collapse triggered');
       setIsCollapsed(true);
       
@@ -74,10 +78,14 @@ export const useVendorBankingSection = ({
     }
   }, [isBankingComplete, marketingConsent, isCollapsed, toast, performAutoSave]);
 
-  const handleBankSelect = async (bankName: string, routing: string, branchCode: string) => {
+  // Optimized bank selection handler
+  const handleBankSelect = useCallback(async (bankName: string, routing: string, branchCode: string) => {
+    if (processingRef.current) return;
+    
+    processingRef.current = true;
     onBankSelect(bankName, routing, branchCode);
     
-    // Immediate save for bank selection
+    // Single save operation for bank selection
     try {
       await saveBankingInfo({
         bankName,
@@ -88,15 +96,17 @@ export const useVendorBankingSection = ({
       setLastSaved(new Date());
     } catch (error) {
       console.error('Failed to save bank selection:', error);
+    } finally {
+      processingRef.current = false;
     }
-  };
+  }, [onBankSelect, saveBankingInfo, formData.accountNumber]);
 
-  const handleAccountNumberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleAccountNumberChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     onInputChange('accountNumber', value);
-  };
+  }, [onInputChange]);
 
-  const handleManualToggle = () => {
+  const handleManualToggle = useCallback(() => {
     if (!isBankingComplete && isCollapsed) {
       toast({
         title: "Complete Banking Details",
@@ -106,7 +116,7 @@ export const useVendorBankingSection = ({
       return;
     }
     setIsCollapsed(!isCollapsed);
-  };
+  }, [isBankingComplete, isCollapsed, toast]);
 
   // Auto-fill on mount (only once)
   useEffect(() => {
@@ -136,7 +146,7 @@ export const useVendorBankingSection = ({
     isInitializedRef.current = true;
   }, [getBankingInfo, onInputChange, onBankSelect, toast]);
 
-  // Debounced auto-save effect
+  // Optimized auto-save effect with better debouncing
   useEffect(() => {
     const hasDataChanged = 
       prevFormDataRef.current.bankName !== formData.bankName ||
@@ -144,7 +154,7 @@ export const useVendorBankingSection = ({
       prevFormDataRef.current.branchCode !== formData.branchCode ||
       prevFormDataRef.current.routingNumber !== formData.routingNumber;
 
-    if (!hasDataChanged) return;
+    if (!hasDataChanged || processingRef.current) return;
 
     if (autoSaveTimeoutRef.current) {
       clearTimeout(autoSaveTimeoutRef.current);
@@ -152,7 +162,7 @@ export const useVendorBankingSection = ({
 
     autoSaveTimeoutRef.current = setTimeout(() => {
       performAutoSave();
-    }, 2500);
+    }, 3000); // Increased debounce time to reduce flickering
 
     prevFormDataRef.current = { ...formData };
 
@@ -163,13 +173,13 @@ export const useVendorBankingSection = ({
     };
   }, [formData, performAutoSave]);
 
-  // Handle marketing consent changes
+  // Handle marketing consent changes with debouncing
   useEffect(() => {
     const consentChanged = prevMarketingConsentRef.current !== marketingConsent;
     
     if (consentChanged) {
       if (marketingConsent && isBankingComplete) {
-        setTimeout(handleIntelligentCollapse, 500);
+        setTimeout(handleIntelligentCollapse, 1000); // Increased delay
       } else if (!marketingConsent && isCollapsed) {
         setIsCollapsed(false);
         toast({

@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { useBranchCodeAutoAssign } from '@/hooks/useBranchCodeAutoAssign';
@@ -88,7 +88,14 @@ const BankAutocomplete: React.FC<BankAutocompleteProps> = ({
   const [displayedBranchCode, setDisplayedBranchCode] = useState(selectedBranchCode);
   const { getBranchCodeForBank } = useBranchCodeAutoAssign();
 
-  // Initialize with selected bank if provided
+  // Memoize the filtered banks to prevent unnecessary recalculations
+  const filteredBanks = React.useMemo(() => 
+    bankData.filter(bank => 
+      bank.name.toLowerCase().includes(query.toLowerCase())
+    ), [query]
+  );
+
+  // Initialize with selected bank if provided (only once)
   useEffect(() => {
     if (selectedBankName && !selectedBank) {
       const bank = bankData.find(b => b.name === selectedBankName);
@@ -98,53 +105,37 @@ const BankAutocomplete: React.FC<BankAutocompleteProps> = ({
         const mainBranch = bank.branches[0];
         setSelectedBranch(mainBranch);
         
-        // Immediately set and display the branch code
         const branchCode = getBranchCodeForBank(bank.name) || bank.branchCode;
         setDisplayedBranchCode(branchCode);
-        
-        console.log(`✅ Bank initialized: ${bank.name}, Branch Code: ${branchCode}`);
       }
     }
   }, [selectedBankName, selectedBank, getBranchCodeForBank]);
 
-  const filteredBanks = bankData.filter(bank => 
-    bank.name.toLowerCase().includes(query.toLowerCase())
-  );
-
-  const handleBankSelect = (bank: Bank) => {
+  // Stable callback to prevent unnecessary re-renders
+  const handleBankSelect = useCallback((bank: Bank) => {
     setSelectedBank(bank);
     setQuery(bank.name);
     setShowDropdown(false);
     
-    // Get the correct branch code immediately
     const branchCode = getBranchCodeForBank(bank.name) || bank.branchCode;
     const mainBranch = bank.branches[0];
     setSelectedBranch(mainBranch);
     setDisplayedBranchCode(branchCode);
     
-    // Immediately call onBankSelect with the branch code
+    // Single call to onBankSelect to prevent multiple updates
     onBankSelect(bank.name, '', branchCode);
-    
-    console.log(`✅ Bank selected: ${bank.name}, Branch Code: ${branchCode}`);
-    
-    // Double-ensure the branch code is set with a slight delay
-    setTimeout(() => {
-      setDisplayedBranchCode(branchCode);
-      onBankSelect(bank.name, '', branchCode);
-    }, 100);
-  };
+  }, [getBranchCodeForBank, onBankSelect]);
 
-  const handleBranchSelect = (branch: any) => {
+  const handleBranchSelect = useCallback((branch: any) => {
     setSelectedBranch(branch);
     if (selectedBank) {
       const branchCodeToUse = getBranchCodeForBank(selectedBank.name) || branch.code;
       setDisplayedBranchCode(branchCodeToUse);
       onBankSelect(selectedBank.name, '', branchCodeToUse);
-      console.log(`✅ Branch selected: ${branch.name}, Branch Code: ${branchCodeToUse}`);
     }
-  };
+  }, [selectedBank, getBranchCodeForBank, onBankSelect]);
 
-  const handleInputChange = (value: string) => {
+  const handleInputChange = useCallback((value: string) => {
     setQuery(value);
     setShowDropdown(value.length > 0);
     if (value.length === 0) {
@@ -153,7 +144,7 @@ const BankAutocomplete: React.FC<BankAutocompleteProps> = ({
       setDisplayedBranchCode('');
       onBankSelect('', '', '');
     }
-  };
+  }, [onBankSelect]);
 
   return (
     <div className="space-y-4">
