@@ -1,7 +1,9 @@
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { AlertTriangle, Check } from 'lucide-react';
+import { usePhoneValidation } from '@/hooks/usePhoneValidation';
 
 interface AdminPersonalInfoProps {
   formData: any;
@@ -14,6 +16,28 @@ const AdminPersonalInfoSection: React.FC<AdminPersonalInfoProps> = ({
   errors,
   onInputChange
 }) => {
+  const [isValidPhone, setIsValidPhone] = useState(false);
+  const { validateSouthAfricanMobile } = usePhoneValidation();
+
+  // Validate phone number with South African standards
+  useEffect(() => {
+    if (formData.phoneNumber) {
+      const validation = validateSouthAfricanMobile(formData.phoneNumber);
+      setIsValidPhone(validation.isValid);
+    } else {
+      setIsValidPhone(false);
+    }
+  }, [formData.phoneNumber, validateSouthAfricanMobile]);
+
+  const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    let value = e.target.value;
+    
+    // Allow only digits, plus, and spaces for better UX
+    value = value.replace(/[^\d+\s]/g, '');
+    
+    onInputChange('phoneNumber', value);
+  };
+
   return (
     <div className="space-y-4">
       <h3 className="text-lg font-semibold">Administrator Information</h3>
@@ -62,24 +86,43 @@ const AdminPersonalInfoSection: React.FC<AdminPersonalInfoProps> = ({
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="phoneNumber">Phone Number *</Label>
+        <Label htmlFor="phoneNumber">South African Mobile Number *</Label>
         <div className="flex space-x-2">
           <Input
             value={formData.countryCode}
             className="w-20"
             readOnly
           />
-          <Input
-            id="phoneNumber"
-            name="phoneNumber"
-            autoComplete="tel"
-            value={formData.phoneNumber}
-            onChange={(e) => onInputChange('phoneNumber', e.target.value)}
-            placeholder="Auto-filled"
-            className={`flex-1 ${errors.phoneNumber ? 'border-red-500' : ''}`}
-          />
+          <div className="relative flex-1">
+            <Input
+              id="phoneNumber"
+              name="phoneNumber"
+              autoComplete="tel"
+              value={formData.phoneNumber}
+              onChange={handlePhoneChange}
+              placeholder="812345678 (9 digits)"
+              className={`${errors.phoneNumber ? 'border-red-500' : isValidPhone ? 'border-green-500' : ''} pr-10`}
+              maxLength={15}
+            />
+            {isValidPhone && (
+              <Check className="absolute right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-green-500" />
+            )}
+            {errors.phoneNumber && (
+              <AlertTriangle className="absolute right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-red-500" />
+            )}
+          </div>
         </div>
-        {errors.phoneNumber && <p className="text-red-500 text-sm">{errors.phoneNumber}</p>}
+        {errors.phoneNumber && (
+          <p className="text-red-500 text-sm flex items-center gap-1">
+            <AlertTriangle className="w-3 h-3" />
+            {errors.phoneNumber}
+          </p>
+        )}
+        <div className="bg-blue-50 p-2 rounded border border-blue-200">
+          <p className="text-xs text-blue-600">
+            <strong>📱 Valid formats:</strong> 812345678, 0812345678, or +27812345678
+          </p>
+        </div>
       </div>
 
       <div className="space-y-2">

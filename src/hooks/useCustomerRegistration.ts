@@ -1,7 +1,7 @@
-
 import { useState } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { usePersistentAuth } from './usePersistentAuth';
+import { usePhoneValidation } from '@/hooks/usePhoneValidation';
 import { FormData as CustomerFormData } from '@/types/customerRegistration';
 
 export const useCustomerRegistration = () => {
@@ -23,6 +23,7 @@ export const useCustomerRegistration = () => {
   const [errors, setErrors] = useState<Partial<Record<keyof CustomerFormData, string>>>({});
   const { toast } = useToast();
   const { createPersistentSession } = usePersistentAuth();
+  const { validateSouthAfricanMobile } = usePhoneValidation();
 
   const handleInputChange = (field: keyof CustomerFormData, value: any) => {
     setFormData(prev => ({
@@ -45,7 +46,17 @@ export const useCustomerRegistration = () => {
     if (!formData.firstName.trim()) newErrors.firstName = 'First name is required';
     if (!formData.lastName.trim()) newErrors.lastName = 'Last name is required';
     if (!formData.email.trim()) newErrors.email = 'Email is required';
-    if (!formData.phoneNumber.trim()) newErrors.phoneNumber = 'Phone number is required';
+    
+    // Enhanced phone validation
+    if (!formData.phoneNumber.trim()) {
+      newErrors.phoneNumber = 'Phone number is required';
+    } else {
+      const phoneValidation = validateSouthAfricanMobile(formData.phoneNumber);
+      if (!phoneValidation.isValid) {
+        newErrors.phoneNumber = phoneValidation.error || 'Invalid South African mobile number';
+      }
+    }
+    
     if (!formData.agreeTerms) newErrors.agreeTerms = 'Terms acceptance is required';
 
     setErrors(newErrors);

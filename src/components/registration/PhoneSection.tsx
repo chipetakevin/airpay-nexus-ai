@@ -4,9 +4,10 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
-import { Phone, History, Check } from 'lucide-react';
+import { Phone, History, Check, AlertTriangle } from 'lucide-react';
 import { FormData } from '@/types/customerRegistration';
 import { usePhoneAutofill } from '@/hooks/usePhoneAutofill';
+import { usePhoneValidation } from '@/hooks/usePhoneValidation';
 import { useToast } from '@/hooks/use-toast';
 
 interface PhoneSectionProps {
@@ -25,6 +26,7 @@ const PhoneSection = ({ formData, errors, onInputChange }: PhoneSectionProps) =>
     normalizePhoneNumber, 
     formatPhoneForDisplay 
   } = usePhoneAutofill();
+  const { validateSouthAfricanMobile } = usePhoneValidation();
   const { toast } = useToast();
 
   // Auto-fill on component mount
@@ -38,35 +40,41 @@ const PhoneSection = ({ formData, errors, onInputChange }: PhoneSectionProps) =>
     }
   }, [detectedPhone, formData.phoneNumber, onInputChange, toast]);
 
-  // Validate phone number
+  // Validate phone number with South African standards
   useEffect(() => {
-    const isValid = formData.phoneNumber && 
-                   formData.phoneNumber.length === 9 && 
-                   /^[0-9]+$/.test(formData.phoneNumber);
-    setIsValidPhone(isValid);
-  }, [formData.phoneNumber]);
+    if (formData.phoneNumber) {
+      const validation = validateSouthAfricanMobile(formData.phoneNumber);
+      setIsValidPhone(validation.isValid);
+      
+      if (!validation.isValid && validation.error) {
+        // Set error through parent component
+        onInputChange('phoneNumber', formData.phoneNumber); // Trigger validation in parent
+      }
+    } else {
+      setIsValidPhone(false);
+    }
+  }, [formData.phoneNumber, validateSouthAfricanMobile]);
 
   const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     let value = e.target.value;
     
-    // Normalize the input to handle both 0 and +27 formats
-    const normalizedValue = normalizePhoneNumber(value);
+    // Allow only digits, plus, and spaces for better UX
+    value = value.replace(/[^\d+\s]/g, '');
     
-    // Limit to 9 digits (SA mobile numbers without country code/leading zero)
-    if (normalizedValue.length > 9) {
-      return; // Don't update if too long
-    }
+    onInputChange('phoneNumber', value);
     
-    onInputChange('phoneNumber', normalizedValue);
-    
-    // Auto-save when user types a complete number
-    if (normalizedValue.length === 9) {
-      savePhoneNumber(normalizedValue);
+    // Validate and auto-save when user types a complete number
+    if (value.length >= 9) {
+      const validation = validateSouthAfricanMobile(value);
+      if (validation.isValid) {
+        const normalizedValue = normalizePhoneNumber(value);
+        savePhoneNumber(normalizedValue);
+      }
     }
   };
 
   const handleSavedNumberSelect = (savedNumber: string) => {
-    onInputChange('phoneNumber', savedNumber);
+    onInputChange('phoneNumber', formatPhoneForDisplay(savedNumber));
     setShowSavedNumbers(false);
     toast({
       title: "Number Selected! ✅",
@@ -77,13 +85,19 @@ const PhoneSection = ({ formData, errors, onInputChange }: PhoneSectionProps) =>
   const handleInputPaste = (e: React.ClipboardEvent<HTMLInputElement>) => {
     e.preventDefault();
     const pastedText = e.clipboardData.getData('text');
-    const normalizedPhone = normalizePhoneNumber(pastedText);
     
-    if (normalizedPhone.length <= 9) {
-      onInputChange('phoneNumber', normalizedPhone);
-      if (normalizedPhone.length === 9) {
-        savePhoneNumber(normalizedPhone);
-      }
+    // Validate pasted number
+    const validation = validateSouthAfricanMobile(pastedText);
+    if (validation.isValid) {
+      onInputChange('phoneNumber', pastedText);
+      const normalizedPhone = normalizePhoneNumber(pastedText);
+      savePhoneNumber(normalizedPhone);
+    } else {
+      toast({
+        title: "Invalid Phone Number",
+        description: validation.error || "Please enter a valid South African mobile number",
+        variant: "destructive"
+      });
     }
   };
 
@@ -92,7 +106,7 @@ const PhoneSection = ({ formData, errors, onInputChange }: PhoneSectionProps) =>
       <CardHeader className="pb-3">
         <CardTitle className="text-base sm:text-lg flex items-center gap-2 text-blue-800">
           <Phone className="w-4 h-4 sm:w-5 sm:h-5" />
-          Phone Number (Required for All Services)
+          South African Mobile Number (Required)
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
@@ -143,20 +157,26 @@ const PhoneSection = ({ formData, errors, onInputChange }: PhoneSectionProps) =>
                 value={formData.phoneNumber}
                 onChange={handlePhoneChange}
                 onPaste={handleInputPaste}
-                placeholder="812345678"
-                className={`rounded-l-none pr-10 ${errors.phoneNumber ? 'border-red-500' : isValidPhone ? 'border-green-500' : 'border-gray-300'}`}
-                maxLength={11}
+                placeholder="812345678 (9 digits)"
+                className={`rounded-l-none pr-10 ${
+                  errors.phoneNumber ? 'border-red-500' : 
+                  isValidPhone ? 'border-green-500' : 'border-gray-300'
+                }`}
+                maxLength={15}
                 autoComplete="tel"
               />
               {isValidPhone && (
                 <Check className="absolute right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-green-500" />
+              )}
+              {errors.phoneNumber && (
+                <AlertTriangle className="absolute right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-red-500" />
               )}
             </div>
           </div>
           
           {formData.phoneNumber && isValidPhone && (
             <div className="text-xs text-green-600 bg-green-50 p-2 rounded border border-green-200">
-              ✅ Full Number: {formatPhoneForDisplay(formData.phoneNumber)}
+              ✅ Valid SA Mobile: {formatPhoneForDisplay(formData.phoneNumber)}
               <br />
               💾 Auto-saved for future use
             </div>
@@ -164,22 +184,22 @@ const PhoneSection = ({ formData, errors, onInputChange }: PhoneSectionProps) =>
           
           {errors.phoneNumber && (
             <p className="text-red-500 text-xs mt-1 flex items-center gap-1">
-              <span className="text-red-500">⚠️</span>
+              <AlertTriangle className="w-3 h-3" />
               {errors.phoneNumber}
             </p>
           )}
           
           <div className="bg-blue-50 p-2 rounded border border-blue-200">
             <p className="text-xs text-blue-600">
-              <strong>📱 Flexible Input:</strong> Enter your number in any format:
+              <strong>📱 SA Mobile Format:</strong> Enter your number in any format:
             </p>
             <ul className="text-xs text-blue-600 mt-1 space-y-1">
-              <li>• 812345678 (preferred)</li>
-              <li>• 0812345678 (with leading zero)</li>
-              <li>• +27812345678 (with country code)</li>
+              <li>• 812345678 (9 digits - preferred)</li>
+              <li>• 0812345678 (10 digits with 0)</li>
+              <li>• +27812345678 (11 digits with +27)</li>
             </ul>
             <p className="text-xs text-blue-500 mt-2">
-              Numbers are automatically normalized and saved for convenience.
+              <strong>Valid networks:</strong> MTN, Vodacom, Cell C, Telkom, Rain
             </p>
           </div>
         </div>

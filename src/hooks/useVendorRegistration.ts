@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { useNavigate } from 'react-router-dom';
+import { usePhoneValidation } from '@/hooks/usePhoneValidation';
 import { VendorFormData, VendorFormErrors } from '@/types/vendorRegistration';
 import { validateVendorForm, validateField } from '@/utils/vendorValidation';
 import { useVendorAutoSave } from '@/hooks/useVendorAutoSave';
@@ -11,6 +12,7 @@ export const useVendorRegistration = () => {
   const { toast } = useToast();
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
+  const { validateSouthAfricanMobile } = usePhoneValidation();
   
   const [formData, setFormData] = useState<VendorFormData>({
     firstName: '',
@@ -51,17 +53,8 @@ export const useVendorRegistration = () => {
   const handleInputChange = (field: keyof VendorFormData, value: any) => {
     // Special handling for phone number to ensure proper formatting
     if (field === 'phoneNumber') {
-      let cleanValue = value.replace(/\D/g, '');
-      
-      if (cleanValue.startsWith('0')) {
-        cleanValue = cleanValue.substring(1);
-      }
-      
-      if (cleanValue.length > 9) {
-        cleanValue = cleanValue.substring(0, 9);
-      }
-      
-      value = cleanValue;
+      // Allow only digits, plus, and spaces for better UX
+      value = value.replace(/[^\d+\s]/g, '');
     }
     
     setFormData(prev => ({ 
@@ -75,7 +68,15 @@ export const useVendorRegistration = () => {
       setErrors((prev: VendorFormErrors) => ({ ...prev, [field]: '' }));
     }
 
-    // Real-time validation
+    // Real-time validation for phone number
+    if (field === 'phoneNumber' && value) {
+      const phoneValidation = validateSouthAfricanMobile(value);
+      if (!phoneValidation.isValid && phoneValidation.error) {
+        setErrors((prev: VendorFormErrors) => ({ ...prev, phoneNumber: phoneValidation.error }));
+      }
+    }
+
+    // Real-time validation for other fields
     const fieldError = validateField(field, value, formData);
     if (fieldError) {
       setErrors((prev: VendorFormErrors) => ({ ...prev, [field]: fieldError }));
@@ -94,7 +95,17 @@ export const useVendorRegistration = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
+    // Enhanced validation including phone number
     const newErrors = validateVendorForm(formData);
+    
+    // Additional phone validation
+    if (formData.phoneNumber) {
+      const phoneValidation = validateSouthAfricanMobile(formData.phoneNumber);
+      if (!phoneValidation.isValid) {
+        newErrors.phoneNumber = phoneValidation.error || 'Invalid South African mobile number';
+      }
+    }
+    
     setErrors(newErrors);
 
     if (Object.keys(newErrors).length === 0) {
@@ -135,7 +146,7 @@ export const useVendorRegistration = () => {
       const errorFields = Object.keys(newErrors);
       toast({
         title: "Please Complete Required Fields",
-        description: `Missing: ${errorFields.join(', ')}`,
+        description: `Missing or invalid: ${errorFields.join(', ')}`,
         variant: "destructive"
       });
       

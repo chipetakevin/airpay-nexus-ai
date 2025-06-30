@@ -35,6 +35,43 @@ export const usePhoneValidation = () => {
     return networkMap[prefix] || 'Unknown';
   };
 
+  const validateSouthAfricanMobile = (phoneNumber: string): { isValid: boolean; error?: string } => {
+    const cleanPhone = phoneNumber.replace(/\D/g, '');
+    
+    // Check if it's a valid South African mobile number format
+    let normalizedPhone = '';
+    
+    if (cleanPhone.startsWith('27')) {
+      // International format: +27812345678 (11 digits total)
+      if (cleanPhone.length !== 11) {
+        return { isValid: false, error: 'South African numbers with +27 must be 11 digits total' };
+      }
+      normalizedPhone = cleanPhone.substring(2); // Remove country code
+    } else if (cleanPhone.startsWith('0')) {
+      // National format: 0812345678 (10 digits total)
+      if (cleanPhone.length !== 10) {
+        return { isValid: false, error: 'South African numbers with 0 must be 10 digits total' };
+      }
+      normalizedPhone = cleanPhone.substring(1); // Remove leading 0
+    } else {
+      // Local format: 812345678 (9 digits)
+      if (cleanPhone.length !== 9) {
+        return { isValid: false, error: 'South African mobile numbers must be 9 digits without prefix' };
+      }
+      normalizedPhone = cleanPhone;
+    }
+    
+    // Check if it's a valid mobile prefix
+    const prefix = normalizedPhone.substring(0, 2);
+    const validPrefixes = ['83', '84', '73', '74', '82', '71', '72', '60', '61', '62', '63', '64', '65', '66', '67', '68', '69', '76', '81', '79', '87'];
+    
+    if (!validPrefixes.includes(prefix)) {
+      return { isValid: false, error: 'Invalid South African mobile number prefix' };
+    }
+    
+    return { isValid: true };
+  };
+
   const isRegisteredNumber = (phoneNumber: string): boolean => {
     // Check if this number is associated with a registered user
     const credentials = localStorage.getItem('userCredentials');
@@ -55,10 +92,10 @@ export const usePhoneValidation = () => {
     setRequiresTermsAcceptance(false);
     
     try {
-      // Basic format validation
-      const cleanPhone = phoneNumber.replace(/\D/g, '');
-      if (cleanPhone.length < 10) {
-        setValidationError('Phone number must be at least 10 digits');
+      // First validate South African mobile number format
+      const saValidation = validateSouthAfricanMobile(phoneNumber);
+      if (!saValidation.isValid) {
+        setValidationError(saValidation.error || 'Invalid South African mobile number');
         setIsValidating(false);
         return;
       }
@@ -67,7 +104,7 @@ export const usePhoneValidation = () => {
       if (isRegisteredNumber(phoneNumber)) {
         const networkFromPrefix = detectNetworkFromPrefix(phoneNumber);
         setDetectedNetwork(networkFromPrefix);
-        setRequiresTermsAcceptance(true); // Always require terms for SA regulations
+        setRequiresTermsAcceptance(true);
         setIsValidating(false);
         return;
       }
@@ -89,21 +126,17 @@ export const usePhoneValidation = () => {
       if (ricaData) {
         networkFromPrefix = ricaData.network_provider;
         setDetectedNetwork(networkFromPrefix);
-        setRequiresTermsAcceptance(true); // Always require terms
+        setRequiresTermsAcceptance(true);
       } else {
         networkFromPrefix = detectNetworkFromPrefix(phoneNumber);
         setDetectedNetwork(networkFromPrefix);
-        
-        // FIXED: Don't show error for unknown numbers - just require terms acceptance
-        setRequiresTermsAcceptance(true); // Always require terms, even for unknown numbers
+        setRequiresTermsAcceptance(true);
       }
-      
-      // FIXED: Remove network mismatch validation - allow all numbers when terms are accepted
       
     } catch (error) {
       console.error('Validation error:', error);
       setValidationError('Unable to validate number. Please try again.');
-      setRequiresTermsAcceptance(true); // Still require terms
+      setRequiresTermsAcceptance(true);
     } finally {
       setIsValidating(false);
     }
@@ -112,7 +145,7 @@ export const usePhoneValidation = () => {
   const acceptUnknownNumberTerms = () => {
     setAcceptedUnknownNumber(true);
     setValidationError('');
-    setRequiresTermsAcceptance(true); // Ensure terms are still required
+    setRequiresTermsAcceptance(true);
   };
 
   return {
@@ -123,6 +156,7 @@ export const usePhoneValidation = () => {
     requiresTermsAcceptance,
     validatePhoneNumber,
     acceptUnknownNumberTerms,
+    validateSouthAfricanMobile,
     setValidationError
   };
 };
