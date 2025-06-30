@@ -45,16 +45,15 @@ const BankingSection: React.FC<BankingSectionProps> = ({
   };
 
   const handleBankSelect = (bank: string, routing: string, branchCode: string) => {
+    console.log(`🏦 Bank selected in BankingSection: ${bank}, Branch Code: ${branchCode}`);
     onInputChange('bankName', bank);
+    onInputChange('branchCode', branchCode);
     
-    // Auto-assign branch code based on SA banking rules
-    const assignedBranchCode = autoAssignBranchCode(bank, (code) => {
-      onInputChange('branchCode', code);
-    });
-    
-    // If no branch code was auto-assigned, use the provided one
-    if (!assignedBranchCode && branchCode) {
-      onInputChange('branchCode', branchCode);
+    // Auto-assign and save branch code
+    if (branchCode) {
+      autoAssignBranchCode(bank, (code) => {
+        onInputChange('branchCode', code);
+      });
     }
   };
 
@@ -95,13 +94,19 @@ const BankingSection: React.FC<BankingSectionProps> = ({
         <Input
           id="branchCode"
           value={formData.branchCode}
-          placeholder="Auto-assigned based on South African banking rules"
+          placeholder={formData.branchCode ? formData.branchCode : "Select bank to auto-assign branch code"}
           readOnly
           className="bg-gray-50"
         />
         <div className="bg-green-50 p-2 rounded border border-green-200">
           <p className="text-xs text-green-600">
             ℹ️ Branch code automatically assigned per SA banking standards and permanently saved
+            {formData.branchCode && (
+              <>
+                <br />
+                <strong>Current Branch Code: {formData.branchCode}</strong>
+              </>
+            )}
           </p>
         </div>
       </div>

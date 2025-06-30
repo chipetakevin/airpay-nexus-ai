@@ -20,9 +20,9 @@ const bankData: Bank[] = [
     code: "051001", 
     branchCode: "051001",
     branches: [
-      { name: "Johannesburg CBD", code: "051001", location: "Johannesburg, Gauteng" },
-      { name: "Sandton City", code: "051002", location: "Sandton, Gauteng" },
-      { name: "Cape Town Main", code: "051003", location: "Cape Town, Western Cape" }
+      { name: "Head Office", code: "051001", location: "Johannesburg CBD" },
+      { name: "Rosebank", code: "052053", location: "Rosebank" },
+      { name: "V&A Waterfront", code: "025009", location: "Cape Town" }
     ]
   },
   { 
@@ -30,9 +30,9 @@ const bankData: Bank[] = [
     code: "632005", 
     branchCode: "632005",
     branches: [
-      { name: "Pretoria Central", code: "632005", location: "Pretoria, Gauteng" },
-      { name: "Durban Point", code: "632006", location: "Durban, KwaZulu-Natal" },
-      { name: "Port Elizabeth Main", code: "632007", location: "Port Elizabeth, Eastern Cape" }
+      { name: "Main Branch", code: "632005", location: "Johannesburg CBD" },
+      { name: "Sandton City", code: "632020", location: "Sandton" },
+      { name: "Cape Town Main", code: "632109", location: "Cape Town CBD" }
     ]
   },
   { 
@@ -40,9 +40,9 @@ const bankData: Bank[] = [
     code: "250655", 
     branchCode: "250655",
     branches: [
-      { name: "Rosebank", code: "250655", location: "Rosebank, Gauteng" },
-      { name: "Bellville", code: "250656", location: "Bellville, Western Cape" },
-      { name: "Bloemfontein Central", code: "250657", location: "Bloemfontein, Free State" }
+      { name: "Main Branch", code: "250655", location: "Johannesburg CBD" },
+      { name: "Eastgate", code: "251345", location: "Bedfordview" },
+      { name: "Claremont", code: "201409", location: "Cape Town" }
     ]
   },
   { 
@@ -50,9 +50,9 @@ const bankData: Bank[] = [
     code: "198765", 
     branchCode: "198765",
     branches: [
-      { name: "Centurion Mall", code: "198765", location: "Centurion, Gauteng" },
-      { name: "East London CBD", code: "198766", location: "East London, Eastern Cape" },
-      { name: "Kimberley Main", code: "198767", location: "Kimberley, Northern Cape" }
+      { name: "Head Office", code: "198765", location: "Sandton" },
+      { name: "Canal Walk", code: "198851", location: "Cape Town" },
+      { name: "Pavilion", code: "128745", location: "Durban" }
     ]
   },
   { 
@@ -60,9 +60,9 @@ const bankData: Bank[] = [
     code: "470010", 
     branchCode: "470010",
     branches: [
-      { name: "Stellenbosch", code: "470010", location: "Stellenbosch, Western Cape" },
-      { name: "George Mall", code: "470011", location: "George, Western Cape" },
-      { name: "Polokwane Central", code: "470012", location: "Polokwane, Limpopo" }
+      { name: "Head Office", code: "470010", location: "Stellenbosch" },
+      { name: "Sandton", code: "470020", location: "Sandton" },
+      { name: "Canal Walk", code: "470030", location: "Cape Town" }
     ]
   }
 ];
@@ -87,16 +87,23 @@ const BankAutocomplete: React.FC<BankAutocompleteProps> = ({ onBankSelect, error
     setQuery(bank.name);
     setShowDropdown(false);
     
-    // Auto-select main branch by default
+    // Auto-select main branch and immediately display the branch code
     const mainBranch = bank.branches[0];
     setSelectedBranch(mainBranch);
-    onBankSelect(bank.name, '', mainBranch.code); // No routing number, only branch code
+    
+    // Use the universal branch code for the bank
+    onBankSelect(bank.name, '', bank.branchCode);
+    
+    console.log(`✅ Bank selected: ${bank.name}, Branch Code: ${bank.branchCode}`);
   };
 
   const handleBranchSelect = (branch: any) => {
     setSelectedBranch(branch);
     if (selectedBank) {
-      onBankSelect(selectedBank.name, '', branch.code); // No routing number, only branch code
+      // Use the selected branch code, but fallback to universal branch code
+      const branchCodeToUse = branch.code || selectedBank.branchCode;
+      onBankSelect(selectedBank.name, '', branchCodeToUse);
+      console.log(`✅ Branch selected: ${branch.name}, Branch Code: ${branchCodeToUse}`);
     }
   };
 
@@ -113,13 +120,13 @@ const BankAutocomplete: React.FC<BankAutocompleteProps> = ({ onBankSelect, error
   return (
     <div className="space-y-4">
       <div className="space-y-2">
-        <Label htmlFor="bankSearch">Select Your Bank *</Label>
+        <Label htmlFor="bankSearch">Select Your South African Bank *</Label>
         <div className="relative">
           <Input
             id="bankSearch"
             value={query}
             onChange={(e) => handleInputChange(e.target.value)}
-            placeholder="Start typing your bank name..."
+            placeholder="Start typing your bank name (e.g., FNB, ABSA, Standard Bank)..."
             className={error ? 'border-red-500' : ''}
             onFocus={() => setShowDropdown(query.length > 0)}
           />
@@ -133,7 +140,7 @@ const BankAutocomplete: React.FC<BankAutocompleteProps> = ({ onBankSelect, error
                   onClick={() => handleBankSelect(bank)}
                 >
                   <div className="font-medium">{bank.name}</div>
-                  <div className="text-sm text-gray-500">Code: {bank.code}</div>
+                  <div className="text-sm text-gray-500">Universal Branch Code: {bank.branchCode}</div>
                 </div>
               ))}
             </div>
@@ -145,7 +152,7 @@ const BankAutocomplete: React.FC<BankAutocompleteProps> = ({ onBankSelect, error
 
       {selectedBank && (
         <div className="space-y-2">
-          <Label htmlFor="branchSelect">Select Branch</Label>
+          <Label htmlFor="branchSelect">Select Branch (Optional)</Label>
           <select
             id="branchSelect"
             value={selectedBranch?.code || ''}
@@ -157,19 +164,33 @@ const BankAutocomplete: React.FC<BankAutocompleteProps> = ({ onBankSelect, error
           >
             {selectedBank.branches.map((branch) => (
               <option key={branch.code} value={branch.code}>
-                {branch.name} - {branch.location} (Branch Code: {branch.code})
+                {branch.name} - {branch.location} (Code: {branch.code})
               </option>
             ))}
           </select>
           
           {selectedBranch && (
-            <div className="text-sm text-gray-600 bg-green-50 p-2 rounded">
-              <p>✓ Bank: {selectedBank.name}</p>
-              <p>✓ Branch: {selectedBranch.name}</p>
-              <p>✓ Location: {selectedBranch.location}</p>
-              <p>✓ Branch Code: {selectedBranch.code}</p>
-              <p className="text-xs text-gray-500 mt-1">
-                ℹ️ South African banks use branch codes, not routing numbers
+            <div className="text-sm text-gray-600 bg-green-50 p-3 rounded-lg border border-green-200">
+              <div className="space-y-1">
+                <p className="flex items-center gap-2">
+                  <span className="text-green-600">✓</span>
+                  <strong>Bank:</strong> {selectedBank.name}
+                </p>
+                <p className="flex items-center gap-2">
+                  <span className="text-green-600">✓</span>
+                  <strong>Branch:</strong> {selectedBranch.name}
+                </p>
+                <p className="flex items-center gap-2">
+                  <span className="text-green-600">✓</span>
+                  <strong>Location:</strong> {selectedBranch.location}
+                </p>
+                <p className="flex items-center gap-2">
+                  <span className="text-green-600">✓</span>
+                  <strong>Branch Code:</strong> {selectedBranch.code || selectedBank.branchCode}
+                </p>
+              </div>
+              <p className="text-xs text-green-600 mt-2 border-t border-green-200 pt-2">
+                ℹ️ Branch code automatically assigned per South African banking standards
               </p>
             </div>
           )}
