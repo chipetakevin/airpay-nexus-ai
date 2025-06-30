@@ -4,7 +4,7 @@ import { useToast } from '@/hooks/use-toast';
 import { handleVendorRegistrationSubmit } from '@/utils/vendorRegistrationSubmit';
 import { usePersistentAuth } from '@/components/auth/PersistentAuthProvider';
 
-export const useVendorRegistrationSubmit = (handleSubmit: (e: React.FormEvent) => Promise<void>) => {
+export const useVendorRegistrationSubmit = (handleSubmit: (e: React.FormEvent) => Promise<boolean>) => {
   const [isRegistering, setIsRegistering] = useState(false);
   const { toast } = useToast();
   const { createPermanentSession } = usePersistentAuth();
@@ -14,8 +14,13 @@ export const useVendorRegistrationSubmit = (handleSubmit: (e: React.FormEvent) =
     setIsRegistering(true);
 
     try {
-      // First run the form validation and data preparation
-      await handleSubmit(e);
+      // First run the form validation and data preparation - now expecting boolean return
+      const isValid = await handleSubmit(e);
+      
+      if (!isValid) {
+        // Form validation failed, don't proceed with registration
+        return;
+      }
       
       // Get the submitted form data from localStorage after successful validation
       const vendorData = localStorage.getItem('onecardVendor');
