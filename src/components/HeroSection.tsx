@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
@@ -23,8 +22,8 @@ const HeroSection = () => {
   };
 
   const handleBecomeVendor = () => {
-    // Always redirect to vendor tab - let the vendor registration component handle the logic
-    navigate('/portal?tab=vendor');
+    // Redirect directly to vendor dashboard (main portal) instead of vendor registration
+    navigate('/portal?tab=deals');
   };
 
   return (
