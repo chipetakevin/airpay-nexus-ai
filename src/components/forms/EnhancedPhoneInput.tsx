@@ -38,7 +38,7 @@ const EnhancedPhoneInput = ({
 }: EnhancedPhoneInputProps) => {
   const [showDropdown, setShowDropdown] = useState(false);
   const [hasAutoFilled, setHasAutoFilled] = useState(false);
-  const [showSuggestions, setShowSuggestionsState] = useState(false);
+  const [showSuggestionsState, setShowSuggestionsState] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   
   const { 
