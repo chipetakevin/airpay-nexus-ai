@@ -1,3 +1,4 @@
+
 import { supabase } from '@/integrations/supabase/client';
 import { Deal, ProfitAllocation } from '@/types/deals';
 
@@ -32,7 +33,7 @@ export const loadDealsFromSupabase = async (): Promise<Deal[]> => {
       expires_at: deal.expires_at,
       verified: deal.verified,
       network_price: deal.original_price, // Using original_price as network_price fallback
-      markup_amount: deal.discounted_price - deal.original_price
+      markup_amount: deal.original_price - deal.discounted_price // Fixed calculation
     }));
 
     return transformedDeals;
