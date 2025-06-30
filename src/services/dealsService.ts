@@ -1,12 +1,15 @@
 
 import { supabase } from '@/integrations/supabase/client';
-import { Deal } from '@/types/deals';
+import { Deal, ProfitAllocation } from '@/types/deals';
 
 export const loadDealsFromSupabase = async (): Promise<Deal[]> => {
   try {
     const { data, error } = await supabase
       .from('deals')
-      .select('*')
+      .select(`
+        *,
+        vendors!inner(business_name)
+      `)
       .order('created_at', { ascending: false });
 
     if (error) {
@@ -14,11 +17,46 @@ export const loadDealsFromSupabase = async (): Promise<Deal[]> => {
       return [];
     }
 
-    return data || [];
+    // Transform the data to include vendor_name
+    const transformedData = (data || []).map(deal => ({
+      ...deal,
+      vendor_name: Array.isArray(deal.vendors) 
+        ? deal.vendors[0]?.business_name || 'Unknown Vendor'
+        : deal.vendors?.business_name || 'Unknown Vendor',
+      network_price: deal.original_price * 0.8, // Estimated network cost
+      markup_amount: deal.original_price - deal.discounted_price
+    }));
+
+    return transformedData;
   } catch (error) {
     console.error('Error loading deals from Supabase:', error);
     return [];
   }
+};
+
+export const calculateProfitSharing = (
+  markupAmount: number,
+  purchaseType: 'self' | 'third_party' | 'vendor',
+  isVendor: boolean
+): ProfitAllocation => {
+  const allocation: ProfitAllocation = {};
+
+  if (isVendor) {
+    // Vendor purchase allocation
+    allocation.vendorProfit = markupAmount * 0.7; // 70% to vendor
+    allocation.adminProfit = markupAmount * 0.3; // 30% to admin
+  } else if (purchaseType === 'self') {
+    // Self purchase allocation
+    allocation.customerCashback = markupAmount * 0.5; // 50% cashback
+    allocation.adminProfit = markupAmount * 0.5; // 50% to admin
+  } else {
+    // Third party purchase allocation
+    allocation.registeredCustomerReward = markupAmount * 0.3; // 30% to registered customer
+    allocation.unregisteredRecipientReward = markupAmount * 0.2; // 20% to recipient
+    allocation.adminProfit = markupAmount * 0.5; // 50% to admin
+  }
+
+  return allocation;
 };
 
 export const getSampleDeals = (): Deal[] => {
