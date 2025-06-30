@@ -30,9 +30,14 @@ const MobileMenuOverlay = ({ isMenuOpen, closeMenu, isHomePage, handleQuickShopC
       {/* Mobile Menu */}
       <div 
         data-mobile-menu="content"
-        className="md:hidden fixed left-0 right-0 top-16 bg-white shadow-2xl border-t-2 border-[#75B8FA]/20 z-[95] max-h-[calc(100vh-4rem)] overflow-y-auto animate-in slide-in-from-top-2 duration-200"
+        className="md:hidden fixed left-0 right-0 top-16 bg-white shadow-2xl border-t-2 border-[#75B8FA]/20 z-[95] max-h-[calc(100vh-4rem)] overflow-y-auto"
+        style={{
+          transform: isMenuOpen ? 'translateY(0)' : 'translateY(-100%)',
+          transition: 'transform 0.2s ease-out',
+          opacity: isMenuOpen ? 1 : 0,
+        }}
       >
-        <nav className="p-4 space-y-2">
+        <nav className="p-4 space-y-2 min-h-[200px]">
           {navigationItems.map((item) => (
             <Link
               key={item.path}
