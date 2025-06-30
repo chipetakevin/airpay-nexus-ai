@@ -11,7 +11,7 @@ export const useVendorFormSubmission = () => {
 
   const processFormSubmission = useCallback(async (
     formData: VendorFormData,
-    savePermanently: (data: VendorFormData) => Promise<void>
+    savePermanently: (data: VendorFormData) => Promise<boolean>
   ): Promise<void> => {
     // Normalize phone number for consistent storage
     const normalizedPhone = formData.phoneNumber.replace(/\D/g, '');
@@ -61,8 +61,11 @@ export const useVendorFormSubmission = () => {
     // Create permanent session
     createPermanentSession(userCredentials, userData);
     
-    // Save form data permanently
-    await savePermanently(updatedFormData);
+    // Save form data permanently and handle the boolean return
+    const saveSuccess = await savePermanently(updatedFormData);
+    if (!saveSuccess) {
+      console.warn('⚠️ Form data save returned false, but continuing with registration');
+    }
     
     console.log('✅ Vendor registration completed with permanent session');
     
