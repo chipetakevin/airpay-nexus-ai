@@ -126,7 +126,7 @@ const WhatsAppAssistant = () => {
       )}
 
       {activeTab === 'cart' && (
-        <div className="flex-1 p-4">
+        <div className="flex-1">
           {isAuthenticated ? (
             <WhatsAppCart 
               items={cart}
