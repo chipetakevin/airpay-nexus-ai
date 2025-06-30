@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -6,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Check, MapPin, Phone, Globe, Building2 } from 'lucide-react';
+import { useBranchCodeAutoAssign } from '@/hooks/useBranchCodeAutoAssign';
 
 interface SouthAfricanBank {
   name: string;
@@ -152,6 +152,7 @@ const EnhancedSouthAfricanBankAutocomplete: React.FC<EnhancedSouthAfricanBankAut
   const [selectedBank, setSelectedBank] = useState<SouthAfricanBank | null>(null);
   const [selectedBranch, setSelectedBranch] = useState<any>(null);
   const [isDetecting, setIsDetecting] = useState(false);
+  const { getBranchCodeForBank } = useBranchCodeAutoAssign();
 
   // Auto-detect bank from saved data
   useEffect(() => {
@@ -164,14 +165,17 @@ const EnhancedSouthAfricanBankAutocomplete: React.FC<EnhancedSouthAfricanBankAut
         setQuery(bank.name);
         const mainBranch = bank.branches.find(b => b.isMain) || bank.branches[0];
         setSelectedBranch(mainBranch);
-        onBankSelect(bank.name, '', mainBranch.code, {
+        
+        // Immediately get and set the branch code
+        const branchCode = getBranchCodeForBank(bank.name) || mainBranch.code;
+        onBankSelect(bank.name, '', branchCode, {
           bank,
           branch: mainBranch,
           swiftCode: bank.swiftCode
         });
       }
     }
-  }, [defaultValue, onBankSelect]);
+  }, [defaultValue, onBankSelect, getBranchCodeForBank]);
 
   const filteredBanks = southAfricanBanks.filter(bank =>
     bank.name.toLowerCase().includes(query.toLowerCase()) ||
@@ -190,7 +194,10 @@ const EnhancedSouthAfricanBankAutocomplete: React.FC<EnhancedSouthAfricanBankAut
     const mainBranch = bank.branches.find(b => b.isMain) || bank.branches[0];
     setSelectedBranch(mainBranch);
     
-    onBankSelect(bank.name, '', mainBranch.code, {
+    // Get the correct branch code immediately
+    const branchCode = getBranchCodeForBank(bank.name) || mainBranch.code;
+    
+    onBankSelect(bank.name, '', branchCode, {
       bank,
       branch: mainBranch,
       swiftCode: bank.swiftCode
@@ -199,12 +206,15 @@ const EnhancedSouthAfricanBankAutocomplete: React.FC<EnhancedSouthAfricanBankAut
     if (onBranchSelect) {
       onBranchSelect(mainBranch);
     }
+
+    console.log(`✅ Enhanced Bank selected: ${bank.name}, Branch Code: ${branchCode}`);
   };
 
   const handleBranchSelect = (branch: any) => {
     setSelectedBranch(branch);
     if (selectedBank) {
-      onBankSelect(selectedBank.name, '', branch.code, {
+      const branchCode = getBranchCodeForBank(selectedBank.name) || branch.code;
+      onBankSelect(selectedBank.name, '', branchCode, {
         bank: selectedBank,
         branch,
         swiftCode: selectedBank.swiftCode
@@ -384,7 +394,7 @@ const EnhancedSouthAfricanBankAutocomplete: React.FC<EnhancedSouthAfricanBankAut
               <div className="bg-white p-3 rounded-lg border border-green-200 space-y-2">
                 <div className="flex items-center gap-2 text-sm">
                   <Check className="w-4 h-4 text-green-600" />
-                  <span className="font-medium text-green-800">Branch Selected</span>
+                  <span className="font-medium text-green-800">Branch Selected & Code Assigned</span>
                 </div>
                 
                 <div className="space-y-1 text-xs text-gray-600">
@@ -397,8 +407,8 @@ const EnhancedSouthAfricanBankAutocomplete: React.FC<EnhancedSouthAfricanBankAut
                     <span><strong>Location:</strong> {selectedBranch.location}</span>
                   </div>
                   <div className="flex items-center gap-2">
-                    <span className="w-3 h-3 text-center">#</span>
-                    <span><strong>Branch Code:</strong> {selectedBranch.code}</span>
+                    <span className="w-3 h-3 text-center font-bold">#</span>
+                    <span><strong>Branch Code:</strong> {getBranchCodeForBank(selectedBank.name) || selectedBranch.code}</span>
                   </div>
                   {selectedBranch.phone && (
                     <div className="flex items-center gap-2">
@@ -413,7 +423,7 @@ const EnhancedSouthAfricanBankAutocomplete: React.FC<EnhancedSouthAfricanBankAut
                 </div>
                 
                 <div className="text-xs text-green-600 mt-2 pt-2 border-t border-green-200">
-                  ℹ️ This information will be securely saved for future transactions
+                  ✅ Branch code automatically assigned and ready for use
                 </div>
               </div>
             )}
