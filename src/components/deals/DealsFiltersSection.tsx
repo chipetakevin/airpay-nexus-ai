@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { 
@@ -57,11 +56,11 @@ const DealsFiltersSection = ({
           <SelectContent className="bg-white border border-gray-300 shadow-lg z-50 max-h-80 overflow-y-auto">
             <SelectItem value="all">All Networks & Retailers</SelectItem>
             
-            {/* Priority Networks - Divinely Mobile First, then MTN */}
+            {/* Priority Networks - Divine Mobile First, then MTN */}
             <SelectGroup>
               <SelectLabel>⭐ Priority Networks</SelectLabel>
-              <SelectItem value="divinely mobile" className="font-semibold text-yellow-700 bg-yellow-50">
-                🏆 Divinely Mobile (Best Deals)
+              <SelectItem value="divine mobile" className="font-semibold text-yellow-700 bg-yellow-50">
+                🏆 Divine Mobile (Best Deals)
               </SelectItem>
               <SelectItem value="mtn" className="font-medium text-orange-600">
                 📱 MTN

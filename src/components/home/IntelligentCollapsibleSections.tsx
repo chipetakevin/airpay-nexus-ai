@@ -1,18 +1,17 @@
-
 import React from 'react';
 import { Star, Zap, Users, Shield } from 'lucide-react';
 import IntelligentCollapsible from '@/components/ui/intelligent-collapsible';
 
 const IntelligentCollapsibleSections = () => {
   return (
-    <div className="space-y-4 max-w-4xl mx-auto">
+    <div className="space-y-3 max-w-4xl mx-auto">
       <IntelligentCollapsible
         title="Unified Mobile Platform"
-        icon={<Star className="w-6 h-6 text-orange-500" />}
+        icon={<Star className="w-5 h-5 text-orange-500" />}
         badge="Premium"
         badgeVariant="outline"
         defaultCollapsed={true}
-        className="border-orange-200 bg-orange-50/30"
+        className="border-orange-200 bg-orange-50/20"
       >
         <div className="space-y-4">
           <p className="text-gray-700">
@@ -45,11 +44,11 @@ const IntelligentCollapsibleSections = () => {
 
       <IntelligentCollapsible
         title="Quick Access Features"
-        icon={<Zap className="w-6 h-6 text-blue-500" />}
+        icon={<Zap className="w-5 h-5 text-blue-500" />}
         badge="Fast"
         badgeVariant="secondary"
         defaultCollapsed={true}
-        className="border-blue-200 bg-blue-50/30"
+        className="border-blue-200 bg-blue-50/20"
       >
         <div className="space-y-4">
           <p className="text-gray-700">
@@ -79,11 +78,11 @@ const IntelligentCollapsibleSections = () => {
 
       <IntelligentCollapsible
         title="Join Our Thriving Community"
-        icon={<Users className="w-6 h-6 text-purple-500" />}
+        icon={<Users className="w-5 h-5 text-purple-500" />}
         badge="50K+ Members"
         badgeVariant="outline"
         defaultCollapsed={true}
-        className="border-purple-200 bg-purple-50/30"
+        className="border-purple-200 bg-purple-50/20"
       >
         <div className="space-y-4">
           <p className="text-gray-700">
@@ -109,11 +108,11 @@ const IntelligentCollapsibleSections = () => {
 
       <IntelligentCollapsible
         title="Why Choose Smart Deals Shopping?"
-        icon={<Shield className="w-6 h-6 text-purple-500" />}
+        icon={<Shield className="w-5 h-5 text-purple-500" />}
         badge="Trusted"
         badgeVariant="outline"
         defaultCollapsed={true}
-        className="border-purple-200 bg-purple-50/30"
+        className="border-purple-200 bg-purple-50/20"
       >
         <div className="space-y-4">
           <p className="text-gray-700">

@@ -23,7 +23,7 @@ const IntelligentCollapsible: React.FC<IntelligentCollapsibleProps> = ({
   badge,
   badgeVariant = 'default',
   children,
-  defaultCollapsed = false,
+  defaultCollapsed = true,
   isComplete = false,
   completedContent,
   className = ''
@@ -42,19 +42,19 @@ const IntelligentCollapsible: React.FC<IntelligentCollapsibleProps> = ({
   };
 
   return (
-    <Card className={`transition-all duration-300 ${className}`}>
+    <Card className={`transition-all duration-300 shadow-sm border-l-4 ${className}`}>
       <CardHeader 
-        className="cursor-pointer hover:bg-gray-50 transition-colors duration-200"
+        className="cursor-pointer hover:bg-gray-50/50 transition-colors duration-200 py-3"
         onClick={toggleCollapse}
       >
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="flex items-center gap-2">
               {icon}
-              <h3 className="text-lg font-semibold">{title}</h3>
+              <h3 className="text-base font-semibold">{title}</h3>
             </div>
             {badge && (
-              <Badge variant={badgeVariant} className="ml-2">
+              <Badge variant={badgeVariant} className="ml-2 text-xs px-2 py-1">
                 {badge}
               </Badge>
             )}
@@ -62,19 +62,19 @@ const IntelligentCollapsible: React.FC<IntelligentCollapsibleProps> = ({
           <Button
             variant="ghost"
             size="sm"
-            className="p-1 h-auto hover:bg-gray-100"
+            className="p-1 h-6 w-6 hover:bg-gray-100 rounded-full"
           >
             {isCollapsed ? (
-              <ChevronDown className="w-4 h-4" />
+              <ChevronDown className="w-3 h-3" />
             ) : (
-              <ChevronUp className="w-4 h-4" />
+              <ChevronUp className="w-3 h-3" />
             )}
           </Button>
         </div>
       </CardHeader>
       
       {!isCollapsed && (
-        <CardContent className="pt-0">
+        <CardContent className="pt-0 pb-4">
           {isComplete && completedContent ? completedContent : children}
         </CardContent>
       )}
