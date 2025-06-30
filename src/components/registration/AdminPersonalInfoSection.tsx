@@ -100,7 +100,7 @@ const AdminPersonalInfoSection: React.FC<AdminPersonalInfoProps> = ({
               autoComplete="tel"
               value={formData.phoneNumber}
               onChange={handlePhoneChange}
-              placeholder="812345678 (9 digits)"
+              placeholder="832466539 (9 digits)"
               className={`${errors.phoneNumber ? 'border-red-500' : isValidPhone ? 'border-green-500' : ''} pr-10`}
               maxLength={15}
             />
@@ -120,7 +120,7 @@ const AdminPersonalInfoSection: React.FC<AdminPersonalInfoProps> = ({
         )}
         <div className="bg-blue-50 p-2 rounded border border-blue-200">
           <p className="text-xs text-blue-600">
-            <strong>📱 Valid formats:</strong> 812345678, 0812345678, or +27812345678
+            <strong>📱 Valid formats:</strong> 832466539, 0832466539, or +27832466539
           </p>
         </div>
       </div>

@@ -157,7 +157,7 @@ const PhoneSection = ({ formData, errors, onInputChange }: PhoneSectionProps) =>
                 value={formData.phoneNumber}
                 onChange={handlePhoneChange}
                 onPaste={handleInputPaste}
-                placeholder="812345678 (9 digits)"
+                placeholder="832466539 (9 digits)"
                 className={`rounded-l-none pr-10 ${
                   errors.phoneNumber ? 'border-red-500' : 
                   isValidPhone ? 'border-green-500' : 'border-gray-300'
@@ -194,9 +194,9 @@ const PhoneSection = ({ formData, errors, onInputChange }: PhoneSectionProps) =>
               <strong>📱 SA Mobile Format:</strong> Enter your number in any format:
             </p>
             <ul className="text-xs text-blue-600 mt-1 space-y-1">
-              <li>• 812345678 (9 digits - preferred)</li>
-              <li>• 0812345678 (10 digits with 0)</li>
-              <li>• +27812345678 (11 digits with +27)</li>
+              <li>• 832466539 (9 digits - preferred)</li>
+              <li>• 0832466539 (10 digits with 0)</li>
+              <li>• +27832466539 (11 digits with +27)</li>
             </ul>
             <p className="text-xs text-blue-500 mt-2">
               <strong>Valid networks:</strong> MTN, Vodacom, Cell C, Telkom, Rain
