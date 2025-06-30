@@ -1,11 +1,11 @@
 
-import { Crown, ShoppingCart, MessageCircle, Star } from 'lucide-react';
+import { Home, ShoppingCart, MessageCircle, Star } from 'lucide-react';
 
 export const navigationItems = [
   { 
     path: '/', 
     label: 'Home', 
-    icon: <Crown className="w-4 h-4" /> 
+    icon: <Home className="w-4 h-4" />
   },
   { 
     path: '/deals', 
@@ -22,6 +22,6 @@ export const navigationItems = [
   { 
     path: '/portal', 
     label: 'Portal', 
-    icon: <Star className="w-4 h-4" /> 
+    icon: <Star className="w-4 h-4" />
   }
 ];

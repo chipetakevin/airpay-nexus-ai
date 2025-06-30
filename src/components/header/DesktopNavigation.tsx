@@ -17,51 +17,59 @@ const DesktopNavigation = ({ isHomePage, handleQuickShopClick }: DesktopNavigati
 
   return (
     <>
-      {/* Desktop Navigation */}
-      <nav className="hidden md:flex items-center space-x-1">
+      {/* Desktop Navigation - Cleaner Layout */}
+      <nav className="hidden md:flex items-center space-x-2 lg:space-x-3">
         {navigationItems.map((item) => (
           <Link
             key={item.path}
             to={item.path}
-            className={`relative px-4 py-2 rounded-lg transition-all duration-200 flex items-center gap-2 ${
+            className={`relative px-3 lg:px-4 py-2 rounded-lg transition-all duration-200 flex items-center gap-2 text-sm font-medium whitespace-nowrap ${
               isActive(item.path)
-                ? 'bg-white text-[#75B8FA] font-medium'
-                : 'text-white hover:bg-white/20 hover:text-white font-medium'
+                ? 'bg-white text-[#75B8FA] shadow-sm'
+                : 'text-white hover:bg-white/15 hover:text-white'
             }`}
           >
-            {item.icon}
-            <span>{item.label}</span>
+            <span className="text-base">{item.icon}</span>
+            <span className="hidden lg:inline">{item.label}</span>
+            <span className="lg:hidden">{item.label.split(' ')[0]}</span>
             {item.badge && (
-              <Badge className="bg-[#75B8FA] text-white text-xs border-white">
+              <Badge 
+                variant="secondary" 
+                className="bg-yellow-400 text-black text-xs px-1.5 py-0.5 font-semibold border-0 ml-1"
+              >
                 {item.badge}
               </Badge>
             )}
           </Link>
         ))}
         
-        {/* Buy Airtime & Data Tab - Always show on home page */}
+        {/* Buy Airtime & Data Tab - Clean Design */}
         {isHomePage && (
           <button
             onClick={handleQuickShopClick}
-            className="relative px-4 py-2 rounded-lg transition-all duration-200 flex items-center gap-2 font-medium bg-white text-green-600 hover:bg-green-50 border-2 border-green-200"
+            className="relative px-3 lg:px-4 py-2 rounded-lg transition-all duration-200 flex items-center gap-2 text-sm font-medium whitespace-nowrap bg-gradient-to-r from-emerald-500 to-green-600 text-white hover:from-emerald-600 hover:to-green-700 shadow-sm border-0"
           >
             <CreditCard className="w-4 h-4" />
-            <span>Buy Airtime & Data</span>
-            <Badge className="bg-green-600 text-white text-xs">
+            <span className="hidden lg:inline">Buy Airtime & Data</span>
+            <span className="lg:hidden">Buy Now</span>
+            <Badge className="bg-white text-emerald-600 text-xs px-1.5 py-0.5 font-semibold border-0 ml-1">
               Quick
             </Badge>
           </button>
         )}
       </nav>
 
-      {/* WhatsApp Quick Access */}
-      <div className="hidden md:flex items-center gap-3">
+      {/* WhatsApp Quick Access - Simplified */}
+      <div className="hidden md:flex items-center">
         <Button
           onClick={() => window.open('https://wa.me/27832466539', '_blank')}
-          className="bg-white text-[#75B8FA] hover:bg-white/90 px-4 py-2 font-semibold"
+          variant="outline"
+          size="sm"
+          className="bg-white/10 text-white border-white/30 hover:bg-white hover:text-[#75B8FA] transition-all duration-200 font-medium px-3"
         >
           <MessageCircle className="w-4 h-4 mr-2" />
-          WhatsApp Support
+          <span className="hidden lg:inline">WhatsApp Support</span>
+          <span className="lg:hidden">Support</span>
         </Button>
       </div>
     </>
