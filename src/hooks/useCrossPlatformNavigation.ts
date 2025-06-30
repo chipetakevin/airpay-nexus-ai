@@ -32,8 +32,8 @@ export const useCrossPlatformNavigation = () => {
 
   const navigateToPortalDeals = () => {
     toast({
-      title: "Switching to Portal Deals",
-      description: "Opening comprehensive deals dashboard...",
+      title: "Opening Smart Deals",
+      description: "Accessing comprehensive deals dashboard...",
       duration: 2000,
     });
 

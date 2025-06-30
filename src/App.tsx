@@ -13,6 +13,7 @@ import SpazaAI from "./pages/SpazaAI";
 import MasterDashboard from "./pages/MasterDashboard";
 import USSDSystem from "./pages/USSDSystem";
 import DealsHub from "./pages/DealsHub";
+import DealsRedirect from "./pages/DealsRedirect";
 import NotFound from "./pages/NotFound";
 import DevineBaaS from "./pages/DevineBaaS";
 import DivineBaaS from "./pages/DivineBaaS";
@@ -40,6 +41,7 @@ const App = () => (
             <Route path="/spaza-ai" element={<SpazaAI />} />
             <Route path="/master-dashboard" element={<MasterDashboard />} />
             <Route path="/ussd-system" element={<USSDSystem />} />
+            <Route path="/deals" element={<DealsRedirect />} />
             <Route path="/deals-hub" element={<DealsHub />} />
             <Route path="/devine-baas" element={<DevineBaaS />} />
             <Route path="/divine-baas" element={<DivineBaaS />} />

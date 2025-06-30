@@ -8,7 +8,7 @@ export const navigationItems = [
     icon: <Home className="w-4 h-4" />
   },
   { 
-    path: '/deals', 
+    path: '/portal?tab=deals', 
     label: 'Deals Hub', 
     icon: <ShoppingCart className="w-4 h-4" />,
     badge: 'USSD'
