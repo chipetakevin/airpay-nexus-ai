@@ -12,6 +12,8 @@ import { User, Phone, Mail, Shield, CheckCircle } from 'lucide-react';
 import EnhancedSouthAfricanBankAutocomplete from '@/components/banking/EnhancedSouthAfricanBankAutocomplete';
 import UniversalCardDetailsForm from '@/components/banking/UniversalCardDetailsForm';
 import { useUniversalBankingStorage } from '@/hooks/useUniversalBankingStorage';
+import { useIntelligentReporting } from '@/hooks/useIntelligentReporting';
+import IntelligentReporting from '@/components/feedback/IntelligentReporting';
 
 const CustomerRegistration = () => {
   const { toast } = useToast();
@@ -22,6 +24,7 @@ const CustomerRegistration = () => {
   const [bankingDataLoaded, setBankingDataLoaded] = useState(false);
   
   const { bankingData, saveBankingProfile, loadBankingData } = useUniversalBankingStorage('customer');
+  const { activeReport, showSuccessReport, showErrorReport, clearReport } = useIntelligentReporting();
 
   // Prevent flickering by memoizing conditional rendering logic
   const shouldShowBankingSection = useMemo(() => {
@@ -104,9 +107,35 @@ const CustomerRegistration = () => {
     setIsSubmitting(true);
     
     try {
+      // Validate required fields
+      if (!formData.firstName || !formData.lastName || !formData.email || !formData.phoneNumber) {
+        showErrorReport(
+          'Please complete all required fields to continue registration.',
+          '/portal?tab=registration',
+          'Complete Registration'
+        );
+        return;
+      }
+
+      if (!formData.agreeTerms) {
+        showErrorReport(
+          'Please accept the terms and conditions to proceed.',
+          '/portal?tab=registration',
+          'Accept Terms'
+        );
+        return;
+      }
+
       await handleSubmit(e);
+      showSuccessReport('Customer registration completed successfully! Welcome to Addex-Hub Mobile.');
+      
     } catch (error) {
       console.error('Registration error:', error);
+      showErrorReport(
+        'Registration failed. Please check your information and try again.',
+        '/portal?tab=registration',
+        'Try Again'
+      );
     } finally {
       setIsSubmitting(false);
     }
@@ -372,6 +401,14 @@ const CustomerRegistration = () => {
           </CardContent>
         </Card>
       </form>
+
+      {/* Intelligent Reporting */}
+      {activeReport && (
+        <IntelligentReporting
+          report={activeReport}
+          onClose={clearReport}
+        />
+      )}
     </div>
   );
 };

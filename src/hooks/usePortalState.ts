@@ -1,7 +1,8 @@
 
 import { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { useToast } from '@/hooks/use-toast';
+import { useAccessControl } from './useAccessControl';
+import { useIntelligentReporting } from './useIntelligentReporting';
 
 type UserType = 'customer' | 'vendor' | 'admin' | null;
 
@@ -11,7 +12,9 @@ export const usePortalState = () => {
   const [userType, setUserType] = useState<UserType>(null);
   const [isAdminAuthenticated, setIsAdminAuthenticated] = useState(false);
   const [isUnifiedProfile, setIsUnifiedProfile] = useState(false);
-  const { toast } = useToast();
+  
+  const { checkTabAccess, isAuthenticated } = useAccessControl();
+  const { showErrorReport } = useIntelligentReporting();
 
   useEffect(() => {
     const adminAuth = localStorage.getItem('adminAuthenticated');
@@ -22,11 +25,11 @@ export const usePortalState = () => {
       setUserType('admin');
     }
 
-    // Check for unified profile access
     if (credentials) {
       try {
         const userCreds = JSON.parse(credentials);
         setIsUnifiedProfile(userCreds.isUnifiedProfile || false);
+        setUserType(userCreds.userType);
       } catch (error) {
         console.error('Error parsing credentials:', error);
       }
@@ -34,89 +37,51 @@ export const usePortalState = () => {
 
     const tabParam = searchParams.get('tab');
     if (tabParam) {
-      setActiveTab(tabParam);
-      
-      // Set user type based on tab for non-unified users
-      if (!isUnifiedProfile) {
-        if (tabParam === 'registration') {
-          setUserType('customer');
-        } else if (tabParam === 'vendor') {
-          setUserType('vendor');
-        } else if (tabParam === 'admin-reg' || tabParam === 'admin') {
-          setUserType('admin');
+      // Check if user has access to this tab
+      if (!checkTabAccess(tabParam)) {
+        // Redirect to appropriate registration or show access denied
+        if (!isAuthenticated) {
+          setActiveTab('registration');
+          showErrorReport(
+            'Please complete registration to access this service.',
+            '/portal?tab=registration',
+            'Complete Registration'
+          );
+        } else {
+          setActiveTab('deals'); // Default to deals for authenticated users
+          showErrorReport(
+            'Access denied. You do not have permission to access this section.',
+            '/portal?tab=deals',
+            'Go to Deals'
+          );
         }
+      } else {
+        setActiveTab(tabParam);
       }
     } else {
-      // Default to deals tab for authenticated users
-      const isAuthenticated = localStorage.getItem('userAuthenticated') === 'true';
-      if (isAuthenticated) {
-        setActiveTab('deals');
-      }
+      setActiveTab(isAuthenticated ? 'deals' : 'registration');
     }
-  }, [searchParams, isUnifiedProfile]);
-
-  const showAdminTab = isAdminAuthenticated || searchParams.get('tab') === 'admin';
-
-  const isTabAllowed = (tabValue: string): boolean => {
-    // Unified profiles have access to all tabs
-    if (isUnifiedProfile) {
-      return true;
-    }
-
-    // Admin users have access to all tabs
-    if (userType === 'admin') {
-      return true;
-    }
-    
-    if (userType === 'customer') {
-      return ['registration', 'onecard', 'deals'].includes(tabValue);
-    }
-    
-    if (userType === 'vendor') {
-      return ['vendor', 'onecard', 'deals'].includes(tabValue);
-    }
-    
-    return true; // No restriction if no user type selected yet
-  };
+  }, [searchParams, checkTabAccess, isAuthenticated, showErrorReport]);
 
   const handleTabChange = (value: string) => {
-    // For unified profiles, allow all tabs without restriction
-    if (isUnifiedProfile) {
-      setActiveTab(value);
-      return;
-    }
-
-    // If user type is not selected yet, set it based on tab selection
-    if (!userType) {
-      if (value === 'registration') {
-        setUserType('customer');
-      } else if (value === 'vendor') {
-        setUserType('vendor');
-      } else if (value === 'admin-reg') {
-        setUserType('admin');
+    // Check access before allowing tab change
+    if (!checkTabAccess(value)) {
+      if (!isAuthenticated) {
+        showErrorReport(
+          'Registration required to access this service.',
+          '/portal?tab=registration',
+          'Register Now'
+        );
+      } else {
+        showErrorReport(
+          'Access denied. You do not have permission to access this section.',
+          undefined,
+          'OK'
+        );
       }
-    }
-
-    // Check if user has access to the tab
-    if (!isTabAllowed(value)) {
-      toast({
-        title: "Access Restricted",
-        description: "You can only access tabs relevant to your registration type.",
-        variant: "destructive"
-      });
       return;
     }
 
-    // Check admin portal access
-    if (value === 'admin' && !isAdminAuthenticated) {
-      toast({
-        title: "Access Denied",
-        description: "Please complete admin registration to access the admin portal.",
-        variant: "destructive"
-      });
-      return;
-    }
-    
     setActiveTab(value);
   };
 
@@ -131,8 +96,8 @@ export const usePortalState = () => {
     userType,
     isAdminAuthenticated,
     isUnifiedProfile,
-    showAdminTab,
-    isTabAllowed,
+    showAdminTab: isAdminAuthenticated,
+    isTabAllowed: checkTabAccess,
     handleTabChange,
     resetUserType,
     setIsAdminAuthenticated
