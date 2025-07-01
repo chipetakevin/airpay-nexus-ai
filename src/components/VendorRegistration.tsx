@@ -5,7 +5,14 @@ import ExistingVendorSummary from './registration/ExistingVendorSummary';
 import VendorRegistrationLayout from './registration/VendorRegistrationLayout';
 
 const VendorRegistrationContent: React.FC = () => {
-  const { existingRegistration, isFormCollapsed } = useVendorRegistrationContext();
+  const context = useVendorRegistrationContext();
+  
+  // Handle case where context might not be available
+  if (!context) {
+    return <VendorRegistrationLayout />;
+  }
+  
+  const { existingRegistration, isFormCollapsed } = context;
 
   if (existingRegistration && isFormCollapsed) {
     return <ExistingVendorSummary />;

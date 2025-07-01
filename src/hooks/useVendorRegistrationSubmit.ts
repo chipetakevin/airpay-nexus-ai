@@ -25,12 +25,13 @@ export const useVendorRegistrationSubmit = (handleSubmit: (e: React.FormEvent) =
         duration: 2000,
       });
 
-      // Create vendor session data immediately
+      // Create vendor session data with proper ID
       const vendorCredentials = {
         email: "vendor@example.com",
         userType: 'vendor',
         firstName: 'Vendor',
         lastName: 'User',
+        id: 'vendor_' + Date.now(),
         permanentSession: true
       };
 
@@ -38,6 +39,7 @@ export const useVendorRegistrationSubmit = (handleSubmit: (e: React.FormEvent) =
         firstName: 'Vendor',
         lastName: 'User',
         email: "vendor@example.com",
+        id: 'vendor_' + Date.now(),
         registrationDate: new Date().toISOString()
       };
 

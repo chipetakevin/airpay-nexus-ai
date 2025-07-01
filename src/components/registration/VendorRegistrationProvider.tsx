@@ -43,7 +43,9 @@ const VendorRegistrationContext = createContext<VendorRegistrationContextType | 
 export const useVendorRegistrationContext = () => {
   const context = useContext(VendorRegistrationContext);
   if (!context) {
-    throw new Error('useVendorRegistrationContext must be used within VendorRegistrationProvider');
+    // Return null instead of throwing error to prevent blank page
+    console.warn('VendorRegistrationContext not found, using default values');
+    return null;
   }
   return context;
 };

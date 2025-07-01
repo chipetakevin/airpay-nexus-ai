@@ -75,7 +75,7 @@ const PermanentAuthStatus = () => {
                   {currentUser.firstName} {currentUser.lastName}
                 </div>
                 <div className="text-xs text-gray-600">{currentUser.email}</div>
-                <div className="text-xs text-gray-500">ID: ****{currentUser.id.slice(-4)}</div>
+                <div className="text-xs text-gray-500">ID: ****{currentUser.id?.slice(-4) || 'N/A'}</div>
               </div>
 
               {/* Unified Profile Benefits */}
