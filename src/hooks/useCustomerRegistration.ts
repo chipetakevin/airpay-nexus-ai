@@ -55,6 +55,17 @@ export const useCustomerRegistration = () => {
   });
 
   const handleInputChange = (field: keyof CustomerFormData, value: any) => {
+    // Special handling for phone numbers to ensure 9-digit preservation
+    if (field === 'phoneNumber') {
+      const cleanValue = value.replace(/\D/g, '');
+      // Ensure we don't truncate - preserve all 9 digits
+      if (cleanValue.length <= 9) {
+        value = cleanValue;
+      } else {
+        return; // Don't update if more than 9 digits
+      }
+    }
+    
     const updatedFormData = {
       ...formData,
       [field]: value
@@ -70,8 +81,8 @@ export const useCustomerRegistration = () => {
       }));
     }
 
-    // Save phone number when it's updated
-    if (field === 'phoneNumber' && value) {
+    // Save phone number when it's updated and is exactly 9 digits
+    if (field === 'phoneNumber' && value && value.length === 9) {
       savePhoneNumber(value, formData.countryCode, 'customer');
     }
 
@@ -86,9 +97,11 @@ export const useCustomerRegistration = () => {
     if (!formData.lastName.trim()) newErrors.lastName = 'Last name is required';
     if (!formData.email.trim()) newErrors.email = 'Email is required';
     
-    // Enhanced phone validation
+    // Enhanced phone validation with exact 9-digit requirement
     if (!formData.phoneNumber.trim()) {
       newErrors.phoneNumber = 'Phone number is required';
+    } else if (formData.phoneNumber.length !== 9) {
+      newErrors.phoneNumber = 'Phone number must be exactly 9 digits';
     } else {
       const phoneValidation = validateSouthAfricanMobile(formData.phoneNumber);
       if (!phoneValidation.isValid) {
@@ -126,14 +139,10 @@ export const useCustomerRegistration = () => {
       // Generate card number
       const cardNumber = `OC${Math.random().toString().substr(2, 8)}`;
       
-      // Normalize phone number for consistent storage
-      const normalizedPhone = formData.phoneNumber.replace(/\D/g, '');
-      let finalPhone = normalizedPhone;
-      
-      if (normalizedPhone.startsWith('27')) {
-        finalPhone = normalizedPhone.substring(2);
-      } else if (normalizedPhone.startsWith('0')) {
-        finalPhone = normalizedPhone.substring(1);
+      // Ensure phone number is exactly 9 digits and properly formatted
+      const phoneNumber = formData.phoneNumber.replace(/\D/g, '');
+      if (phoneNumber.length !== 9) {
+        throw new Error('Invalid phone number format');
       }
       
       // Create user credentials with permanent session flag
@@ -143,9 +152,9 @@ export const useCustomerRegistration = () => {
         userType: 'customer',
         firstName: formData.firstName,
         lastName: formData.lastName,
-        phone: finalPhone,
-        registeredPhone: `+27${finalPhone}`,
-        phoneNumber: finalPhone,
+        phone: phoneNumber,
+        registeredPhone: `+27${phoneNumber}`,
+        phoneNumber: phoneNumber,
         permanentSession: true // Flag for permanent session
       };
 
@@ -155,9 +164,9 @@ export const useCustomerRegistration = () => {
         lastName: formData.lastName,
         email: formData.email,
         cardNumber,
-        phone: finalPhone,
-        registeredPhone: `+27${finalPhone}`,
-        phoneNumber: finalPhone,
+        phone: phoneNumber,
+        registeredPhone: `+27${phoneNumber}`,
+        phoneNumber: phoneNumber,
         bankName: formData.bankName,
         branchCode: formData.branchCode,
         accountNumber: formData.accountNumber,

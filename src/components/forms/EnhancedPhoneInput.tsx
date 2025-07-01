@@ -76,14 +76,16 @@ const EnhancedPhoneInput = ({
     // Clean input - allow only digits
     inputValue = inputValue.replace(/\D/g, '');
     
-    // Limit to 9 digits for SA mobile numbers (without country code)
+    // Ensure we preserve all 9 digits for SA mobile numbers
     if (inputValue.length <= 9) {
       onChange(inputValue);
     }
   };
 
   const handleSuggestionSelect = (phone: any) => {
-    onChange(phone.number);
+    // Ensure full phone number is preserved when selecting from suggestions
+    const fullNumber = phone.number || phone.phoneNumber || '';
+    onChange(fullNumber);
     if (onCountryCodeChange) {
       onCountryCodeChange(phone.countryCode);
     }
@@ -97,17 +99,21 @@ const EnhancedPhoneInput = ({
     if (validation.isValid) {
       e.preventDefault();
       const cleanNumber = pastedText.replace(/\D/g, '');
-      // Extract 9 digits for display
+      // Extract exactly 9 digits for display, preserving the full number
       let displayNumber = cleanNumber;
-      if (cleanNumber.startsWith('27')) {
-        displayNumber = cleanNumber.substring(2);
-      } else if (cleanNumber.startsWith('0')) {
-        displayNumber = cleanNumber.substring(1);
+      if (cleanNumber.startsWith('27') && cleanNumber.length === 11) {
+        displayNumber = cleanNumber.substring(2); // Keep all 9 digits
+      } else if (cleanNumber.startsWith('0') && cleanNumber.length === 10) {
+        displayNumber = cleanNumber.substring(1); // Keep all 9 digits
       }
-      onChange(displayNumber);
-      if (displayNumber !== lastSavedValue) {
-        savePhoneNumber(displayNumber, countryCode, userType);
-        setLastSavedValue(displayNumber);
+      
+      // Ensure we have exactly 9 digits
+      if (displayNumber.length === 9) {
+        onChange(displayNumber);
+        if (displayNumber !== lastSavedValue) {
+          savePhoneNumber(displayNumber, countryCode, userType);
+          setLastSavedValue(displayNumber);
+        }
       }
     }
   };

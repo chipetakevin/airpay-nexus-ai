@@ -1,172 +1,159 @@
-import { useState, useEffect } from 'react';
+import { useState, useCallback } from 'react';
+import { useToast } from '@/hooks/use-toast';
 
 interface StoredPhone {
   number: string;
+  phoneNumber: string;
   countryCode: string;
-  fullNumber: string;
   userType: string;
-  frequency: number;
-  lastUsed: string;
+  timestamp: string;
+  fullNumber: string;
 }
 
 export const usePhoneStorage = () => {
-  const [storedPhones, setStoredPhones] = useState<StoredPhone[]>([]);
+  const { toast } = useToast();
 
-  useEffect(() => {
-    loadStoredPhones();
-  }, []);
-
-  const loadStoredPhones = () => {
+  const savePhoneNumber = useCallback((phoneNumber: string, countryCode: string = '+27', userType: string = 'guest') => {
     try {
-      const stored = localStorage.getItem('savedPhoneNumbers');
-      if (stored) {
-        const phones = JSON.parse(stored);
-        setStoredPhones(phones);
-      }
-    } catch (error) {
-      console.error('Error loading stored phone numbers:', error);
-    }
-  };
-
-  const savePhoneNumber = (phoneNumber: string, countryCode: string = '+27', userType: string = 'guest') => {
-    try {
-      // Clean the phone number to 9 digits
-      const cleanNumber = phoneNumber.replace(/\D/g, '');
-      let finalNumber = cleanNumber;
+      // Ensure we preserve the full 9-digit number
+      const cleanPhone = phoneNumber.replace(/\D/g, '');
+      let finalPhone = cleanPhone;
       
-      // Normalize to 9 digits
-      if (cleanNumber.startsWith('27')) {
-        finalNumber = cleanNumber.substring(2);
-      } else if (cleanNumber.startsWith('0')) {
-        finalNumber = cleanNumber.substring(1);
+      // Normalize to 9 digits without truncation
+      if (cleanPhone.startsWith('27') && cleanPhone.length === 11) {
+        finalPhone = cleanPhone.substring(2);
+      } else if (cleanPhone.startsWith('0') && cleanPhone.length === 10) {
+        finalPhone = cleanPhone.substring(1);
+      }
+      
+      // Only proceed if we have exactly 9 digits
+      if (finalPhone.length !== 9) {
+        console.warn('Phone number must be exactly 9 digits:', finalPhone);
+        return;
       }
 
-      if (finalNumber.length !== 9) return;
-
-      const fullNumber = `${countryCode}${finalNumber}`;
-      
-      // Load existing phones
-      const stored = localStorage.getItem('savedPhoneNumbers');
-      let phones: StoredPhone[] = stored ? JSON.parse(stored) : [];
-      
-      // Check if phone already exists
-      const existingIndex = phones.findIndex(p => p.fullNumber === fullNumber);
-      
-      if (existingIndex >= 0) {
-        // Update existing phone
-        phones[existingIndex].frequency += 1;
-        phones[existingIndex].lastUsed = new Date().toISOString();
-        phones[existingIndex].userType = userType; // Update user type
-      } else {
-        // Add new phone
-        phones.push({
-          number: finalNumber,
-          countryCode,
-          fullNumber,
-          userType,
-          frequency: 1,
-          lastUsed: new Date().toISOString()
-        });
-      }
-
-      // Sort by frequency and recency
-      phones.sort((a, b) => {
-        if (a.frequency !== b.frequency) {
-          return b.frequency - a.frequency;
-        }
-        return new Date(b.lastUsed).getTime() - new Date(a.lastUsed).getTime();
-      });
-
-      // Keep only top 10 most used numbers
-      phones = phones.slice(0, 10);
-
-      // Save back to localStorage
-      localStorage.setItem('savedPhoneNumbers', JSON.stringify(phones));
-      setStoredPhones(phones);
-
-      // Also save to session storage for immediate access
-      sessionStorage.setItem('lastUsedPhone', JSON.stringify({
-        number: finalNumber,
+      const phoneData: StoredPhone = {
+        number: finalPhone,
+        phoneNumber: finalPhone,
         countryCode,
-        fullNumber,
-        userType
-      }));
+        userType,
+        timestamp: new Date().toISOString(),
+        fullNumber: `${countryCode}${finalPhone}`
+      };
 
-      console.log(`📱 Phone number permanently saved: ${fullNumber} for ${userType}`);
+      // Get existing phones
+      const existingPhones = JSON.parse(localStorage.getItem('savedPhoneNumbers') || '[]');
+      
+      // Check if this exact number already exists
+      const existingIndex = existingPhones.findIndex((phone: StoredPhone) => 
+        phone.phoneNumber === finalPhone || phone.number === finalPhone
+      );
+      
+      if (existingIndex !== -1) {
+        // Update existing entry
+        existingPhones[existingIndex] = phoneData;
+      } else {
+        // Add new entry at the beginning
+        existingPhones.unshift(phoneData);
+      }
+      
+      // Keep only the most recent 10 numbers
+      const limitedPhones = existingPhones.slice(0, 10);
+      
+      localStorage.setItem('savedPhoneNumbers', JSON.stringify(limitedPhones));
+      
+      console.log(`✅ Phone number saved: ${finalPhone} (Full: ${countryCode}${finalPhone})`);
       
     } catch (error) {
       console.error('Error saving phone number:', error);
     }
-  };
+  }, []);
 
-  const autoFillPhone = (userType: string = 'guest') => {
+  const getAllStoredPhones = useCallback((): StoredPhone[] => {
     try {
-      // First try to get the most recent phone for this user type
-      const phones = storedPhones.filter(p => p.userType === userType);
-      if (phones.length > 0) {
-        return {
-          phoneNumber: phones[0].number,
-          countryCode: phones[0].countryCode
-        };
-      }
-
-      // Fallback to most frequently used phone
-      if (storedPhones.length > 0) {
-        return {
-          phoneNumber: storedPhones[0].number,
-          countryCode: storedPhones[0].countryCode
-        };
-      }
-
-      // Last resort: check session storage
-      const lastUsed = sessionStorage.getItem('lastUsedPhone');
-      if (lastUsed) {
-        const phone = JSON.parse(lastUsed);
-        return {
-          phoneNumber: phone.number,
-          countryCode: phone.countryCode
-        };
-      }
-
-      return null;
+      const stored = localStorage.getItem('savedPhoneNumbers');
+      if (!stored) return [];
+      
+      const phones = JSON.parse(stored);
+      // Ensure all returned phones have 9 digits
+      return phones.filter((phone: StoredPhone) => {
+        const cleanNumber = (phone.phoneNumber || phone.number || '').replace(/\D/g, '');
+        return cleanNumber.length === 9;
+      });
     } catch (error) {
-      console.error('Error auto-filling phone:', error);
-      return null;
+      console.error('Error loading stored phones:', error);
+      return [];
     }
-  };
+  }, []);
 
-  const getAllStoredPhones = () => {
-    return storedPhones;
-  };
-
-  const getPhonesByUserType = (userType: string) => {
-    return storedPhones.filter(p => p.userType === userType);
-  };
-
-  const clearStoredPhones = () => {
-    localStorage.removeItem('savedPhoneNumbers');
-    sessionStorage.removeItem('lastUsedPhone');
-    setStoredPhones([]);
-  };
-
-  // Load saved banking info (maintaining existing functionality)
-  const loadSavedBankingInfo = () => {
-    try {
-      const savedInfo = localStorage.getItem('savedBankingInfo');
-      return savedInfo ? JSON.parse(savedInfo) : null;
-    } catch (error) {
-      console.error('Error loading saved banking info:', error);
-      return null;
+  const autoFillPhone = useCallback((userType: string = 'guest') => {
+    // First check for user-specific registered phone
+    const userCredentials = localStorage.getItem('userCredentials');
+    const userData = localStorage.getItem('onecardUser') || 
+                     localStorage.getItem('onecardVendor') || 
+                     localStorage.getItem('onecardAdmin');
+    
+    if (userCredentials || userData) {
+      try {
+        let registeredPhone = '';
+        
+        if (userCredentials) {
+          const credentials = JSON.parse(userCredentials);
+          registeredPhone = credentials.phone || credentials.phoneNumber || credentials.registeredPhone || '';
+        }
+        
+        if (!registeredPhone && userData) {
+          const user = JSON.parse(userData);
+          registeredPhone = user.phone || user.phoneNumber || user.registeredPhone || '';
+        }
+        
+        if (registeredPhone) {
+          // Ensure we normalize to exactly 9 digits
+          const cleanPhone = registeredPhone.replace(/\D/g, '');
+          let finalPhone = cleanPhone;
+          
+          if (cleanPhone.startsWith('27') && cleanPhone.length === 11) {
+            finalPhone = cleanPhone.substring(2);
+          } else if (cleanPhone.startsWith('0') && cleanPhone.length === 10) {
+            finalPhone = cleanPhone.substring(1);
+          }
+          
+          if (finalPhone.length === 9) {
+            console.log(`📱 Auto-filled registered phone: ${finalPhone}`);
+            return {
+              phoneNumber: finalPhone,
+              countryCode: '+27',
+              source: 'registered'
+            };
+          }
+        }
+      } catch (error) {
+        console.error('Error auto-filling registered phone:', error);
+      }
     }
-  };
+    
+    // Fallback to most recent saved phone
+    const storedPhones = getAllStoredPhones();
+    if (storedPhones.length > 0) {
+      const mostRecent = storedPhones[0];
+      const phoneNumber = mostRecent.phoneNumber || mostRecent.number;
+      
+      if (phoneNumber && phoneNumber.length === 9) {
+        console.log(`📱 Auto-filled recent phone: ${phoneNumber}`);
+        return {
+          phoneNumber,
+          countryCode: mostRecent.countryCode || '+27',
+          source: 'recent'
+        };
+      }
+    }
+    
+    return null;
+  }, [getAllStoredPhones]);
 
   return {
-    storedPhones,
     savePhoneNumber,
-    autoFillPhone,
     getAllStoredPhones,
-    getPhonesByUserType,
-    clearStoredPhones,
-    loadSavedBankingInfo
+    autoFillPhone
   };
 };

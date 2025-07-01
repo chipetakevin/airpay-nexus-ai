@@ -88,18 +88,23 @@ const CustomerRegistration = () => {
   };
 
   const handlePhoneChange = (value: string) => {
-    // Format South African phone number
+    // Ensure we preserve all 9 digits for South African phone numbers
     let cleanValue = value.replace(/\D/g, '');
     
+    // Remove leading zero if present
     if (cleanValue.startsWith('0')) {
       cleanValue = cleanValue.substring(1);
     }
     
-    if (cleanValue.length > 9) {
-      cleanValue = cleanValue.substring(0, 9);
+    // Remove country code if present
+    if (cleanValue.startsWith('27')) {
+      cleanValue = cleanValue.substring(2);
     }
     
-    handleInputChange('phoneNumber', cleanValue);
+    // Ensure we don't truncate - keep up to 9 digits
+    if (cleanValue.length <= 9) {
+      handleInputChange('phoneNumber', cleanValue);
+    }
   };
 
   const handleFormSubmit = async (e: React.FormEvent) => {
@@ -225,7 +230,7 @@ const CustomerRegistration = () => {
                     id="phoneNumber"
                     value={formData.phoneNumber}
                     onChange={(e) => handlePhoneChange(e.target.value)}
-                    placeholder="812345678"
+                    placeholder="832466539"
                     className={`pl-10 ${errors.phoneNumber ? 'border-red-500' : ''}`}
                     maxLength={9}
                   />
