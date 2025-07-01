@@ -48,13 +48,13 @@ const PermanentAuthStatus = () => {
   };
 
   return (
-    <div className="fixed top-4 right-4 z-50 max-w-xs">
+    <div className="fixed top-20 right-4 z-30 max-w-xs">
       {/* Compact Status Indicator */}
       <div className={`relative transition-all duration-300 ${isExpanded ? 'mb-2' : ''}`}>
-        <Card className={`border-2 shadow-lg backdrop-blur-sm ${
+        <Card className={`border shadow-md backdrop-blur-sm ${
           currentUser.isUnifiedProfile 
-            ? 'border-orange-400 bg-gradient-to-r from-orange-100/90 to-yellow-100/90' 
-            : 'border-green-400 bg-green-100/90'
+            ? 'border-orange-300 bg-gradient-to-r from-orange-50/95 to-yellow-50/95' 
+            : 'border-green-300 bg-green-50/95'
         }`}>
           <CardContent className="p-2">
             <div className="flex items-center justify-between gap-2">
@@ -95,10 +95,10 @@ const PermanentAuthStatus = () => {
       <div className={`transition-all duration-300 ease-in-out overflow-hidden ${
         isExpanded ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
       }`}>
-        <Card className={`border-2 shadow-lg backdrop-blur-sm ${
+        <Card className={`border shadow-md backdrop-blur-sm ${
           currentUser.isUnifiedProfile 
-            ? 'border-orange-400 bg-gradient-to-r from-orange-50/95 to-yellow-50/95' 
-            : 'border-green-400 bg-green-50/95'
+            ? 'border-orange-300 bg-gradient-to-r from-orange-50/98 to-yellow-50/98' 
+            : 'border-green-300 bg-green-50/98'
         }`}>
           <CardContent className="p-3 space-y-3">
             {/* Session Status */}
@@ -111,7 +111,7 @@ const PermanentAuthStatus = () => {
             </div>
 
             {/* User Details */}
-            <div className="bg-white/70 rounded-lg p-2 space-y-1">
+            <div className="bg-white/80 rounded-lg p-2 space-y-1">
               <div className="text-sm font-medium text-gray-800">
                 {currentUser.firstName} {currentUser.lastName}
               </div>
@@ -121,7 +121,7 @@ const PermanentAuthStatus = () => {
 
             {/* Unified Profile Benefits */}
             {currentUser.isUnifiedProfile && (
-              <div className="bg-gradient-to-r from-orange-100 to-yellow-100 rounded-lg p-2">
+              <div className="bg-gradient-to-r from-orange-100/80 to-yellow-100/80 rounded-lg p-2">
                 <div className="flex items-center gap-1 mb-1">
                   <Crown className="w-3 h-3 text-orange-600" />
                   <span className="text-xs font-medium text-orange-800">Unified Access</span>
@@ -137,7 +137,7 @@ const PermanentAuthStatus = () => {
               onClick={handleLogout}
               variant="outline"
               size="sm"
-              className="w-full bg-red-50 border-red-300 text-red-700 hover:bg-red-100 h-8 text-xs"
+              className="w-full bg-red-50/80 border-red-300 text-red-700 hover:bg-red-100/80 h-8 text-xs"
             >
               <LogOut className="w-3 h-3 mr-1" />
               Secure Logout
