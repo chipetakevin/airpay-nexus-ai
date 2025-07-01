@@ -3,13 +3,15 @@ import React, { useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { MessageCircle, Smartphone, CreditCard, Wifi, Phone, Gift, Zap, Users, ChevronDown, ChevronUp } from 'lucide-react';
+import { MessageCircle, Smartphone, CreditCard, Wifi, Phone, Gift, Zap, Users, ChevronDown, ChevronUp, X, Minimize2 } from 'lucide-react';
 import SmartWhatsAppButton from './SmartWhatsAppButton';
 
 const StaticWhatsAppAssistant = () => {
   const [selectedOption, setSelectedOption] = useState<number | null>(null);
   const [showWelcome, setShowWelcome] = useState(true);
   const [isExpanded, setIsExpanded] = useState(false);
+  const [isMinimized, setIsMinimized] = useState(false);
+  const [isClosed, setIsClosed] = useState(false);
 
   const quickActions = [
     {
@@ -72,6 +74,18 @@ const StaticWhatsAppAssistant = () => {
     setIsExpanded(!isExpanded);
   };
 
+  const handleMinimize = () => {
+    setIsMinimized(!isMinimized);
+  };
+
+  const handleClose = () => {
+    setIsClosed(true);
+  };
+
+  if (isClosed) {
+    return null;
+  }
+
   return (
     <div className="bg-white rounded-t-3xl overflow-hidden">
       {/* WhatsApp Header */}
@@ -87,9 +101,25 @@ const StaticWhatsAppAssistant = () => {
               <span>Online • Always here to help</span>
             </div>
           </div>
-          <Badge className="bg-green-800 text-green-100 px-2 py-1 text-xs">
-            AI Agent
-          </Badge>
+          <div className="flex items-center gap-2">
+            <Badge className="bg-green-800 text-green-100 px-2 py-1 text-xs">
+              AI Agent
+            </Badge>
+            <button
+              onClick={handleMinimize}
+              className="p-1 hover:bg-green-800 rounded transition-colors"
+              title={isMinimized ? "Expand" : "Minimize"}
+            >
+              <Minimize2 className="w-4 h-4" />
+            </button>
+            <button
+              onClick={handleClose}
+              className="p-1 hover:bg-red-600 rounded transition-colors"
+              title="Close"
+            >
+              <X className="w-4 h-4" />
+            </button>
+          </div>
         </div>
       </div>
 
@@ -129,7 +159,8 @@ const StaticWhatsAppAssistant = () => {
       )}
 
       {/* Chat Content */}
-      <div className="px-4 py-4 min-h-[400px] max-h-[400px] overflow-hidden">
+      {!isMinimized && (
+        <div className="px-4 py-4 min-h-[400px] max-h-[400px] overflow-hidden">
         {showWelcome && !selectedOption && (
           <div className="space-y-4">
             <div className="bg-gray-100 rounded-2xl p-4">
@@ -219,20 +250,23 @@ const StaticWhatsAppAssistant = () => {
             </div>
           </div>
         )}
-      </div>
+        </div>
+      )}
 
       {/* Smart Action Buttons */}
-      <div className="p-4 bg-gray-50 border-t space-y-2">
-        <SmartWhatsAppButton className="w-full h-12 text-base font-semibold" />
-        
-        <div className="text-center">
-          <p className="text-xs text-gray-500 mb-2">Or explore our full interface:</p>
-          <SmartWhatsAppButton 
-            variant="interface" 
-            className="w-full h-10 text-sm"
-          />
+      {!isMinimized && (
+        <div className="p-4 bg-gray-50 border-t space-y-2">
+          <SmartWhatsAppButton className="w-full h-12 text-base font-semibold" />
+          
+          <div className="text-center">
+            <p className="text-xs text-gray-500 mb-2">Or explore our full interface:</p>
+            <SmartWhatsAppButton 
+              variant="interface" 
+              className="w-full h-10 text-sm"
+            />
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 };
