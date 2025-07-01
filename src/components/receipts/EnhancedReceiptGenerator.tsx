@@ -283,15 +283,34 @@ ${data.vendor ? `━━━━━━━━━━━━━━━━━━━━━
     try {
       // Generate modern WhatsApp receipt
       const whatsappMessage = generateComprehensiveWhatsAppReceipt(receiptData);
-      const whatsappUrl = `https://wa.me/${receiptData.customer.mobile.replace('+', '')}?text=${encodeURIComponent(whatsappMessage)}`;
+      
+      // Clean phone number for WhatsApp (fix for "link couldn't be opened" error)
+      const cleanPhone = receiptData.customer.mobile
+        .replace(/\+/g, '')
+        .replace(/\s/g, '')
+        .replace(/[^\d]/g, '');
+      
+      // Create a shorter, more reliable WhatsApp URL
+      const whatsappUrl = `https://wa.me/${cleanPhone}?text=${encodeURIComponent(whatsappMessage.substring(0, 2000))}`;
       
       // Generate email receipt
       const emailContent = generateProfessionalEmailReceipt(receiptData);
       
-      // Auto-open WhatsApp with enhanced receipt
+      // Auto-open WhatsApp with enhanced receipt - reduced timeout for faster response
       setTimeout(() => {
-        window.open(whatsappUrl, '_blank');
-      }, 1000);
+        try {
+          window.open(whatsappUrl, '_blank', 'noopener,noreferrer');
+        } catch (error) {
+          console.error('Error opening WhatsApp:', error);
+          // Fallback: copy to clipboard
+          navigator.clipboard?.writeText(whatsappMessage);
+          toast({
+            title: "Receipt Copied! 📋",
+            description: "Receipt copied to clipboard. Open WhatsApp manually and paste.",
+            duration: 5000
+          });
+        }
+      }, 500);
 
       // Show success notification
       toast({

@@ -60,10 +60,13 @@ const EnhancedVendorBankingSection: React.FC<EnhancedVendorBankingSectionProps> 
   const handleBankSelect = (bankName: string, routing: string, branchCode: string, bankDetails?: any) => {
     onBankSelect(bankName, routing, branchCode);
     
+    // Ensure branch code is immediately updated in the form data
+    onInputChange('branchCode', branchCode);
+    
     if (bankDetails) {
       toast({
         title: "Bank Selected! 🏦",
-        description: `${bankName} with branch code ${branchCode} has been selected.`,
+        description: `${bankName} with branch code ${branchCode} has been auto-filled.`,
         duration: 3000
       });
     }

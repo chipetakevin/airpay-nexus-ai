@@ -194,20 +194,25 @@ const EnhancedSouthAfricanBankAutocomplete: React.FC<EnhancedSouthAfricanBankAut
     const mainBranch = bank.branches.find(b => b.isMain) || bank.branches[0];
     setSelectedBranch(mainBranch);
     
-    // Get the correct branch code immediately
-    const branchCode = getBranchCodeForBank(bank.name) || mainBranch.code;
+    // Get the correct branch code immediately - this is the critical fix
+    const branchCode = getBranchCodeForBank(bank.name) || bank.universalBranchCode || mainBranch.code;
     
-    onBankSelect(bank.name, '', branchCode, {
+    // Call onBankSelect with the proper branch code to update parent form
+    onBankSelect(bank.name, bank.universalBranchCode || '', branchCode, {
       bank,
       branch: mainBranch,
-      swiftCode: bank.swiftCode
+      swiftCode: bank.swiftCode,
+      branchCode: branchCode  // Explicitly pass branch code
     });
 
     if (onBranchSelect) {
-      onBranchSelect(mainBranch);
+      onBranchSelect({
+        ...mainBranch,
+        branchCode: branchCode  // Ensure branch code is included
+      });
     }
 
-    console.log(`✅ Enhanced Bank selected: ${bank.name}, Branch Code: ${branchCode}`);
+    console.log(`✅ Enhanced Bank selected: ${bank.name}, Branch Code: ${branchCode}, Universal Code: ${bank.universalBranchCode}`);
   };
 
   const handleBranchSelect = (branch: any) => {
