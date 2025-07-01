@@ -11,6 +11,7 @@ import RevenueReporting from './admin/RevenueReporting';
 import NetworkRevenue from './admin/NetworkRevenue';
 import OrderManagement from './admin/OrderManagement';
 import DashboardManager from './admin/DashboardManager';
+import VersionRestoration from './admin/VersionRestoration';
 
 interface AdminPortalProps {
   onAuthSuccess?: () => void;
@@ -148,12 +149,13 @@ const AdminPortal: React.FC<AdminPortalProps> = ({ onAuthSuccess }) => {
       </div>
 
       <Tabs defaultValue="balances" className="w-full">
-        <TabsList className="grid w-full grid-cols-5 bg-gray-100">
+        <TabsList className="grid w-full grid-cols-6 bg-gray-100">
           <TabsTrigger value="balances">Balances</TabsTrigger>
           <TabsTrigger value="dashboard">Dashboard</TabsTrigger>
           <TabsTrigger value="revenue">Revenue</TabsTrigger>
           <TabsTrigger value="networks">Networks</TabsTrigger>
           <TabsTrigger value="orders">Orders</TabsTrigger>
+          <TabsTrigger value="versions">Versions</TabsTrigger>
         </TabsList>
 
         <TabsContent value="balances" className="space-y-6">
@@ -174,6 +176,10 @@ const AdminPortal: React.FC<AdminPortalProps> = ({ onAuthSuccess }) => {
 
         <TabsContent value="orders" className="space-y-6">
           <OrderManagement />
+        </TabsContent>
+
+        <TabsContent value="versions" className="space-y-6">
+          <VersionRestoration />
         </TabsContent>
       </Tabs>
     </div>
