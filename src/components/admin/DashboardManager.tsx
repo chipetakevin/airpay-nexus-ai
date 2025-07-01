@@ -100,71 +100,61 @@ const DashboardManager = () => {
               <p className="text-gray-600">Manage customer accounts, view balances, and handle support tickets</p>
             </CardHeader>
             <CardContent>
-              <div className="mb-6">
-                <Button 
-                  className="w-full bg-black text-white hover:bg-gray-800 rounded-lg py-4 text-lg font-semibold"
-                  onClick={() => {
-                    // This will be handled by the nested tabs below
-                  }}
-                >
-                  Manage Customers
-                </Button>
+              <div className="mb-6 p-4 bg-gray-50 rounded-lg border">
+                <div className="flex items-center gap-3 p-3 bg-black text-white rounded-lg">
+                  <span className="text-lg">👥</span>
+                  <span className="text-lg font-semibold">Manage Customers</span>
+                </div>
               </div>
               
-              {/* Intelligent Data Extraction Tabs */}
-              <Tabs defaultValue="sim-data" className="w-full">
-                <TabsList className="grid w-full grid-cols-2 bg-gradient-to-r from-blue-50 to-purple-50 border border-blue-200">
-                  <TabsTrigger 
-                    value="sim-data" 
-                    className="data-[state=active]:bg-blue-500 data-[state=active]:text-white hover:bg-blue-100 transition-all"
-                  >
-                    SIM Card Identifiers
-                  </TabsTrigger>
-                  <TabsTrigger 
-                    value="recharge-data" 
-                    className="data-[state=active]:bg-purple-500 data-[state=active]:text-white hover:bg-purple-100 transition-all"
-                  >
-                    Daily Recharge Records
-                  </TabsTrigger>
-                </TabsList>
+              {/* Data Extraction Section */}
+              <div className="space-y-6">
+                <h3 className="text-lg font-semibold text-gray-800 border-b pb-2">
+                  Divine Mobile Data Extraction Center
+                </h3>
+                
+                <Tabs defaultValue="sim-data" className="w-full">
+                  <TabsList className="grid w-full grid-cols-2">
+                    <TabsTrigger value="sim-data">SIM Card Identifiers</TabsTrigger>
+                    <TabsTrigger value="recharge-data">Daily Recharge Records</TabsTrigger>
+                  </TabsList>
 
-                <TabsContent value="sim-data" className="space-y-4 mt-6">
-                  <MVNEDataExtractionPanel />
-                </TabsContent>
+                  <TabsContent value="sim-data" className="mt-6">
+                    <MVNEDataExtractionPanel />
+                  </TabsContent>
 
-                <TabsContent value="recharge-data" className="space-y-4 mt-6">
-                  <MVNEDailyRechargePanel />
-                </TabsContent>
-              </Tabs>
+                  <TabsContent value="recharge-data" className="mt-6">
+                    <MVNEDailyRechargePanel />
+                  </TabsContent>
+                </Tabs>
+              </div>
 
-              {/* Customer Profile Information */}
+              {/* Customer Profile Section */}
               {customerData && (
-                <Card className="mt-6 border-t-4 border-t-blue-500">
-                  <CardHeader>
-                    <CardTitle>Current Customer Profile</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div>
-                        <h4 className="font-semibold">Personal Information</h4>
-                        <p>Name: {customerData.firstName} {customerData.lastName}</p>
-                        <p>Email: {customerData.email}</p>
-                        <p>Card Number: ****{customerData.cardNumber?.slice(-4)}</p>
-                      </div>
-                      <div>
-                        <h4 className="font-semibold">OneCard Details</h4>
-                        <p>Cashback Balance: R{customerData.cashbackBalance?.toFixed(2)}</p>
-                        <p>Total Earned: R{customerData.totalEarned?.toFixed(2)}</p>
-                        <p>Total Spent: R{customerData.totalSpent?.toFixed(2)}</p>
-                      </div>
+                <div className="mt-8 pt-6 border-t">
+                  <h3 className="text-lg font-semibold text-gray-800 mb-4">
+                    Current Customer Profile
+                  </h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4 bg-blue-50 rounded-lg">
+                    <div>
+                      <h4 className="font-semibold">Personal Information</h4>
+                      <p>Name: {customerData.firstName} {customerData.lastName}</p>
+                      <p>Email: {customerData.email}</p>
+                      <p>Card Number: ****{customerData.cardNumber?.slice(-4)}</p>
                     </div>
-                    <div className="flex space-x-2 mt-4">
-                      <Button size="sm">View Details</Button>
-                      <Button size="sm" variant="outline">Edit Profile</Button>
-                      <Button size="sm" variant="outline">Manage Balance</Button>
+                    <div>
+                      <h4 className="font-semibold">OneCard Details</h4>
+                      <p>Cashback Balance: R{customerData.cashbackBalance?.toFixed(2)}</p>
+                      <p>Total Earned: R{customerData.totalEarned?.toFixed(2)}</p>
+                      <p>Total Spent: R{customerData.totalSpent?.toFixed(2)}</p>
                     </div>
-                  </CardContent>
-                </Card>
+                  </div>
+                  <div className="flex space-x-2 mt-4">
+                    <Button size="sm">View Details</Button>
+                    <Button size="sm" variant="outline">Edit Profile</Button>
+                    <Button size="sm" variant="outline">Manage Balance</Button>
+                  </div>
+                </div>
               )}
             </CardContent>
           </Card>
