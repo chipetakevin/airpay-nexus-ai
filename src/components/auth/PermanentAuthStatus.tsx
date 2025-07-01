@@ -48,100 +48,107 @@ const PermanentAuthStatus = () => {
   };
 
   return (
-    <div className="fixed top-20 right-4 z-30 max-w-xs">
-      {/* Compact Status Indicator */}
-      <div className={`relative transition-all duration-300 ${isExpanded ? 'mb-2' : ''}`}>
-        <Card className={`border shadow-md backdrop-blur-sm ${
+    <div className="fixed bottom-0 left-0 right-0 z-40 p-2 sm:p-4">
+      <div className="max-w-sm mx-auto">
+        {/* Expanded Details - Slides up from bottom */}
+        <div className={`transition-all duration-300 ease-in-out overflow-hidden mb-2 ${
+          isExpanded ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
+        }`}>
+          <Card className={`border shadow-lg backdrop-blur-md ${
+            currentUser.isUnifiedProfile 
+              ? 'border-orange-300 bg-gradient-to-r from-orange-50/98 to-yellow-50/98' 
+              : 'border-green-300 bg-green-50/98'
+          }`}>
+            <CardContent className="p-3 space-y-3">
+              {/* Session Status */}
+              <div className="text-center">
+                <div className="text-sm font-semibold text-green-800 flex items-center justify-center gap-1">
+                  <Shield className="w-4 h-4" />
+                  Permanently Authenticated
+                </div>
+                <div className="text-xs text-gray-600">Active until manual logout</div>
+              </div>
+
+              {/* User Details */}
+              <div className="bg-white/80 rounded-lg p-2 space-y-1">
+                <div className="text-sm font-medium text-gray-800">
+                  {currentUser.firstName} {currentUser.lastName}
+                </div>
+                <div className="text-xs text-gray-600">{currentUser.email}</div>
+                <div className="text-xs text-gray-500">ID: ****{currentUser.id.slice(-4)}</div>
+              </div>
+
+              {/* Unified Profile Benefits */}
+              {currentUser.isUnifiedProfile && (
+                <div className="bg-gradient-to-r from-orange-100/80 to-yellow-100/80 rounded-lg p-2">
+                  <div className="flex items-center gap-1 mb-1">
+                    <Crown className="w-3 h-3 text-orange-600" />
+                    <span className="text-xs font-medium text-orange-800">Unified Access</span>
+                  </div>
+                  <div className="text-xs text-orange-700">
+                    Customer, Vendor & Admin privileges enabled
+                  </div>
+                </div>
+              )}
+
+              {/* Logout Button */}
+              <Button
+                onClick={handleLogout}
+                variant="outline"
+                size="sm"
+                className="w-full bg-red-50/80 border-red-300 text-red-700 hover:bg-red-100/80 h-8 text-xs"
+              >
+                <LogOut className="w-3 h-3 mr-1" />
+                Secure Logout
+              </Button>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Collapsed Status Bar - Always visible at bottom */}
+        <Card className={`border shadow-lg backdrop-blur-md ${
           currentUser.isUnifiedProfile 
             ? 'border-orange-300 bg-gradient-to-r from-orange-50/95 to-yellow-50/95' 
             : 'border-green-300 bg-green-50/95'
         }`}>
           <CardContent className="p-2">
             <div className="flex items-center justify-between gap-2">
-              {/* Status Badge */}
-              <div className="flex items-center gap-1">
-                <CheckCircle className="w-3 h-3 text-green-600" />
-                <Badge className={`${getUserTypeColor()} text-xs px-2 py-0 h-5`}>
-                  {getUserTypeIcon()}
-                  <span className="ml-1 capitalize">{currentUser.userType.charAt(0)}</span>
-                </Badge>
-                {currentUser.isUnifiedProfile && (
-                  <Badge className="bg-orange-500 text-white text-xs px-1 py-0 h-5">
-                    <Crown className="w-2 h-2" />
+              {/* Status Section */}
+              <div className="flex items-center gap-2 flex-1 min-w-0">
+                <div className="flex items-center gap-1">
+                  <CheckCircle className="w-3 h-3 text-green-600 flex-shrink-0" />
+                  <Badge className={`${getUserTypeColor()} text-xs px-2 py-0 h-5 flex items-center gap-1`}>
+                    {getUserTypeIcon()}
+                    <span className="capitalize">{currentUser.userType.charAt(0)}</span>
                   </Badge>
-                )}
+                  {currentUser.isUnifiedProfile && (
+                    <Badge className="bg-orange-500 text-white text-xs px-1 py-0 h-5 flex items-center">
+                      <Crown className="w-2 h-2" />
+                    </Badge>
+                  )}
+                </div>
+                
+                {/* User name - hidden on very small screens */}
+                <span className="text-xs text-gray-700 font-medium truncate hidden xs:block">
+                  {currentUser.firstName}
+                </span>
               </div>
               
-              {/* Expand/Collapse Button */}
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => setIsExpanded(!isExpanded)}
-                className="h-5 w-5 p-0 hover:bg-white/50"
-              >
-                {isExpanded ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
-              </Button>
-            </div>
-            
-            {/* Lock Icon */}
-            <div className="flex justify-center mt-1">
-              <Lock className="w-3 h-3 text-gray-500" />
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* Expanded Details - Slides down smoothly */}
-      <div className={`transition-all duration-300 ease-in-out overflow-hidden ${
-        isExpanded ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
-      }`}>
-        <Card className={`border shadow-md backdrop-blur-sm ${
-          currentUser.isUnifiedProfile 
-            ? 'border-orange-300 bg-gradient-to-r from-orange-50/98 to-yellow-50/98' 
-            : 'border-green-300 bg-green-50/98'
-        }`}>
-          <CardContent className="p-3 space-y-3">
-            {/* Session Status */}
-            <div className="text-center">
-              <div className="text-sm font-semibold text-green-800 flex items-center justify-center gap-1">
-                <Shield className="w-4 h-4" />
-                Permanently Authenticated
+              {/* Security Icon */}
+              <div className="flex items-center gap-2">
+                <Lock className="w-3 h-3 text-gray-500 flex-shrink-0" />
+                
+                {/* Expand/Collapse Button */}
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setIsExpanded(!isExpanded)}
+                  className="h-6 w-6 p-0 hover:bg-white/50 flex-shrink-0"
+                >
+                  {isExpanded ? <ChevronDown className="w-3 h-3" /> : <ChevronUp className="w-3 h-3" />}
+                </Button>
               </div>
-              <div className="text-xs text-gray-600">Active until manual logout</div>
             </div>
-
-            {/* User Details */}
-            <div className="bg-white/80 rounded-lg p-2 space-y-1">
-              <div className="text-sm font-medium text-gray-800">
-                {currentUser.firstName} {currentUser.lastName}
-              </div>
-              <div className="text-xs text-gray-600">{currentUser.email}</div>
-              <div className="text-xs text-gray-500">ID: ****{currentUser.id.slice(-4)}</div>
-            </div>
-
-            {/* Unified Profile Benefits */}
-            {currentUser.isUnifiedProfile && (
-              <div className="bg-gradient-to-r from-orange-100/80 to-yellow-100/80 rounded-lg p-2">
-                <div className="flex items-center gap-1 mb-1">
-                  <Crown className="w-3 h-3 text-orange-600" />
-                  <span className="text-xs font-medium text-orange-800">Unified Access</span>
-                </div>
-                <div className="text-xs text-orange-700">
-                  Customer, Vendor & Admin privileges enabled
-                </div>
-              </div>
-            )}
-
-            {/* Logout Button */}
-            <Button
-              onClick={handleLogout}
-              variant="outline"
-              size="sm"
-              className="w-full bg-red-50/80 border-red-300 text-red-700 hover:bg-red-100/80 h-8 text-xs"
-            >
-              <LogOut className="w-3 h-3 mr-1" />
-              Secure Logout
-            </Button>
           </CardContent>
         </Card>
       </div>
