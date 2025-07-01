@@ -102,8 +102,11 @@ const DashboardManager = () => {
             {mainTabs.map((tab) => (
               <button
                 key={tab.id}
-                onClick={() => setActiveMainTab(tab.id)}
-                className={`inline-flex items-center justify-center whitespace-nowrap rounded-lg px-3 py-3 text-sm font-medium transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 min-h-[56px] flex-1 min-w-0 ${
+                onClick={() => {
+                  console.log('Main tab clicked:', tab.id);
+                  setActiveMainTab(tab.id);
+                }}
+                className={`inline-flex items-center justify-center whitespace-nowrap rounded-lg px-3 py-3 text-sm font-medium transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 min-h-[56px] flex-1 min-w-0 cursor-pointer ${
                   activeMainTab === tab.id
                     ? 'bg-white text-foreground shadow-lg shadow-blue-100/50 border border-blue-200/30'
                     : 'hover:bg-white/70 hover:shadow-md'
@@ -148,8 +151,11 @@ const DashboardManager = () => {
                           {dataTabs.map((tab) => (
                             <button
                               key={tab.id}
-                              onClick={() => setActiveDataTab(tab.id)}
-                              className={`inline-flex items-center justify-center whitespace-nowrap rounded-lg px-3 py-3 text-sm font-medium transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 min-h-[48px] flex-1 min-w-0 ${
+                              onClick={() => {
+                                console.log('Data tab clicked:', tab.id);
+                                setActiveDataTab(tab.id);
+                              }}
+                              className={`inline-flex items-center justify-center whitespace-nowrap rounded-lg px-3 py-3 text-sm font-medium transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 min-h-[48px] flex-1 min-w-0 cursor-pointer ${
                                 activeDataTab === tab.id
                                   ? tab.id === 'sim-data' 
                                     ? 'bg-blue-500 text-white shadow-lg'
