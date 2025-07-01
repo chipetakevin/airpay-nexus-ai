@@ -6,6 +6,7 @@ import { useUserInfo } from './receipt/useUserInfo';
 import { useWhatsAppForwarding } from './receipt/useWhatsAppForwarding';
 import { useReceiptSender } from './receipt/useReceiptSender';
 import { useComprehensiveReceipts } from './useComprehensiveReceipts';
+import { useDivineMobileReceipts } from './useDivineMobileReceipts';
 
 export const useReceiptGeneration = () => {
   const { toast } = useToast();
@@ -15,6 +16,7 @@ export const useReceiptGeneration = () => {
   const { generateWhatsAppForwardingInstructions, handleIntelligentWhatsAppRedirect, autoRedirectToSmartDeals } = useWhatsAppForwarding();
   const { sendReceiptToCustomer, sendReceiptWithFallback } = useReceiptSender();
   const { createComprehensiveReceipt, getCustomerInfo } = useComprehensiveReceipts();
+  const { processCompleteTransaction: processDivineMobileTransaction } = useDivineMobileReceipts();
 
   const autoGenerateAndSendReceipts = async (
     transactionData: any, 
@@ -32,7 +34,7 @@ export const useReceiptGeneration = () => {
         return;
       }
 
-      console.log('✅ Transaction completed - generating comprehensive receipts for all user types...');
+      console.log('✅ Transaction completed - generating Divine Mobile and comprehensive receipts...');
       
       const customerInfo = getCustomerInfo();
       const currentUserInfo = getCurrentUserInfo();
@@ -56,7 +58,19 @@ export const useReceiptGeneration = () => {
         }
       }
 
-      // Create comprehensive receipt with enhanced data for all user types
+      // Process Divine Mobile receipt first (premium experience)
+      console.log('📱 Generating Divine Mobile professional receipt...');
+      const divineMobileResult = await processDivineMobileTransaction(
+        transactionData,
+        profitSharing,
+        cartItems,
+        purchaseMode,
+        customerPhone,
+        recipientData,
+        userType
+      );
+
+      // Create comprehensive receipt as backup
       const enhancedTransactionData = {
         ...transactionData,
         transactionId: generateTransactionId(transactionData.timestamp),
@@ -64,17 +78,17 @@ export const useReceiptGeneration = () => {
         userType
       };
 
-      console.log('📧 Generating comprehensive receipt for all user types...');
+      console.log('📧 Generating comprehensive receipt as backup...');
       const receiptResult = await createComprehensiveReceipt(
         enhancedTransactionData,
         customerInfo,
         cartItems,
         profitSharing,
-        'Addex-Hub Mobile Payment',
+        'Divine Mobile Payment',
         userInfo
       );
 
-      if (receiptResult?.success) {
+      if (divineMobileResult?.success || receiptResult?.success) {
         // Save receipt to user profile (all user types)
         const baseReceiptData = {
           customerName: customerInfo.name,
@@ -102,8 +116,8 @@ export const useReceiptGeneration = () => {
         await forceReceiptDelivery(baseReceiptData, customerPhone, recipientData, purchaseMode);
 
         toast({
-          title: "📱 Professional Receipt Delivered!",
-          description: "Comprehensive receipt sent via WhatsApp and email regardless of registration status",
+          title: "📱 Divine Mobile Receipt Delivered!",
+          description: "Professional card-style receipt sent via WhatsApp with PDF backup",
           duration: 5000
         });
 
@@ -113,7 +127,7 @@ export const useReceiptGeneration = () => {
         }, 6000);
       } else {
         // Fallback to enhanced receipt system with forced delivery
-        console.log('⚠️ Comprehensive receipt failed, using enhanced fallback with forced delivery...');
+        console.log('⚠️ Both Divine Mobile and comprehensive receipts failed, using enhanced fallback...');
         await enhancedFallbackReceipt(transactionData, profitSharing, cartItems, purchaseMode, customerPhone, recipientData, userType);
       }
 
@@ -121,7 +135,7 @@ export const useReceiptGeneration = () => {
       console.error('❌ Error in autoGenerateAndSendReceipts:', error);
       
       // Fallback to enhanced receipt system with forced delivery
-      console.log('⚠️ Using enhanced fallback receipt system with forced delivery due to error...');
+      console.log('⚠️ Using enhanced fallback receipt system due to error...');
       await enhancedFallbackReceipt(transactionData, profitSharing, cartItems, purchaseMode, customerPhone, recipientData, userType);
     }
   };
