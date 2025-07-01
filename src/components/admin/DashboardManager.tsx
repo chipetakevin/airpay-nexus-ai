@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
 import MVNEDataExtractionPanel from './MVNEDataExtractionPanel';
+import MVNEDailyRechargePanel from './MVNEDailyRechargePanel';
 
 const DashboardManager = () => {
   const [customerData, setCustomerData] = useState<any>(null);
@@ -90,7 +91,22 @@ const DashboardManager = () => {
         </TabsList>
 
         <TabsContent value="customers" className="space-y-4">
-          <MVNEDataExtractionPanel />
+          {/* Intelligent Data Extraction Tabs */}
+          <Tabs defaultValue="sim-data" className="w-full">
+            <TabsList className="grid w-full grid-cols-2 bg-gray-100">
+              <TabsTrigger value="sim-data">SIM Card Identifiers</TabsTrigger>
+              <TabsTrigger value="recharge-data">Daily Recharge Records</TabsTrigger>
+            </TabsList>
+
+            <TabsContent value="sim-data" className="space-y-4">
+              <MVNEDataExtractionPanel />
+            </TabsContent>
+
+            <TabsContent value="recharge-data" className="space-y-4">
+              <MVNEDailyRechargePanel />
+            </TabsContent>
+          </Tabs>
+
           <Card>
             <CardHeader>
               <CardTitle>Customer Management</CardTitle>
