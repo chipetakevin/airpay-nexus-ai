@@ -55,9 +55,9 @@ export const useVendorRegistrationSubmit = (handleSubmit: (e: React.FormEvent) =
           duration: 5000,
         });
 
-        // Redirect to vendor portal after a short delay
+        // Redirect to deals interface after a short delay
         setTimeout(() => {
-          window.location.href = '/portal?tab=vendor';
+          window.location.href = '/portal?tab=deals';
         }, 2000);
       }
     } catch (error) {
