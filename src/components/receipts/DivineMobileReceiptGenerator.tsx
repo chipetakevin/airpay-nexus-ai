@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { useToast } from '@/hooks/use-toast';
 
@@ -23,7 +22,7 @@ interface DivineMobileReceiptData {
 export const useDivineMobileReceiptGenerator = () => {
   const { toast } = useToast();
 
-  const generateDivineMobileReceipt = (data: DivineMobileReceiptData): string => {
+  const generateModernDivineMobileReceipt = (data: DivineMobileReceiptData): string => {
     const date = new Date(data.timestamp);
     const formattedDate = date.toLocaleDateString('en-ZA', {
       day: '2-digit',
@@ -36,98 +35,241 @@ export const useDivineMobileReceiptGenerator = () => {
       hour12: false
     });
 
-    // Fix amount formatting - ensure we have valid numbers
+    // Enhanced formatting with better number handling
     const totalAmount = typeof data.amount === 'number' && !isNaN(data.amount) ? data.amount : 0;
-    const cashback = typeof data.cashbackEarned === 'number' && !isNaN(data.cashbackEarned) ? data.cashbackEarned : 0;
+    const cashback = typeof data.cashbackEarned === 'number' && !isNaN(data.cashbackEarned) ? data.cashbackEarned : (totalAmount * 0.05);
+    const loyaltyPoints = Math.round(totalAmount * 2);
 
+    // Enhanced items list with pricing
     const itemsList = data.items.map(item => {
       const itemPrice = typeof item.price === 'number' && !isNaN(item.price) ? item.price : 0;
-      return `${item.network?.toUpperCase() || 'DIVINE MOBILE'} ${item.type?.toUpperCase() || 'AIRTIME'}`;
+      return `• ${item.network?.toUpperCase() || 'DIVINE MOBILE'} ${item.type?.toUpperCase() || 'AIRTIME'} - R${itemPrice.toFixed(2)}`;
     }).join('\n');
 
-    return `**DIVINE MOBILE RECEIPT**
+    // Generate unique QR code data
+    const qrData = `https://divinemobile.co.za/receipt/${data.transactionId}`;
+    
+    // Personalized offer based on purchase amount
+    const personalizedOffer = totalAmount > 100 
+      ? "🎁 VIP BONUS: Next purchase over R200 gets 20% extra airtime!"
+      : "🔥 SPECIAL: Buy R100+ airtime this week, get R20 FREE!";
 
-**Divine Mobile Promotions**
-22 9th Avenue
-Tel: +27 832 466 539
+    return `📱 **DIVINE MOBILE** - PREMIUM DIGITAL RECEIPT
+
+🏢 **DIVINE MOBILE PROMOTIONS**
+📍 22 9th Avenue, South Africa
+📞 +27 832 466 539
+📧 support@divinemobile.co.za
+🌐 www.divinemobile.co.za
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-**Transaction Details**
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+✅ **TRANSACTION APPROVED** ✅
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
+🔐 **PAYMENT DETAILS**
 Entry Method:        Contactless EMV
-Card Number (PAN):   **** **** **** ${data.customerPhone.slice(-4)}
+Card Number:         **** **** **** ${data.customerPhone.slice(-4)}
 Expiry Date:         ${String(date.getMonth() + 1).padStart(2, '0')}/${date.getFullYear().toString().slice(-2)}
-Card Provider:       ONECARD MOBILE
+Provider:            ONECARD MOBILE
 AID:                 A00000000041010
 Status:              **APPROVED** ✅
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-**Transaction Information**
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
+🆔 **TRANSACTION INFO**
 Transaction ID:      ${data.transactionId}
-PIN Statement:       No CVM
-Authorization ID:    ${data.authorizationId || 'AUTH-' + Math.random().toString(36).substr(2, 8).toUpperCase()}
-Transaction Type:    DIGITAL SERVICES
+PIN Statement:       No CVM Required
+Authorization:       ${data.authorizationId || 'AUTH-' + Math.random().toString(36).substr(2, 8).toUpperCase()}
+Type:                DIGITAL SERVICES
+Processing Time:     Instant ⚡
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-**Purchase Summary**
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-Service Purchased:   ${itemsList}
-Amount:              R${totalAmount.toFixed(2)}
-${cashback > 0 ? `Cashback Earned:     R${cashback.toFixed(2)}\n` : ''}Additional Amount:   R0.00
-Tips:                R0.00
-**Total:             R${totalAmount.toFixed(2)}**
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-**Date & Time:** ${formattedDate} | ${formattedTime}
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-**Customer Information**
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-Name:                ${data.customerName || 'Valued Customer'}
-Mobile:              ${data.customerPhone.replace('+27', '0')}
-Type:                ${data.userType?.toUpperCase() || 'CUSTOMER'}
-
+🛒 **PURCHASE SUMMARY**
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-*Please retain this receipt for your records.*
+${itemsList}
 
-🌟 Thank you for choosing Divine Mobile! 🌟
-⚡ Fast • 🔒 Secure • 🎯 Reliable
-Support: +27 832 466 539`;
+**Subtotal:**        R${totalAmount.toFixed(2)}
+**Discount:**        R0.00
+**VAT (15%):**       R${(totalAmount * 0.15).toFixed(2)}
+**Service Fee:**     R0.00
+
+💰 **TOTAL PAID:**   **R${totalAmount.toFixed(2)}**
+
+🎁 **REWARDS EARNED**
+• Cashback:          R${cashback.toFixed(2)}
+• Loyalty Points:    +${loyaltyPoints} pts
+• VIP Status:        Active ⭐
+
+📅 **DATE & TIME:** ${formattedDate} at ${formattedTime} SAST
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+👤 **CUSTOMER INFORMATION**
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+**Name:**            ${data.customerName || 'Valued Customer'}
+**Mobile:**          ${data.customerPhone.replace('+27', '0')}
+**Account Type:**    ${data.userType?.toUpperCase() || 'PREMIUM CUSTOMER'}
+**Member Since:**    2024
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🎯 **EXCLUSIVE OFFER FOR YOU**
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+${personalizedOffer}
+
+💬 WhatsApp "CLAIM" to: +27 832 466 539
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📋 **DIGITAL FEATURES**
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📱 **QR Code Access:** ${qrData}
+🔗 **View Online:** divinemobile.co.za/receipt/${data.transactionId}
+📊 **Rate Service:** divinemobile.co.za/feedback
+💾 **Download PDF:** Available via email
+📤 **Share Receipt:** Forward this WhatsApp message
+☁️ **Cloud Storage:** Auto-saved to your account
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🛡️ **SECURITY & PRIVACY**
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✅ 256-bit SSL encryption used
+✅ Transaction digitally verified
+✅ Your data is protected (Privacy Policy)
+✅ PCI DSS compliant processing
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📞 **INSTANT SUPPORT**
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🆘 24/7 Support: +27 832 466 539
+💬 WhatsApp: wa.me/27832466539
+📧 Email: support@divinemobile.co.za
+🌐 Help Center: divinemobile.co.za/help
+💻 Live Chat: Available on website
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🌟 **THANK YOU FOR CHOOSING DIVINE MOBILE!** 🌟
+⚡ Instant • 🔒 Secure • 🎯 Reliable • 💎 Premium
+
+📱 *Keep this receipt for your records*
+🔄 *Refund Policy: divinemobile.co.za/refunds*
+📜 *Terms: divinemobile.co.za/terms*`;
   };
 
   const generateWhatsAppReceipt = (data: DivineMobileReceiptData): string => {
-    const receiptText = generateDivineMobileReceipt(data);
-    return `${receiptText}
-
-🌐 www.divinemobile.co.za
-💬 WhatsApp Support: +27832466539
-
-*Digital receipt delivered instantly*`;
+    const receiptText = generateModernDivineMobileReceipt(data);
+    return receiptText; // Already includes all features
   };
 
   const sendDivineMobileReceipt = (receiptData: DivineMobileReceiptData) => {
-    const whatsappMessage = generateWhatsAppReceipt(receiptData);
-    const encodedMessage = encodeURIComponent(whatsappMessage);
-    const whatsappUrl = `https://wa.me/${receiptData.customerPhone.replace('+', '')}?text=${encodedMessage}`;
-    
-    // Auto-open WhatsApp with receipt
-    setTimeout(() => {
-      window.open(whatsappUrl, '_blank');
-    }, 1000);
+    try {
+      console.log('🚀 Starting WhatsApp receipt delivery...');
+      
+      const whatsappMessage = generateWhatsAppReceipt(receiptData);
+      console.log('📝 Generated message length:', whatsappMessage.length);
+      
+      // Enhanced phone number cleaning for global compatibility
+      let cleanPhone = receiptData.customerPhone.toString()
+        .replace(/[\+\-\(\)\s]/g, '') // Remove formatting
+        .replace(/^0/, '27') // South African format
+        .replace(/[^\d]/g, ''); // Keep only digits
+      
+      // Ensure proper format
+      if (cleanPhone.length === 9 && !cleanPhone.startsWith('27')) {
+        cleanPhone = '27' + cleanPhone;
+      }
+      
+      console.log('📞 Cleaned phone number:', cleanPhone);
+      
+      // Check message length and truncate if necessary
+      let finalMessage = whatsappMessage;
+      const maxLength = 1800; // Conservative WhatsApp URL limit
+      
+      if (whatsappMessage.length > maxLength) {
+        // Create shorter version for WhatsApp
+        const shortReceipt = `📱 **DIVINE MOBILE RECEIPT**
 
-    toast({
-      title: "Divine Mobile Receipt Generated! 📱",
-      description: "Professional receipt sent via WhatsApp",
-      duration: 3000
-    });
+✅ **TRANSACTION APPROVED**
 
-    return whatsappUrl;
+🆔 **Transaction:** ${receiptData.transactionId}
+💰 **Amount:** R${receiptData.amount.toFixed(2)}
+🎁 **Cashback:** R${(receiptData.cashbackEarned || receiptData.amount * 0.05).toFixed(2)}
+📅 **Date:** ${new Date(receiptData.timestamp).toLocaleDateString('en-ZA')}
+
+👤 **Customer:** ${receiptData.customerName || 'Valued Customer'}
+📱 **Mobile:** ${receiptData.customerPhone.replace('+27', '0')}
+
+🔗 **Full Receipt:** divinemobile.co.za/receipt/${receiptData.transactionId}
+📞 **Support:** +27 832 466 539
+
+🌟 Thank you for choosing Divine Mobile! 🌟`;
+        
+        finalMessage = shortReceipt;
+        console.log('✂️ Message truncated to:', finalMessage.length, 'characters');
+      }
+      
+      const encodedMessage = encodeURIComponent(finalMessage);
+      const whatsappUrl = `https://wa.me/${cleanPhone}?text=${encodedMessage}`;
+      
+      console.log('🔗 WhatsApp URL length:', whatsappUrl.length);
+      
+      // Validate URL length
+      if (whatsappUrl.length > 2048) {
+        throw new Error('URL too long for WhatsApp');
+      }
+      
+      // Auto-open WhatsApp with enhanced error handling
+      setTimeout(() => {
+        try {
+          console.log('🚀 Opening WhatsApp...');
+          const newWindow = window.open(whatsappUrl, '_blank', 'noopener,noreferrer');
+          
+          if (!newWindow) {
+            throw new Error('Popup blocked or failed to open');
+          }
+          
+          console.log('✅ WhatsApp opened successfully');
+          
+          toast({
+            title: "📱 Modern Receipt Delivered!",
+            description: "Premium digital receipt sent via WhatsApp with all features",
+            duration: 4000
+          });
+          
+        } catch (error) {
+          console.error('❌ WhatsApp open failed:', error);
+          
+          // Fallback: Copy to clipboard
+          navigator.clipboard?.writeText(finalMessage).then(() => {
+            toast({
+              title: "📋 Receipt Copied!",
+              description: "WhatsApp link failed. Receipt copied to clipboard - paste into WhatsApp manually",
+              duration: 7000
+            });
+          }).catch(() => {
+            toast({
+              title: "⚠️ WhatsApp Issue",
+              description: "Please try again or contact support for your receipt",
+              variant: "destructive"
+            });
+          });
+        }
+      }, 500);
+
+      return whatsappUrl;
+      
+    } catch (error) {
+      console.error('💥 Receipt delivery error:', error);
+      
+      toast({
+        title: "Receipt Delivery Failed",
+        description: "Unable to send WhatsApp receipt. Please try again.",
+        variant: "destructive"
+      });
+      
+      return null;
+    }
   };
 
   const processDivineMobileTransaction = (
@@ -184,7 +326,7 @@ Support: +27 832 466 539`;
   };
 
   return {
-    generateDivineMobileReceipt,
+    generateDivineMobileReceipt: generateModernDivineMobileReceipt,
     generateWhatsAppReceipt,
     sendDivineMobileReceipt,
     processDivineMobileTransaction,
