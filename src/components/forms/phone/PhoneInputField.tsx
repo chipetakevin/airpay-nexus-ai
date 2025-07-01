@@ -13,15 +13,46 @@ interface PhoneInputFieldProps {
   inputRef: React.RefObject<HTMLInputElement>;
 }
 
-const PhoneInputField = ({
-  value,
-  onChange,
-  onPaste,
-  placeholder,
-  error,
-  isValid,
-  inputRef
-}: PhoneInputFieldProps) => {
+  const PhoneInputField = ({
+    value,
+    onChange,
+    onPaste,
+    placeholder,
+    error,
+    isValid,
+    inputRef
+  }: PhoneInputFieldProps) => {
+    
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+      let inputValue = e.target.value;
+      
+      // Clean input - allow only digits
+      inputValue = inputValue.replace(/\D/g, '');
+      
+      // Intelligently prevent invalid patterns
+      if (inputValue.length > 0) {
+        // First digit cannot be 0
+        if (inputValue[0] === '0') {
+          return; // Silently ignore
+        }
+        
+        // Second digit cannot be 0
+        if (inputValue.length > 1 && inputValue[1] === '0') {
+          return; // Silently ignore
+        }
+      }
+      
+      // Create synthetic event with cleaned value
+      const syntheticEvent = {
+        ...e,
+        target: {
+          ...e.target,
+          value: inputValue
+        }
+      };
+      
+      onChange(syntheticEvent);
+    };
   return (
     <div className="flex gap-2">
       {/* Country Code Selector with SA Flag */}
@@ -43,7 +74,7 @@ const PhoneInputField = ({
             id="phoneInput"
             type="tel"
             value={value}
-            onChange={onChange}
+            onChange={handleChange}
             onPaste={onPaste}
             placeholder={placeholder}
             className={`border-0 bg-transparent p-0 focus:ring-0 text-lg font-medium ${

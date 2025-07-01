@@ -88,6 +88,19 @@ const EnhancedPhoneInput = ({
       normalizedPhone = normalizedPhone.substring(1);
     }
     
+    // Intelligently prevent invalid patterns
+    if (normalizedPhone.length > 0) {
+      // First digit cannot be 0
+      if (normalizedPhone[0] === '0') {
+        return; // Silently ignore
+      }
+      
+      // Second digit cannot be 0
+      if (normalizedPhone.length > 1 && normalizedPhone[1] === '0') {
+        return; // Silently ignore
+      }
+    }
+    
     // Only allow up to 9 digits for SA mobile numbers
     if (normalizedPhone.length <= 9) {
       onChange(normalizedPhone);

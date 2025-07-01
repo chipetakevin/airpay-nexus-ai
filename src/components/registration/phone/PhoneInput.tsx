@@ -18,6 +18,37 @@ const PhoneInput: React.FC<PhoneInputProps> = ({
   isValidPhone,
   error
 }) => {
+  
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    let inputValue = e.target.value;
+    
+    // Clean input - allow only digits
+    inputValue = inputValue.replace(/\D/g, '');
+    
+    // Intelligently prevent invalid patterns
+    if (inputValue.length > 0) {
+      // First digit cannot be 0
+      if (inputValue[0] === '0') {
+        return; // Silently ignore
+      }
+      
+      // Second digit cannot be 0
+      if (inputValue.length > 1 && inputValue[1] === '0') {
+        return; // Silently ignore
+      }
+    }
+    
+    // Create synthetic event with cleaned value
+    const syntheticEvent = {
+      ...e,
+      target: {
+        ...e.target,
+        value: inputValue
+      }
+    };
+    
+    onPhoneChange(syntheticEvent);
+  };
   return (
     <div className="flex">
       <div className="flex items-center px-3 py-2 bg-gray-100 border border-r-0 border-gray-300 rounded-l-md">
@@ -28,7 +59,7 @@ const PhoneInput: React.FC<PhoneInputProps> = ({
           id="phoneNumber"
           type="tel"
           value={phoneNumber}
-          onChange={onPhoneChange}
+          onChange={handleChange}
           onPaste={onPhonePaste}
           placeholder="832466539 (9 digits)"
           className={`rounded-l-none pr-10 ${
