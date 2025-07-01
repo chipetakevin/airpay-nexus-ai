@@ -89,27 +89,52 @@ const CustomerRegistration = () => {
     }
   };
 
+  // Check if form is valid for submission
+  const isFormValid = () => {
+    const hasRequiredFields = formData.firstName.trim() && 
+                             formData.lastName.trim() && 
+                             formData.email.trim() && 
+                             formData.phoneNumber.trim() && 
+                             formData.phoneNumber.length === 9 &&
+                             formData.agreeTerms;
+    
+    const hasNoErrors = Object.keys(errors).length === 0;
+    
+    return hasRequiredFields && hasNoErrors;
+  };
+
   const handleFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
     
     try {
-      // Validate required fields
-      if (!formData.firstName || !formData.lastName || !formData.email || !formData.phoneNumber) {
-        showErrorReport(
-          'Please complete all required fields to continue registration.',
-          '/portal?tab=registration',
-          'Complete Registration'
-        );
-        return;
-      }
-
-      if (!formData.agreeTerms) {
-        showErrorReport(
-          'Please accept the terms and conditions to proceed.',
-          '/portal?tab=registration',
-          'Accept Terms'
-        );
+      // Check if form is actually valid before showing error
+      if (!isFormValid()) {
+        console.log('Form validation failed:', {
+          firstName: formData.firstName,
+          lastName: formData.lastName,
+          email: formData.email,
+          phoneNumber: formData.phoneNumber,
+          phoneNumberLength: formData.phoneNumber.length,
+          agreeTerms: formData.agreeTerms,
+          errors: errors
+        });
+        
+        // Don't show the error report if form is actually complete
+        const missingFields = [];
+        if (!formData.firstName.trim()) missingFields.push('First Name');
+        if (!formData.lastName.trim()) missingFields.push('Last Name');
+        if (!formData.email.trim()) missingFields.push('Email');
+        if (!formData.phoneNumber.trim()) missingFields.push('Phone Number');
+        if (!formData.agreeTerms) missingFields.push('Terms Agreement');
+        
+        if (missingFields.length > 0) {
+          toast({
+            title: "Please Complete Required Fields",
+            description: `Missing: ${missingFields.join(', ')}`,
+            variant: "destructive"
+          });
+        }
         return;
       }
 
@@ -353,8 +378,8 @@ const CustomerRegistration = () => {
           <CardContent className="p-4">
             <Button
               type="submit"
-              disabled={isSubmitting}
-              className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3"
+              disabled={isSubmitting || !isFormValid()}
+              className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 disabled:opacity-50"
             >
               {isSubmitting ? (
                 <>

@@ -102,6 +102,7 @@ export const useCustomerRegistration = () => {
   const validateForm = (): boolean => {
     const newErrors: Partial<Record<keyof CustomerFormData, string>> = {};
 
+    // Only validate truly required fields
     if (!formData.firstName.trim()) newErrors.firstName = 'First name is required';
     if (!formData.lastName.trim()) newErrors.lastName = 'Last name is required';
     if (!formData.email.trim()) newErrors.email = 'Email is required';
@@ -118,14 +119,15 @@ export const useCustomerRegistration = () => {
       }
     }
 
-    // Enhanced banking validation
-    if (formData.accountNumber) {
+    // Banking validation is optional - only validate if user provided banking info
+    if (formData.accountNumber && formData.accountNumber.trim()) {
       const bankValidation = validateSouthAfricanBankAccount(formData.accountNumber);
       if (!bankValidation.isValid) {
         newErrors.accountNumber = bankValidation.error || 'Invalid South African bank account number';
       }
     }
     
+    // Terms agreement is required
     if (!formData.agreeTerms) newErrors.agreeTerms = 'Terms acceptance is required';
 
     setErrors(newErrors);
