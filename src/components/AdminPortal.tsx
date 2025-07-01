@@ -22,20 +22,35 @@ const AdminPortal: React.FC<AdminPortalProps> = ({ onAuthSuccess }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [authCode, setAuthCode] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [autofillCount, setAutofillCount] = useState(0);
 
   const adminEmail = 'chi***akevin@gmail.com';
   const fullAdminEmail = 'chipetakevin@gmail.com';
 
   const handleSendCode = () => {
+    // Check if we've reached the 50-time limit
+    if (autofillCount >= 50) {
+      toast({
+        title: "Autofill Limit Reached",
+        description: "Maximum autofill attempts reached. Please manually enter the code.",
+        variant: "destructive"
+      });
+      return;
+    }
+
     setIsLoading(true);
     
     setTimeout(() => {
       const code = Math.random().toString(36).substr(2, 6).toUpperCase();
       setIsLoading(false);
       
+      // Autofill the authentication code immediately
+      setAuthCode(code);
+      setAutofillCount(prev => prev + 1);
+      
       toast({
-        title: "Authentication Code Sent",
-        description: `Code sent to ${adminEmail}. Code: ${code} (Demo)`,
+        title: "Authentication Code Sent & Auto-filled",
+        description: `Code sent to ${adminEmail}. Auto-filled: ${code} (${autofillCount + 1}/50)`,
       });
       
       localStorage.setItem('adminAuthCode', code);
