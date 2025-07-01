@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
+import MVNEDataExtractionPanel from './MVNEDataExtractionPanel';
 
 const DashboardManager = () => {
   const [customerData, setCustomerData] = useState<any>(null);
@@ -89,6 +90,7 @@ const DashboardManager = () => {
         </TabsList>
 
         <TabsContent value="customers" className="space-y-4">
+          <MVNEDataExtractionPanel />
           <Card>
             <CardHeader>
               <CardTitle>Customer Management</CardTitle>
