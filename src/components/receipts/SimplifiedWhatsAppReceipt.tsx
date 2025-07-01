@@ -56,7 +56,12 @@ ${itemsList}
 
   const sendSimplifiedWhatsAppReceipt = (receiptData: SimplifiedReceiptData, customerPhone: string) => {
     try {
+      console.log('🔧 DEBUG: Starting WhatsApp receipt generation');
+      console.log('🔧 DEBUG: Original phone:', customerPhone);
+      console.log('🔧 DEBUG: Receipt data:', receiptData);
+      
       const message = generateSimplifiedWhatsAppReceipt(receiptData);
+      console.log('🔧 DEBUG: Generated message length:', message.length);
       
       // Enhanced phone number cleaning for WhatsApp compatibility
       let cleanPhone = customerPhone.toString()
@@ -69,30 +74,77 @@ ${itemsList}
         cleanPhone = '27' + cleanPhone;
       }
       
-      console.log('📱 Original phone:', customerPhone, 'Clean phone:', cleanPhone);
-      
-      // Create WhatsApp URL with proper encoding
-      const encodedMessage = encodeURIComponent(message);
-      const whatsappUrl = `https://wa.me/${cleanPhone}?text=${encodedMessage}`;
-      
-      // Validate URL length (WhatsApp has limits)
-      if (whatsappUrl.length > 2048) {
-        throw new Error('Message too long for WhatsApp URL');
+      // Validate phone number
+      if (cleanPhone.length < 10 || cleanPhone.length > 15) {
+        throw new Error('Invalid phone number format');
       }
       
-      console.log('📱 WhatsApp URL generated successfully:', whatsappUrl.substring(0, 100) + '...');
+      console.log('🔧 DEBUG: Cleaned phone:', cleanPhone);
       
-      // Auto-open WhatsApp with better error handling
+      // Truncate message if too long (WhatsApp has URL length limits)
+      let finalMessage = message;
+      if (message.length > 1500) {
+        finalMessage = message.substring(0, 1500) + '\n\n...Message truncated. Full receipt available via email.';
+        console.log('🔧 DEBUG: Message truncated to:', finalMessage.length, 'characters');
+      }
+      
+      // Create WhatsApp URL with proper encoding
+      const encodedMessage = encodeURIComponent(finalMessage);
+      const whatsappUrl = `https://wa.me/${cleanPhone}?text=${encodedMessage}`;
+      
+      console.log('🔧 DEBUG: Final WhatsApp URL length:', whatsappUrl.length);
+      console.log('🔧 DEBUG: WhatsApp URL preview:', whatsappUrl.substring(0, 150) + '...');
+      
+      // Validate URL length (WhatsApp has limits around 2048 characters)
+      if (whatsappUrl.length > 2000) {
+        console.log('🔧 DEBUG: URL too long, using fallback');
+        // Fallback to very short message
+        const shortMessage = `🌟 ADDEX-HUB MOBILE 📱\n\nPurchase Complete ✅\nTotal: R${receiptData.totalPaid.toFixed(2)}\nCashback: R${receiptData.cashback.toFixed(2)}\n\nFull receipt emailed to you.\n\nSupport: +27 100 2827`;
+        const shortUrl = `https://wa.me/${cleanPhone}?text=${encodeURIComponent(shortMessage)}`;
+        console.log('🔧 DEBUG: Short URL length:', shortUrl.length);
+        
+        // Use short URL instead
+        setTimeout(() => {
+          try {
+            console.log('🔧 DEBUG: Attempting to open WhatsApp with short URL');
+            const newWindow = window.open(shortUrl, '_blank', 'noopener,noreferrer');
+            if (!newWindow) {
+              throw new Error('Popup blocked');
+            }
+            console.log('🔧 DEBUG: WhatsApp opened successfully');
+          } catch (error) {
+            console.error('🔧 DEBUG: Error opening WhatsApp:', error);
+            navigator.clipboard?.writeText(shortMessage);
+            toast({
+              title: "Receipt Copied! 📋",
+              description: `Short receipt copied. Open WhatsApp and send to ${customerPhone}`,
+              duration: 7000
+            });
+          }
+        }, 300);
+        
+        toast({
+          title: "📱 Short Receipt Sent!",
+          description: "Quick purchase summary delivered via WhatsApp",
+          duration: 3000
+        });
+        
+        return { success: true, whatsappUrl: shortUrl };
+      }
+      
+      // Auto-open WhatsApp with enhanced error handling
       setTimeout(() => {
         try {
+          console.log('🔧 DEBUG: Attempting to open WhatsApp');
           const newWindow = window.open(whatsappUrl, '_blank', 'noopener,noreferrer');
           if (!newWindow) {
             throw new Error('Popup blocked');
           }
+          console.log('🔧 DEBUG: WhatsApp opened successfully');
         } catch (error) {
-          console.error('Error opening WhatsApp:', error);
+          console.error('🔧 DEBUG: Error opening WhatsApp:', error);
           // Enhanced fallback with manual link
-          navigator.clipboard?.writeText(message).then(() => {
+          navigator.clipboard?.writeText(finalMessage).then(() => {
             toast({
               title: "Receipt Copied! 📋",
               description: `Message copied to clipboard. Manually open WhatsApp and send to ${customerPhone}`,
@@ -117,7 +169,7 @@ ${itemsList}
 
       return { success: true, whatsappUrl };
     } catch (error) {
-      console.error('Error sending simplified WhatsApp receipt:', error);
+      console.error('🔧 DEBUG: Error in sendSimplifiedWhatsAppReceipt:', error);
       toast({
         title: "WhatsApp Receipt Failed",
         description: "Unable to send WhatsApp receipt. Please try again.",
