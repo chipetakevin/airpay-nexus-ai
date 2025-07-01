@@ -59,6 +59,15 @@ const ModernTabNavigation = ({
     return colorMap[tab.color] || colorMap.gray;
   };
 
+  const handleTabClick = (tab: TabItem) => {
+    if (isTabAllowed(tab.value)) {
+      console.log(`🖱️ Tab clicked: ${tab.value} (${tab.label})`);
+      onTabChange(tab.value);
+    } else {
+      console.log(`❌ Tab not allowed: ${tab.value} (${tab.label})`);
+    }
+  };
+
   return (
     <div className="w-full max-w-7xl mx-auto px-2 sm:px-4 mb-4 sm:mb-6">
       {/* Mobile: 2x3 Grid */}
@@ -70,9 +79,9 @@ const ModernTabNavigation = ({
               ${getTabStyles(tab)}
               border-2 transition-all duration-300 cursor-pointer
               min-h-[80px] flex flex-col items-center justify-center p-3
-              hover:shadow-md
+              hover:shadow-md active:scale-95
             `}
-            onClick={() => isTabAllowed(tab.value) && onTabChange(tab.value)}
+            onClick={() => handleTabClick(tab)}
           >
             <div className="text-lg mb-1">{tab.icon}</div>
             <div className="text-center">
@@ -95,9 +104,9 @@ const ModernTabNavigation = ({
               ${getTabStyles(tab)}
               border-2 transition-all duration-300 cursor-pointer
               min-h-[90px] flex flex-col items-center justify-center p-4
-              hover:shadow-md
+              hover:shadow-md active:scale-95
             `}
-            onClick={() => isTabAllowed(tab.value) && onTabChange(tab.value)}
+            onClick={() => handleTabClick(tab)}
           >
             <div className="text-xl mb-2">{tab.icon}</div>
             <div className="text-center">
@@ -124,9 +133,9 @@ const ModernTabNavigation = ({
               ${getTabStyles(tab)}
               border-2 transition-all duration-300 cursor-pointer
               min-h-[100px] w-[140px] flex flex-col items-center justify-center p-4
-              hover:shadow-lg hover:-translate-y-1
+              hover:shadow-lg hover:-translate-y-1 active:scale-95
             `}
-            onClick={() => isTabAllowed(tab.value) && onTabChange(tab.value)}
+            onClick={() => handleTabClick(tab)}
           >
             <div className="text-2xl mb-2">{tab.icon}</div>
             <div className="text-center">

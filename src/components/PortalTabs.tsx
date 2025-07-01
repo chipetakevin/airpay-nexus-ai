@@ -51,6 +51,7 @@ const PortalTabs = ({
 
   const { name: userName, isAuth: userAuthenticated } = getUserData();
 
+  // Ensure vendor tab is always included and accessible
   const tabs = [
     {
       value: 'deals',
@@ -77,7 +78,7 @@ const PortalTabs = ({
       value: 'vendor',
       label: 'Vendor',
       icon: '🏪',
-      description: 'Partner',
+      description: 'Register',
       color: 'blue'
     },
     {
@@ -106,13 +107,20 @@ const PortalTabs = ({
     });
   }
 
+  // Enhanced tab change handler with debugging
+  const enhancedHandleTabChange = (value: string) => {
+    console.log(`🔄 Tab change requested: ${value}`);
+    console.log(`✅ Is tab allowed: ${isTabAllowed(value)}`);
+    handleTabChange(value);
+  };
+
   return (
     <div className="w-full max-w-6xl mx-auto pt-2 sm:pt-4">
-      <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full">
+      <Tabs value={activeTab} onValueChange={enhancedHandleTabChange} className="w-full">
         {/* Add Tab Switcher for seamless navigation */}
         <TabSwitcher 
           currentTab={activeTab}
-          onTabChange={handleTabChange}
+          onTabChange={enhancedHandleTabChange}
           isAuthenticated={userAuthenticated}
           userName={userName}
         />
@@ -121,7 +129,7 @@ const PortalTabs = ({
         <ModernTabNavigation
           tabs={tabs}
           activeTab={activeTab}
-          onTabChange={handleTabChange}
+          onTabChange={enhancedHandleTabChange}
           isTabAllowed={isTabAllowed}
         />
         

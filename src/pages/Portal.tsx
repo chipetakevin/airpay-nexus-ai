@@ -98,11 +98,14 @@ const Portal = () => {
   // Enhanced isTabAllowed function for seamless navigation
   const isTabAllowed = (tabValue: string) => {
     try {
-      // Always allow deals and registration tabs for seamless navigation
-      if (['deals', 'registration'].includes(tabValue)) return true;
+      // Always allow deals, registration, and vendor tabs for seamless navigation
+      if (['deals', 'registration', 'vendor'].includes(tabValue)) {
+        console.log(`✅ Always allowed tab: ${tabValue}`);
+        return true;
+      }
       
-      // Always allow registration tabs for all users
-      if (['vendor', 'admin-reg'].includes(tabValue)) return true;
+      // Always allow admin registration tab
+      if (tabValue === 'admin-reg') return true;
       
       const isAuthenticated = localStorage.getItem('userAuthenticated') === 'true';
       const storedCredentials = localStorage.getItem('userCredentials');
@@ -123,7 +126,7 @@ const Portal = () => {
         switch (tabValue) {
           case 'registration':
           case 'vendor':
-            return ['customer', 'vendor', 'admin'].includes(currentUserType);
+            return true; // Always accessible for registration purposes
           case 'onecard':
           case 'deals':
             return true; // Available to all authenticated users
@@ -141,27 +144,32 @@ const Portal = () => {
       return tabValue === 'deals';
     } catch (error) {
       console.error('Error checking tab permissions:', error);
-      return ['deals', 'registration'].includes(tabValue);
+      return ['deals', 'registration', 'vendor'].includes(tabValue);
     }
   };
 
   // Enhanced handleTabChange for seamless navigation
   const handleTabChange = (value: string) => {
     try {
-      // Always allow seamless navigation between deals and registration
-      if (['deals', 'registration'].includes(value)) {
+      console.log(`🔄 Attempting to change to tab: ${value}`);
+      
+      // Always allow seamless navigation between core tabs
+      if (['deals', 'registration', 'vendor'].includes(value)) {
+        console.log(`✅ Core tab access granted: ${value}`);
         setActiveTab(value);
         navigate(`?tab=${value}`, { replace: true });
         return;
       }
 
       if (isTabAllowed(value)) {
+        console.log(`✅ Tab access granted: ${value}`);
         setActiveTab(value);
         navigate(`?tab=${value}`, { replace: true });
       } else {
+        console.log(`❌ Tab access denied: ${value}`);
         toast({
-          title: "Access Available",
-          description: "All registration tabs are accessible to everyone. Complete registration to unlock more features!",
+          title: "Tab Access",
+          description: "Vendor registration is always accessible. Complete registration to unlock more features!",
           variant: "default"
         });
       }
