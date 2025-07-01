@@ -61,22 +61,25 @@ export const useVendorBankingSection = ({
     }
   }, [formData.bankName, formData.accountNumber, formData.branchCode, formData.routingNumber, saveBankingInfo]);
 
-  // Intelligent collapse logic with debouncing
+  // Intelligent collapse logic with 3-second delay
   const handleIntelligentCollapse = useCallback(() => {
-    if (isBankingComplete && marketingConsent && !isCollapsed && !processingRef.current) {
-      console.log('🔄 Intelligent collapse triggered');
-      setIsCollapsed(true);
+    if (isBankingComplete && !isCollapsed && !processingRef.current) {
+      console.log('🔄 Banking complete - auto-collapse in 3 seconds');
       
-      toast({
-        title: "Banking Secured & Collapsed! 🔒",
-        description: "Banking details saved and collapsed for better navigation.",
-        duration: 2000
-      });
-      
-      // Auto-save when collapsing
-      performAutoSave();
+      // Auto-collapse after 3 seconds
+      setTimeout(() => {
+        setIsCollapsed(true);
+        toast({
+          title: "Banking Secured & Collapsed! 🔒",
+          description: "Banking details saved and collapsed. Click to expand if needed.",
+          duration: 3000
+        });
+        
+        // Auto-save when collapsing
+        performAutoSave();
+      }, 3000);
     }
-  }, [isBankingComplete, marketingConsent, isCollapsed, toast, performAutoSave]);
+  }, [isBankingComplete, isCollapsed, toast, performAutoSave]);
 
   // Optimized bank selection handler
   const handleBankSelect = useCallback(async (bankName: string, routing: string, branchCode: string) => {
@@ -173,25 +176,13 @@ export const useVendorBankingSection = ({
     };
   }, [formData, performAutoSave]);
 
-  // Handle marketing consent changes with debouncing
+  // Handle banking completion changes - trigger auto-collapse
   useEffect(() => {
-    const consentChanged = prevMarketingConsentRef.current !== marketingConsent;
-    
-    if (consentChanged) {
-      if (marketingConsent && isBankingComplete) {
-        setTimeout(handleIntelligentCollapse, 1000); // Increased delay
-      } else if (!marketingConsent && isCollapsed) {
-        setIsCollapsed(false);
-        toast({
-          title: "Banking Section Expanded 📋",
-          description: "Banking details are now visible for review.",
-          duration: 1500
-        });
-      }
-      
-      prevMarketingConsentRef.current = marketingConsent;
+    if (isBankingComplete && !isCollapsed) {
+      console.log('✅ Banking completed - triggering auto-collapse');
+      handleIntelligentCollapse();
     }
-  }, [marketingConsent, isBankingComplete, isCollapsed, handleIntelligentCollapse, toast]);
+  }, [isBankingComplete, isCollapsed, handleIntelligentCollapse]);
 
   // Handle banking completion changes
   useEffect(() => {
