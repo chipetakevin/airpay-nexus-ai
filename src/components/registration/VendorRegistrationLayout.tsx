@@ -26,7 +26,8 @@ const VendorRegistrationLayout: React.FC = () => {
   const { errors, isFormValid } = useVendorFormValidation(formData);
   const { isRegistering, handleFormSubmit } = useVendorRegistrationSubmit(async (e) => {
     e.preventDefault();
-    return isFormValid();
+    // Always allow submission, let the validation happen inside the submit handler
+    return true;
   });
 
   // Calculate progress
