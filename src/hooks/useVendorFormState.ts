@@ -55,6 +55,22 @@ export const useVendorFormState = () => {
     // Special handling for phone number to ensure proper formatting
     if (field === 'phoneNumber') {
       value = value.replace(/[^\d+\s]/g, '');
+      
+      // Clean to only digits for validation
+      const digitsOnly = value.replace(/\D/g, '');
+      
+      // Intelligently prevent invalid patterns
+      if (digitsOnly.length > 0) {
+        // First digit cannot be 0
+        if (digitsOnly[0] === '0') {
+          return; // Silently ignore
+        }
+        
+        // Second digit cannot be 0
+        if (digitsOnly.length > 1 && digitsOnly[1] === '0') {
+          return; // Silently ignore
+        }
+      }
     }
     
     setFormData(prev => {

@@ -43,6 +43,19 @@ const VendorPhoneSection = ({ formData, errors, onInputChange }: VendorPhoneSect
     // Normalize the input to handle both 0 and +27 formats
     const normalizedValue = normalizePhoneNumber(value);
     
+    // Intelligently prevent invalid patterns
+    if (normalizedValue.length > 0) {
+      // First digit cannot be 0
+      if (normalizedValue[0] === '0') {
+        return; // Silently ignore
+      }
+      
+      // Second digit cannot be 0
+      if (normalizedValue.length > 1 && normalizedValue[1] === '0') {
+        return; // Silently ignore
+      }
+    }
+    
     // Limit to 9 digits (SA mobile numbers without country code/leading zero)
     if (normalizedValue.length > 9) {
       return; // Don't update if too long

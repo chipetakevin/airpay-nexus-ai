@@ -67,6 +67,19 @@ export const useCustomerRegistration = () => {
         normalizedPhone = cleanValue.substring(1);
       }
       
+      // Intelligently prevent invalid patterns
+      if (normalizedPhone.length > 0) {
+        // First digit cannot be 0
+        if (normalizedPhone[0] === '0') {
+          return; // Silently ignore
+        }
+        
+        // Second digit cannot be 0
+        if (normalizedPhone.length > 1 && normalizedPhone[1] === '0') {
+          return; // Silently ignore
+        }
+      }
+      
       // Only update if we have 9 or fewer digits
       if (normalizedPhone.length <= 9) {
         value = normalizedPhone;
