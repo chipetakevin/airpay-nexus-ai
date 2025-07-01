@@ -2,16 +2,22 @@
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { X, Smartphone, ArrowLeft } from 'lucide-react';
+import { X, Smartphone, ArrowLeft, Minimize2 } from 'lucide-react';
 
 interface WhatsAppShoppingHeaderProps {
   isAuthenticated: boolean;
   onExit: () => void;
+  onMinimize?: () => void;
+  onClose?: () => void;
+  isMinimized?: boolean;
 }
 
 const WhatsAppShoppingHeader: React.FC<WhatsAppShoppingHeaderProps> = ({ 
   isAuthenticated, 
-  onExit 
+  onExit,
+  onMinimize,
+  onClose,
+  isMinimized
 }) => {
   return (
     <div className="bg-gradient-to-r from-green-600 to-emerald-700 text-white p-4">
@@ -34,6 +40,28 @@ const WhatsAppShoppingHeader: React.FC<WhatsAppShoppingHeaderProps> = ({
             <Badge className="bg-green-800 text-green-100 px-2 py-1 text-xs">
               Registered ✓
             </Badge>
+          )}
+          {onMinimize && (
+            <Button
+              onClick={onMinimize}
+              variant="ghost"
+              size="sm"
+              className="text-white hover:bg-white/20 p-2"
+              title={isMinimized ? "Expand" : "Minimize"}
+            >
+              <Minimize2 className="w-4 h-4" />
+            </Button>
+          )}
+          {onClose && (
+            <Button
+              onClick={onClose}
+              variant="ghost"
+              size="sm"
+              className="text-white hover:bg-red-400/30 p-2"
+              title="Close"
+            >
+              <X className="w-4 h-4" />
+            </Button>
           )}
           <Button
             onClick={onExit}
