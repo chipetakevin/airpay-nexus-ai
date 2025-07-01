@@ -35,7 +35,10 @@ export const useDivineMobileReceipts = () => {
       const customerInfo = getCurrentCustomerInfo();
       const cashbackEarned = profitSharing.customerCashback || profitSharing.registeredCustomerReward || profitSharing.adminCashback || 0;
 
-      // Process Divine Mobile transaction
+      // Ensure we have valid transaction amount
+      const validAmount = typeof transactionData.amount === 'number' && !isNaN(transactionData.amount) ? transactionData.amount : 0;
+
+      // Process Divine Mobile transaction with proper amount handling
       const transactionId = processDivineMobileTransaction(
         cartItems,
         customerPhone,
@@ -44,22 +47,22 @@ export const useDivineMobileReceipts = () => {
         cashbackEarned
       );
 
-      // Generate PDF receipt
+      // Generate PDF receipt with validated data
       const pdfData = {
         transactionId,
-        amount: transactionData.amount,
+        amount: validAmount,
         customerPhone,
         customerName: customerInfo.name,
         items: cartItems.map(item => ({
-          network: item.network || 'Divine',
+          network: item.network || 'Divine Mobile',
           type: item.dealType || 'Digital Service',
-          amount: item.amount || item.price.toString(),
-          price: item.price
+          amount: item.amount || (typeof item.price === 'number' ? item.price.toFixed(2) : '0.00'),
+          price: typeof item.price === 'number' && !isNaN(item.price) ? item.price : 0
         })),
         timestamp: transactionData.timestamp,
         paymentMethod: 'OneCard Mobile',
         authorizationId: 'AUTH-' + Math.random().toString(36).substr(2, 8).toUpperCase(),
-        cashbackEarned,
+        cashbackEarned: typeof cashbackEarned === 'number' && !isNaN(cashbackEarned) ? cashbackEarned : 0,
         userType
       };
 
@@ -70,8 +73,8 @@ export const useDivineMobileReceipts = () => {
         customerEmail: customerInfo.email,
         customerPhone,
         items: cartItems,
-        total: transactionData.amount,
-        cashbackEarned,
+        total: validAmount,
+        cashbackEarned: typeof cashbackEarned === 'number' && !isNaN(cashbackEarned) ? cashbackEarned : 0,
         timestamp: transactionData.timestamp,
         purchaseType: purchaseMode === 'self' ? 'self' : 'sender',
         userType
@@ -100,7 +103,18 @@ export const useDivineMobileReceipts = () => {
 
   const downloadPDFReceipt = (receiptData: any) => {
     try {
-      const doc = generateDivineMobilePDFReceipt(receiptData);
+      // Validate receipt data before PDF generation
+      const validatedData = {
+        ...receiptData,
+        amount: typeof receiptData.amount === 'number' && !isNaN(receiptData.amount) ? receiptData.amount : 0,
+        cashbackEarned: typeof receiptData.cashbackEarned === 'number' && !isNaN(receiptData.cashbackEarned) ? receiptData.cashbackEarned : 0,
+        items: receiptData.items.map((item: any) => ({
+          ...item,
+          price: typeof item.price === 'number' && !isNaN(item.price) ? item.price : 0
+        }))
+      };
+
+      const doc = generateDivineMobilePDFReceipt(validatedData);
       doc.save(`Divine_Mobile_Receipt_${receiptData.transactionId}.pdf`);
       
       toast({
