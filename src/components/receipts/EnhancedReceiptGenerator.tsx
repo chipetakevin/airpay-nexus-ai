@@ -281,55 +281,61 @@ ${data.vendor ? `━━━━━━━━━━━━━━━━━━━━━
 
   const processComprehensiveReceipt = async (receiptData: EnhancedReceiptData) => {
     try {
-      // Generate modern WhatsApp receipt
-      const whatsappMessage = generateComprehensiveWhatsAppReceipt(receiptData);
+      // Import simplified WhatsApp and enhanced email services
+      const { useSimplifiedWhatsAppReceipt } = await import('./SimplifiedWhatsAppReceipt');
+      const { useEmailReceiptService } = await import('@/services/emailReceiptService');
+      const { useEnhancedPDFReceiptGenerator } = await import('./EnhancedPDFReceiptGenerator');
       
-      // Clean phone number for WhatsApp (fix for "link couldn't be opened" error)
-      const cleanPhone = receiptData.customer.mobile
-        .replace(/\+/g, '')
-        .replace(/\s/g, '')
-        .replace(/[^\d]/g, '');
-      
-      // Create a shorter, more reliable WhatsApp URL
-      const whatsappUrl = `https://wa.me/${cleanPhone}?text=${encodeURIComponent(whatsappMessage.substring(0, 2000))}`;
-      
-      // Generate email receipt
-      const emailContent = generateProfessionalEmailReceipt(receiptData);
-      
-      // Auto-open WhatsApp with enhanced receipt - reduced timeout for faster response
-      setTimeout(() => {
-        try {
-          window.open(whatsappUrl, '_blank', 'noopener,noreferrer');
-        } catch (error) {
-          console.error('Error opening WhatsApp:', error);
-          // Fallback: copy to clipboard
-          navigator.clipboard?.writeText(whatsappMessage);
-          toast({
-            title: "Receipt Copied! 📋",
-            description: "Receipt copied to clipboard. Open WhatsApp manually and paste.",
-            duration: 5000
-          });
-        }
-      }, 500);
+      const { sendSimplifiedWhatsAppReceipt } = useSimplifiedWhatsAppReceipt();
+      const { sendDetailedEmailReceipt } = useEmailReceiptService();
+      const { downloadEnhancedPDFReceipt } = useEnhancedPDFReceiptGenerator();
 
-      // Show success notification
+      // Send simplified WhatsApp receipt (purchase summary only)
+      const whatsappData = {
+        items: receiptData.items.map(item => ({
+          network: item.network,
+          type: item.type,
+          amount: `${item.subtotal.toFixed(2)}`,
+          price: item.subtotal
+        })),
+        subtotal: receiptData.subtotal,
+        totalPaid: receiptData.totalPaid,
+        paymentMethod: receiptData.paymentMethod,
+        status: "Payment Successful",
+        cashback: receiptData.cashbackEarned,
+        loyaltyPoints: Math.round(receiptData.totalPaid * 2),
+        deliveryPhone: receiptData.deliveryPhone
+      };
+
+      sendSimplifiedWhatsAppReceipt(whatsappData, receiptData.customer.mobile);
+
+      // Send detailed email receipt to all registered users
+      if (receiptData.customer.email) {
+        const emailData = {
+          ...receiptData,
+          customer: {
+            ...receiptData.customer,
+            email: receiptData.customer.email
+          }
+        };
+        await sendDetailedEmailReceipt(emailData);
+      }
+
+      // Generate enhanced PDF receipt with logo
+      downloadEnhancedPDFReceipt(receiptData);
+
       toast({
-        title: "🌟 Premium Receipt Generated!",
-        description: "Modern, comprehensive receipt delivered via WhatsApp & Email",
+        title: "🌟 Receipt System Updated!",
+        description: "WhatsApp summary sent, detailed email delivered, PDF generated",
         duration: 4000
       });
 
-      return {
-        whatsappMessage,
-        emailContent,
-        whatsappUrl,
-        success: true
-      };
+      return { success: true };
     } catch (error) {
-      console.error('Error generating comprehensive receipt:', error);
+      console.error('Error in updated receipt system:', error);
       toast({
         title: "Receipt Generation Failed",
-        description: "Unable to generate comprehensive receipt. Please try again.",
+        description: "Unable to generate receipts. Please try again.",
         variant: "destructive"
       });
       return { success: false };
