@@ -58,30 +58,56 @@ ${itemsList}
     try {
       const message = generateSimplifiedWhatsAppReceipt(receiptData);
       
-      // Clean phone number for WhatsApp
-      const cleanPhone = customerPhone
-        .replace(/\+/g, '')
-        .replace(/\s/g, '')
-        .replace(/[^\d]/g, '');
+      // Enhanced phone number cleaning for WhatsApp compatibility
+      let cleanPhone = customerPhone.toString()
+        .replace(/[\+\-\(\)\s]/g, '') // Remove +, -, (, ), spaces
+        .replace(/^0/, '27') // Replace leading 0 with 27 for South Africa
+        .replace(/[^\d]/g, ''); // Keep only digits
       
-      // Create WhatsApp URL with simplified message
-      const whatsappUrl = `https://wa.me/${cleanPhone}?text=${encodeURIComponent(message)}`;
+      // Ensure South African format
+      if (cleanPhone.length === 9 && !cleanPhone.startsWith('27')) {
+        cleanPhone = '27' + cleanPhone;
+      }
       
-      // Auto-open WhatsApp
+      console.log('📱 Original phone:', customerPhone, 'Clean phone:', cleanPhone);
+      
+      // Create WhatsApp URL with proper encoding
+      const encodedMessage = encodeURIComponent(message);
+      const whatsappUrl = `https://wa.me/${cleanPhone}?text=${encodedMessage}`;
+      
+      // Validate URL length (WhatsApp has limits)
+      if (whatsappUrl.length > 2048) {
+        throw new Error('Message too long for WhatsApp URL');
+      }
+      
+      console.log('📱 WhatsApp URL generated successfully:', whatsappUrl.substring(0, 100) + '...');
+      
+      // Auto-open WhatsApp with better error handling
       setTimeout(() => {
         try {
-          window.open(whatsappUrl, '_blank', 'noopener,noreferrer');
+          const newWindow = window.open(whatsappUrl, '_blank', 'noopener,noreferrer');
+          if (!newWindow) {
+            throw new Error('Popup blocked');
+          }
         } catch (error) {
           console.error('Error opening WhatsApp:', error);
-          // Fallback: copy to clipboard
-          navigator.clipboard?.writeText(message);
-          toast({
-            title: "Receipt Copied! 📋",
-            description: "Purchase summary copied to clipboard. Open WhatsApp manually and paste.",
-            duration: 5000
+          // Enhanced fallback with manual link
+          navigator.clipboard?.writeText(message).then(() => {
+            toast({
+              title: "Receipt Copied! 📋",
+              description: `Message copied to clipboard. Manually open WhatsApp and send to ${customerPhone}`,
+              duration: 7000
+            });
+          }).catch(() => {
+            // Final fallback - show the URL for manual copy
+            toast({
+              title: "WhatsApp Link Ready 📱",
+              description: "Click anywhere to copy WhatsApp link and open manually",
+              duration: 10000
+            });
           });
         }
-      }, 500);
+      }, 300);
 
       toast({
         title: "📱 Purchase Summary Sent!",

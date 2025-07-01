@@ -281,14 +281,14 @@ ${data.vendor ? `━━━━━━━━━━━━━━━━━━━━━
 
   const processComprehensiveReceipt = async (receiptData: EnhancedReceiptData) => {
     try {
-      // Import simplified WhatsApp and enhanced email services
+      // Import modern receipt system
+      const { useModernDivineReceiptGenerator } = await import('./ModernDivineReceiptGenerator');
       const { useSimplifiedWhatsAppReceipt } = await import('./SimplifiedWhatsAppReceipt');
       const { useEmailReceiptService } = await import('@/services/emailReceiptService');
-      const { useEnhancedPDFReceiptGenerator } = await import('./EnhancedPDFReceiptGenerator');
       
+      const { processModernTransaction } = useModernDivineReceiptGenerator();
       const { sendSimplifiedWhatsAppReceipt } = useSimplifiedWhatsAppReceipt();
       const { sendDetailedEmailReceipt } = useEmailReceiptService();
-      const { downloadEnhancedPDFReceipt } = useEnhancedPDFReceiptGenerator();
 
       // Send simplified WhatsApp receipt (purchase summary only)
       const whatsappData = {
@@ -321,8 +321,24 @@ ${data.vendor ? `━━━━━━━━━━━━━━━━━━━━━
         await sendDetailedEmailReceipt(emailData);
       }
 
-      // Generate enhanced PDF receipt with logo
-      downloadEnhancedPDFReceipt(receiptData);
+      // Process modern transaction with enhanced features
+      const cartItems = receiptData.items.map(item => ({
+        network: item.network,
+        dealType: item.type,
+        amount: item.subtotal.toFixed(2),
+        price: item.subtotal,
+        quantity: item.quantity
+      }));
+
+      processModernTransaction(
+        cartItems,
+        receiptData.customer.mobile,
+        receiptData.customer.name,
+        receiptData.customer.email,
+        'customer',
+        receiptData.cashbackEarned,
+        '🎉 Special offer: Get 20% off your next purchase!'
+      );
 
       toast({
         title: "🌟 Receipt System Updated!",
