@@ -29,7 +29,7 @@ export const useDivineMobileReceiptGenerator = () => {
       day: '2-digit',
       month: '2-digit', 
       year: 'numeric'
-    }).replace(/\//g, '-');
+    });
     const formattedTime = date.toLocaleTimeString('en-ZA', {
       hour: '2-digit',
       minute: '2-digit',
@@ -42,56 +42,63 @@ export const useDivineMobileReceiptGenerator = () => {
 
     const itemsList = data.items.map(item => {
       const itemPrice = typeof item.price === 'number' && !isNaN(item.price) ? item.price : 0;
-      return `${item.network?.toUpperCase() || 'DIVINE MOBILE'} ${item.type?.toUpperCase() || 'AIRTIME'} R${item.amount || itemPrice.toFixed(2)}`;
+      return `${item.network?.toUpperCase() || 'DIVINE MOBILE'} ${item.type?.toUpperCase() || 'AIRTIME'}`;
     }).join('\n');
 
-    return `
-📱 **DIVINE MOBILE RECEIPT** 📱
+    return `**DIVINE MOBILE RECEIPT**
 
-          Divine Mobile
-           Promotions
-     22 9th Avenue
-Tel: +27832466539
+**Divine Mobile Promotions**
+22 9th Avenue
+Tel: +27 832 466 539
 
-Entry:           Contactless EMV
-PAN:             **** **** **** ${data.customerPhone.slice(-4)}
-Expiry:          ${String(date.getMonth() + 1).padStart(2, '0')}/${date.getFullYear().toString().slice(-2)}
-APL:             ONECARD MOBILE
-AID:             A0000000041010
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+**Transaction Details**
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-                 APPROVED ✅
+Entry Method:        Contactless EMV
+Card Number (PAN):   **** **** **** ${data.customerPhone.slice(-4)}
+Expiry Date:         ${String(date.getMonth() + 1).padStart(2, '0')}/${date.getFullYear().toString().slice(-2)}
+Card Provider:       ONECARD MOBILE
+AID:                 A00000000041010
+Status:              **APPROVED** ✅
 
-Transaction ID:  ${data.transactionId}
-PIN statement:   No CVM
-Authorization ID: ${data.authorizationId || 'AUTH-' + Math.random().toString(36).substr(2, 8).toUpperCase()}
-Transaction Type: DIGITAL SERVICES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+**Transaction Information**
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
------------------------------
+Transaction ID:      ${data.transactionId}
+PIN Statement:       No CVM
+Authorization ID:    ${data.authorizationId || 'AUTH-' + Math.random().toString(36).substr(2, 8).toUpperCase()}
+Transaction Type:    DIGITAL SERVICES
 
-SERVICES PURCHASED:
-${itemsList}
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+**Purchase Summary**
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-${cashback > 0 ? `CASHBACK EARNED:     R${cashback.toFixed(2)}\n` : ''}
-AMOUNT           R${totalAmount.toFixed(2)}
-TIPS             R0.00
+Service Purchased:   ${itemsList}
+Amount:              R${totalAmount.toFixed(2)}
+${cashback > 0 ? `Cashback Earned:     R${cashback.toFixed(2)}\n` : ''}Additional Amount:   R0.00
+Tips:                R0.00
+**Total:             R${totalAmount.toFixed(2)}**
 
-TOTAL            R${totalAmount.toFixed(2)}
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+**Date & Time:** ${formattedDate} | ${formattedTime}
 
-DATE             ${formattedDate}
-TIME             ${formattedTime}
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+**Customer Information**
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-Customer: ${data.customerName || 'Valued Customer'}
-Mobile:   ${data.customerPhone}
-${data.userType ? `Type:     ${data.userType.toUpperCase()}` : ''}
+Name:                ${data.customerName || 'Valued Customer'}
+Mobile:              ${data.customerPhone.replace('+27', '0')}
+Type:                ${data.userType?.toUpperCase() || 'CUSTOMER'}
 
-PLEASE RETAIN FOR YOUR RECORDS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-               ORIGINAL
+*Please retain this receipt for your records.*
 
 🌟 Thank you for choosing Divine Mobile! 🌟
 ⚡ Fast • 🔒 Secure • 🎯 Reliable
-Support: +27832466539
-`;
+Support: +27 832 466 539`;
   };
 
   const generateWhatsAppReceipt = (data: DivineMobileReceiptData): string => {
