@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useMemo } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -14,6 +15,7 @@ import UniversalCardDetailsForm from '@/components/banking/UniversalCardDetailsF
 import { useUniversalBankingStorage } from '@/hooks/useUniversalBankingStorage';
 import { useIntelligentReporting } from '@/hooks/useIntelligentReporting';
 import IntelligentReporting from '@/components/feedback/IntelligentReporting';
+import EnhancedPhoneInput from '@/components/forms/EnhancedPhoneInput';
 
 const CustomerRegistration = () => {
   const { toast } = useToast();
@@ -84,26 +86,6 @@ const CustomerRegistration = () => {
       } catch (error) {
         console.error('Error auto-saving banking profile:', error);
       }
-    }
-  };
-
-  const handlePhoneChange = (value: string) => {
-    // Ensure we preserve all 9 digits for South African phone numbers
-    let cleanValue = value.replace(/\D/g, '');
-    
-    // Remove leading zero if present
-    if (cleanValue.startsWith('0')) {
-      cleanValue = cleanValue.substring(1);
-    }
-    
-    // Remove country code if present
-    if (cleanValue.startsWith('27')) {
-      cleanValue = cleanValue.substring(2);
-    }
-    
-    // Ensure we don't truncate - keep up to 9 digits
-    if (cleanValue.length <= 9) {
-      handleInputChange('phoneNumber', cleanValue);
     }
   };
 
@@ -213,30 +195,20 @@ const CustomerRegistration = () => {
               {errors.email && <p className="text-red-500 text-sm">{errors.email}</p>}
             </div>
 
+            {/* Enhanced Phone Input */}
             <div className="space-y-2">
-              <Label htmlFor="phoneNumber">Mobile Number *</Label>
-              <div className="flex gap-2">
-                <Select value={formData.countryCode} onValueChange={(value) => handleInputChange('countryCode', value)}>
-                  <SelectTrigger className="w-24">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="+27">🇿🇦 +27</SelectItem>
-                  </SelectContent>
-                </Select>
-                <div className="relative flex-1">
-                  <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
-                  <Input
-                    id="phoneNumber"
-                    value={formData.phoneNumber}
-                    onChange={(e) => handlePhoneChange(e.target.value)}
-                    placeholder="832466539"
-                    className={`pl-10 ${errors.phoneNumber ? 'border-red-500' : ''}`}
-                    maxLength={9}
-                  />
-                </div>
-              </div>
-              {errors.phoneNumber && <p className="text-red-500 text-sm">{errors.phoneNumber}</p>}
+              <EnhancedPhoneInput
+                value={formData.phoneNumber}
+                onChange={(value) => handleInputChange('phoneNumber', value)}
+                onCountryCodeChange={(code) => handleInputChange('countryCode', code)}
+                userType="customer"
+                error={errors.phoneNumber}
+                countryCode={formData.countryCode}
+                autoFill={true}
+                showSuggestions={true}
+                label="Mobile Number *"
+                placeholder="832466539"
+              />
               {formData.phoneNumber && formData.phoneNumber.length === 9 && (
                 <p className="text-green-600 text-sm flex items-center gap-1">
                   <CheckCircle className="w-3 h-3" />

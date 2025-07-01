@@ -58,9 +58,18 @@ export const useCustomerRegistration = () => {
     // Special handling for phone numbers to ensure 9-digit preservation
     if (field === 'phoneNumber') {
       const cleanValue = value.replace(/\D/g, '');
-      // Ensure we don't truncate - preserve all 9 digits
-      if (cleanValue.length <= 9) {
-        value = cleanValue;
+      
+      // Normalize different input formats
+      let normalizedPhone = cleanValue;
+      if (cleanValue.startsWith('27') && cleanValue.length === 11) {
+        normalizedPhone = cleanValue.substring(2);
+      } else if (cleanValue.startsWith('0') && cleanValue.length === 10) {
+        normalizedPhone = cleanValue.substring(1);
+      }
+      
+      // Only update if we have 9 or fewer digits
+      if (normalizedPhone.length <= 9) {
+        value = normalizedPhone;
       } else {
         return; // Don't update if more than 9 digits
       }
@@ -191,6 +200,7 @@ export const useCustomerRegistration = () => {
       await savePermanently(formData);
 
       console.log('✅ Customer registration completed with PERMANENT session - never expires');
+      console.log('✅ Phone number saved:', phoneNumber, '(9 digits preserved)');
 
       // Trigger automatic collapse by dispatching storage event
       window.dispatchEvent(new StorageEvent('storage', {

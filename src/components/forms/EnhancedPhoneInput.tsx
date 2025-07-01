@@ -76,9 +76,21 @@ const EnhancedPhoneInput = ({
     // Clean input - allow only digits
     inputValue = inputValue.replace(/\D/g, '');
     
-    // Ensure we preserve all 9 digits for SA mobile numbers
-    if (inputValue.length <= 9) {
-      onChange(inputValue);
+    // Handle different input formats but preserve all digits up to 9
+    let normalizedPhone = inputValue;
+    
+    // If starts with 27 (country code), remove it
+    if (normalizedPhone.startsWith('27') && normalizedPhone.length === 11) {
+      normalizedPhone = normalizedPhone.substring(2);
+    }
+    // If starts with 0 (national format), remove it  
+    else if (normalizedPhone.startsWith('0') && normalizedPhone.length === 10) {
+      normalizedPhone = normalizedPhone.substring(1);
+    }
+    
+    // Only allow up to 9 digits for SA mobile numbers
+    if (normalizedPhone.length <= 9) {
+      onChange(normalizedPhone);
     }
   };
 
@@ -94,26 +106,26 @@ const EnhancedPhoneInput = ({
 
   const handlePaste = (e: React.ClipboardEvent<HTMLInputElement>) => {
     const pastedText = e.clipboardData.getData('text');
-    const validation = validateSouthAfricanMobile(pastedText);
+    const cleanPasted = pastedText.replace(/\D/g, '');
     
-    if (validation.isValid) {
+    let normalizedPhone = cleanPasted;
+    
+    // Handle different paste formats
+    if (cleanPasted.startsWith('27') && cleanPasted.length === 11) {
+      normalizedPhone = cleanPasted.substring(2); // Remove +27
+    } else if (cleanPasted.startsWith('0') && cleanPasted.length === 10) {
+      normalizedPhone = cleanPasted.substring(1); // Remove leading 0
+    }
+    
+    // Only proceed if we have exactly 9 digits
+    if (normalizedPhone.length === 9) {
       e.preventDefault();
-      const cleanNumber = pastedText.replace(/\D/g, '');
-      // Extract exactly 9 digits for display, preserving the full number
-      let displayNumber = cleanNumber;
-      if (cleanNumber.startsWith('27') && cleanNumber.length === 11) {
-        displayNumber = cleanNumber.substring(2); // Keep all 9 digits
-      } else if (cleanNumber.startsWith('0') && cleanNumber.length === 10) {
-        displayNumber = cleanNumber.substring(1); // Keep all 9 digits
-      }
+      onChange(normalizedPhone);
       
-      // Ensure we have exactly 9 digits
-      if (displayNumber.length === 9) {
-        onChange(displayNumber);
-        if (displayNumber !== lastSavedValue) {
-          savePhoneNumber(displayNumber, countryCode, userType);
-          setLastSavedValue(displayNumber);
-        }
+      const validation = validateSouthAfricanMobile(normalizedPhone);
+      if (validation.isValid && normalizedPhone !== lastSavedValue) {
+        savePhoneNumber(normalizedPhone, countryCode, userType);
+        setLastSavedValue(normalizedPhone);
       }
     }
   };
