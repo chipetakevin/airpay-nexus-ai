@@ -73,6 +73,7 @@ const PortingSystem = () => {
     simType: 'physical',
     consentOwnership: false,
     consentDataProcessing: false,
+    consentMarketing: false,
     digitalSignature: ''
   });
 
@@ -270,6 +271,7 @@ const PortingSystem = () => {
         simType: 'physical',
         consentOwnership: false,
         consentDataProcessing: false,
+        consentMarketing: false,
         digitalSignature: ''
       });
       clearErrors();
@@ -803,56 +805,125 @@ const PortingSystem = () => {
                 </div>
               </div>
 
-              {/* Security & Consent Section */}
+              {/* Enhanced Security & Compliance Section */}
               <div className="bg-red-50 p-4 rounded-lg border-l-4 border-red-500">
                 <h3 className="font-semibold text-red-800 mb-3 flex items-center gap-2">
                   <Shield className="w-4 h-4" />
-                  Security & Consent
+                  Legal Authorization & Compliance
                 </h3>
-                <div className="space-y-3">
-                  <div className="flex items-start gap-3">
-                    <input
-                      type="checkbox"
-                      id="consentOwnership"
-                      checked={portingRequest.consentOwnership}
-                      onChange={(e) => {
-                        setPortingRequest({...portingRequest, consentOwnership: e.target.checked});
-                        handleFieldChange('consentOwnership', e.target.checked, portingRequest as FormData);
-                      }}
-                      className="mt-1"
-                    />
-                    <label htmlFor="consentOwnership" className="text-sm text-red-800 cursor-pointer">
-                      <span className="font-medium">I confirm that I am the legal owner</span> of the mobile number listed above and authorize this porting request. I understand that providing false information is illegal under South African law.
-                    </label>
-                  </div>
-                  {errors.consentOwnership && (
-                    <div className="flex items-center gap-1 text-sm text-red-600">
-                      <AlertCircle className="w-3 h-3" />
-                      {errors.consentOwnership}
+                <div className="space-y-4">
+                  {/* ICASA Number Porting Authorization */}
+                  <div className="bg-white p-3 rounded border border-red-200">
+                    <div className="flex items-start gap-3">
+                      <input
+                        type="checkbox"
+                        id="consentOwnership"
+                        checked={portingRequest.consentOwnership}
+                        onChange={(e) => {
+                          setPortingRequest({...portingRequest, consentOwnership: e.target.checked});
+                          handleFieldChange('consentOwnership', e.target.checked, portingRequest as FormData);
+                        }}
+                        className="mt-1 w-4 h-4 text-red-600 border-red-300 rounded focus:ring-red-500"
+                        required
+                      />
+                      <label htmlFor="consentOwnership" className="text-sm text-red-800 cursor-pointer">
+                        <span className="font-semibold text-red-900">ICASA Number Porting Authorization:</span> I confirm that I am the legal owner or authorized user of the mobile number listed above and hereby authorize the porting of this number in accordance with ICASA Number Portability Regulations (2018). I understand that providing false information constitutes fraud under South African law.
+                      </label>
                     </div>
-                  )}
+                    {errors.consentOwnership && (
+                      <div className="flex items-center gap-1 mt-2 text-sm text-red-600">
+                        <AlertCircle className="w-3 h-3" />
+                        {errors.consentOwnership}
+                      </div>
+                    )}
+                  </div>
 
-                  <div className="flex items-start gap-3">
-                    <input
-                      type="checkbox"
-                      id="consentDataProcessing"
-                      checked={portingRequest.consentDataProcessing}
-                      onChange={(e) => {
-                        setPortingRequest({...portingRequest, consentDataProcessing: e.target.checked});
-                        handleFieldChange('consentDataProcessing', e.target.checked, portingRequest as FormData);
-                      }}
-                      className="mt-1"
-                    />
-                    <label htmlFor="consentDataProcessing" className="text-sm text-red-800 cursor-pointer">
-                      <span className="font-medium">I consent to the processing</span> of my personal data for the purpose of number porting in accordance with POPIA (Protection of Personal Information Act).
-                    </label>
-                  </div>
-                  {errors.consentDataProcessing && (
-                    <div className="flex items-center gap-1 text-sm text-red-600">
-                      <AlertCircle className="w-3 h-3" />
-                      {errors.consentDataProcessing}
+                  {/* POPIA Data Processing Consent */}
+                  <div className="bg-white p-3 rounded border border-red-200">
+                    <div className="flex items-start gap-3">
+                      <input
+                        type="checkbox"
+                        id="consentDataProcessing"
+                        checked={portingRequest.consentDataProcessing}
+                        onChange={(e) => {
+                          setPortingRequest({...portingRequest, consentDataProcessing: e.target.checked});
+                          handleFieldChange('consentDataProcessing', e.target.checked, portingRequest as FormData);
+                        }}
+                        className="mt-1 w-4 h-4 text-red-600 border-red-300 rounded focus:ring-red-500"
+                        required
+                      />
+                      <label htmlFor="consentDataProcessing" className="text-sm text-red-800 cursor-pointer">
+                        <span className="font-semibold text-red-900">POPIA Data Processing Consent:</span> I consent to the collection, processing, and storage of my personal information for the purpose of number porting, customer service, and regulatory compliance in accordance with the Protection of Personal Information Act (POPIA). 
+                        <a href="/privacy-policy" target="_blank" className="text-blue-600 hover:underline ml-1">
+                          View Privacy Policy
+                        </a>
+                      </label>
                     </div>
-                  )}
+                    {errors.consentDataProcessing && (
+                      <div className="flex items-center gap-1 mt-2 text-sm text-red-600">
+                        <AlertCircle className="w-3 h-3" />
+                        {errors.consentDataProcessing}
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Optional Marketing Consent */}
+                  <div className="bg-white p-3 rounded border border-gray-200">
+                    <div className="flex items-start gap-3">
+                      <input
+                        type="checkbox"
+                        id="consentMarketing"
+                        checked={portingRequest.consentMarketing || false}
+                        onChange={(e) => setPortingRequest({...portingRequest, consentMarketing: e.target.checked})}
+                        className="mt-1 w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                      />
+                      <label htmlFor="consentMarketing" className="text-sm text-gray-700 cursor-pointer">
+                        <span className="font-medium">Optional Marketing Communications:</span> I consent to receive promotional offers, service updates, and marketing communications via SMS, email, or phone. You can withdraw this consent at any time by contacting customer service or clicking unsubscribe.
+                      </label>
+                    </div>
+                  </div>
+
+                  {/* Digital Signature */}
+                  <div className="bg-white p-3 rounded border border-red-200">
+                    <Label htmlFor="digitalSignature" className="text-sm font-medium text-red-800">
+                      Digital Signature / Full Name Confirmation *
+                    </Label>
+                    <Input
+                      id="digitalSignature"
+                      placeholder="Type your full name as digital signature"
+                      value={portingRequest.digitalSignature}
+                      onChange={(e) => {
+                        const sanitized = sanitizeInput(e.target.value);
+                        setPortingRequest({...portingRequest, digitalSignature: sanitized});
+                        handleFieldChange('digitalSignature', sanitized, portingRequest as FormData);
+                      }}
+                      className={`mt-1 ${errors.digitalSignature ? 'border-red-500 bg-red-50' : ''}`}
+                      required
+                    />
+                    {errors.digitalSignature && (
+                      <div className="flex items-center gap-1 mt-1 text-sm text-red-600">
+                        <AlertCircle className="w-3 h-3" />
+                        {errors.digitalSignature}
+                      </div>
+                    )}
+                    <p className="text-xs text-red-600 mt-1">
+                      By typing your name, you provide a legally binding digital signature for this porting request.
+                    </p>
+                  </div>
+
+                  {/* Consent Withdrawal Information */}
+                  <div className="bg-blue-50 p-3 rounded border border-blue-200">
+                    <div className="flex items-start gap-2">
+                      <AlertCircle className="w-4 h-4 text-blue-600 mt-0.5 flex-shrink-0" />
+                      <div className="text-xs text-blue-800">
+                        <p className="font-medium mb-1">Your Rights:</p>
+                        <p>• You can withdraw data processing consent at any time (this may affect service delivery)</p>
+                        <p>• You can request access to, correction of, or deletion of your personal information</p>
+                        <p>• Contact our Data Protection Officer at dpo@company.com for privacy-related queries</p>
+                        <p>• File complaints with the Information Regulator if you believe your rights have been violated</p>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
 

@@ -167,7 +167,17 @@ export const useFormValidation = () => {
       case 'consentDataProcessing':
         if (!value) {
           isValid = false;
-          message = 'You must consent to data processing';
+          message = 'You must consent to data processing for POPIA compliance';
+        }
+        break;
+
+      case 'digitalSignature':
+        if (!value || value.trim().length === 0) {
+          isValid = false;
+          message = 'Digital signature is required';
+        } else if (value.trim().length < 2) {
+          isValid = false;
+          message = 'Please enter your full name as digital signature';
         }
         break;
     }
