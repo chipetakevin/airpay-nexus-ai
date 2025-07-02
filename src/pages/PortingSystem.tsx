@@ -412,34 +412,44 @@ const PortingSystem = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white p-4">
-      {/* Header */}
-      <div className="mb-6">
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">
-          🇿🇦 SA Number Porting System
-        </h1>
-        <p className="text-gray-600">
-          AI-Driven • ICASA Compliant • Automated Processing
-        </p>
+    <div className="min-h-screen bg-gradient-to-br from-background via-background/95 to-muted/30 p-2 sm:p-4 lg:p-6">
+      {/* Mobile-First Header */}
+      <div className="mb-4 sm:mb-6">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-4">
+          <div>
+            <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent">
+              🇿🇦 SA Number Porting System
+            </h1>
+            <p className="text-sm sm:text-base text-muted-foreground mt-1">
+              AI-Driven • ICASA Compliant • Automated Processing
+            </p>
+          </div>
+          <div className="flex items-center gap-2">
+            <Badge variant="outline" className="text-xs">
+              <Activity className="w-3 h-3 mr-1" />
+              Live System
+            </Badge>
+          </div>
+        </div>
       </div>
 
-      {/* Key Features Banner */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-        <Card className="text-center p-3">
-          <Bot className="w-8 h-8 mx-auto mb-2 text-blue-600" />
-          <p className="text-sm font-medium">AI Verification</p>
+      {/* Mobile-First Feature Cards */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-4 mb-4 sm:mb-6">
+        <Card className="text-center p-2 sm:p-3 hover:shadow-md transition-shadow">
+          <Bot className="w-6 h-6 sm:w-8 sm:h-8 mx-auto mb-1 sm:mb-2 text-blue-600" />
+          <p className="text-xs sm:text-sm font-medium">AI Verification</p>
         </Card>
-        <Card className="text-center p-3">
-          <Shield className="w-8 h-8 mx-auto mb-2 text-green-600" />
-          <p className="text-sm font-medium">ICASA Compliant</p>
+        <Card className="text-center p-2 sm:p-3 hover:shadow-md transition-shadow">
+          <Shield className="w-6 h-6 sm:w-8 sm:h-8 mx-auto mb-1 sm:mb-2 text-green-600" />
+          <p className="text-xs sm:text-sm font-medium">ICASA Compliant</p>
         </Card>
-        <Card className="text-center p-3">
-          <Zap className="w-8 h-8 mx-auto mb-2 text-yellow-600" />
-          <p className="text-sm font-medium">Fast Processing</p>
+        <Card className="text-center p-2 sm:p-3 hover:shadow-md transition-shadow">
+          <Zap className="w-6 h-6 sm:w-8 sm:h-8 mx-auto mb-1 sm:mb-2 text-yellow-600" />
+          <p className="text-xs sm:text-sm font-medium">Fast Processing</p>
         </Card>
-        <Card className="text-center p-3">
-          <Phone className="w-8 h-8 mx-auto mb-2 text-purple-600" />
-          <p className="text-sm font-medium">All Networks</p>
+        <Card className="text-center p-2 sm:p-3 hover:shadow-md transition-shadow">
+          <Phone className="w-6 h-6 sm:w-8 sm:h-8 mx-auto mb-1 sm:mb-2 text-purple-600" />
+          <p className="text-xs sm:text-sm font-medium">All Networks</p>
         </Card>
       </div>
 
@@ -562,20 +572,41 @@ const PortingSystem = () => {
         </Card>
       )}
 
-      {/* Main Interface */}
+      {/* Mobile-First Tab Navigation */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <TabsList className="grid grid-cols-7 w-full mb-6">
-          <TabsTrigger value="initiate">Initiate</TabsTrigger>
-          <TabsTrigger value="track">Track</TabsTrigger>
-          <TabsTrigger value="bulk">Bulk</TabsTrigger>
-          <TabsTrigger value="analytics">Analytics</TabsTrigger>
-          <TabsTrigger value="api">API</TabsTrigger>
-          <TabsTrigger value="admin">Admin</TabsTrigger>
-          <TabsTrigger value="recovery">
-            <Activity className="w-4 h-4 mr-1" />
-            Recovery
-          </TabsTrigger>
-        </TabsList>
+        <div className="sticky top-0 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 z-50 pb-2 sm:pb-4">
+          <TabsList className="grid grid-cols-3 sm:grid-cols-7 w-full h-auto p-1 bg-muted/30">
+            <TabsTrigger value="initiate" className="flex flex-col sm:flex-row items-center gap-1 text-xs sm:text-sm p-2 sm:p-3">
+              <Phone className="w-3 h-3 sm:w-4 sm:h-4" />
+              <span className="hidden sm:inline">Initiate</span>
+              <span className="sm:hidden">Start</span>
+            </TabsTrigger>
+            <TabsTrigger value="track" className="flex flex-col sm:flex-row items-center gap-1 text-xs sm:text-sm p-2 sm:p-3">
+              <Search className="w-3 h-3 sm:w-4 sm:h-4" />
+              <span>Track</span>
+            </TabsTrigger>
+            <TabsTrigger value="bulk" className="flex flex-col sm:flex-row items-center gap-1 text-xs sm:text-sm p-2 sm:p-3">
+              <FileText className="w-3 h-3 sm:w-4 sm:h-4" />
+              <span>Bulk</span>
+            </TabsTrigger>
+            <TabsTrigger value="analytics" className="hidden sm:flex flex-col sm:flex-row items-center gap-1 text-xs sm:text-sm p-2 sm:p-3">
+              <BarChart3 className="w-3 h-3 sm:w-4 sm:h-4" />
+              <span>Analytics</span>
+            </TabsTrigger>
+            <TabsTrigger value="api" className="hidden sm:flex flex-col sm:flex-row items-center gap-1 text-xs sm:text-sm p-2 sm:p-3">
+              <Globe className="w-3 h-3 sm:w-4 sm:h-4" />
+              <span>API</span>
+            </TabsTrigger>
+            <TabsTrigger value="admin" className="hidden sm:flex flex-col sm:flex-row items-center gap-1 text-xs sm:text-sm p-2 sm:p-3">
+              <Settings className="w-3 h-3 sm:w-4 sm:h-4" />
+              <span>Admin</span>
+            </TabsTrigger>
+            <TabsTrigger value="recovery" className="hidden sm:flex flex-col sm:flex-row items-center gap-1 text-xs sm:text-sm p-2 sm:p-3">
+              <Activity className="w-3 h-3 sm:w-4 sm:h-4" />
+              <span>Recovery</span>
+            </TabsTrigger>
+          </TabsList>
+        </div>
 
         {/* Enhanced Initiate Porting Tab with Full Validation */}
         <TabsContent value="initiate">
