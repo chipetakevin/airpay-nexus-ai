@@ -1,15 +1,38 @@
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Store, User, Calendar, IdCard, Edit, Plus } from 'lucide-react';
+import { Store, User, Calendar, IdCard, Edit, Plus, ChevronDown, ChevronUp } from 'lucide-react';
 import { useVendorRegistrationContext } from './VendorRegistrationProvider';
 
 const ExistingVendorSummary: React.FC = () => {
   const { existingRegistration, handleFormToggle, handleNewRegistration } = useVendorRegistrationContext();
+  const [isSummaryCollapsed, setIsSummaryCollapsed] = useState(false);
 
   if (!existingRegistration) return null;
+
+  // Add scroll detection to collapse registration summary when scrolling down
+  useEffect(() => {
+    let lastScrollY = window.scrollY;
+
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+      
+      // If scrolling down and summary is not collapsed, collapse it
+      if (currentScrollY > lastScrollY && currentScrollY > 50 && !isSummaryCollapsed) {
+        setIsSummaryCollapsed(true);
+      }
+      
+      lastScrollY = currentScrollY;
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, [isSummaryCollapsed]);
 
   const formatDate = (dateString: string) => {
     try {
@@ -43,58 +66,93 @@ const ExistingVendorSummary: React.FC = () => {
         </CardHeader>
       </Card>
 
-      {/* Registration Summary */}
-      <Card className="border-blue-200 bg-blue-50/50">
-        <CardHeader>
-          <CardTitle className="text-lg flex items-center gap-2 text-blue-800">
-            <IdCard className="w-5 h-5" />
-            Vendor Registration Summary
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <div className="flex items-center gap-2">
-                <User className="w-4 h-4 text-gray-600" />
-                <span className="text-sm font-medium text-gray-700">Full Name</span>
+      {/* Registration Summary - Full View */}
+      {!isSummaryCollapsed && (
+        <Card className="border-blue-200 bg-blue-50/50">
+          <CardHeader>
+            <CardTitle className="text-lg flex items-center gap-2 text-blue-800">
+              <IdCard className="w-5 h-5" />
+              Vendor Registration Summary
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <div className="flex items-center gap-2">
+                  <User className="w-4 h-4 text-gray-600" />
+                  <span className="text-sm font-medium text-gray-700">Full Name</span>
+                </div>
+                <p className="text-gray-900 font-medium">
+                  {existingRegistration.firstName} {existingRegistration.lastName}
+                </p>
               </div>
-              <p className="text-gray-900 font-medium">
-                {existingRegistration.firstName} {existingRegistration.lastName}
-              </p>
-            </div>
 
-            <div className="space-y-2">
-              <div className="flex items-center gap-2">
-                <Store className="w-4 h-4 text-gray-600" />
-                <span className="text-sm font-medium text-gray-700">Company</span>
+              <div className="space-y-2">
+                <div className="flex items-center gap-2">
+                  <Store className="w-4 h-4 text-gray-600" />
+                  <span className="text-sm font-medium text-gray-700">Company</span>
+                </div>
+                <p className="text-gray-900 font-medium">
+                  {existingRegistration.companyName}
+                </p>
               </div>
-              <p className="text-gray-900 font-medium">
-                {existingRegistration.companyName}
-              </p>
-            </div>
 
-            <div className="space-y-2">
-              <div className="flex items-center gap-2">
-                <IdCard className="w-4 h-4 text-gray-600" />
-                <span className="text-sm font-medium text-gray-700">Vendor ID</span>
+              <div className="space-y-2">
+                <div className="flex items-center gap-2">
+                  <IdCard className="w-4 h-4 text-gray-600" />
+                  <span className="text-sm font-medium text-gray-700">Vendor ID</span>
+                </div>
+                <p className="text-gray-900 font-medium font-mono">
+                  {existingRegistration.vendorId}
+                </p>
               </div>
-              <p className="text-gray-900 font-medium font-mono">
-                {existingRegistration.vendorId}
-              </p>
-            </div>
 
-            <div className="space-y-2">
-              <div className="flex items-center gap-2">
-                <Calendar className="w-4 h-4 text-gray-600" />
-                <span className="text-sm font-medium text-gray-700">Registered</span>
+              <div className="space-y-2">
+                <div className="flex items-center gap-2">
+                  <Calendar className="w-4 h-4 text-gray-600" />
+                  <span className="text-sm font-medium text-gray-700">Registered</span>
+                </div>
+                <p className="text-gray-900 font-medium">
+                  {formatDate(existingRegistration.registrationDate)}
+                </p>
               </div>
-              <p className="text-gray-900 font-medium">
-                {formatDate(existingRegistration.registrationDate)}
-              </p>
             </div>
-          </div>
-        </CardContent>
-      </Card>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Registration Summary - Collapsed View */}
+      {isSummaryCollapsed && (
+        <Card className="border-blue-200 bg-gradient-to-r from-blue-50 to-indigo-50">
+          <CardContent className="p-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center">
+                  <IdCard className="w-4 h-4 text-white" />
+                </div>
+                <div>
+                  <div className="text-sm font-medium text-blue-800">
+                    Vendor Registration Summary
+                  </div>
+                  <div className="text-xs text-blue-700 mt-0.5">
+                    {existingRegistration.firstName} {existingRegistration.lastName} • {existingRegistration.companyName}
+                  </div>
+                </div>
+              </div>
+              <Button
+                type="button"
+                variant="ghost"
+                size="sm"
+                onClick={() => setIsSummaryCollapsed(false)}
+                className="text-xs text-blue-700 hover:bg-blue-100 flex items-center gap-1"
+              >
+                <ChevronDown className="w-4 h-4" />
+                Show Details
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      )}
 
       {/* Action Buttons */}
       <div className="flex flex-col sm:flex-row gap-4">
