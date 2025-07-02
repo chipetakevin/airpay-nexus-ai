@@ -18,7 +18,9 @@ const DashboardManager = () => {
     isBalancesCollapsed,
     setIsBalancesCollapsed,
     isCustomerProfileCollapsed,
-    setIsCustomerProfileCollapsed
+    setIsCustomerProfileCollapsed,
+    isVendorProfileCollapsed,
+    setIsVendorProfileCollapsed
   } = useScrollCollapse();
 
   const mainTabs = [
@@ -87,7 +89,11 @@ const DashboardManager = () => {
           )}
 
           {activeMainTab === 'vendors' && (
-            <VendorProfileSection vendorData={vendorData} />
+            <VendorProfileSection 
+              vendorData={vendorData}
+              isCollapsed={isVendorProfileCollapsed}
+              onToggleCollapse={setIsVendorProfileCollapsed}
+            />
           )}
 
           {activeMainTab === 'admin' && (
