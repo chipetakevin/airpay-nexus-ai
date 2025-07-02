@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { ChevronDown, ChevronUp } from 'lucide-react';
 import MVNEDataExtractionPanel from './MVNEDataExtractionPanel';
 import MVNEDailyRechargePanel from './MVNEDailyRechargePanel';
 
@@ -11,6 +12,7 @@ const DashboardManager = () => {
   const [adminData, setAdminData] = useState<any>(null);
   const [activeMainTab, setActiveMainTab] = useState('customers');
   const [activeDataTab, setActiveDataTab] = useState('sim-data');
+  const [isBalancesCollapsed, setIsBalancesCollapsed] = useState(false);
 
   useEffect(() => {
     // Load all profile data
@@ -22,6 +24,28 @@ const DashboardManager = () => {
     if (vendor) setVendorData(JSON.parse(vendor));
     if (admin) setAdminData(JSON.parse(admin));
   }, []);
+
+  // Add scroll detection to collapse balance cards when scrolling down
+  useEffect(() => {
+    let lastScrollY = window.scrollY;
+
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+      
+      // If scrolling down and balances are not collapsed, collapse them
+      if (currentScrollY > lastScrollY && currentScrollY > 50 && !isBalancesCollapsed) {
+        setIsBalancesCollapsed(true);
+      }
+      
+      lastScrollY = currentScrollY;
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, [isBalancesCollapsed]);
 
   const getTotalBalances = () => {
     const customerBalance = customerData?.cashbackBalance || 0;
@@ -57,43 +81,73 @@ const DashboardManager = () => {
       </div>
 
       {/* Total Balances Overview */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <Card className="bg-blue-50 border-blue-200">
-          <CardContent className="p-6 text-center">
-            <div className="text-2xl font-bold text-blue-600 mb-2">
-              R{balances.totalCustomer.toFixed(2)}
-            </div>
-            <div className="text-gray-600 text-sm">Customer Balances</div>
-          </CardContent>
-        </Card>
+      {!isBalancesCollapsed && (
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+          <Card className="bg-blue-50 border-blue-200">
+            <CardContent className="p-6 text-center">
+              <div className="text-2xl font-bold text-blue-600 mb-2">
+                R{balances.totalCustomer.toFixed(2)}
+              </div>
+              <div className="text-gray-600 text-sm">Customer Balances</div>
+            </CardContent>
+          </Card>
 
-        <Card className="bg-yellow-50 border-yellow-200">
-          <CardContent className="p-6 text-center">
-            <div className="text-2xl font-bold text-yellow-600 mb-2">
-              R{balances.totalVendor.toFixed(2)}
-            </div>
-            <div className="text-gray-600 text-sm">Vendor Balances</div>
-          </CardContent>
-        </Card>
+          <Card className="bg-yellow-50 border-yellow-200">
+            <CardContent className="p-6 text-center">
+              <div className="text-2xl font-bold text-yellow-600 mb-2">
+                R{balances.totalVendor.toFixed(2)}
+              </div>
+              <div className="text-gray-600 text-sm">Vendor Balances</div>
+            </CardContent>
+          </Card>
 
-        <Card className="bg-red-50 border-red-200">
-          <CardContent className="p-6 text-center">
-            <div className="text-2xl font-bold text-red-600 mb-2">
-              R{balances.totalAdmin.toFixed(2)}
-            </div>
-            <div className="text-gray-600 text-sm">Admin Balance</div>
-          </CardContent>
-        </Card>
+          <Card className="bg-red-50 border-red-200">
+            <CardContent className="p-6 text-center">
+              <div className="text-2xl font-bold text-red-600 mb-2">
+                R{balances.totalAdmin.toFixed(2)}
+              </div>
+              <div className="text-gray-600 text-sm">Admin Balance</div>
+            </CardContent>
+          </Card>
 
-        <Card className="bg-green-50 border-green-200">
-          <CardContent className="p-6 text-center">
-            <div className="text-2xl font-bold text-green-600 mb-2">
-              R{balances.grandTotal.toFixed(2)}
+          <Card className="bg-green-50 border-green-200">
+            <CardContent className="p-6 text-center">
+              <div className="text-2xl font-bold text-green-600 mb-2">
+                R{balances.grandTotal.toFixed(2)}
+              </div>
+              <div className="text-gray-600 text-sm">Total System Balance</div>
+            </CardContent>
+          </Card>
+        </div>
+      )}
+
+      {/* Collapsed Balance Summary */}
+      {isBalancesCollapsed && (
+        <Card className="bg-gradient-to-r from-green-50 to-blue-50 border-green-200">
+          <CardContent className="p-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-4">
+                <div className="text-sm font-medium text-muted-foreground">
+                  System Balance Summary
+                </div>
+                <Badge variant="outline" className="bg-green-100 text-green-700">
+                  R{balances.grandTotal.toFixed(2)}
+                </Badge>
+              </div>
+              <Button
+                type="button"
+                variant="ghost"
+                size="sm"
+                onClick={() => setIsBalancesCollapsed(false)}
+                className="text-xs text-green-700 hover:bg-green-100 flex items-center gap-1"
+              >
+                <ChevronDown className="w-4 h-4" />
+                Show Details
+              </Button>
             </div>
-            <div className="text-gray-600 text-sm">Total System Balance</div>
           </CardContent>
         </Card>
-      </div>
+      )}
 
       {/* Custom Tab Navigation */}
       <div className="w-full">
