@@ -70,7 +70,7 @@ const DashboardManager = () => {
 
   const dataTabs = [
     { id: 'sim-data', label: 'SIM Card Identifiers' },
-    { id: 'recharge-data', label: 'Daily Recharge Records' }
+    { id: 'recharge-data', label: 'Recharge Records' }
   ];
 
   return (
