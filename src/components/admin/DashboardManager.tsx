@@ -13,6 +13,7 @@ const DashboardManager = () => {
   const [activeMainTab, setActiveMainTab] = useState('customers');
   const [activeDataTab, setActiveDataTab] = useState('sim-data');
   const [isBalancesCollapsed, setIsBalancesCollapsed] = useState(false);
+  const [isCustomerProfileCollapsed, setIsCustomerProfileCollapsed] = useState(false);
 
   useEffect(() => {
     // Load all profile data
@@ -25,16 +26,21 @@ const DashboardManager = () => {
     if (admin) setAdminData(JSON.parse(admin));
   }, []);
 
-  // Add scroll detection to collapse balance cards when scrolling down
+  // Add scroll detection to collapse sections when scrolling down
   useEffect(() => {
     let lastScrollY = window.scrollY;
 
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
       
-      // If scrolling down and balances are not collapsed, collapse them
-      if (currentScrollY > lastScrollY && currentScrollY > 50 && !isBalancesCollapsed) {
-        setIsBalancesCollapsed(true);
+      // If scrolling down and sections are not collapsed, collapse them
+      if (currentScrollY > lastScrollY && currentScrollY > 50) {
+        if (!isBalancesCollapsed) {
+          setIsBalancesCollapsed(true);
+        }
+        if (!isCustomerProfileCollapsed) {
+          setIsCustomerProfileCollapsed(true);
+        }
       }
       
       lastScrollY = currentScrollY;
@@ -45,7 +51,7 @@ const DashboardManager = () => {
     return () => {
       window.removeEventListener('scroll', handleScroll);
     };
-  }, [isBalancesCollapsed]);
+  }, [isBalancesCollapsed, isCustomerProfileCollapsed]);
 
   const getTotalBalances = () => {
     const customerBalance = customerData?.cashbackBalance || 0;
@@ -231,8 +237,8 @@ const DashboardManager = () => {
                     </div>
                   </div>
 
-                  {/* Customer Profile Section */}
-                  {customerData && (
+                  {/* Customer Profile Section - Full View */}
+                  {customerData && !isCustomerProfileCollapsed && (
                     <div className="mt-8 pt-6 border-t">
                       <h3 className="text-lg font-semibold text-gray-800 mb-4">
                         Current Customer Profile
@@ -256,6 +262,41 @@ const DashboardManager = () => {
                         <Button size="sm" variant="outline">Edit Profile</Button>
                         <Button size="sm" variant="outline">Manage Balance</Button>
                       </div>
+                    </div>
+                  )}
+
+                  {/* Customer Profile Section - Collapsed View */}
+                  {customerData && isCustomerProfileCollapsed && (
+                    <div className="mt-8 pt-6 border-t">
+                      <Card className="bg-gradient-to-r from-blue-50 to-indigo-50 border-blue-200">
+                        <CardContent className="p-4">
+                          <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-3">
+                              <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center">
+                                <span className="text-white text-xs">👤</span>
+                              </div>
+                              <div>
+                                <div className="text-sm font-medium text-blue-800">
+                                  Current Customer Profile
+                                </div>
+                                <div className="text-xs text-blue-700 mt-0.5">
+                                  {customerData.firstName} {customerData.lastName} • R{customerData.cashbackBalance?.toFixed(2)}
+                                </div>
+                              </div>
+                            </div>
+                            <Button
+                              type="button"
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => setIsCustomerProfileCollapsed(false)}
+                              className="text-xs text-blue-700 hover:bg-blue-100 flex items-center gap-1"
+                            >
+                              <ChevronDown className="w-4 h-4" />
+                              Show Details
+                            </Button>
+                          </div>
+                        </CardContent>
+                      </Card>
                     </div>
                   )}
                 </CardContent>
