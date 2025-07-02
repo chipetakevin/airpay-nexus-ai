@@ -152,6 +152,7 @@ const EnhancedSouthAfricanBankAutocomplete: React.FC<EnhancedSouthAfricanBankAut
   const [selectedBank, setSelectedBank] = useState<SouthAfricanBank | null>(null);
   const [selectedBranch, setSelectedBranch] = useState<any>(null);
   const [isDetecting, setIsDetecting] = useState(false);
+  const [isDetailsCollapsed, setIsDetailsCollapsed] = useState(false);
   const { getBranchCodeForBank } = useBranchCodeAutoAssign();
 
   // Auto-detect bank from saved data
@@ -176,6 +177,28 @@ const EnhancedSouthAfricanBankAutocomplete: React.FC<EnhancedSouthAfricanBankAut
       }
     }
   }, [defaultValue, onBankSelect, getBranchCodeForBank]);
+
+  // Add scroll detection to collapse details when scrolling down
+  useEffect(() => {
+    let lastScrollY = window.scrollY;
+
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+      
+      // If scrolling down and details are not collapsed, collapse them
+      if (currentScrollY > lastScrollY && currentScrollY > 50 && !isDetailsCollapsed && selectedBank) {
+        setIsDetailsCollapsed(true);
+      }
+      
+      lastScrollY = currentScrollY;
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, [isDetailsCollapsed, selectedBank]);
 
   const filteredBanks = southAfricanBanks.filter(bank =>
     bank.name.toLowerCase().includes(query.toLowerCase()) ||
@@ -353,7 +376,7 @@ const EnhancedSouthAfricanBankAutocomplete: React.FC<EnhancedSouthAfricanBankAut
         {error && <p className="text-red-500 text-sm">{error}</p>}
       </div>
 
-      {selectedBank && showBranchDetails && (
+      {selectedBank && showBranchDetails && !isDetailsCollapsed && (
         <Card className="border-green-200 bg-green-50/30">
           <CardContent className="p-4 space-y-3">
             <div className="flex items-center justify-between">
@@ -430,6 +453,36 @@ const EnhancedSouthAfricanBankAutocomplete: React.FC<EnhancedSouthAfricanBankAut
                 <div className="text-xs text-green-600 mt-2 pt-2 border-t border-green-200">
                   ✅ Branch code automatically assigned and ready for use
                 </div>
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      )}
+
+      {selectedBank && isDetailsCollapsed && (
+        <Card className="border-green-200 bg-green-50/30">
+          <CardContent className="p-3">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <Building2 className="w-4 h-4 text-green-600" />
+                <span className="text-sm font-medium text-green-800">{selectedBank.name}</span>
+                <Badge variant="outline" className="bg-green-100 text-green-700 text-xs">
+                  Selected
+                </Badge>
+              </div>
+              <Button
+                type="button"
+                variant="ghost"
+                size="sm"
+                onClick={() => setIsDetailsCollapsed(false)}
+                className="text-xs text-green-700 hover:bg-green-100"
+              >
+                Show Details
+              </Button>
+            </div>
+            {selectedBranch && (
+              <div className="text-xs text-gray-600 mt-1">
+                {selectedBranch.name} - {selectedBranch.location}
               </div>
             )}
           </CardContent>
