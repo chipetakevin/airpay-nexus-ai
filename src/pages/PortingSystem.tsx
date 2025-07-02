@@ -11,6 +11,13 @@ import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import { 
+  useFormValidation, 
+  formatSAMobileNumber, 
+  formatSAIDNumber, 
+  sanitizeInput,
+  type FormData 
+} from '@/hooks/useFormValidation';
+import { 
   Upload, 
   FileText, 
   CheckCircle, 
@@ -33,7 +40,9 @@ import {
   MessageSquare,
   Eye,
   Download,
-  RefreshCw
+  RefreshCw,
+  AlertCircle,
+  X
 } from 'lucide-react';
 
 const PortingSystem = () => {
@@ -45,7 +54,9 @@ const PortingSystem = () => {
   const [loading, setLoading] = useState(false);
   const [realTimeEnabled, setRealTimeEnabled] = useState(true);
   const [aiChatOpen, setAiChatOpen] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState(0);
   const { toast } = useToast();
+  const { errors, touched, validateField, validateForm, handleFieldChange, clearErrors } = useFormValidation();
 
   const [portingRequest, setPortingRequest] = useState({
     phoneNumber: '',
@@ -196,10 +207,11 @@ const PortingSystem = () => {
   };
 
   const initiatePorting = async () => {
-    if (!portingRequest.phoneNumber || !portingRequest.currentNetwork || !portingRequest.targetNetwork) {
+    // Validate the entire form
+    if (!validateForm(portingRequest as FormData)) {
       toast({
-        title: "Missing Information",
-        description: "Please fill in all required fields.",
+        title: "Validation Error",
+        description: "Please correct the errors in the form before submitting.",
         variant: "destructive"
       });
       return;
@@ -221,7 +233,7 @@ const PortingSystem = () => {
         .from('porting_requests')
         .insert({
           user_id: user.id,
-          phone_number: portingRequest.phoneNumber,
+          phone_number: portingRequest.phoneNumber.replace(/\s/g, ''),
           current_network: portingRequest.currentNetwork,
           target_network: portingRequest.targetNetwork,
           request_type: 'individual',
@@ -235,14 +247,14 @@ const PortingSystem = () => {
       if (error) throw error;
 
       toast({
-        title: "Porting Request Initiated",
-        description: `Request ${data.id} submitted to NPC for processing. You'll receive real-time updates.`,
+        title: "Porting Request Initiated ✓",
+        description: `Request ${data.id.slice(0, 8)}... submitted successfully. Real-time updates enabled.`,
       });
       
       setActiveTab('track');
       await loadPortingRequests();
       
-      // Reset form
+      // Reset form and clear validation
       setPortingRequest({
         phoneNumber: '',
         currentNetwork: '',
@@ -260,10 +272,11 @@ const PortingSystem = () => {
         consentDataProcessing: false,
         digitalSignature: ''
       });
+      clearErrors();
 
     } catch (error) {
       toast({
-        title: "Error",
+        title: "Submission Error",
         description: "Failed to initiate porting request. Please try again.",
         variant: "destructive"
       });
@@ -400,152 +413,513 @@ const PortingSystem = () => {
           <TabsTrigger value="admin">Admin</TabsTrigger>
         </TabsList>
 
-        {/* Initiate Porting Tab */}
+        {/* Enhanced Initiate Porting Tab with Full Validation */}
         <TabsContent value="initiate">
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Phone className="w-5 h-5" />
-                Initiate Number Porting
+                Customer Number Porting Request Form
               </CardTitle>
+              <p className="text-sm text-gray-600 mt-1">
+                Complete this form with accurate information. All fields marked with * are required.
+              </p>
             </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <Label htmlFor="phoneNumber">Phone Number *</Label>
-                  <Input
-                    id="phoneNumber"
-                    placeholder="e.g., 072 123 4567"
-                    value={portingRequest.phoneNumber}
-                    onChange={(e) => setPortingRequest({...portingRequest, phoneNumber: e.target.value})}
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="currentNetwork">Current Network *</Label>
-                  <select 
-                    id="currentNetwork"
-                    className="w-full p-2 border rounded-md"
-                    value={portingRequest.currentNetwork}
-                    onChange={(e) => setPortingRequest({...portingRequest, currentNetwork: e.target.value})}
-                  >
-                    <option value="">Select Network</option>
-                    {networks.map(network => (
-                      <option key={network} value={network}>{network}</option>
-                    ))}
-                  </select>
-                </div>
-              </div>
-
-              <div>
-                <Label htmlFor="targetNetwork">Target Network *</Label>
-                <select 
-                  id="targetNetwork"
-                  className="w-full p-2 border rounded-md"
-                  value={portingRequest.targetNetwork}
-                  onChange={(e) => setPortingRequest({...portingRequest, targetNetwork: e.target.value})}
-                >
-                  <option value="">Select Network</option>
-                  {networks.map(network => (
-                    <option key={network} value={network}>{network}</option>
-                  ))}
-                </select>
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <Label htmlFor="priority">Priority Level</Label>
-                  <select 
-                    id="priority"
-                    className="w-full p-2 border rounded-md"
-                    value={portingRequest.priority}
-                    onChange={(e) => setPortingRequest({...portingRequest, priority: e.target.value})}
-                  >
-                    <option value="normal">Normal</option>
-                    <option value="high">High</option>
-                    <option value="urgent">Urgent</option>
-                  </select>
-                </div>
-                <div>
-                  <Label htmlFor="scheduledCutover">Scheduled Cutover (Optional)</Label>
-                  <Input
-                    id="scheduledCutover"
-                    type="datetime-local"
-                    value={portingRequest.scheduledCutover}
-                    onChange={(e) => setPortingRequest({...portingRequest, scheduledCutover: e.target.value})}
-                  />
-                </div>
-              </div>
-
-              {/* Document Upload */}
-              <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
-                <Upload className="w-8 h-8 mx-auto mb-2 text-gray-400" />
-                <p className="text-sm text-gray-600 mb-2">Upload Required Documents</p>
-                <input
-                  type="file"
-                  multiple
-                  accept=".pdf,.jpg,.png,.jpeg"
-                  className="hidden"
-                  id="documentUpload"
-                  onChange={(e) => handleDocumentUpload(e.target.files)}
-                />
-                <Label htmlFor="documentUpload" className="cursor-pointer">
-                  <Button variant="outline" type="button" disabled={loading}>
-                    {loading ? 'Processing...' : 'Select Files'}
-                  </Button>
-                </Label>
-                <p className="text-xs text-gray-500 mt-2">
-                  ID Document, Proof of Address, POA (if applicable)
-                </p>
-                
-                {/* Document Verification Results */}
-                {portingRequest.documents.length > 0 && (
-                  <div className="mt-4 p-3 bg-green-50 rounded-lg">
-                    <div className="flex items-center gap-2 text-green-800">
-                      <CheckCircle className="w-4 h-4" />
-                      <span className="text-sm font-medium">
-                        {portingRequest.documents.length} document(s) verified
-                      </span>
-                    </div>
-                    {portingRequest.documents.map((doc, index) => (
-                      <div key={index} className="text-xs text-green-700 mt-1">
-                        Authenticity: {doc.verification?.authenticity}% • Fraud Score: {doc.verification?.fraudScore}
+            <CardContent className="space-y-6">
+              {/* Personal Information Section - Enhanced */}
+              <div className="bg-blue-50 p-4 rounded-lg border-l-4 border-blue-500">
+                <h3 className="font-semibold text-blue-800 mb-3 flex items-center gap-2">
+                  <Users className="w-4 h-4" />
+                  Personal Information
+                </h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <Label htmlFor="fullName" className="flex items-center gap-1">
+                      Full Name <span className="text-red-500">*</span>
+                    </Label>
+                    <Input
+                      id="fullName"
+                      placeholder="e.g., John Smith"
+                      value={portingRequest.fullName || ''}
+                      onChange={(e) => {
+                        const sanitized = sanitizeInput(e.target.value);
+                        setPortingRequest({...portingRequest, fullName: sanitized});
+                        handleFieldChange('fullName', sanitized, portingRequest as FormData);
+                      }}
+                      className={`${errors.fullName ? 'border-red-500 bg-red-50' : touched.fullName ? 'border-green-500 bg-green-50' : ''}`}
+                      maxLength={50}
+                    />
+                    {errors.fullName && (
+                      <div className="flex items-center gap-1 mt-1 text-sm text-red-600">
+                        <AlertCircle className="w-3 h-3" />
+                        {errors.fullName}
                       </div>
-                    ))}
+                    )}
+                    {touched.fullName && !errors.fullName && (
+                      <div className="flex items-center gap-1 mt-1 text-sm text-green-600">
+                        <CheckCircle className="w-3 h-3" />
+                        Valid name format
+                      </div>
+                    )}
                   </div>
-                )}
+
+                  <div>
+                    <Label htmlFor="idNumber" className="flex items-center gap-1">
+                      SA ID Number / Passport <span className="text-red-500">*</span>
+                    </Label>
+                    <Input
+                      id="idNumber"
+                      placeholder="e.g., 8001015009087"
+                      value={portingRequest.idNumber || ''}
+                      onChange={(e) => {
+                        const formatted = formatSAIDNumber(e.target.value);
+                        setPortingRequest({...portingRequest, idNumber: formatted});
+                        handleFieldChange('idNumber', formatted, portingRequest as FormData);
+                      }}
+                      className={`${errors.idNumber ? 'border-red-500 bg-red-50' : touched.idNumber ? 'border-green-500 bg-green-50' : ''}`}
+                      maxLength={13}
+                    />
+                    {errors.idNumber && (
+                      <div className="flex items-center gap-1 mt-1 text-sm text-red-600">
+                        <AlertCircle className="w-3 h-3" />
+                        {errors.idNumber}
+                      </div>
+                    )}
+                    {touched.idNumber && !errors.idNumber && (
+                      <div className="flex items-center gap-1 mt-1 text-sm text-green-600">
+                        <CheckCircle className="w-3 h-3" />
+                        Valid SA ID number
+                      </div>
+                    )}
+                  </div>
+
+                  <div>
+                    <Label htmlFor="dateOfBirth" className="flex items-center gap-1">
+                      Date of Birth <span className="text-red-500">*</span>
+                    </Label>
+                    <Input
+                      id="dateOfBirth"
+                      type="date"
+                      value={portingRequest.dateOfBirth || ''}
+                      onChange={(e) => {
+                        setPortingRequest({...portingRequest, dateOfBirth: e.target.value});
+                        handleFieldChange('dateOfBirth', e.target.value, portingRequest as FormData);
+                      }}
+                      className={`${errors.dateOfBirth ? 'border-red-500 bg-red-50' : touched.dateOfBirth ? 'border-green-500 bg-green-50' : ''}`}
+                      max={new Date().toISOString().split('T')[0]}
+                    />
+                    {errors.dateOfBirth && (
+                      <div className="flex items-center gap-1 mt-1 text-sm text-red-600">
+                        <AlertCircle className="w-3 h-3" />
+                        {errors.dateOfBirth}
+                      </div>
+                    )}
+                    <p className="text-xs text-gray-500 mt-1">Must be 18+ years old</p>
+                  </div>
+
+                  <div>
+                    <Label htmlFor="contactEmail" className="flex items-center gap-1">
+                      Contact Email <span className="text-red-500">*</span>
+                    </Label>
+                    <Input
+                      id="contactEmail"
+                      type="email"
+                      placeholder="john@example.com"
+                      value={portingRequest.contactEmail || ''}
+                      onChange={(e) => {
+                        const sanitized = sanitizeInput(e.target.value);
+                        setPortingRequest({...portingRequest, contactEmail: sanitized});
+                        handleFieldChange('contactEmail', sanitized, portingRequest as FormData);
+                      }}
+                      className={`${errors.contactEmail ? 'border-red-500 bg-red-50' : touched.contactEmail ? 'border-green-500 bg-green-50' : ''}`}
+                    />
+                    {errors.contactEmail && (
+                      <div className="flex items-center gap-1 mt-1 text-sm text-red-600">
+                        <AlertCircle className="w-3 h-3" />
+                        {errors.contactEmail}
+                      </div>
+                    )}
+                  </div>
+
+                  <div>
+                    <Label htmlFor="contactMobile" className="flex items-center gap-1">
+                      Contact Mobile Number <span className="text-red-500">*</span>
+                    </Label>
+                    <Input
+                      id="contactMobile"
+                      placeholder="082 123 4567"
+                      value={portingRequest.contactMobile || ''}
+                      onChange={(e) => {
+                        const formatted = formatSAMobileNumber(e.target.value);
+                        setPortingRequest({...portingRequest, contactMobile: formatted});
+                        handleFieldChange('contactMobile', formatted, portingRequest as FormData);
+                      }}
+                      className={`${errors.contactMobile ? 'border-red-500 bg-red-50' : touched.contactMobile ? 'border-green-500 bg-green-50' : ''}`}
+                      maxLength={13}
+                    />
+                    {errors.contactMobile && (
+                      <div className="flex items-center gap-1 mt-1 text-sm text-red-600">
+                        <AlertCircle className="w-3 h-3" />
+                        {errors.contactMobile}
+                      </div>
+                    )}
+                    <p className="text-xs text-gray-500 mt-1">Format: 082 123 4567</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Current SIM Details Section - Enhanced */}
+              <div className="bg-yellow-50 p-4 rounded-lg border-l-4 border-yellow-500">
+                <h3 className="font-semibold text-yellow-800 mb-3 flex items-center gap-2">
+                  <Phone className="w-4 h-4" />
+                  Current SIM Details
+                </h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <Label htmlFor="phoneNumber" className="flex items-center gap-1">
+                      Mobile Number to Port <span className="text-red-500">*</span>
+                    </Label>
+                    <Input
+                      id="phoneNumber"
+                      placeholder="072 123 4567"
+                      value={portingRequest.phoneNumber}
+                      onChange={(e) => {
+                        const formatted = formatSAMobileNumber(e.target.value);
+                        setPortingRequest({...portingRequest, phoneNumber: formatted});
+                        handleFieldChange('phoneNumber', formatted, portingRequest as FormData);
+                      }}
+                      className={`${errors.phoneNumber ? 'border-red-500 bg-red-50' : touched.phoneNumber ? 'border-green-500 bg-green-50' : ''}`}
+                      maxLength={13}
+                    />
+                    {errors.phoneNumber && (
+                      <div className="flex items-center gap-1 mt-1 text-sm text-red-600">
+                        <AlertCircle className="w-3 h-3" />
+                        {errors.phoneNumber}
+                      </div>
+                    )}
+                  </div>
+
+                  <div>
+                    <Label htmlFor="currentNetwork" className="flex items-center gap-1">
+                      Current Network Provider <span className="text-red-500">*</span>
+                    </Label>
+                    <select 
+                      id="currentNetwork"
+                      className={`w-full p-2 border rounded-md bg-white ${errors.currentNetwork ? 'border-red-500 bg-red-50' : ''}`}
+                      value={portingRequest.currentNetwork}
+                      onChange={(e) => {
+                        setPortingRequest({...portingRequest, currentNetwork: e.target.value});
+                        handleFieldChange('currentNetwork', e.target.value, portingRequest as FormData);
+                      }}
+                    >
+                      <option value="">Select Current Network</option>
+                      {networks.map(network => (
+                        <option key={network} value={network}>{network}</option>
+                      ))}
+                    </select>
+                    {errors.currentNetwork && (
+                      <div className="flex items-center gap-1 mt-1 text-sm text-red-600">
+                        <AlertCircle className="w-3 h-3" />
+                        {errors.currentNetwork}
+                      </div>
+                    )}
+                  </div>
+
+                  <div>
+                    <Label htmlFor="simType" className="flex items-center gap-1">
+                      SIM Type <span className="text-red-500">*</span>
+                    </Label>
+                    <div className="flex gap-4 mt-2">
+                      <label className="flex items-center gap-2 cursor-pointer">
+                        <input
+                          type="radio"
+                          name="simType"
+                          value="physical"
+                          checked={portingRequest.simType === 'physical'}
+                          onChange={(e) => {
+                            setPortingRequest({...portingRequest, simType: e.target.value});
+                            handleFieldChange('simType', e.target.value, portingRequest as FormData);
+                          }}
+                          className="text-blue-600"
+                        />
+                        Physical SIM
+                      </label>
+                      <label className="flex items-center gap-2 cursor-pointer">
+                        <input
+                          type="radio"
+                          name="simType"
+                          value="esim"
+                          checked={portingRequest.simType === 'esim'}
+                          onChange={(e) => {
+                            setPortingRequest({...portingRequest, simType: e.target.value});
+                            handleFieldChange('simType', e.target.value, portingRequest as FormData);
+                          }}
+                          className="text-blue-600"
+                        />
+                        eSIM
+                      </label>
+                    </div>
+                    {errors.simType && (
+                      <div className="flex items-center gap-1 mt-1 text-sm text-red-600">
+                        <AlertCircle className="w-3 h-3" />
+                        {errors.simType}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+
+              {/* Recipient Network Section - Enhanced */}
+              <div className="bg-green-50 p-4 rounded-lg border-l-4 border-green-500">
+                <h3 className="font-semibold text-green-800 mb-3 flex items-center gap-2">
+                  <Zap className="w-4 h-4" />
+                  Recipient (New) Network
+                </h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <Label htmlFor="targetNetwork" className="flex items-center gap-1">
+                      Desired New Network Provider <span className="text-red-500">*</span>
+                    </Label>
+                    <select 
+                      id="targetNetwork"
+                      className={`w-full p-2 border rounded-md bg-white ${errors.targetNetwork ? 'border-red-500 bg-red-50' : ''}`}
+                      value={portingRequest.targetNetwork}
+                      onChange={(e) => {
+                        setPortingRequest({...portingRequest, targetNetwork: e.target.value});
+                        handleFieldChange('targetNetwork', e.target.value, portingRequest as FormData);
+                      }}
+                    >
+                      <option value="">Select Target Network</option>
+                      {networks.map(network => (
+                        <option key={network} value={network}>{network}</option>
+                      ))}
+                    </select>
+                    {errors.targetNetwork && (
+                      <div className="flex items-center gap-1 mt-1 text-sm text-red-600">
+                        <AlertCircle className="w-3 h-3" />
+                        {errors.targetNetwork}
+                      </div>
+                    )}
+                  </div>
+
+                  <div>
+                    <Label htmlFor="scheduledCutover">Preferred Activation Date & Time</Label>
+                    <Input
+                      id="scheduledCutover"
+                      type="datetime-local"
+                      value={portingRequest.scheduledCutover}
+                      min={new Date(Date.now() + 2 * 60 * 60 * 1000).toISOString().slice(0, 16)}
+                      onChange={(e) => {
+                        setPortingRequest({...portingRequest, scheduledCutover: e.target.value});
+                        handleFieldChange('scheduledCutover', e.target.value, portingRequest as FormData);
+                      }}
+                      className={`${errors.scheduledCutover ? 'border-red-500 bg-red-50' : ''}`}
+                    />
+                    {errors.scheduledCutover && (
+                      <div className="flex items-center gap-1 mt-1 text-sm text-red-600">
+                        <AlertCircle className="w-3 h-3" />
+                        {errors.scheduledCutover}
+                      </div>
+                    )}
+                    <p className="text-xs text-gray-500 mt-1">Optional: Leave blank for immediate processing</p>
+                  </div>
+
+                  <div>
+                    <Label htmlFor="priority">Priority Level</Label>
+                    <select 
+                      id="priority"
+                      className="w-full p-2 border rounded-md bg-white"
+                      value={portingRequest.priority}
+                      onChange={(e) => setPortingRequest({...portingRequest, priority: e.target.value})}
+                    >
+                      <option value="normal">Normal (Standard Processing)</option>
+                      <option value="high">High (Expedited Processing)</option>
+                      <option value="urgent">Urgent (Emergency Processing)</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              {/* Enhanced Document Upload with Validation */}
+              <div className="bg-purple-50 p-4 rounded-lg border-l-4 border-purple-500">
+                <h3 className="font-semibold text-purple-800 mb-3 flex items-center gap-2">
+                  <Upload className="w-4 h-4" />
+                  Supporting Documents
+                </h3>
+                <div className="border-2 border-dashed border-purple-300 rounded-lg p-6 text-center">
+                  <Upload className="w-8 h-8 mx-auto mb-2 text-purple-400" />
+                  <p className="text-sm text-purple-600 mb-2">Upload Required Documents</p>
+                  <input
+                    type="file"
+                    multiple
+                    accept=".pdf,.jpg,.png,.jpeg"
+                    className="hidden"
+                    id="documentUpload"
+                    onChange={(e) => handleDocumentUpload(e.target.files)}
+                  />
+                  <Label htmlFor="documentUpload" className="cursor-pointer">
+                    <Button variant="outline" type="button" disabled={loading}>
+                      {loading ? (
+                        <>
+                          <RefreshCw className="w-4 h-4 mr-2 animate-spin" />
+                          AI Processing...
+                        </>
+                      ) : (
+                        'Select Files'
+                      )}
+                    </Button>
+                  </Label>
+                  <div className="mt-3 space-y-1 text-xs text-purple-600">
+                    <p><strong>Required:</strong> SA ID Document or Passport</p>
+                    <p><strong>Required:</strong> Proof of Address (not older than 3 months)</p>
+                    <p><strong>Optional:</strong> Power of Attorney (if applicable)</p>
+                    <p><strong>Formats:</strong> PDF, JPG, PNG • <strong>Max Size:</strong> 5MB per file</p>
+                  </div>
+                  
+                  {/* Document Verification Results */}
+                  {portingRequest.documents.length > 0 && (
+                    <div className="mt-4 p-3 bg-green-50 rounded-lg border border-green-200">
+                      <div className="flex items-center gap-2 text-green-800">
+                        <CheckCircle className="w-4 h-4" />
+                        <span className="text-sm font-medium">
+                          {portingRequest.documents.length} document(s) verified by AI
+                        </span>
+                      </div>
+                      {portingRequest.documents.map((doc, index) => (
+                        <div key={index} className="text-xs text-green-700 mt-1 flex justify-between">
+                          <span>Document {index + 1}</span>
+                          <span>Authenticity: {doc.verification?.authenticity}% • Fraud Risk: {doc.verification?.fraudScore}</span>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                  
+                  {errors.documents && (
+                    <div className="flex items-center gap-1 mt-2 text-sm text-red-600">
+                      <AlertCircle className="w-3 h-3" />
+                      {errors.documents}
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* Security & Consent Section */}
+              <div className="bg-red-50 p-4 rounded-lg border-l-4 border-red-500">
+                <h3 className="font-semibold text-red-800 mb-3 flex items-center gap-2">
+                  <Shield className="w-4 h-4" />
+                  Security & Consent
+                </h3>
+                <div className="space-y-3">
+                  <div className="flex items-start gap-3">
+                    <input
+                      type="checkbox"
+                      id="consentOwnership"
+                      checked={portingRequest.consentOwnership}
+                      onChange={(e) => {
+                        setPortingRequest({...portingRequest, consentOwnership: e.target.checked});
+                        handleFieldChange('consentOwnership', e.target.checked, portingRequest as FormData);
+                      }}
+                      className="mt-1"
+                    />
+                    <label htmlFor="consentOwnership" className="text-sm text-red-800 cursor-pointer">
+                      <span className="font-medium">I confirm that I am the legal owner</span> of the mobile number listed above and authorize this porting request. I understand that providing false information is illegal under South African law.
+                    </label>
+                  </div>
+                  {errors.consentOwnership && (
+                    <div className="flex items-center gap-1 text-sm text-red-600">
+                      <AlertCircle className="w-3 h-3" />
+                      {errors.consentOwnership}
+                    </div>
+                  )}
+
+                  <div className="flex items-start gap-3">
+                    <input
+                      type="checkbox"
+                      id="consentDataProcessing"
+                      checked={portingRequest.consentDataProcessing}
+                      onChange={(e) => {
+                        setPortingRequest({...portingRequest, consentDataProcessing: e.target.checked});
+                        handleFieldChange('consentDataProcessing', e.target.checked, portingRequest as FormData);
+                      }}
+                      className="mt-1"
+                    />
+                    <label htmlFor="consentDataProcessing" className="text-sm text-red-800 cursor-pointer">
+                      <span className="font-medium">I consent to the processing</span> of my personal data for the purpose of number porting in accordance with POPIA (Protection of Personal Information Act).
+                    </label>
+                  </div>
+                  {errors.consentDataProcessing && (
+                    <div className="flex items-center gap-1 text-sm text-red-600">
+                      <AlertCircle className="w-3 h-3" />
+                      {errors.consentDataProcessing}
+                    </div>
+                  )}
+                </div>
               </div>
 
               {/* Enhanced AI Verification Status */}
               <Card className="bg-gradient-to-r from-blue-50 to-purple-50 border-blue-200">
                 <CardContent className="p-4">
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-2 mb-3">
                     <Bot className="w-5 h-5 text-blue-600" />
-                    <span className="font-medium text-blue-800">Advanced AI Processing</span>
+                    <span className="font-medium text-blue-800">Advanced AI Processing & Security</span>
                   </div>
-                  <div className="grid grid-cols-2 gap-4 mt-3 text-sm">
-                    <div>
-                      <p className="text-blue-700">• Document Authentication</p>
-                      <p className="text-blue-700">• Fraud Detection & Prevention</p>
-                      <p className="text-blue-700">• ICASA Compliance Validation</p>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                    <div className="space-y-2">
+                      <p className="text-blue-700 flex items-center gap-2">
+                        <CheckCircle className="w-3 h-3" />
+                        Document Authentication & Verification
+                      </p>
+                      <p className="text-blue-700 flex items-center gap-2">
+                        <CheckCircle className="w-3 h-3" />
+                        Advanced Fraud Detection & Prevention
+                      </p>
+                      <p className="text-blue-700 flex items-center gap-2">
+                        <CheckCircle className="w-3 h-3" />
+                        ICASA Compliance Validation
+                      </p>
                     </div>
-                    <div>
-                      <p className="text-blue-700">• Eligibility Verification</p>
-                      <p className="text-blue-700">• Network Compatibility Check</p>
-                      <p className="text-blue-700">• Automated Risk Assessment</p>
+                    <div className="space-y-2">
+                      <p className="text-blue-700 flex items-center gap-2">
+                        <CheckCircle className="w-3 h-3" />
+                        Real-time Eligibility Verification
+                      </p>
+                      <p className="text-blue-700 flex items-center gap-2">
+                        <CheckCircle className="w-3 h-3" />
+                        Network Compatibility Check
+                      </p>
+                      <p className="text-blue-700 flex items-center gap-2">
+                        <CheckCircle className="w-3 h-3" />
+                        Automated Risk Assessment
+                      </p>
                     </div>
                   </div>
                 </CardContent>
               </Card>
 
-              <Button onClick={initiatePorting} className="w-full" size="lg" disabled={loading}>
-                {loading ? (
-                  <>
-                    <RefreshCw className="w-4 h-4 mr-2 animate-spin" />
-                    Processing Request...
-                  </>
-                ) : (
-                  'Initiate Porting Request'
-                )}
-              </Button>
+              {/* Enhanced Submit Button */}
+              <div className="bg-gray-50 p-4 rounded-lg">
+                <Button 
+                  onClick={initiatePorting} 
+                  className="w-full" 
+                  size="lg" 
+                  disabled={loading}
+                >
+                  {loading ? (
+                    <>
+                      <RefreshCw className="w-4 h-4 mr-2 animate-spin" />
+                      Processing Request with AI Validation...
+                    </>
+                  ) : (
+                    <>
+                      <Phone className="w-4 h-4 mr-2" />
+                      Submit Porting Request
+                    </>
+                  )}
+                </Button>
+                <p className="text-xs text-gray-600 text-center mt-2">
+                  By submitting this form, you confirm that all information provided is accurate and complete.
+                </p>
+              </div>
             </CardContent>
           </Card>
         </TabsContent>
