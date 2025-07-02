@@ -7,6 +7,7 @@ import { Shield, ChevronDown, ChevronUp, CheckCircle } from 'lucide-react';
 import AdminRegistrationForm from './registration/AdminRegistrationForm';
 import MVNEDataExtractionPanel from './admin/MVNEDataExtractionPanel';
 import MVNEDailyRechargePanel from './admin/MVNEDailyRechargePanel';
+import CustomerManagementDashboard from './admin/CustomerManagementDashboard';
 import { useToast } from '@/hooks/use-toast';
 
 const AdminRegistration = () => {
@@ -207,49 +208,46 @@ const AdminRegistration = () => {
                   </CardHeader>
                   <CardContent>
                     <div className="space-y-6">
-                      <div className="flex items-center gap-3 p-3 bg-black text-white rounded-lg cursor-pointer hover:bg-gray-800 transition-colors">
-                        <span className="text-lg">👥</span>
-                        <span className="text-lg font-semibold">Manage Customers</span>
-                      </div>
-                      
-                      {/* Divine Mobile Data Extraction Center */}
-                      <div className="space-y-4">
-                        <h3 className="text-lg font-semibold text-gray-800 border-b pb-2">
-                          Divine Mobile Data Extraction Center
-                        </h3>
-                        
-                        {/* Data Extraction Tabs */}
-                        <div className="w-full">
-                          <div className="inline-flex h-auto items-center justify-center rounded-xl bg-gradient-to-r from-blue-50 to-purple-50 p-1.5 text-muted-foreground shadow-lg border border-blue-200 backdrop-blur-sm w-full">
-                            <div className="grid w-full grid-cols-2 gap-1">
-                              {dataTabs.map((tab) => (
-                                <button
-                                  key={tab.id}
-                                  onClick={() => {
-                                    console.log('Data tab clicked:', tab.id);
-                                    setActiveDataTab(tab.id);
-                                  }}
-                                  className={`inline-flex items-center justify-center whitespace-nowrap rounded-lg px-3 py-3 text-sm font-medium transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 min-h-[48px] flex-1 min-w-0 cursor-pointer ${
-                                    activeDataTab === tab.id
-                                      ? tab.id === 'sim-data' 
-                                        ? 'bg-blue-500 text-white shadow-lg'
-                                        : 'bg-purple-500 text-white shadow-lg'
-                                      : 'hover:bg-white/70 hover:shadow-md'
-                                  }`}
-                                >
-                                  {tab.label}
-                                </button>
-                              ))}
-                            </div>
-                          </div>
-
-                          {/* Data Tab Content */}
-                          <div className="mt-6">
-                            {activeDataTab === 'sim-data' && <MVNEDataExtractionPanel />}
-                            {activeDataTab === 'recharge-data' && <MVNEDailyRechargePanel />}
-                          </div>
+                  <CustomerManagementDashboard />
+                  
+                  {/* Divine Mobile Data Extraction Center */}
+                  <div className="mt-8 space-y-4">
+                    <h3 className="text-lg font-semibold text-gray-800 border-b pb-2">
+                      Divine Mobile Data Extraction Center
+                    </h3>
+                    
+                    {/* Data Extraction Tabs */}
+                    <div className="w-full">
+                      <div className="inline-flex h-auto items-center justify-center rounded-xl bg-gradient-to-r from-blue-50 to-purple-50 p-1.5 text-muted-foreground shadow-lg border border-blue-200 backdrop-blur-sm w-full">
+                        <div className="grid w-full grid-cols-2 gap-1">
+                          {dataTabs.map((tab) => (
+                            <button
+                              key={tab.id}
+                              onClick={() => {
+                                console.log('Data tab clicked:', tab.id);
+                                setActiveDataTab(tab.id);
+                              }}
+                              className={`inline-flex items-center justify-center whitespace-nowrap rounded-lg px-3 py-3 text-sm font-medium transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 min-h-[48px] flex-1 min-w-0 cursor-pointer ${
+                                activeDataTab === tab.id
+                                  ? tab.id === 'sim-data' 
+                                    ? 'bg-blue-500 text-white shadow-lg'
+                                    : 'bg-purple-500 text-white shadow-lg'
+                                  : 'hover:bg-white/70 hover:shadow-md'
+                              }`}
+                            >
+                              {tab.label}
+                            </button>
+                          ))}
                         </div>
                       </div>
+
+                      {/* Data Tab Content */}
+                      <div className="mt-6">
+                        {activeDataTab === 'sim-data' && <MVNEDataExtractionPanel />}
+                        {activeDataTab === 'recharge-data' && <MVNEDailyRechargePanel />}
+                      </div>
+                    </div>
+                  </div>
                     </div>
                   </CardContent>
                 </Card>
