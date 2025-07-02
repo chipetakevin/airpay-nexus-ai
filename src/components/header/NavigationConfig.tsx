@@ -1,5 +1,5 @@
 
-import { Home, ShoppingCart, MessageCircle, Star } from 'lucide-react';
+import { Home, ShoppingCart, MessageCircle, Star, Phone } from 'lucide-react';
 
 export const navigationItems = [
   { 
@@ -18,6 +18,12 @@ export const navigationItems = [
     label: 'WhatsApp Shopping', 
     icon: <MessageCircle className="w-4 h-4" />,
     badge: 'AI'
+  },
+  { 
+    path: '/porting-system', 
+    label: 'Number Porting', 
+    icon: <Phone className="w-4 h-4" />,
+    badge: 'NEW'
   },
   { 
     path: '/portal', 
