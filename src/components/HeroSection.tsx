@@ -115,7 +115,7 @@ const HeroSection = () => {
                 variant="outline"
                 className="relative bg-transparent hover:bg-white/10 text-white font-bold border-white/50 hover:border-white/70 px-8 py-4 text-lg rounded-xl transform hover:scale-105 transition-all duration-300 w-full sm:w-auto"
               >
-                Become a Vendor
+                Check Out Our Smart Deals
               </Button>
             </div>
           </div>
