@@ -416,13 +416,20 @@ const PortingSystem = () => {
       {/* Mobile-First Header */}
       <div className="mb-4 sm:mb-6">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-4">
-          <div>
-            <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent">
-              🇿🇦 SA Number Porting System
-            </h1>
-            <p className="text-sm sm:text-base text-muted-foreground mt-1">
-              AI-Driven • ICASA Compliant • Automated Processing
-            </p>
+          <div className="flex items-center gap-3">
+            <img 
+              src="/lovable-uploads/638d9726-2690-4aba-acea-6054bc398c06.png"
+              alt="Divine Mobile Crown Logo"
+              className="w-8 h-8 sm:w-10 sm:h-10 object-contain"
+            />
+            <div>
+              <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent">
+                Divine Mobile Porting Interface
+              </h1>
+              <p className="text-sm sm:text-base text-muted-foreground mt-1">
+                AI-Driven • ICASA Compliant • Automated Processing
+              </p>
+            </div>
           </div>
           <div className="flex items-center gap-2">
             <Badge variant="outline" className="text-xs">
