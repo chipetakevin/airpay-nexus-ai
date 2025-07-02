@@ -18,6 +18,9 @@ import {
   type FormData 
 } from '@/hooks/useFormValidation';
 import { useEnhancedSecurity } from '@/hooks/useEnhancedSecurity';
+import { usePortingSystemState } from '@/hooks/usePortingSystemState';
+import { useErrorRecovery } from '@/hooks/useErrorRecovery';
+import { ErrorRecoveryDashboard } from '@/components/porting/ErrorRecoveryDashboard';
 import { 
   Upload, 
   FileText, 
@@ -43,16 +46,12 @@ import {
   Download,
   RefreshCw,
   AlertCircle,
-  X
+  X,
+  Activity
 } from 'lucide-react';
 
 const PortingSystem = () => {
   const [activeTab, setActiveTab] = useState('initiate');
-  const [user, setUser] = useState(null);
-  const [portingRequests, setPortingRequests] = useState([]);
-  const [notifications, setNotifications] = useState([]);
-  const [analytics, setAnalytics] = useState(null);
-  const [loading, setLoading] = useState(false);
   const [realTimeEnabled, setRealTimeEnabled] = useState(true);
   const [aiChatOpen, setAiChatOpen] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
@@ -61,13 +60,7 @@ const PortingSystem = () => {
   const [npcStatus, setNpcStatus] = useState({ connected: true, responseTime: '45ms' });
   const [networkCompatibility, setNetworkCompatibility] = useState<any>(null);
   const [validationStatus, setValidationStatus] = useState<any>({});
-  const [systemHealth, setSystemHealth] = useState({
-    npcConnection: true,
-    apiGateway: true,
-    database: true,
-    security: true,
-    uptime: '99.98%'
-  });
+
   const { toast } = useToast();
   const { errors, touched, validateField, validateForm, handleFieldChange, clearErrors } = useFormValidation();
   const { 
@@ -79,6 +72,25 @@ const PortingSystem = () => {
     auditLogs,
     securityViolations 
   } = useEnhancedSecurity();
+
+  const {
+    user,
+    portingRequests,
+    notifications,
+    analytics,
+    loading,
+    systemHealth,
+    setLoading,
+    initializeUser,
+    loadPortingRequests,
+    loadNotifications,
+    loadAnalytics,
+    monitorSystemHealth,
+    submitPortingRequest,
+    withRecovery
+  } = usePortingSystemState();
+
+  const { attemptRecovery, getErrorStats } = useErrorRecovery();
 
   const [portingRequest, setPortingRequest] = useState({
     phoneNumber: '',
@@ -111,7 +123,7 @@ const PortingSystem = () => {
     'FNB Connect': { 'MTN': true, 'Vodacom': true, 'Telkom Mobile': true, 'Cell C': false, 'Rain': false, 'MakroCall': false },
     'MakroCall': { 'Telkom Mobile': true, 'MTN': false, 'Vodacom': false, 'Cell C': false, 'Rain': false, 'FNB Connect': false }
   };
-  
+
   useEffect(() => {
     initializeUser();
     if (user) {
@@ -126,61 +138,31 @@ const PortingSystem = () => {
     }
   }, [user, realTimeEnabled]);
 
-  const initializeUser = async () => {
-    const { data: { user } } = await supabase.auth.getUser();
-    setUser(user);
-  };
+  const setupRealTimeSubscriptions = () => {
+    // Real-time updates for porting requests
+    const portingChannel = supabase
+      .channel('porting_requests')
+      .on('postgres_changes', {
+        event: '*',
+        schema: 'public',
+        table: 'porting_requests',
+        filter: `user_id=eq.${user?.id}`
+      }, (payload) => {
+        console.log('Real-time update:', payload);
+        loadPortingRequests();
+        
+        if (payload.eventType === 'UPDATE') {
+          toast({
+            title: "Status Update",
+            description: `Porting request ${payload.new.phone_number} status changed to ${payload.new.status}`,
+          });
+        }
+      })
+      .subscribe();
 
-  const monitorSystemHealth = async () => {
-    // Simulate NPC and system health checks
-    try {
-      const healthChecks = await Promise.all([
-        simulateNpcConnection(),
-        checkApiGateway(),
-        validateDatabaseConnection(),
-        verifySecuritySystems()
-      ]);
-
-      setSystemHealth({
-        npcConnection: healthChecks[0],
-        apiGateway: healthChecks[1],
-        database: healthChecks[2],
-        security: healthChecks[3],
-        uptime: '99.98%'
-      });
-
-      setNpcStatus({
-        connected: healthChecks[0],
-        responseTime: `${Math.floor(Math.random() * 50) + 20}ms`
-      });
-    } catch (error) {
-      console.error('System health check failed:', error);
-    }
-  };
-
-  const simulateNpcConnection = async (): Promise<boolean> => {
-    // Simulate NPC connection check
-    await new Promise(resolve => setTimeout(resolve, 100));
-    return Math.random() > 0.05; // 95% uptime simulation
-  };
-
-  const checkApiGateway = async (): Promise<boolean> => {
-    await new Promise(resolve => setTimeout(resolve, 50));
-    return Math.random() > 0.02; // 98% uptime simulation
-  };
-
-  const validateDatabaseConnection = async (): Promise<boolean> => {
-    try {
-      const { error } = await supabase.from('porting_requests').select('id').limit(1);
-      return !error;
-    } catch {
-      return false;
-    }
-  };
-
-  const verifySecuritySystems = async (): Promise<boolean> => {
-    await new Promise(resolve => setTimeout(resolve, 30));
-    return securityViolations < 5; // Security threshold
+    return () => {
+      supabase.removeChannel(portingChannel);
+    };
   };
 
   const validateNetworkCompatibility = (fromNetwork: string, toNetwork: string) => {
@@ -205,14 +187,17 @@ const PortingSystem = () => {
 
     switch (field) {
       case 'phoneNumber':
-        // Simulate real-time number validation
-        const isValidFormat = /^0[6-8][0-9]{8}$/.test(value.replace(/\s/g, ''));
-        const networkCheck = await simulateNetworkLookup(value);
+        // Use withRecovery for network lookup
+        const networkCheck = await withRecovery(async () => {
+          return await simulateNetworkLookup(value);
+        }, 'Phone Number Validation');
         
-        validation.valid = isValidFormat && networkCheck.active;
+        const isValidFormat = /^0[6-8][0-9]{8}$/.test(value.replace(/\s/g, ''));
+        
+        validation.valid = isValidFormat && (networkCheck?.active || false);
         validation.message = !isValidFormat 
           ? 'Invalid SA mobile number format' 
-          : !networkCheck.active 
+          : !(networkCheck?.active) 
           ? 'Number not found or inactive'
           : `Active on ${networkCheck.network}`;
         break;
@@ -255,74 +240,6 @@ const PortingSystem = () => {
     }
 
     return { active: false, network: 'Unknown' };
-  };
-
-  const setupRealTimeSubscriptions = () => {
-    // Real-time updates for porting requests
-    const portingChannel = supabase
-      .channel('porting_requests')
-      .on('postgres_changes', {
-        event: '*',
-        schema: 'public',
-        table: 'porting_requests',
-        filter: `user_id=eq.${user?.id}`
-      }, (payload) => {
-        console.log('Real-time update:', payload);
-        loadPortingRequests();
-        
-        if (payload.eventType === 'UPDATE') {
-          toast({
-            title: "Status Update",
-            description: `Porting request ${payload.new.phone_number} status changed to ${payload.new.status}`,
-          });
-        }
-      })
-      .subscribe();
-
-    return () => {
-      supabase.removeChannel(portingChannel);
-    };
-  };
-
-  const loadPortingRequests = async () => {
-    if (!user) return;
-    
-    const { data, error } = await supabase
-      .from('porting_requests')
-      .select('*')
-      .eq('user_id', user.id)
-      .order('created_at', { ascending: false });
-
-    if (!error && data) {
-      setPortingRequests(data);
-    }
-  };
-
-  const loadNotifications = async () => {
-    if (!user) return;
-    
-    const { data, error } = await supabase
-      .from('porting_notifications')
-      .select('*')
-      .eq('user_id', user.id)
-      .order('created_at', { ascending: false })
-      .limit(10);
-
-    if (!error && data) {
-      setNotifications(data);
-    }
-  };
-
-  const loadAnalytics = async () => {
-    const { data, error } = await supabase
-      .from('porting_analytics')
-      .select('*')
-      .gte('date', new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0])
-      .order('date', { ascending: false });
-
-    if (!error && data) {
-      setAnalytics(data);
-    }
   };
 
   const handleDocumentUpload = async (files: FileList | null) => {
@@ -647,13 +564,17 @@ const PortingSystem = () => {
 
       {/* Main Interface */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <TabsList className="grid grid-cols-6 w-full mb-6">
+        <TabsList className="grid grid-cols-7 w-full mb-6">
           <TabsTrigger value="initiate">Initiate</TabsTrigger>
           <TabsTrigger value="track">Track</TabsTrigger>
           <TabsTrigger value="bulk">Bulk</TabsTrigger>
           <TabsTrigger value="analytics">Analytics</TabsTrigger>
           <TabsTrigger value="api">API</TabsTrigger>
           <TabsTrigger value="admin">Admin</TabsTrigger>
+          <TabsTrigger value="recovery">
+            <Activity className="w-4 h-4 mr-1" />
+            Recovery
+          </TabsTrigger>
         </TabsList>
 
         {/* Enhanced Initiate Porting Tab with Full Validation */}
@@ -1781,6 +1702,11 @@ const PortingSystem = () => {
               </Card>
             </CardContent>
           </Card>
+        </TabsContent>
+
+        {/* Error Recovery Tab */}
+        <TabsContent value="recovery">
+          <ErrorRecoveryDashboard />
         </TabsContent>
       </Tabs>
     </div>
