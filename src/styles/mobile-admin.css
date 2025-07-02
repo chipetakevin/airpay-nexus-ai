@@ -1,0 +1,206 @@
+/* Mobile Admin Dashboard Styles */
+
+/* Mobile Header Styles */
+.mobile-admin-header {
+  @apply sticky top-0 z-50 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b border-border;
+}
+
+.mobile-admin-header-content {
+  @apply flex items-center justify-between px-4 py-3;
+}
+
+/* Mobile Sidebar Styles */
+.mobile-admin-sidebar {
+  @apply fixed top-0 left-0 z-50 h-full w-80 bg-background border-r border-border transform transition-transform duration-300 ease-in-out overflow-y-auto;
+}
+
+.mobile-admin-sidebar.open {
+  @apply translate-x-0;
+}
+
+.mobile-admin-sidebar.closed {
+  @apply -translate-x-full;
+}
+
+.mobile-admin-sidebar-backdrop {
+  @apply fixed inset-0 z-40 bg-background/80 backdrop-blur-sm;
+}
+
+/* Mobile Customer Card Styles */
+.mobile-customer-card {
+  @apply w-full hover:shadow-md transition-shadow;
+}
+
+.mobile-customer-card-header {
+  @apply flex items-start justify-between mb-3;
+}
+
+.mobile-customer-card-content {
+  @apply p-4;
+}
+
+.mobile-customer-usage-bar {
+  @apply w-full bg-muted rounded-full h-1.5;
+}
+
+.mobile-customer-usage-progress {
+  @apply bg-blue-600 h-1.5 rounded-full transition-all;
+}
+
+/* Mobile Search Styles */
+.mobile-search-container {
+  @apply space-y-3;
+}
+
+.mobile-search-card {
+  @apply transition-all duration-200;
+}
+
+.mobile-search-card.focused {
+  @apply ring-2 ring-primary ring-offset-2;
+}
+
+.mobile-filter-badge {
+  @apply absolute -top-1 -right-1 w-5 h-5 p-0 flex items-center justify-center text-xs;
+}
+
+/* Mobile Quick Stats Grid */
+.mobile-stats-grid {
+  @apply grid grid-cols-2 gap-3;
+}
+
+.mobile-stat-card {
+  @apply p-3;
+}
+
+.mobile-stat-content {
+  @apply flex items-center gap-2;
+}
+
+/* Touch Improvements */
+@media (hover: none) and (pointer: coarse) {
+  .mobile-touch-target {
+    @apply min-h-[44px] min-w-[44px];
+  }
+  
+  .mobile-button {
+    @apply py-3 px-4;
+  }
+  
+  .mobile-list-item {
+    @apply py-4;
+  }
+}
+
+/* Mobile Navigation Enhancements */
+.mobile-nav-button {
+  @apply w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left transition-colors;
+}
+
+.mobile-nav-button.active {
+  @apply bg-primary text-primary-foreground shadow-sm;
+}
+
+.mobile-nav-button.inactive {
+  @apply text-muted-foreground hover:text-foreground hover:bg-muted/50;
+}
+
+/* Mobile Customer List */
+.mobile-customer-list {
+  @apply space-y-3;
+}
+
+.mobile-customer-empty {
+  @apply p-8 text-center;
+}
+
+/* Mobile Quick Actions */
+.mobile-quick-actions {
+  @apply flex gap-2 overflow-x-auto pb-2;
+}
+
+.mobile-quick-action-button {
+  @apply flex-shrink-0;
+}
+
+/* Responsive Text Sizes */
+@screen sm {
+  .mobile-admin-title {
+    @apply text-lg;
+  }
+}
+
+@screen md {
+  .mobile-admin-title {
+    @apply text-xl;
+  }
+}
+
+/* Mobile Loading States */
+.mobile-loading-spinner {
+  @apply animate-spin;
+}
+
+.mobile-loading-skeleton {
+  @apply animate-pulse bg-muted rounded;
+}
+
+/* Mobile Badge Styles */
+.mobile-status-badge {
+  @apply text-xs;
+}
+
+.mobile-count-badge {
+  @apply px-2 py-1 rounded-full text-xs font-medium;
+}
+
+/* Mobile Collapsible Styles */
+.mobile-collapsible-trigger {
+  @apply flex items-center justify-between w-full py-2;
+}
+
+.mobile-collapsible-content {
+  @apply overflow-hidden;
+}
+
+/* Mobile Form Styles */
+.mobile-form-select {
+  @apply h-8 text-sm;
+}
+
+.mobile-form-input {
+  @apply border-0 px-0 focus-visible:ring-0 focus-visible:ring-offset-0;
+}
+
+/* Mobile Layout Spacing */
+.mobile-content-padding {
+  @apply p-4 space-y-4 pb-20;
+}
+
+.mobile-section-spacing {
+  @apply space-y-3;
+}
+
+/* Mobile Bottom Safe Area */
+.mobile-bottom-safe-area {
+  @apply pb-safe-bottom;
+}
+
+/* Mobile Scroll Optimization */
+.mobile-scroll-container {
+  @apply overflow-y-auto overscroll-contain;
+}
+
+/* Mobile Performance Classes */
+.mobile-will-change-transform {
+  will-change: transform;
+}
+
+.mobile-will-change-scroll {
+  will-change: scroll-position;
+}
+
+/* Mobile Focus States */
+.mobile-focus-visible {
+  @apply focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2;
+}

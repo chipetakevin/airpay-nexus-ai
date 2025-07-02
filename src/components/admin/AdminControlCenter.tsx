@@ -5,7 +5,9 @@ import MVNEDataExtractionPanel from './MVNEDataExtractionPanel';
 import MVNEDailyRechargePanel from './MVNEDailyRechargePanel';
 import ModernAdminTabs from './ModernAdminTabs';
 import OrdersSection from './OrdersSection';
+import MobileCustomerManagementLayout from './mobile/MobileCustomerManagementLayout';
 import { adminTabs, profileTabs, dataTabs } from './AdminTabsConfig';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 interface AdminControlCenterProps {
   activeAdminTab: string;
@@ -24,6 +26,20 @@ const AdminControlCenter: React.FC<AdminControlCenterProps> = ({
   activeDataTab,
   setActiveDataTab
 }) => {
+  const isMobile = useIsMobile();
+
+  // Mobile-first Customer Management View
+  if (isMobile && activeAdminTab === 'dashboard' && activeProfileTab === 'customer-profiles') {
+    return (
+      <MobileCustomerManagementLayout
+        activeAdminTab={activeAdminTab}
+        setActiveAdminTab={setActiveAdminTab}
+        activeProfileTab={activeProfileTab}
+        setActiveProfileTab={setActiveProfileTab}
+      />
+    );
+  }
+
   return (
     <div className="space-y-6">
       <div className="text-center">
