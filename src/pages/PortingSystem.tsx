@@ -53,7 +53,16 @@ const PortingSystem = () => {
     targetNetwork: '',
     documents: [],
     priority: 'normal',
-    scheduledCutover: ''
+    scheduledCutover: '',
+    fullName: '',
+    idNumber: '',
+    dateOfBirth: '',
+    contactEmail: '',
+    contactMobile: '',
+    simType: 'physical',
+    consentOwnership: false,
+    consentDataProcessing: false,
+    digitalSignature: ''
   });
 
   const networks = ['MTN', 'Vodacom', 'Cell C', 'Telkom Mobile', 'Rain'];
@@ -240,7 +249,16 @@ const PortingSystem = () => {
         targetNetwork: '',
         documents: [],
         priority: 'normal',
-        scheduledCutover: ''
+        scheduledCutover: '',
+        fullName: '',
+        idNumber: '',
+        dateOfBirth: '',
+        contactEmail: '',
+        contactMobile: '',
+        simType: 'physical',
+        consentOwnership: false,
+        consentDataProcessing: false,
+        digitalSignature: ''
       });
 
     } catch (error) {
