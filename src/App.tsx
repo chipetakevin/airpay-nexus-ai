@@ -23,6 +23,7 @@ import MVNXBaaS from "./pages/MVNXBaaS";
 import DGXStation from "./pages/DGXStation";
 import DMPayroll from "./pages/DMPayroll";
 import AIPoweredDeals from "./pages/AIPoweredDeals";
+import PortingSystem from "./pages/PortingSystem";
 
 const queryClient = new QueryClient();
 
@@ -51,6 +52,7 @@ const App = () => (
             <Route path="/dgx-station" element={<DGXStation />} />
             <Route path="/dm-payroll" element={<DMPayroll />} />
             <Route path="/ai-powered-deals" element={<AIPoweredDeals />} />
+            <Route path="/porting-system" element={<PortingSystem />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>

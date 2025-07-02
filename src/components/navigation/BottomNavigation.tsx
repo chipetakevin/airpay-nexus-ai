@@ -25,7 +25,7 @@ const BottomNavigation = () => {
       id: 'sanctuary',
       label: 'Port',
       icon: Home,
-      path: '/',
+      path: '/porting-system',
     },
     {
       id: 'cards',
