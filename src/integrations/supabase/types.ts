@@ -9,6 +9,81 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      api_access_logs: {
+        Row: {
+          api_endpoint: string
+          created_at: string
+          id: string
+          ip_address: unknown | null
+          method: string
+          response_time_ms: number | null
+          status_code: number | null
+          user_agent: string | null
+          user_id: string | null
+        }
+        Insert: {
+          api_endpoint: string
+          created_at?: string
+          id?: string
+          ip_address?: unknown | null
+          method: string
+          response_time_ms?: number | null
+          status_code?: number | null
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          api_endpoint?: string
+          created_at?: string
+          id?: string
+          ip_address?: unknown | null
+          method?: string
+          response_time_ms?: number | null
+          status_code?: number | null
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      bulk_porting_batches: {
+        Row: {
+          batch_name: string
+          completed_numbers: number | null
+          created_at: string
+          failed_numbers: number | null
+          id: string
+          scheduled_cutover: string | null
+          status: string | null
+          total_numbers: number | null
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          batch_name: string
+          completed_numbers?: number | null
+          created_at?: string
+          failed_numbers?: number | null
+          id?: string
+          scheduled_cutover?: string | null
+          status?: string | null
+          total_numbers?: number | null
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          batch_name?: string
+          completed_numbers?: number | null
+          created_at?: string
+          failed_numbers?: number | null
+          id?: string
+          scheduled_cutover?: string | null
+          status?: string | null
+          total_numbers?: number | null
+          updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       cart_sessions: {
         Row: {
           created_at: string | null
@@ -172,6 +247,146 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      porting_analytics: {
+        Row: {
+          average_processing_time: unknown | null
+          created_at: string
+          date: string
+          failed_requests: number | null
+          id: string
+          network_from: string
+          network_to: string
+          successful_requests: number | null
+          total_requests: number | null
+        }
+        Insert: {
+          average_processing_time?: unknown | null
+          created_at?: string
+          date: string
+          failed_requests?: number | null
+          id?: string
+          network_from: string
+          network_to: string
+          successful_requests?: number | null
+          total_requests?: number | null
+        }
+        Update: {
+          average_processing_time?: unknown | null
+          created_at?: string
+          date?: string
+          failed_requests?: number | null
+          id?: string
+          network_from?: string
+          network_to?: string
+          successful_requests?: number | null
+          total_requests?: number | null
+        }
+        Relationships: []
+      }
+      porting_notifications: {
+        Row: {
+          created_at: string
+          delivery_status: string | null
+          id: string
+          message: string
+          notification_type: string
+          porting_request_id: string | null
+          sent_at: string | null
+          status: string
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          delivery_status?: string | null
+          id?: string
+          message: string
+          notification_type: string
+          porting_request_id?: string | null
+          sent_at?: string | null
+          status: string
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          delivery_status?: string | null
+          id?: string
+          message?: string
+          notification_type?: string
+          porting_request_id?: string | null
+          sent_at?: string | null
+          status?: string
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "porting_notifications_porting_request_id_fkey"
+            columns: ["porting_request_id"]
+            isOneToOne: false
+            referencedRelation: "porting_requests"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      porting_requests: {
+        Row: {
+          ai_verification_result: Json | null
+          completed_at: string | null
+          created_at: string
+          current_network: string
+          documents: Json | null
+          id: string
+          npc_reference: string | null
+          phone_number: string
+          priority: string | null
+          progress_percentage: number | null
+          rejection_reason: string | null
+          request_type: string | null
+          scheduled_cutover: string | null
+          status: string | null
+          target_network: string
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          ai_verification_result?: Json | null
+          completed_at?: string | null
+          created_at?: string
+          current_network: string
+          documents?: Json | null
+          id?: string
+          npc_reference?: string | null
+          phone_number: string
+          priority?: string | null
+          progress_percentage?: number | null
+          rejection_reason?: string | null
+          request_type?: string | null
+          scheduled_cutover?: string | null
+          status?: string | null
+          target_network: string
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          ai_verification_result?: Json | null
+          completed_at?: string | null
+          created_at?: string
+          current_network?: string
+          documents?: Json | null
+          id?: string
+          npc_reference?: string | null
+          phone_number?: string
+          priority?: string | null
+          progress_percentage?: number | null
+          rejection_reason?: string | null
+          request_type?: string | null
+          scheduled_cutover?: string | null
+          status?: string | null
+          target_network?: string
+          updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: []
       }
       rica_validations: {
         Row: {
