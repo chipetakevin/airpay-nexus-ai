@@ -4,8 +4,17 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
+import { ChevronDown } from 'lucide-react';
 
-const NetworkRevenue = () => {
+interface NetworkRevenueProps {
+  isNetworkRevenueCollapsed?: boolean;
+  onToggleNetworkRevenue?: (collapsed: boolean) => void;
+}
+
+const NetworkRevenue: React.FC<NetworkRevenueProps> = ({
+  isNetworkRevenueCollapsed = false,
+  onToggleNetworkRevenue
+}) => {
   const { toast } = useToast();
   
   const [networks] = useState([
@@ -70,6 +79,42 @@ const NetworkRevenue = () => {
   };
 
   const totalNetworkRevenue = networks.reduce((sum, network) => sum + network.revenue, 0);
+
+  if (isNetworkRevenueCollapsed) {
+    return (
+      <div className="space-y-4">
+        <Card className="bg-gradient-to-r from-green-50 to-blue-50 border-green-200">
+          <CardContent className="p-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 bg-green-600 rounded-full flex items-center justify-center">
+                  <span className="text-white text-xs">📊</span>
+                </div>
+                <div>
+                  <div className="text-sm font-medium text-green-800">
+                    Network Revenue Management
+                  </div>
+                  <div className="text-xs text-green-700 mt-0.5">
+                    Total: R{totalNetworkRevenue.toLocaleString()} • {networks.length} Networks • 95% Revenue Share
+                  </div>
+                </div>
+              </div>
+              <Button
+                type="button"
+                variant="ghost"
+                size="sm"
+                onClick={() => onToggleNetworkRevenue?.(false)}
+                className="text-xs text-green-700 hover:bg-green-100 flex items-center gap-1"
+              >
+                <ChevronDown className="w-4 h-4" />
+                Show Details
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">

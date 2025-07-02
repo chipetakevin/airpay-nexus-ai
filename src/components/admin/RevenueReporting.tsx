@@ -3,8 +3,18 @@ import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { ChevronDown } from 'lucide-react';
 
-const RevenueReporting = () => {
+interface RevenueReportingProps {
+  isRevenueCardsCollapsed?: boolean;
+  onToggleRevenueCards?: (collapsed: boolean) => void;
+}
+
+const RevenueReporting: React.FC<RevenueReportingProps> = ({
+  isRevenueCardsCollapsed = false,
+  onToggleRevenueCards
+}) => {
   const [revenueData] = useState({
     totalRevenue: 125840.50,
     networkCosts: 114400.45, // 91% of total revenue (network costs)
@@ -73,6 +83,42 @@ const RevenueReporting = () => {
       profitShare: 'Buyer: 50%, Recipient: 50%, Platform: 0%'
     }
   ]);
+
+  if (isRevenueCardsCollapsed) {
+    return (
+      <div className="space-y-4">
+        <Card className="bg-gradient-to-r from-blue-50 to-green-50 border-blue-200">
+          <CardContent className="p-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center">
+                  <span className="text-white text-xs">🏦</span>
+                </div>
+                <div>
+                  <div className="text-sm font-medium text-blue-800">
+                    Protected Revenue & Profit Distribution
+                  </div>
+                  <div className="text-xs text-blue-700 mt-0.5">
+                    Total: R{revenueData.totalRevenue.toLocaleString()} • Markup: R{revenueData.totalMarkup.toLocaleString()} • {revenueData.transactions} transactions
+                  </div>
+                </div>
+              </div>
+              <Button
+                type="button"
+                variant="ghost"
+                size="sm"
+                onClick={() => onToggleRevenueCards?.(false)}
+                className="text-xs text-blue-700 hover:bg-blue-100 flex items-center gap-1"
+              >
+                <ChevronDown className="w-4 h-4" />
+                Show Details
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">

@@ -9,6 +9,8 @@ export const useScrollCollapse = (options: UseScrollCollapseOptions = {}) => {
   const [isBalancesCollapsed, setIsBalancesCollapsed] = useState(false);
   const [isCustomerProfileCollapsed, setIsCustomerProfileCollapsed] = useState(false);
   const [isVendorProfileCollapsed, setIsVendorProfileCollapsed] = useState(false);
+  const [isRevenueCardsCollapsed, setIsRevenueCardsCollapsed] = useState(false);
+  const [isNetworkRevenueCollapsed, setIsNetworkRevenueCollapsed] = useState(false);
 
   useEffect(() => {
     let lastScrollY = window.scrollY;
@@ -27,6 +29,12 @@ export const useScrollCollapse = (options: UseScrollCollapseOptions = {}) => {
         if (!isVendorProfileCollapsed) {
           setIsVendorProfileCollapsed(true);
         }
+        if (!isRevenueCardsCollapsed) {
+          setIsRevenueCardsCollapsed(true);
+        }
+        if (!isNetworkRevenueCollapsed) {
+          setIsNetworkRevenueCollapsed(true);
+        }
       }
       
       lastScrollY = currentScrollY;
@@ -37,7 +45,7 @@ export const useScrollCollapse = (options: UseScrollCollapseOptions = {}) => {
     return () => {
       window.removeEventListener('scroll', handleScroll);
     };
-  }, [isBalancesCollapsed, isCustomerProfileCollapsed, isVendorProfileCollapsed, scrollThreshold]);
+  }, [isBalancesCollapsed, isCustomerProfileCollapsed, isVendorProfileCollapsed, isRevenueCardsCollapsed, isNetworkRevenueCollapsed, scrollThreshold]);
 
   return {
     isBalancesCollapsed,
@@ -45,6 +53,10 @@ export const useScrollCollapse = (options: UseScrollCollapseOptions = {}) => {
     isCustomerProfileCollapsed,
     setIsCustomerProfileCollapsed,
     isVendorProfileCollapsed,
-    setIsVendorProfileCollapsed
+    setIsVendorProfileCollapsed,
+    isRevenueCardsCollapsed,
+    setIsRevenueCardsCollapsed,
+    isNetworkRevenueCollapsed,
+    setIsNetworkRevenueCollapsed
   };
 };
