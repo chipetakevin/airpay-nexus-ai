@@ -3,6 +3,8 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import CustomerManagementDashboard from './CustomerManagementDashboard';
 import MVNEDataExtractionPanel from './MVNEDataExtractionPanel';
 import MVNEDailyRechargePanel from './MVNEDailyRechargePanel';
+import ModernAdminTabs from './ModernAdminTabs';
+import OrdersSection from './OrdersSection';
 import { adminTabs, profileTabs, dataTabs } from './AdminTabsConfig';
 
 interface AdminControlCenterProps {
@@ -32,53 +34,25 @@ const AdminControlCenter: React.FC<AdminControlCenterProps> = ({
         <p className="text-gray-600">Complete system administration and oversight</p>
       </div>
 
-      {/* Tab Navigation */}
+      {/* Main Admin Tabs */}
       <div className="flex justify-center">
-        <div className="inline-flex h-auto items-center justify-center rounded-xl bg-gradient-to-r from-gray-50 to-gray-100 p-1.5 shadow-lg border border-gray-200/50 backdrop-blur-sm">
-          <div className="flex gap-1">
-            {adminTabs.map((tab) => (
-              <button
-                key={tab.id}
-                onClick={() => {
-                  console.log('Admin tab clicked:', tab.id);
-                  setActiveAdminTab(tab.id);
-                }}
-                className={`inline-flex items-center justify-center whitespace-nowrap rounded-lg px-4 py-3 text-sm font-medium transition-all duration-300 cursor-pointer ${
-                  activeAdminTab === tab.id
-                    ? 'bg-white text-foreground shadow-lg shadow-blue-100/50 border border-blue-200/30'
-                    : 'hover:bg-white/70 hover:shadow-md text-gray-600'
-                }`}
-              >
-                {tab.label}
-              </button>
-            ))}
-          </div>
-        </div>
+        <ModernAdminTabs
+          tabs={adminTabs}
+          activeTab={activeAdminTab}
+          onTabChange={setActiveAdminTab}
+          variant="primary"
+        />
       </div>
 
       {/* Profile Tabs - Only shown when Dashboard is active */}
       {activeAdminTab === 'dashboard' && (
         <div className="flex justify-center">
-          <div className="inline-flex h-auto items-center justify-center rounded-xl bg-gradient-to-r from-gray-50 to-gray-100 p-1.5 shadow-lg border border-gray-200/50 backdrop-blur-sm">
-            <div className="flex gap-1">
-              {profileTabs.map((tab) => (
-                <button
-                  key={tab.id}
-                  onClick={() => {
-                    console.log('Profile tab clicked:', tab.id);
-                    setActiveProfileTab(tab.id);
-                  }}
-                  className={`inline-flex items-center justify-center whitespace-nowrap rounded-lg px-3 py-2 text-sm font-medium transition-all duration-300 cursor-pointer ${
-                    activeProfileTab === tab.id
-                      ? 'bg-white text-foreground shadow-lg shadow-blue-100/50 border border-blue-200/30'
-                      : 'hover:bg-white/70 hover:shadow-md text-gray-600'
-                  }`}
-                >
-                  {tab.label}
-                </button>
-              ))}
-            </div>
-          </div>
+          <ModernAdminTabs
+            tabs={profileTabs}
+            activeTab={activeProfileTab}
+            onTabChange={setActiveProfileTab}
+            variant="secondary"
+          />
         </div>
       )}
 
@@ -107,28 +81,13 @@ const AdminControlCenter: React.FC<AdminControlCenterProps> = ({
                     
                     {/* Data Extraction Tabs */}
                     <div className="w-full">
-                      <div className="inline-flex h-auto items-center justify-center rounded-xl bg-gradient-to-r from-blue-50 to-purple-50 p-1.5 text-muted-foreground shadow-lg border border-blue-200 backdrop-blur-sm w-full">
-                        <div className="grid w-full grid-cols-2 gap-1">
-                          {dataTabs.map((tab) => (
-                            <button
-                              key={tab.id}
-                              onClick={() => {
-                                console.log('Data tab clicked:', tab.id);
-                                setActiveDataTab(tab.id);
-                              }}
-                              className={`inline-flex items-center justify-center whitespace-nowrap rounded-lg px-3 py-3 text-sm font-medium transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 min-h-[48px] flex-1 min-w-0 cursor-pointer ${
-                                activeDataTab === tab.id
-                                  ? tab.id === 'sim-data' 
-                                    ? 'bg-blue-500 text-white shadow-lg'
-                                    : 'bg-purple-500 text-white shadow-lg'
-                                  : 'hover:bg-white/70 hover:shadow-md'
-                              }`}
-                            >
-                              {tab.label}
-                            </button>
-                          ))}
-                        </div>
-                      </div>
+                      <ModernAdminTabs
+                        tabs={dataTabs}
+                        activeTab={activeDataTab}
+                        onTabChange={setActiveDataTab}
+                        variant="secondary"
+                        className="w-full"
+                      />
 
                       {/* Data Tab Content */}
                       <div className="mt-6">
@@ -199,14 +158,17 @@ const AdminControlCenter: React.FC<AdminControlCenterProps> = ({
         </div>
       )}
 
+      {/* Orders Tab Content */}
+      {activeAdminTab === 'orders' && <OrdersSection />}
+
       {/* Other Admin Tabs Content */}
-      {activeAdminTab !== 'dashboard' && (
+      {activeAdminTab !== 'dashboard' && activeAdminTab !== 'orders' && (
         <Card>
           <CardContent className="p-8 text-center">
             <h3 className="text-xl font-semibold mb-2">
               {activeAdminTab.charAt(0).toUpperCase() + activeAdminTab.slice(1)} Section
             </h3>
-            <p className="text-gray-600">Content for {activeAdminTab} will be available soon.</p>
+            <p className="text-muted-foreground">Content for {activeAdminTab} will be available soon.</p>
           </CardContent>
         </Card>
       )}
