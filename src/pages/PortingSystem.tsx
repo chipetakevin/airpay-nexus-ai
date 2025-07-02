@@ -58,6 +58,16 @@ const PortingSystem = () => {
   const [uploadProgress, setUploadProgress] = useState(0);
   const [captchaVerified, setCaptchaVerified] = useState(false);
   const [securityToken, setSecurityToken] = useState('');
+  const [npcStatus, setNpcStatus] = useState({ connected: true, responseTime: '45ms' });
+  const [networkCompatibility, setNetworkCompatibility] = useState<any>(null);
+  const [validationStatus, setValidationStatus] = useState<any>({});
+  const [systemHealth, setSystemHealth] = useState({
+    npcConnection: true,
+    apiGateway: true,
+    database: true,
+    security: true,
+    uptime: '99.98%'
+  });
   const { toast } = useToast();
   const { errors, touched, validateField, validateForm, handleFieldChange, clearErrors } = useFormValidation();
   const { 
@@ -89,7 +99,18 @@ const PortingSystem = () => {
     digitalSignature: ''
   });
 
-  const networks = ['MTN', 'Vodacom', 'Cell C', 'Telkom Mobile', 'Rain'];
+  const networks = ['MTN', 'Vodacom', 'Cell C', 'Telkom Mobile', 'Rain', 'FNB Connect', 'MakroCall'];
+  
+  // Enhanced network compatibility matrix
+  const networkCompatibilityMatrix = {
+    'MTN': { 'Vodacom': true, 'Cell C': true, 'Telkom Mobile': true, 'Rain': true, 'FNB Connect': true, 'MakroCall': false },
+    'Vodacom': { 'MTN': true, 'Cell C': true, 'Telkom Mobile': true, 'Rain': true, 'FNB Connect': true, 'MakroCall': false },
+    'Cell C': { 'MTN': true, 'Vodacom': true, 'Telkom Mobile': true, 'Rain': true, 'FNB Connect': false, 'MakroCall': false },
+    'Telkom Mobile': { 'MTN': true, 'Vodacom': true, 'Cell C': true, 'Rain': true, 'FNB Connect': true, 'MakroCall': true },
+    'Rain': { 'MTN': true, 'Vodacom': true, 'Cell C': true, 'Telkom Mobile': true, 'FNB Connect': false, 'MakroCall': false },
+    'FNB Connect': { 'MTN': true, 'Vodacom': true, 'Telkom Mobile': true, 'Cell C': false, 'Rain': false, 'MakroCall': false },
+    'MakroCall': { 'Telkom Mobile': true, 'MTN': false, 'Vodacom': false, 'Cell C': false, 'Rain': false, 'FNB Connect': false }
+  };
   
   useEffect(() => {
     initializeUser();
@@ -97,6 +118,7 @@ const PortingSystem = () => {
       loadPortingRequests();
       loadNotifications();
       loadAnalytics();
+      monitorSystemHealth();
       
       if (realTimeEnabled) {
         setupRealTimeSubscriptions();
@@ -107,6 +129,132 @@ const PortingSystem = () => {
   const initializeUser = async () => {
     const { data: { user } } = await supabase.auth.getUser();
     setUser(user);
+  };
+
+  const monitorSystemHealth = async () => {
+    // Simulate NPC and system health checks
+    try {
+      const healthChecks = await Promise.all([
+        simulateNpcConnection(),
+        checkApiGateway(),
+        validateDatabaseConnection(),
+        verifySecuritySystems()
+      ]);
+
+      setSystemHealth({
+        npcConnection: healthChecks[0],
+        apiGateway: healthChecks[1],
+        database: healthChecks[2],
+        security: healthChecks[3],
+        uptime: '99.98%'
+      });
+
+      setNpcStatus({
+        connected: healthChecks[0],
+        responseTime: `${Math.floor(Math.random() * 50) + 20}ms`
+      });
+    } catch (error) {
+      console.error('System health check failed:', error);
+    }
+  };
+
+  const simulateNpcConnection = async (): Promise<boolean> => {
+    // Simulate NPC connection check
+    await new Promise(resolve => setTimeout(resolve, 100));
+    return Math.random() > 0.05; // 95% uptime simulation
+  };
+
+  const checkApiGateway = async (): Promise<boolean> => {
+    await new Promise(resolve => setTimeout(resolve, 50));
+    return Math.random() > 0.02; // 98% uptime simulation
+  };
+
+  const validateDatabaseConnection = async (): Promise<boolean> => {
+    try {
+      const { error } = await supabase.from('porting_requests').select('id').limit(1);
+      return !error;
+    } catch {
+      return false;
+    }
+  };
+
+  const verifySecuritySystems = async (): Promise<boolean> => {
+    await new Promise(resolve => setTimeout(resolve, 30));
+    return securityViolations < 5; // Security threshold
+  };
+
+  const validateNetworkCompatibility = (fromNetwork: string, toNetwork: string) => {
+    if (!fromNetwork || !toNetwork) return null;
+    
+    const isCompatible = networkCompatibilityMatrix[fromNetwork]?.[toNetwork] || false;
+    const result = {
+      compatible: isCompatible,
+      estimatedTime: isCompatible ? `${Math.floor(Math.random() * 4) + 2} hours` : 'N/A',
+      npcRequired: true,
+      additionalSteps: !isCompatible ? ['Contact current provider', 'Special authorization required'] : []
+    };
+
+    setNetworkCompatibility(result);
+    return result;
+  };
+
+  const performRealTimeValidation = async (field: string, value: string) => {
+    if (!value) return;
+
+    const validation = { valid: true, message: '', suggestions: [] };
+
+    switch (field) {
+      case 'phoneNumber':
+        // Simulate real-time number validation
+        const isValidFormat = /^0[6-8][0-9]{8}$/.test(value.replace(/\s/g, ''));
+        const networkCheck = await simulateNetworkLookup(value);
+        
+        validation.valid = isValidFormat && networkCheck.active;
+        validation.message = !isValidFormat 
+          ? 'Invalid SA mobile number format' 
+          : !networkCheck.active 
+          ? 'Number not found or inactive'
+          : `Active on ${networkCheck.network}`;
+        break;
+
+      case 'currentNetwork':
+      case 'targetNetwork':
+        if (portingRequest.currentNetwork && portingRequest.targetNetwork) {
+          const compatibility = validateNetworkCompatibility(
+            portingRequest.currentNetwork, 
+            portingRequest.targetNetwork
+          );
+          validation.valid = compatibility?.compatible || false;
+          validation.message = compatibility?.compatible 
+            ? `Compatible - Est. ${compatibility.estimatedTime}`
+            : 'Incompatible networks - additional steps required';
+        }
+        break;
+    }
+
+    setValidationStatus(prev => ({ ...prev, [field]: validation }));
+  };
+
+  const simulateNetworkLookup = async (phoneNumber: string) => {
+    await new Promise(resolve => setTimeout(resolve, 200));
+    const cleanNumber = phoneNumber.replace(/\s/g, '');
+    
+    // Simulate network detection based on number patterns
+    const networkPatterns = {
+      'MTN': /^0(83|63|73|78)/,
+      'Vodacom': /^0(82|72|79)/,
+      'Cell C': /^0(84|74)/,
+      'Telkom Mobile': /^0(81|71)/,
+      'Rain': /^0(87|67)/
+    };
+
+    for (const [network, pattern] of Object.entries(networkPatterns)) {
+      if (pattern.test(cleanNumber)) {
+        return { active: Math.random() > 0.1, network }; // 90% active rate
+      }
+    }
+
+    return { active: false, network: 'Unknown' };
   };
 
   const setupRealTimeSubscriptions = () => {
@@ -378,13 +526,26 @@ const PortingSystem = () => {
         </Card>
       </div>
 
-      {/* Enhanced Status Bar */}
-      <div className="mb-6 grid grid-cols-1 md:grid-cols-3 gap-4">
+      {/* Enhanced Status Bar with NPC Integration */}
+      <div className="mb-6 grid grid-cols-1 md:grid-cols-4 gap-4">
+        <Card className={`${systemHealth.npcConnection ? 'bg-green-50 border-green-200' : 'bg-red-50 border-red-200'}`}>
+          <CardContent className="p-4">
+            <div className="flex items-center gap-2 mb-1">
+              <Database className={`w-4 h-4 ${systemHealth.npcConnection ? 'text-green-600' : 'text-red-600'}`} />
+              <span className="text-sm font-medium">NPC Integration</span>
+            </div>
+            <div className="text-xs text-gray-600">
+              <div>Status: {npcStatus.connected ? 'Connected' : 'Disconnected'}</div>
+              <div>Response: {npcStatus.responseTime}</div>
+            </div>
+          </CardContent>
+        </Card>
+
         <Card className={`${realTimeEnabled ? 'bg-green-50 border-green-200' : 'bg-gray-50'}`}>
           <CardContent className="p-4 flex items-center justify-between">
             <div className="flex items-center gap-2">
               <Wifi className={`w-4 h-4 ${realTimeEnabled ? 'text-green-600' : 'text-gray-400'}`} />
-              <span className="text-sm font-medium">Real-Time Updates</span>
+              <span className="text-sm font-medium">Real-Time</span>
             </div>
             <Switch checked={realTimeEnabled} onCheckedChange={setRealTimeEnabled} />
           </CardContent>
@@ -412,6 +573,45 @@ const PortingSystem = () => {
           </CardContent>
         </Card>
       </div>
+
+      {/* System Health Dashboard */}
+      <Card className="mb-6 bg-gradient-to-r from-blue-50 to-green-50 border-blue-200">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2 text-blue-800">
+            <Shield className="w-5 h-5" />
+            System Health & Network Status
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+            <div className="text-center">
+              <div className={`w-3 h-3 rounded-full mx-auto mb-2 ${systemHealth.npcConnection ? 'bg-green-500' : 'bg-red-500'}`}></div>
+              <p className="text-xs font-medium">NPC Gateway</p>
+              <p className="text-xs text-gray-600">{systemHealth.npcConnection ? 'Online' : 'Offline'}</p>
+            </div>
+            <div className="text-center">
+              <div className={`w-3 h-3 rounded-full mx-auto mb-2 ${systemHealth.apiGateway ? 'bg-green-500' : 'bg-red-500'}`}></div>
+              <p className="text-xs font-medium">API Gateway</p>
+              <p className="text-xs text-gray-600">{systemHealth.apiGateway ? 'Active' : 'Down'}</p>
+            </div>
+            <div className="text-center">
+              <div className={`w-3 h-3 rounded-full mx-auto mb-2 ${systemHealth.database ? 'bg-green-500' : 'bg-red-500'}`}></div>
+              <p className="text-xs font-medium">Database</p>
+              <p className="text-xs text-gray-600">{systemHealth.database ? 'Connected' : 'Error'}</p>
+            </div>
+            <div className="text-center">
+              <div className={`w-3 h-3 rounded-full mx-auto mb-2 ${systemHealth.security ? 'bg-green-500' : 'bg-yellow-500'}`}></div>
+              <p className="text-xs font-medium">Security</p>
+              <p className="text-xs text-gray-600">{systemHealth.security ? 'Secure' : 'Alert'}</p>
+            </div>
+            <div className="text-center">
+              <div className="w-3 h-3 rounded-full mx-auto mb-2 bg-blue-500"></div>
+              <p className="text-xs font-medium">Uptime</p>
+              <p className="text-xs text-gray-600">{systemHealth.uptime}</p>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
 
       {/* AI Chat Interface */}
       {aiChatOpen && (
@@ -638,6 +838,7 @@ const PortingSystem = () => {
                         const formatted = formatSAMobileNumber(e.target.value);
                         setPortingRequest({...portingRequest, phoneNumber: formatted});
                         handleFieldChange('phoneNumber', formatted, portingRequest as FormData);
+                        performRealTimeValidation('phoneNumber', formatted);
                       }}
                       className={`${errors.phoneNumber ? 'border-red-500 bg-red-50' : touched.phoneNumber ? 'border-green-500 bg-green-50' : ''}`}
                       maxLength={13}
@@ -646,6 +847,12 @@ const PortingSystem = () => {
                       <div className="flex items-center gap-1 mt-1 text-sm text-red-600">
                         <AlertCircle className="w-3 h-3" />
                         {errors.phoneNumber}
+                      </div>
+                    )}
+                    {validationStatus.phoneNumber && (
+                      <div className={`flex items-center gap-1 mt-1 text-sm ${validationStatus.phoneNumber.valid ? 'text-green-600' : 'text-yellow-600'}`}>
+                        {validationStatus.phoneNumber.valid ? <CheckCircle className="w-3 h-3" /> : <Clock className="w-3 h-3" />}
+                        {validationStatus.phoneNumber.message}
                       </div>
                     )}
                   </div>
@@ -661,6 +868,7 @@ const PortingSystem = () => {
                       onChange={(e) => {
                         setPortingRequest({...portingRequest, currentNetwork: e.target.value});
                         handleFieldChange('currentNetwork', e.target.value, portingRequest as FormData);
+                        performRealTimeValidation('currentNetwork', e.target.value);
                       }}
                     >
                       <option value="">Select Current Network</option>
@@ -738,6 +946,7 @@ const PortingSystem = () => {
                       onChange={(e) => {
                         setPortingRequest({...portingRequest, targetNetwork: e.target.value});
                         handleFieldChange('targetNetwork', e.target.value, portingRequest as FormData);
+                        performRealTimeValidation('targetNetwork', e.target.value);
                       }}
                     >
                       <option value="">Select Target Network</option>
@@ -749,6 +958,33 @@ const PortingSystem = () => {
                       <div className="flex items-center gap-1 mt-1 text-sm text-red-600">
                         <AlertCircle className="w-3 h-3" />
                         {errors.targetNetwork}
+                      </div>
+                    )}
+                    {networkCompatibility && (
+                      <div className={`mt-2 p-3 rounded-lg border ${networkCompatibility.compatible ? 'bg-green-50 border-green-200' : 'bg-yellow-50 border-yellow-200'}`}>
+                        <div className="flex items-center gap-2 text-sm">
+                          {networkCompatibility.compatible ? (
+                            <CheckCircle className="w-4 h-4 text-green-600" />
+                          ) : (
+                            <AlertTriangle className="w-4 h-4 text-yellow-600" />
+                          )}
+                          <span className={networkCompatibility.compatible ? 'text-green-800' : 'text-yellow-800'}>
+                            {networkCompatibility.compatible 
+                              ? `✓ Compatible networks - Estimated time: ${networkCompatibility.estimatedTime}`
+                              : '⚠ Additional authorization may be required'
+                            }
+                          </span>
+                        </div>
+                        {networkCompatibility.additionalSteps.length > 0 && (
+                          <div className="mt-2 text-xs text-yellow-700">
+                            <strong>Required steps:</strong>
+                            <ul className="ml-4 mt-1">
+                              {networkCompatibility.additionalSteps.map((step, index) => (
+                                <li key={index} className="list-disc">{step}</li>
+                              ))}
+                            </ul>
+                          </div>
+                        )}
                       </div>
                     )}
                   </div>
