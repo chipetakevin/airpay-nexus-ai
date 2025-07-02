@@ -805,15 +805,15 @@ const PortingSystem = () => {
                 </div>
               </div>
 
-              {/* Enhanced Security & Compliance Section */}
+              {/* Enhanced Legal Compliance & Consent Section */}
               <div className="bg-red-50 p-4 rounded-lg border-l-4 border-red-500">
                 <h3 className="font-semibold text-red-800 mb-3 flex items-center gap-2">
                   <Shield className="w-4 h-4" />
-                  Legal Authorization & Compliance
+                  Legal Authorization & Consent
                 </h3>
                 <div className="space-y-4">
-                  {/* ICASA Number Porting Authorization */}
-                  <div className="bg-white p-3 rounded border border-red-200">
+                  {/* Mandatory Porting Authorization & Data Processing Consent */}
+                  <div className="bg-white p-4 rounded-lg border border-red-200">
                     <div className="flex items-start gap-3">
                       <input
                         type="checkbox"
@@ -826,20 +826,23 @@ const PortingSystem = () => {
                         className="mt-1 w-4 h-4 text-red-600 border-red-300 rounded focus:ring-red-500"
                         required
                       />
-                      <label htmlFor="consentOwnership" className="text-sm text-red-800 cursor-pointer">
-                        <span className="font-semibold text-red-900">ICASA Number Porting Authorization:</span> I confirm that I am the legal owner or authorized user of the mobile number listed above and hereby authorize the porting of this number in accordance with ICASA Number Portability Regulations (2018). I understand that providing false information constitutes fraud under South African law.
+                      <label htmlFor="consentOwnership" className="text-sm text-gray-800 cursor-pointer leading-relaxed">
+                        I confirm that I am the legal owner of this cellphone number and hereby authorize Divine Mobile to process my porting request. I consent to the collection and processing of my personal information for the purpose of number porting, in accordance with the{' '}
+                        <a href="/privacy-policy" target="_blank" className="text-blue-600 hover:underline font-medium">
+                          Privacy Policy
+                        </a>.
                       </label>
                     </div>
                     {errors.consentOwnership && (
                       <div className="flex items-center gap-1 mt-2 text-sm text-red-600">
                         <AlertCircle className="w-3 h-3" />
-                        {errors.consentOwnership}
+                        This authorization is required to process your porting request.
                       </div>
                     )}
                   </div>
 
-                  {/* POPIA Data Processing Consent */}
-                  <div className="bg-white p-3 rounded border border-red-200">
+                  {/* POPIA Data Processing Consent - Enhanced */}
+                  <div className="bg-white p-4 rounded-lg border border-red-200">
                     <div className="flex items-start gap-3">
                       <input
                         type="checkbox"
@@ -852,52 +855,62 @@ const PortingSystem = () => {
                         className="mt-1 w-4 h-4 text-red-600 border-red-300 rounded focus:ring-red-500"
                         required
                       />
-                      <label htmlFor="consentDataProcessing" className="text-sm text-red-800 cursor-pointer">
-                        <span className="font-semibold text-red-900">POPIA Data Processing Consent:</span> I consent to the collection, processing, and storage of my personal information for the purpose of number porting, customer service, and regulatory compliance in accordance with the Protection of Personal Information Act (POPIA). 
-                        <a href="/privacy-policy" target="_blank" className="text-blue-600 hover:underline ml-1">
-                          View Privacy Policy
-                        </a>
+                      <label htmlFor="consentDataProcessing" className="text-sm text-gray-800 cursor-pointer leading-relaxed">
+                        I acknowledge that I have read and understood the{' '}
+                        <a href="/terms-and-conditions" target="_blank" className="text-blue-600 hover:underline font-medium">
+                          Terms and Conditions
+                        </a>{' '}
+                        and the{' '}
+                        <a href="/privacy-policy" target="_blank" className="text-blue-600 hover:underline font-medium">
+                          Privacy Policy
+                        </a>{' '}
+                        relating to this porting request.
                       </label>
                     </div>
                     {errors.consentDataProcessing && (
                       <div className="flex items-center gap-1 mt-2 text-sm text-red-600">
                         <AlertCircle className="w-3 h-3" />
-                        {errors.consentDataProcessing}
+                        You must acknowledge the terms and privacy policy to proceed.
                       </div>
                     )}
                   </div>
 
-                  {/* Optional Marketing Consent */}
-                  <div className="bg-white p-3 rounded border border-gray-200">
+                  {/* Optional Marketing Communications Consent */}
+                  <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
                     <div className="flex items-start gap-3">
                       <input
                         type="checkbox"
                         id="consentMarketing"
                         checked={portingRequest.consentMarketing || false}
                         onChange={(e) => setPortingRequest({...portingRequest, consentMarketing: e.target.checked})}
-                        className="mt-1 w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                        className="mt-1 w-4 h-4 text-blue-600 border-blue-300 rounded focus:ring-blue-500"
                       />
-                      <label htmlFor="consentMarketing" className="text-sm text-gray-700 cursor-pointer">
-                        <span className="font-medium">Optional Marketing Communications:</span> I consent to receive promotional offers, service updates, and marketing communications via SMS, email, or phone. You can withdraw this consent at any time by contacting customer service or clicking unsubscribe.
+                      <label htmlFor="consentMarketing" className="text-sm text-gray-800 cursor-pointer leading-relaxed">
+                        <span className="font-medium text-blue-800">Optional:</span> I consent to receive marketing and promotional communications from Divine Mobile. I understand I can opt out at any time.
                       </label>
+                    </div>
+                    <div className="ml-7 mt-2">
+                      <p className="text-xs text-blue-700">
+                        This includes special offers, service updates, and product announcements via SMS, email, or phone.
+                      </p>
                     </div>
                   </div>
 
-                  {/* Digital Signature */}
-                  <div className="bg-white p-3 rounded border border-red-200">
-                    <Label htmlFor="digitalSignature" className="text-sm font-medium text-red-800">
-                      Digital Signature / Full Name Confirmation *
+                  {/* Digital Signature Confirmation */}
+                  <div className="bg-white p-4 rounded-lg border border-gray-200">
+                    <Label htmlFor="digitalSignature" className="text-sm font-medium text-gray-800 mb-2 block">
+                      Digital Signature Confirmation <span className="text-red-500">*</span>
                     </Label>
                     <Input
                       id="digitalSignature"
-                      placeholder="Type your full name as digital signature"
+                      placeholder="Type your full name to provide digital signature"
                       value={portingRequest.digitalSignature}
                       onChange={(e) => {
                         const sanitized = sanitizeInput(e.target.value);
                         setPortingRequest({...portingRequest, digitalSignature: sanitized});
                         handleFieldChange('digitalSignature', sanitized, portingRequest as FormData);
                       }}
-                      className={`mt-1 ${errors.digitalSignature ? 'border-red-500 bg-red-50' : ''}`}
+                      className={`${errors.digitalSignature ? 'border-red-500 bg-red-50' : ''}`}
                       required
                     />
                     {errors.digitalSignature && (
@@ -906,23 +919,33 @@ const PortingSystem = () => {
                         {errors.digitalSignature}
                       </div>
                     )}
-                    <p className="text-xs text-red-600 mt-1">
-                      By typing your name, you provide a legally binding digital signature for this porting request.
+                    <p className="text-xs text-gray-600 mt-2">
+                      By typing your full name above, you provide a legally binding digital signature for this porting request under the Electronic Communications and Transactions Act.
                     </p>
                   </div>
 
                   {/* Consent Withdrawal Information */}
-                  <div className="bg-blue-50 p-3 rounded border border-blue-200">
+                  <div className="bg-yellow-50 p-4 rounded-lg border border-yellow-200">
                     <div className="flex items-start gap-2">
-                      <AlertCircle className="w-4 h-4 text-blue-600 mt-0.5 flex-shrink-0" />
-                      <div className="text-xs text-blue-800">
-                        <p className="font-medium mb-1">Your Rights:</p>
-                        <p>• You can withdraw data processing consent at any time (this may affect service delivery)</p>
-                        <p>• You can request access to, correction of, or deletion of your personal information</p>
-                        <p>• Contact our Data Protection Officer at dpo@company.com for privacy-related queries</p>
-                        <p>• File complaints with the Information Regulator if you believe your rights have been violated</p>
+                      <AlertCircle className="w-4 h-4 text-yellow-600 mt-0.5 flex-shrink-0" />
+                      <div className="text-sm text-yellow-800">
+                        <p className="font-medium mb-2">Your Rights & Consent Withdrawal:</p>
+                        <div className="space-y-1 text-xs">
+                          <p>• You may withdraw your consent at any time by contacting us at <a href="mailto:dpo@divinemobile.co.za" className="text-blue-600 hover:underline font-medium">dpo@divinemobile.co.za</a> or through our customer portal.</p>
+                          <p>• You have the right to access, correct, or delete your personal information under POPIA.</p>
+                          <p>• Withdrawal of consent may affect our ability to complete your porting request.</p>
+                          <p>• You can file complaints with the Information Regulator if your privacy rights are violated.</p>
+                        </div>
                       </div>
                     </div>
+                  </div>
+
+                  {/* Legal Compliance Statement */}
+                  <div className="bg-gray-50 p-3 rounded border border-gray-200">
+                    <p className="text-xs text-gray-700 text-center">
+                      This form complies with ICASA Number Portability Regulations (2018), POPIA, and ECT Act requirements.
+                      All consents are recorded with timestamps for audit and compliance purposes.
+                    </p>
                   </div>
                 </div>
               </div>
