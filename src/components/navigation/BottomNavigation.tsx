@@ -23,7 +23,7 @@ const BottomNavigation = () => {
   const navItems: NavItem[] = [
     {
       id: 'sanctuary',
-      label: 'Sanctuary',
+      label: 'Port',
       icon: Home,
       path: '/',
     },
@@ -41,7 +41,7 @@ const BottomNavigation = () => {
     },
     {
       id: 'messages',
-      label: 'Messages',
+      label: 'RICA',
       icon: MessageCircle,
       path: '/whatsapp-assistant'
     },
