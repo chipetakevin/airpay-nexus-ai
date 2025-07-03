@@ -211,7 +211,7 @@ const RICADocumentValidator: React.FC<RICADocumentValidatorProps> = ({
       malwareDetected: false,
       fileIntegrity: true,
       metadataClean: true,
-      facialMatch: documentType === 'selfie' ? extractedData.facialMatchConfidence : undefined
+      facialMatch: documentType === 'selfie' ? (extractedData as any).facialMatchConfidence : undefined
     };
     
     // Random security issues (very rare)
