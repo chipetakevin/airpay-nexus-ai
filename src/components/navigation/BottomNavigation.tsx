@@ -43,7 +43,7 @@ const BottomNavigation = () => {
       id: 'messages',
       label: 'RICA',
       icon: MessageCircle,
-      path: '/whatsapp-assistant'
+      path: '/rica-registration'
     },
     {
       id: 'home',
