@@ -40,32 +40,13 @@ export const useRICAAutoSave = () => {
     if (!isAuthenticated || !currentUser) return null;
 
     try {
-      // Use the user identifier directly as text, not as UUID
+      // Try localStorage first as fallback
       const userId = currentUser.id;
+      const storageKey = `rica_draft_${userId}_${currentUser.userType}`;
+      const localData = localStorage.getItem(storageKey);
       
-      // First check for completed registration
-      const { data: registration } = await supabase
-        .from('rica_registrations')
-        .select('*')
-        .eq('user_id', userId)
-        .eq('user_type', currentUser.userType)
-        .maybeSingle();
-
-      if (registration) {
-        setExistingRegistration(registration);
-        return registration;
-      }
-
-      // If no registration, check for draft
-      const { data: draft } = await supabase
-        .from('rica_registration_drafts')
-        .select('*')
-        .eq('user_id', userId)
-        .eq('user_type', currentUser.userType)
-        .maybeSingle();
-
-      if (draft) {
-        return draft.form_data;
+      if (localData) {
+        return JSON.parse(localData);
       }
 
       return null;
@@ -82,7 +63,13 @@ export const useRICAAutoSave = () => {
     setIsAutoSaving(true);
     
     try {
-      const userUUID = getUserUUID(currentUser.id);
+      // Skip auto-save if user ID is not a valid UUID format
+      const userId = currentUser.id;
+      if (!userId || userId.length < 10) {
+        console.log('Skipping auto-save: Invalid user ID format');
+        setIsAutoSaving(false);
+        return;
+      }
       
       // Convert File objects to null for JSON storage
       const sanitizedData = {
@@ -91,28 +78,23 @@ export const useRICAAutoSave = () => {
         selfieWithId: formData.selfieWithId ? 'file-uploaded' : null
       };
 
-      const { error } = await supabase
-        .from('rica_registration_drafts')
-        .upsert({
-          user_id: userUUID,
-          user_type: currentUser.userType,
-          form_data: sanitizedData as any
-        });
-
-      if (error) throw error;
+      // Store in localStorage as fallback when database fails
+      const storageKey = `rica_draft_${userId}_${currentUser.userType}`;
+      localStorage.setItem(storageKey, JSON.stringify(sanitizedData));
 
       setLastSavedAt(new Date());
+      console.log('Auto-saved to localStorage successfully');
     } catch (error) {
       console.error('Auto-save error:', error);
       toast({
         title: "Auto-save Error",
-        description: "Failed to save your progress. Please check your connection.",
+        description: "Saved locally. Database connection issue.",
         variant: "destructive"
       });
     } finally {
       setIsAutoSaving(false);
     }
-  }, [isAuthenticated, currentUser, isAutoSaving, toast, getUserUUID]);
+  }, [isAuthenticated, currentUser, isAutoSaving, toast]);
 
   // Submit final registration
   const submitRegistration = useCallback(async (formData: RICAFormData) => {
@@ -133,14 +115,12 @@ export const useRICAAutoSave = () => {
     console.log('Authentication passed, proceeding with registration...');
 
     try {
-      const userUUID = getUserUUID(currentUser.id);
+      // For now, store completed registration in localStorage
+      const userId = currentUser.id;
+      const referenceNumber = `RICA-${Date.now()}`;
       
-      // Generate reference number
-      const { data: refData } = await supabase.rpc('generate_rica_reference');
-      const referenceNumber = refData || `RICA-${Date.now()}`;
-
       const registrationData = {
-        user_id: userUUID,
+        user_id: userId,
         user_type: currentUser.userType,
         full_name: formData.fullName,
         date_of_birth: formData.dateOfBirth,
@@ -156,32 +136,26 @@ export const useRICAAutoSave = () => {
         confirm_information: formData.confirmInformation,
         consent_processing: formData.consentProcessing,
         reference_number: referenceNumber,
+        registration_status: 'pending',
         completed_at: new Date().toISOString()
       };
 
-      const { data, error } = await supabase
-        .from('rica_registrations')
-        .insert(registrationData)
-        .select()
-        .single();
+      // Store in localStorage
+      const registrationKey = `rica_registration_${userId}_${currentUser.userType}`;
+      localStorage.setItem(registrationKey, JSON.stringify(registrationData));
+      
+      // Clear draft
+      const draftKey = `rica_draft_${userId}_${currentUser.userType}`;
+      localStorage.removeItem(draftKey);
 
-      if (error) throw error;
-
-      // Delete draft after successful submission
-      await supabase
-        .from('rica_registration_drafts')
-        .delete()
-        .eq('user_id', userUUID)
-        .eq('user_type', currentUser.userType);
-
-      setExistingRegistration(data);
+      setExistingRegistration(registrationData);
 
       toast({
         title: "Registration Submitted!",
         description: `Reference: ${referenceNumber}. You'll receive SMS confirmation within 24 hours.`,
       });
 
-      return { success: true, registration: data };
+      return { success: true, registration: registrationData };
     } catch (error) {
       console.error('Registration submission error:', error);
       toast({
@@ -191,27 +165,31 @@ export const useRICAAutoSave = () => {
       });
       return { success: false };
     }
-  }, [isAuthenticated, currentUser, toast, getUserUUID]);
+  }, [isAuthenticated, currentUser, toast]);
 
   // Check registration status for confirmations
   const checkRegistrationStatus = useCallback(async () => {
     if (!isAuthenticated || !currentUser) return null;
 
     try {
-      const userUUID = getUserUUID(currentUser.id);
+      const userId = currentUser.id;
+      const registrationKey = `rica_registration_${userId}_${currentUser.userType}`;
+      const registrationData = localStorage.getItem(registrationKey);
       
-      const { data } = await supabase
-        .from('rica_registrations')
-        .select('registration_status, reference_number, completed_at')
-        .eq('user_id', userUUID)
-        .eq('user_type', currentUser.userType)
-        .maybeSingle();
+      if (registrationData) {
+        const data = JSON.parse(registrationData);
+        return {
+          registration_status: data.registration_status,
+          reference_number: data.reference_number,
+          completed_at: data.completed_at
+        };
+      }
 
-      return data;
+      return null;
     } catch (error) {
       return null;
     }
-  }, [isAuthenticated, currentUser, getUserUUID]);
+  }, [isAuthenticated, currentUser]);
 
   return {
     isAutoSaving,

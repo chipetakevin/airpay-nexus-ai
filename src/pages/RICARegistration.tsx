@@ -37,6 +37,7 @@ const RICARegistration = () => {
   const { currentUser, isAuthenticated } = useMobileAuth();
   const { userProfile } = useRegistrationGuard();
   const { loadExistingData, autoSaveDraft, submitRegistration, existingRegistration } = useRICAAutoSave();
+  const [localExistingRegistration, setLocalExistingRegistration] = useState<any>(null);
   const [currentStep, setCurrentStep] = useState<RegistrationStep>('personal');
   const [activeTab, setActiveTab] = useState('register');
   const [isRegistered, setIsRegistered] = useState(false);
@@ -129,14 +130,15 @@ const RICARegistration = () => {
   useEffect(() => {
     // Only trigger if user is not authenticated AND no existing registration
     // This matches the "Authentication Required" state shown in the image
-    if (!isAuthenticated && !existingRegistration && activeTab === 'register') {
+    const hasExistingReg = existingRegistration || localExistingRegistration;
+    if (!isAuthenticated && !hasExistingReg && activeTab === 'register') {
       // Small delay to ensure UI is rendered before showing modal
       const timer = setTimeout(() => {
         setShowRegistrationForm(true);
       }, 500);
       return () => clearTimeout(timer);
     }
-  }, [isAuthenticated, existingRegistration, activeTab]);
+  }, [isAuthenticated, existingRegistration, localExistingRegistration, activeTab]);
 
   // Auto-save on form data changes
   useEffect(() => {
@@ -155,11 +157,20 @@ const RICARegistration = () => {
       if (existingData && typeof existingData === 'object') {
         setFormData(prev => ({ ...prev, ...existingData }));
       }
+      
+      // Check for existing registration in localStorage
+      if (isAuthenticated && currentUser) {
+        const registrationKey = `rica_registration_${currentUser.id}_${currentUser.userType}`;
+        const registrationData = localStorage.getItem(registrationKey);
+        if (registrationData) {
+          setLocalExistingRegistration(JSON.parse(registrationData));
+        }
+      }
     };
     if (isAuthenticated) {
       loadData();
     }
-  }, [isAuthenticated, loadExistingData]);
+  }, [isAuthenticated, loadExistingData, currentUser]);
 
   if (currentStep === 'confirmation') {
     return (
@@ -214,7 +225,7 @@ const RICARegistration = () => {
           
           <TabsContent value="register" className="space-y-6 mt-6">
             {/* Registration Status */}
-            {!existingRegistration && (
+            {!(existingRegistration || localExistingRegistration) && (
               <Card className="border-red-200 bg-red-50">
                 <CardContent className="p-6 text-center space-y-4">
                   <div className="flex justify-center">
@@ -241,7 +252,7 @@ const RICARegistration = () => {
               </Card>
             )}
 
-            {existingRegistration && (
+            {(existingRegistration || localExistingRegistration) && (
               <Card className="border-green-200 bg-green-50">
                 <CardContent className="p-6 text-center space-y-4">
                   <div className="flex justify-center">
@@ -252,10 +263,10 @@ const RICARegistration = () => {
                   
                   <div>
                     <h3 className="text-lg font-semibold text-green-800 mb-2">
-                      ✅ RICA Registration Status: {existingRegistration.registration_status}
+                      ✅ RICA Registration Status: {(existingRegistration || localExistingRegistration)?.registration_status}
                     </h3>
                     <p className="text-sm text-green-600 mb-2">
-                      Reference: {existingRegistration.reference_number}
+                      Reference: {(existingRegistration || localExistingRegistration)?.reference_number}
                     </p>
                     <p className="text-sm text-green-600">
                       Your registration is being processed. Check the History tab for updates.
@@ -266,7 +277,7 @@ const RICARegistration = () => {
             )}
 
             {/* Progress Section - Only show if not registered */}
-            {!existingRegistration && (
+            {!(existingRegistration || localExistingRegistration) && (
               <Card className="border-blue-200 bg-blue-50/30">
                 <CardHeader className="pb-3">
                   <CardTitle className="text-lg text-blue-800">Registration Progress</CardTitle>
@@ -310,7 +321,7 @@ const RICARegistration = () => {
             )}
 
             {/* Step Content - Only show if not registered */}
-            {!existingRegistration && (
+            {!(existingRegistration || localExistingRegistration) && (
               <div className="space-y-4">
                 {currentStep === 'personal' && (
                   <RICAPersonalInfo 
