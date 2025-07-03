@@ -21,6 +21,8 @@ import { useEnhancedSecurity } from '@/hooks/useEnhancedSecurity';
 import { usePortingSystemState } from '@/hooks/usePortingSystemState';
 import { useErrorRecovery } from '@/hooks/useErrorRecovery';
 import { ErrorRecoveryDashboard } from '@/components/porting/ErrorRecoveryDashboard';
+import PortingValidationEngine from '@/components/porting/PortingValidationEngine';
+import OTPValidationSystem from '@/components/auth/OTPValidationSystem';
 import UniversalExitTabs from '@/components/navigation/UniversalExitTabs';
 import { 
   Upload, 
@@ -61,6 +63,9 @@ const PortingSystem = () => {
   const [npcStatus, setNpcStatus] = useState({ connected: true, responseTime: '45ms' });
   const [networkCompatibility, setNetworkCompatibility] = useState<any>(null);
   const [validationStatus, setValidationStatus] = useState<any>({});
+  const [isValidationPassed, setIsValidationPassed] = useState(false);
+  const [validationErrors, setValidationErrors] = useState<any[]>([]);
+  const [otpVerified, setOtpVerified] = useState(false);
 
   const { toast } = useToast();
   const { errors, touched, validateField, validateForm, handleFieldChange, clearErrors } = useFormValidation();
@@ -315,11 +320,21 @@ const PortingSystem = () => {
   };
 
   const initiatePorting = async () => {
-    // Validate the entire form
-    if (!validateForm(portingRequest as FormData)) {
+    // Check validation status first
+    if (!isValidationPassed) {
       toast({
-        title: "Validation Error",
-        description: "Please correct the errors in the form before submitting.",
+        title: "Validation Required",
+        description: "Please complete ICASA compliance validation before submitting.",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    // Check OTP verification
+    if (!otpVerified) {
+      toast({
+        title: "OTP Verification Required",
+        description: "Please verify your phone number with OTP before proceeding.",
         variant: "destructive"
       });
       return;
@@ -1437,7 +1452,7 @@ const PortingSystem = () => {
             </Card>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div className="space-y-6">
             <Card>
               <CardHeader>
                 <CardTitle>Network Distribution</CardTitle>

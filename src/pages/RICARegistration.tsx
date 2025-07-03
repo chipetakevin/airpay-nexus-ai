@@ -20,6 +20,7 @@ import { useMobileAuth } from '@/hooks/useMobileAuth';
 import { useRegistrationGuard } from '@/hooks/useRegistrationGuard';
 import { useRICAAutoSave } from '@/hooks/useRICAAutoSave';
 import RICAHistoryTab from '@/components/rica/RICAHistoryTab';
+import RICADocumentValidator from '@/components/rica/RICADocumentValidator';
 import UniversalExitTabs from '@/components/navigation/UniversalExitTabs';
 import RICAPersonalInfo from '@/components/rica/RICAPersonalInfo';
 import RICAAddressDetails from '@/components/rica/RICAAddressDetails';
@@ -328,9 +329,32 @@ const RICARegistration = () => {
               </Card>
             )}
 
-            {/* Step Content - Only show if not registered */}
+            {/* Modern RICA Document Validation */}
             {!(existingRegistration || localExistingRegistration) && (
               <div className="space-y-4">
+                {/* AI-Powered Document Validation */}
+                <RICADocumentValidator 
+                  onValidationComplete={(results) => {
+                    console.log('Document validation results:', results);
+                    // Update form with extracted data
+                    const validResults = results.filter(r => r.isValid);
+                    if (validResults.length > 0) {
+                      // Extract data from validated documents
+                      validResults.forEach(result => {
+                        if (result.extractedData.idNumber) {
+                          setFormData(prev => ({ ...prev, idNumber: result.extractedData.idNumber }));
+                        }
+                        if (result.extractedData.fullName) {
+                          setFormData(prev => ({ ...prev, fullName: result.extractedData.fullName }));
+                        }
+                        if (result.extractedData.address) {
+                          setFormData(prev => ({ ...prev, physicalAddress: result.extractedData.address }));
+                        }
+                      });
+                    }
+                  }}
+                />
+
                 {currentStep === 'personal' && (
                   <RICAPersonalInfo 
                     formData={formData}
