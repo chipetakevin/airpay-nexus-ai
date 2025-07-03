@@ -120,6 +120,8 @@ export const useRICAAutoSave = () => {
             user_id: userId,
             user_type: currentUser.userType,
             form_data: sanitizedData as any
+          }, {
+            onConflict: 'user_id,user_type'
           });
 
         if (error) throw error;
@@ -134,17 +136,11 @@ export const useRICAAutoSave = () => {
       } catch (dbError) {
         console.error('Database auto-save failed, using localStorage:', dbError);
         
-        // Fallback to localStorage
+        // Fallback to localStorage only (no toast for silent auto-save)
         const storageKey = `rica_draft_${userId}_${currentUser.userType}`;
         localStorage.setItem(storageKey, JSON.stringify(sanitizedData));
         
         setLastSavedAt(new Date());
-        
-        toast({
-          title: "Auto-save",
-          description: "Saved locally (database offline)",
-          variant: "default"
-        });
       }
     } catch (error) {
       console.error('Auto-save error:', error);

@@ -40,6 +40,15 @@ const RICARegistration = () => {
   const [localExistingRegistration, setLocalExistingRegistration] = useState<any>(null);
   const [currentStep, setCurrentStep] = useState<RegistrationStep>('personal');
   const [activeTab, setActiveTab] = useState('register');
+  
+  // Check URL parameters for initial tab
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const tabParam = urlParams.get('tab');
+    if (tabParam === 'history') {
+      setActiveTab('history');
+    }
+  }, []);
   const [isRegistered, setIsRegistered] = useState(false);
   const [showRegistrationForm, setShowRegistrationForm] = useState(false);
   const [selectedUserType, setSelectedUserType] = useState<'customer' | 'vendor' | 'admin'>('customer');

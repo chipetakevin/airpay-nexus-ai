@@ -1,14 +1,11 @@
 import React from 'react';
 import { Card, CardContent } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { CheckCircle, MessageCircle, Phone, Home } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { CheckCircle } from 'lucide-react';
+import RICABottomTabs from '@/components/navigation/RICABottomTabs';
 
 const RICAConfirmation: React.FC = () => {
-  const navigate = useNavigate();
-
   return (
-    <div className="max-w-md mx-auto p-4 space-y-6 mt-8">
+    <div className="max-w-md mx-auto p-4 space-y-6 mt-8 pb-32">
       {/* Success Message */}
       <Card className="border-green-200 bg-green-50">
         <CardContent className="p-6 text-center space-y-4">
@@ -81,35 +78,6 @@ const RICAConfirmation: React.FC = () => {
         </CardContent>
       </Card>
 
-      {/* Action Buttons */}
-      <div className="space-y-3">
-        <Button 
-          onClick={() => navigate('/whatsapp-assistant')}
-          className="w-full h-12 bg-green-600 hover:bg-green-700"
-        >
-          <MessageCircle className="w-4 h-4 mr-2" />
-          Continue to WhatsApp Shopping
-        </Button>
-        
-        <Button 
-          variant="outline"
-          onClick={() => navigate('/portal')}
-          className="w-full h-12"
-        >
-          <Phone className="w-4 h-4 mr-2" />
-          Check Registration Status
-        </Button>
-        
-        <Button 
-          variant="ghost"
-          onClick={() => navigate('/')}
-          className="w-full h-12"
-        >
-          <Home className="w-4 h-4 mr-2" />
-          Return to Home
-        </Button>
-      </div>
-
       {/* Support Information */}
       <Card className="border-gray-200">
         <CardContent className="p-4 text-center">
@@ -124,6 +92,9 @@ const RICAConfirmation: React.FC = () => {
           </p>
         </CardContent>
       </Card>
+
+      {/* Fixed Bottom Tabs */}
+      <RICABottomTabs />
     </div>
   );
 };
