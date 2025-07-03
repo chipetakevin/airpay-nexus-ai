@@ -125,6 +125,19 @@ const RICARegistration = () => {
     });
   };
 
+  // Auto-trigger registration modal when authentication is required for RICA
+  useEffect(() => {
+    // Only trigger if user is not authenticated AND no existing registration
+    // This matches the "Authentication Required" state shown in the image
+    if (!isAuthenticated && !existingRegistration && activeTab === 'register') {
+      // Small delay to ensure UI is rendered before showing modal
+      const timer = setTimeout(() => {
+        setShowRegistrationForm(true);
+      }, 500);
+      return () => clearTimeout(timer);
+    }
+  }, [isAuthenticated, existingRegistration, activeTab]);
+
   // Auto-save on form data changes
   useEffect(() => {
     if (isAuthenticated && Object.keys(formData).some(key => formData[key as keyof typeof formData])) {
