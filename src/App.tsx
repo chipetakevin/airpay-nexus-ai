@@ -25,6 +25,7 @@ import DMPayroll from "./pages/DMPayroll";
 import AIPoweredDeals from "./pages/AIPoweredDeals";
 import PortingSystem from "./pages/PortingSystem";
 import RICARegistration from "./pages/RICARegistration";
+import RegistrationHub from "./pages/RegistrationHub";
 
 const queryClient = new QueryClient();
 
@@ -55,6 +56,7 @@ const App = () => (
             <Route path="/ai-powered-deals" element={<AIPoweredDeals />} />
             <Route path="/porting-system" element={<PortingSystem />} />
             <Route path="/rica-registration" element={<RICARegistration />} />
+            <Route path="/registration-hub" element={<RegistrationHub />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>

@@ -146,6 +146,63 @@ const HeroSection = () => {
               </div>
             </div>
           </div>
+
+          {/* Smart Services Quick Access */}
+          <div className="mt-12 max-w-4xl mx-auto">
+            <div className="text-center mb-6">
+              <p className="text-white/80 text-sm mb-3">Smart Mobile Services</p>
+            </div>
+            
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+              {/* RICA Service */}
+              <Link to="/rica-registration" className="group relative">
+                <div className="absolute inset-0 bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 shadow-lg group-hover:shadow-xl transition-all duration-300 group-hover:bg-white/15"></div>
+                <div className="relative text-center p-4">
+                  <div className="w-12 h-12 bg-green-500/20 rounded-full flex items-center justify-center mx-auto mb-2">
+                    <Shield className="w-6 h-6 text-green-400" />
+                  </div>
+                  <div className="text-sm font-medium text-white">RICA</div>
+                  <div className="text-xs text-white/60">Registration</div>
+                </div>
+              </Link>
+
+              {/* Port Service */}
+              <Link to="/porting-system" className="group relative">
+                <div className="absolute inset-0 bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 shadow-lg group-hover:shadow-xl transition-all duration-300 group-hover:bg-white/15"></div>
+                <div className="relative text-center p-4">
+                  <div className="w-12 h-12 bg-blue-500/20 rounded-full flex items-center justify-center mx-auto mb-2">
+                    <ArrowRight className="w-6 h-6 text-blue-400" />
+                  </div>
+                  <div className="text-sm font-medium text-white">Port</div>
+                  <div className="text-xs text-white/60">Numbers</div>
+                </div>
+              </Link>
+
+              {/* Registration Hub */}
+              <Link to="/registration-hub" className="group relative">
+                <div className="absolute inset-0 bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 shadow-lg group-hover:shadow-xl transition-all duration-300 group-hover:bg-white/15"></div>
+                <div className="relative text-center p-4">
+                  <div className="w-12 h-12 bg-purple-500/20 rounded-full flex items-center justify-center mx-auto mb-2">
+                    <Star className="w-6 h-6 text-purple-400" />
+                  </div>
+                  <div className="text-sm font-medium text-white">Register</div>
+                  <div className="text-xs text-white/60">Accounts</div>
+                </div>
+              </Link>
+
+              {/* AI Deals */}
+              <Link to="/ai-powered-deals" className="group relative">
+                <div className="absolute inset-0 bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 shadow-lg group-hover:shadow-xl transition-all duration-300 group-hover:bg-white/15"></div>
+                <div className="relative text-center p-4">
+                  <div className="w-12 h-12 bg-yellow-500/20 rounded-full flex items-center justify-center mx-auto mb-2">
+                    <Zap className="w-6 h-6 text-yellow-400" />
+                  </div>
+                  <div className="text-sm font-medium text-white">AI Deals</div>
+                  <div className="text-xs text-white/60">Smart Offers</div>
+                </div>
+              </Link>
+            </div>
+          </div>
         </div>
       </div>
     </section>
