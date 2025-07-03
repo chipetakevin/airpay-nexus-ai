@@ -5,7 +5,7 @@ import { ArrowLeft, Home, MessageCircle, CreditCard, Phone, Settings } from 'luc
 import { useNavigate, useLocation } from 'react-router-dom';
 
 interface ExitTabsProps {
-  currentService: 'rica' | 'port' | 'deals' | 'registration';
+  currentService: 'rica' | 'port' | 'deals' | 'registration' | 'admin';
   variant?: 'bottom' | 'top' | 'floating';
   showServiceSwitcher?: boolean;
 }
@@ -81,6 +81,24 @@ const UniversalExitTabs: React.FC<ExitTabsProps> = ({
         action: () => navigate('/ai-powered-deals'),
         className: 'bg-blue-600 hover:bg-blue-700 text-white',
         primary: true
+      }
+    ],
+    admin: [
+      {
+        id: 'portal',
+        label: 'Main Portal',
+        icon: Settings,
+        action: () => navigate('/portal'),
+        className: 'bg-blue-600 hover:bg-blue-700 text-white',
+        primary: true
+      },
+      {
+        id: 'deals',
+        label: 'Deals Hub',
+        icon: CreditCard,
+        action: () => navigate('/ai-powered-deals'),
+        className: 'bg-green-600 hover:bg-green-700 text-white',
+        primary: false
       }
     ]
   };

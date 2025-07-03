@@ -9,6 +9,107 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      admin_profiles: {
+        Row: {
+          created_at: string | null
+          department: string | null
+          email: string
+          first_name: string
+          id: string
+          last_login: string | null
+          last_name: string
+          permissions: Json | null
+          phone: string | null
+          role_level: string | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          department?: string | null
+          email: string
+          first_name: string
+          id?: string
+          last_login?: string | null
+          last_name: string
+          permissions?: Json | null
+          phone?: string | null
+          role_level?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          department?: string | null
+          email?: string
+          first_name?: string
+          id?: string
+          last_login?: string | null
+          last_name?: string
+          permissions?: Json | null
+          phone?: string | null
+          role_level?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      ai_analytics: {
+        Row: {
+          action_taken: string | null
+          admin_reviewed: boolean | null
+          ai_model_version: string | null
+          analysis_type: string
+          confidence_score: number | null
+          created_at: string | null
+          entity_id: string
+          entity_type: string
+          id: string
+          insights: Json | null
+          recommendations: Json | null
+          reviewed_at: string | null
+          reviewed_by: string | null
+        }
+        Insert: {
+          action_taken?: string | null
+          admin_reviewed?: boolean | null
+          ai_model_version?: string | null
+          analysis_type: string
+          confidence_score?: number | null
+          created_at?: string | null
+          entity_id: string
+          entity_type: string
+          id?: string
+          insights?: Json | null
+          recommendations?: Json | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+        }
+        Update: {
+          action_taken?: string | null
+          admin_reviewed?: boolean | null
+          ai_model_version?: string | null
+          analysis_type?: string
+          confidence_score?: number | null
+          created_at?: string | null
+          entity_id?: string
+          entity_type?: string
+          id?: string
+          insights?: Json | null
+          recommendations?: Json | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ai_analytics_reviewed_by_fkey"
+            columns: ["reviewed_by"]
+            isOneToOne: false
+            referencedRelation: "admin_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       api_access_logs: {
         Row: {
           api_endpoint: string
@@ -138,6 +239,144 @@ export type Database = {
           },
         ]
       }
+      compliance_monitoring: {
+        Row: {
+          auto_resolved: boolean | null
+          compliance_score: number | null
+          compliance_type: string
+          created_at: string | null
+          entity_id: string
+          entity_type: string
+          id: string
+          issues: Json | null
+          last_checked: string | null
+          next_check_due: string | null
+          remediation_steps: Json | null
+          status: string
+          updated_at: string | null
+        }
+        Insert: {
+          auto_resolved?: boolean | null
+          compliance_score?: number | null
+          compliance_type: string
+          created_at?: string | null
+          entity_id: string
+          entity_type: string
+          id?: string
+          issues?: Json | null
+          last_checked?: string | null
+          next_check_due?: string | null
+          remediation_steps?: Json | null
+          status: string
+          updated_at?: string | null
+        }
+        Update: {
+          auto_resolved?: boolean | null
+          compliance_score?: number | null
+          compliance_type?: string
+          created_at?: string | null
+          entity_id?: string
+          entity_type?: string
+          id?: string
+          issues?: Json | null
+          last_checked?: string | null
+          next_check_due?: string | null
+          remediation_steps?: Json | null
+          status?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      customer_profiles: {
+        Row: {
+          created_at: string | null
+          date_of_birth: string | null
+          email: string
+          first_name: string
+          gender: string | null
+          id: string
+          id_document_url: string | null
+          id_number: string
+          id_type: string | null
+          kyc_status: Database["public"]["Enums"]["kyc_status"] | null
+          kyc_verified_at: string | null
+          last_name: string
+          nationality: string | null
+          network_provider: string | null
+          onecard_balance: number | null
+          phone: string
+          physical_address: string
+          postal_address: string | null
+          proof_of_address_url: string | null
+          province: string | null
+          rica_reference_number: string | null
+          rica_status: Database["public"]["Enums"]["rica_status"] | null
+          rica_verified_at: string | null
+          selfie_url: string | null
+          total_cashback: number | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          date_of_birth?: string | null
+          email: string
+          first_name: string
+          gender?: string | null
+          id?: string
+          id_document_url?: string | null
+          id_number: string
+          id_type?: string | null
+          kyc_status?: Database["public"]["Enums"]["kyc_status"] | null
+          kyc_verified_at?: string | null
+          last_name: string
+          nationality?: string | null
+          network_provider?: string | null
+          onecard_balance?: number | null
+          phone: string
+          physical_address: string
+          postal_address?: string | null
+          proof_of_address_url?: string | null
+          province?: string | null
+          rica_reference_number?: string | null
+          rica_status?: Database["public"]["Enums"]["rica_status"] | null
+          rica_verified_at?: string | null
+          selfie_url?: string | null
+          total_cashback?: number | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          date_of_birth?: string | null
+          email?: string
+          first_name?: string
+          gender?: string | null
+          id?: string
+          id_document_url?: string | null
+          id_number?: string
+          id_type?: string | null
+          kyc_status?: Database["public"]["Enums"]["kyc_status"] | null
+          kyc_verified_at?: string | null
+          last_name?: string
+          nationality?: string | null
+          network_provider?: string | null
+          onecard_balance?: number | null
+          phone?: string
+          physical_address?: string
+          postal_address?: string | null
+          proof_of_address_url?: string | null
+          province?: string | null
+          rica_reference_number?: string | null
+          rica_status?: Database["public"]["Enums"]["rica_status"] | null
+          rica_verified_at?: string | null
+          selfie_url?: string | null
+          total_cashback?: number | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       customers: {
         Row: {
           created_at: string | null
@@ -244,6 +483,100 @@ export type Database = {
             columns: ["vendor_id"]
             isOneToOne: false
             referencedRelation: "vendors"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      mvne_transactions: {
+        Row: {
+          admin_fee: number | null
+          amount: number
+          cashback_earned: number | null
+          compliance_checked: boolean | null
+          compliance_notes: string | null
+          created_at: string | null
+          customer_id: string | null
+          discounted_price: number
+          id: string
+          network: string
+          original_price: number
+          receipt_url: string | null
+          recipient_name: string | null
+          recipient_phone: string | null
+          recipient_relationship: string | null
+          sim_id: string | null
+          status: string | null
+          transaction_type: string
+          updated_at: string | null
+          vendor_commission: number | null
+          vendor_id: string | null
+        }
+        Insert: {
+          admin_fee?: number | null
+          amount: number
+          cashback_earned?: number | null
+          compliance_checked?: boolean | null
+          compliance_notes?: string | null
+          created_at?: string | null
+          customer_id?: string | null
+          discounted_price: number
+          id?: string
+          network: string
+          original_price: number
+          receipt_url?: string | null
+          recipient_name?: string | null
+          recipient_phone?: string | null
+          recipient_relationship?: string | null
+          sim_id?: string | null
+          status?: string | null
+          transaction_type: string
+          updated_at?: string | null
+          vendor_commission?: number | null
+          vendor_id?: string | null
+        }
+        Update: {
+          admin_fee?: number | null
+          amount?: number
+          cashback_earned?: number | null
+          compliance_checked?: boolean | null
+          compliance_notes?: string | null
+          created_at?: string | null
+          customer_id?: string | null
+          discounted_price?: number
+          id?: string
+          network?: string
+          original_price?: number
+          receipt_url?: string | null
+          recipient_name?: string | null
+          recipient_phone?: string | null
+          recipient_relationship?: string | null
+          sim_id?: string | null
+          status?: string | null
+          transaction_type?: string
+          updated_at?: string | null
+          vendor_commission?: number | null
+          vendor_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "mvne_transactions_customer_id_fkey"
+            columns: ["customer_id"]
+            isOneToOne: false
+            referencedRelation: "customer_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "mvne_transactions_sim_id_fkey"
+            columns: ["sim_id"]
+            isOneToOne: false
+            referencedRelation: "sim_cards"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "mvne_transactions_vendor_id_fkey"
+            columns: ["vendor_id"]
+            isOneToOne: false
+            referencedRelation: "vendor_profiles"
             referencedColumns: ["id"]
           },
         ]
@@ -388,6 +721,69 @@ export type Database = {
         }
         Relationships: []
       }
+      rica_audit_logs: {
+        Row: {
+          action: string
+          admin_id: string | null
+          ai_confidence_score: number | null
+          compliance_notes: string | null
+          created_at: string | null
+          customer_id: string | null
+          document_type: string | null
+          id: string
+          ip_address: unknown | null
+          new_status: string | null
+          old_status: string | null
+          user_agent: string | null
+          verification_method: string | null
+        }
+        Insert: {
+          action: string
+          admin_id?: string | null
+          ai_confidence_score?: number | null
+          compliance_notes?: string | null
+          created_at?: string | null
+          customer_id?: string | null
+          document_type?: string | null
+          id?: string
+          ip_address?: unknown | null
+          new_status?: string | null
+          old_status?: string | null
+          user_agent?: string | null
+          verification_method?: string | null
+        }
+        Update: {
+          action?: string
+          admin_id?: string | null
+          ai_confidence_score?: number | null
+          compliance_notes?: string | null
+          created_at?: string | null
+          customer_id?: string | null
+          document_type?: string | null
+          id?: string
+          ip_address?: unknown | null
+          new_status?: string | null
+          old_status?: string | null
+          user_agent?: string | null
+          verification_method?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "rica_audit_logs_admin_id_fkey"
+            columns: ["admin_id"]
+            isOneToOne: false
+            referencedRelation: "admin_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "rica_audit_logs_customer_id_fkey"
+            columns: ["customer_id"]
+            isOneToOne: false
+            referencedRelation: "customer_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       rica_registration_drafts: {
         Row: {
           created_at: string
@@ -526,6 +922,113 @@ export type Database = {
         }
         Relationships: []
       }
+      sim_cards: {
+        Row: {
+          activated_at: string | null
+          assigned_to: string | null
+          created_at: string | null
+          data_usage_mb: number | null
+          deactivated_at: string | null
+          iccid: string
+          id: string
+          last_used_at: string | null
+          msisdn: string | null
+          network_provider: string | null
+          sim_status: Database["public"]["Enums"]["sim_status"] | null
+          sim_type: string | null
+          sms_usage_count: number | null
+          updated_at: string | null
+          voice_usage_minutes: number | null
+        }
+        Insert: {
+          activated_at?: string | null
+          assigned_to?: string | null
+          created_at?: string | null
+          data_usage_mb?: number | null
+          deactivated_at?: string | null
+          iccid: string
+          id?: string
+          last_used_at?: string | null
+          msisdn?: string | null
+          network_provider?: string | null
+          sim_status?: Database["public"]["Enums"]["sim_status"] | null
+          sim_type?: string | null
+          sms_usage_count?: number | null
+          updated_at?: string | null
+          voice_usage_minutes?: number | null
+        }
+        Update: {
+          activated_at?: string | null
+          assigned_to?: string | null
+          created_at?: string | null
+          data_usage_mb?: number | null
+          deactivated_at?: string | null
+          iccid?: string
+          id?: string
+          last_used_at?: string | null
+          msisdn?: string | null
+          network_provider?: string | null
+          sim_status?: Database["public"]["Enums"]["sim_status"] | null
+          sim_type?: string | null
+          sms_usage_count?: number | null
+          updated_at?: string | null
+          voice_usage_minutes?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "sim_cards_assigned_to_fkey"
+            columns: ["assigned_to"]
+            isOneToOne: false
+            referencedRelation: "customer_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      system_notifications: {
+        Row: {
+          action_required: boolean | null
+          action_url: string | null
+          content: string
+          created_at: string | null
+          expires_at: string | null
+          id: string
+          notification_type: string
+          priority: string | null
+          read_at: string | null
+          recipient_id: string
+          recipient_type: string
+          title: string
+        }
+        Insert: {
+          action_required?: boolean | null
+          action_url?: string | null
+          content: string
+          created_at?: string | null
+          expires_at?: string | null
+          id?: string
+          notification_type: string
+          priority?: string | null
+          read_at?: string | null
+          recipient_id: string
+          recipient_type: string
+          title: string
+        }
+        Update: {
+          action_required?: boolean | null
+          action_url?: string | null
+          content?: string
+          created_at?: string | null
+          expires_at?: string | null
+          id?: string
+          notification_type?: string
+          priority?: string | null
+          read_at?: string | null
+          recipient_id?: string
+          recipient_type?: string
+          title?: string
+        }
+        Relationships: []
+      }
       transactions: {
         Row: {
           admin_fee: number | null
@@ -614,6 +1117,93 @@ export type Database = {
           },
         ]
       }
+      vendor_profiles: {
+        Row: {
+          account_number: string | null
+          admin_percentage: number | null
+          bank_account_holder: string | null
+          bank_name: string | null
+          bank_statement_url: string | null
+          branch_code: string | null
+          business_address: string
+          business_license_url: string | null
+          business_name: string
+          business_type: string | null
+          commission_rate: number | null
+          contact_person_email: string
+          contact_person_name: string
+          contact_person_phone: string
+          created_at: string | null
+          id: string
+          kyc_status: Database["public"]["Enums"]["kyc_status"] | null
+          kyc_verified_at: string | null
+          onecard_balance: number | null
+          registration_number: string | null
+          tax_certificate_url: string | null
+          tax_number: string | null
+          total_sales: number | null
+          updated_at: string | null
+          user_id: string | null
+          verification_status: string | null
+        }
+        Insert: {
+          account_number?: string | null
+          admin_percentage?: number | null
+          bank_account_holder?: string | null
+          bank_name?: string | null
+          bank_statement_url?: string | null
+          branch_code?: string | null
+          business_address: string
+          business_license_url?: string | null
+          business_name: string
+          business_type?: string | null
+          commission_rate?: number | null
+          contact_person_email: string
+          contact_person_name: string
+          contact_person_phone: string
+          created_at?: string | null
+          id?: string
+          kyc_status?: Database["public"]["Enums"]["kyc_status"] | null
+          kyc_verified_at?: string | null
+          onecard_balance?: number | null
+          registration_number?: string | null
+          tax_certificate_url?: string | null
+          tax_number?: string | null
+          total_sales?: number | null
+          updated_at?: string | null
+          user_id?: string | null
+          verification_status?: string | null
+        }
+        Update: {
+          account_number?: string | null
+          admin_percentage?: number | null
+          bank_account_holder?: string | null
+          bank_name?: string | null
+          bank_statement_url?: string | null
+          branch_code?: string | null
+          business_address?: string
+          business_license_url?: string | null
+          business_name?: string
+          business_type?: string | null
+          commission_rate?: number | null
+          contact_person_email?: string
+          contact_person_name?: string
+          contact_person_phone?: string
+          created_at?: string | null
+          id?: string
+          kyc_status?: Database["public"]["Enums"]["kyc_status"] | null
+          kyc_verified_at?: string | null
+          onecard_balance?: number | null
+          registration_number?: string | null
+          tax_certificate_url?: string | null
+          tax_number?: string | null
+          total_sales?: number | null
+          updated_at?: string | null
+          user_id?: string | null
+          verification_status?: string | null
+        }
+        Relationships: []
+      }
       vendors: {
         Row: {
           admin_percentage: number | null
@@ -671,7 +1261,10 @@ export type Database = {
       }
     }
     Enums: {
-      [_ in never]: never
+      kyc_status: "pending" | "verified" | "rejected" | "requires_update"
+      rica_status: "pending" | "verified" | "rejected" | "expired"
+      sim_status: "inactive" | "active" | "suspended" | "deactivated"
+      user_role: "customer" | "admin" | "vendor"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -786,6 +1379,11 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      kyc_status: ["pending", "verified", "rejected", "requires_update"],
+      rica_status: ["pending", "verified", "rejected", "expired"],
+      sim_status: ["inactive", "active", "suspended", "deactivated"],
+      user_role: ["customer", "admin", "vendor"],
+    },
   },
 } as const
