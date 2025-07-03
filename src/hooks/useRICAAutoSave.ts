@@ -35,18 +35,40 @@ export const useRICAAutoSave = () => {
   const [lastSavedAt, setLastSavedAt] = useState<Date | null>(null);
   const [existingRegistration, setExistingRegistration] = useState<any>(null);
 
+  // Generate a consistent UUID from user identifier
+  const getUserUUID = useCallback((userIdentifier: string) => {
+    // Create a deterministic UUID based on the user identifier
+    // This ensures the same user always gets the same UUID
+    const encoder = new TextEncoder();
+    const data = encoder.encode(userIdentifier);
+    
+    // Simple hash to create a deterministic identifier
+    let hash = 0;
+    for (let i = 0; i < data.length; i++) {
+      const char = data[i];
+      hash = ((hash << 5) - hash) + char;
+      hash = hash & hash; // Convert to 32-bit integer
+    }
+    
+    // Convert to a simple UUID format (not cryptographically secure, but consistent)
+    const hashStr = Math.abs(hash).toString(16).padStart(8, '0');
+    return `${hashStr}-0000-4000-8000-000000000000`.slice(0, 36);
+  }, []);
+
   // Load existing registration or draft
   const loadExistingData = useCallback(async () => {
     if (!isAuthenticated || !currentUser) return null;
 
     try {
+      const userUUID = getUserUUID(currentUser.id);
+      
       // First check for completed registration
       const { data: registration } = await supabase
         .from('rica_registrations')
         .select('*')
-        .eq('user_id', currentUser.id)
+        .eq('user_id', userUUID)
         .eq('user_type', currentUser.userType)
-        .single();
+        .maybeSingle();
 
       if (registration) {
         setExistingRegistration(registration);
@@ -57,9 +79,9 @@ export const useRICAAutoSave = () => {
       const { data: draft } = await supabase
         .from('rica_registration_drafts')
         .select('*')
-        .eq('user_id', currentUser.id)
+        .eq('user_id', userUUID)
         .eq('user_type', currentUser.userType)
-        .single();
+        .maybeSingle();
 
       if (draft) {
         return draft.form_data;
@@ -70,7 +92,7 @@ export const useRICAAutoSave = () => {
       console.error('Error loading RICA data:', error);
       return null;
     }
-  }, [isAuthenticated, currentUser]);
+  }, [isAuthenticated, currentUser, getUserUUID]);
 
   // Auto-save draft data
   const autoSaveDraft = useCallback(async (formData: Partial<RICAFormData>) => {
@@ -79,6 +101,8 @@ export const useRICAAutoSave = () => {
     setIsAutoSaving(true);
     
     try {
+      const userUUID = getUserUUID(currentUser.id);
+      
       // Convert File objects to null for JSON storage
       const sanitizedData = {
         ...formData,
@@ -89,7 +113,7 @@ export const useRICAAutoSave = () => {
       const { error } = await supabase
         .from('rica_registration_drafts')
         .upsert({
-          user_id: currentUser.id,
+          user_id: userUUID,
           user_type: currentUser.userType,
           form_data: sanitizedData as any
         });
@@ -107,7 +131,7 @@ export const useRICAAutoSave = () => {
     } finally {
       setIsAutoSaving(false);
     }
-  }, [isAuthenticated, currentUser, isAutoSaving, toast]);
+  }, [isAuthenticated, currentUser, isAutoSaving, toast, getUserUUID]);
 
   // Submit final registration
   const submitRegistration = useCallback(async (formData: RICAFormData) => {
@@ -128,12 +152,14 @@ export const useRICAAutoSave = () => {
     console.log('Authentication passed, proceeding with registration...');
 
     try {
+      const userUUID = getUserUUID(currentUser.id);
+      
       // Generate reference number
       const { data: refData } = await supabase.rpc('generate_rica_reference');
       const referenceNumber = refData || `RICA-${Date.now()}`;
 
       const registrationData = {
-        user_id: currentUser.id,
+        user_id: userUUID,
         user_type: currentUser.userType,
         full_name: formData.fullName,
         date_of_birth: formData.dateOfBirth,
@@ -164,7 +190,7 @@ export const useRICAAutoSave = () => {
       await supabase
         .from('rica_registration_drafts')
         .delete()
-        .eq('user_id', currentUser.id)
+        .eq('user_id', userUUID)
         .eq('user_type', currentUser.userType);
 
       setExistingRegistration(data);
@@ -184,25 +210,27 @@ export const useRICAAutoSave = () => {
       });
       return { success: false };
     }
-  }, [isAuthenticated, currentUser, toast]);
+  }, [isAuthenticated, currentUser, toast, getUserUUID]);
 
   // Check registration status for confirmations
   const checkRegistrationStatus = useCallback(async () => {
     if (!isAuthenticated || !currentUser) return null;
 
     try {
+      const userUUID = getUserUUID(currentUser.id);
+      
       const { data } = await supabase
         .from('rica_registrations')
         .select('registration_status, reference_number, completed_at')
-        .eq('user_id', currentUser.id)
+        .eq('user_id', userUUID)
         .eq('user_type', currentUser.userType)
-        .single();
+        .maybeSingle();
 
       return data;
     } catch (error) {
       return null;
     }
-  }, [isAuthenticated, currentUser]);
+  }, [isAuthenticated, currentUser, getUserUUID]);
 
   return {
     isAutoSaving,
