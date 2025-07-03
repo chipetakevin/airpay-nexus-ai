@@ -337,21 +337,24 @@ const RICARegistration = () => {
                   onValidationComplete={(results) => {
                     console.log('Document validation results:', results);
                     // Update form with extracted data
-                    const validResults = results.filter(r => r.isValid);
-                    if (validResults.length > 0) {
-                      // Extract data from validated documents
-                      validResults.forEach(result => {
-                        if (result.extractedData.idNumber) {
-                          setFormData(prev => ({ ...prev, idNumber: result.extractedData.idNumber }));
-                        }
-                        if (result.extractedData.fullName) {
-                          setFormData(prev => ({ ...prev, fullName: result.extractedData.fullName }));
-                        }
-                        if (result.extractedData.address) {
-                          setFormData(prev => ({ ...prev, physicalAddress: result.extractedData.address }));
-                        }
-                      });
-                    }
+                     const validResults = results.filter(r => r.isValid);
+                     if (validResults.length > 0) {
+                       // Extract data from validated documents
+                       validResults.forEach(result => {
+                         const data = result.extractedData as any;
+                         if (data && typeof data === 'object') {
+                           if (data.idNumber) {
+                             setFormData(prev => ({ ...prev, idNumber: data.idNumber }));
+                           }
+                           if (data.fullName) {
+                             setFormData(prev => ({ ...prev, fullName: data.fullName }));
+                           }
+                           if (data.address) {
+                             setFormData(prev => ({ ...prev, physicalAddress: data.address }));
+                           }
+                         }
+                       });
+                     }
                   }}
                 />
 

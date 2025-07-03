@@ -18,10 +18,30 @@ import {
   MapPin
 } from 'lucide-react';
 
+interface ExtractedIDData {
+  idNumber?: string;
+  fullName?: string;
+  dateOfBirth?: string;
+  gender?: string;
+  nationality?: string;
+}
+
+interface ExtractedAddressData {
+  address?: string;
+  documentDate?: string;
+  issuer?: string;
+}
+
+interface ExtractedSelfieData {
+  facialMatchConfidence?: number;
+  faceDetected?: boolean;
+  qualityScore?: number;
+}
+
 interface DocumentValidationResult {
   isValid: boolean;
   confidence: number;
-  extractedData: any;
+  extractedData: ExtractedIDData | ExtractedAddressData | ExtractedSelfieData | {};
   securityChecks: {
     malwareDetected: boolean;
     fileIntegrity: boolean;
@@ -151,19 +171,20 @@ const RICADocumentValidator: React.FC<RICADocumentValidatorProps> = ({
     const documentType = detectDocumentType(file.name);
     const confidence = 85 + Math.random() * 10; // 85-95% confidence
     
-    let extractedData = {};
+    let extractedData: ExtractedIDData | ExtractedAddressData | ExtractedSelfieData | {} = {};
     let errors: string[] = [];
     let suggestions: string[] = [];
     
     // Simulate OCR and data extraction
     if (documentType === 'sa_id') {
-      extractedData = {
+      const idData: ExtractedIDData = {
         idNumber: '8001015009087',
         fullName: 'JOHN CITIZEN SMITH',
         dateOfBirth: '1980-01-01',
         gender: 'M',
         nationality: 'SA'
       };
+      extractedData = idData;
       
       // Validate ID document requirements
       if (confidence < 90) {
@@ -178,11 +199,12 @@ const RICADocumentValidator: React.FC<RICADocumentValidatorProps> = ({
       }
       
     } else if (documentType === 'proof_of_address') {
-      extractedData = {
+      const addressData: ExtractedAddressData = {
         address: '123 Main Street, Cape Town, 8001',
         documentDate: new Date().toISOString().split('T')[0],
         issuer: 'City of Cape Town'
       };
+      extractedData = addressData;
       
       // Validate proof of residence requirements
       const documentAge = Math.random() * 120; // Days
@@ -194,11 +216,12 @@ const RICADocumentValidator: React.FC<RICADocumentValidatorProps> = ({
       } else if (documentType === 'selfie') {
         // Simulate facial recognition
         const facialMatch = 85 + Math.random() * 10;
-        extractedData = {
+        const selfieData: ExtractedSelfieData = {
           facialMatchConfidence: facialMatch,
           faceDetected: true,
           qualityScore: confidence
         };
+        extractedData = selfieData;
         
         if (facialMatch < 80) {
           errors.push('Facial recognition confidence is low');
@@ -211,7 +234,7 @@ const RICADocumentValidator: React.FC<RICADocumentValidatorProps> = ({
       malwareDetected: false,
       fileIntegrity: true,
       metadataClean: true,
-      facialMatch: documentType === 'selfie' ? (extractedData as any).facialMatchConfidence : undefined
+      facialMatch: documentType === 'selfie' ? (extractedData as ExtractedSelfieData).facialMatchConfidence : undefined
     };
     
     // Random security issues (very rare)
