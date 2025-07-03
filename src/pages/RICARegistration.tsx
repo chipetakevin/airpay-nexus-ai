@@ -118,8 +118,11 @@ const RICARegistration = () => {
 
   const handleRegistrationComplete = () => {
     setShowRegistrationForm(false);
-    // Reload the page data after successful registration
-    window.location.reload();
+    // Refresh authentication state and stay on RICA tab
+    toast({
+      title: "Registration Complete!",
+      description: "You can now proceed with your RICA registration.",
+    });
   };
 
   // Auto-save on form data changes
