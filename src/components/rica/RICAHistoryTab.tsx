@@ -48,19 +48,37 @@ const RICAHistoryTab = () => {
 
     setLoading(true);
     try {
-      let query = supabase
-        .from('rica_registrations')
-        .select('*')
-        .order('created_at', { ascending: false });
+      // Try database first
+      try {
+        let query = supabase
+          .from('rica_registrations')
+          .select('*')
+          .order('created_at', { ascending: false });
 
-      if (selectedTab === 'own' || userType !== 'admin') {
-        query = query.eq('user_id', currentUser.id);
+        if (selectedTab === 'own' || userType !== 'admin') {
+          query = query.eq('user_id', currentUser.id);
+        }
+
+        const { data, error } = await query;
+
+        if (error) throw error;
+        setRegistrations(data || []);
+        
+      } catch (dbError) {
+        console.log('Database load failed, checking localStorage');
+        
+        // Fallback to localStorage
+        const userId = currentUser.id;
+        const registrationKey = `rica_registration_${userId}_${currentUser.userType}`;
+        const registrationData = localStorage.getItem(registrationKey);
+        
+        if (registrationData) {
+          const data = JSON.parse(registrationData);
+          setRegistrations([data]);
+        } else {
+          setRegistrations([]);
+        }
       }
-
-      const { data, error } = await query;
-
-      if (error) throw error;
-      setRegistrations(data || []);
     } catch (error) {
       console.error('Error loading registrations:', error);
       toast({
@@ -68,6 +86,7 @@ const RICAHistoryTab = () => {
         description: "Failed to load RICA registration history.",
         variant: "destructive"
       });
+      setRegistrations([]);
     } finally {
       setLoading(false);
     }

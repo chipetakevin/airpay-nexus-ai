@@ -40,8 +40,34 @@ export const useRICAAutoSave = () => {
     if (!isAuthenticated || !currentUser) return null;
 
     try {
-      // Try localStorage first as fallback
       const userId = currentUser.id;
+      
+      // First check for completed registration
+      const { data: registration } = await supabase
+        .from('rica_registrations')
+        .select('*')
+        .eq('user_id', userId)
+        .eq('user_type', currentUser.userType)
+        .maybeSingle();
+
+      if (registration) {
+        setExistingRegistration(registration);
+        return registration;
+      }
+
+      // If no registration, check for draft
+      const { data: draft } = await supabase
+        .from('rica_registration_drafts')
+        .select('*')
+        .eq('user_id', userId)
+        .eq('user_type', currentUser.userType)
+        .maybeSingle();
+
+      if (draft) {
+        return draft.form_data;
+      }
+
+      // Also check localStorage as fallback
       const storageKey = `rica_draft_${userId}_${currentUser.userType}`;
       const localData = localStorage.getItem(storageKey);
       
@@ -52,6 +78,20 @@ export const useRICAAutoSave = () => {
       return null;
     } catch (error) {
       console.error('Error loading RICA data:', error);
+      
+      // Fallback to localStorage if database fails
+      try {
+        const userId = currentUser.id;
+        const storageKey = `rica_draft_${userId}_${currentUser.userType}`;
+        const localData = localStorage.getItem(storageKey);
+        
+        if (localData) {
+          return JSON.parse(localData);
+        }
+      } catch (localError) {
+        console.error('Error loading from localStorage:', localError);
+      }
+      
       return null;
     }
   }, [isAuthenticated, currentUser]);
@@ -63,13 +103,7 @@ export const useRICAAutoSave = () => {
     setIsAutoSaving(true);
     
     try {
-      // Skip auto-save if user ID is not a valid UUID format
       const userId = currentUser.id;
-      if (!userId || userId.length < 10) {
-        console.log('Skipping auto-save: Invalid user ID format');
-        setIsAutoSaving(false);
-        return;
-      }
       
       // Convert File objects to null for JSON storage
       const sanitizedData = {
@@ -78,17 +112,45 @@ export const useRICAAutoSave = () => {
         selfieWithId: formData.selfieWithId ? 'file-uploaded' : null
       };
 
-      // Store in localStorage as fallback when database fails
-      const storageKey = `rica_draft_${userId}_${currentUser.userType}`;
-      localStorage.setItem(storageKey, JSON.stringify(sanitizedData));
+      // Try database first
+      try {
+        const { error } = await supabase
+          .from('rica_registration_drafts')
+          .upsert({
+            user_id: userId,
+            user_type: currentUser.userType,
+            form_data: sanitizedData as any
+          });
 
-      setLastSavedAt(new Date());
-      console.log('Auto-saved to localStorage successfully');
+        if (error) throw error;
+
+        setLastSavedAt(new Date());
+        console.log('Auto-saved to database successfully');
+        
+        // Also save to localStorage as backup
+        const storageKey = `rica_draft_${userId}_${currentUser.userType}`;
+        localStorage.setItem(storageKey, JSON.stringify(sanitizedData));
+        
+      } catch (dbError) {
+        console.error('Database auto-save failed, using localStorage:', dbError);
+        
+        // Fallback to localStorage
+        const storageKey = `rica_draft_${userId}_${currentUser.userType}`;
+        localStorage.setItem(storageKey, JSON.stringify(sanitizedData));
+        
+        setLastSavedAt(new Date());
+        
+        toast({
+          title: "Auto-save",
+          description: "Saved locally (database offline)",
+          variant: "default"
+        });
+      }
     } catch (error) {
       console.error('Auto-save error:', error);
       toast({
         title: "Auto-save Error",
-        description: "Saved locally. Database connection issue.",
+        description: "Failed to save progress. Please try again.",
         variant: "destructive"
       });
     } finally {
@@ -115,9 +177,16 @@ export const useRICAAutoSave = () => {
     console.log('Authentication passed, proceeding with registration...');
 
     try {
-      // For now, store completed registration in localStorage
       const userId = currentUser.id;
-      const referenceNumber = `RICA-${Date.now()}`;
+      
+      // Generate reference number (try database function first)
+      let referenceNumber = `RICA-${Date.now()}`;
+      try {
+        const { data: refData } = await supabase.rpc('generate_rica_reference');
+        if (refData) referenceNumber = refData;
+      } catch (refError) {
+        console.log('Using fallback reference number generation');
+      }
       
       const registrationData = {
         user_id: userId,
@@ -140,22 +209,56 @@ export const useRICAAutoSave = () => {
         completed_at: new Date().toISOString()
       };
 
-      // Store in localStorage
-      const registrationKey = `rica_registration_${userId}_${currentUser.userType}`;
-      localStorage.setItem(registrationKey, JSON.stringify(registrationData));
-      
-      // Clear draft
-      const draftKey = `rica_draft_${userId}_${currentUser.userType}`;
-      localStorage.removeItem(draftKey);
+      // Try database first
+      try {
+        const { data, error } = await supabase
+          .from('rica_registrations')
+          .insert(registrationData)
+          .select()
+          .single();
 
-      setExistingRegistration(registrationData);
+        if (error) throw error;
 
-      toast({
-        title: "Registration Submitted!",
-        description: `Reference: ${referenceNumber}. You'll receive SMS confirmation within 24 hours.`,
-      });
+        // Delete draft after successful submission
+        await supabase
+          .from('rica_registration_drafts')
+          .delete()
+          .eq('user_id', userId)
+          .eq('user_type', currentUser.userType);
 
-      return { success: true, registration: registrationData };
+        setExistingRegistration(data);
+        
+        // Also clear localStorage draft
+        const draftKey = `rica_draft_${userId}_${currentUser.userType}`;
+        localStorage.removeItem(draftKey);
+
+        toast({
+          title: "Registration Submitted!",
+          description: `Reference: ${referenceNumber}. You'll receive SMS confirmation within 24 hours.`,
+        });
+
+        return { success: true, registration: data };
+        
+      } catch (dbError) {
+        console.error('Database submission failed, using localStorage:', dbError);
+        
+        // Fallback to localStorage
+        const registrationKey = `rica_registration_${userId}_${currentUser.userType}`;
+        localStorage.setItem(registrationKey, JSON.stringify(registrationData));
+        
+        // Clear draft
+        const draftKey = `rica_draft_${userId}_${currentUser.userType}`;
+        localStorage.removeItem(draftKey);
+
+        setExistingRegistration(registrationData);
+
+        toast({
+          title: "Registration Submitted!",
+          description: `Reference: ${referenceNumber}. Saved locally - will sync when online.`,
+        });
+
+        return { success: true, registration: registrationData };
+      }
     } catch (error) {
       console.error('Registration submission error:', error);
       toast({
@@ -173,6 +276,22 @@ export const useRICAAutoSave = () => {
 
     try {
       const userId = currentUser.id;
+      
+      // Try database first
+      try {
+        const { data } = await supabase
+          .from('rica_registrations')
+          .select('registration_status, reference_number, completed_at')
+          .eq('user_id', userId)
+          .eq('user_type', currentUser.userType)
+          .maybeSingle();
+
+        if (data) return data;
+      } catch (dbError) {
+        console.log('Database check failed, using localStorage');
+      }
+      
+      // Fallback to localStorage
       const registrationKey = `rica_registration_${userId}_${currentUser.userType}`;
       const registrationData = localStorage.getItem(registrationKey);
       
