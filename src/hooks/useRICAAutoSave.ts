@@ -35,38 +35,19 @@ export const useRICAAutoSave = () => {
   const [lastSavedAt, setLastSavedAt] = useState<Date | null>(null);
   const [existingRegistration, setExistingRegistration] = useState<any>(null);
 
-  // Generate a consistent UUID from user identifier
-  const getUserUUID = useCallback((userIdentifier: string) => {
-    // Create a deterministic UUID based on the user identifier
-    // This ensures the same user always gets the same UUID
-    const encoder = new TextEncoder();
-    const data = encoder.encode(userIdentifier);
-    
-    // Simple hash to create a deterministic identifier
-    let hash = 0;
-    for (let i = 0; i < data.length; i++) {
-      const char = data[i];
-      hash = ((hash << 5) - hash) + char;
-      hash = hash & hash; // Convert to 32-bit integer
-    }
-    
-    // Convert to a simple UUID format (not cryptographically secure, but consistent)
-    const hashStr = Math.abs(hash).toString(16).padStart(8, '0');
-    return `${hashStr}-0000-4000-8000-000000000000`.slice(0, 36);
-  }, []);
-
   // Load existing registration or draft
   const loadExistingData = useCallback(async () => {
     if (!isAuthenticated || !currentUser) return null;
 
     try {
-      const userUUID = getUserUUID(currentUser.id);
+      // Use the user identifier directly as text, not as UUID
+      const userId = currentUser.id;
       
       // First check for completed registration
       const { data: registration } = await supabase
         .from('rica_registrations')
         .select('*')
-        .eq('user_id', userUUID)
+        .eq('user_id', userId)
         .eq('user_type', currentUser.userType)
         .maybeSingle();
 
@@ -79,7 +60,7 @@ export const useRICAAutoSave = () => {
       const { data: draft } = await supabase
         .from('rica_registration_drafts')
         .select('*')
-        .eq('user_id', userUUID)
+        .eq('user_id', userId)
         .eq('user_type', currentUser.userType)
         .maybeSingle();
 
@@ -92,7 +73,7 @@ export const useRICAAutoSave = () => {
       console.error('Error loading RICA data:', error);
       return null;
     }
-  }, [isAuthenticated, currentUser, getUserUUID]);
+  }, [isAuthenticated, currentUser]);
 
   // Auto-save draft data
   const autoSaveDraft = useCallback(async (formData: Partial<RICAFormData>) => {
