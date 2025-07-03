@@ -26,6 +26,9 @@ import RICAAddressDetails from '@/components/rica/RICAAddressDetails';
 import RICASIMDetails from '@/components/rica/RICASIMDetails';
 import RICADeclaration from '@/components/rica/RICADeclaration';
 import RICAConfirmation from '@/components/rica/RICAConfirmation';
+import CustomerRegistration from '@/components/registration/CustomerRegistration';
+import VendorRegistration from '@/components/VendorRegistration';
+import AdminRegistration from '@/components/AdminRegistration';
 
 type RegistrationStep = 'personal' | 'address' | 'sim' | 'declaration' | 'confirmation';
 
@@ -37,6 +40,8 @@ const RICARegistration = () => {
   const [currentStep, setCurrentStep] = useState<RegistrationStep>('personal');
   const [activeTab, setActiveTab] = useState('register');
   const [isRegistered, setIsRegistered] = useState(false);
+  const [showRegistrationForm, setShowRegistrationForm] = useState(false);
+  const [selectedUserType, setSelectedUserType] = useState<'customer' | 'vendor' | 'admin'>('customer');
   const [formData, setFormData] = useState({
     // Personal Information
     fullName: userProfile?.firstName ? `${userProfile.firstName} ${userProfile.lastName}` : '',
@@ -97,11 +102,8 @@ const RICARegistration = () => {
     console.log('Form data:', formData);
     
     if (!isAuthenticated || !currentUser) {
-      toast({
-        title: "Authentication Required",
-        description: "Please log in to register your SIM card.",
-        variant: "destructive"
-      });
+      // Auto-redirect to registration form
+      setShowRegistrationForm(true);
       return;
     }
     
@@ -112,6 +114,12 @@ const RICARegistration = () => {
       setCurrentStep('confirmation');
       setIsRegistered(true);
     }
+  };
+
+  const handleRegistrationComplete = () => {
+    setShowRegistrationForm(false);
+    // Reload the page data after successful registration
+    window.location.reload();
   };
 
   // Auto-save on form data changes
@@ -331,6 +339,88 @@ const RICARegistration = () => {
           </TabsContent>
         </Tabs>
       </div>
+
+      {/* Registration Form Modal/Overlay */}
+      {showRegistrationForm && (
+        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-lg max-w-md w-full max-h-[90vh] overflow-y-auto">
+            <div className="p-4 border-b">
+              <div className="flex items-center justify-between">
+                <h2 className="text-lg font-semibold">Choose Registration Type</h2>
+                <Button 
+                  variant="ghost" 
+                  size="sm" 
+                  onClick={() => setShowRegistrationForm(false)}
+                >
+                  ✕
+                </Button>
+              </div>
+            </div>
+            
+            <div className="p-4">
+              <div className="space-y-4 mb-6">
+                <div className="text-center">
+                  <AlertCircle className="w-12 h-12 text-blue-600 mx-auto mb-3" />
+                  <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                    Registration Required
+                  </h3>
+                  <p className="text-sm text-gray-600">
+                    Please register first to access RICA services
+                  </p>
+                </div>
+                
+                <div className="grid gap-3">
+                  <Button
+                    onClick={() => setSelectedUserType('customer')}
+                    variant={selectedUserType === 'customer' ? 'default' : 'outline'}
+                    className="justify-start p-4 h-auto"
+                  >
+                    <div className="text-left">
+                      <div className="font-medium">Customer</div>
+                      <div className="text-xs opacity-75">Personal account for mobile services</div>
+                    </div>
+                  </Button>
+                  
+                  <Button
+                    onClick={() => setSelectedUserType('vendor')}
+                    variant={selectedUserType === 'vendor' ? 'default' : 'outline'}
+                    className="justify-start p-4 h-auto"
+                  >
+                    <div className="text-left">
+                      <div className="font-medium">Vendor</div>
+                      <div className="text-xs opacity-75">Business account for selling services</div>
+                    </div>
+                  </Button>
+                  
+                  <Button
+                    onClick={() => setSelectedUserType('admin')}
+                    variant={selectedUserType === 'admin' ? 'default' : 'outline'}
+                    className="justify-start p-4 h-auto"
+                  >
+                    <div className="text-left">
+                      <div className="font-medium">Admin</div>
+                      <div className="text-xs opacity-75">Administrative access and management</div>
+                    </div>
+                  </Button>
+                </div>
+              </div>
+              
+              {/* Selected Registration Form */}
+              <div className="border-t pt-4">
+                {selectedUserType === 'customer' && (
+                  <CustomerRegistration />
+                )}
+                {selectedUserType === 'vendor' && (
+                  <VendorRegistration />
+                )}
+                {selectedUserType === 'admin' && (
+                  <AdminRegistration />
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       <BottomNavigation />
     </div>
