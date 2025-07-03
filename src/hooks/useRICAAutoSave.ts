@@ -111,7 +111,21 @@ export const useRICAAutoSave = () => {
 
   // Submit final registration
   const submitRegistration = useCallback(async (formData: RICAFormData) => {
-    if (!isAuthenticated || !currentUser) return { success: false };
+    console.log('submitRegistration called with:', formData);
+    console.log('isAuthenticated:', isAuthenticated);
+    console.log('currentUser:', currentUser);
+    
+    if (!isAuthenticated || !currentUser) {
+      console.log('Authentication check failed');
+      toast({
+        title: "Authentication Required",
+        description: "Please register or log in first to submit your RICA registration.",
+        variant: "destructive"
+      });
+      return { success: false };
+    }
+
+    console.log('Authentication passed, proceeding with registration...');
 
     try {
       // Generate reference number

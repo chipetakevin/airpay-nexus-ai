@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { useToast } from '@/hooks/use-toast';
 import { 
   User, 
   MapPin, 
@@ -29,6 +30,7 @@ import RICAConfirmation from '@/components/rica/RICAConfirmation';
 type RegistrationStep = 'personal' | 'address' | 'sim' | 'declaration' | 'confirmation';
 
 const RICARegistration = () => {
+  const { toast } = useToast();
   const { currentUser, isAuthenticated } = useMobileAuth();
   const { userProfile } = useRegistrationGuard();
   const { loadExistingData, autoSaveDraft, submitRegistration, existingRegistration } = useRICAAutoSave();
@@ -89,7 +91,23 @@ const RICARegistration = () => {
   };
 
   const handleSubmit = async () => {
+    console.log('Submit button clicked');
+    console.log('Current user:', currentUser);
+    console.log('Is authenticated:', isAuthenticated);
+    console.log('Form data:', formData);
+    
+    if (!isAuthenticated || !currentUser) {
+      toast({
+        title: "Authentication Required",
+        description: "Please log in to register your SIM card.",
+        variant: "destructive"
+      });
+      return;
+    }
+    
     const result = await submitRegistration(formData);
+    console.log('Registration result:', result);
+    
     if (result.success) {
       setCurrentStep('confirmation');
       setIsRegistered(true);
