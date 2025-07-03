@@ -388,6 +388,114 @@ export type Database = {
         }
         Relationships: []
       }
+      rica_registration_drafts: {
+        Row: {
+          created_at: string
+          form_data: Json
+          id: string
+          updated_at: string
+          user_id: string
+          user_type: string
+        }
+        Insert: {
+          created_at?: string
+          form_data: Json
+          id?: string
+          updated_at?: string
+          user_id: string
+          user_type: string
+        }
+        Update: {
+          created_at?: string
+          form_data?: Json
+          id?: string
+          updated_at?: string
+          user_id?: string
+          user_type?: string
+        }
+        Relationships: []
+      }
+      rica_registrations: {
+        Row: {
+          auto_saved_at: string | null
+          completed_at: string | null
+          confirm_information: boolean
+          consent_processing: boolean
+          created_at: string
+          date_of_birth: string
+          email: string | null
+          full_name: string
+          gender: string
+          id: string
+          id_number: string
+          id_type: string
+          mobile_number: string
+          nationality: string
+          physical_address: string
+          proof_of_residence_url: string | null
+          province: string
+          reference_number: string
+          registration_status: string
+          selfie_with_id_url: string | null
+          sim_serial_number: string
+          updated_at: string
+          user_id: string
+          user_type: string
+        }
+        Insert: {
+          auto_saved_at?: string | null
+          completed_at?: string | null
+          confirm_information?: boolean
+          consent_processing?: boolean
+          created_at?: string
+          date_of_birth: string
+          email?: string | null
+          full_name: string
+          gender: string
+          id?: string
+          id_number: string
+          id_type: string
+          mobile_number: string
+          nationality: string
+          physical_address: string
+          proof_of_residence_url?: string | null
+          province: string
+          reference_number: string
+          registration_status?: string
+          selfie_with_id_url?: string | null
+          sim_serial_number: string
+          updated_at?: string
+          user_id: string
+          user_type: string
+        }
+        Update: {
+          auto_saved_at?: string | null
+          completed_at?: string | null
+          confirm_information?: boolean
+          consent_processing?: boolean
+          created_at?: string
+          date_of_birth?: string
+          email?: string | null
+          full_name?: string
+          gender?: string
+          id?: string
+          id_number?: string
+          id_type?: string
+          mobile_number?: string
+          nationality?: string
+          physical_address?: string
+          proof_of_residence_url?: string | null
+          province?: string
+          reference_number?: string
+          registration_status?: string
+          selfie_with_id_url?: string | null
+          sim_serial_number?: string
+          updated_at?: string
+          user_id?: string
+          user_type?: string
+        }
+        Relationships: []
+      }
       rica_validations: {
         Row: {
           created_at: string | null
@@ -556,6 +664,10 @@ export type Database = {
       clean_expired_cart_sessions: {
         Args: Record<PropertyKey, never>
         Returns: undefined
+      }
+      generate_rica_reference: {
+        Args: Record<PropertyKey, never>
+        Returns: string
       }
     }
     Enums: {
