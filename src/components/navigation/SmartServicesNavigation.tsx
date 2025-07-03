@@ -13,6 +13,7 @@ import {
   Wifi
 } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
+import UniversalExitTabs from '@/components/navigation/UniversalExitTabs';
 import RICARegistration from '@/pages/RICARegistration';
 import PortingSystem from '@/pages/PortingSystem';
 import CustomerRegistration from '@/components/registration/CustomerRegistration';
@@ -153,7 +154,7 @@ const SmartServicesNavigation: React.FC<SmartServicesNavigationProps> = ({
   };
 
   return (
-    <div className={`min-h-screen bg-gradient-to-br ${backgroundGradient} relative overflow-hidden`}>
+    <div className={`min-h-screen bg-gradient-to-br ${backgroundGradient} relative overflow-hidden pb-32`}>
       {/* Background Pattern */}
       <div className="absolute inset-0 opacity-10">
         <div className="absolute top-20 left-10 w-32 h-32 bg-gradient-to-r from-yellow-300 to-orange-400 rounded-full blur-2xl"></div>
@@ -209,13 +210,13 @@ const SmartServicesNavigation: React.FC<SmartServicesNavigationProps> = ({
           </TabsContent>
 
           <TabsContent value="rica">
-            <div className="bg-white/5 backdrop-blur-sm rounded-2xl overflow-hidden border border-white/10">
+            <div className="bg-white/5 backdrop-blur-sm rounded-2xl overflow-hidden border border-white/10 pb-32">
               <RICARegistration />
             </div>
           </TabsContent>
 
           <TabsContent value="port">
-            <div className="bg-white/5 backdrop-blur-sm rounded-2xl overflow-hidden border border-white/10">
+            <div className="bg-white/5 backdrop-blur-sm rounded-2xl overflow-hidden border border-white/10 pb-32">
               <PortingSystem />
             </div>
           </TabsContent>
@@ -250,6 +251,13 @@ const SmartServicesNavigation: React.FC<SmartServicesNavigationProps> = ({
             </TabsContent>
           )}
         </Tabs>
+
+        {/* Universal Exit Navigation */}
+        <UniversalExitTabs 
+          currentService="registration"
+          variant="bottom"
+          showServiceSwitcher={true}
+        />
       </div>
     </div>
   );

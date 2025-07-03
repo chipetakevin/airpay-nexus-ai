@@ -20,7 +20,7 @@ import { useMobileAuth } from '@/hooks/useMobileAuth';
 import { useRegistrationGuard } from '@/hooks/useRegistrationGuard';
 import { useRICAAutoSave } from '@/hooks/useRICAAutoSave';
 import RICAHistoryTab from '@/components/rica/RICAHistoryTab';
-import BottomNavigation from '@/components/navigation/BottomNavigation';
+import UniversalExitTabs from '@/components/navigation/UniversalExitTabs';
 import RICAPersonalInfo from '@/components/rica/RICAPersonalInfo';
 import RICAAddressDetails from '@/components/rica/RICAAddressDetails';
 import RICASIMDetails from '@/components/rica/RICASIMDetails';
@@ -183,15 +183,14 @@ const RICARegistration = () => {
 
   if (currentStep === 'confirmation') {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50 pb-24">
+      <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50 pb-32">
         <RICAConfirmation />
-        <BottomNavigation />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 pb-24">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 pb-32">
       {/* Header */}
       <div className="bg-white shadow-sm border-b px-4 py-6">
         <div className="max-w-md mx-auto">
@@ -458,7 +457,12 @@ const RICARegistration = () => {
         </div>
       )}
 
-      <BottomNavigation />
+      {/* Universal Exit Navigation */}
+      <UniversalExitTabs 
+        currentService="rica"
+        variant="bottom"
+        showServiceSwitcher={true}
+      />
     </div>
   );
 };

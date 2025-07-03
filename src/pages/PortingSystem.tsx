@@ -21,6 +21,7 @@ import { useEnhancedSecurity } from '@/hooks/useEnhancedSecurity';
 import { usePortingSystemState } from '@/hooks/usePortingSystemState';
 import { useErrorRecovery } from '@/hooks/useErrorRecovery';
 import { ErrorRecoveryDashboard } from '@/components/porting/ErrorRecoveryDashboard';
+import UniversalExitTabs from '@/components/navigation/UniversalExitTabs';
 import { 
   Upload, 
   FileText, 
@@ -412,7 +413,7 @@ const PortingSystem = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-background/95 to-muted/30 p-2 sm:p-4 lg:p-6">
+    <div className="min-h-screen bg-gradient-to-br from-background via-background/95 to-muted/30 p-2 sm:p-4 lg:p-6 pb-32">
       {/* Mobile-First Header */}
       <div className="mb-4 sm:mb-6">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-4">
@@ -1747,6 +1748,13 @@ const PortingSystem = () => {
           <ErrorRecoveryDashboard />
         </TabsContent>
       </Tabs>
+
+      {/* Universal Exit Navigation */}
+      <UniversalExitTabs 
+        currentService="port"
+        variant="bottom"
+        showServiceSwitcher={true}
+      />
     </div>
   );
 };

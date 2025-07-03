@@ -6,6 +6,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Crown, Shield, ArrowRight, Phone, MessageCircle, Home, CreditCard } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import MobileLayout from '@/components/navigation/MobileLayout';
+import UniversalExitTabs from '@/components/navigation/UniversalExitTabs';
 import RICARegistration from './RICARegistration';
 import PortingSystem from './PortingSystem';
 
@@ -84,8 +85,8 @@ const AIPoweredDeals = () => {
   );
 
   return (
-    <MobileLayout showTopNav={false} showBottomNav={true}>
-      <div className="min-h-screen bg-gradient-to-br from-blue-400 via-purple-500 to-purple-700 relative overflow-hidden">
+    <MobileLayout showTopNav={false} showBottomNav={false}>
+      <div className="min-h-screen bg-gradient-to-br from-blue-400 via-purple-500 to-purple-700 relative overflow-hidden pb-32">
         {/* Header */}
         <div className="flex items-center justify-between p-4 relative z-10">
           <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center shadow-lg">
@@ -146,13 +147,13 @@ const AIPoweredDeals = () => {
             </TabsContent>
 
             <TabsContent value="rica" className="mt-4">
-              <div className="bg-white/5 backdrop-blur-sm rounded-2xl overflow-hidden border border-white/10">
+              <div className="bg-white/5 backdrop-blur-sm rounded-2xl overflow-hidden border border-white/10 pb-32">
                 <RICARegistration />
               </div>
             </TabsContent>
 
             <TabsContent value="port" className="mt-4">
-              <div className="bg-white/5 backdrop-blur-sm rounded-2xl overflow-hidden border border-white/10">
+              <div className="bg-white/5 backdrop-blur-sm rounded-2xl overflow-hidden border border-white/10 pb-32">
                 <PortingSystem />
               </div>
             </TabsContent>
@@ -181,6 +182,13 @@ const AIPoweredDeals = () => {
               </div>
             </TabsContent>
           </Tabs>
+
+          {/* Universal Exit Navigation for Deals */}
+          <UniversalExitTabs 
+            currentService="deals"
+            variant="bottom"
+            showServiceSwitcher={true}
+          />
         </div>
       </div>
     </MobileLayout>

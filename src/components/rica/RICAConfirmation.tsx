@@ -1,7 +1,7 @@
 import React from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { CheckCircle } from 'lucide-react';
-import RICABottomTabs from '@/components/navigation/RICABottomTabs';
+import UniversalExitTabs from '@/components/navigation/UniversalExitTabs';
 
 const RICAConfirmation: React.FC = () => {
   return (
@@ -93,8 +93,12 @@ const RICAConfirmation: React.FC = () => {
         </CardContent>
       </Card>
 
-      {/* Fixed Bottom Tabs */}
-      <RICABottomTabs />
+      {/* Universal Exit Navigation */}
+      <UniversalExitTabs 
+        currentService="rica"
+        variant="floating"
+        showServiceSwitcher={true}
+      />
     </div>
   );
 };
