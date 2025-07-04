@@ -16,6 +16,23 @@ const PhoneSuggestions = ({
 }: PhoneSuggestionsProps) => {
   if (!showSuggestions || suggestions.length === 0) return null;
 
+  // Smart SA number detection and prioritization
+  const prioritizeSANumbers = (numbers: any[]) => {
+    return numbers.sort((a, b) => {
+      const aNumber = a.fullNumber || `+27${a.phoneNumber || a.number}`;
+      const bNumber = b.fullNumber || `+27${b.phoneNumber || b.number}`;
+      
+      const isSA_A = aNumber.startsWith('+27');
+      const isSA_B = bNumber.startsWith('+27');
+      
+      if (isSA_A && !isSA_B) return -1;
+      if (!isSA_A && isSA_B) return 1;
+      return 0;
+    });
+  };
+
+  const smartSuggestions = prioritizeSANumbers(suggestions);
+
   const formatTimeAgo = (timestamp: string) => {
     const now = new Date();
     const past = new Date(timestamp);
@@ -39,16 +56,21 @@ const PhoneSuggestions = ({
       </div>
       
       <div className="space-y-2">
-        {suggestions.slice(0, 3).map((phone, index) => {
+        {smartSuggestions.slice(0, 3).map((phone, index) => {
           const displayNumber = phone.fullNumber || `+27${phone.phoneNumber || phone.number}`;
           const shortNumber = phone.phoneNumber || phone.number || '';
+          const isSANumber = displayNumber.startsWith('+27');
           
           return (
             <Button
               key={index}
               variant="outline"
               onClick={() => onSuggestionSelect(phone)}
-              className="w-full h-auto p-3 border-blue-300 hover:bg-blue-100 hover:border-blue-400 transition-all duration-200 justify-start group"
+              className={`w-full h-auto p-3 transition-all duration-200 justify-start group ${
+                isSANumber 
+                  ? 'border-green-300 bg-green-50 hover:bg-green-100 hover:border-green-400' 
+                  : 'border-blue-300 hover:bg-blue-100 hover:border-blue-400'
+              }`}
             >
               <div className="flex items-center justify-between w-full">
                 <div className="flex items-center gap-3">
@@ -74,10 +96,10 @@ const PhoneSuggestions = ({
         })}
       </div>
       
-      {suggestions.length > 3 && (
+      {smartSuggestions.length > 3 && (
         <div className="mt-2 text-center">
           <span className="text-xs text-blue-600">
-            +{suggestions.length - 3} more saved numbers
+            +{smartSuggestions.length - 3} more saved numbers
           </span>
         </div>
       )}

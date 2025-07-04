@@ -35,6 +35,8 @@ const EnhancedPhoneInput = ({
 }: EnhancedPhoneInputProps) => {
   const [hasAutoFilled, setHasAutoFilled] = useState(false);
   const [lastSavedValue, setLastSavedValue] = useState('');
+  const [isProcessingSelection, setIsProcessingSelection] = useState(false);
+  const [suggestionsVisible, setSuggestionsVisible] = useState(true);
   const inputRef = useRef<HTMLInputElement>(null);
   
   const { 
@@ -107,26 +109,83 @@ const EnhancedPhoneInput = ({
     }
   };
 
-  const handleSuggestionSelect = (phone: any) => {
-    // Extract the 9-digit number from stored phone data
-    const phoneNumber = phone.phoneNumber || phone.number || '';
-    const countryCode = phone.countryCode || '+27';
+  const parseSAMobileNumber = (numberString: string) => {
+    const digits = numberString.replace(/\D/g, '');
     
-    // Ensure we have exactly 9 digits
-    if (phoneNumber && phoneNumber.length === 9) {
-      onChange(phoneNumber);
-      if (onCountryCodeChange) {
-        onCountryCodeChange(countryCode);
-      }
-      
-      // Immediately validate and save
-      const validation = validateSouthAfricanMobile(phoneNumber);
-      if (validation.isValid) {
-        savePhoneNumber(phoneNumber, countryCode, userType);
-        setLastSavedValue(phoneNumber);
-      }
+    // Handle different SA number formats
+    if (digits.startsWith('27') && digits.length === 11) {
+      return {
+        isValid: true,
+        nineDigit: digits.substring(2),
+        international: '+' + digits,
+        countryCode: '+27'
+      };
     }
-    inputRef.current?.focus();
+    
+    if (digits.startsWith('0') && digits.length === 10) {
+      return {
+        isValid: true,
+        nineDigit: digits.substring(1),
+        international: '+27' + digits.substring(1),
+        countryCode: '+27'
+      };
+    }
+    
+    if (digits.length === 9 && !digits.startsWith('0')) {
+      return {
+        isValid: true,
+        nineDigit: digits,
+        international: '+27' + digits,
+        countryCode: '+27'
+      };
+    }
+    
+    return { isValid: false };
+  };
+
+  const handleSuggestionSelect = async (phone: any) => {
+    setIsProcessingSelection(true);
+    
+    try {
+      // Smart SA number parsing
+      const fullNumber = phone.fullNumber || `+27${phone.phoneNumber || phone.number}`;
+      const parsed = parseSAMobileNumber(fullNumber);
+      
+      if (parsed.isValid) {
+        // Smooth autofill with loading state
+        setTimeout(() => {
+          onChange(parsed.nineDigit);
+          if (onCountryCodeChange) {
+            onCountryCodeChange(parsed.countryCode);
+          }
+          
+          // Immediate validation and save
+          const validation = validateSouthAfricanMobile(parsed.nineDigit);
+          if (validation.isValid) {
+            savePhoneNumber(parsed.nineDigit, parsed.countryCode, userType);
+            setLastSavedValue(parsed.nineDigit);
+          }
+          
+          // Hide suggestions with smooth transition
+          setSuggestionsVisible(false);
+          
+          // Auto-focus to next field or current field
+          setTimeout(() => {
+            inputRef.current?.focus();
+            // Simulate moving to next field in form
+            const event = new Event('focusNext', { bubbles: true });
+            inputRef.current?.dispatchEvent(event);
+          }, 300);
+          
+          setIsProcessingSelection(false);
+        }, 150); // Brief loading state for smooth UX
+      } else {
+        setIsProcessingSelection(false);
+      }
+    } catch (error) {
+      console.error('Error processing suggestion selection:', error);
+      setIsProcessingSelection(false);
+    }
   };
 
   const handlePaste = (e: React.ClipboardEvent<HTMLInputElement>) => {
@@ -168,9 +227,17 @@ const EnhancedPhoneInput = ({
       
       <PhoneSuggestions
         suggestions={relevantPhones}
-        showSuggestions={showSuggestions && relevantPhones.length > 0 && !value}
+        showSuggestions={showSuggestions && relevantPhones.length > 0 && !value && suggestionsVisible}
         onSuggestionSelect={handleSuggestionSelect}
       />
+
+      {/* Processing indicator */}
+      {isProcessingSelection && (
+        <div className="flex items-center gap-2 text-blue-600 bg-blue-50 p-2 rounded border border-blue-200 animate-fade-in">
+          <div className="w-4 h-4 border-2 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
+          <span className="text-sm">Processing selection...</span>
+        </div>
+      )}
 
       <PhoneInputField
         value={value}
