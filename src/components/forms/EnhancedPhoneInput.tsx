@@ -177,7 +177,10 @@ const EnhancedPhoneInput = ({
         error={error}
       />
       
-      <PhoneInstructions />
+      <PhoneInstructions 
+        isValid={isValid}
+        hasValue={!!value}
+      />
     </div>
   );
 };
