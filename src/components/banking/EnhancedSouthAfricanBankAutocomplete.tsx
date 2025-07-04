@@ -410,8 +410,8 @@ const EnhancedSouthAfricanBankAutocomplete: React.FC<EnhancedSouthAfricanBankAut
       </div>
 
       {/* Branch Code Field - Auto-filled from bank selection */}
-      {showBranchCodeField && selectedBank && (
-        <div className="space-y-2">
+      {showBranchCodeField && selectedBank && !isDetailsCollapsed && (
+        <div className="space-y-2 animate-fade-in">
           <Label htmlFor="branchCode" className="text-sm font-medium text-gray-700">
             Branch Code *
           </Label>
