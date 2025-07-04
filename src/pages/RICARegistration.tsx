@@ -30,6 +30,7 @@ import RICAConfirmation from '@/components/rica/RICAConfirmation';
 import CustomerRegistration from '@/components/registration/CustomerRegistration';
 import VendorRegistration from '@/components/VendorRegistration';
 import AdminRegistration from '@/components/AdminRegistration';
+import { CollapsibleOneCardAccount } from '@/components/onecard/CollapsibleOneCardAccount';
 
 type RegistrationStep = 'personal' | 'address' | 'sim' | 'declaration' | 'confirmation';
 
@@ -201,6 +202,15 @@ const RICARegistration = () => {
       </div>
 
       <div className="max-w-md mx-auto p-4 space-y-6">
+        {/* Collapsible OneCard Account */}
+        {isAuthenticated && currentUser && (
+          <CollapsibleOneCardAccount 
+            userData={currentUser}
+            defaultCollapsed={true}
+            className="mb-4"
+          />
+        )}
+
         {/* User Greeting */}
         {isAuthenticated && currentUser && (
           <Card className="border-blue-200 bg-blue-50/30">
