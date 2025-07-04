@@ -581,6 +581,84 @@ export type Database = {
           },
         ]
       }
+      permission_audit_logs: {
+        Row: {
+          action: string
+          created_at: string
+          error_message: string | null
+          id: string
+          ip_address: unknown | null
+          metadata: Json | null
+          resource_id: string | null
+          resource_type: Database["public"]["Enums"]["resource_type"]
+          success: boolean
+          user_agent: string | null
+          user_id: string | null
+          user_role: Database["public"]["Enums"]["user_role"] | null
+        }
+        Insert: {
+          action: string
+          created_at?: string
+          error_message?: string | null
+          id?: string
+          ip_address?: unknown | null
+          metadata?: Json | null
+          resource_id?: string | null
+          resource_type: Database["public"]["Enums"]["resource_type"]
+          success?: boolean
+          user_agent?: string | null
+          user_id?: string | null
+          user_role?: Database["public"]["Enums"]["user_role"] | null
+        }
+        Update: {
+          action?: string
+          created_at?: string
+          error_message?: string | null
+          id?: string
+          ip_address?: unknown | null
+          metadata?: Json | null
+          resource_id?: string | null
+          resource_type?: Database["public"]["Enums"]["resource_type"]
+          success?: boolean
+          user_agent?: string | null
+          user_id?: string | null
+          user_role?: Database["public"]["Enums"]["user_role"] | null
+        }
+        Relationships: []
+      }
+      permissions: {
+        Row: {
+          conditions: Json | null
+          created_at: string
+          id: string
+          permission_type: Database["public"]["Enums"]["permission_type"]
+          resource_id: string | null
+          resource_type: Database["public"]["Enums"]["resource_type"]
+          role: Database["public"]["Enums"]["user_role"]
+          updated_at: string
+        }
+        Insert: {
+          conditions?: Json | null
+          created_at?: string
+          id?: string
+          permission_type: Database["public"]["Enums"]["permission_type"]
+          resource_id?: string | null
+          resource_type: Database["public"]["Enums"]["resource_type"]
+          role: Database["public"]["Enums"]["user_role"]
+          updated_at?: string
+        }
+        Update: {
+          conditions?: Json | null
+          created_at?: string
+          id?: string
+          permission_type?: Database["public"]["Enums"]["permission_type"]
+          resource_id?: string | null
+          resource_type?: Database["public"]["Enums"]["resource_type"]
+          role?: Database["public"]["Enums"]["user_role"]
+          updated_at?: string
+        }
+        Relationships: []
+      }
       porting_analytics: {
         Row: {
           average_processing_time: unknown | null
@@ -1117,6 +1195,45 @@ export type Database = {
           },
         ]
       }
+      user_roles: {
+        Row: {
+          assigned_at: string
+          assigned_by: string | null
+          created_at: string
+          department: string | null
+          expires_at: string | null
+          id: string
+          is_active: boolean
+          role: Database["public"]["Enums"]["user_role"]
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          assigned_at?: string
+          assigned_by?: string | null
+          created_at?: string
+          department?: string | null
+          expires_at?: string | null
+          id?: string
+          is_active?: boolean
+          role: Database["public"]["Enums"]["user_role"]
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          assigned_at?: string
+          assigned_by?: string | null
+          created_at?: string
+          department?: string | null
+          expires_at?: string | null
+          id?: string
+          is_active?: boolean
+          role?: Database["public"]["Enums"]["user_role"]
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       vendor_profiles: {
         Row: {
           account_number: string | null
@@ -1259,12 +1376,55 @@ export type Database = {
         Args: Record<PropertyKey, never>
         Returns: string
       }
+      get_user_roles: {
+        Args: { _user_id: string }
+        Returns: {
+          role: Database["public"]["Enums"]["user_role"]
+          department: string
+          expires_at: string
+        }[]
+      }
+      has_permission: {
+        Args: {
+          _user_id: string
+          _resource_type: Database["public"]["Enums"]["resource_type"]
+          _permission_type: Database["public"]["Enums"]["permission_type"]
+          _resource_id?: string
+        }
+        Returns: boolean
+      }
+      log_permission_activity: {
+        Args: {
+          _user_id: string
+          _action: string
+          _resource_type: Database["public"]["Enums"]["resource_type"]
+          _resource_id?: string
+          _success?: boolean
+          _error_message?: string
+          _metadata?: Json
+        }
+        Returns: string
+      }
     }
     Enums: {
       kyc_status: "pending" | "verified" | "rejected" | "requires_update"
+      permission_type: "view" | "edit" | "export" | "share" | "manage" | "audit"
+      resource_type:
+        | "reports"
+        | "suspicious_activity"
+        | "database_management"
+        | "user_management"
+        | "system_settings"
+        | "compliance_data"
       rica_status: "pending" | "verified" | "rejected" | "expired"
       sim_status: "inactive" | "active" | "suspended" | "deactivated"
-      user_role: "customer" | "admin" | "vendor"
+      user_role:
+        | "customer"
+        | "admin"
+        | "vendor"
+        | "manager"
+        | "contractor"
+        | "support"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -1381,9 +1541,25 @@ export const Constants = {
   public: {
     Enums: {
       kyc_status: ["pending", "verified", "rejected", "requires_update"],
+      permission_type: ["view", "edit", "export", "share", "manage", "audit"],
+      resource_type: [
+        "reports",
+        "suspicious_activity",
+        "database_management",
+        "user_management",
+        "system_settings",
+        "compliance_data",
+      ],
       rica_status: ["pending", "verified", "rejected", "expired"],
       sim_status: ["inactive", "active", "suspended", "deactivated"],
-      user_role: ["customer", "admin", "vendor"],
+      user_role: [
+        "customer",
+        "admin",
+        "vendor",
+        "manager",
+        "contractor",
+        "support",
+      ],
     },
   },
 } as const
