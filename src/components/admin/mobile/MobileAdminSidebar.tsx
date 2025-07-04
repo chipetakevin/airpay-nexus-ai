@@ -2,7 +2,7 @@ import React from 'react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { X, Users, CreditCard, Headphones, BarChart3, Settings, Package } from 'lucide-react';
+import { X, Users, CreditCard, Headphones, BarChart3, Settings, Package, Database } from 'lucide-react';
 
 interface MobileAdminSidebarProps {
   isOpen: boolean;
@@ -23,6 +23,7 @@ const MobileAdminSidebar: React.FC<MobileAdminSidebarProps> = ({
 }) => {
   const adminTabs = [
     { id: 'dashboard', label: 'Dashboard', icon: BarChart3 },
+    { id: 'database-baas', label: 'Database (BaaS)', icon: Database, special: true },
     { id: 'balances', label: 'Balances', icon: CreditCard },
     { id: 'orders', label: 'Orders', icon: Package },
     { id: 'revenue', label: 'Revenue', icon: BarChart3 },
@@ -78,14 +79,33 @@ const MobileAdminSidebar: React.FC<MobileAdminSidebarProps> = ({
                       onClose();
                     }}
                     className={cn(
-                      "w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left transition-colors",
-                      activeTab === tab.id
-                        ? "bg-primary text-primary-foreground shadow-sm"
-                        : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
+                      "w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left transition-all duration-200",
+                      // Special styling for Database (BaaS) tab
+                      tab.special
+                        ? activeTab === tab.id
+                          ? "bg-gradient-to-r from-purple-600 to-indigo-600 text-white shadow-lg border-2 border-purple-400"
+                          : "bg-gradient-to-r from-purple-100 to-indigo-100 text-purple-700 border-2 border-purple-300 hover:from-purple-200 hover:to-indigo-200 shadow-md"
+                        : activeTab === tab.id
+                          ? "bg-primary text-primary-foreground shadow-sm"
+                          : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
                     )}
                   >
-                    <Icon className="w-5 h-5 flex-shrink-0" />
-                    <span className="font-medium">{tab.label}</span>
+                    <Icon className={cn(
+                      "w-5 h-5 flex-shrink-0",
+                      tab.special && activeTab !== tab.id && "text-purple-600"
+                    )} />
+                    <span className={cn(
+                      "font-medium",
+                      tab.special && "font-semibold"
+                    )}>
+                      {tab.label}
+                    </span>
+                    {tab.special && (
+                      <div className={cn(
+                        "ml-auto w-2 h-2 rounded-full",
+                        activeTab === tab.id ? "bg-white/80" : "bg-purple-500 animate-pulse"
+                      )} />
+                    )}
                   </button>
                 );
               })}
