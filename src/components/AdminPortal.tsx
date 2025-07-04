@@ -14,6 +14,7 @@ import DashboardManager from './admin/DashboardManager';
 import VersionRestoration from './admin/VersionRestoration';
 import AddexHubNerveCenter from './admin/AddexHubNerveCenter';
 import DatabaseBaaSPanel from './admin/DatabaseBaaSPanel';
+import SuspiciousActivityMonitor from './admin/SuspiciousActivityMonitor';
 
 interface AdminPortalProps {
   onAuthSuccess?: () => void;
@@ -166,9 +167,10 @@ const AdminPortal: React.FC<AdminPortalProps> = ({ onAuthSuccess }) => {
       </div>
 
       <Tabs defaultValue="nerve-center" className="w-full">
-        <TabsList className="grid w-full grid-cols-8 bg-gray-100">
+        <TabsList className="grid w-full grid-cols-9 bg-gray-100">
           <TabsTrigger value="nerve-center">Nerve Center</TabsTrigger>
           <TabsTrigger value="database-baas" className="bg-gradient-to-r from-purple-100 to-indigo-100 text-purple-700 border border-purple-300 data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-600 data-[state=active]:to-indigo-600 data-[state=active]:text-white">Database (BaaS)</TabsTrigger>
+          <TabsTrigger value="security-monitor" className="bg-gradient-to-r from-red-100 to-orange-100 text-red-700 border border-red-300 data-[state=active]:bg-gradient-to-r data-[state=active]:from-red-600 data-[state=active]:to-orange-600 data-[state=active]:text-white">Security Monitor</TabsTrigger>
           <TabsTrigger value="balances">Balances</TabsTrigger>
           <TabsTrigger value="dashboard">Dashboard</TabsTrigger>
           <TabsTrigger value="revenue">Revenue</TabsTrigger>
@@ -183,6 +185,10 @@ const AdminPortal: React.FC<AdminPortalProps> = ({ onAuthSuccess }) => {
 
         <TabsContent value="database-baas" className="space-y-6">
           <DatabaseBaaSPanel />
+        </TabsContent>
+
+        <TabsContent value="security-monitor" className="space-y-6">
+          <SuspiciousActivityMonitor />
         </TabsContent>
 
         <TabsContent value="balances" className="space-y-6">
