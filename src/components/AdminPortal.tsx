@@ -13,6 +13,7 @@ import OrderManagement from './admin/OrderManagement';
 import DashboardManager from './admin/DashboardManager';
 import VersionRestoration from './admin/VersionRestoration';
 import AddexHubNerveCenter from './admin/AddexHubNerveCenter';
+import DatabaseBaaSPanel from './admin/DatabaseBaaSPanel';
 
 interface AdminPortalProps {
   onAuthSuccess?: () => void;
@@ -165,8 +166,9 @@ const AdminPortal: React.FC<AdminPortalProps> = ({ onAuthSuccess }) => {
       </div>
 
       <Tabs defaultValue="nerve-center" className="w-full">
-        <TabsList className="grid w-full grid-cols-7 bg-gray-100">
+        <TabsList className="grid w-full grid-cols-8 bg-gray-100">
           <TabsTrigger value="nerve-center">Nerve Center</TabsTrigger>
+          <TabsTrigger value="database-baas" className="bg-gradient-to-r from-purple-100 to-indigo-100 text-purple-700 border border-purple-300 data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-600 data-[state=active]:to-indigo-600 data-[state=active]:text-white">Database (BaaS)</TabsTrigger>
           <TabsTrigger value="balances">Balances</TabsTrigger>
           <TabsTrigger value="dashboard">Dashboard</TabsTrigger>
           <TabsTrigger value="revenue">Revenue</TabsTrigger>
@@ -177,6 +179,10 @@ const AdminPortal: React.FC<AdminPortalProps> = ({ onAuthSuccess }) => {
 
         <TabsContent value="nerve-center" className="space-y-6">
           <AddexHubNerveCenter />
+        </TabsContent>
+
+        <TabsContent value="database-baas" className="space-y-6">
+          <DatabaseBaaSPanel />
         </TabsContent>
 
         <TabsContent value="balances" className="space-y-6">
