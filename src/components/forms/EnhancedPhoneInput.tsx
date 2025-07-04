@@ -108,11 +108,23 @@ const EnhancedPhoneInput = ({
   };
 
   const handleSuggestionSelect = (phone: any) => {
-    // Ensure full phone number is preserved when selecting from suggestions
-    const fullNumber = phone.number || phone.phoneNumber || '';
-    onChange(fullNumber);
-    if (onCountryCodeChange) {
-      onCountryCodeChange(phone.countryCode);
+    // Extract the 9-digit number from stored phone data
+    const phoneNumber = phone.phoneNumber || phone.number || '';
+    const countryCode = phone.countryCode || '+27';
+    
+    // Ensure we have exactly 9 digits
+    if (phoneNumber && phoneNumber.length === 9) {
+      onChange(phoneNumber);
+      if (onCountryCodeChange) {
+        onCountryCodeChange(countryCode);
+      }
+      
+      // Immediately validate and save
+      const validation = validateSouthAfricanMobile(phoneNumber);
+      if (validation.isValid) {
+        savePhoneNumber(phoneNumber, countryCode, userType);
+        setLastSavedValue(phoneNumber);
+      }
     }
     inputRef.current?.focus();
   };
