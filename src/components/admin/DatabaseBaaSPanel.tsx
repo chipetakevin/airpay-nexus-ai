@@ -4,29 +4,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
-import { 
-  Database, 
-  Shield, 
-  Users, 
-  Activity,
-  BarChart3,
-  Lock,
-  CheckCircle,
-  AlertTriangle,
-  Eye,
-  Download,
-  RefreshCw,
-  Settings,
-  Zap,
-  FileCheck,
-  Globe,
-  Smartphone,
-  Building,
-  UserCheck,
-  AlertCircle,
-  TrendingUp,
-  Clock
-} from 'lucide-react';
+import ComplianceFormsSystem from './database/ComplianceFormsSystem';
+import DataMigrationEngine from './database/DataMigrationEngine';
 
 const DatabaseBaaSPanel: React.FC = () => {
   const [activeSection, setActiveSection] = useState('overview');
@@ -81,13 +60,13 @@ const DatabaseBaaSPanel: React.FC = () => {
       case 'active':
       case 'enabled':
       case 'success':
-        return <CheckCircle className="w-4 h-4 text-green-500" />;
+        return <div className="w-4 h-4 bg-green-500 rounded-full flex items-center justify-center text-white text-xs">✓</div>;
       case 'warning':
-        return <AlertTriangle className="w-4 h-4 text-yellow-500" />;
+        return <div className="w-4 h-4 bg-yellow-500 rounded-full flex items-center justify-center text-white text-xs">!</div>;
       case 'error':
-        return <AlertCircle className="w-4 h-4 text-red-500" />;
+        return <div className="w-4 h-4 bg-red-500 rounded-full flex items-center justify-center text-white text-xs">×</div>;
       default:
-        return <Activity className="w-4 h-4 text-blue-500" />;
+        return <div className="w-4 h-4 bg-blue-500 rounded-full flex items-center justify-center text-white text-xs">●</div>;
     }
   };
 
@@ -118,11 +97,9 @@ const DatabaseBaaSPanel: React.FC = () => {
         </div>
         <div className="flex gap-2">
           <Button variant="outline" size="sm">
-            <RefreshCw className="w-4 h-4 mr-2" />
             Sync Data
           </Button>
           <Button className="bg-gradient-to-r from-purple-600 to-indigo-600 text-white">
-            <Settings className="w-4 h-4 mr-2" />
             Configure
           </Button>
         </div>
@@ -137,7 +114,9 @@ const DatabaseBaaSPanel: React.FC = () => {
                 <p className="text-sm text-purple-600 font-medium">RICA Compliance</p>
                 <p className="text-2xl font-bold text-purple-700">{complianceMetrics.ricaCompliance}%</p>
               </div>
-              <Shield className="w-8 h-8 text-purple-600" />
+              <div className="w-8 h-8 bg-purple-600 rounded-full flex items-center justify-center">
+                <span className="text-white text-xs font-bold">RC</span>
+              </div>
             </div>
             <Progress value={complianceMetrics.ricaCompliance} className="mt-2" />
           </CardContent>
@@ -150,10 +129,12 @@ const DatabaseBaaSPanel: React.FC = () => {
                 <p className="text-sm text-green-600 font-medium">Verified Customers</p>
                 <p className="text-2xl font-bold text-green-700">{complianceMetrics.kycVerified.toLocaleString()}</p>
               </div>
-              <UserCheck className="w-8 h-8 text-green-600" />
+              <div className="w-8 h-8 bg-green-600 rounded-full flex items-center justify-center">
+                <span className="text-white text-xs font-bold">✓</span>
+              </div>
             </div>
             <div className="flex items-center mt-2 text-sm text-green-600">
-              <TrendingUp className="w-3 h-3 mr-1" />
+              <span className="mr-1">↗</span>
               +127 today
             </div>
           </CardContent>
@@ -166,7 +147,9 @@ const DatabaseBaaSPanel: React.FC = () => {
                 <p className="text-sm text-blue-600 font-medium">Security Score</p>
                 <p className="text-2xl font-bold text-blue-700">{complianceMetrics.securityScore}%</p>
               </div>
-              <Lock className="w-8 h-8 text-blue-600" />
+              <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center">
+                <span className="text-white text-xs font-bold">🔒</span>
+              </div>
             </div>
             <Badge variant="outline" className="mt-2 border-blue-300 text-blue-700">
               Enterprise Grade
@@ -181,10 +164,12 @@ const DatabaseBaaSPanel: React.FC = () => {
                 <p className="text-sm text-orange-600 font-medium">System Uptime</p>
                 <p className="text-2xl font-bold text-orange-700">{systemMetrics.systemUptime}%</p>
               </div>
-              <Activity className="w-8 h-8 text-orange-600" />
+              <div className="w-8 h-8 bg-orange-600 rounded-full flex items-center justify-center">
+                <span className="text-white text-xs font-bold">●</span>
+              </div>
             </div>
             <div className="flex items-center mt-2 text-sm text-orange-600">
-              <Clock className="w-3 h-3 mr-1" />
+              <span className="mr-1">⏰</span>
               Last 30 days
             </div>
           </CardContent>
@@ -194,24 +179,19 @@ const DatabaseBaaSPanel: React.FC = () => {
       {/* Main Content Tabs */}
       <Tabs value={activeSection} onValueChange={setActiveSection} className="w-full">
         <TabsList className="grid w-full grid-cols-5 bg-muted">
-          <TabsTrigger value="overview" className="flex items-center gap-2">
-            <BarChart3 className="w-4 h-4" />
+          <TabsTrigger value="overview">
             Overview
           </TabsTrigger>
-          <TabsTrigger value="rica" className="flex items-center gap-2">
-            <FileCheck className="w-4 h-4" />
-            RICA Compliance
+          <TabsTrigger value="forms">
+            RICA Forms
           </TabsTrigger>
-          <TabsTrigger value="security" className="flex items-center gap-2">
-            <Shield className="w-4 h-4" />
+          <TabsTrigger value="migration">
+            Data Migration
+          </TabsTrigger>
+          <TabsTrigger value="security">
             Security
           </TabsTrigger>
-          <TabsTrigger value="monitoring" className="flex items-center gap-2">
-            <Eye className="w-4 h-4" />
-            Monitoring
-          </TabsTrigger>
-          <TabsTrigger value="reports" className="flex items-center gap-2">
-            <Download className="w-4 h-4" />
+          <TabsTrigger value="reports">
             Reports
           </TabsTrigger>
         </TabsList>
@@ -222,7 +202,7 @@ const DatabaseBaaSPanel: React.FC = () => {
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
-                  <Activity className="w-5 h-5 text-green-500" />
+                  <div className="w-5 h-5 bg-green-500 rounded-full"></div>
                   System Health Monitor
                 </CardTitle>
               </CardHeader>
@@ -252,7 +232,7 @@ const DatabaseBaaSPanel: React.FC = () => {
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
-                  <Clock className="w-5 h-5 text-blue-500" />
+                  <div className="w-5 h-5 bg-blue-500 rounded-full"></div>
                   Recent System Activities
                 </CardTitle>
               </CardHeader>
@@ -275,65 +255,19 @@ const DatabaseBaaSPanel: React.FC = () => {
           </div>
         </TabsContent>
 
-        <TabsContent value="rica" className="space-y-6">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            {/* RICA Requirements */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <FileCheck className="w-5 h-5 text-purple-600" />
-                  RICA Compliance Status
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                {ricaRequirements.map((req) => (
-                  <div key={req.id} className="space-y-2">
-                    <div className="flex justify-between items-center">
-                      <div className="flex items-center gap-2">
-                        {getStatusIcon(req.status)}
-                        <span className="text-sm font-medium">{req.label}</span>
-                      </div>
-                      <span className="text-sm text-muted-foreground">{req.completion}%</span>
-                    </div>
-                    <Progress value={req.completion} className="h-2" />
-                  </div>
-                ))}
-              </CardContent>
-            </Card>
+        <TabsContent value="forms" className="space-y-6">
+          <ComplianceFormsSystem />
+        </TabsContent>
 
-            {/* Customer Verification */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Users className="w-5 h-5 text-green-600" />
-                  Customer Verification Pipeline
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="text-center p-3 bg-green-50 rounded-lg">
-                    <p className="text-2xl font-bold text-green-600">{complianceMetrics.kycVerified}</p>
-                    <p className="text-sm text-green-700">Verified</p>
-                  </div>
-                  <div className="text-center p-3 bg-yellow-50 rounded-lg">
-                    <p className="text-2xl font-bold text-yellow-600">{complianceMetrics.pendingVerifications}</p>
-                    <p className="text-sm text-yellow-700">Pending</p>
-                  </div>
-                </div>
-                <Button className="w-full bg-gradient-to-r from-green-600 to-emerald-600 text-white">
-                  <Zap className="w-4 h-4 mr-2" />
-                  Process Pending Verifications
-                </Button>
-              </CardContent>
-            </Card>
-          </div>
+        <TabsContent value="migration" className="space-y-6">
+          <DataMigrationEngine />
         </TabsContent>
 
         <TabsContent value="security" className="space-y-6">
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <Shield className="w-5 h-5 text-blue-600" />
+                <div className="w-5 h-5 bg-blue-600 rounded-full"></div>
                 Security Controls Matrix
               </CardTitle>
             </CardHeader>
@@ -358,84 +292,30 @@ const DatabaseBaaSPanel: React.FC = () => {
           </Card>
         </TabsContent>
 
-        <TabsContent value="monitoring" className="space-y-6">
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <Card className="lg:col-span-2">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Eye className="w-5 h-5 text-blue-600" />
-                  Real-Time Monitoring Dashboard
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="text-center p-4 bg-blue-50 rounded-lg">
-                      <Database className="w-8 h-8 text-blue-600 mx-auto mb-2" />
-                      <p className="text-2xl font-bold text-blue-600">{systemMetrics.dailyTransactions}</p>
-                      <p className="text-sm text-blue-700">Daily Transactions</p>
-                    </div>
-                    <div className="text-center p-4 bg-purple-50 rounded-lg">
-                      <Globe className="w-8 h-8 text-purple-600 mx-auto mb-2" />
-                      <p className="text-2xl font-bold text-purple-600">{systemMetrics.activeConnections}</p>
-                      <p className="text-sm text-purple-700">Active Connections</p>
-                    </div>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <AlertTriangle className="w-5 h-5 text-orange-600" />
-                  System Alerts
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-3">
-                  <div className="flex items-center gap-2 p-2 bg-yellow-50 rounded-lg">
-                    <AlertTriangle className="w-4 h-4 text-yellow-600" />
-                    <span className="text-sm">High memory usage detected</span>
-                  </div>
-                  <div className="flex items-center gap-2 p-2 bg-blue-50 rounded-lg">
-                    <Activity className="w-4 h-4 text-blue-600" />
-                    <span className="text-sm">Scheduled maintenance in 2hrs</span>
-                  </div>
-                  <div className="flex items-center gap-2 p-2 bg-green-50 rounded-lg">
-                    <CheckCircle className="w-4 h-4 text-green-600" />
-                    <span className="text-sm">All systems operational</span>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-        </TabsContent>
-
         <TabsContent value="reports" className="space-y-6">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
-                  <Download className="w-5 h-5 text-green-600" />
+                  <div className="w-5 h-5 bg-green-600 rounded-full"></div>
                   Compliance Reports
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <Button variant="outline" className="w-full justify-start">
-                  <FileCheck className="w-4 h-4 mr-2" />
+                  <span className="mr-2">📋</span>
                   RICA Compliance Report
                 </Button>
                 <Button variant="outline" className="w-full justify-start">
-                  <Shield className="w-4 h-4 mr-2" />
+                  <span className="mr-2">🛡️</span>
                   Security Audit Report
                 </Button>
                 <Button variant="outline" className="w-full justify-start">
-                  <Users className="w-4 h-4 mr-2" />
+                  <span className="mr-2">👥</span>
                   Customer Verification Report
                 </Button>
                 <Button variant="outline" className="w-full justify-start">
-                  <BarChart3 className="w-4 h-4 mr-2" />
+                  <span className="mr-2">📊</span>
                   System Performance Report
                 </Button>
               </CardContent>
@@ -444,21 +324,21 @@ const DatabaseBaaSPanel: React.FC = () => {
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
-                  <BarChart3 className="w-5 h-5 text-purple-600" />
+                  <div className="w-5 h-5 bg-purple-600 rounded-full"></div>
                   Analytics Dashboard
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <Button className="w-full bg-gradient-to-r from-purple-600 to-indigo-600 text-white">
-                  <TrendingUp className="w-4 h-4 mr-2" />
+                  <span className="mr-2">📈</span>
                   Launch Advanced Analytics
                 </Button>
                 <Button variant="outline" className="w-full justify-start">
-                  <Smartphone className="w-4 h-4 mr-2" />
+                  <span className="mr-2">📱</span>
                   Mobile Usage Analytics
                 </Button>
                 <Button variant="outline" className="w-full justify-start">
-                  <Building className="w-4 h-4 mr-2" />
+                  <span className="mr-2">🏢</span>
                   MVNO Performance Metrics
                 </Button>
               </CardContent>
