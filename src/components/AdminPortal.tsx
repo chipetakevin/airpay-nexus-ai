@@ -12,6 +12,7 @@ import NetworkRevenue from './admin/NetworkRevenue';
 import OrderManagement from './admin/OrderManagement';
 import DashboardManager from './admin/DashboardManager';
 import VersionRestoration from './admin/VersionRestoration';
+import AddexHubNerveCenter from './admin/AddexHubNerveCenter';
 
 interface AdminPortalProps {
   onAuthSuccess?: () => void;
@@ -163,8 +164,9 @@ const AdminPortal: React.FC<AdminPortalProps> = ({ onAuthSuccess }) => {
         <p className="text-gray-600">Complete system administration and oversight</p>
       </div>
 
-      <Tabs defaultValue="balances" className="w-full">
-        <TabsList className="grid w-full grid-cols-6 bg-gray-100">
+      <Tabs defaultValue="nerve-center" className="w-full">
+        <TabsList className="grid w-full grid-cols-7 bg-gray-100">
+          <TabsTrigger value="nerve-center">Nerve Center</TabsTrigger>
           <TabsTrigger value="balances">Balances</TabsTrigger>
           <TabsTrigger value="dashboard">Dashboard</TabsTrigger>
           <TabsTrigger value="revenue">Revenue</TabsTrigger>
@@ -172,6 +174,10 @@ const AdminPortal: React.FC<AdminPortalProps> = ({ onAuthSuccess }) => {
           <TabsTrigger value="orders">Orders</TabsTrigger>
           <TabsTrigger value="versions">Versions</TabsTrigger>
         </TabsList>
+
+        <TabsContent value="nerve-center" className="space-y-6">
+          <AddexHubNerveCenter />
+        </TabsContent>
 
         <TabsContent value="balances" className="space-y-6">
           <DashboardManager />
