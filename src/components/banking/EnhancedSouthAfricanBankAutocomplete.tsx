@@ -434,9 +434,9 @@ const EnhancedSouthAfricanBankAutocomplete: React.FC<EnhancedSouthAfricanBankAut
         </div>
       )}
 
-      {/* Banking Information Saved Confirmation */}
-      {selectedBank && selectedBranch && (
-        <Card className="border-green-200 bg-green-50/30">
+      {/* Banking Information Saved Confirmation - Auto-collapse after 3 seconds */}
+      {selectedBank && selectedBranch && !isDetailsCollapsed && (
+        <Card className="border-green-200 bg-green-50/30 animate-fade-in">
           <CardContent className="p-4">
             <div className="flex items-center gap-2 text-green-800 mb-2">
               <Check className="w-5 h-5 text-green-600" />
