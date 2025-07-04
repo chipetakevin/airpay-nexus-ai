@@ -37,11 +37,21 @@ import {
   Briefcase,
   ScanLine,
   BarChart4,
-  UserCog
+  UserCog,
+  Wrench,
+  Clock,
+  CheckCircle,
+  XCircle,
+  RefreshCcw,
+  Play,
+  Pause,
+  AlertCircle
 } from 'lucide-react';
 
 const NerveCenterDashboard = () => {
   const [activeTab, setActiveTab] = useState('addex-hub-baas');
+  const [isAutoFixing, setIsAutoFixing] = useState(false);
+  const [autoFixResults, setAutoFixResults] = useState(null);
 
   const tabCategories = [
     {
@@ -144,6 +154,14 @@ const NerveCenterDashboard = () => {
       ]
     },
     {
+      id: 'database-autofix',
+      label: 'Database Auto-Fix',
+      icon: <Wrench className="w-4 h-4" />,
+      color: 'emerald',
+      count: 12,
+      items: []
+    },
+    {
       id: 'support-systems',
       label: 'Support Systems',
       icon: <HelpCircle className="w-4 h-4" />,
@@ -167,10 +185,251 @@ const NerveCenterDashboard = () => {
       red: 'data-[state=active]:bg-gradient-to-br data-[state=active]:from-red-500 data-[state=active]:to-red-600 data-[state=active]:text-white bg-red-50 border-red-200 hover:bg-red-100',
       orange: 'data-[state=active]:bg-gradient-to-br data-[state=active]:from-orange-500 data-[state=active]:to-orange-600 data-[state=active]:text-white bg-orange-50 border-orange-200 hover:bg-orange-100',
       yellow: 'data-[state=active]:bg-gradient-to-br data-[state=active]:from-yellow-500 data-[state=active]:to-yellow-600 data-[state=active]:text-white bg-yellow-50 border-yellow-200 hover:bg-yellow-100',
-      slate: 'data-[state=active]:bg-gradient-to-br data-[state=active]:from-slate-500 data-[state=active]:to-slate-600 data-[state=active]:text-white bg-slate-50 border-slate-200 hover:bg-slate-100'
+      slate: 'data-[state=active]:bg-gradient-to-br data-[state=active]:from-slate-500 data-[state=active]:to-slate-600 data-[state=active]:text-white bg-slate-50 border-slate-200 hover:bg-slate-100',
+      emerald: 'data-[state=active]:bg-gradient-to-br data-[state=active]:from-emerald-500 data-[state=active]:to-emerald-600 data-[state=active]:text-white bg-emerald-50 border-emerald-200 hover:bg-emerald-100'
     };
     return colors[color] || colors.blue;
   };
+
+  // Mock database errors for demonstration
+  const mockErrors = [
+    { id: '1', type: 'Connection Timeout', severity: 'Critical', timestamp: '2025-01-04 14:30:12', status: 'pending', database: 'customer_profiles', message: 'Connection pool exhausted' },
+    { id: '2', type: 'Query Performance', severity: 'Warning', timestamp: '2025-01-04 14:28:45', status: 'auto-fixed', database: 'transactions', message: 'Slow query detected (>5s)' },
+    { id: '3', type: 'Index Corruption', severity: 'Critical', timestamp: '2025-01-04 14:25:30', status: 'manual-review', database: 'deals', message: 'Index needs rebuilding' },
+    { id: '4', type: 'Deadlock Detection', severity: 'Warning', timestamp: '2025-01-04 14:22:15', status: 'auto-fixed', database: 'user_roles', message: 'Deadlock resolved automatically' },
+    { id: '5', type: 'Disk Space', severity: 'Info', timestamp: '2025-01-04 14:20:00', status: 'monitoring', database: 'system_logs', message: 'Disk usage at 75%' }
+  ];
+
+  const handleAutoFix = async () => {
+    setIsAutoFixing(true);
+    setAutoFixResults(null);
+    
+    // Simulate auto-fix process
+    setTimeout(() => {
+      setAutoFixResults({
+        fixed: 3,
+        manualReview: 1,
+        monitoring: 1,
+        timestamp: new Date().toLocaleString()
+      });
+      setIsAutoFixing(false);
+    }, 3000);
+  };
+
+  const getSeverityColor = (severity) => {
+    switch (severity) {
+      case 'Critical': return 'text-red-600 bg-red-100';
+      case 'Warning': return 'text-yellow-600 bg-yellow-100';
+      case 'Info': return 'text-blue-600 bg-blue-100';
+      default: return 'text-gray-600 bg-gray-100';
+    }
+  };
+
+  const getStatusColor = (status) => {
+    switch (status) {
+      case 'auto-fixed': return 'text-green-600 bg-green-100';
+      case 'pending': return 'text-red-600 bg-red-100';
+      case 'manual-review': return 'text-orange-600 bg-orange-100';
+      case 'monitoring': return 'text-blue-600 bg-blue-100';
+      default: return 'text-gray-600 bg-gray-100';
+    }
+  };
+
+  const DatabaseAutoFixTab = () => (
+    <div className="space-y-6">
+      {/* Auto-Fix Header */}
+      <div className="flex items-center gap-3 mb-6">
+        <div className="p-3 rounded-xl bg-emerald-100">
+          <Wrench className="w-6 h-6 text-emerald-600" />
+        </div>
+        <div>
+          <h2 className="text-xl font-bold text-gray-900">Database Auto-Fix Center</h2>
+          <p className="text-gray-600 text-sm">Real-time monitoring and automated error correction</p>
+        </div>
+      </div>
+
+      {/* Auto-Fix Action Panel */}
+      <Card className="border-emerald-200 bg-gradient-to-r from-emerald-50 to-green-50">
+        <CardContent className="p-6">
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center gap-3">
+              <div className="p-2 bg-emerald-600 rounded-lg">
+                <Wrench className="w-6 h-6 text-white" />
+              </div>
+              <div>
+                <h3 className="text-lg font-bold text-gray-900">Auto-Fix Database Errors</h3>
+                <p className="text-sm text-gray-600">One-click automated error resolution</p>
+              </div>
+            </div>
+            <Button 
+              onClick={handleAutoFix}
+              disabled={isAutoFixing}
+              className="bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-3 text-lg font-semibold"
+              size="lg"
+            >
+              {isAutoFixing ? (
+                <>
+                  <RefreshCcw className="w-5 h-5 mr-2 animate-spin" />
+                  Fixing Errors...
+                </>
+              ) : (
+                <>
+                  <Wrench className="w-5 h-5 mr-2" />
+                  Auto-Fix All Errors
+                </>
+              )}
+            </Button>
+          </div>
+
+          {/* Status Summary */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4">
+            <div className="bg-white/70 rounded-lg p-3 text-center">
+              <div className="text-2xl font-bold text-red-600">{mockErrors.filter(e => e.severity === 'Critical').length}</div>
+              <div className="text-xs text-gray-600">Critical Errors</div>
+            </div>
+            <div className="bg-white/70 rounded-lg p-3 text-center">
+              <div className="text-2xl font-bold text-yellow-600">{mockErrors.filter(e => e.severity === 'Warning').length}</div>
+              <div className="text-xs text-gray-600">Warnings</div>
+            </div>
+            <div className="bg-white/70 rounded-lg p-3 text-center">
+              <div className="text-2xl font-bold text-green-600">{mockErrors.filter(e => e.status === 'auto-fixed').length}</div>
+              <div className="text-xs text-gray-600">Auto-Fixed</div>
+            </div>
+            <div className="bg-white/70 rounded-lg p-3 text-center">
+              <div className="text-2xl font-bold text-blue-600">{mockErrors.filter(e => e.status === 'monitoring').length}</div>
+              <div className="text-xs text-gray-600">Monitoring</div>
+            </div>
+          </div>
+
+          {/* Auto-Fix Results */}
+          {autoFixResults && (
+            <div className="mt-4 p-4 bg-green-100 border border-green-200 rounded-lg">
+              <div className="flex items-center gap-2 mb-2">
+                <CheckCircle className="w-5 h-5 text-green-600" />
+                <span className="font-semibold text-green-800">Auto-Fix Complete</span>
+              </div>
+              <div className="text-sm text-green-700">
+                ✅ {autoFixResults.fixed} errors automatically resolved<br />
+                ⚠️ {autoFixResults.manualReview} errors require manual review<br />
+                📊 {autoFixResults.monitoring} errors under monitoring<br />
+                <span className="text-xs">Completed at: {autoFixResults.timestamp}</span>
+              </div>
+            </div>
+          )}
+        </CardContent>
+      </Card>
+
+      {/* Error Log Table */}
+      <Card>
+        <CardContent className="p-6">
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-lg font-semibold">Error Log & Status</h3>
+            <div className="flex items-center gap-2 text-sm text-gray-600">
+              <Clock className="w-4 h-4" />
+              Last scan: 2 minutes ago
+            </div>
+          </div>
+
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead className="bg-gray-50 border-b">
+                <tr>
+                  <th className="text-left p-3 font-medium">Error Type</th>
+                  <th className="text-left p-3 font-medium">Severity</th>
+                  <th className="text-left p-3 font-medium">Database</th>
+                  <th className="text-left p-3 font-medium">Timestamp</th>
+                  <th className="text-left p-3 font-medium">Status</th>
+                  <th className="text-left p-3 font-medium">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {mockErrors.map((error) => (
+                  <tr key={error.id} className="border-b hover:bg-gray-50">
+                    <td className="p-3">
+                      <div>
+                        <div className="font-medium">{error.type}</div>
+                        <div className="text-xs text-gray-500">{error.message}</div>
+                      </div>
+                    </td>
+                    <td className="p-3">
+                      <Badge className={`text-xs ${getSeverityColor(error.severity)}`}>
+                        {error.severity}
+                      </Badge>
+                    </td>
+                    <td className="p-3 font-mono text-xs">{error.database}</td>
+                    <td className="p-3 text-xs">{error.timestamp}</td>
+                    <td className="p-3">
+                      <Badge className={`text-xs ${getStatusColor(error.status)}`}>
+                        {error.status.replace('-', ' ').toUpperCase()}
+                      </Badge>
+                    </td>
+                    <td className="p-3">
+                      <div className="flex gap-1">
+                        {error.status === 'pending' && (
+                          <>
+                            <Button size="sm" variant="outline" className="text-xs">
+                              <Play className="w-3 h-3 mr-1" />
+                              Retry
+                            </Button>
+                            <Button size="sm" variant="outline" className="text-xs">
+                              <Pause className="w-3 h-3 mr-1" />
+                              Ignore
+                            </Button>
+                          </>
+                        )}
+                        {error.status === 'manual-review' && (
+                          <Button size="sm" variant="outline" className="text-xs">
+                            <AlertCircle className="w-3 h-3 mr-1" />
+                            Escalate
+                          </Button>
+                        )}
+                        {error.status === 'auto-fixed' && (
+                          <Button size="sm" variant="ghost" className="text-xs text-green-600">
+                            <CheckCircle className="w-3 h-3 mr-1" />
+                            Fixed
+                          </Button>
+                        )}
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Audit Trail */}
+      <Card>
+        <CardContent className="p-6">
+          <h3 className="text-lg font-semibold mb-4">Recent Auto-Fix Audit Trail</h3>
+          <div className="space-y-3">
+            <div className="flex items-center gap-3 p-3 bg-green-50 rounded-lg">
+              <CheckCircle className="w-5 h-5 text-green-600" />
+              <div className="flex-1">
+                <div className="text-sm font-medium">Query Performance Issue Auto-Fixed</div>
+                <div className="text-xs text-gray-600">Optimized slow query in transactions table • 14:28:45</div>
+              </div>
+            </div>
+            <div className="flex items-center gap-3 p-3 bg-green-50 rounded-lg">
+              <CheckCircle className="w-5 h-5 text-green-600" />
+              <div className="flex-1">
+                <div className="text-sm font-medium">Deadlock Resolved</div>
+                <div className="text-xs text-gray-600">Automatically resolved deadlock in user_roles • 14:22:15</div>
+              </div>
+            </div>
+            <div className="flex items-center gap-3 p-3 bg-blue-50 rounded-lg">
+              <Clock className="w-5 h-5 text-blue-600" />
+              <div className="flex-1">
+                <div className="text-sm font-medium">Connection Pool Monitoring</div>
+                <div className="text-xs text-gray-600">Monitoring connection pool usage • Ongoing</div>
+              </div>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+    </div>
+  );
 
   const ServiceCard = ({ item, color }) => (
     <Card className={`hover:shadow-lg transition-all duration-300 border-l-4 border-l-${color}-500 hover:scale-105 cursor-pointer group`}>
@@ -294,43 +553,47 @@ const NerveCenterDashboard = () => {
         {/* Tab Content */}
         {tabCategories.map((category) => (
           <TabsContent key={category.id} value={category.id} className="mt-0">
-            <div className="space-y-4">
-              <div className="flex items-center gap-3 mb-6">
-                <div className={`p-3 rounded-xl bg-${category.color}-100`}>
-                  {category.icon}
+            {category.id === 'database-autofix' ? (
+              <DatabaseAutoFixTab />
+            ) : (
+              <div className="space-y-4">
+                <div className="flex items-center gap-3 mb-6">
+                  <div className={`p-3 rounded-xl bg-${category.color}-100`}>
+                    {category.icon}
+                  </div>
+                  <div>
+                    <h2 className="text-xl font-bold text-gray-900">{category.label}</h2>
+                    <p className="text-gray-600 text-sm">{category.count} active services</p>
+                  </div>
                 </div>
-                <div>
-                  <h2 className="text-xl font-bold text-gray-900">{category.label}</h2>
-                  <p className="text-gray-600 text-sm">{category.count} active services</p>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                  {category.items.map((item, index) => (
+                    <ServiceCard key={index} item={item} color={category.color} />
+                  ))}
+                </div>
+
+                {/* Category-specific actions */}
+                <div className="flex flex-wrap gap-2 mt-6 pt-4 border-t">
+                  <Button variant="outline" size="sm">
+                    <Settings className="w-4 h-4 mr-2" />
+                    Configure All
+                  </Button>
+                  <Button variant="outline" size="sm">
+                    <BarChart3 className="w-4 h-4 mr-2" />
+                    View Analytics
+                  </Button>
+                  <Button variant="outline" size="sm">
+                    <FileText className="w-4 h-4 mr-2" />
+                    Export Report
+                  </Button>
+                  <Button variant="outline" size="sm">
+                    <HelpCircle className="w-4 h-4 mr-2" />
+                    Documentation
+                  </Button>
                 </div>
               </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-                {category.items.map((item, index) => (
-                  <ServiceCard key={index} item={item} color={category.color} />
-                ))}
-              </div>
-
-              {/* Category-specific actions */}
-              <div className="flex flex-wrap gap-2 mt-6 pt-4 border-t">
-                <Button variant="outline" size="sm">
-                  <Settings className="w-4 h-4 mr-2" />
-                  Configure All
-                </Button>
-                <Button variant="outline" size="sm">
-                  <BarChart3 className="w-4 h-4 mr-2" />
-                  View Analytics
-                </Button>
-                <Button variant="outline" size="sm">
-                  <FileText className="w-4 h-4 mr-2" />
-                  Export Report
-                </Button>
-                <Button variant="outline" size="sm">
-                  <HelpCircle className="w-4 h-4 mr-2" />
-                  Documentation
-                </Button>
-              </div>
-            </div>
+            )}
           </TabsContent>
         ))}
       </Tabs>
