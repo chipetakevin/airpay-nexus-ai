@@ -77,12 +77,26 @@ export const usePortingSystemState = () => {
   }, [attemptRecovery, logError]);
 
   const initializeUser = useCallback(async () => {
-    return withRecovery(async () => {
+    try {
       const { data: { user }, error } = await supabase.auth.getUser();
-      if (error) throw error;
+      // Only throw error for actual auth failures, not missing sessions
+      if (error && error.message !== 'Auth session missing!' && !error.message.includes('session')) {
+        throw error;
+      }
       setUser(user);
       return user;
-    }, 'User Initialization');
+    } catch (error) {
+      // Only trigger recovery for non-auth related errors
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      if (!errorMessage.includes('session') && !errorMessage.includes('Auth')) {
+        return withRecovery(async () => {
+          throw error;
+        }, 'User Initialization');
+      }
+      // For auth session issues, just return null silently
+      setUser(null);
+      return null;
+    }
   }, [withRecovery]);
 
   const loadPortingRequests = useCallback(async () => {
