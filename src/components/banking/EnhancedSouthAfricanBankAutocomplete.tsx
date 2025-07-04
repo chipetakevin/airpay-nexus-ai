@@ -4,7 +4,7 @@ import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Check, MapPin, Phone, Globe, Building2 } from 'lucide-react';
+import { Check, MapPin, Phone, Globe, Building2, ChevronUp, ChevronDown } from 'lucide-react';
 import { useBranchCodeAutoAssign } from '@/hooks/useBranchCodeAutoAssign';
 
 interface SouthAfricanBank {
@@ -153,6 +153,8 @@ const EnhancedSouthAfricanBankAutocomplete: React.FC<EnhancedSouthAfricanBankAut
   const [selectedBranch, setSelectedBranch] = useState<any>(null);
   const [isDetecting, setIsDetecting] = useState(false);
   const [isDetailsCollapsed, setIsDetailsCollapsed] = useState(false);
+  const [isProcessingSelection, setIsProcessingSelection] = useState(false);
+  const [hasAutoCollapsed, setHasAutoCollapsed] = useState(false);
   const { getBranchCodeForBank } = useBranchCodeAutoAssign();
 
   // Auto-detect bank from saved data
@@ -208,34 +210,48 @@ const EnhancedSouthAfricanBankAutocomplete: React.FC<EnhancedSouthAfricanBankAut
     )
   );
 
-  const handleBankSelect = (bank: SouthAfricanBank) => {
-    setSelectedBank(bank);
-    setQuery(bank.name);
-    setShowDropdown(false);
+  const handleBankSelect = async (bank: SouthAfricanBank) => {
+    setIsProcessingSelection(true);
     
-    // Auto-select main branch or first branch
-    const mainBranch = bank.branches.find(b => b.isMain) || bank.branches[0];
-    setSelectedBranch(mainBranch);
-    
-    // Get the correct branch code immediately - this is the critical fix
-    const branchCode = getBranchCodeForBank(bank.name) || bank.universalBranchCode || mainBranch.code;
-    
-    // Call onBankSelect with the proper branch code to update parent form
-    onBankSelect(bank.name, bank.universalBranchCode || '', branchCode, {
-      bank,
-      branch: mainBranch,
-      swiftCode: bank.swiftCode,
-      branchCode: branchCode  // Explicitly pass branch code
-    });
-
-    if (onBranchSelect) {
-      onBranchSelect({
-        ...mainBranch,
-        branchCode: branchCode  // Ensure branch code is included
+    // Smooth bank selection with loading state
+    setTimeout(() => {
+      setSelectedBank(bank);
+      setQuery(bank.name);
+      setShowDropdown(false);
+      
+      // Auto-select main branch or first branch
+      const mainBranch = bank.branches.find(b => b.isMain) || bank.branches[0];
+      setSelectedBranch(mainBranch);
+      
+      // Get the correct branch code immediately
+      const branchCode = getBranchCodeForBank(bank.name) || bank.universalBranchCode || mainBranch.code;
+      
+      // Call onBankSelect with the proper branch code to update parent form
+      onBankSelect(bank.name, bank.universalBranchCode || '', branchCode, {
+        bank,
+        branch: mainBranch,
+        swiftCode: bank.swiftCode,
+        branchCode: branchCode
       });
-    }
 
-    console.log(`✅ Enhanced Bank selected: ${bank.name}, Branch Code: ${branchCode}, Universal Code: ${bank.universalBranchCode}`);
+      if (onBranchSelect) {
+        onBranchSelect({
+          ...mainBranch,
+          branchCode: branchCode
+        });
+      }
+
+      // Auto-collapse after 3 seconds similar to phone validation
+      if (!hasAutoCollapsed) {
+        setTimeout(() => {
+          setIsDetailsCollapsed(true);
+          setHasAutoCollapsed(true);
+        }, 3000);
+      }
+
+      setIsProcessingSelection(false);
+      console.log(`✅ Enhanced Bank selected: ${bank.name}, Branch Code: ${branchCode}, Universal Code: ${bank.universalBranchCode}`);
+    }, 300); // Brief loading state for smooth UX
   };
 
   const handleBranchSelect = (branch: any) => {
@@ -293,7 +309,7 @@ const EnhancedSouthAfricanBankAutocomplete: React.FC<EnhancedSouthAfricanBankAut
           />
           
           {showDropdown && filteredBanks.length > 0 && (
-            <div className="absolute top-full left-0 right-0 bg-white border border-gray-300 rounded-b-md shadow-lg z-50 max-h-32 overflow-y-auto">
+            <div className="absolute top-full left-0 right-0 bg-white border border-gray-300 rounded-b-md shadow-lg z-[60] max-h-32 overflow-y-auto">
               {filteredBanks.slice(0, 3).map((bank) => (
                 <div
                   key={bank.code}
@@ -348,7 +364,7 @@ const EnhancedSouthAfricanBankAutocomplete: React.FC<EnhancedSouthAfricanBankAut
           />
           
           {showDropdown && filteredBanks.length > 0 && (
-            <div className="absolute top-full left-0 right-0 bg-white border border-gray-300 rounded-b-md shadow-lg z-50 max-h-64 overflow-y-auto">
+            <div className="absolute top-full left-0 right-0 bg-white border border-gray-300 rounded-b-md shadow-lg z-[60] max-h-64 overflow-y-auto">
               {filteredBanks.map((bank) => (
                 <div
                   key={bank.code}
@@ -373,120 +389,138 @@ const EnhancedSouthAfricanBankAutocomplete: React.FC<EnhancedSouthAfricanBankAut
           )}
         </div>
         
+        {/* Processing indicator */}
+        {isProcessingSelection && (
+          <div className="flex items-center gap-2 text-green-600 bg-green-50 p-2 rounded border border-green-200 animate-fade-in">
+            <div className="w-4 h-4 border-2 border-green-600 border-t-transparent rounded-full animate-spin"></div>
+            <span className="text-sm">Processing bank selection...</span>
+          </div>
+        )}
+        
         {error && <p className="text-red-500 text-sm">{error}</p>}
       </div>
 
-      {selectedBank && showBranchDetails && !isDetailsCollapsed && (
-        <Card className="border-green-200 bg-green-50/30">
-          <CardContent className="p-4 space-y-3">
-            <div className="flex items-center justify-between">
-              <h4 className="font-medium text-green-800 flex items-center gap-2">
-                <Building2 className="w-4 h-4" />
-                {selectedBank.name}
-              </h4>
-              <Badge variant="outline" className="bg-green-100 text-green-700">
-                Selected
-              </Badge>
-            </div>
-            
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm">
-              <div className="flex items-center gap-2">
-                <span className="text-gray-600">Bank Code:</span>
-                <span className="font-mono">{selectedBank.code}</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <span className="text-gray-600">Swift Code:</span>
-                <span className="font-mono">{selectedBank.swiftCode}</span>
-              </div>
-            </div>
-
-            <div className="space-y-2">
-              <Label className="text-sm font-medium text-green-700">Select Branch</Label>
-              <select
-                value={selectedBranch?.code || ''}
-                onChange={(e) => {
-                  const branch = selectedBank.branches.find(b => b.code === e.target.value);
-                  if (branch) handleBranchSelect(branch);
-                }}
-                className="w-full px-3 py-2 text-sm border border-green-200 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
-              >
-                {selectedBank.branches.map((branch) => (
-                  <option key={branch.code} value={branch.code}>
-                    {branch.name} - {branch.location} {branch.isMain ? "(Main)" : ""}
-                  </option>
-                ))}
-              </select>
-            </div>
-            
-            {selectedBranch && (
-              <div className="bg-white p-3 rounded-lg border border-green-200 space-y-2">
-                <div className="flex items-center gap-2 text-sm">
-                  <Check className="w-4 h-4 text-green-600" />
-                  <span className="font-medium text-green-800">Branch Selected & Code Assigned</span>
+      {selectedBank && showBranchDetails && (
+        <>
+          {!isDetailsCollapsed ? (
+            <Card className="border-green-200 bg-green-50/30 animate-fade-in">
+              <CardContent className="p-4 space-y-3">
+                <div className="flex items-center justify-between">
+                  <h4 className="font-medium text-green-800 flex items-center gap-2">
+                    <Building2 className="w-4 h-4" />
+                    {selectedBank.name}
+                  </h4>
+                  <div className="flex items-center gap-2">
+                    <Badge variant="outline" className="bg-green-100 text-green-700">
+                      Selected
+                    </Badge>
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => setIsDetailsCollapsed(true)}
+                      className="text-green-600 hover:text-green-800 p-1 h-6 w-6"
+                    >
+                      <ChevronUp className="w-3 h-3" />
+                    </Button>
+                  </div>
                 </div>
                 
-                <div className="space-y-1 text-xs text-gray-600">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm">
                   <div className="flex items-center gap-2">
-                    <Building2 className="w-3 h-3" />
-                    <span><strong>Branch:</strong> {selectedBranch.name}</span>
+                    <span className="text-gray-600">Bank Code:</span>
+                    <span className="font-mono">{selectedBank.code}</span>
                   </div>
                   <div className="flex items-center gap-2">
-                    <MapPin className="w-3 h-3" />
-                    <span><strong>Location:</strong> {selectedBranch.location}</span>
+                    <span className="text-gray-600">Swift Code:</span>
+                    <span className="font-mono">{selectedBank.swiftCode}</span>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <span className="w-3 h-3 text-center font-bold">#</span>
-                    <span><strong>Branch Code:</strong> {getBranchCodeForBank(selectedBank.name) || selectedBranch.code}</span>
-                  </div>
-                  {selectedBranch.phone && (
-                    <div className="flex items-center gap-2">
-                      <Phone className="w-3 h-3" />
-                      <span><strong>Phone:</strong> {selectedBranch.phone}</span>
+                </div>
+
+                <div className="space-y-2">
+                  <Label className="text-sm font-medium text-green-700">Select Branch</Label>
+                  <select
+                    value={selectedBranch?.code || ''}
+                    onChange={(e) => {
+                      const branch = selectedBank.branches.find(b => b.code === e.target.value);
+                      if (branch) handleBranchSelect(branch);
+                    }}
+                    className="w-full px-3 py-2 text-sm border border-green-200 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 bg-white z-[70]"
+                  >
+                    {selectedBank.branches.map((branch) => (
+                      <option key={branch.code} value={branch.code}>
+                        {branch.name} - {branch.location} {branch.isMain ? "(Main)" : ""}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                
+                {selectedBranch && (
+                  <div className="bg-white p-3 rounded-lg border border-green-200 space-y-2">
+                    <div className="flex items-center gap-2 text-sm">
+                      <Check className="w-4 h-4 text-green-600" />
+                      <span className="font-medium text-green-800">Branch Selected & Code Assigned</span>
                     </div>
-                  )}
-                  <div className="flex items-center gap-2">
-                    <Globe className="w-3 h-3" />
-                    <span><strong>Website:</strong> {selectedBank.website}</span>
+                    
+                    <div className="space-y-1 text-xs text-gray-600">
+                      <div className="flex items-center gap-2">
+                        <Building2 className="w-3 h-3" />
+                        <span><strong>Branch:</strong> {selectedBranch.name}</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <MapPin className="w-3 h-3" />
+                        <span><strong>Location:</strong> {selectedBranch.location}</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <span className="w-3 h-3 text-center">#</span>
+                        <span><strong>Branch Code:</strong> {selectedBranch.code}</span>
+                      </div>
+                      {selectedBranch.phone && (
+                        <div className="flex items-center gap-2">
+                          <Phone className="w-3 h-3" />
+                          <span><strong>Phone:</strong> {selectedBranch.phone}</span>
+                        </div>
+                      )}
+                      {selectedBank.website && (
+                        <div className="flex items-center gap-2">
+                          <Globe className="w-3 h-3" />
+                          <span><strong>Website:</strong> {selectedBank.website}</span>
+                        </div>
+                      )}
+                    </div>
+                    
+                    <div className="border-t border-green-200 pt-2">
+                      <div className="flex items-center gap-2 text-xs text-green-700">
+                        <Check className="w-3 h-3" />
+                        <span>Branch code automatically assigned and ready for use</span>
+                      </div>
+                    </div>
                   </div>
+                )}
+              </CardContent>
+            </Card>
+          ) : (
+            <div 
+              className="bg-green-50 p-3 rounded-lg border border-green-200 cursor-pointer hover:bg-green-100 transition-colors animate-fade-in"
+              onClick={() => setIsDetailsCollapsed(false)}
+            >
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <div className="w-5 h-5 bg-green-600 rounded-full flex items-center justify-center">
+                    <Check className="w-3 h-3 text-white" />
+                  </div>
+                  <span className="text-sm font-medium text-green-700">Banking Details</span>
                 </div>
-                
-                <div className="text-xs text-green-600 mt-2 pt-2 border-t border-green-200">
-                  ✅ Branch code automatically assigned and ready for use
+                <div className="flex items-center gap-2">
+                  <span className="font-mono text-xs text-green-700">
+                    {selectedBank.name} - {selectedBranch?.code}
+                  </span>
+                  <ChevronDown className="w-3 h-3 text-green-600" />
                 </div>
               </div>
-            )}
-          </CardContent>
-        </Card>
-      )}
-
-      {selectedBank && isDetailsCollapsed && (
-        <Card className="border-green-200 bg-green-50/30">
-          <CardContent className="p-3">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <Building2 className="w-4 h-4 text-green-600" />
-                <span className="text-sm font-medium text-green-800">{selectedBank.name}</span>
-                <Badge variant="outline" className="bg-green-100 text-green-700 text-xs">
-                  Selected
-                </Badge>
-              </div>
-              <Button
-                type="button"
-                variant="ghost"
-                size="sm"
-                onClick={() => setIsDetailsCollapsed(false)}
-                className="text-xs text-green-700 hover:bg-green-100"
-              >
-                Show Details
-              </Button>
             </div>
-            {selectedBranch && (
-              <div className="text-xs text-gray-600 mt-1">
-                {selectedBranch.name} - {selectedBranch.location}
-              </div>
-            )}
-          </CardContent>
-        </Card>
+          )}
+        </>
       )}
     </div>
   );

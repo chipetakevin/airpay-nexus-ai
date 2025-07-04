@@ -78,6 +78,11 @@ const EnhancedPhoneInput = ({
     // Clean input - allow only digits
     inputValue = inputValue.replace(/\D/g, '');
     
+    // CRITICAL: Prevent numbers starting with 0 across all forms
+    if (inputValue.startsWith('0')) {
+      return; // Block any input starting with 0
+    }
+    
     // Handle different input formats but preserve all digits up to 9
     let normalizedPhone = inputValue;
     
@@ -85,14 +90,10 @@ const EnhancedPhoneInput = ({
     if (normalizedPhone.startsWith('27') && normalizedPhone.length === 11) {
       normalizedPhone = normalizedPhone.substring(2);
     }
-    // If starts with 0 (national format), remove it  
-    else if (normalizedPhone.startsWith('0') && normalizedPhone.length === 10) {
-      normalizedPhone = normalizedPhone.substring(1);
-    }
     
     // Intelligently prevent invalid patterns
     if (normalizedPhone.length > 0) {
-      // First digit cannot be 0
+      // First digit cannot be 0 (additional safeguard)
       if (normalizedPhone[0] === '0') {
         return; // Silently ignore
       }
