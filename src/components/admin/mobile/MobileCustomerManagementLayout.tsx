@@ -172,7 +172,7 @@ const MobileCustomerManagementLayout: React.FC<MobileCustomerManagementLayoutPro
     <div className="min-h-screen bg-background">
       {/* Mobile Header */}
       <MobileAdminHeader
-        title="Customer Management"
+        title="The Nerve Center Dashboard"
         subtitle={`${filteredCustomers.length} customers • Divine Mobile MVNE`}
         onMenuToggle={() => setSidebarOpen(true)}
         showSearch={true}
