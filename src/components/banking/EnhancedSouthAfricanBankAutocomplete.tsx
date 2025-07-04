@@ -133,19 +133,23 @@ const southAfricanBanks: SouthAfricanBank[] = [
 interface EnhancedSouthAfricanBankAutocompleteProps {
   onBankSelect: (bankName: string, routing: string, branchCode: string, bankDetails?: any) => void;
   onBranchSelect?: (branchDetails: any) => void;
+  onBranchCodeChange?: (branchCode: string) => void;
   error?: string;
   defaultValue?: string;
   showBranchDetails?: boolean;
   compact?: boolean;
+  showBranchCodeField?: boolean;
 }
 
 const EnhancedSouthAfricanBankAutocomplete: React.FC<EnhancedSouthAfricanBankAutocompleteProps> = ({
   onBankSelect,
   onBranchSelect,
+  onBranchCodeChange,
   error,
   defaultValue = '',
   showBranchDetails = true,
-  compact = false
+  compact = false,
+  showBranchCodeField = true
 }) => {
   const [query, setQuery] = useState(defaultValue);
   const [showDropdown, setShowDropdown] = useState(false);
@@ -233,6 +237,11 @@ const EnhancedSouthAfricanBankAutocomplete: React.FC<EnhancedSouthAfricanBankAut
         swiftCode: bank.swiftCode,
         branchCode: branchCode
       });
+
+      // Call branch code change callback
+      if (onBranchCodeChange) {
+        onBranchCodeChange(branchCode);
+      }
 
       if (onBranchSelect) {
         onBranchSelect({
@@ -399,6 +408,46 @@ const EnhancedSouthAfricanBankAutocomplete: React.FC<EnhancedSouthAfricanBankAut
         
         {error && <p className="text-red-500 text-sm">{error}</p>}
       </div>
+
+      {/* Branch Code Field - Auto-filled from bank selection */}
+      {showBranchCodeField && selectedBank && (
+        <div className="space-y-2">
+          <Label htmlFor="branchCode" className="text-sm font-medium text-gray-700">
+            Branch Code *
+          </Label>
+          <div className="relative">
+            <Input
+              id="branchCode"
+              value={selectedBank.universalBranchCode || selectedBranch?.code || ''}
+              readOnly
+              placeholder="Auto-filled from bank selection"
+              className="bg-gray-50 text-gray-600 font-mono border-gray-300"
+            />
+            <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
+              <Check className="w-4 h-4 text-green-600" />
+            </div>
+          </div>
+          <div className="flex items-center gap-2 text-xs text-green-600">
+            <Building2 className="w-3 h-3" />
+            <span>Branch code automatically detected from your bank selection</span>
+          </div>
+        </div>
+      )}
+
+      {/* Banking Information Saved Confirmation */}
+      {selectedBank && selectedBranch && (
+        <Card className="border-green-200 bg-green-50/30">
+          <CardContent className="p-4">
+            <div className="flex items-center gap-2 text-green-800 mb-2">
+              <Check className="w-5 h-5 text-green-600" />
+              <span className="font-medium">Banking Information Saved</span>
+            </div>
+            <p className="text-sm text-green-700">
+              Your banking details are permanently saved and will be available for all future transactions.
+            </p>
+          </CardContent>
+        </Card>
+      )}
 
       {selectedBank && showBranchDetails && (
         <>
