@@ -1019,18 +1019,21 @@ const PortingSystem = () => {
                     id="documentUpload"
                     onChange={(e) => handleDocumentUpload(e.target.files)}
                   />
-                  <Label htmlFor="documentUpload" className="cursor-pointer">
-                    <Button variant="outline" type="button" disabled={loading}>
-                      {loading ? (
-                        <>
-                          <RefreshCw className="w-4 h-4 mr-2 animate-spin" />
-                          AI Processing...
-                        </>
-                      ) : (
-                        'Select Files'
-                      )}
-                    </Button>
-                  </Label>
+                  <Button 
+                    variant="outline" 
+                    type="button" 
+                    disabled={loading}
+                    onClick={() => document.getElementById('documentUpload')?.click()}
+                  >
+                    {loading ? (
+                      <>
+                        <RefreshCw className="w-4 h-4 mr-2 animate-spin" />
+                        AI Processing...
+                      </>
+                    ) : (
+                      'Select Files'
+                    )}
+                  </Button>
                   <div className="mt-3 space-y-1 text-xs text-purple-600">
                     <p><strong>Required:</strong> SA ID Document or Passport</p>
                     <p><strong>Required:</strong> Proof of Address (not older than 3 months)</p>
