@@ -45,7 +45,6 @@ export const EnhancedPortalNavigation: React.FC<EnhancedPortalNavigationProps> =
       tooltip: 'Browse and purchase the latest airtime and data deals with smart discounts',
       priority: 'high',
       category: 'primary',
-      status: 'new',
       disabled: !isTabAllowed('deals')
     },
     {
