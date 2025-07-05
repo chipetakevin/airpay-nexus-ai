@@ -373,50 +373,166 @@ export type Database = {
           },
         ]
       }
+      compliance_documents: {
+        Row: {
+          access_log: Json | null
+          access_restricted: boolean | null
+          ai_confidence_score: number | null
+          ai_extracted_data: Json | null
+          ai_processed: boolean | null
+          created_at: string | null
+          deletion_scheduled_date: string | null
+          document_category: string
+          document_type: string
+          encrypted: boolean | null
+          encryption_key_id: string | null
+          file_name: string
+          file_path: string
+          file_size: number | null
+          id: string
+          legal_hold: boolean | null
+          manual_review_required: boolean | null
+          mime_type: string | null
+          retention_period: unknown | null
+          rica_record_id: string | null
+          updated_at: string | null
+          uploaded_by: string | null
+          user_id: string | null
+          verification_notes: string | null
+          verification_status: string | null
+          verified_at: string | null
+          verified_by: string | null
+        }
+        Insert: {
+          access_log?: Json | null
+          access_restricted?: boolean | null
+          ai_confidence_score?: number | null
+          ai_extracted_data?: Json | null
+          ai_processed?: boolean | null
+          created_at?: string | null
+          deletion_scheduled_date?: string | null
+          document_category: string
+          document_type: string
+          encrypted?: boolean | null
+          encryption_key_id?: string | null
+          file_name: string
+          file_path: string
+          file_size?: number | null
+          id?: string
+          legal_hold?: boolean | null
+          manual_review_required?: boolean | null
+          mime_type?: string | null
+          retention_period?: unknown | null
+          rica_record_id?: string | null
+          updated_at?: string | null
+          uploaded_by?: string | null
+          user_id?: string | null
+          verification_notes?: string | null
+          verification_status?: string | null
+          verified_at?: string | null
+          verified_by?: string | null
+        }
+        Update: {
+          access_log?: Json | null
+          access_restricted?: boolean | null
+          ai_confidence_score?: number | null
+          ai_extracted_data?: Json | null
+          ai_processed?: boolean | null
+          created_at?: string | null
+          deletion_scheduled_date?: string | null
+          document_category?: string
+          document_type?: string
+          encrypted?: boolean | null
+          encryption_key_id?: string | null
+          file_name?: string
+          file_path?: string
+          file_size?: number | null
+          id?: string
+          legal_hold?: boolean | null
+          manual_review_required?: boolean | null
+          mime_type?: string | null
+          retention_period?: unknown | null
+          rica_record_id?: string | null
+          updated_at?: string | null
+          uploaded_by?: string | null
+          user_id?: string | null
+          verification_notes?: string | null
+          verification_status?: string | null
+          verified_at?: string | null
+          verified_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "compliance_documents_rica_record_id_fkey"
+            columns: ["rica_record_id"]
+            isOneToOne: false
+            referencedRelation: "rica_compliance_records"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       compliance_monitoring: {
         Row: {
           auto_resolved: boolean | null
+          check_frequency: unknown | null
           compliance_score: number | null
           compliance_type: string
           created_at: string | null
           entity_id: string
           entity_type: string
+          escalated_to: string | null
+          escalation_date: string | null
+          escalation_level: number | null
           id: string
           issues: Json | null
           last_checked: string | null
+          monitored_by: string | null
           next_check_due: string | null
+          remediation_deadline: string | null
           remediation_steps: Json | null
-          status: string
+          status: string | null
           updated_at: string | null
         }
         Insert: {
           auto_resolved?: boolean | null
+          check_frequency?: unknown | null
           compliance_score?: number | null
           compliance_type: string
           created_at?: string | null
           entity_id: string
           entity_type: string
+          escalated_to?: string | null
+          escalation_date?: string | null
+          escalation_level?: number | null
           id?: string
           issues?: Json | null
           last_checked?: string | null
+          monitored_by?: string | null
           next_check_due?: string | null
+          remediation_deadline?: string | null
           remediation_steps?: Json | null
-          status: string
+          status?: string | null
           updated_at?: string | null
         }
         Update: {
           auto_resolved?: boolean | null
+          check_frequency?: unknown | null
           compliance_score?: number | null
           compliance_type?: string
           created_at?: string | null
           entity_id?: string
           entity_type?: string
+          escalated_to?: string | null
+          escalation_date?: string | null
+          escalation_level?: number | null
           id?: string
           issues?: Json | null
           last_checked?: string | null
+          monitored_by?: string | null
           next_check_due?: string | null
+          remediation_deadline?: string | null
           remediation_steps?: Json | null
-          status?: string
+          status?: string | null
           updated_at?: string | null
         }
         Relationships: []
@@ -2066,6 +2182,147 @@ export type Database = {
           },
         ]
       }
+      rica_compliance_records: {
+        Row: {
+          additional_documents: Json | null
+          alternative_contact: string | null
+          company_document_url: string | null
+          company_letterhead_url: string | null
+          company_name: string | null
+          company_registration_number: string | null
+          compliance_notes: string | null
+          created_at: string | null
+          created_by: string | null
+          document_retention_period: unknown | null
+          email: string | null
+          geographic_boundary_check: boolean | null
+          id: string
+          id_document_back_url: string | null
+          id_document_front_url: string | null
+          id_number: string
+          id_type: string
+          is_business: boolean | null
+          kyc_compliant: boolean | null
+          last_modified_by: string | null
+          marketing_consent: boolean | null
+          mobile_number: string
+          msisdn: string | null
+          physical_address: string
+          popia_consent: boolean | null
+          postal_code: string | null
+          proof_of_address_date: string | null
+          proof_of_address_type: string | null
+          proof_of_address_url: string
+          province: string
+          registration_location: Json | null
+          rejection_reason: string | null
+          retention_expires_at: string | null
+          rica_compliant: boolean | null
+          sim_iccid: string
+          sim_serial_number: string | null
+          tax_number: string | null
+          updated_at: string | null
+          user_id: string | null
+          vat_number: string | null
+          verification_method: string | null
+          verification_status: string | null
+          verified_at: string | null
+          verified_by: string | null
+        }
+        Insert: {
+          additional_documents?: Json | null
+          alternative_contact?: string | null
+          company_document_url?: string | null
+          company_letterhead_url?: string | null
+          company_name?: string | null
+          company_registration_number?: string | null
+          compliance_notes?: string | null
+          created_at?: string | null
+          created_by?: string | null
+          document_retention_period?: unknown | null
+          email?: string | null
+          geographic_boundary_check?: boolean | null
+          id?: string
+          id_document_back_url?: string | null
+          id_document_front_url?: string | null
+          id_number: string
+          id_type?: string
+          is_business?: boolean | null
+          kyc_compliant?: boolean | null
+          last_modified_by?: string | null
+          marketing_consent?: boolean | null
+          mobile_number: string
+          msisdn?: string | null
+          physical_address: string
+          popia_consent?: boolean | null
+          postal_code?: string | null
+          proof_of_address_date?: string | null
+          proof_of_address_type?: string | null
+          proof_of_address_url: string
+          province: string
+          registration_location?: Json | null
+          rejection_reason?: string | null
+          retention_expires_at?: string | null
+          rica_compliant?: boolean | null
+          sim_iccid: string
+          sim_serial_number?: string | null
+          tax_number?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+          vat_number?: string | null
+          verification_method?: string | null
+          verification_status?: string | null
+          verified_at?: string | null
+          verified_by?: string | null
+        }
+        Update: {
+          additional_documents?: Json | null
+          alternative_contact?: string | null
+          company_document_url?: string | null
+          company_letterhead_url?: string | null
+          company_name?: string | null
+          company_registration_number?: string | null
+          compliance_notes?: string | null
+          created_at?: string | null
+          created_by?: string | null
+          document_retention_period?: unknown | null
+          email?: string | null
+          geographic_boundary_check?: boolean | null
+          id?: string
+          id_document_back_url?: string | null
+          id_document_front_url?: string | null
+          id_number?: string
+          id_type?: string
+          is_business?: boolean | null
+          kyc_compliant?: boolean | null
+          last_modified_by?: string | null
+          marketing_consent?: boolean | null
+          mobile_number?: string
+          msisdn?: string | null
+          physical_address?: string
+          popia_consent?: boolean | null
+          postal_code?: string | null
+          proof_of_address_date?: string | null
+          proof_of_address_type?: string | null
+          proof_of_address_url?: string
+          province?: string
+          registration_location?: Json | null
+          rejection_reason?: string | null
+          retention_expires_at?: string | null
+          rica_compliant?: boolean | null
+          sim_iccid?: string
+          sim_serial_number?: string | null
+          tax_number?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+          vat_number?: string | null
+          verification_method?: string | null
+          verification_status?: string | null
+          verified_at?: string | null
+          verified_by?: string | null
+        }
+        Relationships: []
+      }
       rica_registration_drafts: {
         Row: {
           created_at: string
@@ -2266,6 +2523,104 @@ export type Database = {
           },
         ]
       }
+      sim_lifecycle_management: {
+        Row: {
+          activation_date: string | null
+          allowed_countries: string[] | null
+          created_at: string | null
+          current_user_id: string | null
+          emergency_services_enabled: boolean | null
+          home_network_code: string | null
+          id: string
+          imsi: string | null
+          ki_key: string | null
+          last_location: Json | null
+          lawful_interception_enabled: boolean | null
+          msisdn: string | null
+          network_provider: string
+          network_type: string | null
+          pin_code: string | null
+          previous_assignments: Json | null
+          puk_code: string | null
+          recycling_eligible_date: string | null
+          rica_record_id: string | null
+          roaming_enabled: boolean | null
+          sim_iccid: string
+          sim_serial_number: string | null
+          status: string | null
+          status_history: Json | null
+          suspension_date: string | null
+          termination_date: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          activation_date?: string | null
+          allowed_countries?: string[] | null
+          created_at?: string | null
+          current_user_id?: string | null
+          emergency_services_enabled?: boolean | null
+          home_network_code?: string | null
+          id?: string
+          imsi?: string | null
+          ki_key?: string | null
+          last_location?: Json | null
+          lawful_interception_enabled?: boolean | null
+          msisdn?: string | null
+          network_provider: string
+          network_type?: string | null
+          pin_code?: string | null
+          previous_assignments?: Json | null
+          puk_code?: string | null
+          recycling_eligible_date?: string | null
+          rica_record_id?: string | null
+          roaming_enabled?: boolean | null
+          sim_iccid: string
+          sim_serial_number?: string | null
+          status?: string | null
+          status_history?: Json | null
+          suspension_date?: string | null
+          termination_date?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          activation_date?: string | null
+          allowed_countries?: string[] | null
+          created_at?: string | null
+          current_user_id?: string | null
+          emergency_services_enabled?: boolean | null
+          home_network_code?: string | null
+          id?: string
+          imsi?: string | null
+          ki_key?: string | null
+          last_location?: Json | null
+          lawful_interception_enabled?: boolean | null
+          msisdn?: string | null
+          network_provider?: string
+          network_type?: string | null
+          pin_code?: string | null
+          previous_assignments?: Json | null
+          puk_code?: string | null
+          recycling_eligible_date?: string | null
+          rica_record_id?: string | null
+          roaming_enabled?: boolean | null
+          sim_iccid?: string
+          sim_serial_number?: string | null
+          status?: string | null
+          status_history?: Json | null
+          suspension_date?: string | null
+          termination_date?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "sim_lifecycle_management_rica_record_id_fkey"
+            columns: ["rica_record_id"]
+            isOneToOne: false
+            referencedRelation: "rica_compliance_records"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       stakeholder_contacts: {
         Row: {
           created_at: string
@@ -2410,6 +2765,222 @@ export type Database = {
           recipient_id?: string
           recipient_type?: string
           title?: string
+        }
+        Relationships: []
+      }
+      telecom_audit_logs: {
+        Row: {
+          affected_record_id: string | null
+          affected_table: string | null
+          compliance_requirement: string | null
+          customer_id: string | null
+          event_category: string
+          event_description: string
+          event_timestamp: string | null
+          event_type: string
+          geographic_compliance: boolean | null
+          id: string
+          legal_basis: string | null
+          location_data: Json | null
+          metadata: Json | null
+          new_values: Json | null
+          old_values: Json | null
+          related_audit_ids: string[] | null
+          retention_period: unknown | null
+          risk_level: string | null
+          security_impact: boolean | null
+          session_id: string | null
+          sim_iccid: string | null
+          user_agent: string | null
+          user_id: string | null
+          user_ip: unknown | null
+          user_role: string | null
+        }
+        Insert: {
+          affected_record_id?: string | null
+          affected_table?: string | null
+          compliance_requirement?: string | null
+          customer_id?: string | null
+          event_category: string
+          event_description: string
+          event_timestamp?: string | null
+          event_type: string
+          geographic_compliance?: boolean | null
+          id?: string
+          legal_basis?: string | null
+          location_data?: Json | null
+          metadata?: Json | null
+          new_values?: Json | null
+          old_values?: Json | null
+          related_audit_ids?: string[] | null
+          retention_period?: unknown | null
+          risk_level?: string | null
+          security_impact?: boolean | null
+          session_id?: string | null
+          sim_iccid?: string | null
+          user_agent?: string | null
+          user_id?: string | null
+          user_ip?: unknown | null
+          user_role?: string | null
+        }
+        Update: {
+          affected_record_id?: string | null
+          affected_table?: string | null
+          compliance_requirement?: string | null
+          customer_id?: string | null
+          event_category?: string
+          event_description?: string
+          event_timestamp?: string | null
+          event_type?: string
+          geographic_compliance?: boolean | null
+          id?: string
+          legal_basis?: string | null
+          location_data?: Json | null
+          metadata?: Json | null
+          new_values?: Json | null
+          old_values?: Json | null
+          related_audit_ids?: string[] | null
+          retention_period?: unknown | null
+          risk_level?: string | null
+          security_impact?: boolean | null
+          session_id?: string | null
+          sim_iccid?: string | null
+          user_agent?: string | null
+          user_id?: string | null
+          user_ip?: unknown | null
+          user_role?: string | null
+        }
+        Relationships: []
+      }
+      telecom_network_providers: {
+        Row: {
+          api_credentials_encrypted: string | null
+          api_endpoint: string | null
+          billing_integration: boolean | null
+          coverage_areas: string[] | null
+          created_at: string | null
+          default_provider: boolean | null
+          icasa_license_number: string | null
+          icasa_licensed: boolean | null
+          id: string
+          is_active: boolean | null
+          is_divine_mobile_compatible: boolean | null
+          license_expiry_date: string | null
+          network_codes: string[] | null
+          popia_compliant: boolean | null
+          provider_code: string
+          provider_name: string
+          provider_type: string
+          rica_compliant: boolean | null
+          security_certified: boolean | null
+          supported_technologies: string[] | null
+          updated_at: string | null
+        }
+        Insert: {
+          api_credentials_encrypted?: string | null
+          api_endpoint?: string | null
+          billing_integration?: boolean | null
+          coverage_areas?: string[] | null
+          created_at?: string | null
+          default_provider?: boolean | null
+          icasa_license_number?: string | null
+          icasa_licensed?: boolean | null
+          id?: string
+          is_active?: boolean | null
+          is_divine_mobile_compatible?: boolean | null
+          license_expiry_date?: string | null
+          network_codes?: string[] | null
+          popia_compliant?: boolean | null
+          provider_code: string
+          provider_name: string
+          provider_type: string
+          rica_compliant?: boolean | null
+          security_certified?: boolean | null
+          supported_technologies?: string[] | null
+          updated_at?: string | null
+        }
+        Update: {
+          api_credentials_encrypted?: string | null
+          api_endpoint?: string | null
+          billing_integration?: boolean | null
+          coverage_areas?: string[] | null
+          created_at?: string | null
+          default_provider?: boolean | null
+          icasa_license_number?: string | null
+          icasa_licensed?: boolean | null
+          id?: string
+          is_active?: boolean | null
+          is_divine_mobile_compatible?: boolean | null
+          license_expiry_date?: string | null
+          network_codes?: string[] | null
+          popia_compliant?: boolean | null
+          provider_code?: string
+          provider_name?: string
+          provider_type?: string
+          rica_compliant?: boolean | null
+          security_certified?: boolean | null
+          supported_technologies?: string[] | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      telecom_user_roles: {
+        Row: {
+          access_level: number | null
+          can_access_rica_data: boolean | null
+          can_approve_registrations: boolean | null
+          can_export_data: boolean | null
+          can_modify_sim_status: boolean | null
+          can_view_audit_logs: boolean | null
+          created_at: string | null
+          created_by: string | null
+          department: string | null
+          effective_from: string | null
+          expires_at: string | null
+          id: string
+          is_active: boolean | null
+          last_login: string | null
+          location: string | null
+          role: Database["public"]["Enums"]["telecom_role"]
+          user_id: string | null
+        }
+        Insert: {
+          access_level?: number | null
+          can_access_rica_data?: boolean | null
+          can_approve_registrations?: boolean | null
+          can_export_data?: boolean | null
+          can_modify_sim_status?: boolean | null
+          can_view_audit_logs?: boolean | null
+          created_at?: string | null
+          created_by?: string | null
+          department?: string | null
+          effective_from?: string | null
+          expires_at?: string | null
+          id?: string
+          is_active?: boolean | null
+          last_login?: string | null
+          location?: string | null
+          role: Database["public"]["Enums"]["telecom_role"]
+          user_id?: string | null
+        }
+        Update: {
+          access_level?: number | null
+          can_access_rica_data?: boolean | null
+          can_approve_registrations?: boolean | null
+          can_export_data?: boolean | null
+          can_modify_sim_status?: boolean | null
+          can_view_audit_logs?: boolean | null
+          created_at?: string | null
+          created_by?: string | null
+          department?: string | null
+          effective_from?: string | null
+          expires_at?: string | null
+          id?: string
+          is_active?: boolean | null
+          last_login?: string | null
+          location?: string | null
+          role?: Database["public"]["Enums"]["telecom_role"]
+          user_id?: string | null
         }
         Relationships: []
       }
@@ -2730,6 +3301,10 @@ export type Database = {
         Args: { component_name_param: string }
         Returns: number
       }
+      check_rica_compliance: {
+        Args: { record_id: string }
+        Returns: boolean
+      }
       clean_expired_cart_sessions: {
         Args: Record<PropertyKey, never>
         Returns: undefined
@@ -2779,6 +3354,19 @@ export type Database = {
         }
         Returns: string
       }
+      log_telecom_audit: {
+        Args: {
+          p_event_type: string
+          p_event_category: string
+          p_event_description: string
+          p_affected_table?: string
+          p_affected_record_id?: string
+          p_old_values?: Json
+          p_new_values?: Json
+          p_risk_level?: string
+        }
+        Returns: string
+      }
       update_cashback_balance: {
         Args: {
           onecard_account_id_param: string
@@ -2800,6 +3388,16 @@ export type Database = {
         | "compliance_data"
       rica_status: "pending" | "verified" | "rejected" | "expired"
       sim_status: "inactive" | "active" | "suspended" | "deactivated"
+      telecom_role:
+        | "super_admin"
+        | "compliance_officer"
+        | "network_admin"
+        | "customer_service"
+        | "vendor_manager"
+        | "audit_reviewer"
+        | "technical_support"
+        | "billing_admin"
+        | "security_admin"
       user_role:
         | "customer"
         | "admin"
@@ -2934,6 +3532,17 @@ export const Constants = {
       ],
       rica_status: ["pending", "verified", "rejected", "expired"],
       sim_status: ["inactive", "active", "suspended", "deactivated"],
+      telecom_role: [
+        "super_admin",
+        "compliance_officer",
+        "network_admin",
+        "customer_service",
+        "vendor_manager",
+        "audit_reviewer",
+        "technical_support",
+        "billing_admin",
+        "security_admin",
+      ],
       user_role: [
         "customer",
         "admin",

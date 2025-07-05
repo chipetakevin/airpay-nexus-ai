@@ -117,9 +117,40 @@ const PortingSystem = () => {
     digitalSignature: ''
   });
 
-  const networks = ['Divine Mobile', 'MTN', 'Vodacom', 'Cell C', 'Telkom Mobile', 'Rain', 'FNB Connect', 'MakroCall'];
+  // Fetch network providers from database for MVNE/MVNO compliance
+  const [networks, setNetworks] = useState<string[]>([]);
+  const [networkProviders, setNetworkProviders] = useState<any[]>([]);
+
+  // Load network providers on component mount
+  useEffect(() => {
+    const loadNetworkProviders = async () => {
+      try {
+        const { data, error } = await supabase
+          .from('telecom_network_providers')
+          .select('*')
+          .eq('is_active', true)
+          .order('default_provider', { ascending: false })
+          .order('provider_name');
+
+        if (error) {
+          console.error('Error loading network providers:', error);
+          // Fallback to static list
+          setNetworks(['Divine Mobile', 'MTN', 'Vodacom', 'Cell C', 'Telkom Mobile', 'Rain', 'FNB Connect', 'MakroCall']);
+        } else {
+          setNetworkProviders(data);
+          setNetworks(data.map(provider => provider.provider_name));
+        }
+      } catch (error) {
+        console.error('Error loading network providers:', error);
+        // Fallback to static list
+        setNetworks(['Divine Mobile', 'MTN', 'Vodacom', 'Cell C', 'Telkom Mobile', 'Rain', 'FNB Connect', 'MakroCall']);
+      }
+    };
+
+    loadNetworkProviders();
+  }, []);
   
-  // Enhanced network compatibility matrix
+  // Enhanced network compatibility matrix with Divine Mobile compatibility
   const networkCompatibilityMatrix = {
     'Divine Mobile': { 'MTN': true, 'Vodacom': true, 'Cell C': true, 'Telkom Mobile': true, 'Rain': true, 'FNB Connect': true, 'MakroCall': true },
     'MTN': { 'Divine Mobile': true, 'Vodacom': true, 'Cell C': true, 'Telkom Mobile': true, 'Rain': true, 'FNB Connect': true, 'MakroCall': false },
@@ -128,7 +159,7 @@ const PortingSystem = () => {
     'Telkom Mobile': { 'Divine Mobile': true, 'MTN': true, 'Vodacom': true, 'Cell C': true, 'Rain': true, 'FNB Connect': true, 'MakroCall': true },
     'Rain': { 'Divine Mobile': true, 'MTN': true, 'Vodacom': true, 'Cell C': true, 'Telkom Mobile': true, 'FNB Connect': false, 'MakroCall': false },
     'FNB Connect': { 'Divine Mobile': true, 'MTN': true, 'Vodacom': true, 'Telkom Mobile': true, 'Cell C': false, 'Rain': false, 'MakroCall': false },
-    'MakroCall': { 'Telkom Mobile': true, 'MTN': false, 'Vodacom': false, 'Cell C': false, 'Rain': false, 'FNB Connect': false }
+    'MakroCall': { 'Telkom Mobile': true, 'Divine Mobile': false, 'MTN': false, 'Vodacom': false, 'Cell C': false, 'Rain': false, 'FNB Connect': false }
   };
 
   useEffect(() => {
