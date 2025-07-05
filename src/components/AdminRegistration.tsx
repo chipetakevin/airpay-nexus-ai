@@ -1,6 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useToast } from '@/hooks/use-toast';
+import { useAdminRegistration } from '@/hooks/useAdminRegistration';
 import AdminRegistrationForm from './registration/AdminRegistrationForm';
 import AdminRegistrationStatus from './admin/AdminRegistrationStatus';
 import AdminControlCenter from './admin/AdminControlCenter';
@@ -22,6 +23,16 @@ const AdminRegistration = () => {
   const [activeAdminTab, setActiveAdminTab] = useState('dashboard');
   const [activeProfileTab, setActiveProfileTab] = useState('customer-profiles');
   const { toast } = useToast();
+  
+  // Admin registration hook
+  const {
+    formData,
+    errors,
+    showPassword,
+    togglePasswordVisibility,
+    handleInputChange,
+    handleSubmit
+  } = useAdminRegistration();
 
   useEffect(() => {
     const checkExistingRegistration = () => {
@@ -108,7 +119,14 @@ const AdminRegistration = () => {
 
   return (
     <div className="w-full">
-      <AdminRegistrationForm />
+      <AdminRegistrationForm 
+        formData={formData}
+        errors={errors}
+        showPassword={showPassword}
+        togglePasswordVisibility={togglePasswordVisibility}
+        handleInputChange={handleInputChange}
+        handleSubmit={handleSubmit}
+      />
     </div>
   );
 };
