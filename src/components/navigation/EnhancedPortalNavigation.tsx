@@ -135,39 +135,41 @@ export const EnhancedPortalNavigation: React.FC<EnhancedPortalNavigationProps> =
   if (isMobile) {
     return (
       <div className={cn("w-full", className)}>
-        <div className="mobile-tab-container nav-pills-container">
-          {tabs.map((tab) => (
-            <button
-              key={tab.id}
-              onClick={() => !tab.disabled && handleTabChange(tab.id)}
-              disabled={tab.disabled}
-              className={cn(
-                "mobile-tab-item nav-pill flex items-center gap-2 px-4 py-3 rounded-full font-medium transition-all duration-300 border min-w-max",
-                activeTab === tab.id
-                  ? "bg-primary text-primary-foreground shadow-lg border-primary scale-105"
-                  : "bg-background/90 text-muted-foreground hover:text-foreground hover:bg-muted/70 border-border hover:scale-102",
-                tab.disabled && "opacity-50 cursor-not-allowed"
-              )}
-            >
-              <span className="text-base flex-shrink-0">{tab.icon}</span>
-              <div className="flex flex-col items-start">
-                <span className="font-medium text-sm whitespace-nowrap">{tab.label}</span>
-                <span className="text-xs opacity-70 whitespace-nowrap">{tab.description}</span>
-              </div>
-              {tab.count && (
-                <span className="text-xs ml-2 flex-shrink-0 bg-primary/10 text-primary px-2 py-1 rounded-full">
-                  {tab.count}
-                </span>
-              )}
-              {tab.status && (
-                <div className="flex-shrink-0 ml-1">
-                  {tab.status === 'new' && <span className="bg-green-500 text-white text-xs animate-pulse px-2 py-1 rounded-full">New</span>}
-                  {tab.status === 'alert' && <span className="bg-red-500 text-white text-xs animate-bounce px-2 py-1 rounded-full">!</span>}
-                  {tab.status === 'coming-soon' && <span className="text-xs border border-yellow-500 text-yellow-600 px-2 py-1 rounded-full">Soon</span>}
+        <div className="w-full overflow-x-auto scrollbar-hide">
+          <div className="flex gap-2 pb-2 px-1 min-w-max">
+            {tabs.map((tab) => (
+              <button
+                key={tab.id}
+                onClick={() => !tab.disabled && handleTabChange(tab.id)}
+                disabled={tab.disabled}
+                className={cn(
+                  "flex items-center gap-2 px-4 py-3 rounded-xl font-medium transition-all duration-300 border flex-shrink-0 min-w-fit",
+                  activeTab === tab.id
+                    ? "bg-primary text-primary-foreground shadow-lg border-primary transform scale-105"
+                    : "bg-background/80 text-foreground hover:bg-muted/70 border-border hover:border-primary/50 hover:shadow-md hover:scale-102",
+                  tab.disabled && "opacity-50 cursor-not-allowed"
+                )}
+              >
+                <span className="text-lg flex-shrink-0">{tab.icon}</span>
+                <div className="flex flex-col items-start text-left">
+                  <span className="font-semibold text-sm whitespace-nowrap leading-tight">{tab.label}</span>
+                  <span className="text-xs opacity-80 whitespace-nowrap leading-tight">{tab.description}</span>
                 </div>
-              )}
-            </button>
-          ))}
+                {tab.count && (
+                  <span className="text-xs ml-2 flex-shrink-0 bg-primary/20 text-primary px-2 py-1 rounded-full font-medium">
+                    {tab.count}
+                  </span>
+                )}
+                {tab.status && (
+                  <div className="flex-shrink-0 ml-1">
+                    {tab.status === 'new' && <span className="bg-green-500 text-white text-xs animate-pulse px-2 py-1 rounded-full font-medium">New</span>}
+                    {tab.status === 'alert' && <span className="bg-red-500 text-white text-xs animate-bounce px-2 py-1 rounded-full font-medium">!</span>}
+                    {tab.status === 'coming-soon' && <span className="text-xs border border-yellow-500 text-yellow-600 px-2 py-1 rounded-full font-medium">Soon</span>}
+                  </div>
+                )}
+              </button>
+            ))}
+          </div>
         </div>
       </div>
     );

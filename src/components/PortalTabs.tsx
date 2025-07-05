@@ -139,18 +139,21 @@ const PortalTabs = ({
             className="nerve-center-mobile-portal"
           >
             <div className="w-full responsive-content-wrapper">
-              {/* Mobile Navigation */}
-              <MobileOnly>
-                <div className="mb-6">
-                  <EnhancedPortalNavigation
-                    activeTab={activeTab}
-                    onTabChange={enhancedHandleTabChange}
-                    isTabAllowed={isTabAllowed}
-                    showAdminTab={showAdminTab}
-                    className="nerve-center-mobile-nav"
-                  />
-                </div>
-              </MobileOnly>
+      {/* Enhanced Mobile Navigation with Better Visibility */}
+      <MobileOnly>
+        <div className="mb-6 px-4">
+          <div className="bg-gradient-to-r from-primary/5 via-primary/10 to-primary/5 rounded-2xl p-4 border border-primary/20">
+            <h3 className="text-sm font-medium text-muted-foreground mb-3 text-center">Navigate Services</h3>
+            <EnhancedPortalNavigation
+              activeTab={activeTab}
+              onTabChange={enhancedHandleTabChange}
+              isTabAllowed={isTabAllowed}
+              showAdminTab={showAdminTab}
+              className="nerve-center-mobile-nav"
+            />
+          </div>
+        </div>
+      </MobileOnly>
 
               <Tabs value={activeTab} onValueChange={enhancedHandleTabChange} className="w-full">
                 {/* Mobile Tab Content with Enhanced Service Cards */}
