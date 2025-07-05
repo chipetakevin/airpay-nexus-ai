@@ -146,6 +146,71 @@ export type Database = {
         }
         Relationships: []
       }
+      banking_profiles: {
+        Row: {
+          account_holder_name: string
+          account_number: string
+          account_type: string | null
+          bank_name: string
+          branch_code: string
+          created_at: string | null
+          form_submission_id: string | null
+          id: string
+          is_active: boolean | null
+          is_primary: boolean | null
+          is_verified: boolean | null
+          updated_at: string | null
+          user_id: string
+          user_type: string
+          verification_date: string | null
+          verification_method: string | null
+        }
+        Insert: {
+          account_holder_name: string
+          account_number: string
+          account_type?: string | null
+          bank_name: string
+          branch_code: string
+          created_at?: string | null
+          form_submission_id?: string | null
+          id?: string
+          is_active?: boolean | null
+          is_primary?: boolean | null
+          is_verified?: boolean | null
+          updated_at?: string | null
+          user_id: string
+          user_type: string
+          verification_date?: string | null
+          verification_method?: string | null
+        }
+        Update: {
+          account_holder_name?: string
+          account_number?: string
+          account_type?: string | null
+          bank_name?: string
+          branch_code?: string
+          created_at?: string | null
+          form_submission_id?: string | null
+          id?: string
+          is_active?: boolean | null
+          is_primary?: boolean | null
+          is_verified?: boolean | null
+          updated_at?: string | null
+          user_id?: string
+          user_type?: string
+          verification_date?: string | null
+          verification_method?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "banking_profiles_form_submission_id_fkey"
+            columns: ["form_submission_id"]
+            isOneToOne: false
+            referencedRelation: "universal_form_submissions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       bulk_porting_batches: {
         Row: {
           batch_name: string
@@ -284,6 +349,189 @@ export type Database = {
           remediation_steps?: Json | null
           status?: string
           updated_at?: string | null
+        }
+        Relationships: []
+      }
+      comprehensive_user_profiles: {
+        Row: {
+          account_holder_name: string | null
+          account_number: string | null
+          account_type: string | null
+          additional_data: Json | null
+          admin_percentage: number | null
+          bank_name: string | null
+          bank_statement_url: string | null
+          branch_code: string | null
+          business_address: string | null
+          business_email: string | null
+          business_license_url: string | null
+          business_name: string | null
+          business_phone: string | null
+          business_type: string | null
+          city: string | null
+          commission_rate: number | null
+          country: string | null
+          created_at: string | null
+          date_of_birth: string | null
+          email: string | null
+          emergency_contact_name: string | null
+          emergency_contact_phone: string | null
+          emergency_contact_relationship: string | null
+          first_name: string | null
+          full_name: string | null
+          gender: string | null
+          id: string
+          id_document_url: string | null
+          id_number: string | null
+          id_type: string | null
+          is_active: boolean | null
+          kyc_status: string | null
+          last_login: string | null
+          last_name: string | null
+          marketing_consent: boolean | null
+          nationality: string | null
+          onecard_balance: number | null
+          phone: string | null
+          physical_address: string | null
+          postal_address: string | null
+          postal_code: string | null
+          privacy_policy_accepted: boolean | null
+          proof_of_address_url: string | null
+          province: string | null
+          registration_number: string | null
+          rica_status: string | null
+          selfie_url: string | null
+          tax_certificate_url: string | null
+          tax_number: string | null
+          terms_accepted: boolean | null
+          terms_accepted_at: string | null
+          total_cashback: number | null
+          total_sales: number | null
+          updated_at: string | null
+          user_id: string | null
+          user_type: string
+          vat_number: string | null
+          verification_status: string | null
+        }
+        Insert: {
+          account_holder_name?: string | null
+          account_number?: string | null
+          account_type?: string | null
+          additional_data?: Json | null
+          admin_percentage?: number | null
+          bank_name?: string | null
+          bank_statement_url?: string | null
+          branch_code?: string | null
+          business_address?: string | null
+          business_email?: string | null
+          business_license_url?: string | null
+          business_name?: string | null
+          business_phone?: string | null
+          business_type?: string | null
+          city?: string | null
+          commission_rate?: number | null
+          country?: string | null
+          created_at?: string | null
+          date_of_birth?: string | null
+          email?: string | null
+          emergency_contact_name?: string | null
+          emergency_contact_phone?: string | null
+          emergency_contact_relationship?: string | null
+          first_name?: string | null
+          full_name?: string | null
+          gender?: string | null
+          id?: string
+          id_document_url?: string | null
+          id_number?: string | null
+          id_type?: string | null
+          is_active?: boolean | null
+          kyc_status?: string | null
+          last_login?: string | null
+          last_name?: string | null
+          marketing_consent?: boolean | null
+          nationality?: string | null
+          onecard_balance?: number | null
+          phone?: string | null
+          physical_address?: string | null
+          postal_address?: string | null
+          postal_code?: string | null
+          privacy_policy_accepted?: boolean | null
+          proof_of_address_url?: string | null
+          province?: string | null
+          registration_number?: string | null
+          rica_status?: string | null
+          selfie_url?: string | null
+          tax_certificate_url?: string | null
+          tax_number?: string | null
+          terms_accepted?: boolean | null
+          terms_accepted_at?: string | null
+          total_cashback?: number | null
+          total_sales?: number | null
+          updated_at?: string | null
+          user_id?: string | null
+          user_type: string
+          vat_number?: string | null
+          verification_status?: string | null
+        }
+        Update: {
+          account_holder_name?: string | null
+          account_number?: string | null
+          account_type?: string | null
+          additional_data?: Json | null
+          admin_percentage?: number | null
+          bank_name?: string | null
+          bank_statement_url?: string | null
+          branch_code?: string | null
+          business_address?: string | null
+          business_email?: string | null
+          business_license_url?: string | null
+          business_name?: string | null
+          business_phone?: string | null
+          business_type?: string | null
+          city?: string | null
+          commission_rate?: number | null
+          country?: string | null
+          created_at?: string | null
+          date_of_birth?: string | null
+          email?: string | null
+          emergency_contact_name?: string | null
+          emergency_contact_phone?: string | null
+          emergency_contact_relationship?: string | null
+          first_name?: string | null
+          full_name?: string | null
+          gender?: string | null
+          id?: string
+          id_document_url?: string | null
+          id_number?: string | null
+          id_type?: string | null
+          is_active?: boolean | null
+          kyc_status?: string | null
+          last_login?: string | null
+          last_name?: string | null
+          marketing_consent?: boolean | null
+          nationality?: string | null
+          onecard_balance?: number | null
+          phone?: string | null
+          physical_address?: string | null
+          postal_address?: string | null
+          postal_code?: string | null
+          privacy_policy_accepted?: boolean | null
+          proof_of_address_url?: string | null
+          province?: string | null
+          registration_number?: string | null
+          rica_status?: string | null
+          selfie_url?: string | null
+          tax_certificate_url?: string | null
+          tax_number?: string | null
+          terms_accepted?: boolean | null
+          terms_accepted_at?: string | null
+          total_cashback?: number | null
+          total_sales?: number | null
+          updated_at?: string | null
+          user_id?: string | null
+          user_type?: string
+          vat_number?: string | null
+          verification_status?: string | null
         }
         Relationships: []
       }
@@ -487,6 +735,148 @@ export type Database = {
           },
         ]
       }
+      enhanced_rica_registrations: {
+        Row: {
+          auto_saved_at: string | null
+          completed_at: string | null
+          confirm_information: boolean
+          consent_processing: boolean
+          created_at: string | null
+          date_of_birth: string
+          email: string | null
+          form_submission_id: string | null
+          full_name: string
+          gender: string
+          id: string
+          id_document_url: string | null
+          id_number: string
+          id_type: string
+          mobile_number: string
+          nationality: string
+          network_provider: string | null
+          physical_address: string
+          proof_of_residence_url: string | null
+          province: string
+          reference_number: string
+          registration_status: string
+          selfie_with_id_url: string | null
+          sim_serial_number: string
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          auto_saved_at?: string | null
+          completed_at?: string | null
+          confirm_information?: boolean
+          consent_processing?: boolean
+          created_at?: string | null
+          date_of_birth: string
+          email?: string | null
+          form_submission_id?: string | null
+          full_name: string
+          gender: string
+          id?: string
+          id_document_url?: string | null
+          id_number: string
+          id_type?: string
+          mobile_number: string
+          nationality?: string
+          network_provider?: string | null
+          physical_address: string
+          proof_of_residence_url?: string | null
+          province: string
+          reference_number?: string
+          registration_status?: string
+          selfie_with_id_url?: string | null
+          sim_serial_number: string
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          auto_saved_at?: string | null
+          completed_at?: string | null
+          confirm_information?: boolean
+          consent_processing?: boolean
+          created_at?: string | null
+          date_of_birth?: string
+          email?: string | null
+          form_submission_id?: string | null
+          full_name?: string
+          gender?: string
+          id?: string
+          id_document_url?: string | null
+          id_number?: string
+          id_type?: string
+          mobile_number?: string
+          nationality?: string
+          network_provider?: string | null
+          physical_address?: string
+          proof_of_residence_url?: string | null
+          province?: string
+          reference_number?: string
+          registration_status?: string
+          selfie_with_id_url?: string | null
+          sim_serial_number?: string
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "enhanced_rica_registrations_form_submission_id_fkey"
+            columns: ["form_submission_id"]
+            isOneToOne: false
+            referencedRelation: "universal_form_submissions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      local_storage_mirror: {
+        Row: {
+          created_at: string | null
+          form_reference_id: string | null
+          id: string
+          last_sync_at: string | null
+          storage_data: Json
+          storage_key: string
+          storage_type: string | null
+          sync_status: string | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          form_reference_id?: string | null
+          id?: string
+          last_sync_at?: string | null
+          storage_data: Json
+          storage_key: string
+          storage_type?: string | null
+          sync_status?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          form_reference_id?: string | null
+          id?: string
+          last_sync_at?: string | null
+          storage_data?: Json
+          storage_key?: string
+          storage_type?: string | null
+          sync_status?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "local_storage_mirror_form_reference_id_fkey"
+            columns: ["form_reference_id"]
+            isOneToOne: false
+            referencedRelation: "universal_form_submissions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       mvne_transactions: {
         Row: {
           admin_fee: number | null
@@ -580,6 +970,111 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      onecard_rewards: {
+        Row: {
+          base_transaction_amount: number | null
+          created_at: string | null
+          expires_at: string | null
+          id: string
+          is_redeemed: boolean | null
+          redeemed_at: string | null
+          reward_amount: number
+          reward_description: string | null
+          reward_percentage: number | null
+          reward_source: string | null
+          reward_type: string
+          status: string | null
+          transaction_id: string | null
+          updated_at: string | null
+          user_id: string
+          user_type: string
+        }
+        Insert: {
+          base_transaction_amount?: number | null
+          created_at?: string | null
+          expires_at?: string | null
+          id?: string
+          is_redeemed?: boolean | null
+          redeemed_at?: string | null
+          reward_amount: number
+          reward_description?: string | null
+          reward_percentage?: number | null
+          reward_source?: string | null
+          reward_type: string
+          status?: string | null
+          transaction_id?: string | null
+          updated_at?: string | null
+          user_id: string
+          user_type: string
+        }
+        Update: {
+          base_transaction_amount?: number | null
+          created_at?: string | null
+          expires_at?: string | null
+          id?: string
+          is_redeemed?: boolean | null
+          redeemed_at?: string | null
+          reward_amount?: number
+          reward_description?: string | null
+          reward_percentage?: number | null
+          reward_source?: string | null
+          reward_type?: string
+          status?: string | null
+          transaction_id?: string | null
+          updated_at?: string | null
+          user_id?: string
+          user_type?: string
+        }
+        Relationships: []
+      }
+      payment_cards: {
+        Row: {
+          billing_address: Json | null
+          card_type: string
+          cardholder_name: string
+          created_at: string | null
+          expiry_month: number
+          expiry_year: number
+          id: string
+          is_active: boolean | null
+          is_primary: boolean | null
+          last_four_digits: string
+          updated_at: string | null
+          user_id: string
+          user_type: string
+        }
+        Insert: {
+          billing_address?: Json | null
+          card_type: string
+          cardholder_name: string
+          created_at?: string | null
+          expiry_month: number
+          expiry_year: number
+          id?: string
+          is_active?: boolean | null
+          is_primary?: boolean | null
+          last_four_digits: string
+          updated_at?: string | null
+          user_id: string
+          user_type: string
+        }
+        Update: {
+          billing_address?: Json | null
+          card_type?: string
+          cardholder_name?: string
+          created_at?: string | null
+          expiry_month?: number
+          expiry_year?: number
+          id?: string
+          is_active?: boolean | null
+          is_primary?: boolean | null
+          last_four_digits?: string
+          updated_at?: string | null
+          user_id?: string
+          user_type?: string
+        }
+        Relationships: []
       }
       permission_audit_logs: {
         Row: {
@@ -1399,6 +1894,54 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      universal_form_submissions: {
+        Row: {
+          created_at: string | null
+          form_data: Json
+          form_type: string
+          id: string
+          ip_address: unknown | null
+          is_complete: boolean | null
+          is_verified: boolean | null
+          submission_source: string | null
+          updated_at: string | null
+          user_agent: string | null
+          user_id: string | null
+          verification_method: string | null
+          version: number | null
+        }
+        Insert: {
+          created_at?: string | null
+          form_data: Json
+          form_type: string
+          id?: string
+          ip_address?: unknown | null
+          is_complete?: boolean | null
+          is_verified?: boolean | null
+          submission_source?: string | null
+          updated_at?: string | null
+          user_agent?: string | null
+          user_id?: string | null
+          verification_method?: string | null
+          version?: number | null
+        }
+        Update: {
+          created_at?: string | null
+          form_data?: Json
+          form_type?: string
+          id?: string
+          ip_address?: unknown | null
+          is_complete?: boolean | null
+          is_verified?: boolean | null
+          submission_source?: string | null
+          updated_at?: string | null
+          user_agent?: string | null
+          user_id?: string | null
+          verification_method?: string | null
+          version?: number | null
+        }
+        Relationships: []
       }
       user_roles: {
         Row: {
