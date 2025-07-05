@@ -9,14 +9,13 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
 import { useCustomerRegistration } from '@/hooks/useCustomerRegistration';
-import { User, Phone, Mail, Shield, CheckCircle, Database } from 'lucide-react';
+import { User, Phone, Mail, Shield, CheckCircle } from 'lucide-react';
 import EnhancedSouthAfricanBankAutocomplete from '@/components/banking/EnhancedSouthAfricanBankAutocomplete';
 import UniversalCardDetailsForm from '@/components/banking/UniversalCardDetailsForm';
 import { useUniversalBankingStorage } from '@/hooks/useUniversalBankingStorage';
 import { useIntelligentReporting } from '@/hooks/useIntelligentReporting';
 import IntelligentReporting from '@/components/feedback/IntelligentReporting';
 import EnhancedPhoneInput from '@/components/forms/EnhancedPhoneInput';
-import { useUniversalFormStorage } from '@/hooks/useUniversalFormStorage';
 
 const CustomerRegistration = () => {
   const { toast } = useToast();
@@ -28,14 +27,6 @@ const CustomerRegistration = () => {
   
   const { bankingData, saveBankingProfile, loadBankingData } = useUniversalBankingStorage('customer');
   const { activeReport, showSuccessReport, showErrorReport, clearReport } = useIntelligentReporting();
-  
-  // Universal data storage integration
-  const universalStorage = useUniversalFormStorage({
-    formType: 'customer',
-    storageKey: 'customerRegistrationForm',
-    autoSave: true,
-    autoSaveDelay: 2000
-  });
 
   // Prevent flickering by memoizing conditional rendering logic
   const shouldShowBankingSection = useMemo(() => {
@@ -129,6 +120,7 @@ const CustomerRegistration = () => {
           errors: errors
         });
         
+        // Don't show the error report if form is actually complete
         const missingFields = [];
         if (!formData.firstName.trim()) missingFields.push('First Name');
         if (!formData.lastName.trim()) missingFields.push('Last Name');
@@ -146,36 +138,8 @@ const CustomerRegistration = () => {
         return;
       }
 
-      // Store data universally (local + database) before submission
-      const storageResult = await universalStorage.storeFormData(formData, true, false);
-      
-      // Store user profile in comprehensive table
-      await universalStorage.storeUserProfile({
-        first_name: formData.firstName,
-        last_name: formData.lastName,
-        email: formData.email,
-        phone: formData.phoneNumber,
-        terms_accepted: formData.agreeTerms,
-        terms_accepted_at: new Date().toISOString(),
-        marketing_consent: formData.marketingConsent,
-        verification_status: 'pending'
-      }, 'customer');
-
-      // Store banking data if provided
-      if (formData.bankName && formData.accountNumber) {
-        await universalStorage.storeBankingData({
-          bankName: formData.bankName,
-          branchCode: formData.branchCode,
-          accountNumber: formData.accountNumber,
-          accountType: 'savings',
-          firstName: formData.firstName,
-          lastName: formData.lastName
-        }, 'customer');
-      }
-
       await handleSubmit(e);
-      
-      showSuccessReport('Customer registration completed successfully! All data stored permanently in both local storage and secure cloud database.');
+      showSuccessReport('Customer registration completed successfully! Welcome to Addex-Hub Mobile.');
       
     } catch (error) {
       console.error('Registration error:', error);
@@ -201,17 +165,6 @@ const CustomerRegistration = () => {
           <p className="text-blue-600">
             Join Addex-Hub Mobile for exclusive deals and secure payments
           </p>
-          <div className="flex items-center justify-center gap-2 mt-2">
-            <Badge className="bg-green-100 text-green-700">
-              <Database className="w-3 h-3 mr-1" />
-              Universal Storage Active
-            </Badge>
-            {universalStorage.lastSaved && (
-              <Badge variant="outline" className="text-xs">
-                Last saved: {universalStorage.lastSaved.toLocaleTimeString()}
-              </Badge>
-            )}
-          </div>
         </CardHeader>
       </Card>
 

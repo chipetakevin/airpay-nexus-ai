@@ -5,7 +5,6 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { PersistentAuthProvider } from "@/components/auth/PersistentAuthProvider";
-import { MobileFirstProvider } from "@/components/layout/MobileFirstProvider";
 import Index from "./pages/Index";
 import Portal from "./pages/Portal";
 import WhatsAppAssistant from "./pages/WhatsAppAssistant";
@@ -28,21 +27,16 @@ import PortingSystem from "./pages/PortingSystem";
 import RICARegistration from "./pages/RICARegistration";
 import RegistrationHub from "./pages/RegistrationHub";
 import AdminMVNEDashboard from "./pages/AdminMVNEDashboard";
-import CollapsibleDemo from "./pages/CollapsibleDemo";
-import { SystemManagement } from "./pages/SystemManagement";
-import { MobileDashboard } from "./components/mobile/MobileDashboard";
-import { MobileNavigation } from "./components/mobile/MobileNavigation";
 
 const queryClient = new QueryClient();
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <PersistentAuthProvider>
-      <MobileFirstProvider>
-        <TooltipProvider>
-          <Toaster />
-          <Sonner />
-          <BrowserRouter>
+      <TooltipProvider>
+        <Toaster />
+        <Sonner />
+        <BrowserRouter>
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/portal" element={<Portal />} />
@@ -65,14 +59,10 @@ const App = () => (
             <Route path="/rica-registration" element={<RICARegistration />} />
             <Route path="/registration-hub" element={<RegistrationHub />} />
             <Route path="/admin-mvne" element={<AdminMVNEDashboard />} />
-            <Route path="/collapsible-demo" element={<CollapsibleDemo />} />
-            <Route path="/system-management" element={<SystemManagement />} />
-            <Route path="/mobile-dashboard" element={<MobileDashboard />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
       </TooltipProvider>
-      </MobileFirstProvider>
     </PersistentAuthProvider>
   </QueryClientProvider>
 );

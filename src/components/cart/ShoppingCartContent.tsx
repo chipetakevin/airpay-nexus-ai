@@ -93,36 +93,18 @@ const ShoppingCartContent: React.FC<ShoppingCartContentProps> = ({ initialDeal }
       return;
     }
 
-    // Enhanced validation - try to get phone from registration first
+    // Enhanced validation for all user types
     let validationError = '';
-    const phoneToValidate = customerPhone || (() => {
-      // Try to get phone from stored credentials if customerPhone is empty
-      try {
-        const credentials = localStorage.getItem('userCredentials');
-        if (credentials) {
-          const parsed = JSON.parse(credentials);
-          const foundPhone = parsed.phone || parsed.registeredPhone || parsed.phoneNumber;
-          if (foundPhone) {
-            // Auto-fill the customerPhone state
-            setCustomerPhone(foundPhone);
-            return foundPhone;
-          }
-        }
-      } catch (error) {
-        console.error('Error getting phone from credentials:', error);
-      }
-      return '';
-    })();
     
     if (cartItems.length === 0) {
       validationError = 'Your cart is empty';
     } else if (purchaseMode === 'other' && (!recipientData.name || !recipientData.phone)) {
       validationError = 'Please provide recipient details for third-party purchases';
-    } else if (!phoneToValidate) {
-      validationError = 'Customer phone number is required - please update your profile';
+    } else if (!customerPhone) {
+      validationError = 'Customer phone number is required';
     }
 
-    console.log('📋 Validation check:', { validationError, phoneToValidate, userType });
+    console.log('📋 Validation check:', { validationError, customerPhone, userType });
 
     // Process the purchase using the enhanced shopping cart logic
     try {
@@ -159,7 +141,7 @@ const ShoppingCartContent: React.FC<ShoppingCartContentProps> = ({ initialDeal }
   }
 
   return (
-    <div className="space-y-6 max-h-[calc(100vh-200px)] overflow-y-auto">
+    <div className="space-y-6">
       {/* Cart Items */}
       <Card>
         <CardHeader>

@@ -8,12 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Eye, EyeOff, User, Building, Phone, Mail, MapPin, Shield } from 'lucide-react';
 import VendorPhoneSection from '@/components/forms/VendorPhoneSection';
 import UniversalCardDetailsForm from '@/components/banking/UniversalCardDetailsForm';
-import UnifiedBankingSection from '@/components/forms/UnifiedBankingSection';
-import OneCardDigitalWallet from '@/components/cards/OneCardDigitalWallet';
-import InternationalPaymentCardForm from '@/components/cards/InternationalPaymentCardForm';
-import { useOneCardSystem } from '@/hooks/useOneCardSystem';
 import { useToast } from '@/hooks/use-toast';
-import { supabase } from '@/integrations/supabase/client';
 
 interface VendorRegistrationFormProps {
   formData: any;
@@ -39,79 +34,10 @@ const VendorRegistrationForm: React.FC<VendorRegistrationFormProps> = ({
   setLocation
 }) => {
   const { toast } = useToast();
-  const { oneCardAccount, initializeOneCardSystem, addPaymentCard } = useOneCardSystem();
   const [showCardSection, setShowCardSection] = useState(false);
-  const [showOneCardWallet, setShowOneCardWallet] = useState(false);
-  const [userId, setUserId] = useState<string>('');
-
-  // Get current user ID and initialize OneCard
-  React.useEffect(() => {
-    const getCurrentUser = async () => {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (user) {
-        setUserId(user.id);
-        if (formData.firstName && formData.lastName) {
-          await initializeOneCardSystem(user.id, 'vendor');
-          setShowOneCardWallet(true);
-        }
-      }
-    };
-    getCurrentUser();
-  }, [formData.firstName, formData.lastName, initializeOneCardSystem]);
-
-  const handleEnhancedBankSelect = (bankName: string, routing: string, branchCode: string, bankDetails?: any) => {
-    console.log('🏦 Vendor bank selected:', { bankName, routing, branchCode, bankDetails });
-    handleBankSelect(bankName, routing, branchCode);
-    handleInputChange('bankName', bankName);
-    handleInputChange('branchCode', branchCode);
-    handleInputChange('routingNumber', routing);
-  };
-
-  const handleCardAdded = async (cardData: any) => {
-    if (oneCardAccount && userId) {
-      try {
-        await addPaymentCard({
-          userId,
-          oneCardAccountId: oneCardAccount.id,
-          cardType: cardData.cardType,
-          cardBrand: cardData.cardBrand,
-          lastFourDigits: cardData.lastFourDigits,
-          expiryMonth: cardData.expiryMonth,
-          expiryYear: cardData.expiryYear,
-          cardholderName: cardData.cardholderName,
-          billingCountry: cardData.billingCountry,
-          billingAddress: cardData.billingAddress,
-          isPrimary: true
-        });
-      } catch (error) {
-        console.error('Failed to add vendor payment card:', error);
-      }
-    }
-  };
 
   return (
     <div className="space-y-6">
-      {/* OneCard Digital Wallet Preview */}
-      {showOneCardWallet && userId && (
-        <Card className="border-gold-200 bg-gold-50/30">
-          <CardHeader className="pb-3">
-            <CardTitle className="text-lg flex items-center gap-2 text-gold-800">
-              <Shield className="w-5 h-5" />
-              Your OneCard Gold Wallet
-            </CardTitle>
-            <p className="text-sm text-gold-600">
-              Vendor OneCard with business rewards and cashback benefits
-            </p>
-          </CardHeader>
-          <CardContent>
-            <OneCardDigitalWallet
-              userId={userId}
-              userType="vendor"
-              showBalance={true}
-            />
-          </CardContent>
-        </Card>
-      )}
       {/* Personal Information */}
       <Card className="border-purple-200 bg-purple-50/30">
         <CardHeader className="pb-3">
@@ -237,52 +163,32 @@ const VendorRegistrationForm: React.FC<VendorRegistrationFormProps> = ({
         </CardContent>
       </Card>
 
-      {/* Banking Information */}
-      <UnifiedBankingSection
-        formData={{
-          bankName: formData.bankName,
-          accountNumber: formData.accountNumber,
-          branchCode: formData.branchCode,
-          routingNumber: formData.routingNumber
-        }}
-        errors={errors}
-        onInputChange={handleInputChange}
-        onBankSelect={handleEnhancedBankSelect}
-        userType="vendor"
-        required={false}
-      />
-
-      {/* International Payment Cards */}
-      <Card className="border-blue-200 bg-blue-50/30">
-        <CardHeader className="pb-3">
-          <div className="flex items-center justify-between">
-            <CardTitle className="text-lg flex items-center gap-2 text-blue-800">
-              <Building className="w-5 h-5" />
-              Business Payment Cards (Optional)
-            </CardTitle>
-            <Button
-              type="button"
-              variant="outline"
-              size="sm" 
-              onClick={() => setShowCardSection(!showCardSection)}
-            >
-              {showCardSection ? 'Hide' : 'Add'} Card
-            </Button>
-          </div>
-          <p className="text-sm text-blue-600">
-            Add international cards for business transactions and OneCard management
-          </p>
-        </CardHeader>
-        {showCardSection && oneCardAccount && (
-          <CardContent>
-            <InternationalPaymentCardForm
-              userId={userId}
-              oneCardAccountId={oneCardAccount.id}
-              onCardAdded={handleCardAdded}
-            />
-          </CardContent>
+      {/* Optional Payment Card Section */}
+      <div>
+        <div className="flex items-center justify-between mb-4">
+          <h3 className="text-lg font-medium text-gray-800">Business Payment Card (Optional)</h3>
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            onClick={() => setShowCardSection(!showCardSection)}
+          >
+            {showCardSection ? 'Hide' : 'Add'} Card Details
+          </Button>
+        </div>
+        
+        {showCardSection && (
+          <UniversalCardDetailsForm
+            userType="vendor"
+            onCardSaved={(card) => {
+              toast({
+                title: "Business Card Added! 💳",
+                description: `Your ${card.cardType.toUpperCase()} ending in ${card.lastFourDigits} has been saved securely.`,
+              });
+            }}
+          />
         )}
-      </Card>
+      </div>
 
       {/* Password Section */}
       <Card className="border-red-200 bg-red-50/30">

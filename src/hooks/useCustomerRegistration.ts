@@ -1,7 +1,6 @@
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useToast } from '@/hooks/use-toast';
-import { supabase } from '@/integrations/supabase/client';
 import { usePermanentAuth } from './usePermanentAuth';
 import { usePhoneValidation } from '@/hooks/usePhoneValidation';
 import { usePermanentFormStorage } from './usePermanentFormStorage';
@@ -33,7 +32,7 @@ export const useCustomerRegistration = () => {
   const { savePhoneNumber, autoFillPhone } = usePhoneStorage();
 
   // Load saved data on mount
-  useEffect(() => {
+  useState(() => {
     const savedData = loadPermanentData();
     if (savedData) {
       setFormData(prev => ({ ...prev, ...savedData }));
@@ -53,7 +52,7 @@ export const useCustomerRegistration = () => {
         }));
       }
     }
-  }, [loadPermanentData, autoFillPhone, toast]);
+  });
 
   const handleInputChange = (field: keyof CustomerFormData, value: any) => {
     // Special handling for phone numbers to ensure 9-digit preservation
@@ -161,27 +160,8 @@ export const useCustomerRegistration = () => {
     }
 
     try {
-      // Get current user ID for OneCard creation
-      const { data: { user } } = await supabase.auth.getUser();
-      const userId = user?.id;
-      
-      if (!userId) {
-        throw new Error('User not authenticated');
-      }
-
-      // Create OneCard account using the new system
-      const { data: oneCardNumber, error: oneCardError } = await supabase.rpc('create_onecard_account', {
-        user_id_param: userId,
-        user_type_param: 'customer',
-        onecard_type_param: 'standard'
-      });
-
-      if (oneCardError) {
-        console.error('OneCard creation error:', oneCardError);
-        throw new Error('Failed to create OneCard account');
-      }
-
-      console.log('✅ OneCard Standard created for customer:', oneCardNumber);
+      // Generate card number
+      const cardNumber = `OC${Math.random().toString().substr(2, 8)}`;
       
       // Ensure phone number is exactly 9 digits and properly formatted
       const phoneNumber = formData.phoneNumber.replace(/\D/g, '');
@@ -202,12 +182,12 @@ export const useCustomerRegistration = () => {
         permanentSession: true // Flag for permanent session
       };
 
-      // Create user data with consistent phone storage and OneCard integration
+      // Create user data with consistent phone storage
       const userData = {
         firstName: formData.firstName,
         lastName: formData.lastName,
         email: formData.email,
-        cardNumber: oneCardNumber, // Use the generated OneCard number
+        cardNumber,
         phone: phoneNumber,
         registeredPhone: `+27${phoneNumber}`,
         phoneNumber: phoneNumber,
@@ -217,9 +197,7 @@ export const useCustomerRegistration = () => {
         balance: 0,
         cashbackBalance: 0,
         totalEarned: 0,
-        registrationDate: new Date().toISOString(),
-        oneCardNumber: oneCardNumber,
-        oneCardType: 'standard'
+        registrationDate: new Date().toISOString()
       };
 
       // Store permanent session flags
@@ -235,32 +213,6 @@ export const useCustomerRegistration = () => {
 
       // Save form data permanently
       await savePermanently(formData);
-
-      // Store MVNE-compliant customer registration transaction
-      const { error: transactionError } = await supabase
-        .from('mvne_compliant_transactions')
-        .insert({
-          transaction_type: 'customer_registration',
-          customer_id: userId,
-          amount: 0,
-          base_amount: 0,
-          status: 'completed',
-          transaction_reference: `CUSTOMER-REG-${Date.now()}`,
-          recipient_msisdn: phoneNumber,
-          network_provider: 'SYSTEM',
-          regulatory_compliance: {
-            user_type: 'customer',
-            registration_timestamp: new Date().toISOString(),
-            terms_accepted: formData.agreeTerms,
-            marketing_consent: formData.marketingConsent
-          },
-          icasa_compliant: true,
-          rica_verified: true
-        });
-
-      if (transactionError) {
-        console.error('Transaction logging error:', transactionError);
-      }
 
       console.log('✅ Customer registration completed with PERMANENT session - never expires');
       console.log('✅ Phone number saved:', phoneNumber, '(9 digits preserved)');

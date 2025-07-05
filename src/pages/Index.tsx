@@ -114,40 +114,6 @@ const Index = () => {
           <div id="features">
             <FeaturesSection />
           </div>
-          
-          {/* Collapsible Components Demo Section */}
-          <section className="py-8 bg-gradient-to-br from-indigo-50 via-white to-purple-50">
-            <div className="container mx-auto px-4">
-              <div className="text-center mb-6">
-                <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2">
-                  Interactive Components
-                </h2>
-                <p className="text-gray-600 max-w-2xl mx-auto">
-                  Experience smooth collapsible sections with beautiful animations
-                </p>
-              </div>
-              
-              <div className="max-w-md mx-auto">
-                <Card className="shadow-xl border-2 border-indigo-200 overflow-hidden">
-                  <CardContent className="p-6 text-center">
-                    <div className="text-4xl mb-4">✨</div>
-                    <h3 className="text-xl font-semibold mb-2">Collapsible Demo</h3>
-                    <p className="text-gray-600 mb-4 text-sm">
-                      See the OneCard interface with smooth collapse animations
-                    </p>
-                    <Button 
-                      className="w-full bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700"
-                      onClick={() => window.location.href = '/collapsible-demo'}
-                    >
-                      Try Interactive Demo
-                      <ArrowRight className="w-4 h-4 ml-2" />
-                    </Button>
-                  </CardContent>
-                </Card>
-              </div>
-            </div>
-          </section>
-          
           <BenefitsSection />
           <StatsGrid />
           

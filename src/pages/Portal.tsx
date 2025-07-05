@@ -8,9 +8,6 @@ import FloatingPlatformSwitcher from '@/components/navigation/FloatingPlatformSw
 import PermanentAuthStatus from '@/components/auth/PermanentAuthStatus';
 import { useSessionManager } from '@/hooks/useSessionManager';
 import { usePersistentAuth } from '@/components/auth/PersistentAuthProvider';
-import { MobileNavigation } from '@/components/mobile/MobileNavigation';
-import { MobileOnly, DesktopOnly } from '@/components/layout/ResponsiveRenderer';
-import { useMobileDetection } from '@/hooks/useMobileDetection';
 
 type UserType = 'customer' | 'vendor' | 'admin' | null;
 
@@ -101,8 +98,8 @@ const Portal = () => {
   // Enhanced isTabAllowed function for seamless navigation
   const isTabAllowed = (tabValue: string) => {
     try {
-      // Always allow deals, registration, vendor, and contractor tabs for seamless navigation
-      if (['deals', 'registration', 'vendor', 'contractor'].includes(tabValue)) {
+      // Always allow deals, registration, and vendor tabs for seamless navigation
+      if (['deals', 'registration', 'vendor'].includes(tabValue)) {
         console.log(`✅ Always allowed tab: ${tabValue}`);
         return true;
       }
@@ -147,7 +144,7 @@ const Portal = () => {
       return tabValue === 'deals';
     } catch (error) {
       console.error('Error checking tab permissions:', error);
-      return ['deals', 'registration', 'vendor', 'contractor'].includes(tabValue);
+      return ['deals', 'registration', 'vendor'].includes(tabValue);
     }
   };
 
@@ -157,7 +154,7 @@ const Portal = () => {
       console.log(`🔄 Attempting to change to tab: ${value}`);
       
       // Always allow seamless navigation between core tabs
-      if (['deals', 'registration', 'vendor', 'contractor'].includes(value)) {
+      if (['deals', 'registration', 'vendor'].includes(value)) {
         console.log(`✅ Core tab access granted: ${value}`);
         setActiveTab(value);
         navigate(`?tab=${value}`, { replace: true });
@@ -187,58 +184,29 @@ const Portal = () => {
   };
 
   return (
-    <div className="min-h-screen overflow-y-auto">
-      {/* Desktop Header */}
-      <DesktopOnly>
-        <div className="bg-gradient-to-r from-blue-600 to-purple-600 p-4">
-          <PortalHeader userType={userType} resetUserType={resetUserType} />
-        </div>
-      </DesktopOnly>
+    <div className="min-h-screen bg-gray-50">
+      <div className="bg-gradient-to-r from-blue-600 to-purple-600 p-2">
+        <PortalHeader userType={userType} resetUserType={resetUserType} />
+      </div>
       
-      {/* Mobile Header - Integrated with mobile layout */}
-      <MobileOnly>
-        <div className="bg-gradient-to-r from-blue-600 to-purple-600 p-2">
-          <PortalHeader userType={userType} resetUserType={resetUserType} />
-        </div>
-      </MobileOnly>
-      
-      <main className="container mx-auto px-2 sm:px-4 -mt-1 pb-8 md:pb-8">
-        {/* Add extra bottom padding on mobile to account for floating elements */}
-        <div className="pb-20 md:pb-0">
-          <PortalTabs 
-            activeTab={activeTab}
-            showAdminTab={showAdminTab}
-            isTabAllowed={isTabAllowed}
-            handleTabChange={handleTabChange}
-            setIsAdminAuthenticated={setIsAdminAuthenticated}
-            isUnifiedProfile={isUnifiedProfile}
-            isAuthenticated={isAuthenticated}
-          />
-        </div>
+      <main className="container mx-auto px-2 sm:px-4 -mt-1">
+        <PortalTabs 
+          activeTab={activeTab}
+          showAdminTab={showAdminTab}
+          isTabAllowed={isTabAllowed}
+          handleTabChange={handleTabChange}
+          setIsAdminAuthenticated={setIsAdminAuthenticated}
+          isUnifiedProfile={isUnifiedProfile}
+          isAuthenticated={isAuthenticated}
+        />
       </main>
       
-      {/* Device-Specific Navigation */}
-      <MobileOnly>
-        <MobileNavigation />
-      </MobileOnly>
+      <WhatsAppFloatingButton />
       
-      {/* Desktop-Only Features */}
-      <DesktopOnly>
-        <WhatsAppFloatingButton />
-        
-        {/* Add Floating Platform Switcher */}
-        {activeTab === 'deals' && (
-          <FloatingPlatformSwitcher currentPlatform="portal" />
-        )}
-      </DesktopOnly>
-
-      {/* Mobile-Only Features */}
-      <MobileOnly>
-        {/* Mobile WhatsApp Button - positioned differently for mobile */}
-        <div className="fixed bottom-20 right-4 z-40">
-          <WhatsAppFloatingButton />
-        </div>
-      </MobileOnly>
+      {/* Add Floating Platform Switcher */}
+      {activeTab === 'deals' && (
+        <FloatingPlatformSwitcher currentPlatform="portal" />
+      )}
 
       {/* Permanent Authentication Status */}
       <PermanentAuthStatus />
