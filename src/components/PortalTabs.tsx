@@ -139,11 +139,14 @@ const PortalTabs = ({
             className="nerve-center-mobile-portal"
           >
             <div className="w-full responsive-content-wrapper">
-      {/* Enhanced Mobile Navigation with Better Visibility */}
+      {/* Enhanced Mobile Navigation with Premium Styling */}
       <MobileOnly>
         <div className="mb-6 px-4">
-          <div className="bg-gradient-to-r from-primary/5 via-primary/10 to-primary/5 rounded-2xl p-4 border border-primary/20">
-            <h3 className="text-sm font-medium text-muted-foreground mb-3 text-center">Navigate Services</h3>
+          <div className="bg-gradient-to-br from-muted/30 via-background to-muted/20 rounded-3xl p-5 border border-border/40 shadow-lg backdrop-blur-sm">
+            <div className="text-center mb-4">
+              <h3 className="text-sm font-bold text-muted-foreground/80 uppercase tracking-wider">Navigate Services</h3>
+              <div className="w-12 h-0.5 bg-gradient-to-r from-transparent via-primary to-transparent mx-auto mt-2"></div>
+            </div>
             <EnhancedPortalNavigation
               activeTab={activeTab}
               onTabChange={enhancedHandleTabChange}

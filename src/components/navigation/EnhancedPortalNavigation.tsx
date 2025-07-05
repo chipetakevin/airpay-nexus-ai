@@ -135,38 +135,63 @@ export const EnhancedPortalNavigation: React.FC<EnhancedPortalNavigationProps> =
   if (isMobile) {
     return (
       <div className={cn("w-full", className)}>
-        <div className="w-full overflow-x-auto scrollbar-hide">
-          <div className="flex gap-2 pb-2 px-1 min-w-max">
+        <div className="w-full overflow-x-auto scrollbar-hide enhanced-tab-container">
+          <div className="flex gap-3 pb-2 px-1 min-w-max">
             {tabs.map((tab) => (
               <button
                 key={tab.id}
                 onClick={() => !tab.disabled && handleTabChange(tab.id)}
                 disabled={tab.disabled}
                 className={cn(
-                  "flex items-center gap-2 px-4 py-3 rounded-xl font-medium transition-all duration-300 border flex-shrink-0 min-w-fit",
+                  "mobile-tab-enhanced flex items-center gap-3 px-5 py-4 rounded-2xl font-medium transition-all duration-300 border flex-shrink-0 min-w-fit shadow-sm",
                   activeTab === tab.id
-                    ? "bg-primary text-primary-foreground shadow-lg border-primary transform scale-105"
-                    : "bg-background/80 text-foreground hover:bg-muted/70 border-border hover:border-primary/50 hover:shadow-md hover:scale-102",
+                    ? "active bg-gradient-to-r from-primary via-primary/95 to-primary text-primary-foreground border-primary/20 shadow-lg ring-2 ring-primary/20"
+                    : "bg-gradient-to-r from-background/90 via-background to-background/90 text-foreground border-border/60 hover:border-primary/40 hover:shadow-md hover:bg-gradient-to-r hover:from-muted/40 hover:via-muted/60 hover:to-muted/40",
                   tab.disabled && "opacity-50 cursor-not-allowed"
                 )}
               >
-                <span className="text-lg flex-shrink-0">{tab.icon}</span>
-                <div className="flex flex-col items-start text-left">
-                  <span className="font-semibold text-sm whitespace-nowrap leading-tight">{tab.label}</span>
-                  <span className="text-xs opacity-80 whitespace-nowrap leading-tight">{tab.description}</span>
+                {/* Icon with better spacing */}
+                <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-white/10 flex-shrink-0">
+                  <span className="text-xl">{tab.icon}</span>
                 </div>
-                {tab.count && (
-                  <span className="text-xs ml-2 flex-shrink-0 bg-primary/20 text-primary px-2 py-1 rounded-full font-medium">
-                    {tab.count}
+                
+                {/* Text content with improved typography */}
+                <div className="flex flex-col items-start text-left min-w-0">
+                  <span className="font-bold text-base whitespace-nowrap leading-tight tracking-wide">
+                    {tab.label}
                   </span>
-                )}
-                {tab.status && (
-                  <div className="flex-shrink-0 ml-1">
-                    {tab.status === 'new' && <span className="bg-green-500 text-white text-xs animate-pulse px-2 py-1 rounded-full font-medium">New</span>}
-                    {tab.status === 'alert' && <span className="bg-red-500 text-white text-xs animate-bounce px-2 py-1 rounded-full font-medium">!</span>}
-                    {tab.status === 'coming-soon' && <span className="text-xs border border-yellow-500 text-yellow-600 px-2 py-1 rounded-full font-medium">Soon</span>}
-                  </div>
-                )}
+                  <span className="text-xs opacity-85 whitespace-nowrap leading-tight font-medium">
+                    {tab.description}
+                  </span>
+                </div>
+                
+                {/* Status indicators */}
+                <div className="flex items-center gap-2 flex-shrink-0">
+                  {tab.count && (
+                    <span className="text-xs bg-white/20 text-current px-2.5 py-1 rounded-full font-bold min-w-6 text-center">
+                      {tab.count}
+                    </span>
+                  )}
+                  {tab.status && (
+                    <div className="flex-shrink-0">
+                      {tab.status === 'new' && (
+                        <span className="bg-green-500 text-white text-xs animate-pulse px-2.5 py-1 rounded-full font-bold shadow-sm">
+                          New
+                        </span>
+                      )}
+                      {tab.status === 'alert' && (
+                        <span className="bg-red-500 text-white text-xs animate-bounce px-2.5 py-1 rounded-full font-bold shadow-sm">
+                          !
+                        </span>
+                      )}
+                      {tab.status === 'coming-soon' && (
+                        <span className="text-xs border-2 border-yellow-500 text-yellow-600 px-2.5 py-1 rounded-full font-bold bg-yellow-50 dark:bg-yellow-900/20">
+                          Soon
+                        </span>
+                      )}
+                    </div>
+                  )}
+                </div>
               </button>
             ))}
           </div>
