@@ -1,6 +1,110 @@
 
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+
+/* Design System - Semantic Color Tokens */
+@layer base {
+  :root {
+    /* Base colors */
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+    --primary: 221.2 83.2% 53.3%;
+    --primary-foreground: 210 40% 98%;
+    --secondary: 210 40% 96%;
+    --secondary-foreground: 222.2 84% 4.9%;
+    --muted: 210 40% 96%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+    --accent: 210 40% 96%;
+    --accent-foreground: 222.2 84% 4.9%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 221.2 83.2% 53.3%;
+    --radius: 0.5rem;
+
+    /* Enhanced Tab Colors - HSL System */
+    --tab-orange: 24.6 95% 53.1%;
+    --tab-orange-light: 24.6 95% 97%;
+    --tab-orange-muted: 24.6 95% 85%;
+    
+    --tab-purple: 262.1 83.3% 57.8%;
+    --tab-purple-light: 262.1 83.3% 97%;
+    --tab-purple-muted: 262.1 83.3% 85%;
+    
+    --tab-green: 142.1 76.2% 36.3%;
+    --tab-green-light: 142.1 76.2% 97%;
+    --tab-green-muted: 142.1 76.2% 85%;
+    
+    --tab-blue: 221.2 83.2% 53.3%;
+    --tab-blue-light: 221.2 83.2% 97%;
+    --tab-blue-muted: 221.2 83.2% 85%;
+    
+    --tab-yellow: 35.5 91.7% 32.9%;
+    --tab-yellow-light: 35.5 91.7% 97%;
+    --tab-yellow-muted: 35.5 91.7% 85%;
+    
+    --tab-gray: 215.4 16.3% 46.9%;
+    --tab-gray-light: 215.4 16.3% 97%;
+    --tab-gray-muted: 215.4 16.3% 85%;
+  }
+
+  .dark {
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+    --primary: 217.2 91.2% 59.8%;
+    --primary-foreground: 222.2 84% 4.9%;
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 224.3 76.3% 94.1%;
+
+    /* Dark mode tab colors */
+    --tab-orange: 24.6 95% 53.1%;
+    --tab-orange-light: 24.6 95% 8%;
+    --tab-orange-muted: 24.6 95% 15%;
+    
+    --tab-purple: 262.1 83.3% 57.8%;
+    --tab-purple-light: 262.1 83.3% 8%;
+    --tab-purple-muted: 262.1 83.3% 15%;
+    
+    --tab-green: 142.1 76.2% 36.3%;
+    --tab-green-light: 142.1 76.2% 8%;
+    --tab-green-muted: 142.1 76.2% 15%;
+    
+    --tab-blue: 221.2 83.2% 53.3%;
+    --tab-blue-light: 221.2 83.2% 8%;
+    --tab-blue-muted: 221.2 83.2% 15%;
+    
+    --tab-yellow: 35.5 91.7% 32.9%;
+    --tab-yellow-light: 35.5 91.7% 8%;
+    --tab-yellow-muted: 35.5 91.7% 15%;
+    
+    --tab-gray: 215.4 16.3% 46.9%;
+    --tab-gray-light: 215.4 16.3% 8%;
+    --tab-gray-muted: 215.4 16.3% 15%;
+  }
+}
+
 /* Import modular CSS files */
 @import './styles/base.css';
 @import './styles/animations.css';
 @import './styles/components.css';
 @import './styles/mobile.css';
+@import './styles/mobile-tabs.css';

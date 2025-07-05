@@ -1,5 +1,100 @@
 
 @layer utilities {
+  /* Enhanced Tab System - Using Design System Tokens */
+  
+  /* Base tab styles */
+  .tab-active {
+    color: white;
+    font-weight: 700;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  .tab-inactive {
+    background: hsl(var(--card));
+    color: hsl(var(--foreground));
+    font-weight: 600;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  /* Tab color variants using design system */
+  .tab-orange-active {
+    background: linear-gradient(135deg, hsl(var(--tab-orange)), hsl(var(--tab-orange)) 70%);
+    border-color: hsl(var(--tab-orange));
+  }
+  .tab-orange-inactive {
+    background: hsl(var(--tab-orange-light));
+    border-color: hsl(var(--tab-orange-muted));
+  }
+  .tab-orange-hover:hover {
+    background: hsl(var(--tab-orange-muted));
+    border-color: hsl(var(--tab-orange));
+  }
+  
+  .tab-purple-active {
+    background: linear-gradient(135deg, hsl(var(--tab-purple)), hsl(var(--tab-purple)) 70%);
+    border-color: hsl(var(--tab-purple));
+  }
+  .tab-purple-inactive {
+    background: hsl(var(--tab-purple-light));
+    border-color: hsl(var(--tab-purple-muted));
+  }
+  .tab-purple-hover:hover {
+    background: hsl(var(--tab-purple-muted));
+    border-color: hsl(var(--tab-purple));
+  }
+  
+  .tab-green-active {
+    background: linear-gradient(135deg, hsl(var(--tab-green)), hsl(var(--tab-green)) 70%);
+    border-color: hsl(var(--tab-green));
+  }
+  .tab-green-inactive {
+    background: hsl(var(--tab-green-light));
+    border-color: hsl(var(--tab-green-muted));
+  }
+  .tab-green-hover:hover {
+    background: hsl(var(--tab-green-muted));
+    border-color: hsl(var(--tab-green));
+  }
+  
+  .tab-blue-active {
+    background: linear-gradient(135deg, hsl(var(--tab-blue)), hsl(var(--tab-blue)) 70%);
+    border-color: hsl(var(--tab-blue));
+  }
+  .tab-blue-inactive {
+    background: hsl(var(--tab-blue-light));
+    border-color: hsl(var(--tab-blue-muted));
+  }
+  .tab-blue-hover:hover {
+    background: hsl(var(--tab-blue-muted));
+    border-color: hsl(var(--tab-blue));
+  }
+  
+  .tab-yellow-active {
+    background: linear-gradient(135deg, hsl(var(--tab-yellow)), hsl(var(--tab-yellow)) 70%);
+    border-color: hsl(var(--tab-yellow));
+  }
+  .tab-yellow-inactive {
+    background: hsl(var(--tab-yellow-light));
+    border-color: hsl(var(--tab-yellow-muted));
+  }
+  .tab-yellow-hover:hover {
+    background: hsl(var(--tab-yellow-muted));
+    border-color: hsl(var(--tab-yellow));
+  }
+  
+  .tab-gray-active {
+    background: linear-gradient(135deg, hsl(var(--tab-gray)), hsl(var(--tab-gray)) 70%);
+    border-color: hsl(var(--tab-gray));
+  }
+  .tab-gray-inactive {
+    background: hsl(var(--tab-gray-light));
+    border-color: hsl(var(--tab-gray-muted));
+  }
+  .tab-gray-hover:hover {
+    background: hsl(var(--tab-gray-muted));
+    border-color: hsl(var(--tab-gray));
+  }
+
   /* Mobile-friendly tab styles */
   .mobile-tab-container {
     display: flex;

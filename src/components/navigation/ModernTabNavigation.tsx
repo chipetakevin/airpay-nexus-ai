@@ -32,28 +32,28 @@ const ModernTabNavigation = ({
     const isAllowed = isTabAllowed(tab.value);
     
     if (!isAllowed) {
-      return "opacity-50 cursor-not-allowed bg-gray-50 border-gray-200 text-gray-400";
+      return "opacity-50 cursor-not-allowed bg-muted border-border text-muted-foreground";
     }
     
     const colorMap = {
       orange: isActive 
-        ? "bg-gradient-to-br from-orange-500 to-red-500 text-white shadow-lg border-orange-400 scale-105" 
-        : "bg-orange-50 border-orange-200 hover:bg-orange-100 hover:border-orange-300 text-orange-700",
+        ? "tab-active tab-orange-active border-2 shadow-lg transform hover:shadow-xl" 
+        : "tab-inactive tab-orange-inactive border hover:tab-orange-hover",
       purple: isActive 
-        ? "bg-gradient-to-br from-purple-500 to-pink-500 text-white shadow-lg border-purple-400 scale-105" 
-        : "bg-purple-50 border-purple-200 hover:bg-purple-100 hover:border-purple-300 text-purple-700",
+        ? "tab-active tab-purple-active border-2 shadow-lg transform hover:shadow-xl" 
+        : "tab-inactive tab-purple-inactive border hover:tab-purple-hover",
       green: isActive 
-        ? "bg-gradient-to-br from-green-500 to-emerald-500 text-white shadow-lg border-green-400 scale-105" 
-        : "bg-green-50 border-green-200 hover:bg-green-100 hover:border-green-300 text-green-700",
+        ? "tab-active tab-green-active border-2 shadow-lg transform hover:shadow-xl" 
+        : "tab-inactive tab-green-inactive border hover:tab-green-hover",
       blue: isActive 
-        ? "bg-gradient-to-br from-blue-500 to-cyan-500 text-white shadow-lg border-blue-400 scale-105" 
-        : "bg-blue-50 border-blue-200 hover:bg-blue-100 hover:border-blue-300 text-blue-700",
+        ? "tab-active tab-blue-active border-2 shadow-lg transform hover:shadow-xl" 
+        : "tab-inactive tab-blue-inactive border hover:tab-blue-hover",
       yellow: isActive 
-        ? "bg-gradient-to-br from-yellow-500 to-amber-500 text-white shadow-lg border-yellow-400 scale-105" 
-        : "bg-yellow-50 border-yellow-200 hover:bg-yellow-100 hover:border-yellow-300 text-yellow-700",
+        ? "tab-active tab-yellow-active border-2 shadow-lg transform hover:shadow-xl" 
+        : "tab-inactive tab-yellow-inactive border hover:tab-yellow-hover",
       gray: isActive 
-        ? "bg-gradient-to-br from-gray-600 to-slate-600 text-white shadow-lg border-gray-400 scale-105" 
-        : "bg-gray-50 border-gray-200 hover:bg-gray-100 hover:border-gray-300 text-gray-700"
+        ? "tab-active tab-gray-active border-2 shadow-lg transform hover:shadow-xl" 
+        : "tab-inactive tab-gray-inactive border hover:tab-gray-hover"
     };
     
     return colorMap[tab.color] || colorMap.gray;
@@ -77,10 +77,11 @@ const ModernTabNavigation = ({
             key={tab.value}
             className={`
               ${getTabStyles(tab)}
-              border-2 transition-all duration-300 cursor-pointer
+              transition-all duration-300 cursor-pointer
               min-h-[100px] flex flex-col items-center justify-center p-3
-              hover:shadow-lg active:scale-98 mobile-touch-target
+              hover:shadow-lg mobile-touch-target
               focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2
+              overflow-hidden
             `}
             onClick={() => handleTabClick(tab)}
             role="button"
@@ -88,9 +89,9 @@ const ModernTabNavigation = ({
             aria-label={`${tab.label} - ${tab.description}`}
           >
             <div className="text-xl mb-1.5">{tab.icon}</div>
-            <div className="text-center w-full">
-              <div className="text-sm font-bold leading-tight truncate px-1">{tab.label}</div>
-              <div className="text-xs opacity-90 leading-tight mt-0.5 truncate px-1">{tab.description}</div>
+            <div className="text-center w-full max-w-full">
+              <div className="text-sm font-bold leading-tight truncate px-1 max-w-full overflow-hidden">{tab.label}</div>
+              <div className="text-xs opacity-90 leading-tight mt-0.5 truncate px-1 max-w-full overflow-hidden">{tab.description}</div>
             </div>
             {activeTab === tab.value && (
               <div className="flex items-center gap-1 mt-1.5">
@@ -110,10 +111,11 @@ const ModernTabNavigation = ({
             key={tab.value}
             className={`
               ${getTabStyles(tab)}
-              border-2 transition-all duration-300 cursor-pointer
+              transition-all duration-300 cursor-pointer
               min-h-[110px] flex flex-col items-center justify-center p-5
-              hover:shadow-lg active:scale-98
+              hover:shadow-lg
               focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2
+              overflow-hidden
             `}
             onClick={() => handleTabClick(tab)}
             role="button"
@@ -121,9 +123,9 @@ const ModernTabNavigation = ({
             aria-label={`${tab.label} - ${tab.description}`}
           >
             <div className="text-2xl mb-2">{tab.icon}</div>
-            <div className="text-center">
-              <div className="mobile-heading-small text-sm font-bold leading-tight">{tab.label}</div>
-              <div className="mobile-text-medium text-sm opacity-85 leading-tight mt-1">{tab.description}</div>
+            <div className="text-center max-w-full">
+              <div className="text-sm font-bold leading-tight truncate max-w-full overflow-hidden">{tab.label}</div>
+              <div className="text-sm opacity-85 leading-tight mt-1 truncate max-w-full overflow-hidden">{tab.description}</div>
             </div>
             {activeTab === tab.value && (
               <div className="flex items-center gap-1 mt-2">
@@ -143,16 +145,17 @@ const ModernTabNavigation = ({
             key={tab.value}
             className={`
               ${getTabStyles(tab)}
-              border-2 transition-all duration-300 cursor-pointer
+              transition-all duration-300 cursor-pointer
               min-h-[100px] w-[140px] flex flex-col items-center justify-center p-4
-              hover:shadow-lg hover:-translate-y-1 active:scale-95
+              hover:shadow-lg hover:-translate-y-1
+              overflow-hidden
             `}
             onClick={() => handleTabClick(tab)}
           >
             <div className="text-2xl mb-2">{tab.icon}</div>
-            <div className="text-center">
-              <div className="text-sm font-bold leading-tight">{tab.label}</div>
-              <div className="text-xs opacity-75 leading-tight mt-1">{tab.description}</div>
+            <div className="text-center max-w-full">
+              <div className="text-sm font-bold leading-tight truncate max-w-full overflow-hidden">{tab.label}</div>
+              <div className="text-xs opacity-75 leading-tight mt-1 truncate max-w-full overflow-hidden">{tab.description}</div>
             </div>
             {activeTab === tab.value && (
               <div className="flex items-center gap-1 mt-2">
