@@ -180,7 +180,7 @@ export const CollapsibleFeatureSection: React.FC<CollapsibleFeatureSectionProps>
                   isEnabled={getFeatureStatus(feature.feature_key)}
                   isLoading={isLoading}
                   canToggle={canToggle}
-                  onToggle={onToggleFeature}
+                  onToggle={(enabled) => onToggleFeature?.(feature.feature_key, enabled)}
                   variant={variant}
                   showQuickActions={false} // Already handled at section level
                 />
