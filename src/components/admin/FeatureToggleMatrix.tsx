@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Switch } from '@/components/ui/switch';
+import { EnhancedToggle } from '@/components/ui/enhanced-toggle';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -8,7 +8,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { useFeatureAccess } from '@/hooks/useFeatureAccess';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
-import { Search, Filter, Users, RotateCcw, Save } from 'lucide-react';
+import { Search, Filter, Users, RotateCcw, Save, CheckCircle2, AlertCircle } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 interface ContractorProfile {
   id: string;
@@ -252,37 +253,52 @@ export const FeatureToggleMatrix: React.FC = () => {
                     Contractor
                   </th>
                   {filteredFeatures.map(feature => (
-                    <th key={feature.id} className="text-center p-3 border-b min-w-32">
-                      <div className="space-y-1">
+                  <th key={feature.id} className="text-center p-3 border-b min-w-32">
+                    <div className="space-y-2">
+                      <div className="flex items-center justify-center space-x-1">
+                        {getFeatureEnabledCount(feature.feature_key) > 0 ? (
+                          <CheckCircle2 className="h-3 w-3 text-toggle-enabled" />
+                        ) : (
+                          <AlertCircle className="h-3 w-3 text-toggle-disabled" />
+                        )}
                         <div className="font-medium text-xs">
                           {feature.feature_name}
                         </div>
-                        <Badge variant="outline" className="text-xs">
-                          {feature.category}
-                        </Badge>
-                        <div className="text-xs text-muted-foreground">
-                          {getFeatureEnabledCount(feature.feature_key)}/{filteredContractors.length}
-                        </div>
-                        <div className="flex gap-1 justify-center">
-                          <Button
-                            size="sm"
-                            variant="outline"
-                            className="h-6 px-2 text-xs"
-                            onClick={() => handleBulkToggleFeature(feature.feature_key, true)}
-                          >
-                            All On
-                          </Button>
-                          <Button
-                            size="sm"
-                            variant="outline"
-                            className="h-6 px-2 text-xs"
-                            onClick={() => handleBulkToggleFeature(feature.feature_key, false)}
-                          >
-                            All Off
-                          </Button>
-                        </div>
                       </div>
-                    </th>
+                      <Badge 
+                        variant="outline" 
+                        className={cn(
+                          "text-xs",
+                          getFeatureEnabledCount(feature.feature_key) > 0 
+                            ? "border-feature-enabled-border text-feature-enabled-text" 
+                            : "border-feature-disabled-border text-feature-disabled-text"
+                        )}
+                      >
+                        {feature.category}
+                      </Badge>
+                      <div className="text-xs text-muted-foreground">
+                        {getFeatureEnabledCount(feature.feature_key)}/{filteredContractors.length} enabled
+                      </div>
+                      <div className="flex gap-1 justify-center">
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          className="h-6 px-2 text-xs hover:bg-feature-enabled-bg hover:border-feature-enabled-border"
+                          onClick={() => handleBulkToggleFeature(feature.feature_key, true)}
+                        >
+                          All On
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          className="h-6 px-2 text-xs hover:bg-feature-disabled-bg hover:border-feature-disabled-border"
+                          onClick={() => handleBulkToggleFeature(feature.feature_key, false)}
+                        >
+                          All Off
+                        </Button>
+                      </div>
+                    </div>
+                  </th>
                   ))}
                   <th className="text-center p-3 border-b">
                     <div className="space-y-1">
@@ -292,54 +308,98 @@ export const FeatureToggleMatrix: React.FC = () => {
                 </tr>
               </thead>
               <tbody>
-                {filteredContractors.map(contractor => (
-                  <tr key={contractor.id} className="border-b hover:bg-muted/30">
-                    <td className="p-3">
-                      <div>
-                        <div className="font-medium">
-                          {contractor.first_name} {contractor.last_name}
+                {filteredContractors.map(contractor => {
+                  const enabledCount = getContractorEnabledCount(contractor.id);
+                  const totalCount = filteredFeatures.length;
+                  const completionRate = totalCount > 0 ? (enabledCount / totalCount) * 100 : 0;
+                  
+                  return (
+                    <tr 
+                      key={contractor.id} 
+                      className={cn(
+                        "border-b transition-colors hover:bg-muted/30",
+                        completionRate > 75 ? "bg-feature-enabled-bg/20" : 
+                        completionRate > 25 ? "bg-feature-pending-bg/20" : "bg-feature-disabled-bg/20"
+                      )}
+                    >
+                      <td className="p-3">
+                        <div>
+                          <div className="flex items-center space-x-2 mb-1">
+                            {completionRate > 75 ? (
+                              <CheckCircle2 className="h-4 w-4 text-toggle-enabled" />
+                            ) : (
+                              <AlertCircle className="h-4 w-4 text-toggle-disabled" />
+                            )}
+                            <div className="font-medium">
+                              {contractor.first_name} {contractor.last_name}
+                            </div>
+                          </div>
+                          <div className="text-sm text-muted-foreground">
+                            {contractor.email}
+                          </div>
+                          <div className="flex items-center space-x-2 mt-1">
+                            <Badge 
+                              variant="secondary" 
+                              className={cn(
+                                "text-xs",
+                                completionRate > 75 ? "bg-feature-enabled-bg text-feature-enabled-text border-feature-enabled-border" :
+                                completionRate > 25 ? "bg-feature-pending-bg text-feature-pending-text border-feature-pending-border" :
+                                "bg-feature-disabled-bg text-feature-disabled-text border-feature-disabled-border"
+                              )}
+                            >
+                              {enabledCount}/{totalCount} enabled
+                            </Badge>
+                            <div className="w-12 bg-muted rounded-full h-1.5">
+                              <div 
+                                className={cn(
+                                  "h-1.5 rounded-full transition-all",
+                                  completionRate > 75 ? "bg-toggle-enabled" :
+                                  completionRate > 25 ? "bg-feature-pending-border" :
+                                  "bg-toggle-disabled"
+                                )}
+                                style={{ width: `${completionRate}%` }}
+                              />
+                            </div>
+                          </div>
                         </div>
-                        <div className="text-sm text-muted-foreground">
-                          {contractor.email}
-                        </div>
-                        <Badge variant="secondary" className="text-xs mt-1">
-                          {getContractorEnabledCount(contractor.id)}/{filteredFeatures.length} enabled
-                        </Badge>
-                      </div>
-                    </td>
-                    {filteredFeatures.map(feature => (
-                      <td key={feature.id} className="p-3 text-center">
-                        <Switch
-                          checked={getContractorFeatureStatus(contractor.id, feature.feature_key)}
-                          onCheckedChange={(checked) => 
-                            handleToggle(contractor.id, feature.feature_key, checked)
-                          }
-                          disabled={pendingChanges.has(`${contractor.id}-${feature.feature_key}`)}
-                        />
                       </td>
-                    ))}
-                    <td className="p-3 text-center">
-                      <div className="flex gap-1 justify-center">
-                        <Button
-                          size="sm"
-                          variant="outline"
-                          className="h-7 px-2 text-xs"
-                          onClick={() => handleBulkToggleContractor(contractor.id, true)}
-                        >
-                          Enable All
-                        </Button>
-                        <Button
-                          size="sm"
-                          variant="outline"
-                          className="h-7 px-2 text-xs"
-                          onClick={() => handleBulkToggleContractor(contractor.id, false)}
-                        >
-                          Disable All
-                        </Button>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
+                      {filteredFeatures.map(feature => (
+                        <td key={feature.id} className="p-3 text-center">
+                          <EnhancedToggle
+                            checked={getContractorFeatureStatus(contractor.id, feature.feature_key)}
+                            onCheckedChange={(checked) => 
+                              handleToggle(contractor.id, feature.feature_key, checked)
+                            }
+                            loading={pendingChanges.has(`${contractor.id}-${feature.feature_key}`)}
+                            size="sm"
+                            showLabels={false}
+                            showIcons={false}
+                          />
+                        </td>
+                      ))}
+                      <td className="p-3 text-center">
+                        <div className="flex gap-1 justify-center">
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            className="h-7 px-2 text-xs hover:bg-feature-enabled-bg hover:border-feature-enabled-border"
+                            onClick={() => handleBulkToggleContractor(contractor.id, true)}
+                          >
+                            Enable All
+                          </Button>
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            className="h-7 px-2 text-xs hover:bg-feature-disabled-bg hover:border-feature-disabled-border"
+                            onClick={() => handleBulkToggleContractor(contractor.id, false)}
+                          >
+                            Disable All
+                          </Button>
+                        </div>
+                      </td>
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
           </div>

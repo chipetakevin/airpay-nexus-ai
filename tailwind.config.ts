@@ -68,6 +68,27 @@ export default {
 					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
+				},
+				toggle: {
+					enabled: 'hsl(var(--toggle-enabled))',
+					'enabled-foreground': 'hsl(var(--toggle-enabled-foreground))',
+					disabled: 'hsl(var(--toggle-disabled))',
+					'disabled-foreground': 'hsl(var(--toggle-disabled-foreground))',
+					background: 'hsl(var(--toggle-background))',
+					'track-enabled': 'hsl(var(--toggle-track-enabled))',
+					'track-disabled': 'hsl(var(--toggle-track-disabled))',
+					thumb: 'hsl(var(--toggle-thumb))'
+				},
+				feature: {
+					'enabled-bg': 'hsl(var(--feature-enabled-bg))',
+					'enabled-border': 'hsl(var(--feature-enabled-border))',
+					'enabled-text': 'hsl(var(--feature-enabled-text))',
+					'disabled-bg': 'hsl(var(--feature-disabled-bg))',
+					'disabled-border': 'hsl(var(--feature-disabled-border))',
+					'disabled-text': 'hsl(var(--feature-disabled-text))',
+					'pending-bg': 'hsl(var(--feature-pending-bg))',
+					'pending-border': 'hsl(var(--feature-pending-border))',
+					'pending-text': 'hsl(var(--feature-pending-text))'
 				}
 			},
 			borderRadius: {
