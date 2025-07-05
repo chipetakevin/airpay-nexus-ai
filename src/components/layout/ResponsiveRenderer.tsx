@@ -1,6 +1,7 @@
 import React from 'react';
 import { useMobileDetection } from '@/hooks/useMobileDetection';
 import { useMobileFirst } from './MobileFirstProvider';
+import { cn } from '@/lib/utils';
 
 interface ResponsiveRendererProps {
   mobile?: React.ReactNode;
@@ -33,31 +34,44 @@ export const ResponsiveRenderer: React.FC<ResponsiveRendererProps> = ({
                        forceLayout === 'desktop' ? 'desktop' :
                        mobileDetection.deviceType;
   
-  // Touch device filtering
+  // Strict device separation - prevent crossover
+  const actualDevice = mobileDetection.deviceType;
+  const effectiveDevice = forceLayout || actualDevice;
+  
+  // Log device decisions in development
+  if (process.env.NODE_ENV === 'development' && currentDevice !== effectiveDevice) {
+    console.log('ResponsiveRenderer: Device override', {
+      actualDevice,
+      effectiveDevice,
+      forceLayout
+    });
+  }
+  
+  // Touch device filtering with strict separation
   if (touchOnly && !mobileDetection.touchSupport) {
     return null;
   }
   
-  // Hide on specific devices
+  // Hide on specific devices - strict enforcement
   if (hideOn) {
-    if (hideOn === 'mobile' && currentDevice === 'mobile') return null;
-    if (hideOn === 'tablet' && currentDevice === 'tablet') return null;
-    if (hideOn === 'desktop' && currentDevice === 'desktop') return null;
+    if (hideOn === 'mobile' && (effectiveDevice === 'mobile' || actualDevice === 'mobile')) return null;
+    if (hideOn === 'tablet' && (effectiveDevice === 'tablet' || actualDevice === 'tablet')) return null;
+    if (hideOn === 'desktop' && (effectiveDevice === 'desktop' || actualDevice === 'desktop')) return null;
   }
   
-  // Show on specific devices
+  // Show on specific devices - enhanced logic
   const shouldShow = () => {
     switch (showOn) {
       case 'mobile':
-        return currentDevice === 'mobile';
+        return effectiveDevice === 'mobile';
       case 'tablet':
-        return currentDevice === 'tablet';
+        return effectiveDevice === 'tablet';
       case 'desktop':
-        return currentDevice === 'desktop';
+        return effectiveDevice === 'desktop';
       case 'mobile-tablet':
-        return currentDevice === 'mobile' || currentDevice === 'tablet';
+        return effectiveDevice === 'mobile' || effectiveDevice === 'tablet';
       case 'tablet-desktop':
-        return currentDevice === 'tablet' || currentDevice === 'desktop';
+        return effectiveDevice === 'tablet' || effectiveDevice === 'desktop';
       case 'all':
         return true;
       default:
@@ -69,16 +83,16 @@ export const ResponsiveRenderer: React.FC<ResponsiveRendererProps> = ({
     return null;
   }
   
-  // Render device-specific content
-  if (currentDevice === 'mobile' && mobile) {
+  // Render device-specific content with strict separation
+  if (effectiveDevice === 'mobile' && mobile) {
     return <>{mobile}</>;
   }
   
-  if (currentDevice === 'tablet' && tablet) {
+  if (effectiveDevice === 'tablet' && tablet) {
     return <>{tablet}</>;
   }
   
-  if (currentDevice === 'desktop' && desktop) {
+  if (effectiveDevice === 'desktop' && desktop) {
     return <>{desktop}</>;
   }
   
@@ -103,16 +117,35 @@ export const TouchOnly: React.FC<{ children: React.ReactNode }> = ({ children })
   <ResponsiveRenderer touchOnly>{children}</ResponsiveRenderer>
 );
 
-// Force mobile layout component for preventing desktop layout on mobile
+// Force mobile layout component with enhanced device detection
 export const ForceMobileLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const { touchSupport, screenWidth } = useMobileDetection();
+  const { touchSupport, screenWidth, deviceType } = useMobileDetection();
   
-  // Force mobile layout if it's a touch device under 1024px
-  const shouldForceMobile = touchSupport && screenWidth < 1024;
+  // Enhanced logic to force mobile layout
+  const shouldForceMobile = 
+    deviceType === 'mobile' || 
+    (touchSupport && screenWidth < 1024) ||
+    localStorage.getItem('forceMobileInterface') === 'true';
+  
+  // Prevent desktop layout bleeding through
+  const forceLayout = shouldForceMobile ? 'mobile' : undefined;
+  
+  if (process.env.NODE_ENV === 'development') {
+    console.log('ForceMobileLayout:', {
+      deviceType,
+      touchSupport,
+      screenWidth,
+      shouldForceMobile,
+      forceLayout
+    });
+  }
   
   return (
-    <div className={shouldForceMobile ? 'force-mobile-layout' : ''}>
-      <ResponsiveRenderer forceLayout={shouldForceMobile ? 'mobile' : undefined}>
+    <div className={cn(
+      shouldForceMobile ? 'force-mobile-layout mobile-interface-only' : 'allow-responsive-layout',
+      'device-layout-container'
+    )}>
+      <ResponsiveRenderer forceLayout={forceLayout}>
         {children}
       </ResponsiveRenderer>
     </div>
