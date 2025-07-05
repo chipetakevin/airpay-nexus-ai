@@ -7,6 +7,7 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { usePermissions } from '@/hooks/usePermissions';
 import { useToast } from '@/hooks/use-toast';
+import { useEmailNotifications } from '@/hooks/useEmailNotifications';
 import { 
   Database, 
   Cloud, 
@@ -181,6 +182,7 @@ const MOCK_APPROVALS: ApprovalRequest[] = [
 export const DatabaseManagementPlatform: React.FC = () => {
   const { hasRole } = usePermissions();
   const { toast } = useToast();
+  const { sendFeatureUpdateNotification, sendNotification } = useEmailNotifications();
   const [activeTab, setActiveTab] = useState('overview');
   const [databaseNodes, setDatabaseNodes] = useState<DatabaseNode[]>(MOCK_DATABASE_NODES);
   const [operations, setOperations] = useState<DatabaseOperation[]>(MOCK_OPERATIONS);
@@ -246,6 +248,17 @@ export const DatabaseManagementPlatform: React.FC = () => {
       } : req
     ));
 
+    // Send notification for approval
+    const request = approvals.find(req => req.id === requestId);
+    if (request) {
+      await sendFeatureUpdateNotification({
+        featureName: request.title,
+        status: 'approved',
+        description: request.description,
+        approvedBy: 'Current Admin'
+      });
+    }
+
     toast({
       title: "Request Approved",
       description: "Database operation has been approved and will execute shortly",
@@ -278,6 +291,18 @@ export const DatabaseManagementPlatform: React.FC = () => {
       // Simulate failover process
       await new Promise(resolve => setTimeout(resolve, 3000));
       
+      // Send critical notification for failover
+      await sendNotification(
+        'database_error',
+        'critical',
+        '[CRITICAL] Emergency Database Failover Initiated',
+        'Emergency failover has been triggered due to critical database health issues. Primary database has been switched to backup replica.',
+        {
+          component: 'Database Failover System',
+          affectedSystem: 'Primary Database'
+        }
+      );
+
       toast({
         title: "Failover Initiated",
         description: "Database failover process has been started",

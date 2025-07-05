@@ -7,6 +7,7 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { usePermissions } from '@/hooks/usePermissions';
 import { useToast } from '@/hooks/use-toast';
+import { useEmailNotifications } from '@/hooks/useEmailNotifications';
 import { 
   AlertTriangle, 
   CheckCircle2, 
@@ -131,6 +132,7 @@ const MOCK_HEALTH: SystemHealth[] = [
 export const AutoErrorDetectionSystem: React.FC = () => {
   const { hasRole } = usePermissions();
   const { toast } = useToast();
+  const { sendDatabaseErrorAlert } = useEmailNotifications();
   const [activeTab, setActiveTab] = useState('dashboard');
   const [errors, setErrors] = useState<SystemError[]>(MOCK_ERRORS);
   const [systemHealth, setSystemHealth] = useState<SystemHealth[]>(MOCK_HEALTH);
@@ -247,6 +249,16 @@ export const AutoErrorDetectionSystem: React.FC = () => {
             fixed_at: success ? new Date().toISOString() : undefined
           } : e
         ));
+
+        // Send notification for auto-fix result
+        await sendDatabaseErrorAlert({
+          component: error.component,
+          errorType: error.error_type,
+          severity: error.severity as 'critical' | 'warning' | 'info',
+          message: error.message,
+          autoFixAttempted: true,
+          autoFixSuccess: success
+        });
       }
 
       toast({
@@ -277,7 +289,7 @@ export const AutoErrorDetectionSystem: React.FC = () => {
     ));
 
     // Simulate fix
-    setTimeout(() => {
+    setTimeout(async () => {
       setErrors(prev => prev.map(e => 
         e.id === errorId ? { 
           ...e, 
@@ -286,6 +298,16 @@ export const AutoErrorDetectionSystem: React.FC = () => {
         } : e
       ));
       
+      // Send notification for individual fix
+      await sendDatabaseErrorAlert({
+        component: error.component,
+        errorType: error.error_type,
+        severity: error.severity as 'critical' | 'warning' | 'info',
+        message: error.message,
+        autoFixAttempted: true,
+        autoFixSuccess: true
+      });
+
       toast({
         title: "Error Fixed",
         description: `Successfully fixed: ${error.component}`,
