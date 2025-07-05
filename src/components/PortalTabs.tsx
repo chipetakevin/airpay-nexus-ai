@@ -7,7 +7,6 @@ import AdminRegistration from './AdminRegistration';
 import OneCardDashboard from './OneCardDashboard';
 import AdminPortal from './AdminPortal';
 import ReportsTabContent from './onecard/ReportsTabContent';
-import AirtimeDealsSystem from './AirtimeDealsSystem';
 import { ContractorRegistrationContainer } from './contractor/ContractorRegistrationContainer';
 import TabSwitcher from './navigation/TabSwitcher';
 import ModernTabNavigation from './navigation/ModernTabNavigation';
@@ -67,13 +66,6 @@ const PortalTabs = ({
       icon: '🔧',
       description: 'Register',
       color: 'blue'
-    },
-    {
-      value: 'deals',
-      label: 'Smart Deals',
-      icon: '🔥',
-      description: 'Shop Now',
-      color: 'orange'
     },
     {
       value: 'onecard',
@@ -167,12 +159,6 @@ const PortalTabs = ({
                     </div>
                   </TabsContent>
                   
-                  <TabsContent value="deals" className="mobile-fade-in">
-                    <div className="service-card-mobile">
-                      <AirtimeDealsSystem />
-                    </div>
-                  </TabsContent>
-                  
                   <TabsContent value="onecard" className="mobile-fade-in">
                     <div className="service-card-mobile">
                       <OneCardDashboard />
@@ -261,12 +247,6 @@ const PortalTabs = ({
                   <TabsContent value="contractor" className="desktop-fade-in">
                     <div className="service-card">
                       <ContractorRegistrationContainer />
-                    </div>
-                  </TabsContent>
-                  
-                  <TabsContent value="deals" className="desktop-fade-in">
-                    <div className="service-card">
-                      <AirtimeDealsSystem />
                     </div>
                   </TabsContent>
                   

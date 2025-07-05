@@ -39,16 +39,6 @@ export const EnhancedPortalNavigation: React.FC<EnhancedPortalNavigationProps> =
   const tabs: TabConfig[] = [
     // Primary Services (High Priority)
     {
-      id: 'deals',
-      label: 'Smart Deals',
-      icon: 'flame',
-      description: 'Shop Now',
-      tooltip: 'Browse and purchase the latest airtime and data deals with smart discounts',
-      priority: 'high',
-      category: 'primary',
-      disabled: !isTabAllowed('deals')
-    },
-    {
       id: 'onecard',
       label: 'OneCard',
       icon: 'credit-card',
