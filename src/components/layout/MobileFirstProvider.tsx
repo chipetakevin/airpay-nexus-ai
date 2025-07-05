@@ -1,23 +1,22 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import { useIsMobile } from '@/hooks/use-mobile';
 
 interface MobileFirstContextType {
   isMobile: boolean;
   isTablet: boolean;
   isDesktop: boolean;
-  deviceType: 'mobile' | 'tablet' | 'desktop';
+  screenWidth: number;
   orientation: 'portrait' | 'landscape';
-  screenSize: {
-    width: number;
-    height: number;
-  };
+  touchDevice: boolean;
+  // Backward compatibility
+  deviceType: 'mobile' | 'tablet' | 'desktop';
+  screenSize: 'sm' | 'md' | 'lg' | 'xl';
 }
 
 const MobileFirstContext = createContext<MobileFirstContextType | undefined>(undefined);
 
 export const useMobileFirst = () => {
   const context = useContext(MobileFirstContext);
-  if (!context) {
+  if (context === undefined) {
     throw new Error('useMobileFirst must be used within a MobileFirstProvider');
   }
   return context;
@@ -28,49 +27,61 @@ interface MobileFirstProviderProps {
 }
 
 export const MobileFirstProvider: React.FC<MobileFirstProviderProps> = ({ children }) => {
-  const isMobile = useIsMobile();
-  const [screenSize, setScreenSize] = useState({ width: 0, height: 0 });
-  const [orientation, setOrientation] = useState<'portrait' | 'landscape'>('portrait');
+  const [screenData, setScreenData] = useState<MobileFirstContextType>(() => {
+    const width = typeof window !== 'undefined' ? window.innerWidth : 768;
+    const isMobile = width < 768;
+    const isTablet = width >= 768 && width < 1024;
+    const isDesktop = width >= 1024;
+    
+    return {
+      isMobile,
+      isTablet,
+      isDesktop,
+      screenWidth: width,
+      orientation: typeof window !== 'undefined' 
+        ? (window.innerHeight > window.innerWidth ? 'portrait' : 'landscape')
+        : 'portrait',
+      touchDevice: typeof window !== 'undefined' 
+        ? 'ontouchstart' in window || navigator.maxTouchPoints > 0
+        : false,
+      deviceType: isMobile ? 'mobile' : isTablet ? 'tablet' : 'desktop',
+      screenSize: width < 640 ? 'sm' : width < 768 ? 'md' : width < 1024 ? 'lg' : 'xl'
+    };
+  });
 
   useEffect(() => {
-    const updateScreenInfo = () => {
-      setScreenSize({
-        width: window.innerWidth,
-        height: window.innerHeight
+    const updateScreenData = () => {
+      const width = window.innerWidth;
+      const isMobile = width < 768;
+      const isTablet = width >= 768 && width < 1024;
+      const isDesktop = width >= 1024;
+      
+      setScreenData({
+        isMobile,
+        isTablet,
+        isDesktop,
+        screenWidth: width,
+        orientation: window.innerHeight > window.innerWidth ? 'portrait' : 'landscape',
+        touchDevice: 'ontouchstart' in window || navigator.maxTouchPoints > 0,
+        deviceType: isMobile ? 'mobile' : isTablet ? 'tablet' : 'desktop',
+        screenSize: width < 640 ? 'sm' : width < 768 ? 'md' : width < 1024 ? 'lg' : 'xl'
       });
-      setOrientation(window.innerWidth > window.innerHeight ? 'landscape' : 'portrait');
     };
 
-    updateScreenInfo();
-    window.addEventListener('resize', updateScreenInfo);
-    window.addEventListener('orientationchange', updateScreenInfo);
+    // Add event listeners
+    window.addEventListener('resize', updateScreenData);
+    window.addEventListener('orientationchange', updateScreenData);
 
+    // Cleanup
     return () => {
-      window.removeEventListener('resize', updateScreenInfo);
-      window.removeEventListener('orientationchange', updateScreenInfo);
+      window.removeEventListener('resize', updateScreenData);
+      window.removeEventListener('orientationchange', updateScreenData);
     };
   }, []);
 
-  const isTablet = screenSize.width >= 768 && screenSize.width < 1024;
-  const isDesktop = screenSize.width >= 1024;
-  
-  const deviceType: 'mobile' | 'tablet' | 'desktop' = 
-    isMobile ? 'mobile' : isTablet ? 'tablet' : 'desktop';
-
-  const value: MobileFirstContextType = {
-    isMobile,
-    isTablet,
-    isDesktop,
-    deviceType,
-    orientation,
-    screenSize
-  };
-
   return (
-    <MobileFirstContext.Provider value={value}>
-      <div className={`mobile-first-layout ${deviceType} ${orientation}`}>
-        {children}
-      </div>
+    <MobileFirstContext.Provider value={screenData}>
+      {children}
     </MobileFirstContext.Provider>
   );
 };
