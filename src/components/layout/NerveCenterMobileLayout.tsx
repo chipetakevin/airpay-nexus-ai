@@ -57,15 +57,6 @@ export const NerveCenterMobileLayout: React.FC<NerveCenterMobileLayoutProps> = (
 
   return (
     <div className={layoutClasses}>
-      {/* Skip Link for Accessibility */}
-      <a 
-        href="#main-content" 
-        className="skip-link"
-        aria-label="Skip to main content"
-      >
-        Skip to main content
-      </a>
-
       {/* Enhanced Nerve Center Header - Mobile First with Accessibility */}
       {showHeader && (
         <header 

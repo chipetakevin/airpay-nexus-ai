@@ -220,11 +220,6 @@ const PortalTabs = ({
                       <h1 className="dashboard-title mb-2">Nerve Center BaaS</h1>
                       <p className="dashboard-subtitle">Enterprise Dashboard Portal</p>
                     </div>
-                    <div className="flex items-center space-x-4">
-                      <div className="service-description">
-                        Desktop Mode | {userName || 'Guest'}
-                      </div>
-                    </div>
                   </div>
                 </header>
               </DesktopOnly>
@@ -243,11 +238,10 @@ const PortalTabs = ({
               </DesktopOnly>
 
               <Tabs value={activeTab} onValueChange={enhancedHandleTabChange} className="w-full">
-                {/* Legacy Desktop Navigation with Skip Link */}
+                {/* Legacy Desktop Navigation */}
                 <DesktopOnly>
                   <div className="mb-6 bg-muted/30 rounded-lg p-4">
-                    <a href="#desktop-content" className="skip-link">Skip to content</a>
-                    <TabSwitcher 
+                    <TabSwitcher
                       currentTab={activeTab}
                       onTabChange={enhancedHandleTabChange}
                       isAuthenticated={userAuthenticated}
