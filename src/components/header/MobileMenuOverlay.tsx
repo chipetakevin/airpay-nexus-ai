@@ -23,14 +23,14 @@ const MobileMenuOverlay = ({ isMenuOpen, closeMenu, isHomePage, handleQuickShopC
     <>
       {/* Backdrop */}
       <div 
-        className="md:hidden fixed inset-0 bg-black/60 z-[90] backdrop-blur-sm"
+        className="md:hidden fixed inset-0 bg-black/60 z-[999] backdrop-blur-sm"
         onClick={closeMenu}
       />
       
       {/* Mobile Menu */}
       <div 
         data-mobile-menu="content"
-        className="md:hidden fixed left-0 right-0 top-16 bg-white shadow-2xl border-t-2 border-[#75B8FA]/20 z-[95] max-h-[calc(100vh-4rem)] overflow-y-auto"
+        className="md:hidden fixed left-0 right-0 top-16 bg-white shadow-2xl border-t-2 border-[#75B8FA]/20 z-[9999] max-h-[calc(100vh-4rem)] overflow-y-auto"
       >
         <nav className="p-4 space-y-2">
           {navigationItems.map((item) => (

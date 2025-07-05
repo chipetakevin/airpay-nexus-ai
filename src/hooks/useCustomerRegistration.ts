@@ -1,5 +1,5 @@
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import { usePermanentAuth } from './usePermanentAuth';
@@ -33,7 +33,7 @@ export const useCustomerRegistration = () => {
   const { savePhoneNumber, autoFillPhone } = usePhoneStorage();
 
   // Load saved data on mount
-  useState(() => {
+  useEffect(() => {
     const savedData = loadPermanentData();
     if (savedData) {
       setFormData(prev => ({ ...prev, ...savedData }));
@@ -53,7 +53,7 @@ export const useCustomerRegistration = () => {
         }));
       }
     }
-  });
+  }, [loadPermanentData, autoFillPhone, toast]);
 
   const handleInputChange = (field: keyof CustomerFormData, value: any) => {
     // Special handling for phone numbers to ensure 9-digit preservation
