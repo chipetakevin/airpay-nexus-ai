@@ -86,20 +86,22 @@ const AdminRegistration = () => {
   // Auto-collapse interface after successful registration
   if (existingRegistration && isFormCollapsed) {
     return (
-      <div className="max-w-6xl mx-auto space-y-6">
-        <AdminRegistrationStatus 
-          existingRegistration={existingRegistration}
-          onToggle={handleFormToggle}
-        />
-        
-        <AdminControlCenter
-          activeAdminTab={activeAdminTab}
-          setActiveAdminTab={setActiveAdminTab}
-          activeProfileTab={activeProfileTab}
-          setActiveProfileTab={setActiveProfileTab}
-          activeDataTab={activeDataTab}
-          setActiveDataTab={setActiveDataTab}
-        />
+      <div className="w-full min-h-screen overflow-y-auto">
+        <div className="max-w-6xl mx-auto space-y-6 p-4">
+          <AdminRegistrationStatus 
+            existingRegistration={existingRegistration}
+            onToggle={handleFormToggle}
+          />
+          
+          <AdminControlCenter
+            activeAdminTab={activeAdminTab}
+            setActiveAdminTab={setActiveAdminTab}
+            activeProfileTab={activeProfileTab}
+            setActiveProfileTab={setActiveProfileTab}
+            activeDataTab={activeDataTab}
+            setActiveDataTab={setActiveDataTab}
+          />
+        </div>
       </div>
     );
   }

@@ -184,12 +184,12 @@ const Portal = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 overflow-y-auto">
       <div className="bg-gradient-to-r from-blue-600 to-purple-600 p-2">
         <PortalHeader userType={userType} resetUserType={resetUserType} />
       </div>
       
-      <main className="container mx-auto px-2 sm:px-4 -mt-1">
+      <main className="container mx-auto px-2 sm:px-4 -mt-1 pb-8">
         <PortalTabs 
           activeTab={activeTab}
           showAdminTab={showAdminTab}
