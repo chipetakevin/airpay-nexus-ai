@@ -3,6 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import PolicyManagementTab from './PolicyManagementTab';
 import { 
   Crown, 
   Server, 
@@ -162,6 +163,14 @@ const NerveCenterDashboard = () => {
       items: []
     },
     {
+      id: 'policy-management',
+      label: 'Policy Management',
+      icon: <FileText className="w-4 h-4" />,
+      color: 'amber',
+      count: 8,
+      items: []
+    },
+    {
       id: 'support-systems',
       label: 'Support Systems',
       icon: <HelpCircle className="w-4 h-4" />,
@@ -186,7 +195,8 @@ const NerveCenterDashboard = () => {
       orange: 'data-[state=active]:bg-gradient-to-br data-[state=active]:from-orange-500 data-[state=active]:to-orange-600 data-[state=active]:text-white bg-orange-50 border-orange-200 hover:bg-orange-100',
       yellow: 'data-[state=active]:bg-gradient-to-br data-[state=active]:from-yellow-500 data-[state=active]:to-yellow-600 data-[state=active]:text-white bg-yellow-50 border-yellow-200 hover:bg-yellow-100',
       slate: 'data-[state=active]:bg-gradient-to-br data-[state=active]:from-slate-500 data-[state=active]:to-slate-600 data-[state=active]:text-white bg-slate-50 border-slate-200 hover:bg-slate-100',
-      emerald: 'data-[state=active]:bg-gradient-to-br data-[state=active]:from-emerald-500 data-[state=active]:to-emerald-600 data-[state=active]:text-white bg-emerald-50 border-emerald-200 hover:bg-emerald-100'
+      emerald: 'data-[state=active]:bg-gradient-to-br data-[state=active]:from-emerald-500 data-[state=active]:to-emerald-600 data-[state=active]:text-white bg-emerald-50 border-emerald-200 hover:bg-emerald-100',
+      amber: 'data-[state=active]:bg-gradient-to-br data-[state=active]:from-amber-500 data-[state=active]:to-amber-600 data-[state=active]:text-white bg-amber-50 border-amber-200 hover:bg-amber-100'
     };
     return colors[color] || colors.blue;
   };
@@ -555,6 +565,8 @@ const NerveCenterDashboard = () => {
           <TabsContent key={category.id} value={category.id} className="mt-0">
             {category.id === 'database-autofix' ? (
               <DatabaseAutoFixTab />
+            ) : category.id === 'policy-management' ? (
+              <PolicyManagementTab />
             ) : (
               <div className="space-y-4">
                 <div className="flex items-center gap-3 mb-6">

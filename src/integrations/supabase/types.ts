@@ -659,6 +659,163 @@ export type Database = {
         }
         Relationships: []
       }
+      policy_acknowledgments: {
+        Row: {
+          acknowledged_at: string
+          created_at: string
+          id: string
+          ip_address: unknown | null
+          policy_id: string
+          quiz_score: number | null
+          training_completed: boolean | null
+          training_completed_at: string | null
+          user_agent: string | null
+          user_email: string
+          user_id: string
+          user_name: string | null
+          user_role: string | null
+          user_type: string
+        }
+        Insert: {
+          acknowledged_at?: string
+          created_at?: string
+          id?: string
+          ip_address?: unknown | null
+          policy_id: string
+          quiz_score?: number | null
+          training_completed?: boolean | null
+          training_completed_at?: string | null
+          user_agent?: string | null
+          user_email: string
+          user_id: string
+          user_name?: string | null
+          user_role?: string | null
+          user_type: string
+        }
+        Update: {
+          acknowledged_at?: string
+          created_at?: string
+          id?: string
+          ip_address?: unknown | null
+          policy_id?: string
+          quiz_score?: number | null
+          training_completed?: boolean | null
+          training_completed_at?: string | null
+          user_agent?: string | null
+          user_email?: string
+          user_id?: string
+          user_name?: string | null
+          user_role?: string | null
+          user_type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "policy_acknowledgments_policy_id_fkey"
+            columns: ["policy_id"]
+            isOneToOne: false
+            referencedRelation: "policy_documents"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      policy_distributions: {
+        Row: {
+          created_at: string
+          created_by: string
+          distribution_date: string
+          distribution_status: string
+          email_failed_count: number
+          email_sent_count: number
+          id: string
+          policy_id: string
+          total_acknowledged: number
+          total_recipients: number
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          created_by: string
+          distribution_date?: string
+          distribution_status?: string
+          email_failed_count?: number
+          email_sent_count?: number
+          id?: string
+          policy_id: string
+          total_acknowledged?: number
+          total_recipients?: number
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string
+          distribution_date?: string
+          distribution_status?: string
+          email_failed_count?: number
+          email_sent_count?: number
+          id?: string
+          policy_id?: string
+          total_acknowledged?: number
+          total_recipients?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "policy_distributions_policy_id_fkey"
+            columns: ["policy_id"]
+            isOneToOne: false
+            referencedRelation: "policy_documents"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      policy_documents: {
+        Row: {
+          approved_at: string | null
+          approved_by: string | null
+          category: string
+          content: Json
+          created_at: string
+          created_by: string
+          effective_date: string | null
+          expiry_date: string | null
+          id: string
+          status: string
+          title: string
+          updated_at: string
+          version: string
+        }
+        Insert: {
+          approved_at?: string | null
+          approved_by?: string | null
+          category: string
+          content: Json
+          created_at?: string
+          created_by: string
+          effective_date?: string | null
+          expiry_date?: string | null
+          id?: string
+          status?: string
+          title: string
+          updated_at?: string
+          version: string
+        }
+        Update: {
+          approved_at?: string | null
+          approved_by?: string | null
+          category?: string
+          content?: Json
+          created_at?: string
+          created_by?: string
+          effective_date?: string | null
+          expiry_date?: string | null
+          id?: string
+          status?: string
+          title?: string
+          updated_at?: string
+          version?: string
+        }
+        Relationships: []
+      }
       porting_analytics: {
         Row: {
           average_processing_time: unknown | null
@@ -1061,6 +1218,54 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      stakeholder_contacts: {
+        Row: {
+          created_at: string
+          department: string | null
+          email: string
+          first_name: string
+          id: string
+          is_active: boolean
+          last_email_sent: string | null
+          last_name: string
+          location: string | null
+          phone: string | null
+          role: string
+          updated_at: string
+          user_type: string
+        }
+        Insert: {
+          created_at?: string
+          department?: string | null
+          email: string
+          first_name: string
+          id?: string
+          is_active?: boolean
+          last_email_sent?: string | null
+          last_name: string
+          location?: string | null
+          phone?: string | null
+          role: string
+          updated_at?: string
+          user_type: string
+        }
+        Update: {
+          created_at?: string
+          department?: string | null
+          email?: string
+          first_name?: string
+          id?: string
+          is_active?: boolean
+          last_email_sent?: string | null
+          last_name?: string
+          location?: string | null
+          phone?: string | null
+          role?: string
+          updated_at?: string
+          user_type?: string
+        }
+        Relationships: []
       }
       system_notifications: {
         Row: {
