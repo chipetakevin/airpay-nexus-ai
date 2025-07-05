@@ -115,7 +115,7 @@ const PortalTabs = ({
   };
 
   return (
-    <div className="w-full max-w-6xl mx-auto pt-3 sm:pt-4 mobile-content-container">
+    <div className="w-full max-w-6xl mx-auto pt-3 sm:pt-4 mobile-content-container mobile-safe-bottom">
       <Tabs value={activeTab} onValueChange={enhancedHandleTabChange} className="w-full">
         {/* Add Tab Switcher for seamless navigation */}
         <TabSwitcher 

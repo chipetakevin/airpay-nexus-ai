@@ -61,7 +61,7 @@ const MobileDashboard = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 mobile-content-container">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 mobile-content-container mobile-safe-bottom">
       {/* Header */}
       <div className="sticky top-0 z-10 bg-white/95 backdrop-blur-sm border-b border-gray-200 px-4 py-4">
         <div className="flex items-center justify-between">
@@ -186,9 +186,6 @@ const MobileDashboard = () => {
             Return to Home
           </Button>
         </div>
-
-        {/* Bottom spacing for safe area */}
-        <div className="h-8"></div>
       </div>
     </div>
   );
