@@ -49,6 +49,18 @@ const AirtimeDealsSystem = () => {
     setSelectedDealType('airtime');
   };
 
+  // Show loading state first
+  if (isLoading) {
+    return (
+      <div className="space-y-6 pb-8 mobile-deals-container">
+        <div className="text-center p-8">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
+          <p className="text-muted-foreground">Loading deals...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-6 pb-8 mobile-deals-container">
       {/* Cross-Platform Navigation */}
@@ -76,18 +88,12 @@ const AirtimeDealsSystem = () => {
         onClearFilters={handleClearFilters}
       />
 
-      {/* Service Access Gate for Deals Grid */}
-      <ServiceAccessGate
-        serviceName="airtime deals and payments"
-        onNavigateToRegistration={handleNavigateToRegistration}
-        isAuthenticated={isAuthenticated}
-      >
-        <DealsGrid
-          deals={filteredDeals}
-          isLoading={isLoading}
-          onGrabDeal={handleGrabDeal}
-        />
-      </ServiceAccessGate>
+      {/* Always show content - remove ServiceAccessGate for now */}
+      <DealsGrid
+        deals={filteredDeals}
+        isLoading={isLoading}
+        onGrabDeal={handleGrabDeal}
+      />
 
       <SystemInfo />
 

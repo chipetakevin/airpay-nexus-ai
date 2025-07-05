@@ -155,18 +155,15 @@ export const EnhancedPortalNavigation: React.FC<EnhancedPortalNavigationProps> =
                 <span className="text-xs opacity-70 whitespace-nowrap">{tab.description}</span>
               </div>
               {tab.count && (
-                <Badge 
-                  variant={activeTab === tab.id ? "secondary" : "outline"} 
-                  className="text-xs ml-2 flex-shrink-0"
-                >
+                <span className="text-xs ml-2 flex-shrink-0 bg-primary/10 text-primary px-2 py-1 rounded-full">
                   {tab.count}
-                </Badge>
+                </span>
               )}
               {tab.status && (
                 <div className="flex-shrink-0 ml-1">
-                  {tab.status === 'new' && <Badge className="bg-green-500 text-white text-xs animate-pulse">New</Badge>}
-                  {tab.status === 'alert' && <Badge className="bg-red-500 text-white text-xs animate-bounce">!</Badge>}
-                  {tab.status === 'coming-soon' && <Badge variant="outline" className="text-xs border-yellow-500 text-yellow-600">Soon</Badge>}
+                  {tab.status === 'new' && <span className="bg-green-500 text-white text-xs animate-pulse px-2 py-1 rounded-full">New</span>}
+                  {tab.status === 'alert' && <span className="bg-red-500 text-white text-xs animate-bounce px-2 py-1 rounded-full">!</span>}
+                  {tab.status === 'coming-soon' && <span className="text-xs border border-yellow-500 text-yellow-600 px-2 py-1 rounded-full">Soon</span>}
                 </div>
               )}
             </button>
