@@ -8,6 +8,7 @@ import OneCardDashboard from './OneCardDashboard';
 import AdminPortal from './AdminPortal';
 import ReportsTabContent from './onecard/ReportsTabContent';
 import AirtimeDealsSystem from './AirtimeDealsSystem';
+import { ContractorRegistrationContainer } from './contractor/ContractorRegistrationContainer';
 import TabSwitcher from './navigation/TabSwitcher';
 import ModernTabNavigation from './navigation/ModernTabNavigation';
 import EnhancedPortalNavigation from './navigation/EnhancedPortalNavigation';
@@ -58,6 +59,13 @@ const PortalTabs = ({
 
   // Ensure vendor tab is always included and accessible
   const tabs = [
+    {
+      value: 'contractor',
+      label: 'Field Contractor',
+      icon: '🔧',
+      description: 'Register',
+      color: 'blue'
+    },
     {
       value: 'deals',
       label: 'Smart Deals',
@@ -152,6 +160,12 @@ const PortalTabs = ({
           
           {/* Tab Content - Enhanced with Animations */}
           <div className="nerve-center-content-area space-y-6">
+            <TabsContent value="contractor" className="nerve-center-fade-in">
+              <div className="nerve-center-card">
+                <ContractorRegistrationContainer />
+              </div>
+            </TabsContent>
+            
             <TabsContent value="deals" className="nerve-center-fade-in">
               <div className="nerve-center-card">
                 <AirtimeDealsSystem />

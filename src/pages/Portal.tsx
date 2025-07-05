@@ -98,8 +98,8 @@ const Portal = () => {
   // Enhanced isTabAllowed function for seamless navigation
   const isTabAllowed = (tabValue: string) => {
     try {
-      // Always allow deals, registration, and vendor tabs for seamless navigation
-      if (['deals', 'registration', 'vendor'].includes(tabValue)) {
+      // Always allow deals, registration, vendor, and contractor tabs for seamless navigation
+      if (['deals', 'registration', 'vendor', 'contractor'].includes(tabValue)) {
         console.log(`✅ Always allowed tab: ${tabValue}`);
         return true;
       }
@@ -144,7 +144,7 @@ const Portal = () => {
       return tabValue === 'deals';
     } catch (error) {
       console.error('Error checking tab permissions:', error);
-      return ['deals', 'registration', 'vendor'].includes(tabValue);
+      return ['deals', 'registration', 'vendor', 'contractor'].includes(tabValue);
     }
   };
 
@@ -154,7 +154,7 @@ const Portal = () => {
       console.log(`🔄 Attempting to change to tab: ${value}`);
       
       // Always allow seamless navigation between core tabs
-      if (['deals', 'registration', 'vendor'].includes(value)) {
+      if (['deals', 'registration', 'vendor', 'contractor'].includes(value)) {
         console.log(`✅ Core tab access granted: ${value}`);
         setActiveTab(value);
         navigate(`?tab=${value}`, { replace: true });
