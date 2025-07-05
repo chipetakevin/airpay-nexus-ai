@@ -10,6 +10,9 @@ import ReportsTabContent from './onecard/ReportsTabContent';
 import AirtimeDealsSystem from './AirtimeDealsSystem';
 import TabSwitcher from './navigation/TabSwitcher';
 import ModernTabNavigation from './navigation/ModernTabNavigation';
+import { NerveCenterMobileLayout } from './layout/NerveCenterMobileLayout';
+import { UniversalMobileTabs } from './tabs/UniversalMobileTabs';
+import { useMobileFirst } from './layout/MobileFirstProvider';
 
 interface PortalTabsProps {
   activeTab: string;
@@ -30,6 +33,7 @@ const PortalTabs = ({
   isUnifiedProfile = false,
   isAuthenticated = false
 }: PortalTabsProps) => {
+  const { isMobile, deviceType } = useMobileFirst();
   
   // Get user data for tab switcher
   const getUserData = () => {
@@ -115,60 +119,92 @@ const PortalTabs = ({
   };
 
   return (
-    <div className="w-full max-w-6xl mx-auto pt-2 sm:pt-4">
-      <Tabs value={activeTab} onValueChange={enhancedHandleTabChange} className="w-full">
-        {/* Add Tab Switcher for seamless navigation */}
-        <TabSwitcher 
-          currentTab={activeTab}
-          onTabChange={enhancedHandleTabChange}
-          isAuthenticated={userAuthenticated}
-          userName={userName}
-        />
+    <NerveCenterMobileLayout 
+      title="Nerve Center BaaS"
+      subtitle="Mobile-First Dashboard"
+      className="nerve-center-portal"
+    >
+      <div className="w-full max-w-6xl mx-auto">
+        <Tabs value={activeTab} onValueChange={enhancedHandleTabChange} className="w-full">
+          {/* Universal Mobile-First Tab Navigation */}
+          <div className="mb-6">
+            <UniversalMobileTabs
+              tabs={tabs.map(tab => ({
+                id: tab.value,
+                label: tab.label,
+                icon: tab.icon,
+                count: tab.value === 'admin' && showAdminTab ? 1 : undefined,
+                description: tab.description,
+                disabled: !isTabAllowed(tab.value)
+              }))}
+              activeTab={activeTab}
+              onTabChange={enhancedHandleTabChange}
+              variant="nerve-center"
+              className="nerve-center-tabs"
+            />
+          </div>
 
-        {/* Modern Tab Navigation */}
-        <ModernTabNavigation
-          tabs={tabs}
-          activeTab={activeTab}
-          onTabChange={enhancedHandleTabChange}
-          isTabAllowed={isTabAllowed}
-        />
-        
-        {/* Tab Content - Optimized for top positioning */}
-        <div className="w-full">
-          <TabsContent value="deals" className="p-1 sm:p-2 md:p-4 lg:p-6 animate-fade-in">
-            <AirtimeDealsSystem />
-          </TabsContent>
-          
-          <TabsContent value="onecard" className="p-1 sm:p-2 md:p-4 lg:p-6 animate-fade-in">
-            <OneCardDashboard />
-          </TabsContent>
-          
-          <TabsContent value="registration" className="p-1 sm:p-2 md:p-4 lg:p-6 animate-fade-in">
-            <div className="w-full max-w-4xl mx-auto">
-              <CustomerRegistration />
+          {/* Legacy Tab Switcher for compatibility */}
+          {!isMobile && (
+            <div className="mb-4">
+              <TabSwitcher 
+                currentTab={activeTab}
+                onTabChange={enhancedHandleTabChange}
+                isAuthenticated={userAuthenticated}
+                userName={userName}
+              />
             </div>
-          </TabsContent>
-          
-          <TabsContent value="vendor" className="p-1 sm:p-2 md:p-4 lg:p-6 animate-fade-in">
-            <VendorRegistration />
-          </TabsContent>
-
-          <TabsContent value="unified-reports" className="p-1 sm:p-2 md:p-4 lg:p-6 animate-fade-in">
-            <ReportsTabContent />
-          </TabsContent>
-          
-          <TabsContent value="admin-reg" className="p-1 sm:p-2 md:p-4 lg:p-6 animate-fade-in">
-            <AdminRegistration />
-          </TabsContent>
-          
-          {showAdminTab && (
-            <TabsContent value="admin" className="p-1 sm:p-2 md:p-4 lg:p-6 animate-fade-in">
-              <AdminPortal onAuthSuccess={() => setIsAdminAuthenticated(true)} />
-            </TabsContent>
           )}
-        </div>
-      </Tabs>
-    </div>
+          
+          {/* Tab Content - Mobile-First Optimized */}
+          <div className="nerve-center-content-area">
+            <TabsContent value="deals" className="nerve-center-fade-in">
+              <div className="nerve-center-card">
+                <AirtimeDealsSystem />
+              </div>
+            </TabsContent>
+            
+            <TabsContent value="onecard" className="nerve-center-fade-in">
+              <div className="nerve-center-card">
+                <OneCardDashboard />
+              </div>
+            </TabsContent>
+            
+            <TabsContent value="registration" className="nerve-center-fade-in">
+              <div className="nerve-center-card">
+                <CustomerRegistration />
+              </div>
+            </TabsContent>
+            
+            <TabsContent value="vendor" className="nerve-center-fade-in">
+              <div className="nerve-center-card">
+                <VendorRegistration />
+              </div>
+            </TabsContent>
+
+            <TabsContent value="unified-reports" className="nerve-center-fade-in">
+              <div className="nerve-center-card">
+                <ReportsTabContent />
+              </div>
+            </TabsContent>
+            
+            <TabsContent value="admin-reg" className="nerve-center-fade-in">
+              <div className="nerve-center-card">
+                <AdminRegistration />
+              </div>
+            </TabsContent>
+            
+            {showAdminTab && (
+              <TabsContent value="admin" className="nerve-center-fade-in">
+                <div className="nerve-center-card">
+                  <AdminPortal onAuthSuccess={() => setIsAdminAuthenticated(true)} />
+                </div>
+              </TabsContent>
+            )}
+          </div>
+        </Tabs>
+      </div>
+    </NerveCenterMobileLayout>
   );
 };
 

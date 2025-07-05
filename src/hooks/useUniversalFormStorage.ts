@@ -20,6 +20,7 @@ export const useUniversalFormStorage = (options: UseUniversalFormStorageOptions)
   const [storageStatus, setStorageStatus] = useState({
     localStorage: false,
     database: false,
+    nerveCenterBaaS: false,
     errors: [] as string[]
   });
 
@@ -64,15 +65,24 @@ export const useUniversalFormStorage = (options: UseUniversalFormStorageOptions)
       setStorageStatus(result);
       setLastSaved(new Date());
 
-      if (result.localStorage && result.database) {
+      if (result.localStorage && result.database && result.nerveCenterBaaS) {
         if (showToast) {
           toast({
             title: "Data Saved Successfully! 💾",
-            description: "Your information has been saved both locally and securely in the cloud.",
+            description: "Your information has been saved locally, in the cloud, and synced to Nerve Center BaaS.",
             duration: 3000
           });
         }
         return { success: true };
+      } else if (result.localStorage && result.database) {
+        if (showToast) {
+          toast({
+            title: "Data Saved! 📱",
+            description: "Your information is saved locally and in the cloud. Nerve Center BaaS sync pending.",
+            duration: 3000
+          });
+        }
+        return { success: true, partial: true };
       } else if (result.localStorage) {
         if (showToast) {
           toast({
