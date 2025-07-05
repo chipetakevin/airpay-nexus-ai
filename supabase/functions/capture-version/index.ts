@@ -54,9 +54,23 @@ serve(async (req) => {
       throw new Error(`Version ${versionNumber} already exists`)
     }
 
-    // Compress and store version data
+    // Calculate comprehensive code metrics
     const fileContentsJson = JSON.stringify(fileContents)
     const originalSize = new TextEncoder().encode(fileContentsJson).length
+    
+    // Calculate lines of code and file extension distribution
+    let totalLines = 0
+    const extensionCounts: Record<string, number> = {}
+    
+    for (const [filePath, content] of Object.entries(fileContents)) {
+      // Count lines in file
+      const lines = content.split('\n').length
+      totalLines += lines
+      
+      // Extract file extension
+      const extension = filePath.split('.').pop()?.toLowerCase() || 'no-ext'
+      extensionCounts[extension] = (extensionCounts[extension] || 0) + 1
+    }
     
     // Calculate compression ratio (simplified)
     const compressionRatio = originalSize > 0 ? (originalSize / originalSize) * 100 : 100
@@ -68,6 +82,8 @@ serve(async (req) => {
       file_contents: fileContents,
       file_count: Object.keys(fileContents).length,
       total_size_bytes: originalSize,
+      lines_of_code: totalLines,
+      file_extensions: extensionCounts,
       is_stable: isStable || false,
       capture_duration_ms: Date.now() - startTime,
       compression_ratio: compressionRatio,
@@ -87,7 +103,8 @@ serve(async (req) => {
 
     // Log successful capture
     console.log(`✅ Version ${versionNumber} captured successfully`)
-    console.log(`📊 Files: ${captureData.file_count}, Size: ${(originalSize / 1024).toFixed(2)}KB`)
+    console.log(`📊 Files: ${captureData.file_count}, Lines: ${totalLines}, Size: ${(originalSize / 1024).toFixed(2)}KB`)
+    console.log(`📈 Extensions: ${JSON.stringify(extensionCounts)}`)
 
     return new Response(
       JSON.stringify({

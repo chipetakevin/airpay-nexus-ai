@@ -384,11 +384,13 @@ export type Database = {
           description: string | null
           file_contents: Json
           file_count: number
+          file_extensions: Json | null
           git_hash: string | null
           id: string
           is_active: boolean
           is_stable: boolean
           last_restored_at: string | null
+          lines_of_code: number
           restoration_count: number
           total_size_bytes: number
           updated_at: string
@@ -405,11 +407,13 @@ export type Database = {
           description?: string | null
           file_contents?: Json
           file_count?: number
+          file_extensions?: Json | null
           git_hash?: string | null
           id?: string
           is_active?: boolean
           is_stable?: boolean
           last_restored_at?: string | null
+          lines_of_code?: number
           restoration_count?: number
           total_size_bytes?: number
           updated_at?: string
@@ -426,11 +430,13 @@ export type Database = {
           description?: string | null
           file_contents?: Json
           file_count?: number
+          file_extensions?: Json | null
           git_hash?: string | null
           id?: string
           is_active?: boolean
           is_stable?: boolean
           last_restored_at?: string | null
+          lines_of_code?: number
           restoration_count?: number
           total_size_bytes?: number
           updated_at?: string
