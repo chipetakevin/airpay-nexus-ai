@@ -134,66 +134,108 @@ export const EnhancedPortalNavigation: React.FC<EnhancedPortalNavigationProps> =
 
   if (isMobile) {
     return (
-      <div className={cn("w-full", className)}>
-        <div className="w-full overflow-x-auto scrollbar-hide enhanced-tab-container">
-          <div className="flex gap-3 pb-2 px-1 min-w-max">
-            {tabs.map((tab) => (
-              <button
-                key={tab.id}
-                onClick={() => !tab.disabled && handleTabChange(tab.id)}
-                disabled={tab.disabled}
-                className={cn(
-                  "mobile-tab-enhanced flex items-center gap-3 px-5 py-4 rounded-2xl font-medium transition-all duration-300 border flex-shrink-0 min-w-fit shadow-sm",
+      <div className={cn("w-full px-4", className)}>
+        {/* Modern Card-Based Navigation Grid */}
+        <div className="grid grid-cols-2 gap-4 mb-6">
+          {tabs.filter(tab => !tab.disabled).map((tab) => (
+            <div
+              key={tab.id}
+              onClick={() => handleTabChange(tab.id)}
+              className={cn(
+                "modern-nav-card group relative overflow-hidden rounded-3xl p-6 cursor-pointer transition-all duration-500 transform hover:scale-[1.02] active:scale-[0.98]",
+                activeTab === tab.id
+                  ? "bg-gradient-to-br from-primary via-primary/90 to-primary/80 text-primary-foreground shadow-2xl shadow-primary/25 border-2 border-primary/30"
+                  : "bg-gradient-to-br from-card via-card/95 to-muted/20 text-card-foreground hover:shadow-xl border-2 border-border/40 hover:border-primary/20"
+              )}
+            >
+              {/* Animated Background Effect */}
+              <div className="absolute inset-0 bg-gradient-to-br from-transparent via-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+              
+              {/* Content Container */}
+              <div className="relative z-10 flex flex-col items-center text-center space-y-3">
+                {/* Icon with Enhanced Styling */}
+                <div className={cn(
+                  "w-14 h-14 rounded-2xl flex items-center justify-center text-2xl font-bold transition-all duration-300 group-hover:scale-110",
                   activeTab === tab.id
-                    ? "active bg-gradient-to-r from-primary via-primary/95 to-primary text-primary-foreground border-primary/20 shadow-lg ring-2 ring-primary/20"
-                    : "bg-gradient-to-r from-background/90 via-background to-background/90 text-foreground border-border/60 hover:border-primary/40 hover:shadow-md hover:bg-gradient-to-r hover:from-muted/40 hover:via-muted/60 hover:to-muted/40",
-                  tab.disabled && "opacity-50 cursor-not-allowed"
-                )}
-              >
-                {/* Icon with better spacing */}
-                <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-white/10 flex-shrink-0">
-                  <span className="text-xl">{tab.icon}</span>
+                    ? "bg-white/20 backdrop-blur-sm border border-white/20"
+                    : "bg-primary/10 border border-primary/20 group-hover:bg-primary/20"
+                )}>
+                  <span>{tab.icon}</span>
                 </div>
                 
-                {/* Text content with improved typography */}
-                <div className="flex flex-col items-start text-left min-w-0">
-                  <span className="font-bold text-base whitespace-nowrap leading-tight tracking-wide">
+                {/* Text Content with Modern Typography */}
+                <div className="space-y-1">
+                  <h3 className="font-bold text-lg leading-tight tracking-tight">
                     {tab.label}
-                  </span>
-                  <span className="text-xs opacity-85 whitespace-nowrap leading-tight font-medium">
+                  </h3>
+                  <p className={cn(
+                    "text-sm font-medium leading-tight",
+                    activeTab === tab.id ? "opacity-90" : "opacity-70"
+                  )}>
                     {tab.description}
-                  </span>
+                  </p>
                 </div>
                 
-                {/* Status indicators */}
-                <div className="flex items-center gap-2 flex-shrink-0">
-                  {tab.count && (
-                    <span className="text-xs bg-white/20 text-current px-2.5 py-1 rounded-full font-bold min-w-6 text-center">
-                      {tab.count}
-                    </span>
-                  )}
-                  {tab.status && (
-                    <div className="flex-shrink-0">
-                      {tab.status === 'new' && (
-                        <span className="bg-green-500 text-white text-xs animate-pulse px-2.5 py-1 rounded-full font-bold shadow-sm">
-                          New
-                        </span>
-                      )}
-                      {tab.status === 'alert' && (
-                        <span className="bg-red-500 text-white text-xs animate-bounce px-2.5 py-1 rounded-full font-bold shadow-sm">
-                          !
-                        </span>
-                      )}
-                      {tab.status === 'coming-soon' && (
-                        <span className="text-xs border-2 border-yellow-500 text-yellow-600 px-2.5 py-1 rounded-full font-bold bg-yellow-50 dark:bg-yellow-900/20">
-                          Soon
-                        </span>
-                      )}
-                    </div>
-                  )}
-                </div>
-              </button>
-            ))}
+                {/* Status Indicators */}
+                {(tab.count || tab.status) && (
+                  <div className="flex items-center justify-center gap-2">
+                    {tab.count && (
+                      <div className="bg-destructive text-destructive-foreground text-xs font-bold px-3 py-1.5 rounded-full animate-pulse">
+                        {tab.count}
+                      </div>
+                    )}
+                    {tab.status && (
+                      <div className="flex-shrink-0">
+                        {tab.status === 'new' && (
+                          <div className="bg-green-500 text-white text-xs font-bold px-3 py-1.5 rounded-full animate-bounce">
+                            New
+                          </div>
+                        )}
+                        {tab.status === 'alert' && (
+                          <div className="bg-red-500 text-white text-xs font-bold px-3 py-1.5 rounded-full animate-pulse">
+                            Alert
+                          </div>
+                        )}
+                        {tab.status === 'coming-soon' && (
+                          <div className="border-2 border-yellow-500 text-yellow-600 text-xs font-bold px-3 py-1.5 rounded-full bg-yellow-50 dark:bg-yellow-900/20">
+                            Soon
+                          </div>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
+              
+              {/* Active State Glow Effect */}
+              {activeTab === tab.id && (
+                <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-primary/20 via-transparent to-primary/20 animate-pulse"></div>
+              )}
+            </div>
+          ))}
+        </div>
+        
+        {/* Quick Actions Card */}
+        <div className="bg-gradient-to-r from-emerald-50 via-green-50 to-teal-50 dark:from-emerald-900/20 dark:via-green-900/20 dark:to-teal-900/20 rounded-3xl p-6 border-2 border-emerald-200/40 dark:border-emerald-700/40">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-4">
+              <div className="w-12 h-12 bg-green-500 rounded-2xl flex items-center justify-center text-white text-xl">
+                💬
+              </div>
+              <div>
+                <h4 className="font-bold text-lg text-green-800 dark:text-green-200">
+                  Quick Shopping?
+                </h4>
+                <p className="text-sm text-green-600 dark:text-green-300">
+                  Start a conversation
+                </p>
+              </div>
+            </div>
+            <div className="bg-green-500 text-white px-6 py-3 rounded-2xl font-bold text-sm hover:bg-green-600 transition-colors cursor-pointer flex items-center space-x-2">
+              <span>📱</span>
+              <span>WhatsApp Chat</span>
+              <span>→</span>
+            </div>
           </div>
         </div>
       </div>
