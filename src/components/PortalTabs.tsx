@@ -51,48 +51,48 @@ const PortalTabs = ({
 
   const { name: userName, isAuth: userAuthenticated } = getUserData();
 
-  // Ensure vendor tab is always included and accessible
+  // Enhanced tabs with consistent wording and proper mobile layout
   const tabs = [
     {
       value: 'deals',
       label: 'Smart Deals',
       icon: '🔥',
-      description: 'Shop Now',
+      description: 'Live Offers',
       color: 'orange'
     },
     {
       value: 'onecard',
       label: 'OneCard',
       icon: '💳',
-      description: 'Dashboard',
+      description: 'My Card',
       color: 'purple'
     },
     {
       value: 'registration',
       label: 'Customer',
       icon: '👤',
-      description: 'Register',
+      description: 'Sign Up',
       color: 'green'
     },
     {
       value: 'vendor',
       label: 'Vendor',
       icon: '🏪',
-      description: 'Register',
+      description: 'Partner',
       color: 'blue'
     },
     {
       value: 'unified-reports',
-      label: 'Unified Reports',
+      label: 'Reports',
       icon: '👑',
-      description: 'Gold Card',
+      description: 'Gold Access',
       color: 'yellow'
     },
     {
       value: 'admin-reg',
       label: 'Admin',
       icon: '🔐',
-      description: 'Access',
+      description: 'Control',
       color: 'gray'
     }
   ];
@@ -100,9 +100,9 @@ const PortalTabs = ({
   if (showAdminTab) {
     tabs.push({
       value: 'admin',
-      label: 'Portal',
+      label: 'Control Center',
       icon: '⚙️',
-      description: 'Control',
+      description: 'Admin Portal',
       color: 'gray'
     });
   }

@@ -70,15 +70,15 @@ const ModernTabNavigation = ({
 
   return (
     <div className="w-full max-w-7xl mx-auto px-3 sm:px-4 mb-6 sm:mb-8">
-      {/* Enhanced Mobile: 2x3 Grid with improved typography and spacing */}
-      <div className="grid grid-cols-2 gap-4 sm:hidden">
+      {/* Enhanced Mobile: 2x3 Grid with improved card sizing and typography */}
+      <div className="grid grid-cols-2 gap-3 sm:hidden">
         {tabs.slice(0, 6).map((tab) => (
           <Card 
             key={tab.value}
             className={`
               ${getTabStyles(tab)}
               border-2 transition-all duration-300 cursor-pointer
-              min-h-[108px] flex flex-col items-center justify-center p-4
+              min-h-[100px] flex flex-col items-center justify-center p-3
               hover:shadow-lg active:scale-98 mobile-touch-target
               focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2
             `}
@@ -87,13 +87,13 @@ const ModernTabNavigation = ({
             tabIndex={0}
             aria-label={`${tab.label} - ${tab.description}`}
           >
-            <div className="text-2xl mb-2">{tab.icon}</div>
-            <div className="text-center">
-              <div className="mobile-card-title text-sm font-bold leading-tight">{tab.label}</div>
-              <div className="mobile-card-description text-xs opacity-90 leading-tight mt-1">{tab.description}</div>
+            <div className="text-xl mb-1.5">{tab.icon}</div>
+            <div className="text-center w-full">
+              <div className="text-sm font-bold leading-tight truncate px-1">{tab.label}</div>
+              <div className="text-xs opacity-90 leading-tight mt-0.5 truncate px-1">{tab.description}</div>
             </div>
             {activeTab === tab.value && (
-              <div className="flex items-center gap-1 mt-2">
+              <div className="flex items-center gap-1 mt-1.5">
                 <div className="w-1.5 h-1.5 bg-current rounded-full animate-pulse"></div>
                 <div className="w-1.5 h-1.5 bg-current rounded-full animate-pulse" style={{ animationDelay: '0.2s' }}></div>
                 <div className="w-1.5 h-1.5 bg-current rounded-full animate-pulse" style={{ animationDelay: '0.4s' }}></div>
