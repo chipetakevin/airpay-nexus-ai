@@ -13,6 +13,7 @@ interface UnifiedBankingSectionProps {
     bankName?: string;
     accountNumber?: string;
     branchCode?: string;
+    routingNumber?: string;
   };
   errors: Record<string, string>;
   onInputChange: (field: string, value: string) => void;
@@ -40,16 +41,27 @@ const UnifiedBankingSection = ({
   };
 
   const handleEnhancedBankSelect = (bankName: string, routing: string, branchCode: string, bankDetails?: any) => {
-    // Ensure branch code is properly extracted and passed
-    const finalBranchCode = branchCode || bankDetails?.branchCode || bankDetails?.bank?.universalBranchCode || '';
+    // Ensure branch code is properly extracted and passed with priority order
+    const finalBranchCode = branchCode || 
+                           bankDetails?.branchCode || 
+                           bankDetails?.bank?.universalBranchCode || 
+                           bankDetails?.bank?.code || 
+                           '';
     
     console.log('🏦 Bank selected in UnifiedBankingSection:', {
       bankName,
       routing,
       branchCode: finalBranchCode,
-      bankDetails
+      bankDetails,
+      bankDetailsKeys: bankDetails ? Object.keys(bankDetails) : []
     });
     
+    // Update form data immediately
+    onInputChange('bankName', bankName);
+    onInputChange('branchCode', finalBranchCode);
+    onInputChange('routingNumber', routing);
+    
+    // Call the parent bank select handler
     onBankSelect(bankName, routing, finalBranchCode, bankDetails);
     
     setIsAutoSaving(true);
@@ -58,12 +70,14 @@ const UnifiedBankingSection = ({
       setLastSaved(new Date());
     }, 1500);
     
-    if (bankDetails && finalBranchCode) {
+    if (finalBranchCode) {
       toast({
         title: "Bank Selected! 🏦",
         description: `${bankName} with branch code ${finalBranchCode} has been selected and auto-saved.`,
         duration: 3000
       });
+    } else {
+      console.warn('⚠️ No branch code found for bank:', bankName);
     }
   };
 

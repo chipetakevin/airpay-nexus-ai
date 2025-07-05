@@ -1,6 +1,7 @@
 
 import { useCallback } from 'react';
 import { useToast } from '@/hooks/use-toast';
+import { supabase } from '@/integrations/supabase/client';
 import { VendorFormData } from '@/types/vendorRegistration';
 import { useVendorFormState } from './useVendorFormState';
 import { useVendorFormValidation } from './useVendorFormValidation';
@@ -49,6 +50,9 @@ export const useVendorRegistration = () => {
         
         // Enhanced submission process with OneCard integration
         try {
+          const { data: { user } } = await supabase.auth.getUser();
+          const userId = user?.id;
+          
           await processFormSubmission(formData, savePermanently);
           
           console.log('✅ Vendor registration completed successfully');
@@ -64,11 +68,40 @@ export const useVendorRegistration = () => {
           localStorage.setItem('vendorUser', JSON.stringify(vendorData));
           localStorage.setItem('vendorRegistrationCompleted', 'true');
           
-          toast({
-            title: "Vendor Registration Complete! 🎉",
-            description: "OneCard Gold account created successfully!",
-            duration: 5000
-          });
+        // Store MVNE-compliant vendor registration transaction
+        if (userId) {
+          const { error: transactionError } = await supabase
+            .from('mvne_compliant_transactions')
+            .insert({
+              transaction_type: 'vendor_registration',
+              customer_id: userId,
+              vendor_id: userId,
+              amount: 0,
+              base_amount: 0,
+              status: 'completed',
+              transaction_reference: `VENDOR-REG-${Date.now()}`,
+              recipient_msisdn: formData.phoneNumber,
+              network_provider: 'SYSTEM',
+              regulatory_compliance: {
+                user_type: 'vendor',
+                business_name: formData.companyName,
+                business_type: formData.businessType,
+                registration_timestamp: new Date().toISOString()
+              },
+              icasa_compliant: true,
+              rica_verified: true
+            });
+
+          if (transactionError) {
+            console.error('Transaction logging error:', transactionError);
+          }
+        }
+
+        toast({
+          title: "Vendor Registration Complete! 🎉",
+          description: "OneCard Gold account created successfully!",
+          duration: 5000
+        });
           
           return true;
         } catch (submissionError) {

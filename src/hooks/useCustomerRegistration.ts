@@ -181,7 +181,7 @@ export const useCustomerRegistration = () => {
         throw new Error('Failed to create OneCard account');
       }
 
-      console.log('✅ OneCard created:', oneCardNumber);
+      console.log('✅ OneCard Standard created for customer:', oneCardNumber);
       
       // Ensure phone number is exactly 9 digits and properly formatted
       const phoneNumber = formData.phoneNumber.replace(/\D/g, '');
@@ -235,6 +235,32 @@ export const useCustomerRegistration = () => {
 
       // Save form data permanently
       await savePermanently(formData);
+
+      // Store MVNE-compliant customer registration transaction
+      const { error: transactionError } = await supabase
+        .from('mvne_compliant_transactions')
+        .insert({
+          transaction_type: 'customer_registration',
+          customer_id: userId,
+          amount: 0,
+          base_amount: 0,
+          status: 'completed',
+          transaction_reference: `CUSTOMER-REG-${Date.now()}`,
+          recipient_msisdn: phoneNumber,
+          network_provider: 'SYSTEM',
+          regulatory_compliance: {
+            user_type: 'customer',
+            registration_timestamp: new Date().toISOString(),
+            terms_accepted: formData.agreeTerms,
+            marketing_consent: formData.marketingConsent
+          },
+          icasa_compliant: true,
+          rica_verified: true
+        });
+
+      if (transactionError) {
+        console.error('Transaction logging error:', transactionError);
+      }
 
       console.log('✅ Customer registration completed with PERMANENT session - never expires');
       console.log('✅ Phone number saved:', phoneNumber, '(9 digits preserved)');
