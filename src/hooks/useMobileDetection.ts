@@ -42,7 +42,7 @@ export const useMobileDetection = (): MobileDetectionResult => {
     const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
     const orientation = height > width ? 'portrait' : 'landscape' as 'portrait' | 'landscape';
     
-    // Enhanced device detection with comprehensive patterns
+    // Enhanced device detection with comprehensive patterns - order matters!
     const mobilePatterns = [
       /android.*mobile/i, /iphone/i, /ipod/i, /blackberry/i, /bb10/i, 
       /opera mini/i, /mobile/i, /phone/i, /samsung.*mobile/i, 
@@ -54,14 +54,18 @@ export const useMobileDetection = (): MobileDetectionResult => {
       /playbook/i, /rim tablet/i
     ];
     
+    // Desktop patterns - exclude mobile devices that contain "Mac" (like iPhone)
     const desktopPatterns = [
-      /windows nt/i, /mac os x/i, /linux/i, /cros/i, /x11/i
+      /windows nt(?!.*mobile)/i, 
+      /mac os x(?!.*mobile)(?!.*iphone)(?!.*ipod)/i, 
+      /linux(?!.*mobile)(?!.*android)/i, 
+      /cros/i, /x11(?!.*mobile)/i
     ];
     
-    // Check patterns against user agent
+    // Check patterns against user agent - order is critical
     const isMobileUA = mobilePatterns.some(pattern => pattern.test(userAgent));
-    const isTabletUA = tabletPatterns.some(pattern => pattern.test(userAgent));
-    const isDesktopUA = desktopPatterns.some(pattern => pattern.test(userAgent));
+    const isTabletUA = !isMobileUA && tabletPatterns.some(pattern => pattern.test(userAgent));
+    const isDesktopUA = !isMobileUA && !isTabletUA && desktopPatterns.some(pattern => pattern.test(userAgent));
     
     // Device-specific checks
     const isIOSDevice = /iPad|iPhone|iPod/i.test(userAgent);
@@ -148,7 +152,7 @@ export const useMobileDetection = (): MobileDetectionResult => {
       const userAgent = navigator.userAgent;
       const devicePixelRatio = window.devicePixelRatio || 1;
       
-      // Enhanced device detection with comprehensive patterns
+      // Enhanced device detection with comprehensive patterns - order matters!
       const mobilePatterns = [
         /android.*mobile/i, /iphone/i, /ipod/i, /blackberry/i, /bb10/i, 
         /opera mini/i, /mobile/i, /phone/i, /samsung.*mobile/i, 
@@ -160,13 +164,18 @@ export const useMobileDetection = (): MobileDetectionResult => {
         /playbook/i, /rim tablet/i
       ];
       
+      // Desktop patterns - exclude mobile devices that contain "Mac" (like iPhone)
       const desktopPatterns = [
-        /windows nt/i, /mac os x/i, /linux/i, /cros/i, /x11/i
+        /windows nt(?!.*mobile)/i, 
+        /mac os x(?!.*mobile)(?!.*iphone)(?!.*ipod)/i, 
+        /linux(?!.*mobile)(?!.*android)/i, 
+        /cros/i, /x11(?!.*mobile)/i
       ];
       
+      // Check patterns against user agent - order is critical
       const isMobileUA = mobilePatterns.some(pattern => pattern.test(userAgent));
-      const isTabletUA = tabletPatterns.some(pattern => pattern.test(userAgent));
-      const isDesktopUA = desktopPatterns.some(pattern => pattern.test(userAgent));
+      const isTabletUA = !isMobileUA && tabletPatterns.some(pattern => pattern.test(userAgent));
+      const isDesktopUA = !isMobileUA && !isTabletUA && desktopPatterns.some(pattern => pattern.test(userAgent));
       const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
       const orientation = height > width ? 'portrait' : 'landscape';
       
