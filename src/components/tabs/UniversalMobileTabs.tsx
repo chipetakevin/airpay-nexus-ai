@@ -56,40 +56,40 @@ export const UniversalMobileTabs: React.FC<UniversalMobileTabsProps> = ({
   const styles = getVariantStyles();
 
   if (isMobile) {
-    // Mobile: Vertical stacked tabs
+    // Mobile: Horizontal scrollable tabs
     return (
-      <div className={cn("w-full space-y-1 p-2", className)}>
-        {tabs.map((tab) => (
-          <button
-            key={tab.id}
-            onClick={() => !tab.disabled && onTabChange(tab.id)}
-            disabled={tab.disabled}
-            className={cn(
-              "w-full text-left px-4 py-3 rounded-lg font-medium transition-all duration-200 flex items-center justify-between",
-              activeTab === tab.id
-                ? "bg-primary text-primary-foreground shadow-md"
-                : "text-muted-foreground hover:text-foreground hover:bg-muted/50",
-              tab.disabled && "opacity-50 cursor-not-allowed"
-            )}
-          >
-            <div className="flex items-center gap-3">
-              {tab.icon && (
-                <span className="text-lg">{tab.icon}</span>
+      <div className={cn("w-full", className)}>
+        <div className="mobile-tab-container nav-pills-container">
+          {tabs.map((tab) => (
+            <button
+              key={tab.id}
+              onClick={() => !tab.disabled && onTabChange(tab.id)}
+              disabled={tab.disabled}
+              className={cn(
+                "mobile-tab-item nav-pill flex items-center gap-2 px-4 py-3 rounded-full font-medium transition-all duration-200 border",
+                activeTab === tab.id
+                  ? "bg-primary text-primary-foreground shadow-md border-primary"
+                  : "bg-background text-muted-foreground hover:text-foreground hover:bg-muted/50 border-border",
+                tab.disabled && "opacity-50 cursor-not-allowed"
               )}
-              <div>
-                <div className="font-medium">{tab.label}</div>
+            >
+              {tab.icon && (
+                <span className="text-base flex-shrink-0">{tab.icon}</span>
+              )}
+              <div className="flex flex-col items-start">
+                <div className="font-medium text-sm">{tab.label}</div>
                 {tab.description && (
-                  <div className="text-xs opacity-70">{tab.description}</div>
+                  <div className="text-xs opacity-70 whitespace-nowrap">{tab.description}</div>
                 )}
               </div>
-            </div>
-            {tab.count && (
-              <Badge variant="outline" className="text-xs">
-                {tab.count}
-              </Badge>
-            )}
-          </button>
-        ))}
+              {tab.count && (
+                <Badge variant="outline" className="text-xs ml-2 flex-shrink-0">
+                  {tab.count}
+                </Badge>
+              )}
+            </button>
+          ))}
+        </div>
       </div>
     );
   }

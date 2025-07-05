@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { cn } from '@/lib/utils';
+import { Badge } from '@/components/ui/badge';
 import IntelligentSidebar from './IntelligentSidebar';
 import { useMobileFirst } from '@/components/layout/MobileFirstProvider';
 
@@ -133,13 +134,45 @@ export const EnhancedPortalNavigation: React.FC<EnhancedPortalNavigationProps> =
 
   if (isMobile) {
     return (
-      <IntelligentSidebar
-        tabs={tabs}
-        activeTab={activeTab}
-        onTabChange={handleTabChange}
-        className={className}
-        theme="auto"
-      />
+      <div className={cn("w-full", className)}>
+        <div className="mobile-tab-container nav-pills-container">
+          {tabs.map((tab) => (
+            <button
+              key={tab.id}
+              onClick={() => !tab.disabled && handleTabChange(tab.id)}
+              disabled={tab.disabled}
+              className={cn(
+                "mobile-tab-item nav-pill flex items-center gap-2 px-4 py-3 rounded-full font-medium transition-all duration-300 border min-w-max",
+                activeTab === tab.id
+                  ? "bg-primary text-primary-foreground shadow-lg border-primary scale-105"
+                  : "bg-background/90 text-muted-foreground hover:text-foreground hover:bg-muted/70 border-border hover:scale-102",
+                tab.disabled && "opacity-50 cursor-not-allowed"
+              )}
+            >
+              <span className="text-base flex-shrink-0">{tab.icon}</span>
+              <div className="flex flex-col items-start">
+                <span className="font-medium text-sm whitespace-nowrap">{tab.label}</span>
+                <span className="text-xs opacity-70 whitespace-nowrap">{tab.description}</span>
+              </div>
+              {tab.count && (
+                <Badge 
+                  variant={activeTab === tab.id ? "secondary" : "outline"} 
+                  className="text-xs ml-2 flex-shrink-0"
+                >
+                  {tab.count}
+                </Badge>
+              )}
+              {tab.status && (
+                <div className="flex-shrink-0 ml-1">
+                  {tab.status === 'new' && <Badge className="bg-green-500 text-white text-xs animate-pulse">New</Badge>}
+                  {tab.status === 'alert' && <Badge className="bg-red-500 text-white text-xs animate-bounce">!</Badge>}
+                  {tab.status === 'coming-soon' && <Badge variant="outline" className="text-xs border-yellow-500 text-yellow-600">Soon</Badge>}
+                </div>
+              )}
+            </button>
+          ))}
+        </div>
+      </div>
     );
   }
 

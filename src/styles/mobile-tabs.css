@@ -1,15 +1,19 @@
 
 @layer utilities {
-  /* Mobile-friendly tab styles */
+  /* Enhanced Mobile-friendly tab styles with smooth scrolling */
   .mobile-tab-container {
     display: flex;
     overflow-x: auto;
+    overflow-y: hidden;
     scroll-snap-type: x mandatory;
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
     -ms-overflow-style: none;
     padding: 0 20px 0 16px;
     margin: 0 -4px;
+    scroll-behavior: smooth;
+    width: 100%;
+    max-width: 100vw;
   }
 
   .mobile-tab-container::-webkit-scrollbar {
@@ -21,6 +25,37 @@
     scroll-snap-align: start;
     min-width: fit-content;
     padding: 0 4px;
+    white-space: nowrap;
+  }
+
+  /* Enhanced horizontal scrolling for navigation pills */
+  .nav-pills-container {
+    display: flex;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    padding: 8px 16px;
+    gap: 8px;
+    scroll-behavior: smooth;
+    width: 100%;
+    max-width: 100vw;
+  }
+
+  .nav-pills-container::-webkit-scrollbar {
+    display: none;
+  }
+
+  .nav-pill {
+    flex: 0 0 auto;
+    scroll-snap-align: start;
+    min-width: fit-content;
+    white-space: nowrap;
+    padding: 12px 20px;
+    border-radius: 25px;
+    transition: all 0.3s ease;
   }
 
   /* Mobile-first service cards */

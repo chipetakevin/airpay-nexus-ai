@@ -148,37 +148,43 @@ export const NerveCenterMobileLayout: React.FC<NerveCenterMobileLayoutProps> = (
         </>
       )}
 
-      {/* Enhanced Mobile Bottom Navigation with Accessibility */}
+      {/* Enhanced Mobile Bottom Navigation with Horizontal Scrolling */}
       {showBottomNav && isMobile && (
         <nav 
           className="mobile-navigation-enhanced"
           role="navigation"
           aria-label="Bottom navigation"
         >
-          <div className="flex items-center justify-around py-2">
-            <button className="mobile-nav-button focus-visible" aria-label="Home dashboard">
+          <div className="nav-pills-container justify-start py-2">
+            <button className="mobile-nav-button nav-pill focus-visible flex-shrink-0" aria-label="Home dashboard">
               <div className="w-6 h-6 bg-primary/20 rounded-lg flex items-center justify-center mb-1">
                 <span className="text-sm" role="img" aria-hidden="true">🏠</span>
               </div>
-              <span className="text-xs">Home</span>
+              <span className="text-xs whitespace-nowrap">Home</span>
             </button>
-            <button className="mobile-nav-button focus-visible" aria-label="Analytics and reports">
+            <button className="mobile-nav-button nav-pill focus-visible flex-shrink-0" aria-label="Analytics and reports">
               <div className="w-6 h-6 bg-green-100 dark:bg-green-900 rounded-lg flex items-center justify-center mb-1">
                 <span className="text-sm" role="img" aria-hidden="true">📊</span>
               </div>
-              <span className="text-xs">Analytics</span>
+              <span className="text-xs whitespace-nowrap">Analytics</span>
             </button>
-            <button className="mobile-nav-button focus-visible" aria-label="System settings">
+            <button className="mobile-nav-button nav-pill focus-visible flex-shrink-0" aria-label="System settings">
               <div className="w-6 h-6 bg-purple-100 dark:bg-purple-900 rounded-lg flex items-center justify-center mb-1">
                 <span className="text-sm" role="img" aria-hidden="true">⚙️</span>
               </div>
-              <span className="text-xs">Settings</span>
+              <span className="text-xs whitespace-nowrap">Settings</span>
             </button>
-            <button className="mobile-nav-button focus-visible" aria-label="User profile">
+            <button className="mobile-nav-button nav-pill focus-visible flex-shrink-0" aria-label="User profile">
               <div className="w-6 h-6 bg-orange-100 dark:bg-orange-900 rounded-lg flex items-center justify-center mb-1">
                 <span className="text-sm" role="img" aria-hidden="true">👤</span>
               </div>
-              <span className="text-xs">Profile</span>
+              <span className="text-xs whitespace-nowrap">Profile</span>
+            </button>
+            <button className="mobile-nav-button nav-pill focus-visible flex-shrink-0" aria-label="Additional features">
+              <div className="w-6 h-6 bg-blue-100 dark:bg-blue-900 rounded-lg flex items-center justify-center mb-1">
+                <span className="text-sm" role="img" aria-hidden="true">⭐</span>
+              </div>
+              <span className="text-xs whitespace-nowrap">More</span>
             </button>
           </div>
         </nav>

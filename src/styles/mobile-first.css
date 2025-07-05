@@ -75,6 +75,9 @@ body {
   @apply flex items-center space-x-2;
   @apply overflow-x-auto scrollbar-hide;
   @apply pb-2;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  scroll-snap-type: x mandatory;
 }
 
 .mobile-nav-item {
@@ -85,6 +88,9 @@ body {
   @apply transition-all duration-200;
   @apply touch-manipulation;
   min-height: 44px; /* iOS touch target minimum */
+  min-width: fit-content;
+  white-space: nowrap;
+  scroll-snap-align: start;
 }
 
 .mobile-nav-item.active {
