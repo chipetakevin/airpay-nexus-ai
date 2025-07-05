@@ -27,6 +27,7 @@ import PortingSystem from "./pages/PortingSystem";
 import RICARegistration from "./pages/RICARegistration";
 import RegistrationHub from "./pages/RegistrationHub";
 import AdminMVNEDashboard from "./pages/AdminMVNEDashboard";
+import CollapsibleDemo from "./pages/CollapsibleDemo";
 
 const queryClient = new QueryClient();
 
@@ -59,6 +60,7 @@ const App = () => (
             <Route path="/rica-registration" element={<RICARegistration />} />
             <Route path="/registration-hub" element={<RegistrationHub />} />
             <Route path="/admin-mvne" element={<AdminMVNEDashboard />} />
+            <Route path="/collapsible-demo" element={<CollapsibleDemo />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
