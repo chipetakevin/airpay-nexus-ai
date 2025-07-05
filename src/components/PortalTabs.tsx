@@ -10,6 +10,7 @@ import ReportsTabContent from './onecard/ReportsTabContent';
 import AirtimeDealsSystem from './AirtimeDealsSystem';
 import TabSwitcher from './navigation/TabSwitcher';
 import ModernTabNavigation from './navigation/ModernTabNavigation';
+import EnhancedPortalNavigation from './navigation/EnhancedPortalNavigation';
 import { NerveCenterMobileLayout } from './layout/NerveCenterMobileLayout';
 import { UniversalMobileTabs } from './tabs/UniversalMobileTabs';
 import { useMobileFirst } from './layout/MobileFirstProvider';
@@ -124,29 +125,22 @@ const PortalTabs = ({
       subtitle="Mobile-First Dashboard"
       className="nerve-center-portal"
     >
-      <div className="w-full max-w-6xl mx-auto">
-        <Tabs value={activeTab} onValueChange={enhancedHandleTabChange} className="w-full">
-          {/* Universal Mobile-First Tab Navigation */}
-          <div className="mb-6">
-            <UniversalMobileTabs
-              tabs={tabs.map(tab => ({
-                id: tab.value,
-                label: tab.label,
-                icon: tab.icon,
-                count: tab.value === 'admin' && showAdminTab ? 1 : undefined,
-                description: tab.description,
-                disabled: !isTabAllowed(tab.value)
-              }))}
-              activeTab={activeTab}
-              onTabChange={enhancedHandleTabChange}
-              variant="nerve-center"
-              className="nerve-center-tabs"
-            />
-          </div>
+      <div className="w-full max-w-7xl mx-auto">
+        {/* Enhanced Intelligent Navigation */}
+        <div className="mb-6">
+          <EnhancedPortalNavigation
+            activeTab={activeTab}
+            onTabChange={enhancedHandleTabChange}
+            isTabAllowed={isTabAllowed}
+            showAdminTab={showAdminTab}
+            className="nerve-center-enhanced-nav"
+          />
+        </div>
 
-          {/* Legacy Tab Switcher for compatibility */}
+        <Tabs value={activeTab} onValueChange={enhancedHandleTabChange} className="w-full">
+          {/* Legacy Fallback Navigation for Desktop */}
           {!isMobile && (
-            <div className="mb-4">
+            <div className="mb-4 bg-muted/30 rounded-lg p-2">
               <TabSwitcher 
                 currentTab={activeTab}
                 onTabChange={enhancedHandleTabChange}
@@ -156,8 +150,8 @@ const PortalTabs = ({
             </div>
           )}
           
-          {/* Tab Content - Mobile-First Optimized */}
-          <div className="nerve-center-content-area">
+          {/* Tab Content - Enhanced with Animations */}
+          <div className="nerve-center-content-area space-y-6">
             <TabsContent value="deals" className="nerve-center-fade-in">
               <div className="nerve-center-card">
                 <AirtimeDealsSystem />
