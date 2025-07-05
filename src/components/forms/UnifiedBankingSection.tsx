@@ -40,7 +40,17 @@ const UnifiedBankingSection = ({
   };
 
   const handleEnhancedBankSelect = (bankName: string, routing: string, branchCode: string, bankDetails?: any) => {
-    onBankSelect(bankName, routing, branchCode, bankDetails);
+    // Ensure branch code is properly extracted and passed
+    const finalBranchCode = branchCode || bankDetails?.branchCode || bankDetails?.bank?.universalBranchCode || '';
+    
+    console.log('🏦 Bank selected in UnifiedBankingSection:', {
+      bankName,
+      routing,
+      branchCode: finalBranchCode,
+      bankDetails
+    });
+    
+    onBankSelect(bankName, routing, finalBranchCode, bankDetails);
     
     setIsAutoSaving(true);
     setTimeout(() => {
@@ -48,10 +58,10 @@ const UnifiedBankingSection = ({
       setLastSaved(new Date());
     }, 1500);
     
-    if (bankDetails) {
+    if (bankDetails && finalBranchCode) {
       toast({
         title: "Bank Selected! 🏦",
-        description: `${bankName} with branch code ${branchCode} has been selected and auto-saved.`,
+        description: `${bankName} with branch code ${finalBranchCode} has been selected and auto-saved.`,
         duration: 3000
       });
     }

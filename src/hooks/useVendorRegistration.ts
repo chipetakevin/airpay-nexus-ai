@@ -36,7 +36,7 @@ export const useVendorRegistration = () => {
   const handleSubmit = useCallback(async (e: React.FormEvent) => {
     e.preventDefault();
     
-    console.log('🚀 Form submission started with data:', formData);
+    console.log('🚀 Vendor form submission started with data:', formData);
     
     try {
       const validationErrors = validateCompleteForm();
@@ -45,15 +45,47 @@ export const useVendorRegistration = () => {
       console.log(`📋 Validation completed: ${errorCount} errors found`);
 
       if (errorCount === 0) {
-        console.log('✅ Form is valid, proceeding with submission');
-        await processFormSubmission(formData, savePermanently);
-        return true;
+        console.log('✅ Vendor form is valid, proceeding with submission');
+        
+        // Enhanced submission process with OneCard integration
+        try {
+          await processFormSubmission(formData, savePermanently);
+          
+          console.log('✅ Vendor registration completed successfully');
+          
+          // Store OneCard information in localStorage for immediate access
+          const vendorData = {
+            ...formData,
+            oneCardType: 'gold', // Vendors get gold cards
+            registrationDate: new Date().toISOString(),
+            userType: 'vendor'
+          };
+          
+          localStorage.setItem('vendorUser', JSON.stringify(vendorData));
+          localStorage.setItem('vendorRegistrationCompleted', 'true');
+          
+          toast({
+            title: "Vendor Registration Complete! 🎉",
+            description: "OneCard Gold account created successfully!",
+            duration: 5000
+          });
+          
+          return true;
+        } catch (submissionError) {
+          console.error('❌ Vendor registration submission failed:', submissionError);
+          toast({
+            title: "Registration Failed",
+            description: "Unable to complete registration. Please try again.",
+            variant: "destructive"
+          });
+          return false;
+        }
       } else {
         // Show validation errors with specific field information
         const errorFields = Object.keys(validationErrors);
         const firstErrorField = errorFields[0];
         
-        console.log('❌ Form validation failed:', validationErrors);
+        console.log('❌ Vendor form validation failed:', validationErrors);
         
         // Show specific error message
         const errorMessage = validationErrors[firstErrorField] || 'Please check the form fields';
@@ -76,9 +108,9 @@ export const useVendorRegistration = () => {
         return false;
       }
     } catch (error) {
-      console.error('❌ Form submission failed:', error);
+      console.error('❌ Vendor form submission failed:', error);
       toast({
-        title: "Registration Failed",
+        title: "Vendor Registration Failed",
         description: "An unexpected error occurred. Please try again.",
         variant: "destructive"
       });

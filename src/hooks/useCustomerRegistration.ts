@@ -1,6 +1,7 @@
 
 import { useState } from 'react';
 import { useToast } from '@/hooks/use-toast';
+import { supabase } from '@/integrations/supabase/client';
 import { usePermanentAuth } from './usePermanentAuth';
 import { usePhoneValidation } from '@/hooks/usePhoneValidation';
 import { usePermanentFormStorage } from './usePermanentFormStorage';
@@ -160,8 +161,27 @@ export const useCustomerRegistration = () => {
     }
 
     try {
-      // Generate card number
-      const cardNumber = `OC${Math.random().toString().substr(2, 8)}`;
+      // Get current user ID for OneCard creation
+      const { data: { user } } = await supabase.auth.getUser();
+      const userId = user?.id;
+      
+      if (!userId) {
+        throw new Error('User not authenticated');
+      }
+
+      // Create OneCard account using the new system
+      const { data: oneCardNumber, error: oneCardError } = await supabase.rpc('create_onecard_account', {
+        user_id_param: userId,
+        user_type_param: 'customer',
+        onecard_type_param: 'standard'
+      });
+
+      if (oneCardError) {
+        console.error('OneCard creation error:', oneCardError);
+        throw new Error('Failed to create OneCard account');
+      }
+
+      console.log('✅ OneCard created:', oneCardNumber);
       
       // Ensure phone number is exactly 9 digits and properly formatted
       const phoneNumber = formData.phoneNumber.replace(/\D/g, '');
@@ -182,12 +202,12 @@ export const useCustomerRegistration = () => {
         permanentSession: true // Flag for permanent session
       };
 
-      // Create user data with consistent phone storage
+      // Create user data with consistent phone storage and OneCard integration
       const userData = {
         firstName: formData.firstName,
         lastName: formData.lastName,
         email: formData.email,
-        cardNumber,
+        cardNumber: oneCardNumber, // Use the generated OneCard number
         phone: phoneNumber,
         registeredPhone: `+27${phoneNumber}`,
         phoneNumber: phoneNumber,
@@ -197,7 +217,9 @@ export const useCustomerRegistration = () => {
         balance: 0,
         cashbackBalance: 0,
         totalEarned: 0,
-        registrationDate: new Date().toISOString()
+        registrationDate: new Date().toISOString(),
+        oneCardNumber: oneCardNumber,
+        oneCardType: 'standard'
       };
 
       // Store permanent session flags

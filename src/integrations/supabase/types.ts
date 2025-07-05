@@ -304,6 +304,75 @@ export type Database = {
           },
         ]
       }
+      cashback_transactions: {
+        Row: {
+          amount: number
+          cashback_type: string | null
+          created_at: string | null
+          credited_at: string | null
+          earned_at: string | null
+          expires_at: string | null
+          id: string
+          onecard_account_id: string | null
+          percentage_rate: number | null
+          redeemed_at: string | null
+          source_amount: number | null
+          source_transaction_type: string | null
+          status: string | null
+          transaction_id: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          amount: number
+          cashback_type?: string | null
+          created_at?: string | null
+          credited_at?: string | null
+          earned_at?: string | null
+          expires_at?: string | null
+          id?: string
+          onecard_account_id?: string | null
+          percentage_rate?: number | null
+          redeemed_at?: string | null
+          source_amount?: number | null
+          source_transaction_type?: string | null
+          status?: string | null
+          transaction_id?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          amount?: number
+          cashback_type?: string | null
+          created_at?: string | null
+          credited_at?: string | null
+          earned_at?: string | null
+          expires_at?: string | null
+          id?: string
+          onecard_account_id?: string | null
+          percentage_rate?: number | null
+          redeemed_at?: string | null
+          source_amount?: number | null
+          source_transaction_type?: string | null
+          status?: string | null
+          transaction_id?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cashback_transactions_onecard_account_id_fkey"
+            columns: ["onecard_account_id"]
+            isOneToOne: false
+            referencedRelation: "onecard_accounts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cashback_transactions_transaction_id_fkey"
+            columns: ["transaction_id"]
+            isOneToOne: false
+            referencedRelation: "mvne_compliant_transactions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       compliance_monitoring: {
         Row: {
           auto_resolved: boolean | null
@@ -1045,6 +1114,83 @@ export type Database = {
         }
         Relationships: []
       }
+      international_payment_cards: {
+        Row: {
+          billing_address: Json | null
+          billing_country: string
+          card_brand: string
+          card_type: string
+          cardholder_name: string
+          created_at: string | null
+          encryption_standard: string | null
+          expiry_month: number
+          expiry_year: number
+          id: string
+          is_active: boolean | null
+          is_primary: boolean | null
+          is_verified: boolean | null
+          last_four_digits: string
+          onecard_account_id: string | null
+          pci_compliant: boolean | null
+          token_reference: string | null
+          updated_at: string | null
+          user_id: string
+          verification_method: string | null
+        }
+        Insert: {
+          billing_address?: Json | null
+          billing_country: string
+          card_brand: string
+          card_type: string
+          cardholder_name: string
+          created_at?: string | null
+          encryption_standard?: string | null
+          expiry_month: number
+          expiry_year: number
+          id?: string
+          is_active?: boolean | null
+          is_primary?: boolean | null
+          is_verified?: boolean | null
+          last_four_digits: string
+          onecard_account_id?: string | null
+          pci_compliant?: boolean | null
+          token_reference?: string | null
+          updated_at?: string | null
+          user_id: string
+          verification_method?: string | null
+        }
+        Update: {
+          billing_address?: Json | null
+          billing_country?: string
+          card_brand?: string
+          card_type?: string
+          cardholder_name?: string
+          created_at?: string | null
+          encryption_standard?: string | null
+          expiry_month?: number
+          expiry_year?: number
+          id?: string
+          is_active?: boolean | null
+          is_primary?: boolean | null
+          is_verified?: boolean | null
+          last_four_digits?: string
+          onecard_account_id?: string | null
+          pci_compliant?: boolean | null
+          token_reference?: string | null
+          updated_at?: string | null
+          user_id?: string
+          verification_method?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "international_payment_cards_onecard_account_id_fkey"
+            columns: ["onecard_account_id"]
+            isOneToOne: false
+            referencedRelation: "onecard_accounts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       local_storage_mirror: {
         Row: {
           created_at: string | null
@@ -1088,6 +1234,143 @@ export type Database = {
             columns: ["form_reference_id"]
             isOneToOne: false
             referencedRelation: "universal_form_submissions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      mvne_compliant_transactions: {
+        Row: {
+          amount: number
+          base_amount: number
+          cashback_earned: number | null
+          commission_paid: number | null
+          completed_at: string | null
+          completion_code: string | null
+          created_at: string | null
+          currency: string | null
+          customer_id: string | null
+          device_info: Json | null
+          discount_amount: number | null
+          error_code: string | null
+          error_message: string | null
+          icasa_compliant: boolean | null
+          id: string
+          initiated_at: string | null
+          ip_address: unknown | null
+          mno_reference: string | null
+          mvne_fee: number | null
+          mvne_reference: string | null
+          network_provider: string
+          onecard_account_id: string | null
+          payment_method: string | null
+          payment_reference: string | null
+          processed_at: string | null
+          processing_status: string | null
+          receipt_data: Json | null
+          receipt_url: string | null
+          recipient_msisdn: string
+          regulatory_compliance: Json | null
+          regulatory_fee: number | null
+          retry_count: number | null
+          rica_verified: boolean | null
+          sender_msisdn: string | null
+          status: string | null
+          transaction_location: Json | null
+          transaction_reference: string
+          transaction_type: string
+          updated_at: string | null
+          vendor_id: string | null
+        }
+        Insert: {
+          amount: number
+          base_amount: number
+          cashback_earned?: number | null
+          commission_paid?: number | null
+          completed_at?: string | null
+          completion_code?: string | null
+          created_at?: string | null
+          currency?: string | null
+          customer_id?: string | null
+          device_info?: Json | null
+          discount_amount?: number | null
+          error_code?: string | null
+          error_message?: string | null
+          icasa_compliant?: boolean | null
+          id?: string
+          initiated_at?: string | null
+          ip_address?: unknown | null
+          mno_reference?: string | null
+          mvne_fee?: number | null
+          mvne_reference?: string | null
+          network_provider: string
+          onecard_account_id?: string | null
+          payment_method?: string | null
+          payment_reference?: string | null
+          processed_at?: string | null
+          processing_status?: string | null
+          receipt_data?: Json | null
+          receipt_url?: string | null
+          recipient_msisdn: string
+          regulatory_compliance?: Json | null
+          regulatory_fee?: number | null
+          retry_count?: number | null
+          rica_verified?: boolean | null
+          sender_msisdn?: string | null
+          status?: string | null
+          transaction_location?: Json | null
+          transaction_reference: string
+          transaction_type: string
+          updated_at?: string | null
+          vendor_id?: string | null
+        }
+        Update: {
+          amount?: number
+          base_amount?: number
+          cashback_earned?: number | null
+          commission_paid?: number | null
+          completed_at?: string | null
+          completion_code?: string | null
+          created_at?: string | null
+          currency?: string | null
+          customer_id?: string | null
+          device_info?: Json | null
+          discount_amount?: number | null
+          error_code?: string | null
+          error_message?: string | null
+          icasa_compliant?: boolean | null
+          id?: string
+          initiated_at?: string | null
+          ip_address?: unknown | null
+          mno_reference?: string | null
+          mvne_fee?: number | null
+          mvne_reference?: string | null
+          network_provider?: string
+          onecard_account_id?: string | null
+          payment_method?: string | null
+          payment_reference?: string | null
+          processed_at?: string | null
+          processing_status?: string | null
+          receipt_data?: Json | null
+          receipt_url?: string | null
+          recipient_msisdn?: string
+          regulatory_compliance?: Json | null
+          regulatory_fee?: number | null
+          retry_count?: number | null
+          rica_verified?: boolean | null
+          sender_msisdn?: string | null
+          status?: string | null
+          transaction_location?: Json | null
+          transaction_reference?: string
+          transaction_type?: string
+          updated_at?: string | null
+          vendor_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "mvne_compliant_transactions_onecard_account_id_fkey"
+            columns: ["onecard_account_id"]
+            isOneToOne: false
+            referencedRelation: "onecard_accounts"
             referencedColumns: ["id"]
           },
         ]
@@ -1185,6 +1468,60 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      onecard_accounts: {
+        Row: {
+          cashback_balance: number | null
+          created_at: string | null
+          id: string
+          is_active: boolean | null
+          is_verified: boolean | null
+          last_transaction_at: string | null
+          metadata: Json | null
+          onecard_number: string
+          onecard_type: string | null
+          total_earned: number | null
+          total_spent: number | null
+          updated_at: string | null
+          user_id: string
+          user_type: string
+          verification_level: string | null
+        }
+        Insert: {
+          cashback_balance?: number | null
+          created_at?: string | null
+          id?: string
+          is_active?: boolean | null
+          is_verified?: boolean | null
+          last_transaction_at?: string | null
+          metadata?: Json | null
+          onecard_number: string
+          onecard_type?: string | null
+          total_earned?: number | null
+          total_spent?: number | null
+          updated_at?: string | null
+          user_id: string
+          user_type: string
+          verification_level?: string | null
+        }
+        Update: {
+          cashback_balance?: number | null
+          created_at?: string | null
+          id?: string
+          is_active?: boolean | null
+          is_verified?: boolean | null
+          last_transaction_at?: string | null
+          metadata?: Json | null
+          onecard_number?: string
+          onecard_type?: string | null
+          total_earned?: number | null
+          total_spent?: number | null
+          updated_at?: string | null
+          user_id?: string
+          user_type?: string
+          verification_level?: string | null
+        }
+        Relationships: []
       }
       onecard_rewards: {
         Row: {
@@ -2397,6 +2734,18 @@ export type Database = {
         Args: Record<PropertyKey, never>
         Returns: undefined
       }
+      create_onecard_account: {
+        Args: {
+          user_id_param: string
+          user_type_param: string
+          onecard_type_param?: string
+        }
+        Returns: string
+      }
+      generate_onecard_number: {
+        Args: { user_type_param: string }
+        Returns: string
+      }
       generate_rica_reference: {
         Args: Record<PropertyKey, never>
         Returns: string
@@ -2429,6 +2778,14 @@ export type Database = {
           _metadata?: Json
         }
         Returns: string
+      }
+      update_cashback_balance: {
+        Args: {
+          onecard_account_id_param: string
+          amount_param: number
+          transaction_type_param: string
+        }
+        Returns: boolean
       }
     }
     Enums: {
