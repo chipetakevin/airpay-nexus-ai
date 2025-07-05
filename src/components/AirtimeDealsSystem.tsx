@@ -50,7 +50,7 @@ const AirtimeDealsSystem = () => {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 pb-8 mobile-deals-container">
       {/* Cross-Platform Navigation */}
       <CrossPlatformNavigation currentPlatform="portal" />
 

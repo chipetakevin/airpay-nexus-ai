@@ -43,6 +43,8 @@ export const NerveCenterMobileLayout: React.FC<NerveCenterMobileLayoutProps> = (
 
   const contentClasses = `
     nerve-center-content
+    mobile-content-container
+    mobile-safe-scroll
     ${showHeader ? (isMobile ? 'pt-14' : 'pt-16') : ''}
     ${showBottomNav ? (isMobile ? 'pb-20' : 'pb-16') : ''}
     ${isMobile ? 'px-4' : 'px-6'}

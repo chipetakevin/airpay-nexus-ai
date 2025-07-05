@@ -202,16 +202,19 @@ const Portal = () => {
         </div>
       </MobileOnly>
       
-      <main className="container mx-auto px-2 sm:px-4 -mt-1 pb-8">
-        <PortalTabs 
-          activeTab={activeTab}
-          showAdminTab={showAdminTab}
-          isTabAllowed={isTabAllowed}
-          handleTabChange={handleTabChange}
-          setIsAdminAuthenticated={setIsAdminAuthenticated}
-          isUnifiedProfile={isUnifiedProfile}
-          isAuthenticated={isAuthenticated}
-        />
+      <main className="container mx-auto px-2 sm:px-4 -mt-1 pb-8 md:pb-8">
+        {/* Add extra bottom padding on mobile to account for floating elements */}
+        <div className="pb-20 md:pb-0">
+          <PortalTabs 
+            activeTab={activeTab}
+            showAdminTab={showAdminTab}
+            isTabAllowed={isTabAllowed}
+            handleTabChange={handleTabChange}
+            setIsAdminAuthenticated={setIsAdminAuthenticated}
+            isUnifiedProfile={isUnifiedProfile}
+            isAuthenticated={isAuthenticated}
+          />
+        </div>
       </main>
       
       {/* Device-Specific Navigation */}

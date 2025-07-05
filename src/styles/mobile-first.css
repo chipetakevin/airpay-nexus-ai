@@ -239,6 +239,32 @@ html {
   padding-right: env(safe-area-inset-right);
 }
 
+/* Mobile content visibility fixes */
+.mobile-content-container {
+  min-height: calc(100vh - env(safe-area-inset-top) - env(safe-area-inset-bottom));
+  padding-bottom: calc(5rem + env(safe-area-inset-bottom));
+}
+
+.mobile-deals-container {
+  padding-bottom: 6rem; /* Extra space for floating elements */
+}
+
+/* Ensure mobile content is fully scrollable */
+@media (max-width: 767px) {
+  .mobile-card {
+    margin-bottom: 1rem;
+  }
+  
+  .mobile-card:last-child {
+    margin-bottom: 2rem; /* Extra space for last card */
+  }
+  
+  /* Prevent content from being hidden behind fixed elements */
+  .mobile-safe-scroll {
+    scroll-padding-bottom: 5rem;
+  }
+}
+
 /* Hide scrollbars on mobile */
 .scrollbar-hide {
   -ms-overflow-style: none;
