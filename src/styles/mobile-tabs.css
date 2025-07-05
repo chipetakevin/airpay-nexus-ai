@@ -1,62 +1,5 @@
 
 @layer utilities {
-/* Modern Card-Based Navigation Styles */
-.modern-nav-card {
-  @apply relative overflow-hidden;
-  backdrop-filter: blur(12px);
-  min-height: 140px;
-  box-shadow: 
-    0 4px 12px -2px rgba(0, 0, 0, 0.1),
-    0 2px 6px -1px rgba(0, 0, 0, 0.06);
-  border: 1px solid hsl(var(--border) / 0.4);
-}
-
-.modern-nav-card::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(135deg, 
-    transparent 0%, 
-    rgba(255,255,255,0.1) 30%, 
-    transparent 70%
-  );
-  border-radius: inherit;
-  pointer-events: none;
-  transition: opacity 0.3s ease;
-}
-
-.modern-nav-card:hover::before {
-  opacity: 0.8;
-}
-
-/* Enhanced Service Cards */
-.modern-service-card {
-  @apply bg-gradient-to-br from-card via-background to-muted/30;
-  @apply rounded-3xl p-6 shadow-xl border border-border/40;
-  @apply backdrop-blur-sm overflow-hidden relative;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.modern-service-card::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(135deg, 
-    transparent 0%, 
-    rgba(255,255,255,0.05) 50%, 
-    transparent 100%
-  );
-  border-radius: inherit;
-  pointer-events: none;
-}
-
-.modern-service-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 
-    0 20px 40px -8px rgba(0, 0, 0, 0.15),
-    0 8px 16px -4px rgba(0, 0, 0, 0.1);
-}
-
 /* Premium Enhanced Tab Styles for Better Mobile Readability */
 .mobile-tab-enhanced {
   @apply relative overflow-hidden;
@@ -156,42 +99,18 @@
   scroll-snap-align: start;
 }
 
-/* Mobile-first service cards - Legacy support */
-.service-card-mobile {
-  @apply modern-service-card;
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  max-width: 100%;
-  box-sizing: border-box;
-}
-
-/* Smooth animations for mobile */
-.mobile-fade-in {
-  animation: fadeInUp 0.4s ease-out;
-}
-
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
+  /* Mobile-first service cards */
+  .service-card-mobile {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 100%;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    padding: 16px;
+    margin: 8px 0;
+    box-sizing: border-box;
+    overflow: hidden;
   }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-/* Touch-friendly interactive elements */
-@media (max-width: 768px) {
-  .modern-nav-card {
-    min-height: 120px;
-    transition: all 0.2s ease;
-  }
-  
-  .modern-nav-card:active {
-    transform: scale(0.98);
-    transition: transform 0.1s ease;
-  }
-}
 }

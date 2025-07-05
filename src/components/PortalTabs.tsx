@@ -138,74 +138,74 @@ const PortalTabs = ({
             subtitle="Mobile Dashboard"
             className="nerve-center-mobile-portal"
           >
-            <div className="w-full responsive-content-wrapper min-h-screen bg-gradient-to-br from-background via-muted/20 to-background">
-              {/* Enhanced Mobile Navigation with Modern Card Layout */}
-              <MobileOnly>
-                <div className="mb-8 px-2">
-                  <div className="bg-gradient-to-br from-muted/20 via-background/95 to-muted/10 rounded-3xl p-6 border border-border/30 shadow-xl backdrop-blur-sm">
-                    <div className="text-center mb-6">
-                      <h3 className="text-base font-bold text-muted-foreground/90 uppercase tracking-wider mb-2">Navigate Services</h3>
-                      <div className="w-16 h-1 bg-gradient-to-r from-transparent via-primary to-transparent mx-auto rounded-full"></div>
-                    </div>
-                    <EnhancedPortalNavigation
-                      activeTab={activeTab}
-                      onTabChange={enhancedHandleTabChange}
-                      isTabAllowed={isTabAllowed}
-                      showAdminTab={showAdminTab}
-                      className="nerve-center-mobile-nav"
-                    />
-                  </div>
-                </div>
-              </MobileOnly>
+            <div className="w-full responsive-content-wrapper">
+      {/* Enhanced Mobile Navigation with Premium Styling */}
+      <MobileOnly>
+        <div className="mb-6 px-4">
+          <div className="bg-gradient-to-br from-muted/30 via-background to-muted/20 rounded-3xl p-5 border border-border/40 shadow-lg backdrop-blur-sm">
+            <div className="text-center mb-4">
+              <h3 className="text-sm font-bold text-muted-foreground/80 uppercase tracking-wider">Navigate Services</h3>
+              <div className="w-12 h-0.5 bg-gradient-to-r from-transparent via-primary to-transparent mx-auto mt-2"></div>
+            </div>
+            <EnhancedPortalNavigation
+              activeTab={activeTab}
+              onTabChange={enhancedHandleTabChange}
+              isTabAllowed={isTabAllowed}
+              showAdminTab={showAdminTab}
+              className="nerve-center-mobile-nav"
+            />
+          </div>
+        </div>
+      </MobileOnly>
 
               <Tabs value={activeTab} onValueChange={enhancedHandleTabChange} className="w-full">
-                {/* Mobile Tab Content with Enhanced Modern Cards */}
-                <div className="nerve-center-mobile-content space-y-6 px-4">
-                  <TabsContent value="contractor" className="mobile-fade-in mt-0">
-                    <div className="modern-service-card">
+                {/* Mobile Tab Content with Enhanced Service Cards */}
+                <div className="nerve-center-mobile-content space-y-6">
+                  <TabsContent value="contractor" className="mobile-fade-in">
+                    <div className="service-card-mobile">
                       <ContractorRegistrationContainer />
                     </div>
                   </TabsContent>
                   
-                  <TabsContent value="deals" className="mobile-fade-in mt-0">
-                    <div className="modern-service-card">
+                  <TabsContent value="deals" className="mobile-fade-in">
+                    <div className="service-card-mobile">
                       <AirtimeDealsSystem />
                     </div>
                   </TabsContent>
                   
-                  <TabsContent value="onecard" className="mobile-fade-in mt-0">
-                    <div className="modern-service-card">
+                  <TabsContent value="onecard" className="mobile-fade-in">
+                    <div className="service-card-mobile">
                       <OneCardDashboard />
                     </div>
                   </TabsContent>
                   
-                  <TabsContent value="registration" className="mobile-fade-in mt-0">
-                    <div className="modern-service-card">
+                  <TabsContent value="registration" className="mobile-fade-in">
+                    <div className="service-card-mobile">
                       <CustomerRegistration />
                     </div>
                   </TabsContent>
                   
-                  <TabsContent value="vendor" className="mobile-fade-in mt-0">
-                    <div className="modern-service-card">
+                  <TabsContent value="vendor" className="mobile-fade-in">
+                    <div className="service-card-mobile">
                       <VendorRegistration />
                     </div>
                   </TabsContent>
 
-                  <TabsContent value="unified-reports" className="mobile-fade-in mt-0">
-                    <div className="modern-service-card">
+                  <TabsContent value="unified-reports" className="mobile-fade-in">
+                    <div className="service-card-mobile">
                       <ReportsTabContent />
                     </div>
                   </TabsContent>
                   
-                  <TabsContent value="admin-reg" className="mobile-fade-in mt-0">
-                    <div className="modern-service-card">
+                  <TabsContent value="admin-reg" className="mobile-fade-in">
+                    <div className="service-card-mobile">
                       <AdminRegistration />
                     </div>
                   </TabsContent>
                   
                   {showAdminTab && (
-                    <TabsContent value="admin" className="mobile-fade-in mt-0">
-                      <div className="modern-service-card">
+                    <TabsContent value="admin" className="mobile-fade-in">
+                      <div className="service-card-mobile">
                         <AdminPortal onAuthSuccess={() => setIsAdminAuthenticated(true)} />
                       </div>
                     </TabsContent>
