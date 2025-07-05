@@ -12,6 +12,7 @@ import { ActivityLog } from './ActivityLog';
 import { CommissionTracker } from './CommissionTracker';
 import { ExportControls } from './ExportControls';
 import { Shield, BarChart3, FileText, Users, TrendingUp } from 'lucide-react';
+import FeatureGuard from '@/components/common/FeatureGuard';
 
 export interface ReportFilters {
   taskType: string[];
@@ -162,19 +163,21 @@ const MyReportTab: React.FC = () => {
         </TabsList>
 
         <TabsContent value="overview" className="mt-6">
-          {isAdmin ? (
-            <AdminReportDashboard
-              reportData={reportData}
-              filters={filters}
-              onDataUpdate={setReportData}
-            />
-          ) : (
-            <ContractorDashboard
-              reportData={reportData}
-              contractorId={currentUser?.id || ''}
-              filters={filters}
-            />
-          )}
+          <FeatureGuard featureKey="report_viewing">
+            {isAdmin ? (
+              <AdminReportDashboard
+                reportData={reportData}
+                filters={filters}
+                onDataUpdate={setReportData}
+              />
+            ) : (
+              <ContractorDashboard
+                reportData={reportData}
+                contractorId={currentUser?.id || ''}
+                filters={filters}
+              />
+            )}
+          </FeatureGuard>
         </TabsContent>
 
         <TabsContent value="activities" className="mt-6">
@@ -187,14 +190,16 @@ const MyReportTab: React.FC = () => {
         </TabsContent>
 
         <TabsContent value="commissions" className="mt-6">
-          <CommissionTracker
-            dailyEarnings={reportData.dailyPerformance.commissionEarned}
-            monthToDateEarnings={reportData.monthToDate.commissionEarned}
-            pendingAmount={reportData.dailyPerformance.pendingApproval * 50} // Mock calculation
-            canViewPayroll={hasPermission('user_management', 'view')}
-            contractorId={currentUser?.id || ''}
-            isAdmin={isAdmin}
-          />
+          <FeatureGuard featureKey="commission_tracking">
+            <CommissionTracker
+              dailyEarnings={reportData.dailyPerformance.commissionEarned}
+              monthToDateEarnings={reportData.monthToDate.commissionEarned}
+              pendingAmount={reportData.dailyPerformance.pendingApproval * 50} // Mock calculation
+              canViewPayroll={hasPermission('user_management', 'view')}
+              contractorId={currentUser?.id || ''}
+              isAdmin={isAdmin}
+            />
+          </FeatureGuard>
         </TabsContent>
 
         {isAdmin && (

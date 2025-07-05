@@ -720,6 +720,75 @@ export type Database = {
         }
         Relationships: []
       }
+      contractor_feature_access: {
+        Row: {
+          contractor_id: string
+          created_at: string
+          disabled_at: string | null
+          enabled_at: string | null
+          enabled_by: string | null
+          feature_key: string
+          id: string
+          is_enabled: boolean
+          updated_at: string
+        }
+        Insert: {
+          contractor_id: string
+          created_at?: string
+          disabled_at?: string | null
+          enabled_at?: string | null
+          enabled_by?: string | null
+          feature_key: string
+          id?: string
+          is_enabled?: boolean
+          updated_at?: string
+        }
+        Update: {
+          contractor_id?: string
+          created_at?: string
+          disabled_at?: string | null
+          enabled_at?: string | null
+          enabled_by?: string | null
+          feature_key?: string
+          id?: string
+          is_enabled?: boolean
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      contractor_features: {
+        Row: {
+          category: string
+          created_at: string
+          feature_description: string | null
+          feature_key: string
+          feature_name: string
+          id: string
+          is_active: boolean
+          updated_at: string
+        }
+        Insert: {
+          category?: string
+          created_at?: string
+          feature_description?: string | null
+          feature_key: string
+          feature_name: string
+          id?: string
+          is_active?: boolean
+          updated_at?: string
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          feature_description?: string | null
+          feature_key?: string
+          feature_name?: string
+          id?: string
+          is_active?: boolean
+          updated_at?: string
+        }
+        Relationships: []
+      }
       customer_profiles: {
         Row: {
           created_at: string | null
@@ -1227,6 +1296,39 @@ export type Database = {
           sent_at?: string | null
           total_errors?: number | null
           updated_at?: string | null
+        }
+        Relationships: []
+      }
+      feature_access_logs: {
+        Row: {
+          action: string
+          changed_by: string
+          contractor_id: string
+          created_at: string
+          feature_key: string
+          id: string
+          metadata: Json | null
+          reason: string | null
+        }
+        Insert: {
+          action: string
+          changed_by: string
+          contractor_id: string
+          created_at?: string
+          feature_key: string
+          id?: string
+          metadata?: Json | null
+          reason?: string | null
+        }
+        Update: {
+          action?: string
+          changed_by?: string
+          contractor_id?: string
+          created_at?: string
+          feature_key?: string
+          id?: string
+          metadata?: Json | null
+          reason?: string | null
         }
         Relationships: []
       }
@@ -3308,6 +3410,10 @@ export type Database = {
       clean_expired_cart_sessions: {
         Args: Record<PropertyKey, never>
         Returns: undefined
+      }
+      contractor_has_feature_access: {
+        Args: { _contractor_id: string; _feature_key: string }
+        Returns: boolean
       }
       create_onecard_account: {
         Args: {
