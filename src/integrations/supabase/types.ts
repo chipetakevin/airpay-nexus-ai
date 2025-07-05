@@ -830,6 +830,221 @@ export type Database = {
           },
         ]
       }
+      error_fix_requests: {
+        Row: {
+          created_at: string | null
+          error_log_id: string
+          fix_code: string | null
+          fix_description: string
+          fix_type: string
+          id: string
+          implementation_result: string | null
+          implemented_at: string | null
+          requested_by: string | null
+          review_notes: string | null
+          reviewed_by: string | null
+          risk_level: string | null
+          rollback_available: boolean | null
+          status: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          error_log_id: string
+          fix_code?: string | null
+          fix_description: string
+          fix_type: string
+          id?: string
+          implementation_result?: string | null
+          implemented_at?: string | null
+          requested_by?: string | null
+          review_notes?: string | null
+          reviewed_by?: string | null
+          risk_level?: string | null
+          rollback_available?: boolean | null
+          status?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          error_log_id?: string
+          fix_code?: string | null
+          fix_description?: string
+          fix_type?: string
+          id?: string
+          implementation_result?: string | null
+          implemented_at?: string | null
+          requested_by?: string | null
+          review_notes?: string | null
+          reviewed_by?: string | null
+          risk_level?: string | null
+          rollback_available?: boolean | null
+          status?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "error_fix_requests_error_log_id_fkey"
+            columns: ["error_log_id"]
+            isOneToOne: false
+            referencedRelation: "error_logs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      error_logs: {
+        Row: {
+          auto_fix_attempted: boolean | null
+          auto_fix_successful: boolean | null
+          browser_info: Json | null
+          component_name: string
+          component_props: Json | null
+          created_at: string | null
+          error_category: string | null
+          error_code: string | null
+          error_message: string
+          error_stack: string | null
+          error_type: string
+          form_data: Json | null
+          id: string
+          ip_address: unknown | null
+          last_occurrence: string | null
+          occurrence_count: number | null
+          potential_fix: string | null
+          resolution_method: string | null
+          resolved_at: string | null
+          resolved_by: string | null
+          route_path: string | null
+          severity: string | null
+          status: string | null
+          updated_at: string | null
+          user_agent: string | null
+          user_id: string | null
+        }
+        Insert: {
+          auto_fix_attempted?: boolean | null
+          auto_fix_successful?: boolean | null
+          browser_info?: Json | null
+          component_name: string
+          component_props?: Json | null
+          created_at?: string | null
+          error_category?: string | null
+          error_code?: string | null
+          error_message: string
+          error_stack?: string | null
+          error_type: string
+          form_data?: Json | null
+          id?: string
+          ip_address?: unknown | null
+          last_occurrence?: string | null
+          occurrence_count?: number | null
+          potential_fix?: string | null
+          resolution_method?: string | null
+          resolved_at?: string | null
+          resolved_by?: string | null
+          route_path?: string | null
+          severity?: string | null
+          status?: string | null
+          updated_at?: string | null
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          auto_fix_attempted?: boolean | null
+          auto_fix_successful?: boolean | null
+          browser_info?: Json | null
+          component_name?: string
+          component_props?: Json | null
+          created_at?: string | null
+          error_category?: string | null
+          error_code?: string | null
+          error_message?: string
+          error_stack?: string | null
+          error_type?: string
+          form_data?: Json | null
+          id?: string
+          ip_address?: unknown | null
+          last_occurrence?: string | null
+          occurrence_count?: number | null
+          potential_fix?: string | null
+          resolution_method?: string | null
+          resolved_at?: string | null
+          resolved_by?: string | null
+          route_path?: string | null
+          severity?: string | null
+          status?: string | null
+          updated_at?: string | null
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      error_reports: {
+        Row: {
+          auto_fixes_attempted: number | null
+          auto_fixes_successful: number | null
+          component_errors: Json | null
+          created_at: string | null
+          critical_errors: number | null
+          error_trends: Json | null
+          high_errors: number | null
+          id: string
+          low_errors: number | null
+          manual_fixes_pending: number | null
+          medium_errors: number | null
+          recipients: string[] | null
+          recommendations: Json | null
+          report_data: Json
+          report_date: string
+          report_sent: boolean | null
+          sent_at: string | null
+          total_errors: number | null
+          updated_at: string | null
+        }
+        Insert: {
+          auto_fixes_attempted?: number | null
+          auto_fixes_successful?: number | null
+          component_errors?: Json | null
+          created_at?: string | null
+          critical_errors?: number | null
+          error_trends?: Json | null
+          high_errors?: number | null
+          id?: string
+          low_errors?: number | null
+          manual_fixes_pending?: number | null
+          medium_errors?: number | null
+          recipients?: string[] | null
+          recommendations?: Json | null
+          report_data: Json
+          report_date?: string
+          report_sent?: boolean | null
+          sent_at?: string | null
+          total_errors?: number | null
+          updated_at?: string | null
+        }
+        Update: {
+          auto_fixes_attempted?: number | null
+          auto_fixes_successful?: number | null
+          component_errors?: Json | null
+          created_at?: string | null
+          critical_errors?: number | null
+          error_trends?: Json | null
+          high_errors?: number | null
+          id?: string
+          low_errors?: number | null
+          manual_fixes_pending?: number | null
+          medium_errors?: number | null
+          recipients?: string[] | null
+          recommendations?: Json | null
+          report_data?: Json
+          report_date?: string
+          report_sent?: boolean | null
+          sent_at?: string | null
+          total_errors?: number | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       local_storage_mirror: {
         Row: {
           created_at: string | null
@@ -1762,6 +1977,60 @@ export type Database = {
         }
         Relationships: []
       }
+      system_health_metrics: {
+        Row: {
+          availability_percentage: number | null
+          avg_response_time: number | null
+          component_name: string
+          cpu_usage: number | null
+          error_rate: number | null
+          health_score: number | null
+          id: string
+          last_incident: string | null
+          manual_interventions: number | null
+          memory_usage: number | null
+          recorded_at: string | null
+          recovery_time: number | null
+          self_healing_events: number | null
+          trend_direction: string | null
+          uptime_hours: number | null
+        }
+        Insert: {
+          availability_percentage?: number | null
+          avg_response_time?: number | null
+          component_name: string
+          cpu_usage?: number | null
+          error_rate?: number | null
+          health_score?: number | null
+          id?: string
+          last_incident?: string | null
+          manual_interventions?: number | null
+          memory_usage?: number | null
+          recorded_at?: string | null
+          recovery_time?: number | null
+          self_healing_events?: number | null
+          trend_direction?: string | null
+          uptime_hours?: number | null
+        }
+        Update: {
+          availability_percentage?: number | null
+          avg_response_time?: number | null
+          component_name?: string
+          cpu_usage?: number | null
+          error_rate?: number | null
+          health_score?: number | null
+          id?: string
+          last_incident?: string | null
+          manual_interventions?: number | null
+          memory_usage?: number | null
+          recorded_at?: string | null
+          recovery_time?: number | null
+          self_healing_events?: number | null
+          trend_direction?: string | null
+          uptime_hours?: number | null
+        }
+        Relationships: []
+      }
       system_notifications: {
         Row: {
           action_required: boolean | null
@@ -2116,6 +2385,14 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      analyze_error_patterns: {
+        Args: Record<PropertyKey, never>
+        Returns: undefined
+      }
+      calculate_component_health: {
+        Args: { component_name_param: string }
+        Returns: number
+      }
       clean_expired_cart_sessions: {
         Args: Record<PropertyKey, never>
         Returns: undefined
