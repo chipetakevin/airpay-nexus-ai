@@ -69,55 +69,67 @@ const ModernTabNavigation = ({
   };
 
   return (
-    <div className="w-full max-w-7xl mx-auto px-2 sm:px-4 mb-4 sm:mb-6">
-      {/* Mobile: 2x3 Grid */}
-      <div className="grid grid-cols-2 gap-2 sm:hidden">
+    <div className="w-full max-w-7xl mx-auto px-3 sm:px-4 mb-6 sm:mb-8">
+      {/* Enhanced Mobile: 2x3 Grid with improved typography and spacing */}
+      <div className="grid grid-cols-2 gap-4 sm:hidden">
         {tabs.slice(0, 6).map((tab) => (
           <Card 
             key={tab.value}
             className={`
               ${getTabStyles(tab)}
               border-2 transition-all duration-300 cursor-pointer
-              min-h-[80px] flex flex-col items-center justify-center p-3
-              hover:shadow-md active:scale-95
+              min-h-[108px] flex flex-col items-center justify-center p-4
+              hover:shadow-lg active:scale-98 mobile-touch-target
+              focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2
             `}
             onClick={() => handleTabClick(tab)}
+            role="button"
+            tabIndex={0}
+            aria-label={`${tab.label} - ${tab.description}`}
           >
-            <div className="text-lg mb-1">{tab.icon}</div>
+            <div className="text-2xl mb-2">{tab.icon}</div>
             <div className="text-center">
-              <div className="text-xs font-bold leading-tight">{tab.label}</div>
-              <div className="text-xs opacity-75 leading-tight mt-0.5">{tab.description}</div>
+              <div className="mobile-card-title text-sm font-bold leading-tight">{tab.label}</div>
+              <div className="mobile-card-description text-xs opacity-90 leading-tight mt-1">{tab.description}</div>
             </div>
             {activeTab === tab.value && (
-              <div className="w-1 h-1 bg-current rounded-full mt-1 animate-pulse"></div>
+              <div className="flex items-center gap-1 mt-2">
+                <div className="w-1.5 h-1.5 bg-current rounded-full animate-pulse"></div>
+                <div className="w-1.5 h-1.5 bg-current rounded-full animate-pulse" style={{ animationDelay: '0.2s' }}></div>
+                <div className="w-1.5 h-1.5 bg-current rounded-full animate-pulse" style={{ animationDelay: '0.4s' }}></div>
+              </div>
             )}
           </Card>
         ))}
       </div>
 
-      {/* Tablet: 3 columns */}
-      <div className="hidden sm:grid lg:hidden grid-cols-3 gap-3">
+      {/* Enhanced Tablet: 3 columns with improved touch targets */}
+      <div className="hidden sm:grid lg:hidden grid-cols-3 gap-4">
         {tabs.map((tab) => (
           <Card 
             key={tab.value}
             className={`
               ${getTabStyles(tab)}
               border-2 transition-all duration-300 cursor-pointer
-              min-h-[90px] flex flex-col items-center justify-center p-4
-              hover:shadow-md active:scale-95
+              min-h-[110px] flex flex-col items-center justify-center p-5
+              hover:shadow-lg active:scale-98
+              focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2
             `}
             onClick={() => handleTabClick(tab)}
+            role="button"
+            tabIndex={0}
+            aria-label={`${tab.label} - ${tab.description}`}
           >
-            <div className="text-xl mb-2">{tab.icon}</div>
+            <div className="text-2xl mb-2">{tab.icon}</div>
             <div className="text-center">
-              <div className="text-sm font-bold leading-tight">{tab.label}</div>
-              <div className="text-xs opacity-75 leading-tight mt-1">{tab.description}</div>
+              <div className="mobile-heading-small text-sm font-bold leading-tight">{tab.label}</div>
+              <div className="mobile-text-medium text-sm opacity-85 leading-tight mt-1">{tab.description}</div>
             </div>
             {activeTab === tab.value && (
               <div className="flex items-center gap-1 mt-2">
-                <div className="w-1 h-1 bg-current rounded-full animate-pulse"></div>
-                <div className="w-1 h-1 bg-current rounded-full animate-pulse" style={{ animationDelay: '0.2s' }}></div>
-                <div className="w-1 h-1 bg-current rounded-full animate-pulse" style={{ animationDelay: '0.4s' }}></div>
+                <div className="w-1.5 h-1.5 bg-current rounded-full animate-pulse"></div>
+                <div className="w-1.5 h-1.5 bg-current rounded-full animate-pulse" style={{ animationDelay: '0.2s' }}></div>
+                <div className="w-1.5 h-1.5 bg-current rounded-full animate-pulse" style={{ animationDelay: '0.4s' }}></div>
               </div>
             )}
           </Card>

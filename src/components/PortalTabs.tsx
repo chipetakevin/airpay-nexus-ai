@@ -115,7 +115,7 @@ const PortalTabs = ({
   };
 
   return (
-    <div className="w-full max-w-6xl mx-auto pt-2 sm:pt-4">
+    <div className="w-full max-w-6xl mx-auto pt-3 sm:pt-4 mobile-content-container">
       <Tabs value={activeTab} onValueChange={enhancedHandleTabChange} className="w-full">
         {/* Add Tab Switcher for seamless navigation */}
         <TabSwitcher 
@@ -125,7 +125,7 @@ const PortalTabs = ({
           userName={userName}
         />
 
-        {/* Modern Tab Navigation */}
+        {/* Modern Tab Navigation - Enhanced for Mobile */}
         <ModernTabNavigation
           tabs={tabs}
           activeTab={activeTab}
@@ -133,31 +133,31 @@ const PortalTabs = ({
           isTabAllowed={isTabAllowed}
         />
         
-        {/* Tab Content - Optimized for top positioning */}
-        <div className="w-full">
-          <TabsContent value="deals" className="p-1 sm:p-2 md:p-4 lg:p-6 animate-fade-in">
+        {/* Tab Content - Enhanced for Mobile Experience */}
+        <div className="w-full mobile-vertical-stack">
+          <TabsContent value="deals" className="mobile-section-spacing p-2 sm:p-3 md:p-4 lg:p-6 animate-fade-in">
             <AirtimeDealsSystem />
           </TabsContent>
           
-          <TabsContent value="onecard" className="p-1 sm:p-2 md:p-4 lg:p-6 animate-fade-in">
+          <TabsContent value="onecard" className="mobile-section-spacing p-2 sm:p-3 md:p-4 lg:p-6 animate-fade-in">
             <OneCardDashboard />
           </TabsContent>
           
-          <TabsContent value="registration" className="p-1 sm:p-2 md:p-4 lg:p-6 animate-fade-in">
+          <TabsContent value="registration" className="mobile-section-spacing p-2 sm:p-3 md:p-4 lg:p-6 animate-fade-in">
             <div className="w-full max-w-4xl mx-auto">
               <CustomerRegistration />
             </div>
           </TabsContent>
           
-          <TabsContent value="vendor" className="p-1 sm:p-2 md:p-4 lg:p-6 animate-fade-in">
+          <TabsContent value="vendor" className="mobile-section-spacing p-2 sm:p-3 md:p-4 lg:p-6 animate-fade-in">
             <VendorRegistration />
           </TabsContent>
 
-          <TabsContent value="unified-reports" className="p-1 sm:p-2 md:p-4 lg:p-6 animate-fade-in">
+          <TabsContent value="unified-reports" className="mobile-section-spacing p-2 sm:p-3 md:p-4 lg:p-6 animate-fade-in">
             <ReportsTabContent />
           </TabsContent>
           
-          <TabsContent value="admin-reg" className="p-1 sm:p-2 md:p-4 lg:p-6 animate-fade-in">
+          <TabsContent value="admin-reg" className="mobile-section-spacing p-2 sm:p-3 md:p-4 lg:p-6 animate-fade-in">
             <AdminRegistration />
           </TabsContent>
           
