@@ -24,6 +24,11 @@ export const NerveCenterMobileLayout: React.FC<NerveCenterMobileLayoutProps> = (
 }) => {
   const { deviceType, orientation, screenSize } = useMobileFirst();
   const isMobile = useIsMobile();
+  const [isMenuOpen, setIsMenuOpen] = React.useState(false);
+  
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen);
+  };
   
   // Nerve Center BaaS mobile-first styling
   const layoutClasses = `
@@ -55,7 +60,7 @@ export const NerveCenterMobileLayout: React.FC<NerveCenterMobileLayoutProps> = (
             <MobileAdminHeader
               title={title}
               subtitle={subtitle}
-              onMenuToggle={() => {}}
+              onMenuToggle={toggleMenu}
               showSearch={true}
               onSearchToggle={() => {}}
             />
@@ -83,6 +88,39 @@ export const NerveCenterMobileLayout: React.FC<NerveCenterMobileLayoutProps> = (
           {children}
         </div>
       </main>
+
+      {/* Mobile Navigation Menu Overlay */}
+      {isMenuOpen && isMobile && (
+        <>
+          <div 
+            className="fixed inset-0 bg-black/60 z-[999] backdrop-blur-sm"
+            onClick={toggleMenu}
+          />
+          <div className="fixed left-4 right-4 top-20 bg-white rounded-2xl shadow-2xl border-2 border-blue-200/50 z-[9999] max-h-[calc(100vh-6rem)] overflow-y-auto">
+            <div className="p-6 space-y-4">
+              <h3 className="text-lg font-semibold text-slate-900 mb-4">Navigation Menu</h3>
+              <div className="space-y-3">
+                <button className="w-full flex items-center gap-3 px-4 py-3 rounded-xl bg-blue-50 hover:bg-blue-100 text-blue-700 transition-colors">
+                  <span className="text-xl">🏠</span>
+                  <span className="font-medium">Home Dashboard</span>
+                </button>
+                <button className="w-full flex items-center gap-3 px-4 py-3 rounded-xl bg-green-50 hover:bg-green-100 text-green-700 transition-colors">
+                  <span className="text-xl">📊</span>
+                  <span className="font-medium">Analytics & Reports</span>
+                </button>
+                <button className="w-full flex items-center gap-3 px-4 py-3 rounded-xl bg-purple-50 hover:bg-purple-100 text-purple-700 transition-colors">
+                  <span className="text-xl">⚙️</span>
+                  <span className="font-medium">System Settings</span>
+                </button>
+                <button className="w-full flex items-center gap-3 px-4 py-3 rounded-xl bg-orange-50 hover:bg-orange-100 text-orange-700 transition-colors">
+                  <span className="text-xl">👤</span>
+                  <span className="font-medium">User Profile</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </>
+      )}
 
       {/* Mobile Bottom Navigation */}
       {showBottomNav && isMobile && (
