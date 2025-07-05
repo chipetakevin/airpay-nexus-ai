@@ -365,9 +365,7 @@ html {
   @apply hover:shadow-xl hover:border-primary/20;
 }
 
-.mobile-card {
-  @apply mobile-card;
-}
+/* Removed duplicate mobile-card definition to prevent circular dependency */
 
 /* Device-specific content areas */
 .nerve-center-desktop-content {
