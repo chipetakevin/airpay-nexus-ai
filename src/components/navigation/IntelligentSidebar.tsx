@@ -220,42 +220,44 @@ export const IntelligentSidebar: React.FC<IntelligentSidebarProps> = ({
   if (isMobile) {
     return (
       <div className={cn(
-        "fixed bottom-0 left-0 right-0 z-50",
-        "bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60",
-        "border-t border-border/40",
+        "fixed bottom-0 left-0 right-0 z-50 p-4",
         "safe-area-pb",
         className
       )}>
-        <div className="flex items-center justify-around px-2 py-2">
-          {tabs.slice(0, 5).map((tab) => {
-            const isActive = activeTab === tab.id;
-            return (
-              <Button
-                key={tab.id}
-                variant="ghost"
-                size="sm"
-                onClick={() => !tab.disabled && onTabChange(tab.id)}
-                disabled={tab.disabled}
-                className={cn(
-                  "flex flex-col items-center gap-1 h-auto py-2 px-3 min-w-0 flex-1",
-                  isActive && "text-primary bg-primary/10",
-                  tab.disabled && "opacity-50"
-                )}
-              >
-                <div className="relative">
-                  {getTabIcon(tab.icon)}
+        <div className="gradient-nav-container max-w-sm mx-auto">
+          <div className="space-y-3">
+            {tabs.slice(0, 3).map((tab) => {
+              const isActive = activeTab === tab.id;
+              const pillClass = tab.id === 'deals' ? 'nav-pill-instant-rewards' :
+                               tab.id === 'onecard' ? 'nav-pill-secure-transactions' :
+                               'nav-pill-best-deals';
+              
+              return (
+                <button
+                  key={tab.id}
+                  onClick={() => !tab.disabled && onTabChange(tab.id)}
+                  disabled={tab.disabled}
+                  className={cn(
+                    "nav-pill w-full",
+                    pillClass,
+                    isActive && "active",
+                    tab.disabled && "opacity-50"
+                  )}
+                  aria-pressed={isActive}
+                >
+                  <div className="nav-pill-icon">
+                    {getTabIcon(tab.icon)}
+                  </div>
+                  <span className="font-medium">{tab.label}</span>
                   {tab.count && (
-                    <Badge className="absolute -top-2 -right-2 h-4 w-4 p-0 text-xs">
+                    <Badge className="ml-auto bg-white/20 text-white border-white/30">
                       {tab.count}
                     </Badge>
                   )}
-                </div>
-                <span className="text-xs font-medium truncate max-w-full">
-                  {tab.label}
-                </span>
-              </Button>
-            );
-          })}
+                </button>
+              );
+            })}
+          </div>
         </div>
       </div>
     );

@@ -31,6 +31,29 @@
     --chart-4: 43 74% 66%;
     --chart-5: 27 87% 67%;
     --radius: 0.5rem;
+    
+    /* Modern Gradient Navigation System */
+    --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    --gradient-secondary: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    --gradient-accent: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+    
+    /* Glassmorphic Navigation */
+    --glass-background: rgba(255, 255, 255, 0.1);
+    --glass-border: rgba(255, 255, 255, 0.2);
+    --glass-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
+    
+    /* Neumorphic Effects */
+    --neuro-light: rgba(255, 255, 255, 0.7);
+    --neuro-dark: rgba(0, 0, 0, 0.1);
+    --neuro-shadow: 0 8px 16px rgba(31, 38, 135, 0.37);
+    
+    /* Modern Navigation Colors */
+    --nav-instant-rewards: 45 93% 58%;
+    --nav-secure-transactions: 142 71% 45%;
+    --nav-best-deals: 262 83% 63%;
+    --nav-primary-cta: 45 93% 58%;
+    --nav-secondary-cta: 200 100% 80%;
+    
     --sidebar-background: 0 0% 100%;
     --sidebar-foreground: 240 10% 3.9%;
     --sidebar-primary: 240 9% 9%;
@@ -66,6 +89,22 @@
     --chart-3: 30 80% 55%;
     --chart-4: 280 65% 60%;
     --chart-5: 340 75% 55%;
+    
+    /* Dark Mode Gradients */
+    --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    --gradient-secondary: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    --gradient-accent: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+    
+    /* Dark Mode Glass */
+    --glass-background: rgba(255, 255, 255, 0.05);
+    --glass-border: rgba(255, 255, 255, 0.1);
+    --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.37);
+    
+    /* Dark Mode Neumorphic */
+    --neuro-light: rgba(255, 255, 255, 0.1);
+    --neuro-dark: rgba(0, 0, 0, 0.3);
+    --neuro-shadow: 0 8px 16px rgba(0, 0, 0, 0.37);
+    
     --sidebar-background: 240 10% 3.9%;
     --sidebar-foreground: 0 0% 98%;
     --sidebar-primary: 0 0% 98%;
