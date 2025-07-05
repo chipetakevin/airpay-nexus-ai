@@ -1,10 +1,26 @@
-/* Mobile-First Design System for Divine Mobile */
+/* Mobile-First Design System for Divine Mobile - Enhanced for Website Friendliness */
 
 /* Viewport and base mobile styles - Applied to all screen sizes */
 html {
   /* Ensure proper viewport scaling */
   -webkit-text-size-adjust: 100%;
   -ms-text-size-adjust: 100%;
+  /* Smooth scrolling for better UX */
+  scroll-behavior: smooth;
+}
+
+/* Enhanced viewport meta support */
+@viewport {
+  width: device-width;
+  initial-scale: 1;
+  maximum-scale: 5;
+}
+
+/* Improve font rendering on all devices */
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
 }
 
 /* Progressive Enhancement Media Queries */
@@ -431,4 +447,187 @@ html {
 
 .nerve-center-fallback {
   @apply min-h-screen flex items-center justify-center bg-background;
+}
+
+/* Enhanced Mobile-Friendly Dashboard Features */
+
+/* Touch-Friendly Service Cards */
+.service-card {
+  @apply relative overflow-hidden;
+  @apply bg-card border border-border rounded-xl;
+  @apply p-6 transition-all duration-300;
+  @apply hover:shadow-lg hover:border-primary/30;
+  @apply focus-within:ring-2 focus-within:ring-ring;
+  min-height: 120px; /* Comfortable touch target */
+  touch-action: manipulation;
+}
+
+.service-card-mobile {
+  @apply service-card;
+  @apply p-4 mb-4;
+  min-height: 88px; /* Mobile-optimized height */
+}
+
+/* Enhanced Typography for Mobile Readability */
+.dashboard-title {
+  @apply text-2xl md:text-3xl lg:text-4xl font-bold;
+  @apply text-foreground leading-tight;
+  line-height: 1.2;
+}
+
+.dashboard-subtitle {
+  @apply text-base md:text-lg text-muted-foreground;
+  @apply leading-relaxed;
+}
+
+.service-title {
+  @apply text-lg md:text-xl font-semibold;
+  @apply text-foreground leading-snug;
+}
+
+.service-description {
+  @apply text-sm md:text-base text-muted-foreground;
+  @apply leading-relaxed;
+}
+
+/* Responsive Image Containers */
+.responsive-image-container {
+  @apply relative overflow-hidden;
+  width: 100%;
+  height: auto;
+}
+
+.responsive-image {
+  @apply w-full h-auto;
+  @apply object-cover object-center;
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Lazy Loading Support */
+.lazy-image {
+  @apply responsive-image;
+  @apply opacity-0 transition-opacity duration-300;
+}
+
+.lazy-image.loaded {
+  @apply opacity-100;
+}
+
+/* High DPI Display Support */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 2dppx) {
+  .responsive-image {
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
+  }
+}
+
+/* Enhanced Navigation for Mobile */
+.mobile-navigation-enhanced {
+  @apply fixed bottom-0 left-0 right-0 z-50;
+  @apply bg-background/95 backdrop-blur-lg;
+  @apply border-t border-border shadow-lg;
+  @apply safe-area-pb;
+}
+
+.mobile-nav-button {
+  @apply flex flex-col items-center justify-center;
+  @apply px-3 py-2 text-xs font-medium;
+  @apply text-muted-foreground transition-all duration-200;
+  @apply hover:text-primary focus:text-primary;
+  @apply focus:outline-none focus:ring-2 focus:ring-ring;
+  min-height: 56px; /* Large touch target */
+  min-width: 56px;
+  touch-action: manipulation;
+}
+
+.mobile-nav-button.active {
+  @apply text-primary bg-primary/10;
+}
+
+/* Accessibility Enhancements */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.focus-visible {
+  @apply outline-none;
+}
+
+.focus-visible:focus-visible {
+  @apply ring-2 ring-ring ring-offset-2;
+}
+
+/* Skip Links for Accessibility */
+.skip-link {
+  @apply absolute -top-10 left-4 z-[9999];
+  @apply bg-primary text-primary-foreground;
+  @apply px-4 py-2 rounded-md;
+  @apply text-sm font-medium;
+  @apply transition-all duration-200;
+  @apply focus:top-4;
+}
+
+/* Enhanced Contrast Mode Support */
+@media (prefers-contrast: high) {
+  .service-card {
+    @apply border-2;
+  }
+  
+  .mobile-button {
+    @apply border-2 border-primary;
+  }
+}
+
+/* Color Scheme Preferences */
+@media (prefers-color-scheme: dark) {
+  .responsive-image {
+    filter: brightness(0.9);
+  }
+}
+
+/* Performance Optimizations */
+.will-change-transform {
+  will-change: transform;
+}
+
+.will-change-opacity {
+  will-change: opacity;
+}
+
+.gpu-accelerated {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  perspective: 1000px;
+}
+
+/* Optimized Transitions */
+.fast-transition {
+  transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.smooth-transition {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Container Queries Support */
+@container (min-width: 320px) {
+  .service-card-mobile {
+    @apply p-4;
+  }
+}
+
+@container (min-width: 768px) {
+  .service-card {
+    @apply p-6;
+  }
 }

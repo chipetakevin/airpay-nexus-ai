@@ -138,10 +138,10 @@ const PortalTabs = ({
             subtitle="Mobile Dashboard"
             className="nerve-center-mobile-portal"
           >
-            <div className="w-full">
+            <div className="w-full responsive-content-wrapper">
               {/* Mobile Navigation */}
               <MobileOnly>
-                <div className="mb-4">
+                <div className="mb-6">
                   <EnhancedPortalNavigation
                     activeTab={activeTab}
                     onTabChange={enhancedHandleTabChange}
@@ -153,53 +153,53 @@ const PortalTabs = ({
               </MobileOnly>
 
               <Tabs value={activeTab} onValueChange={enhancedHandleTabChange} className="w-full">
-                {/* Mobile Tab Content */}
-                <div className="nerve-center-mobile-content space-y-4">
+                {/* Mobile Tab Content with Enhanced Service Cards */}
+                <div className="nerve-center-mobile-content space-y-6">
                   <TabsContent value="contractor" className="mobile-fade-in">
-                    <div className="mobile-card">
+                    <div className="service-card-mobile">
                       <ContractorRegistrationContainer />
                     </div>
                   </TabsContent>
                   
                   <TabsContent value="deals" className="mobile-fade-in">
-                    <div className="mobile-card">
+                    <div className="service-card-mobile">
                       <AirtimeDealsSystem />
                     </div>
                   </TabsContent>
                   
                   <TabsContent value="onecard" className="mobile-fade-in">
-                    <div className="mobile-card">
+                    <div className="service-card-mobile">
                       <OneCardDashboard />
                     </div>
                   </TabsContent>
                   
                   <TabsContent value="registration" className="mobile-fade-in">
-                    <div className="mobile-card">
+                    <div className="service-card-mobile">
                       <CustomerRegistration />
                     </div>
                   </TabsContent>
                   
                   <TabsContent value="vendor" className="mobile-fade-in">
-                    <div className="mobile-card">
+                    <div className="service-card-mobile">
                       <VendorRegistration />
                     </div>
                   </TabsContent>
 
                   <TabsContent value="unified-reports" className="mobile-fade-in">
-                    <div className="mobile-card">
+                    <div className="service-card-mobile">
                       <ReportsTabContent />
                     </div>
                   </TabsContent>
                   
                   <TabsContent value="admin-reg" className="mobile-fade-in">
-                    <div className="mobile-card">
+                    <div className="service-card-mobile">
                       <AdminRegistration />
                     </div>
                   </TabsContent>
                   
                   {showAdminTab && (
                     <TabsContent value="admin" className="mobile-fade-in">
-                      <div className="mobile-card">
+                      <div className="service-card-mobile">
                         <AdminPortal onAuthSuccess={() => setIsAdminAuthenticated(true)} />
                       </div>
                     </TabsContent>
@@ -212,26 +212,26 @@ const PortalTabs = ({
         desktop={
           <div className="nerve-center-desktop-portal min-h-screen bg-background">
             <div className="w-full max-w-7xl mx-auto p-6">
-              {/* Desktop Header */}
+              {/* Enhanced Desktop Header */}
               <DesktopOnly>
-                <div className="mb-8">
+                <header className="mb-8" role="banner">
                   <div className="flex items-center justify-between">
-                    <div>
-                      <h1 className="text-3xl font-bold text-foreground mb-2">Nerve Center BaaS</h1>
-                      <p className="text-muted-foreground">Enterprise Dashboard Portal</p>
+                    <div className="flex flex-col">
+                      <h1 className="dashboard-title mb-2">Nerve Center BaaS</h1>
+                      <p className="dashboard-subtitle">Enterprise Dashboard Portal</p>
                     </div>
                     <div className="flex items-center space-x-4">
-                      <div className="text-sm text-muted-foreground">
+                      <div className="service-description">
                         Desktop Mode | {userName || 'Guest'}
                       </div>
                     </div>
                   </div>
-                </div>
+                </header>
               </DesktopOnly>
 
-              {/* Desktop Navigation */}
+              {/* Desktop Navigation with Enhanced Accessibility */}
               <DesktopOnly>
-                <div className="mb-6">
+                <nav className="mb-6" role="navigation" aria-label="Main navigation">
                   <EnhancedPortalNavigation
                     activeTab={activeTab}
                     onTabChange={enhancedHandleTabChange}
@@ -239,13 +239,14 @@ const PortalTabs = ({
                     showAdminTab={showAdminTab}
                     className="nerve-center-desktop-nav"
                   />
-                </div>
+                </nav>
               </DesktopOnly>
 
               <Tabs value={activeTab} onValueChange={enhancedHandleTabChange} className="w-full">
-                {/* Legacy Desktop Navigation */}
+                {/* Legacy Desktop Navigation with Skip Link */}
                 <DesktopOnly>
                   <div className="mb-6 bg-muted/30 rounded-lg p-4">
+                    <a href="#desktop-content" className="skip-link">Skip to content</a>
                     <TabSwitcher 
                       currentTab={activeTab}
                       onTabChange={enhancedHandleTabChange}
@@ -255,53 +256,53 @@ const PortalTabs = ({
                   </div>
                 </DesktopOnly>
                 
-                {/* Desktop Tab Content */}
-                <div className="nerve-center-desktop-content space-y-8">
+                {/* Desktop Tab Content with Enhanced Service Cards */}
+                <div id="desktop-content" className="nerve-center-desktop-content space-y-8">
                   <TabsContent value="contractor" className="desktop-fade-in">
-                    <div className="desktop-card">
+                    <div className="service-card">
                       <ContractorRegistrationContainer />
                     </div>
                   </TabsContent>
                   
                   <TabsContent value="deals" className="desktop-fade-in">
-                    <div className="desktop-card">
+                    <div className="service-card">
                       <AirtimeDealsSystem />
                     </div>
                   </TabsContent>
                   
                   <TabsContent value="onecard" className="desktop-fade-in">
-                    <div className="desktop-card">
+                    <div className="service-card">
                       <OneCardDashboard />
                     </div>
                   </TabsContent>
                   
                   <TabsContent value="registration" className="desktop-fade-in">
-                    <div className="desktop-card">
+                    <div className="service-card">
                       <CustomerRegistration />
                     </div>
                   </TabsContent>
                   
                   <TabsContent value="vendor" className="desktop-fade-in">
-                    <div className="desktop-card">
+                    <div className="service-card">
                       <VendorRegistration />
                     </div>
                   </TabsContent>
 
                   <TabsContent value="unified-reports" className="desktop-fade-in">
-                    <div className="desktop-card">
+                    <div className="service-card">
                       <ReportsTabContent />
                     </div>
                   </TabsContent>
                   
                   <TabsContent value="admin-reg" className="desktop-fade-in">
-                    <div className="desktop-card">
+                    <div className="service-card">
                       <AdminRegistration />
                     </div>
                   </TabsContent>
                   
                   {showAdminTab && (
                     <TabsContent value="admin" className="desktop-fade-in">
-                      <div className="desktop-card">
+                      <div className="service-card">
                         <AdminPortal onAuthSuccess={() => setIsAdminAuthenticated(true)} />
                       </div>
                     </TabsContent>
@@ -314,8 +315,8 @@ const PortalTabs = ({
         fallback={
           <div className="nerve-center-fallback">
             <div className="text-center p-8">
-              <h2 className="text-xl font-semibold mb-2">Loading Nerve Center...</h2>
-              <p className="text-muted-foreground">Optimizing for your device</p>
+              <h2 className="service-title mb-2">Loading Nerve Center...</h2>
+              <p className="service-description">Optimizing for your device</p>
             </div>
           </div>
         }
