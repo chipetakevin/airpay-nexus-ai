@@ -69,13 +69,6 @@ const PortalTabs = ({
       color: 'blue'
     },
     {
-      value: 'deals',
-      label: 'Smart Deals',
-      icon: '🔥',
-      description: 'Shop Now',
-      color: 'orange'
-    },
-    {
       value: 'onecard',
       label: 'OneCard',
       icon: '💳',
@@ -161,11 +154,6 @@ const PortalTabs = ({
                     </div>
                   </TabsContent>
                   
-                  <TabsContent value="deals" className="mobile-fade-in">
-                    <div className="mobile-card">
-                      <AirtimeDealsSystem />
-                    </div>
-                  </TabsContent>
                   
                   <TabsContent value="onecard" className="mobile-fade-in">
                     <div className="mobile-card">
@@ -263,11 +251,6 @@ const PortalTabs = ({
                     </div>
                   </TabsContent>
                   
-                  <TabsContent value="deals" className="desktop-fade-in">
-                    <div className="desktop-card">
-                      <AirtimeDealsSystem />
-                    </div>
-                  </TabsContent>
                   
                   <TabsContent value="onecard" className="desktop-fade-in">
                     <div className="desktop-card">

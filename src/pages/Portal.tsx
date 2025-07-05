@@ -16,7 +16,7 @@ type UserType = 'customer' | 'vendor' | 'admin' | null;
 
 const Portal = () => {
   const [searchParams] = useSearchParams();
-  const [activeTab, setActiveTab] = useState('deals');
+  const [activeTab, setActiveTab] = useState('onecard');
   const [userType, setUserType] = useState<UserType>(null);
   const [showAdminTab, setShowAdminTab] = useState(false);
   const [isAdminAuthenticated, setIsAdminAuthenticated] = useState(false);
@@ -63,14 +63,18 @@ const Portal = () => {
       const tabParam = searchParams.get('tab');
       
       if (!tabParam) {
-        navigate('?tab=deals', { replace: true });
-        setActiveTab('deals');
+        navigate('?tab=onecard', { replace: true });
+        setActiveTab('onecard');
+      } else if (tabParam === 'deals') {
+        // Redirect deals tab to onecard since deals tab is removed
+        navigate('?tab=onecard', { replace: true });
+        setActiveTab('onecard');
       } else if (tabParam !== activeTab) {
         setActiveTab(tabParam);
       }
     } catch (error) {
       console.error("Error handling tab navigation:", error);
-      setActiveTab('deals');
+      setActiveTab('onecard');
     }
   }, [searchParams, navigate, activeTab]);
 
@@ -94,15 +98,15 @@ const Portal = () => {
   const resetUserType = () => {
     setUserType(null);
     setIsUnifiedProfile(false);
-    setActiveTab('deals');
-    navigate('?tab=deals', { replace: true });
+    setActiveTab('onecard');
+    navigate('?tab=onecard', { replace: true });
   };
 
   // Enhanced isTabAllowed function for seamless navigation
   const isTabAllowed = (tabValue: string) => {
     try {
-      // Always allow deals, registration, vendor, and contractor tabs for seamless navigation
-      if (['deals', 'registration', 'vendor', 'contractor'].includes(tabValue)) {
+      // Always allow registration, vendor, and contractor tabs for seamless navigation
+      if (['registration', 'vendor', 'contractor'].includes(tabValue)) {
         console.log(`✅ Always allowed tab: ${tabValue}`);
         return true;
       }
@@ -114,7 +118,7 @@ const Portal = () => {
       const storedCredentials = localStorage.getItem('userCredentials');
       
       if (!isAuthenticated) {
-        return ['registration', 'vendor', 'admin-reg', 'deals'].includes(tabValue);
+        return ['registration', 'vendor', 'admin-reg', 'onecard'].includes(tabValue);
       }
 
       if (storedCredentials) {
@@ -131,7 +135,6 @@ const Portal = () => {
           case 'vendor':
             return true; // Always accessible for registration purposes
           case 'onecard':
-          case 'deals':
             return true; // Available to all authenticated users
           case 'unified-reports':
             return isUnified;
@@ -144,10 +147,10 @@ const Portal = () => {
         }
       }
 
-      return tabValue === 'deals';
+      return tabValue === 'onecard';
     } catch (error) {
       console.error('Error checking tab permissions:', error);
-      return ['deals', 'registration', 'vendor', 'contractor'].includes(tabValue);
+      return ['onecard', 'registration', 'vendor', 'contractor'].includes(tabValue);
     }
   };
 
@@ -157,7 +160,7 @@ const Portal = () => {
       console.log(`🔄 Attempting to change to tab: ${value}`);
       
       // Always allow seamless navigation between core tabs
-      if (['deals', 'registration', 'vendor', 'contractor'].includes(value)) {
+      if (['registration', 'vendor', 'contractor'].includes(value)) {
         console.log(`✅ Core tab access granted: ${value}`);
         setActiveTab(value);
         navigate(`?tab=${value}`, { replace: true });
@@ -227,7 +230,7 @@ const Portal = () => {
         <WhatsAppFloatingButton />
         
         {/* Add Floating Platform Switcher */}
-        {activeTab === 'deals' && (
+        {activeTab === 'onecard' && (
           <FloatingPlatformSwitcher currentPlatform="portal" />
         )}
       </DesktopOnly>
