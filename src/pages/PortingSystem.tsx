@@ -101,7 +101,7 @@ const PortingSystem = () => {
   const [portingRequest, setPortingRequest] = useState({
     phoneNumber: '',
     currentNetwork: '',
-    targetNetwork: '',
+    targetNetwork: 'Divine Mobile',
     documents: [],
     priority: 'normal',
     scheduledCutover: '',
@@ -117,16 +117,17 @@ const PortingSystem = () => {
     digitalSignature: ''
   });
 
-  const networks = ['MTN', 'Vodacom', 'Cell C', 'Telkom Mobile', 'Rain', 'FNB Connect', 'MakroCall'];
+  const networks = ['Divine Mobile', 'MTN', 'Vodacom', 'Cell C', 'Telkom Mobile', 'Rain', 'FNB Connect', 'MakroCall'];
   
   // Enhanced network compatibility matrix
   const networkCompatibilityMatrix = {
-    'MTN': { 'Vodacom': true, 'Cell C': true, 'Telkom Mobile': true, 'Rain': true, 'FNB Connect': true, 'MakroCall': false },
-    'Vodacom': { 'MTN': true, 'Cell C': true, 'Telkom Mobile': true, 'Rain': true, 'FNB Connect': true, 'MakroCall': false },
-    'Cell C': { 'MTN': true, 'Vodacom': true, 'Telkom Mobile': true, 'Rain': true, 'FNB Connect': false, 'MakroCall': false },
-    'Telkom Mobile': { 'MTN': true, 'Vodacom': true, 'Cell C': true, 'Rain': true, 'FNB Connect': true, 'MakroCall': true },
-    'Rain': { 'MTN': true, 'Vodacom': true, 'Cell C': true, 'Telkom Mobile': true, 'FNB Connect': false, 'MakroCall': false },
-    'FNB Connect': { 'MTN': true, 'Vodacom': true, 'Telkom Mobile': true, 'Cell C': false, 'Rain': false, 'MakroCall': false },
+    'Divine Mobile': { 'MTN': true, 'Vodacom': true, 'Cell C': true, 'Telkom Mobile': true, 'Rain': true, 'FNB Connect': true, 'MakroCall': true },
+    'MTN': { 'Divine Mobile': true, 'Vodacom': true, 'Cell C': true, 'Telkom Mobile': true, 'Rain': true, 'FNB Connect': true, 'MakroCall': false },
+    'Vodacom': { 'Divine Mobile': true, 'MTN': true, 'Cell C': true, 'Telkom Mobile': true, 'Rain': true, 'FNB Connect': true, 'MakroCall': false },
+    'Cell C': { 'Divine Mobile': true, 'MTN': true, 'Vodacom': true, 'Telkom Mobile': true, 'Rain': true, 'FNB Connect': false, 'MakroCall': false },
+    'Telkom Mobile': { 'Divine Mobile': true, 'MTN': true, 'Vodacom': true, 'Cell C': true, 'Rain': true, 'FNB Connect': true, 'MakroCall': true },
+    'Rain': { 'Divine Mobile': true, 'MTN': true, 'Vodacom': true, 'Cell C': true, 'Telkom Mobile': true, 'FNB Connect': false, 'MakroCall': false },
+    'FNB Connect': { 'Divine Mobile': true, 'MTN': true, 'Vodacom': true, 'Telkom Mobile': true, 'Cell C': false, 'Rain': false, 'MakroCall': false },
     'MakroCall': { 'Telkom Mobile': true, 'MTN': false, 'Vodacom': false, 'Cell C': false, 'Rain': false, 'FNB Connect': false }
   };
 
@@ -381,7 +382,7 @@ const PortingSystem = () => {
       setPortingRequest({
         phoneNumber: '',
         currentNetwork: '',
-        targetNetwork: '',
+        targetNetwork: 'Divine Mobile',
         documents: [],
         priority: 'normal',
         scheduledCutover: '',
@@ -926,7 +927,9 @@ const PortingSystem = () => {
                     >
                       <option value="">Select Target Network</option>
                       {networks.map(network => (
-                        <option key={network} value={network}>{network}</option>
+                        <option key={network} value={network}>
+                          {network === 'Divine Mobile' ? `${network} (Recommended)` : network}
+                        </option>
                       ))}
                     </select>
                     {errors.targetNetwork && (
