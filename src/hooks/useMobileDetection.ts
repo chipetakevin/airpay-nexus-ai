@@ -8,6 +8,12 @@ interface MobileDetectionResult {
   screenWidth: number;
   screenHeight: number;
   devicePixelRatio: number;
+  touchSupport: boolean;
+  orientation: 'portrait' | 'landscape';
+  isIOSDevice: boolean;
+  isAndroidDevice: boolean;
+  deviceType: 'mobile' | 'tablet' | 'desktop';
+  forceDesktopRequested: boolean;
 }
 
 export const useMobileDetection = (): MobileDetectionResult => {
@@ -20,25 +26,48 @@ export const useMobileDetection = (): MobileDetectionResult => {
         userAgent: '',
         screenWidth: 1024,
         screenHeight: 768,
-        devicePixelRatio: 1
+        devicePixelRatio: 1,
+        touchSupport: false,
+        orientation: 'landscape',
+        isIOSDevice: false,
+        isAndroidDevice: false,
+        deviceType: 'desktop',
+        forceDesktopRequested: false
       };
     }
 
     const width = window.innerWidth;
+    const height = window.innerHeight;
     const userAgent = navigator.userAgent;
     
-    // Enhanced mobile detection
+    // Enhanced device detection
     const isMobileUserAgent = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(userAgent);
+    const isIOSDevice = /iPad|iPhone|iPod/i.test(userAgent);
+    const isAndroidDevice = /Android/i.test(userAgent);
     const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+    const orientation = height > width ? 'portrait' : 'landscape';
+    
+    // Check if desktop site was requested (some mobile browsers modify user agent)
+    const forceDesktopRequested = !isMobileUserAgent && isTouchDevice && width < 1024;
+    
+    const isMobile = width < 768 || (isMobileUserAgent && width < 1024 && !forceDesktopRequested);
+    const isTablet = width >= 768 && width < 1024 && (isMobileUserAgent || isTouchDevice);
+    const isDesktop = width >= 1024 && !isMobileUserAgent;
     
     return {
-      isMobile: width < 768 || (isMobileUserAgent && width < 1024),
-      isTablet: width >= 768 && width < 1024 && (isMobileUserAgent || isTouchDevice),
-      isDesktop: width >= 1024 && !isMobileUserAgent,
+      isMobile,
+      isTablet,
+      isDesktop,
       userAgent,
       screenWidth: width,
-      screenHeight: window.innerHeight,
-      devicePixelRatio: window.devicePixelRatio || 1
+      screenHeight: height,
+      devicePixelRatio: window.devicePixelRatio || 1,
+      touchSupport: isTouchDevice,
+      orientation,
+      isIOSDevice,
+      isAndroidDevice,
+      deviceType: isMobile ? 'mobile' : isTablet ? 'tablet' : 'desktop',
+      forceDesktopRequested
     };
   });
 
@@ -50,16 +79,30 @@ export const useMobileDetection = (): MobileDetectionResult => {
       const devicePixelRatio = window.devicePixelRatio || 1;
       
       const isMobileUserAgent = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(userAgent);
+      const isIOSDevice = /iPad|iPhone|iPod/i.test(userAgent);
+      const isAndroidDevice = /Android/i.test(userAgent);
       const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+      const orientation = height > width ? 'portrait' : 'landscape';
+      
+      const forceDesktopRequested = !isMobileUserAgent && isTouchDevice && width < 1024;
+      const isMobile = width < 768 || (isMobileUserAgent && width < 1024 && !forceDesktopRequested);
+      const isTablet = width >= 768 && width < 1024 && (isMobileUserAgent || isTouchDevice);
+      const isDesktop = width >= 1024 && !isMobileUserAgent;
       
       setMobileData({
-        isMobile: width < 768 || (isMobileUserAgent && width < 1024),
-        isTablet: width >= 768 && width < 1024 && (isMobileUserAgent || isTouchDevice),
-        isDesktop: width >= 1024 && !isMobileUserAgent,
+        isMobile,
+        isTablet,
+        isDesktop,
         userAgent,
         screenWidth: width,
         screenHeight: height,
-        devicePixelRatio
+        devicePixelRatio,
+        touchSupport: isTouchDevice,
+        orientation,
+        isIOSDevice,
+        isAndroidDevice,
+        deviceType: isMobile ? 'mobile' : isTablet ? 'tablet' : 'desktop',
+        forceDesktopRequested
       });
     };
 
