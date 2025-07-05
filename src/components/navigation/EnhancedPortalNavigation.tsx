@@ -37,16 +37,17 @@ export const EnhancedPortalNavigation: React.FC<EnhancedPortalNavigationProps> =
 
   // Enhanced tab configuration with intelligent categorization
   const tabs: TabConfig[] = [
-    // Primary Services (High Priority)
+    // Primary Services (High Priority) - Smart Deals collapsed by default
     {
       id: 'deals',
       label: 'Smart Deals',
       icon: 'flame',
       description: 'Shop Now',
       tooltip: 'Browse and purchase the latest airtime and data deals with smart discounts',
-      priority: 'high',
+      priority: 'low',
       category: 'primary',
-      disabled: !isTabAllowed('deals')
+      status: 'coming-soon',
+      disabled: true // Collapsed and disabled
     },
     {
       id: 'onecard',
