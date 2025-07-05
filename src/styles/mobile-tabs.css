@@ -31,7 +31,7 @@
 
 /* Enhanced Service Cards */
 .modern-service-card {
-  @apply bg-gradient-to-br from-card via-card/98 to-muted/30;
+  @apply bg-gradient-to-br from-card via-background to-muted/30;
   @apply rounded-3xl p-6 shadow-xl border border-border/40;
   @apply backdrop-blur-sm overflow-hidden relative;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
