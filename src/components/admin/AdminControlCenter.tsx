@@ -324,6 +324,7 @@ const AdminControlCenter: React.FC<AdminControlCenterProps> = ({
               title="OneCard Balance Management Dashboard"
               description="Comprehensive oversight of all OneCard cashback rewards"
               icon={CreditCard}
+              badge={{ text: "R0.00", variant: "secondary", className: "bg-blue-100 text-blue-800" }}
               color={{
                 border: 'border-l-purple-500',
                 bg: 'from-purple-50 to-white',
@@ -338,6 +339,7 @@ const AdminControlCenter: React.FC<AdminControlCenterProps> = ({
               title="Customer Management"
               description="Manage customer accounts, view balances, and handle support tickets"
               icon={Users}
+              badge={{ text: "MANAGE", variant: "default", className: "bg-green-100 text-green-800" }}
               color={{
                 border: 'border-l-green-500',
                 bg: 'from-green-50 to-white',
@@ -352,6 +354,7 @@ const AdminControlCenter: React.FC<AdminControlCenterProps> = ({
               title="Vendor Management"
               description="Manage vendor accounts, commissions, and business operations"
               icon={Users}
+              badge={{ text: "PARTNER", variant: "secondary", className: "bg-indigo-100 text-indigo-800" }}
               color={{
                 border: 'border-l-indigo-500',
                 bg: 'from-indigo-50 to-white',
@@ -366,6 +369,7 @@ const AdminControlCenter: React.FC<AdminControlCenterProps> = ({
               title="System Analytics"
               description="View system analytics, transaction reports, and performance metrics"
               icon={BarChart3}
+              badge={{ text: "INSIGHTS", variant: "outline", className: "bg-cyan-100 text-cyan-800" }}
               color={{
                 border: 'border-l-cyan-500',
                 bg: 'from-cyan-50 to-white',
@@ -430,6 +434,7 @@ const AdminControlCenter: React.FC<AdminControlCenterProps> = ({
                     title="Vendor Management Portal"
                     description="Comprehensive vendor account management, commission tracking, and business operations oversight"
                     icon={Users}
+                    badge={{ text: "VENDORS", variant: "secondary", className: "bg-indigo-100 text-indigo-800" }}
                     color={{
                       border: 'border-l-indigo-500',
                       bg: 'from-indigo-50 to-white',
@@ -446,6 +451,7 @@ const AdminControlCenter: React.FC<AdminControlCenterProps> = ({
                     title="Admin Profile Management"
                     description="System administration settings, admin account management, and security configurations"
                     icon={Shield}
+                    badge={{ text: "ADMIN", variant: "outline", className: "bg-gray-100 text-gray-800" }}
                     color={{
                       border: 'border-l-gray-500',
                       bg: 'from-gray-50 to-white',
@@ -482,6 +488,7 @@ const AdminControlCenter: React.FC<AdminControlCenterProps> = ({
               title="Access Control"
               description="User permissions, role management, and authentication settings"
               icon={Users}
+              badge={{ text: "CONTROL", variant: "outline", className: "bg-blue-100 text-blue-800" }}
               color={{
                 border: 'border-l-blue-500',
                 bg: 'from-blue-50 to-white',
@@ -532,6 +539,7 @@ const AdminControlCenter: React.FC<AdminControlCenterProps> = ({
               title="OneCard Administration"
               description="Monitor cashback allocations, card status, and reward distributions"
               icon={CreditCard}
+              badge={{ text: "ADMIN", variant: "secondary", className: "bg-purple-100 text-purple-800" }}
               color={{
                 border: 'border-l-purple-500',
                 bg: 'from-purple-50 to-white',
@@ -553,6 +561,7 @@ const AdminControlCenter: React.FC<AdminControlCenterProps> = ({
             title="System Configuration"
             description="Configure system settings, parameters, and operational preferences"
             icon={Settings}
+            badge={{ text: "CONFIG", variant: "outline", className: "bg-gray-100 text-gray-800" }}
             color={{
               border: 'border-l-gray-500',
               bg: 'from-gray-50 to-white',
