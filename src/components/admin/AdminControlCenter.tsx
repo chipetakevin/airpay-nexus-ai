@@ -12,6 +12,7 @@ import OrdersSection from './OrdersSection';
 import MobileCustomerManagementLayout from './mobile/MobileCustomerManagementLayout';
 import { adminTabs, profileTabs, dataTabs } from './AdminTabsConfig';
 import { useIsMobile } from '@/hooks/use-mobile';
+import VersionRestoration from './VersionRestoration';
 import { 
   Shield, 
   TrendingUp, 
@@ -258,7 +259,7 @@ const AdminControlCenter: React.FC<AdminControlCenterProps> = ({
 
       {/* Enhanced Navigation Tabs */}
       <Tabs value={activeAdminTab} onValueChange={setActiveAdminTab} className="w-full">
-        <TabsList className="grid w-full grid-cols-3 lg:grid-cols-6 h-12 bg-muted/50 rounded-xl p-1">
+        <TabsList className="grid w-full grid-cols-3 lg:grid-cols-7 h-12 bg-muted/50 rounded-xl p-1">
           <TabsTrigger value="dashboard" className="data-[state=active]:bg-white data-[state=active]:shadow-sm">
             <BarChart3 className="w-4 h-4 mr-2" />
             Dashboard
@@ -278,6 +279,10 @@ const AdminControlCenter: React.FC<AdminControlCenterProps> = ({
           <TabsTrigger value="orders" className="data-[state=active]:bg-white data-[state=active]:shadow-sm">
             <Settings className="w-4 h-4 mr-2" />
             Orders
+          </TabsTrigger>
+          <TabsTrigger value="version-control" className="data-[state=active]:bg-white data-[state=active]:shadow-sm">
+            <RefreshCw className="w-4 h-4 mr-2" />
+            Versions
           </TabsTrigger>
           <TabsTrigger value="system" className="data-[state=active]:bg-white data-[state=active]:shadow-sm">
             <Zap className="w-4 h-4 mr-2" />
@@ -571,6 +576,10 @@ const AdminControlCenter: React.FC<AdminControlCenterProps> = ({
             }}
             onClick={() => {}}
           />
+        </TabsContent>
+
+        <TabsContent value="version-control" className="mt-6">
+          <VersionRestoration />
         </TabsContent>
       </Tabs>
     </div>

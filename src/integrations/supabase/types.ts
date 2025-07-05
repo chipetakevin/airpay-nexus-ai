@@ -373,6 +373,72 @@ export type Database = {
           },
         ]
       }
+      codebase_versions: {
+        Row: {
+          branch_name: string | null
+          capture_duration_ms: number | null
+          commit_message: string | null
+          compression_ratio: number | null
+          created_at: string
+          created_by: string | null
+          description: string | null
+          file_contents: Json
+          file_count: number
+          git_hash: string | null
+          id: string
+          is_active: boolean
+          is_stable: boolean
+          last_restored_at: string | null
+          restoration_count: number
+          total_size_bytes: number
+          updated_at: string
+          version_name: string
+          version_number: string
+        }
+        Insert: {
+          branch_name?: string | null
+          capture_duration_ms?: number | null
+          commit_message?: string | null
+          compression_ratio?: number | null
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          file_contents?: Json
+          file_count?: number
+          git_hash?: string | null
+          id?: string
+          is_active?: boolean
+          is_stable?: boolean
+          last_restored_at?: string | null
+          restoration_count?: number
+          total_size_bytes?: number
+          updated_at?: string
+          version_name: string
+          version_number: string
+        }
+        Update: {
+          branch_name?: string | null
+          capture_duration_ms?: number | null
+          commit_message?: string | null
+          compression_ratio?: number | null
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          file_contents?: Json
+          file_count?: number
+          git_hash?: string | null
+          id?: string
+          is_active?: boolean
+          is_stable?: boolean
+          last_restored_at?: string | null
+          restoration_count?: number
+          total_size_bytes?: number
+          updated_at?: string
+          version_name?: string
+          version_number?: string
+        }
+        Relationships: []
+      }
       compliance_documents: {
         Row: {
           access_log: Json | null
@@ -3390,6 +3456,59 @@ export type Database = {
         }
         Relationships: []
       }
+      version_restoration_logs: {
+        Row: {
+          backup_version_id: string | null
+          error_message: string | null
+          files_restored: number
+          id: string
+          metadata: Json | null
+          restoration_duration_ms: number | null
+          restoration_type: string
+          restored_at: string
+          restored_by: string | null
+          rollback_available: boolean
+          status: string
+          version_id: string
+        }
+        Insert: {
+          backup_version_id?: string | null
+          error_message?: string | null
+          files_restored?: number
+          id?: string
+          metadata?: Json | null
+          restoration_duration_ms?: number | null
+          restoration_type?: string
+          restored_at?: string
+          restored_by?: string | null
+          rollback_available?: boolean
+          status?: string
+          version_id: string
+        }
+        Update: {
+          backup_version_id?: string | null
+          error_message?: string | null
+          files_restored?: number
+          id?: string
+          metadata?: Json | null
+          restoration_duration_ms?: number | null
+          restoration_type?: string
+          restored_at?: string
+          restored_by?: string | null
+          rollback_available?: boolean
+          status?: string
+          version_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "version_restoration_logs_version_id_fkey"
+            columns: ["version_id"]
+            isOneToOne: false
+            referencedRelation: "codebase_versions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
@@ -3403,11 +3522,25 @@ export type Database = {
         Args: { component_name_param: string }
         Returns: number
       }
+      capture_codebase_version: {
+        Args: {
+          p_version_number: string
+          p_version_name: string
+          p_description?: string
+          p_file_contents?: Json
+          p_is_stable?: boolean
+        }
+        Returns: string
+      }
       check_rica_compliance: {
         Args: { record_id: string }
         Returns: boolean
       }
       clean_expired_cart_sessions: {
+        Args: Record<PropertyKey, never>
+        Returns: undefined
+      }
+      cleanup_old_versions: {
         Args: Record<PropertyKey, never>
         Returns: undefined
       }
@@ -3470,6 +3603,15 @@ export type Database = {
           p_old_values?: Json
           p_new_values?: Json
           p_risk_level?: string
+        }
+        Returns: string
+      }
+      log_version_restoration: {
+        Args: {
+          p_version_id: string
+          p_restoration_type?: string
+          p_files_restored?: number
+          p_status?: string
         }
         Returns: string
       }

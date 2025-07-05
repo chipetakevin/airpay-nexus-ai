@@ -1,272 +1,473 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { Switch } from '@/components/ui/switch';
 import { useToast } from '@/hooks/use-toast';
+import { supabase } from '@/integrations/supabase/client';
 import { 
-  RotateCcw, 
-  Database, 
-  GitBranch, 
-  Clock, 
-  Shield, 
+  History,
+  Package,
   Download,
   Upload,
+  Clock,
+  FileCode,
   CheckCircle,
   AlertTriangle,
-  Info
+  RefreshCw,
+  Save,
+  Undo,
+  Star,
+  Database,
+  GitBranch,
+  Archive
 } from 'lucide-react';
 
+interface CodebaseVersion {
+  id: string;
+  version_number: string;
+  version_name: string;
+  description: string;
+  created_at: string;
+  created_by: string;
+  file_count: number;
+  total_size_bytes: number;
+  is_stable: boolean;
+  restoration_count: number;
+  last_restored_at: string | null;
+}
+
+interface RestorationLog {
+  id: string;
+  version_id: string;
+  restored_at: string;
+  restoration_type: string;
+  files_restored: number;
+  status: string;
+}
+
 const VersionRestoration = () => {
+  const [versions, setVersions] = useState<CodebaseVersion[]>([]);
+  const [restorationLogs, setRestorationLogs] = useState<RestorationLog[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [capturing, setCapturing] = useState(false);
+  const [restoring, setRestoring] = useState(false);
+  const [activeTab, setActiveTab] = useState('versions');
   const { toast } = useToast();
-  const [selectedVersion, setSelectedVersion] = useState<string | null>(null);
-  const [isRestoring, setIsRestoring] = useState(false);
 
-  // Current system version info
-  const currentVersion = {
-    version: "1.0.0",
-    build: "v1-stable",
-    timestamp: new Date().toISOString(),
-    features: [
-      "WhatsApp Receipt System",
-      "Divine Mobile Integration", 
-      "Admin Portal Access",
-      "Customer Registration",
-      "Vendor Management",
-      "OneCard System"
-    ],
-    status: "ACTIVE"
-  };
+  // Version capture form
+  const [captureForm, setCaptureForm] = useState({
+    versionNumber: '2.0',
+    versionName: 'Enhanced Admin Dashboard - Current State',
+    description: 'Complete design system overhaul with HSL tokens, improved tab navigation, and modern UI components',
+    isStable: true
+  });
 
-  // Available restoration points
-  const availableVersions = [
-    {
-      id: "v1-baseline",
-      version: "1.0.0 - Baseline",
-      description: "Initial stable release with core features",
-      timestamp: "2025-01-01T00:00:00Z",
-      size: "2.4 MB",
-      status: "stable",
-      features: ["Core WhatsApp Integration", "Basic Receipt System", "Admin Access"]
-    },
-    {
-      id: "v1-enhanced", 
-      version: "1.0.1 - Enhanced",
-      description: "Improved receipt formatting and mobile optimization",
-      timestamp: "2025-01-01T12:00:00Z", 
-      size: "2.6 MB",
-      status: "stable",
-      features: ["Enhanced Receipts", "Mobile Optimization", "Error Handling"]
-    }
-  ];
+  useEffect(() => {
+    loadVersions();
+    loadRestorationLogs();
+  }, []);
 
-  const handleVersionRestore = async (versionId: string) => {
-    setIsRestoring(true);
-    setSelectedVersion(versionId);
-
+  const loadVersions = async () => {
     try {
-      // Simulate restoration process
-      await new Promise(resolve => setTimeout(resolve, 3000));
+      const { data, error } = await supabase
+        .from('codebase_versions')
+        .select('*')
+        .order('created_at', { ascending: false });
 
-      const version = availableVersions.find(v => v.id === versionId);
-      
-      toast({
-        title: "🔄 Version Restoration Initiated",
-        description: `Restoring to ${version?.version}. System will reload automatically.`,
-        duration: 5000
-      });
-
-      // Simulate system reload after restoration
-      setTimeout(() => {
-        toast({
-          title: "✅ Restoration Complete",
-          description: "System has been successfully restored to selected version.",
-          duration: 4000
-        });
-        setIsRestoring(false);
-        setSelectedVersion(null);
-      }, 2000);
-
+      if (error) throw error;
+      setVersions(data || []);
     } catch (error) {
+      console.error('Error loading versions:', error);
       toast({
-        title: "❌ Restoration Failed",
-        description: "Version restoration failed. Please try again or contact support.",
+        title: "Error",
+        description: "Failed to load codebase versions",
         variant: "destructive"
       });
-      setIsRestoring(false);
-      setSelectedVersion(null);
+    } finally {
+      setLoading(false);
     }
   };
 
-  const createBackup = () => {
-    toast({
-      title: "💾 Backup Created",
-      description: "Current system state has been backed up successfully.",
-      duration: 3000
-    });
+  const loadRestorationLogs = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('version_restoration_logs')
+        .select('*')
+        .order('restored_at', { ascending: false })
+        .limit(20);
+
+      if (error) throw error;
+      setRestorationLogs(data || []);
+    } catch (error) {
+      console.error('Error loading restoration logs:', error);
+    }
   };
+
+  const captureCurrentVersion = async () => {
+    if (!captureForm.versionNumber || !captureForm.versionName) {
+      toast({
+        title: "Validation Error",
+        description: "Version number and name are required",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    setCapturing(true);
+
+    try {
+      // Simulate capturing current codebase files
+      const simulatedFileContents = {
+        'src/index.css': '/* Enhanced design system with HSL tokens */',
+        'src/components/navigation/ModernTabNavigation.tsx': '/* Fixed tab navigation component */',
+        'src/components/admin/AdminControlCenter.tsx': '/* Enhanced admin dashboard */',
+        'src/styles/mobile-tabs.css': '/* Modern tab system using design tokens */',
+        'package.json': '/* Project dependencies */',
+        'README.md': '/* Project documentation */'
+      };
+
+      const response = await fetch('/functions/v1/capture-version', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${(await supabase.auth.getSession()).data.session?.access_token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          versionNumber: captureForm.versionNumber,
+          versionName: captureForm.versionName,
+          description: captureForm.description,
+          fileContents: simulatedFileContents,
+          isStable: captureForm.isStable
+        }),
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.error || 'Failed to capture version');
+      }
+
+      toast({
+        title: "Version Captured",
+        description: `Version ${captureForm.versionNumber} has been successfully captured`,
+        variant: "default"
+      });
+
+      // Reset form and reload versions
+      setCaptureForm({
+        versionNumber: '',
+        versionName: '',
+        description: '',
+        isStable: false
+      });
+      
+      loadVersions();
+
+    } catch (error) {
+      console.error('Error capturing version:', error);
+      toast({
+        title: "Capture Failed",
+        description: error.message || "Failed to capture codebase version",
+        variant: "destructive"
+      });
+    } finally {
+      setCapturing(false);
+    }
+  };
+
+  const restoreVersion = async (versionId: string, versionNumber: string) => {
+    if (!confirm(`Are you sure you want to restore to version ${versionNumber}? This will replace the current codebase.`)) {
+      return;
+    }
+
+    setRestoring(true);
+
+    try {
+      const response = await fetch('/functions/v1/restore-version', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${(await supabase.auth.getSession()).data.session?.access_token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          versionId,
+          restorationType: 'full',
+          createBackup: true
+        }),
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.error || 'Failed to restore version');
+      }
+
+      toast({
+        title: "Version Restored",
+        description: `Successfully restored to version ${versionNumber}`,
+        variant: "default"
+      });
+
+      loadVersions();
+      loadRestorationLogs();
+
+    } catch (error) {
+      console.error('Error restoring version:', error);
+      toast({
+        title: "Restoration Failed",
+        description: error.message || "Failed to restore version",
+        variant: "destructive"
+      });
+    } finally {
+      setRestoring(false);
+    }
+  };
+
+  const formatBytes = (bytes: number) => {
+    if (bytes === 0) return '0 Bytes';
+    const k = 1024;
+    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+  };
+
+  const formatDate = (dateString: string) => {
+    return new Date(dateString).toLocaleString();
+  };
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center p-8">
+        <RefreshCw className="w-6 h-6 animate-spin mr-2" />
+        <span>Loading version history...</span>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">
-      <div className="text-center">
-        <h2 className="text-2xl font-bold mb-2 flex items-center justify-center gap-2">
-          <GitBranch className="w-6 h-6" />
-          Version Restoration System
-        </h2>
-        <p className="text-muted-foreground">
-          Manage system versions and restore to previous stable states
-        </p>
+      {/* Header */}
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          <div className="p-3 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-xl shadow-lg">
+            <History className="w-8 h-8 text-white" />
+          </div>
+          <div>
+            <h2 className="text-2xl font-bold">Intelligent Version Control</h2>
+            <p className="text-muted-foreground">Nerve Center BaaS - Codebase Management System</p>
+          </div>
+        </div>
+        <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200">
+          <Database className="w-4 h-4 mr-1" />
+          Nerve Center
+        </Badge>
       </div>
 
-      {/* Current Version Info */}
-      <Card className="border-2 border-primary/20">
-        <CardHeader className="pb-3">
-          <CardTitle className="flex items-center gap-2">
-            <Shield className="w-5 h-5 text-green-600" />
-            Current System Version
-            <Badge className="bg-green-100 text-green-800 border border-green-300">
-              ACTIVE
-            </Badge>
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div>
-              <p className="text-sm font-medium text-muted-foreground">Version</p>
-              <p className="text-lg font-bold text-primary">{currentVersion.version}</p>
-            </div>
-            <div>
-              <p className="text-sm font-medium text-muted-foreground">Build</p>
-              <p className="text-lg font-mono">{currentVersion.build}</p>
-            </div>
-            <div>
-              <p className="text-sm font-medium text-muted-foreground">Last Updated</p>
-              <p className="text-sm">{new Date(currentVersion.timestamp).toLocaleDateString()}</p>
-            </div>
-          </div>
+      <Tabs value={activeTab} onValueChange={setActiveTab}>
+        <TabsList className="grid w-full grid-cols-3">
+          <TabsTrigger value="capture" className="flex items-center gap-2">
+            <Save className="w-4 h-4" />
+            Capture Version
+          </TabsTrigger>
+          <TabsTrigger value="versions" className="flex items-center gap-2">
+            <Archive className="w-4 h-4" />
+            Version History
+          </TabsTrigger>
+          <TabsTrigger value="logs" className="flex items-center gap-2">
+            <Clock className="w-4 h-4" />
+            Restoration Logs
+          </TabsTrigger>
+        </TabsList>
 
-          <div>
-            <p className="text-sm font-medium text-muted-foreground mb-2">Active Features</p>
-            <div className="grid grid-cols-2 gap-2">
-              {currentVersion.features.map((feature, index) => (
-                <div key={index} className="flex items-center gap-2">
-                  <CheckCircle className="w-4 h-4 text-green-600" />
-                  <span className="text-sm">{feature}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          <div className="flex gap-2">
-            <Button onClick={createBackup} variant="outline" size="sm">
-              <Download className="w-4 h-4 mr-2" />
-              Create Backup
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Restoration Alert */}
-      <Alert>
-        <AlertTriangle className="h-4 w-4" />
-        <AlertDescription>
-          <strong>Important:</strong> Version restoration will replace the current system state. 
-          Always create a backup before proceeding. This action cannot be undone.
-        </AlertDescription>
-      </Alert>
-
-      {/* Available Versions */}
-      <div className="space-y-4">
-        <h3 className="text-lg font-semibold flex items-center gap-2">
-          <Database className="w-5 h-5" />
-          Available Restoration Points
-        </h3>
-
-        {availableVersions.map((version) => (
-          <Card key={version.id} className="transition-all hover:shadow-md">
-            <CardHeader className="pb-3">
-              <div className="flex items-center justify-between">
-                <CardTitle className="text-base">{version.version}</CardTitle>
-                <div className="flex items-center gap-2">
-                  <Badge variant={version.status === 'stable' ? 'default' : 'secondary'}>
-                    {version.status.toUpperCase()}
-                  </Badge>
-                  <Badge variant="outline" className="text-xs">
-                    {version.size}
-                  </Badge>
-                </div>
-              </div>
-              <p className="text-sm text-muted-foreground">{version.description}</p>
+        {/* Capture Version Tab */}
+        <TabsContent value="capture" className="space-y-6">
+          <Card className="border-l-4 border-l-green-500 bg-gradient-to-br from-green-50 to-white">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Package className="w-6 h-6 text-green-600" />
+                Capture Current Codebase
+              </CardTitle>
+              <p className="text-sm text-muted-foreground">
+                Create a snapshot of the current codebase state for future restoration
+              </p>
             </CardHeader>
-            <CardContent className="space-y-3">
-              <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                <Clock className="w-4 h-4" />
-                {new Date(version.timestamp).toLocaleString()}
-              </div>
-
-              <div>
-                <p className="text-sm font-medium mb-2">Features in this version:</p>
-                <div className="flex flex-wrap gap-1">
-                  {version.features.map((feature, index) => (
-                    <Badge key={index} variant="outline" className="text-xs">
-                      {feature}
-                    </Badge>
-                  ))}
+            <CardContent className="space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="text-sm font-medium">Version Number</label>
+                  <Input
+                    value={captureForm.versionNumber}
+                    onChange={(e) => setCaptureForm({...captureForm, versionNumber: e.target.value})}
+                    placeholder="e.g., 2.0, 2.1.1"
+                  />
+                </div>
+                <div>
+                  <label className="text-sm font-medium">Version Name</label>
+                  <Input
+                    value={captureForm.versionName}
+                    onChange={(e) => setCaptureForm({...captureForm, versionName: e.target.value})}
+                    placeholder="e.g., Enhanced Admin Dashboard"
+                  />
                 </div>
               </div>
-
-              <div className="flex gap-2 pt-2">
-                <Button
-                  onClick={() => handleVersionRestore(version.id)}
-                  disabled={isRestoring}
-                  variant={selectedVersion === version.id ? "default" : "outline"}
-                  size="sm"
-                >
-                  {isRestoring && selectedVersion === version.id ? (
-                    <>
-                      <RotateCcw className="w-4 h-4 mr-2 animate-spin" />
-                      Restoring...
-                    </>
-                  ) : (
-                    <>
-                      <Upload className="w-4 h-4 mr-2" />
-                      Restore Version
-                    </>
-                  )}
-                </Button>
+              
+              <div>
+                <label className="text-sm font-medium">Description</label>
+                <Textarea
+                  value={captureForm.description}
+                  onChange={(e) => setCaptureForm({...captureForm, description: e.target.value})}
+                  placeholder="Describe the changes and improvements in this version..."
+                  rows={3}
+                />
               </div>
+
+              <div className="flex items-center space-x-2">
+                <Switch
+                  checked={captureForm.isStable}
+                  onCheckedChange={(checked) => setCaptureForm({...captureForm, isStable: checked})}
+                />
+                <label className="text-sm font-medium">Mark as Stable Release</label>
+                <Star className="w-4 h-4 text-yellow-500" />
+              </div>
+
+              <Button 
+                onClick={captureCurrentVersion}
+                disabled={capturing}
+                className="w-full bg-green-600 hover:bg-green-700"
+              >
+                {capturing ? (
+                  <>
+                    <RefreshCw className="w-4 h-4 mr-2 animate-spin" />
+                    Capturing Version...
+                  </>
+                ) : (
+                  <>
+                    <Upload className="w-4 h-4 mr-2" />
+                    Capture Version 2.0
+                  </>
+                )}
+              </Button>
             </CardContent>
           </Card>
-        ))}
-      </div>
+        </TabsContent>
 
-      {/* System Information */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Info className="w-5 h-5" />
-            System Information
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-2 text-sm">
-          <div className="flex justify-between">
-            <span className="text-muted-foreground">Environment:</span>
-            <span className="font-mono">Production</span>
-          </div>
-          <div className="flex justify-between">
-            <span className="text-muted-foreground">Platform:</span>
-            <span className="font-mono">Divine Mobile v1</span>
-          </div>
-          <div className="flex justify-between">
-            <span className="text-muted-foreground">Admin Access:</span>
-            <span className="font-mono">Enabled ✅</span>
-          </div>
-          <div className="flex justify-between">
-            <span className="text-muted-foreground">Last Backup:</span>
-            <span className="font-mono">{new Date().toLocaleDateString()}</span>
-          </div>
-        </CardContent>
-      </Card>
+        {/* Version History Tab */}
+        <TabsContent value="versions" className="space-y-4">
+          {versions.length === 0 ? (
+            <Card>
+              <CardContent className="text-center p-8">
+                <Archive className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
+                <p className="text-muted-foreground">No versions captured yet</p>
+                <p className="text-sm text-muted-foreground">Create your first version snapshot using the Capture tab</p>
+              </CardContent>
+            </Card>
+          ) : (
+            versions.map((version) => (
+              <Card key={version.id} className={`transition-all duration-300 hover:shadow-lg ${version.is_stable ? 'border-l-4 border-l-yellow-500 bg-gradient-to-br from-yellow-50 to-white' : ''}`}>
+                <CardContent className="p-6">
+                  <div className="flex items-start justify-between">
+                    <div className="flex-1">
+                      <div className="flex items-center gap-3 mb-2">
+                        <h3 className="text-lg font-bold">{version.version_name}</h3>
+                        <Badge variant="outline" className="bg-blue-50 text-blue-700">
+                          v{version.version_number}
+                        </Badge>
+                        {version.is_stable && (
+                          <Badge className="bg-yellow-100 text-yellow-800 border-yellow-300">
+                            <Star className="w-3 h-3 mr-1" />
+                            Stable
+                          </Badge>
+                        )}
+                      </div>
+                      
+                      <p className="text-sm text-muted-foreground mb-3">{version.description}</p>
+                      
+                      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+                        <div className="flex items-center gap-1">
+                          <FileCode className="w-4 h-4 text-blue-500" />
+                          <span>{version.file_count} files</span>
+                        </div>
+                        <div className="flex items-center gap-1">
+                          <Package className="w-4 h-4 text-green-500" />
+                          <span>{formatBytes(version.total_size_bytes)}</span>
+                        </div>
+                        <div className="flex items-center gap-1">
+                          <Clock className="w-4 h-4 text-purple-500" />
+                          <span>{formatDate(version.created_at)}</span>
+                        </div>
+                        <div className="flex items-center gap-1">
+                          <Undo className="w-4 h-4 text-orange-500" />
+                          <span>{version.restoration_count} restores</span>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <Button
+                      onClick={() => restoreVersion(version.id, version.version_number)}
+                      disabled={restoring}
+                      variant="outline"
+                      className="ml-4"
+                    >
+                      {restoring ? (
+                        <RefreshCw className="w-4 h-4 animate-spin" />
+                      ) : (
+                        <>
+                          <Download className="w-4 h-4 mr-2" />
+                          Restore
+                        </>
+                      )}
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            ))
+          )}
+        </TabsContent>
+
+        {/* Restoration Logs Tab */}
+        <TabsContent value="logs" className="space-y-4">
+          {restorationLogs.length === 0 ? (
+            <Card>
+              <CardContent className="text-center p-8">
+                <Clock className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
+                <p className="text-muted-foreground">No restoration activity yet</p>
+              </CardContent>
+            </Card>
+          ) : (
+            restorationLogs.map((log) => (
+              <Card key={log.id} className="hover:shadow-md transition-shadow">
+                <CardContent className="p-4">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      {log.status === 'completed' ? (
+                        <CheckCircle className="w-5 h-5 text-green-500" />
+                      ) : (
+                        <AlertTriangle className="w-5 h-5 text-orange-500" />
+                      )}
+                      <div>
+                        <p className="font-medium">
+                          {log.restoration_type.charAt(0).toUpperCase() + log.restoration_type.slice(1)} Restoration
+                        </p>
+                        <p className="text-sm text-muted-foreground">
+                          {log.files_restored} files • {formatDate(log.restored_at)}
+                        </p>
+                      </div>
+                    </div>
+                    <Badge variant={log.status === 'completed' ? 'default' : 'destructive'}>
+                      {log.status}
+                    </Badge>
+                  </div>
+                </CardContent>
+              </Card>
+            ))
+          )}
+        </TabsContent>
+      </Tabs>
     </div>
   );
 };
