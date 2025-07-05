@@ -355,3 +355,56 @@ html {
     @apply border-t-0 p-0;
   }
 }
+
+/* Device-specific layout styles for Nerve Center BaaS */
+
+/* Device-specific card styles */
+.desktop-card {
+  @apply bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700;
+  @apply p-6 transition-all duration-300;
+  @apply hover:shadow-xl hover:border-primary/20;
+}
+
+.mobile-card {
+  @apply mobile-card;
+}
+
+/* Device-specific content areas */
+.nerve-center-desktop-content {
+  @apply max-w-none;
+}
+
+.nerve-center-mobile-content {
+  @apply w-full px-2;
+}
+
+/* Device-specific navigation */
+.nerve-center-desktop-nav {
+  @apply hidden md:block;
+}
+
+.nerve-center-mobile-nav {
+  @apply block md:hidden;
+}
+
+/* Device-specific fade-in animations */
+.desktop-fade-in {
+  @apply animate-in fade-in slide-in-from-bottom-4 duration-500;
+}
+
+.mobile-fade-in {
+  @apply animate-in fade-in slide-in-from-bottom-2 duration-300;
+}
+
+/* Portal-specific styles */
+.nerve-center-desktop-portal {
+  background: linear-gradient(135deg, hsl(var(--background)) 0%, hsl(var(--muted)) 100%);
+}
+
+.nerve-center-mobile-portal {
+  @apply bg-background;
+}
+
+.nerve-center-fallback {
+  @apply min-h-screen flex items-center justify-center bg-background;
+}

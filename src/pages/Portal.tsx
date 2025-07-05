@@ -8,6 +8,9 @@ import FloatingPlatformSwitcher from '@/components/navigation/FloatingPlatformSw
 import PermanentAuthStatus from '@/components/auth/PermanentAuthStatus';
 import { useSessionManager } from '@/hooks/useSessionManager';
 import { usePersistentAuth } from '@/components/auth/PersistentAuthProvider';
+import { MobileNavigation } from '@/components/mobile/MobileNavigation';
+import { MobileOnly, DesktopOnly } from '@/components/layout/ResponsiveRenderer';
+import { useMobileDetection } from '@/hooks/useMobileDetection';
 
 type UserType = 'customer' | 'vendor' | 'admin' | null;
 
@@ -184,10 +187,20 @@ const Portal = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 overflow-y-auto">
-      <div className="bg-gradient-to-r from-blue-600 to-purple-600 p-2">
-        <PortalHeader userType={userType} resetUserType={resetUserType} />
-      </div>
+    <div className="min-h-screen overflow-y-auto">
+      {/* Desktop Header */}
+      <DesktopOnly>
+        <div className="bg-gradient-to-r from-blue-600 to-purple-600 p-4">
+          <PortalHeader userType={userType} resetUserType={resetUserType} />
+        </div>
+      </DesktopOnly>
+      
+      {/* Mobile Header - Integrated with mobile layout */}
+      <MobileOnly>
+        <div className="bg-gradient-to-r from-blue-600 to-purple-600 p-2">
+          <PortalHeader userType={userType} resetUserType={resetUserType} />
+        </div>
+      </MobileOnly>
       
       <main className="container mx-auto px-2 sm:px-4 -mt-1 pb-8">
         <PortalTabs 
@@ -201,12 +214,28 @@ const Portal = () => {
         />
       </main>
       
-      <WhatsAppFloatingButton />
+      {/* Device-Specific Navigation */}
+      <MobileOnly>
+        <MobileNavigation />
+      </MobileOnly>
       
-      {/* Add Floating Platform Switcher */}
-      {activeTab === 'deals' && (
-        <FloatingPlatformSwitcher currentPlatform="portal" />
-      )}
+      {/* Desktop-Only Features */}
+      <DesktopOnly>
+        <WhatsAppFloatingButton />
+        
+        {/* Add Floating Platform Switcher */}
+        {activeTab === 'deals' && (
+          <FloatingPlatformSwitcher currentPlatform="portal" />
+        )}
+      </DesktopOnly>
+
+      {/* Mobile-Only Features */}
+      <MobileOnly>
+        {/* Mobile WhatsApp Button - positioned differently for mobile */}
+        <div className="fixed bottom-20 right-4 z-40">
+          <WhatsAppFloatingButton />
+        </div>
+      </MobileOnly>
 
       {/* Permanent Authentication Status */}
       <PermanentAuthStatus />

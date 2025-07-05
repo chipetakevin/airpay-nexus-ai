@@ -15,6 +15,8 @@ import EnhancedPortalNavigation from './navigation/EnhancedPortalNavigation';
 import { NerveCenterMobileLayout } from './layout/NerveCenterMobileLayout';
 import { UniversalMobileTabs } from './tabs/UniversalMobileTabs';
 import { useMobileFirst } from './layout/MobileFirstProvider';
+import { ResponsiveRenderer, MobileOnly, DesktopOnly } from './layout/ResponsiveRenderer';
+import { IntelligentLayout } from './layout/IntelligentLayout';
 
 interface PortalTabsProps {
   activeTab: string;
@@ -128,91 +130,197 @@ const PortalTabs = ({
   };
 
   return (
-    <NerveCenterMobileLayout 
-      title="Nerve Center BaaS"
-      subtitle="Mobile-First Dashboard"
-      className="nerve-center-portal"
-    >
-      <div className="w-full max-w-7xl mx-auto">
-        {/* Enhanced Intelligent Navigation */}
-        <div className="mb-6">
-          <EnhancedPortalNavigation
-            activeTab={activeTab}
-            onTabChange={enhancedHandleTabChange}
-            isTabAllowed={isTabAllowed}
-            showAdminTab={showAdminTab}
-            className="nerve-center-enhanced-nav"
-          />
-        </div>
-
-        <Tabs value={activeTab} onValueChange={enhancedHandleTabChange} className="w-full">
-          {/* Legacy Fallback Navigation for Desktop */}
-          {!isMobile && (
-            <div className="mb-4 bg-muted/30 rounded-lg p-2">
-              <TabSwitcher 
-                currentTab={activeTab}
-                onTabChange={enhancedHandleTabChange}
-                isAuthenticated={userAuthenticated}
-                userName={userName}
-              />
-            </div>
-          )}
-          
-          {/* Tab Content - Enhanced with Animations */}
-          <div className="nerve-center-content-area space-y-6">
-            <TabsContent value="contractor" className="nerve-center-fade-in">
-              <div className="nerve-center-card">
-                <ContractorRegistrationContainer />
-              </div>
-            </TabsContent>
-            
-            <TabsContent value="deals" className="nerve-center-fade-in">
-              <div className="nerve-center-card">
-                <AirtimeDealsSystem />
-              </div>
-            </TabsContent>
-            
-            <TabsContent value="onecard" className="nerve-center-fade-in">
-              <div className="nerve-center-card">
-                <OneCardDashboard />
-              </div>
-            </TabsContent>
-            
-            <TabsContent value="registration" className="nerve-center-fade-in">
-              <div className="nerve-center-card">
-                <CustomerRegistration />
-              </div>
-            </TabsContent>
-            
-            <TabsContent value="vendor" className="nerve-center-fade-in">
-              <div className="nerve-center-card">
-                <VendorRegistration />
-              </div>
-            </TabsContent>
-
-            <TabsContent value="unified-reports" className="nerve-center-fade-in">
-              <div className="nerve-center-card">
-                <ReportsTabContent />
-              </div>
-            </TabsContent>
-            
-            <TabsContent value="admin-reg" className="nerve-center-fade-in">
-              <div className="nerve-center-card">
-                <AdminRegistration />
-              </div>
-            </TabsContent>
-            
-            {showAdminTab && (
-              <TabsContent value="admin" className="nerve-center-fade-in">
-                <div className="nerve-center-card">
-                  <AdminPortal onAuthSuccess={() => setIsAdminAuthenticated(true)} />
+    <IntelligentLayout>
+      <ResponsiveRenderer
+        mobile={
+          <NerveCenterMobileLayout 
+            title="Nerve Center BaaS"
+            subtitle="Mobile Dashboard"
+            className="nerve-center-mobile-portal"
+          >
+            <div className="w-full">
+              {/* Mobile Navigation */}
+              <MobileOnly>
+                <div className="mb-4">
+                  <EnhancedPortalNavigation
+                    activeTab={activeTab}
+                    onTabChange={enhancedHandleTabChange}
+                    isTabAllowed={isTabAllowed}
+                    showAdminTab={showAdminTab}
+                    className="nerve-center-mobile-nav"
+                  />
                 </div>
-              </TabsContent>
-            )}
+              </MobileOnly>
+
+              <Tabs value={activeTab} onValueChange={enhancedHandleTabChange} className="w-full">
+                {/* Mobile Tab Content */}
+                <div className="nerve-center-mobile-content space-y-4">
+                  <TabsContent value="contractor" className="mobile-fade-in">
+                    <div className="mobile-card">
+                      <ContractorRegistrationContainer />
+                    </div>
+                  </TabsContent>
+                  
+                  <TabsContent value="deals" className="mobile-fade-in">
+                    <div className="mobile-card">
+                      <AirtimeDealsSystem />
+                    </div>
+                  </TabsContent>
+                  
+                  <TabsContent value="onecard" className="mobile-fade-in">
+                    <div className="mobile-card">
+                      <OneCardDashboard />
+                    </div>
+                  </TabsContent>
+                  
+                  <TabsContent value="registration" className="mobile-fade-in">
+                    <div className="mobile-card">
+                      <CustomerRegistration />
+                    </div>
+                  </TabsContent>
+                  
+                  <TabsContent value="vendor" className="mobile-fade-in">
+                    <div className="mobile-card">
+                      <VendorRegistration />
+                    </div>
+                  </TabsContent>
+
+                  <TabsContent value="unified-reports" className="mobile-fade-in">
+                    <div className="mobile-card">
+                      <ReportsTabContent />
+                    </div>
+                  </TabsContent>
+                  
+                  <TabsContent value="admin-reg" className="mobile-fade-in">
+                    <div className="mobile-card">
+                      <AdminRegistration />
+                    </div>
+                  </TabsContent>
+                  
+                  {showAdminTab && (
+                    <TabsContent value="admin" className="mobile-fade-in">
+                      <div className="mobile-card">
+                        <AdminPortal onAuthSuccess={() => setIsAdminAuthenticated(true)} />
+                      </div>
+                    </TabsContent>
+                  )}
+                </div>
+              </Tabs>
+            </div>
+          </NerveCenterMobileLayout>
+        }
+        desktop={
+          <div className="nerve-center-desktop-portal min-h-screen bg-background">
+            <div className="w-full max-w-7xl mx-auto p-6">
+              {/* Desktop Header */}
+              <DesktopOnly>
+                <div className="mb-8">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <h1 className="text-3xl font-bold text-foreground mb-2">Nerve Center BaaS</h1>
+                      <p className="text-muted-foreground">Enterprise Dashboard Portal</p>
+                    </div>
+                    <div className="flex items-center space-x-4">
+                      <div className="text-sm text-muted-foreground">
+                        Desktop Mode | {userName || 'Guest'}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </DesktopOnly>
+
+              {/* Desktop Navigation */}
+              <DesktopOnly>
+                <div className="mb-6">
+                  <EnhancedPortalNavigation
+                    activeTab={activeTab}
+                    onTabChange={enhancedHandleTabChange}
+                    isTabAllowed={isTabAllowed}
+                    showAdminTab={showAdminTab}
+                    className="nerve-center-desktop-nav"
+                  />
+                </div>
+              </DesktopOnly>
+
+              <Tabs value={activeTab} onValueChange={enhancedHandleTabChange} className="w-full">
+                {/* Legacy Desktop Navigation */}
+                <DesktopOnly>
+                  <div className="mb-6 bg-muted/30 rounded-lg p-4">
+                    <TabSwitcher 
+                      currentTab={activeTab}
+                      onTabChange={enhancedHandleTabChange}
+                      isAuthenticated={userAuthenticated}
+                      userName={userName}
+                    />
+                  </div>
+                </DesktopOnly>
+                
+                {/* Desktop Tab Content */}
+                <div className="nerve-center-desktop-content space-y-8">
+                  <TabsContent value="contractor" className="desktop-fade-in">
+                    <div className="desktop-card">
+                      <ContractorRegistrationContainer />
+                    </div>
+                  </TabsContent>
+                  
+                  <TabsContent value="deals" className="desktop-fade-in">
+                    <div className="desktop-card">
+                      <AirtimeDealsSystem />
+                    </div>
+                  </TabsContent>
+                  
+                  <TabsContent value="onecard" className="desktop-fade-in">
+                    <div className="desktop-card">
+                      <OneCardDashboard />
+                    </div>
+                  </TabsContent>
+                  
+                  <TabsContent value="registration" className="desktop-fade-in">
+                    <div className="desktop-card">
+                      <CustomerRegistration />
+                    </div>
+                  </TabsContent>
+                  
+                  <TabsContent value="vendor" className="desktop-fade-in">
+                    <div className="desktop-card">
+                      <VendorRegistration />
+                    </div>
+                  </TabsContent>
+
+                  <TabsContent value="unified-reports" className="desktop-fade-in">
+                    <div className="desktop-card">
+                      <ReportsTabContent />
+                    </div>
+                  </TabsContent>
+                  
+                  <TabsContent value="admin-reg" className="desktop-fade-in">
+                    <div className="desktop-card">
+                      <AdminRegistration />
+                    </div>
+                  </TabsContent>
+                  
+                  {showAdminTab && (
+                    <TabsContent value="admin" className="desktop-fade-in">
+                      <div className="desktop-card">
+                        <AdminPortal onAuthSuccess={() => setIsAdminAuthenticated(true)} />
+                      </div>
+                    </TabsContent>
+                  )}
+                </div>
+              </Tabs>
+            </div>
           </div>
-        </Tabs>
-      </div>
-    </NerveCenterMobileLayout>
+        }
+        fallback={
+          <div className="nerve-center-fallback">
+            <div className="text-center p-8">
+              <h2 className="text-xl font-semibold mb-2">Loading Nerve Center...</h2>
+              <p className="text-muted-foreground">Optimizing for your device</p>
+            </div>
+          </div>
+        }
+      />
+    </IntelligentLayout>
   );
 };
 

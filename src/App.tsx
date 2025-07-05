@@ -70,7 +70,6 @@ const App = () => (
             <Route path="/mobile-dashboard" element={<MobileDashboard />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
-          <MobileNavigation />
         </BrowserRouter>
       </TooltipProvider>
       </MobileFirstProvider>
