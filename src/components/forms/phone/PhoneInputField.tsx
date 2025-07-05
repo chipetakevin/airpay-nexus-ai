@@ -29,25 +29,29 @@ interface PhoneInputFieldProps {
       // Clean input - allow only digits
       inputValue = inputValue.replace(/\D/g, '');
       
-      // Intelligently prevent invalid patterns
-      if (inputValue.length > 0) {
-        // First digit cannot be 0
-        if (inputValue[0] === '0') {
-          return; // Silently ignore
-        }
-        
-        // Second digit cannot be 0
-        if (inputValue.length > 1 && inputValue[1] === '0') {
-          return; // Silently ignore
-        }
+      // Handle different formats but preserve natural input
+      let processedValue = inputValue;
+      
+      // If starts with country code 27, remove it
+      if (processedValue.startsWith('27') && processedValue.length === 11) {
+        processedValue = processedValue.substring(2);
+      }
+      // If starts with 0 (national format), remove the 0
+      else if (processedValue.startsWith('0') && processedValue.length === 10) {
+        processedValue = processedValue.substring(1);
       }
       
-      // Create synthetic event with cleaned value
+      // Limit to 9 digits maximum
+      if (processedValue.length > 9) {
+        processedValue = processedValue.substring(0, 9);
+      }
+      
+      // Create synthetic event with processed value
       const syntheticEvent = {
         ...e,
         target: {
           ...e.target,
-          value: inputValue
+          value: processedValue
         }
       };
       

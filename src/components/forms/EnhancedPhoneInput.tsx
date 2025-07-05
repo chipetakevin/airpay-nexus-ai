@@ -78,36 +78,25 @@ const EnhancedPhoneInput = ({
     // Clean input - allow only digits
     inputValue = inputValue.replace(/\D/g, '');
     
-    // CRITICAL: Prevent numbers starting with 0 across all forms
-    if (inputValue.startsWith('0')) {
-      return; // Block any input starting with 0
-    }
-    
-    // Handle different input formats but preserve all digits up to 9
+    // Handle different input formats intelligently
     let normalizedPhone = inputValue;
     
     // If starts with 27 (country code), remove it
     if (normalizedPhone.startsWith('27') && normalizedPhone.length === 11) {
       normalizedPhone = normalizedPhone.substring(2);
     }
-    
-    // Intelligently prevent invalid patterns
-    if (normalizedPhone.length > 0) {
-      // First digit cannot be 0 (additional safeguard)
-      if (normalizedPhone[0] === '0') {
-        return; // Silently ignore
-      }
-      
-      // Second digit cannot be 0
-      if (normalizedPhone.length > 1 && normalizedPhone[1] === '0') {
-        return; // Silently ignore
-      }
+    // If starts with 0 (national format), remove the 0
+    else if (normalizedPhone.startsWith('0') && normalizedPhone.length === 10) {
+      normalizedPhone = normalizedPhone.substring(1);
     }
     
-    // Only allow up to 9 digits for SA mobile numbers
-    if (normalizedPhone.length <= 9) {
-      onChange(normalizedPhone);
+    // Limit to 9 digits maximum
+    if (normalizedPhone.length > 9) {
+      normalizedPhone = normalizedPhone.substring(0, 9);
     }
+    
+    // Update the phone number
+    onChange(normalizedPhone);
   };
 
   const parseSAMobileNumber = (numberString: string) => {

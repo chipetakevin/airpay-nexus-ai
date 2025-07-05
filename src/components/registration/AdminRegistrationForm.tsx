@@ -45,16 +45,18 @@ const AdminRegistrationForm = () => {
 
   // Validate account number and auto-collapse
   const validateAccountNumber = (accountNumber: string) => {
-    // Basic validation - South African account numbers are typically 10-11 digits
+    // Enhanced validation - South African account numbers are typically 9-15 digits
     const cleanNumber = accountNumber.replace(/\D/g, '');
-    return cleanNumber.length >= 10 && cleanNumber.length <= 11;
+    return cleanNumber.length >= 9 && cleanNumber.length <= 15;
   };
 
   const handleAccountNumberChange = (value: string) => {
-    handleInputChange('accountNumber', value);
+    // Allow only digits and limit reasonable length
+    const cleanValue = value.replace(/\D/g, '').substring(0, 15);
+    handleInputChange('accountNumber', cleanValue);
     
     // Auto-validate and collapse when account number is valid
-    if (validateAccountNumber(value) && formData.bankName && formData.branchCode) {
+    if (validateAccountNumber(cleanValue) && formData.bankName && formData.branchCode) {
       setIsAutoSaving(true);
       setTimeout(() => {
         setIsAutoSaving(false);

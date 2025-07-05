@@ -28,10 +28,6 @@ export const validateSouthAfricanMobile = (phoneNumber: string): PhoneValidation
     normalizedPhone = cleanPhone.substring(1); // Remove leading 0
   } else {
     // Local format: 832466539 (9 digits) - This is our preferred format
-    // CRITICAL: Block any numbers starting with 0 in local format
-    if (cleanPhone.startsWith('0')) {
-      return { isValid: false, error: 'Mobile numbers cannot start with 0. Use format: 832466539' };
-    }
     if (cleanPhone.length !== 9) {
       return { isValid: false, error: 'Mobile number must be 9 digits (xxxxxxxxx)' };
     }
