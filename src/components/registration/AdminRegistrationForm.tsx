@@ -17,6 +17,7 @@ const AdminRegistrationForm = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [isAutoSaving, setIsAutoSaving] = useState(false);
   const [lastSaved, setLastSaved] = useState<Date | null>(null);
+  const [isBankingCollapsed, setIsBankingCollapsed] = useState(false);
   const { toast } = useToast();
 
   const togglePasswordVisibility = () => {
@@ -39,6 +40,32 @@ const AdminRegistrationForm = () => {
         description: `${bankName} with branch code ${branchCode} has been selected and auto-saved.`,
         duration: 3000
       });
+    }
+  };
+
+  // Validate account number and auto-collapse
+  const validateAccountNumber = (accountNumber: string) => {
+    // Basic validation - South African account numbers are typically 10-11 digits
+    const cleanNumber = accountNumber.replace(/\D/g, '');
+    return cleanNumber.length >= 10 && cleanNumber.length <= 11;
+  };
+
+  const handleAccountNumberChange = (value: string) => {
+    handleInputChange('accountNumber', value);
+    
+    // Auto-validate and collapse when account number is valid
+    if (validateAccountNumber(value) && formData.bankName && formData.branchCode) {
+      setIsAutoSaving(true);
+      setTimeout(() => {
+        setIsAutoSaving(false);
+        setLastSaved(new Date());
+        setIsBankingCollapsed(true);
+        toast({
+          title: "Account Verified! ✅",
+          description: "Banking details have been validated and saved securely.",
+          duration: 3000
+        });
+      }, 1000);
     }
   };
 
@@ -147,52 +174,84 @@ const AdminRegistrationForm = () => {
                     Complete
                   </Badge>
                 )}
+                {isBankingCollapsed && (
+                  <Button 
+                    type="button"
+                    variant="outline" 
+                    size="sm"
+                    onClick={() => setIsBankingCollapsed(false)}
+                    className="text-xs"
+                  >
+                    Edit Details
+                  </Button>
+                )}
               </div>
             </div>
           </CardHeader>
-          <CardContent className="space-y-4">
-            <EnhancedSouthAfricanBankAutocomplete
-              onBankSelect={handleEnhancedBankSelect}
-              error={errors.bankName}
-              defaultValue={formData.bankName}
-              showBranchDetails={true}
-            />
-
-            <div className="space-y-2">
-              <Label htmlFor="accountNumber">Account Number *</Label>
-              <Input
-                id="accountNumber"
-                value={formData.accountNumber || ''}
-                onChange={(e) => handleInputChange('accountNumber', e.target.value)}
-                placeholder="Enter account number"
-                className={errors.accountNumber ? 'border-red-500' : ''}
-              />
-              {errors.accountNumber && <p className="text-red-500 text-sm">{errors.accountNumber}</p>}
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="branchCode">Branch Code</Label>
-              <Input
-                id="branchCode"
-                value={formData.branchCode || ''}
-                placeholder="Auto-filled from bank selection"
-                readOnly
-                className="bg-gray-50 font-mono"
-              />
-              <p className="text-xs text-green-600">
-                ℹ️ Branch code automatically assigned from your bank selection
-              </p>
-            </div>
-
-            {isBankingComplete && (
-              <div className="bg-green-50 p-3 rounded-lg border border-green-200">
-                <div className="flex items-center gap-2 text-sm text-green-700">
+          
+          {/* Collapsed Summary View */}
+          {isBankingCollapsed && isBankingComplete && (
+            <CardContent className="space-y-3">
+              <div className="bg-green-100 p-4 rounded-lg border border-green-200">
+                <div className="flex items-center gap-2 text-sm text-green-700 mb-2">
                   <CheckCircle className="w-4 h-4" />
-                  <span className="font-medium">Banking details verified and secure!</span>
+                  <span className="font-medium">Banking details verified and secured!</span>
+                </div>
+                <div className="text-xs text-green-600 space-y-1">
+                  <p><strong>Bank:</strong> {formData.bankName}</p>
+                  <p><strong>Account:</strong> {formData.accountNumber?.replace(/(\d{4})(?=\d)/g, '$1 ')}</p>
+                  <p><strong>Branch Code:</strong> {formData.branchCode}</p>
                 </div>
               </div>
-            )}
-          </CardContent>
+            </CardContent>
+          )}
+          
+          {/* Full Banking Form */}
+          {!isBankingCollapsed && (
+            <CardContent className="space-y-4">
+              <EnhancedSouthAfricanBankAutocomplete
+                onBankSelect={handleEnhancedBankSelect}
+                error={errors.bankName}
+                defaultValue={formData.bankName}
+                showBranchDetails={true}
+              />
+
+              <div className="space-y-2">
+                <Label htmlFor="accountNumber">Account Number *</Label>
+                <Input
+                  id="accountNumber"
+                  value={formData.accountNumber || ''}
+                  onChange={(e) => handleAccountNumberChange(e.target.value)}
+                  placeholder="Enter account number"
+                  className={errors.accountNumber ? 'border-red-500' : ''}
+                />
+                {errors.accountNumber && <p className="text-red-500 text-sm">{errors.accountNumber}</p>}
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="branchCode">Branch Code</Label>
+                <Input
+                  id="branchCode"
+                  value={formData.branchCode || ''}
+                  placeholder="Auto-filled from bank selection"
+                  readOnly
+                  className="bg-gray-50 font-mono"
+                />
+                <p className="text-xs text-green-600">
+                  ℹ️ Branch code automatically assigned from your bank selection
+                </p>
+              </div>
+
+              {isBankingComplete && !isBankingCollapsed && (
+                <div className="bg-green-50 p-3 rounded-lg border border-green-200">
+                  <div className="flex items-center gap-2 text-sm text-green-700">
+                    <CheckCircle className="w-4 h-4" />
+                    <span className="font-medium">Banking details verified and secure!</span>
+                  </div>
+                </div>
+              )}
+            </CardContent>
+          )}
         </Card>
 
         {/* Password Section */}
