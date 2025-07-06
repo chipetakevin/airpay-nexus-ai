@@ -250,6 +250,42 @@ export type Database = {
           },
         ]
       }
+      bulk_operation_logs: {
+        Row: {
+          duration_seconds: number | null
+          executed_at: string | null
+          executed_by: string | null
+          failure_count: number | null
+          id: string
+          operation_data: Json
+          operation_type: string
+          status: string | null
+          success_count: number | null
+        }
+        Insert: {
+          duration_seconds?: number | null
+          executed_at?: string | null
+          executed_by?: string | null
+          failure_count?: number | null
+          id?: string
+          operation_data?: Json
+          operation_type: string
+          status?: string | null
+          success_count?: number | null
+        }
+        Update: {
+          duration_seconds?: number | null
+          executed_at?: string | null
+          executed_by?: string | null
+          failure_count?: number | null
+          id?: string
+          operation_data?: Json
+          operation_type?: string
+          status?: string | null
+          success_count?: number | null
+        }
+        Relationships: []
+      }
       bulk_porting_batches: {
         Row: {
           batch_name: string
@@ -3560,6 +3596,57 @@ export type Database = {
           },
         ]
       }
+      sms_campaign_logs: {
+        Row: {
+          campaign_name: string
+          campaign_status: string | null
+          created_at: string | null
+          created_by: string | null
+          failed_recipients: Json | null
+          id: string
+          message_content: string
+          metadata: Json | null
+          sender_name: string | null
+          success_rate: string | null
+          total_cost: number | null
+          total_failed: number
+          total_recipients: number
+          total_sent: number
+        }
+        Insert: {
+          campaign_name: string
+          campaign_status?: string | null
+          created_at?: string | null
+          created_by?: string | null
+          failed_recipients?: Json | null
+          id?: string
+          message_content: string
+          metadata?: Json | null
+          sender_name?: string | null
+          success_rate?: string | null
+          total_cost?: number | null
+          total_failed?: number
+          total_recipients?: number
+          total_sent?: number
+        }
+        Update: {
+          campaign_name?: string
+          campaign_status?: string | null
+          created_at?: string | null
+          created_by?: string | null
+          failed_recipients?: Json | null
+          id?: string
+          message_content?: string
+          metadata?: Json | null
+          sender_name?: string | null
+          success_rate?: string | null
+          total_cost?: number | null
+          total_failed?: number
+          total_recipients?: number
+          total_sent?: number
+        }
+        Relationships: []
+      }
       stakeholder_contacts: {
         Row: {
           created_at: string
@@ -4368,6 +4455,15 @@ export type Database = {
           _resource_id?: string
         }
         Returns: boolean
+      }
+      log_bulk_operation: {
+        Args: {
+          operation_type: string
+          operation_data: Json
+          success_count?: number
+          failure_count?: number
+        }
+        Returns: string
       }
       log_permission_activity: {
         Args: {
