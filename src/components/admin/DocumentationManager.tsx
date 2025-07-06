@@ -32,9 +32,10 @@ const DocumentationManager = () => {
 ## 🏢 South African MVNE Platform - Production Ready
 
 **Version:** 3.0 - MVNE Complete  
-**Release Date:** January 6, 2025  
+**Release Date:** July 6, 2025  
 **Status:** 100% Production Ready ✅  
-**Compliance:** South African Regulatory Standards ✅
+**Compliance:** South African Regulatory Standards ✅  
+**Powered by:** Addex Hub ✅
 
 ---
 
@@ -273,7 +274,7 @@ This MVNE (Mobile Virtual Network Enabler) platform is a comprehensive, enterpri
 
 ## 📄 Version History
 
-### Version 3.0 - MVNE Complete (January 6, 2025)
+### Version 3.0 - MVNE Complete (July 6, 2025)
 ✅ Full MVNE platform implementation
 ✅ South African regulatory compliance
 ✅ Advanced security and fraud management
@@ -284,7 +285,7 @@ This MVNE (Mobile Virtual Network Enabler) platform is a comprehensive, enterpri
 
 🎉 MVNE Platform Version 3.0 - Ready for Production Deployment
 
-This platform represents a complete, enterprise-grade MVNE solution specifically designed for the South African telecommunications market, providing all necessary tools and compliance features for successful MVNO operations.
+This platform represents a complete, enterprise-grade MVNE solution specifically designed for the South African telecommunications market, providing all necessary tools and compliance features for successful MVNO operations. Powered by Addex Hub.
   `;
 
   const generatePDF = async () => {
