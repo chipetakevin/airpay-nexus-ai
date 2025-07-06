@@ -168,17 +168,17 @@ const AdminPortal: React.FC<AdminPortalProps> = ({ onAuthSuccess }) => {
       </div>
 
       <Tabs defaultValue="nerve-center" className="w-full">
-        <TabsList className="grid w-full grid-cols-10 bg-gray-100">
-          <TabsTrigger value="nerve-center">Nerve Center</TabsTrigger>
-          <TabsTrigger value="database-baas" className="bg-gradient-to-r from-purple-100 to-indigo-100 text-purple-700 border border-purple-300 data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-600 data-[state=active]:to-indigo-600 data-[state=active]:text-white">Database (BaaS)</TabsTrigger>
-          <TabsTrigger value="security-monitor" className="bg-gradient-to-r from-red-100 to-orange-100 text-red-700 border border-red-300 data-[state=active]:bg-gradient-to-r data-[state=active]:from-red-600 data-[state=active]:to-orange-600 data-[state=active]:text-white">Security Monitor</TabsTrigger>
-          <TabsTrigger value="permissions" className="bg-gradient-to-r from-blue-100 to-cyan-100 text-blue-700 border border-blue-300 data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-600 data-[state=active]:to-cyan-600 data-[state=active]:text-white">Permissions</TabsTrigger>
-          <TabsTrigger value="balances">Balances</TabsTrigger>
-          <TabsTrigger value="dashboard">Dashboard</TabsTrigger>
-          <TabsTrigger value="revenue">Revenue</TabsTrigger>
-          <TabsTrigger value="networks">Networks</TabsTrigger>
-          <TabsTrigger value="orders">Orders</TabsTrigger>
-          <TabsTrigger value="versions">Versions</TabsTrigger>
+        <TabsList className="grid w-full grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-1 h-auto p-2 bg-muted/30">
+          <TabsTrigger value="nerve-center" className="text-xs sm:text-sm">Hub</TabsTrigger>
+          <TabsTrigger value="database-baas" className="text-xs sm:text-sm bg-gradient-to-r from-purple-100 to-indigo-100 text-purple-700 border border-purple-300 data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-600 data-[state=active]:to-indigo-600 data-[state=active]:text-white">Database</TabsTrigger>
+          <TabsTrigger value="security-monitor" className="text-xs sm:text-sm bg-gradient-to-r from-red-100 to-orange-100 text-red-700 border border-red-300 data-[state=active]:bg-gradient-to-r data-[state=active]:from-red-600 data-[state=active]:to-orange-600 data-[state=active]:text-white">Security</TabsTrigger>
+          <TabsTrigger value="permissions" className="text-xs sm:text-sm bg-gradient-to-r from-blue-100 to-cyan-100 text-blue-700 border border-blue-300 data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-600 data-[state=active]:to-cyan-600 data-[state=active]:text-white">Access</TabsTrigger>
+          <TabsTrigger value="balances" className="text-xs sm:text-sm">Balances</TabsTrigger>
+          <TabsTrigger value="dashboard" className="text-xs sm:text-sm">Dashboard</TabsTrigger>
+          <TabsTrigger value="revenue" className="text-xs sm:text-sm">Revenue</TabsTrigger>
+          <TabsTrigger value="networks" className="text-xs sm:text-sm">Networks</TabsTrigger>
+          <TabsTrigger value="orders" className="text-xs sm:text-sm">Orders</TabsTrigger>
+          <TabsTrigger value="versions" className="text-xs sm:text-sm">Versions</TabsTrigger>
         </TabsList>
 
         <TabsContent value="nerve-center" className="space-y-6">
