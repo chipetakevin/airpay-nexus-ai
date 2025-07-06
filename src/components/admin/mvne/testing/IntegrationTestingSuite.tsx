@@ -469,19 +469,19 @@ const IntegrationTestingSuite = () => {
                 <div className="space-y-3">
                   <div className="flex items-center justify-between">
                     <span className="text-sm">Call Setup Time</span>
-                    <Badge className="bg-green-100 text-green-800">< 3s</Badge>
+                    <Badge className="bg-green-100 text-green-800">&lt; 3s</Badge>
                   </div>
                   <div className="flex items-center justify-between">
                     <span className="text-sm">SMS Delivery</span>
-                    <Badge className="bg-green-100 text-green-800">< 5s</Badge>
+                    <Badge className="bg-green-100 text-green-800">&lt; 5s</Badge>
                   </div>
                   <div className="flex items-center justify-between">
                     <span className="text-sm">HLR Query</span>
-                    <Badge className="bg-green-100 text-green-800">< 100ms</Badge>
+                    <Badge className="bg-green-100 text-green-800">&lt; 100ms</Badge>
                   </div>
                   <div className="flex items-center justify-between">
                     <span className="text-sm">Billing Update</span>
-                    <Badge className="bg-yellow-100 text-yellow-800">< 500ms</Badge>
+                    <Badge className="bg-yellow-100 text-yellow-800">&lt; 500ms</Badge>
                   </div>
                 </div>
               </CardContent>

@@ -456,7 +456,7 @@ const BusinessReadinessCenter = () => {
                 <div className="space-y-3">
                   <div className="flex items-center justify-between">
                     <span className="text-sm">First Response Time</span>
-                    <Badge className="bg-green-100 text-green-800">< 1 hour</Badge>
+                    <Badge className="bg-green-100 text-green-800">&lt; 1 hour</Badge>
                   </div>
                   <div className="flex items-center justify-between">
                     <span className="text-sm">Resolution Time</span>

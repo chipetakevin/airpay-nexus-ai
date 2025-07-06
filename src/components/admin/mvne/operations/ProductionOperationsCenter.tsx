@@ -469,11 +469,11 @@ const ProductionOperationsCenter = () => {
                   </div>
                   <div className="flex items-center justify-between">
                     <span className="text-sm">RTO Target</span>
-                    <Badge className="bg-green-100 text-green-800">< 4 hours</Badge>
+                    <Badge className="bg-green-100 text-green-800">&lt; 4 hours</Badge>
                   </div>
                   <div className="flex items-center justify-between">
                     <span className="text-sm">RPO Target</span>
-                    <Badge className="bg-green-100 text-green-800">< 1 hour</Badge>
+                    <Badge className="bg-green-100 text-green-800">&lt; 1 hour</Badge>
                   </div>
                   <div className="flex items-center justify-between">
                     <span className="text-sm">Next Drill</span>
