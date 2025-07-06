@@ -9,6 +9,7 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { supabase } from '@/integrations/supabase/client';
 import AIPayrollAutomation from './ai/AIPayrollAutomation';
 import EmployeeSelfService from './self-service/EmployeeSelfService';
 import RealTimePayroll from './realtime/RealTimePayroll';
@@ -369,13 +370,15 @@ const AddexPayDashboard = () => {
   ];
 
   // Enhanced Contractor Management with Import/Export functionality
-  const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) return;
 
     setImportFile(file);
-    const reader = new FileReader();
     
+    // For large files, we'll process them on the server
+    // For now, show a preview of the first few rows for user confirmation
+    const reader = new FileReader();
     reader.onload = (e) => {
       try {
         const text = e.target?.result as string;
@@ -398,28 +401,19 @@ const AddexPayDashboard = () => {
           return;
         }
 
-        const data = lines.slice(1).map((line, index) => {
+        // Preview first 10 rows only (actual processing will be done on server)
+        const previewData = lines.slice(1, 11).map((line, index) => {
           const values = line.split(',').map(v => v.trim().replace(/"/g, ''));
           const row: any = {};
           headers.forEach((header, i) => {
             row[header] = values[i] || '';
           });
-          row.rowIndex = index + 2; // +2 for 1-based indexing and header row
+          row.rowIndex = index + 2;
           return row;
         });
 
-        // Validate data
-        const errors: string[] = [];
-        data.forEach((row) => {
-          if (!row.Name) errors.push(`Row ${row.rowIndex}: Name is required`);
-          if (!row['Employee ID']) errors.push(`Row ${row.rowIndex}: Employee ID is required`);
-          if (!row.Status || !['Active', 'Inactive'].includes(row.Status)) {
-            errors.push(`Row ${row.rowIndex}: Status must be 'Active' or 'Inactive'`);
-          }
-        });
-
-        setImportErrors(errors);
-        setImportData(data);
+        setImportErrors([]);
+        setImportData(previewData);
         setShowImportPreview(true);
       } catch (error) {
         setImportErrors(['Error parsing file. Please ensure it is a valid CSV file.']);
@@ -429,21 +423,54 @@ const AddexPayDashboard = () => {
     reader.readAsText(file);
   };
 
-  const processImport = () => {
-    if (importErrors.length > 0) return;
+  const processImport = async () => {
+    if (!importFile) {
+      setImportErrors(['No file selected']);
+      return;
+    }
     
-    // In a real application, this would save to database
-    console.log('Importing contractors:', importData);
-    
-    // Reset import state
-    setImportFile(null);
-    setImportData([]);
-    setImportErrors([]);
-    setShowImportPreview(false);
-    setShowImportModal(false);
-    
-    // Show success message (in real app, use toast)
-    alert(`Successfully imported ${importData.length} contractors`);
+    try {
+      const formData = new FormData();
+      formData.append('file', importFile);
+
+      // Get current session
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) {
+        setImportErrors(['Please log in to import data']);
+        return;
+      }
+
+      // Call the edge function
+      const { data, error } = await supabase.functions.invoke('import-contractors', {
+        body: formData,
+        headers: {
+          Authorization: `Bearer ${session.access_token}`,
+        },
+      });
+
+      if (error) {
+        console.error('Import error:', error);
+        setImportErrors([error.message || 'Import failed']);
+        return;
+      }
+
+      if (data.success) {
+        // Reset import state
+        setImportFile(null);
+        setImportData([]);
+        setImportErrors([]);
+        setShowImportPreview(false);
+        setShowImportModal(false);
+        
+        // Show success message
+        alert(`Successfully imported ${data.successfulImports} out of ${data.totalRows} contractors`);
+      } else {
+        setImportErrors(data.validationErrors || data.error ? [data.error] : ['Import failed']);
+      }
+    } catch (error) {
+      console.error('Import processing error:', error);
+      setImportErrors(['Failed to process import. Please try again.']);
+    }
   };
 
   const handleExport = (format = 'csv') => {
@@ -1714,10 +1741,15 @@ const AddexPayDashboard = () => {
               <>
                 <div className="space-y-4">
                   <div className="flex items-center justify-between">
-                    <h4 className="font-medium">Import Preview</h4>
-                    <Badge variant={importErrors.length > 0 ? 'destructive' : 'default'}>
-                      {importData.length} rows • {importErrors.length} errors
-                    </Badge>
+                    <h4 className="font-medium">Import Preview (First 10 rows)</h4>
+                    <div className="flex items-center gap-2">
+                      <Badge variant={importErrors.length > 0 ? 'destructive' : 'default'}>
+                        Preview: {importData.length} rows shown
+                      </Badge>
+                      <Badge variant="outline">
+                        Full file will be processed on server
+                      </Badge>
+                    </div>
                   </div>
                   
                   {importErrors.length > 0 && (
@@ -1779,7 +1811,7 @@ const AddexPayDashboard = () => {
                     className="flex-1"
                   >
                     <Upload className="w-4 h-4 mr-2" />
-                    Import {importData.length} Contractors
+                    Process Import ({importData.length}+ contractors)
                   </Button>
                   <Button variant="outline" onClick={() => {
                     setShowImportPreview(false);

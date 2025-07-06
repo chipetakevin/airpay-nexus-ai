@@ -957,6 +957,57 @@ export type Database = {
         }
         Relationships: []
       }
+      contractor_profiles: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          department: string | null
+          email: string | null
+          employee_id: string
+          id: string
+          import_id: string | null
+          name: string
+          notes: string | null
+          phone: string | null
+          position: string | null
+          start_date: string | null
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          department?: string | null
+          email?: string | null
+          employee_id: string
+          id?: string
+          import_id?: string | null
+          name: string
+          notes?: string | null
+          phone?: string | null
+          position?: string | null
+          start_date?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          department?: string | null
+          email?: string | null
+          employee_id?: string
+          id?: string
+          import_id?: string | null
+          name?: string
+          notes?: string | null
+          phone?: string | null
+          position?: string | null
+          start_date?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       customer_profiles: {
         Row: {
           created_at: string | null
@@ -1697,6 +1748,51 @@ export type Database = {
           id?: string
           metadata?: Json | null
           reason?: string | null
+        }
+        Relationships: []
+      }
+      import_audit_logs: {
+        Row: {
+          created_at: string
+          error_details: Json | null
+          failed_imports: number
+          file_name: string
+          file_size: number | null
+          id: string
+          import_id: string
+          import_type: string
+          status: string
+          successful_imports: number
+          total_rows: number
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          error_details?: Json | null
+          failed_imports?: number
+          file_name: string
+          file_size?: number | null
+          id?: string
+          import_id: string
+          import_type: string
+          status?: string
+          successful_imports?: number
+          total_rows?: number
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          error_details?: Json | null
+          failed_imports?: number
+          file_name?: string
+          file_size?: number | null
+          id?: string
+          import_id?: string
+          import_type?: string
+          status?: string
+          successful_imports?: number
+          total_rows?: number
+          user_id?: string | null
         }
         Relationships: []
       }
