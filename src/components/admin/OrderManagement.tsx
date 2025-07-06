@@ -51,6 +51,7 @@ const OrderManagement = () => {
         <TabsContent value="onecard">
           <OneCardBalancePanel />
         </TabsContent>
+
       </Tabs>
     </div>
   );

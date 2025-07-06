@@ -106,19 +106,52 @@ const MNOIntegrationPanel = () => {
       return;
     }
 
+    // Automated validation checks
+    const amount = parseFloat(bulkOrderAmount);
+    const provider = providers.find(p => p.id === selectedProvider);
+    
+    if (amount <= 0) {
+      toast({
+        title: "Invalid Amount",
+        description: "Order amount must be greater than zero",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    if (provider && amount > provider.balance) {
+      toast({
+        title: "Insufficient Balance",
+        description: `Provider balance (R${provider.balance.toLocaleString()}) is insufficient for this order`,
+        variant: "destructive"
+      });
+      return;
+    }
+
+    if (amount > 100000) {
+      toast({
+        title: "Large Order Detected",
+        description: "Orders over R100,000 require additional verification",
+        variant: "destructive"
+      });
+      return;
+    }
+
     toast({
       title: "Processing Bulk Order",
-      description: `Placing bulk order for R${bulkOrderAmount} on ${selectedNetwork}...`
+      description: `Automated validation passed. Placing bulk order for R${bulkOrderAmount} on ${selectedNetwork}...`
     });
 
-    // Simulate API integration
+    // Simulate automated order processing with error reduction
     setTimeout(() => {
+      const orderRef = `ORD-${Date.now()}-${Math.random().toString(36).substr(2, 8).toUpperCase()}`;
+      
       toast({
-        title: "Bulk Order Placed",
-        description: `Successfully ordered R${bulkOrderAmount} inventory for ${selectedNetwork}`,
+        title: "Bulk Order Completed",
+        description: `✅ Order ${orderRef} placed successfully. R${bulkOrderAmount} credited to digital wallet.`,
       });
       
-      // Update provider balance
+      // Update provider balance and add to order history
       setProviders(prev => prev.map(p => 
         p.id === selectedProvider 
           ? { ...p, balance: p.balance - parseFloat(bulkOrderAmount) }
