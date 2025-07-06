@@ -153,7 +153,7 @@ const AdminControlCenter: React.FC<AdminControlCenterProps> = ({
   );
 
   return (
-    <div className="space-y-8 mobile-safe-bottom">
+    <div className="space-y-8 pb-20 overflow-y-visible">
       {/* Enhanced Header Section */}
       <div className="text-center space-y-4">
         <div className="flex items-center justify-center gap-3 mb-4">

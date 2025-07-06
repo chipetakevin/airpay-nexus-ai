@@ -161,7 +161,7 @@ const AdminPortal: React.FC<AdminPortalProps> = ({ onAuthSuccess }) => {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 pb-20">
       <div className="text-center">
         <h2 className="text-2xl font-bold mb-2">🛡️ Admin Control Center</h2>
         <p className="text-gray-600">Complete system administration and oversight</p>
