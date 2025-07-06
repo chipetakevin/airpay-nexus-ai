@@ -24,6 +24,7 @@ interface AdminPortalProps {
 const AdminPortal: React.FC<AdminPortalProps> = ({ onAuthSuccess }) => {
   const { toast } = useToast();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isCollapsed, setIsCollapsed] = useState(false);
   const [authCode, setAuthCode] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [autofillCount, setAutofillCount] = useState(0);
@@ -66,6 +67,7 @@ const AdminPortal: React.FC<AdminPortalProps> = ({ onAuthSuccess }) => {
     
     if (authCode.toUpperCase() === storedCode) {
       setIsAuthenticated(true);
+      setIsCollapsed(true); // Auto-collapse after successful authentication
       localStorage.setItem('adminAuthenticated', 'true');
       
       const adminCardNumber = 'ADM' + Math.random().toString(36).substr(2, 8).toUpperCase();
@@ -96,6 +98,20 @@ const AdminPortal: React.FC<AdminPortalProps> = ({ onAuthSuccess }) => {
         variant: "destructive"
       });
     }
+  };
+
+  const handleLogout = () => {
+    setIsAuthenticated(false);
+    setIsCollapsed(false);
+    setAuthCode('');
+    localStorage.removeItem('adminAuthenticated');
+    localStorage.removeItem('adminAuthCode');
+    localStorage.removeItem('adminProfile');
+    
+    toast({
+      title: "Logged Out",
+      description: "Admin session ended. Authentication process restarted.",
+    });
   };
 
   if (!isAuthenticated) {
@@ -160,69 +176,137 @@ const AdminPortal: React.FC<AdminPortalProps> = ({ onAuthSuccess }) => {
     );
   }
 
-  return (
-    <div className="space-y-6 pb-20">
-      <div className="text-center">
-        <h2 className="text-2xl font-bold mb-2">🛡️ Admin Control Center</h2>
-        <p className="text-gray-600">Complete system administration and oversight</p>
+  // Show collapsed admin indicator when authenticated but collapsed
+  if (isAuthenticated && isCollapsed) {
+    const adminData = JSON.parse(localStorage.getItem('adminProfile') || '{}');
+    return (
+      <div className="fixed top-4 right-4 z-50">
+        <Card className="border-green-200 bg-green-50 shadow-lg">
+          <CardContent className="p-4">
+            <div className="flex items-center gap-3">
+              <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
+              <div>
+                <p className="text-sm font-semibold text-green-800">
+                  🔑 Admin Authenticated
+                </p>
+                <p className="text-xs text-green-600">
+                  {adminData.firstName} • {adminData.cardType}
+                </p>
+              </div>
+              <div className="flex gap-2">
+                <Button 
+                  size="sm"
+                  variant="outline"
+                  className="h-8 text-xs bg-white hover:bg-gray-50"
+                  onClick={() => setIsCollapsed(false)}
+                >
+                  Expand
+                </Button>
+                <Button 
+                  size="sm"
+                  variant="outline"
+                  className="h-8 text-xs bg-white hover:bg-red-50 text-red-600 border-red-200"
+                  onClick={handleLogout}
+                >
+                  Logout
+                </Button>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
       </div>
+    );
+  }
 
-      <Tabs defaultValue="nerve-center" className="w-full">
-        <TabsList className="grid w-full grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-1 h-auto p-2 bg-muted/30">
-          <TabsTrigger value="nerve-center" className="text-xs sm:text-sm">Hub</TabsTrigger>
-          <TabsTrigger value="database-baas" className="text-xs sm:text-sm bg-gradient-to-r from-purple-100 to-indigo-100 text-purple-700 border border-purple-300 data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-600 data-[state=active]:to-indigo-600 data-[state=active]:text-white">Database</TabsTrigger>
-          <TabsTrigger value="security-monitor" className="text-xs sm:text-sm bg-gradient-to-r from-red-100 to-orange-100 text-red-700 border border-red-300 data-[state=active]:bg-gradient-to-r data-[state=active]:from-red-600 data-[state=active]:to-orange-600 data-[state=active]:text-white">Security</TabsTrigger>
-          <TabsTrigger value="permissions" className="text-xs sm:text-sm bg-gradient-to-r from-blue-100 to-cyan-100 text-blue-700 border border-blue-300 data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-600 data-[state=active]:to-cyan-600 data-[state=active]:text-white">Access</TabsTrigger>
-          <TabsTrigger value="balances" className="text-xs sm:text-sm">Balances</TabsTrigger>
-          <TabsTrigger value="dashboard" className="text-xs sm:text-sm">Dashboard</TabsTrigger>
-          <TabsTrigger value="revenue" className="text-xs sm:text-sm">Revenue</TabsTrigger>
-          <TabsTrigger value="networks" className="text-xs sm:text-sm">Networks</TabsTrigger>
-          <TabsTrigger value="orders" className="text-xs sm:text-sm">Orders</TabsTrigger>
-          <TabsTrigger value="versions" className="text-xs sm:text-sm">Versions</TabsTrigger>
-        </TabsList>
+  // Show full admin dashboard when authenticated and expanded
+  if (isAuthenticated && !isCollapsed) {
+    return (
+      <div className="space-y-6 pb-20">
+        {/* Admin header with collapse option */}
+        <div className="flex justify-between items-center">
+          <div className="text-center flex-1">
+            <h2 className="text-2xl font-bold mb-2">🛡️ Admin Control Center</h2>
+            <p className="text-gray-600">Complete system administration and oversight</p>
+          </div>
+          <div className="flex gap-2">
+            <Button 
+              size="sm"
+              variant="outline"
+              onClick={() => setIsCollapsed(true)}
+              className="text-xs"
+            >
+              Minimize
+            </Button>
+            <Button 
+              size="sm"
+              variant="outline"
+              onClick={handleLogout}
+              className="text-xs text-red-600 border-red-200 hover:bg-red-50"
+            >
+              Logout
+            </Button>
+          </div>
+        </div>
 
-        <TabsContent value="nerve-center" className="space-y-6">
-          <AddexHubNerveCenter />
-        </TabsContent>
+        <Tabs defaultValue="nerve-center" className="w-full">
+          <TabsList className="grid w-full grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-1 h-auto p-2 bg-muted/30">
+            <TabsTrigger value="nerve-center" className="text-xs sm:text-sm">Hub</TabsTrigger>
+            <TabsTrigger value="database-baas" className="text-xs sm:text-sm bg-gradient-to-r from-purple-100 to-indigo-100 text-purple-700 border border-purple-300 data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-600 data-[state=active]:to-indigo-600 data-[state=active]:text-white">Database</TabsTrigger>
+            <TabsTrigger value="security-monitor" className="text-xs sm:text-sm bg-gradient-to-r from-red-100 to-orange-100 text-red-700 border border-red-300 data-[state=active]:bg-gradient-to-r data-[state=active]:from-red-600 data-[state=active]:to-orange-600 data-[state=active]:text-white">Security</TabsTrigger>
+            <TabsTrigger value="permissions" className="text-xs sm:text-sm bg-gradient-to-r from-blue-100 to-cyan-100 text-blue-700 border border-blue-300 data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-600 data-[state=active]:to-cyan-600 data-[state=active]:text-white">Access</TabsTrigger>
+            <TabsTrigger value="balances" className="text-xs sm:text-sm">Balances</TabsTrigger>
+            <TabsTrigger value="dashboard" className="text-xs sm:text-sm">Dashboard</TabsTrigger>
+            <TabsTrigger value="revenue" className="text-xs sm:text-sm">Revenue</TabsTrigger>
+            <TabsTrigger value="networks" className="text-xs sm:text-sm">Networks</TabsTrigger>
+            <TabsTrigger value="orders" className="text-xs sm:text-sm">Orders</TabsTrigger>
+            <TabsTrigger value="versions" className="text-xs sm:text-sm">Versions</TabsTrigger>
+          </TabsList>
 
-        <TabsContent value="database-baas" className="space-y-6">
-          <DatabaseBaaSPanel />
-        </TabsContent>
+          <TabsContent value="nerve-center" className="space-y-6">
+            <AddexHubNerveCenter />
+          </TabsContent>
 
-        <TabsContent value="security-monitor" className="space-y-6">
-          <SuspiciousActivityMonitor />
-        </TabsContent>
+          <TabsContent value="database-baas" className="space-y-6">
+            <DatabaseBaaSPanel />
+          </TabsContent>
 
-        <TabsContent value="permissions" className="space-y-6">
-          <PermissionManager />
-        </TabsContent>
+          <TabsContent value="security-monitor" className="space-y-6">
+            <SuspiciousActivityMonitor />
+          </TabsContent>
 
-        <TabsContent value="balances" className="space-y-6">
-          <DashboardManager />
-        </TabsContent>
+          <TabsContent value="permissions" className="space-y-6">
+            <PermissionManager />
+          </TabsContent>
 
-        <TabsContent value="dashboard" className="space-y-6">
-          <AdminDashboard />
-        </TabsContent>
+          <TabsContent value="balances" className="space-y-6">
+            <DashboardManager />
+          </TabsContent>
 
-        <TabsContent value="revenue" className="space-y-6">
-          <RevenueReporting />
-        </TabsContent>
+          <TabsContent value="dashboard" className="space-y-6">
+            <AdminDashboard />
+          </TabsContent>
 
-        <TabsContent value="networks" className="space-y-6">
-          <NetworkRevenue />
-        </TabsContent>
+          <TabsContent value="revenue" className="space-y-6">
+            <RevenueReporting />
+          </TabsContent>
 
-        <TabsContent value="orders" className="space-y-6">
-          <OrderManagement />
-        </TabsContent>
+          <TabsContent value="networks" className="space-y-6">
+            <NetworkRevenue />
+          </TabsContent>
 
-        <TabsContent value="versions" className="space-y-6">
-          <VersionRestoration />
-        </TabsContent>
-      </Tabs>
-    </div>
-  );
+          <TabsContent value="orders" className="space-y-6">
+            <OrderManagement />
+          </TabsContent>
+
+          <TabsContent value="versions" className="space-y-6">
+            <VersionRestoration />
+          </TabsContent>
+        </Tabs>
+      </div>
+    );
+  }
+
+  return null;
 };
 
 export default AdminPortal;
