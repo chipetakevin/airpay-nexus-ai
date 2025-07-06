@@ -20,14 +20,28 @@ const OrderManagement = () => {
       </div>
 
       <Tabs defaultValue="integration" className="w-full">
-        <TabsList className="grid w-full grid-cols-7">
-          <TabsTrigger value="integration">MNO Integration</TabsTrigger>
-          <TabsTrigger value="processing">Real-Time Orders</TabsTrigger>
-          <TabsTrigger value="customers">Customer Management</TabsTrigger>
-          <TabsTrigger value="inventory">Inventory Control</TabsTrigger>
-          <TabsTrigger value="financial">Financial Analytics</TabsTrigger>
-          <TabsTrigger value="onecard">OneCard Balances</TabsTrigger>
-          <TabsTrigger value="security">Security Center</TabsTrigger>
+        <TabsList className="grid w-full grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7 gap-1 h-auto p-2">
+          <TabsTrigger value="integration" className="text-xs sm:text-sm px-2 py-2 h-auto whitespace-nowrap">
+            MNO Integration
+          </TabsTrigger>
+          <TabsTrigger value="processing" className="text-xs sm:text-sm px-2 py-2 h-auto whitespace-nowrap">
+            Real-Time Orders
+          </TabsTrigger>
+          <TabsTrigger value="customers" className="text-xs sm:text-sm px-2 py-2 h-auto whitespace-nowrap">
+            Customer Management
+          </TabsTrigger>
+          <TabsTrigger value="inventory" className="text-xs sm:text-sm px-2 py-2 h-auto whitespace-nowrap">
+            Inventory Control
+          </TabsTrigger>
+          <TabsTrigger value="financial" className="text-xs sm:text-sm px-2 py-2 h-auto whitespace-nowrap">
+            Financial Analytics
+          </TabsTrigger>
+          <TabsTrigger value="onecard" className="text-xs sm:text-sm px-2 py-2 h-auto whitespace-nowrap bg-gradient-to-r from-yellow-100 to-amber-100 text-amber-700 border border-amber-300 data-[state=active]:bg-gradient-to-r data-[state=active]:from-yellow-600 data-[state=active]:to-amber-600 data-[state=active]:text-white">
+            OneCard Balances
+          </TabsTrigger>
+          <TabsTrigger value="security" className="text-xs sm:text-sm px-2 py-2 h-auto whitespace-nowrap">
+            Security Center
+          </TabsTrigger>
         </TabsList>
 
         <TabsContent value="integration">
