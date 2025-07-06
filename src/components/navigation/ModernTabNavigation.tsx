@@ -9,6 +9,7 @@ interface TabItem {
   icon: string;
   description: string;
   color: string;
+  adminOnly?: boolean;
   isActive?: boolean;
   isAllowed?: boolean;
 }
@@ -88,9 +89,21 @@ const ModernTabNavigation = ({
             tabIndex={0}
             aria-label={`${tab.label} - ${tab.description}`}
           >
-            <div className="text-xl mb-1.5">{tab.icon}</div>
+            <div className="text-xl mb-1.5 flex items-center gap-1">
+              {tab.icon}
+              {tab.adminOnly && !isTabAllowed(tab.value) && (
+                <span className="text-xs">🔒</span>
+              )}
+            </div>
             <div className="text-center w-full max-w-full">
-              <div className="text-sm font-bold leading-tight truncate px-1 max-w-full overflow-hidden">{tab.label}</div>
+              <div className="text-sm font-bold leading-tight truncate px-1 max-w-full overflow-hidden flex items-center justify-center gap-1">
+                {tab.label}
+                {tab.adminOnly && isTabAllowed(tab.value) && (
+                  <Badge className="text-xs px-1 py-0 h-4 bg-yellow-100 text-yellow-800 border-yellow-200">
+                    ADMIN
+                  </Badge>
+                )}
+              </div>
               <div className="text-xs opacity-90 leading-tight mt-0.5 truncate px-1 max-w-full overflow-hidden">{tab.description}</div>
             </div>
             {activeTab === tab.value && (
@@ -122,9 +135,21 @@ const ModernTabNavigation = ({
             tabIndex={0}
             aria-label={`${tab.label} - ${tab.description}`}
           >
-            <div className="text-2xl mb-2">{tab.icon}</div>
+            <div className="text-2xl mb-2 flex items-center gap-1">
+              {tab.icon}
+              {tab.adminOnly && !isTabAllowed(tab.value) && (
+                <span className="text-sm">🔒</span>
+              )}
+            </div>
             <div className="text-center max-w-full">
-              <div className="text-sm font-bold leading-tight truncate max-w-full overflow-hidden">{tab.label}</div>
+              <div className="text-sm font-bold leading-tight truncate max-w-full overflow-hidden flex items-center justify-center gap-1">
+                {tab.label}
+                {tab.adminOnly && isTabAllowed(tab.value) && (
+                  <Badge className="text-xs px-1 py-0 h-4 bg-yellow-100 text-yellow-800 border-yellow-200">
+                    ADMIN
+                  </Badge>
+                )}
+              </div>
               <div className="text-sm opacity-85 leading-tight mt-1 truncate max-w-full overflow-hidden">{tab.description}</div>
             </div>
             {activeTab === tab.value && (
@@ -152,9 +177,21 @@ const ModernTabNavigation = ({
             `}
             onClick={() => handleTabClick(tab)}
           >
-            <div className="text-2xl mb-2">{tab.icon}</div>
+            <div className="text-2xl mb-2 flex items-center gap-1">
+              {tab.icon}
+              {tab.adminOnly && !isTabAllowed(tab.value) && (
+                <span className="text-sm">🔒</span>
+              )}
+            </div>
             <div className="text-center max-w-full">
-              <div className="text-sm font-bold leading-tight truncate max-w-full overflow-hidden">{tab.label}</div>
+              <div className="text-sm font-bold leading-tight truncate max-w-full overflow-hidden flex items-center justify-center gap-1">
+                {tab.label}
+                {tab.adminOnly && isTabAllowed(tab.value) && (
+                  <Badge className="text-xs px-1 py-0 h-4 bg-yellow-100 text-yellow-800 border-yellow-200">
+                    ADMIN
+                  </Badge>
+                )}
+              </div>
               <div className="text-xs opacity-75 leading-tight mt-1 truncate max-w-full overflow-hidden">{tab.description}</div>
             </div>
             {activeTab === tab.value && (

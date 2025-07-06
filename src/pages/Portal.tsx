@@ -95,7 +95,7 @@ const Portal = () => {
     navigate('?tab=deals', { replace: true });
   };
 
-  // Enhanced isTabAllowed function for seamless navigation
+  // Enhanced isTabAllowed function for seamless navigation with admin controls
   const isTabAllowed = (tabValue: string) => {
     try {
       // Always allow deals, registration, and vendor tabs for seamless navigation
@@ -104,11 +104,31 @@ const Portal = () => {
         return true;
       }
       
-      // Always allow admin registration tab
-      if (tabValue === 'admin-reg') return true;
-      
       const isAuthenticated = localStorage.getItem('userAuthenticated') === 'true';
       const storedCredentials = localStorage.getItem('userCredentials');
+      const adminData = localStorage.getItem('onecardAdmin');
+      
+      // Check if user is registered admin
+      const isRegisteredAdmin = storedCredentials && adminData ? 
+        (() => {
+          try {
+            const credentials = JSON.parse(storedCredentials);
+            return credentials.userType === 'admin' && credentials.password === 'Malawi@1976';
+          } catch {
+            return false;
+          }
+        })() : false;
+
+      // Admin-only tabs (Reports and Docs) require registered admin status
+      if (['unified-reports', 'documentation'].includes(tabValue)) {
+        console.log(`🔐 Admin-only tab ${tabValue}: ${isRegisteredAdmin ? 'ALLOWED' : 'DENIED'}`);
+        return isRegisteredAdmin;
+      }
+      
+      // Admin registration tab - only show to non-admins
+      if (tabValue === 'admin-reg') {
+        return !isRegisteredAdmin;
+      }
       
       if (!isAuthenticated) {
         return ['registration', 'vendor', 'admin-reg', 'deals'].includes(tabValue);
@@ -131,11 +151,10 @@ const Portal = () => {
           case 'deals':
             return true; // Available to all authenticated users
           case 'unified-reports':
-            return isUnified;
           case 'documentation':
-            return (currentUserType === 'admin' && isAdminAuthenticated) || isUnified;
+            return isRegisteredAdmin; // Only for registered admins
           case 'admin-reg':
-            return currentUserType === 'admin' || isUnified;
+            return !isRegisteredAdmin; // Only for non-admins
           case 'admin':
             return (currentUserType === 'admin' && isAdminAuthenticated) || isUnified;
           default:
@@ -150,7 +169,7 @@ const Portal = () => {
     }
   };
 
-  // Enhanced handleTabChange for seamless navigation
+  // Enhanced handleTabChange for seamless navigation with admin feedback
   const handleTabChange = (value: string) => {
     try {
       console.log(`🔄 Attempting to change to tab: ${value}`);
@@ -169,11 +188,21 @@ const Portal = () => {
         navigate(`?tab=${value}`, { replace: true });
       } else {
         console.log(`❌ Tab access denied: ${value}`);
-        toast({
-          title: "Tab Access",
-          description: "Vendor registration is always accessible. Complete registration to unlock more features!",
-          variant: "default"
-        });
+        
+        // Provide specific feedback for admin-only tabs
+        if (['unified-reports', 'documentation'].includes(value)) {
+          toast({
+            title: "Admin Access Required",
+            description: "Complete admin registration to access Reports and Documentation features.",
+            variant: "default"
+          });
+        } else {
+          toast({
+            title: "Tab Access",
+            description: "Registration required to unlock more features!",
+            variant: "default"
+          });
+        }
       }
     } catch (error) {
       console.error('Error changing tabs:', error);

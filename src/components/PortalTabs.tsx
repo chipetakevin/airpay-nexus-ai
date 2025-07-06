@@ -52,58 +52,85 @@ const PortalTabs = ({
 
   const { name: userName, isAuth: userAuthenticated } = getUserData();
 
-  // Enhanced tabs with consistent wording and proper mobile layout
-  const tabs = [
+  // Check if user is registered admin
+  const isRegisteredAdmin = () => {
+    try {
+      const credentials = localStorage.getItem('userCredentials');
+      const adminData = localStorage.getItem('onecardAdmin');
+      if (credentials && adminData) {
+        const parsedCredentials = JSON.parse(credentials);
+        return parsedCredentials.userType === 'admin' && parsedCredentials.password === 'Malawi@1976';
+      }
+      return false;
+    } catch {
+      return false;
+    }
+  };
+
+  // Enhanced tabs with admin access control
+  const baseTabs = [
     {
       value: 'deals',
       label: 'Smart Deals',
       icon: '🔥',
       description: 'Live Offers',
-      color: 'orange'
+      color: 'orange',
+      adminOnly: false
     },
     {
       value: 'onecard',
       label: 'OneCard',
       icon: '💳',
       description: 'My Card',
-      color: 'purple'
+      color: 'purple',
+      adminOnly: false
     },
     {
       value: 'registration',
       label: 'Customer',
       icon: '👤',
       description: 'Sign Up',
-      color: 'green'
+      color: 'green',
+      adminOnly: false
     },
     {
       value: 'vendor',
       label: 'Vendor',
       icon: '🏪',
       description: 'Partner',
-      color: 'blue'
+      color: 'blue',
+      adminOnly: false
     },
     {
       value: 'unified-reports',
       label: 'Reports',
       icon: '👑',
       description: 'Gold Access',
-      color: 'yellow'
+      color: 'yellow',
+      adminOnly: true
     },
     {
       value: 'documentation',
       label: 'Docs',
       icon: '📋',
       description: 'MVNE v3.0',
-      color: 'blue'
-    },
-    {
-      value: 'admin-reg',
-      label: 'Admin',
-      icon: '🔐',
-      description: 'Control',
-      color: 'gray'
+      color: 'blue',
+      adminOnly: true
     }
   ];
+
+  // Add admin registration tab only for non-admins
+  const tabs = [...baseTabs];
+  if (!isRegisteredAdmin()) {
+    tabs.push({
+      value: 'admin-reg',
+      label: 'Admin Reg',
+      icon: '🔐',
+      description: 'Register',
+      color: 'gray',
+      adminOnly: false
+    });
+  }
 
   if (showAdminTab) {
     tabs.push({
@@ -111,7 +138,8 @@ const PortalTabs = ({
       label: 'Control Center',
       icon: '⚙️',
       description: 'Admin Portal',
-      color: 'gray'
+      color: 'gray',
+      adminOnly: true
     });
   }
 
