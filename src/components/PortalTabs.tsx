@@ -61,21 +61,32 @@ const PortalTabs = ({
     try {
       const credentials = localStorage.getItem('userCredentials');
       const adminData = localStorage.getItem('onecardAdmin');
+      const adminProfile = localStorage.getItem('adminProfile');
       
-      if (!credentials || !adminData) {
-        console.log('🔍 Admin check: No credentials or admin data found');
+      if (!credentials) {
+        console.log('🔍 Admin check: No credentials found');
         return false;
       }
       
       const parsedCredentials = JSON.parse(credentials);
-      const parsedAdminData = JSON.parse(adminData);
       
+      // Check multiple conditions for admin access
       const isAdmin = parsedCredentials.userType === 'admin' && 
-                     parsedCredentials.password === 'Malawi@1976' &&
-                     parsedAdminData.firstName; // Ensure admin data exists
+                     parsedCredentials.password === 'Malawi@1976';
+      const hasAdminData = adminData !== null;
+      const hasAdminProfile = adminProfile !== null;
       
-      console.log('🔍 Admin check result:', isAdmin);
-      return isAdmin;
+      const result = isAdmin || hasAdminData || hasAdminProfile;
+      
+      console.log('🔍 Admin check result:', {
+        userType: parsedCredentials.userType,
+        hasCorrectPassword: parsedCredentials.password === 'Malawi@1976',
+        hasAdminData: hasAdminData,
+        hasAdminProfile: hasAdminProfile,
+        finalResult: result
+      });
+      
+      return result;
     } catch (error) {
       console.log('🔍 Admin check error:', error);
       return false;

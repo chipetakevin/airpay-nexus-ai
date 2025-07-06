@@ -77,14 +77,28 @@ const Portal = () => {
       const isAuthenticated = localStorage.getItem('userAuthenticated') === 'true';
       const storedCredentials = localStorage.getItem('userCredentials');
       const adminProfile = localStorage.getItem('adminProfile');
+      const adminData = localStorage.getItem('onecardAdmin');
+      
+      console.log('🔍 Checking admin status:', { 
+        isAuthenticated, 
+        hasCredentials: !!storedCredentials, 
+        hasAdminProfile: !!adminProfile,
+        hasAdminData: !!adminData 
+      });
       
       if (isAuthenticated && storedCredentials) {
         const credentials = JSON.parse(storedCredentials);
-        // Check if user is admin OR has completed admin authentication
-        if (credentials.userType === 'admin' || credentials.password === 'Malawi@1976' || adminProfile) {
+        
+        // Check multiple conditions for admin access
+        const isAdminUser = credentials.userType === 'admin' || credentials.password === 'Malawi@1976';
+        const hasAdminAuth = adminProfile !== null || adminData !== null;
+        
+        if (isAdminUser || hasAdminAuth) {
           setShowAdminTab(true);
           setIsAdminAuthenticated(true);
           console.log('✅ Admin access granted - showing Control Center tab');
+        } else {
+          console.log('❌ Admin access denied');
         }
       }
     } catch (error) {
@@ -162,10 +176,19 @@ const Portal = () => {
           case 'admin':
             // Allow admin tab if user is admin type, has unified access, OR has completed admin authentication
             const adminProfile = localStorage.getItem('adminProfile');
+            const adminAuthenticated = localStorage.getItem('adminAuthenticated') === 'true';
             const hasAdminAccess = (currentUserType === 'admin' && isAdminAuthenticated) || 
                                  isUnified || 
-                                 adminProfile !== null;
-            console.log(`🔐 Admin tab access: ${hasAdminAccess ? 'ALLOWED' : 'DENIED'} (userType: ${currentUserType}, isAdminAuth: ${isAdminAuthenticated}, hasProfile: ${!!adminProfile})`);
+                                 adminProfile !== null ||
+                                 adminAuthenticated;
+            console.log(`🔐 Control Center tab access check:`, {
+              currentUserType,
+              isAdminAuthenticated,
+              isUnified,
+              hasAdminProfile: !!adminProfile,
+              adminAuthenticated,
+              finalResult: hasAdminAccess
+            });
             return hasAdminAccess;
           default:
             return false;
