@@ -63,6 +63,13 @@ const AddexPayDashboard = () => {
   const [showBankingModal, setShowBankingModal] = useState(false);
   const [showSARSPaymentModal, setShowSARSPaymentModal] = useState(false);
   const [showReportsModal, setShowReportsModal] = useState(false);
+  const [showAddContractorModal, setShowAddContractorModal] = useState(false);
+  const [showImportModal, setShowImportModal] = useState(false);
+  const [showExportModal, setShowExportModal] = useState(false);
+  const [importFile, setImportFile] = useState(null);
+  const [importData, setImportData] = useState([]);
+  const [importErrors, setImportErrors] = useState([]);
+  const [showImportPreview, setShowImportPreview] = useState(false);
 
   const payrollStats = {
     totalEmployees: 1247,
@@ -361,7 +368,203 @@ const AddexPayDashboard = () => {
     }
   ];
 
-  // Contract Management Component
+  // Enhanced Contractor Management with Import/Export functionality
+  const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    setImportFile(file);
+    const reader = new FileReader();
+    
+    reader.onload = (e) => {
+      try {
+        const text = e.target?.result as string;
+        if (!text) return;
+        
+        const lines = text.split('\n').filter(line => line.trim());
+        
+        if (lines.length < 2) {
+          setImportErrors(['File must contain at least header and one data row']);
+          return;
+        }
+
+        const headers = lines[0].split(',').map(h => h.trim().replace(/"/g, ''));
+        const expectedHeaders = ['Name', 'Employee ID', 'Position', 'Department', 'Status'];
+        
+        // Validate headers
+        const missingHeaders = expectedHeaders.filter(h => !headers.includes(h));
+        if (missingHeaders.length > 0) {
+          setImportErrors([`Missing required columns: ${missingHeaders.join(', ')}`]);
+          return;
+        }
+
+        const data = lines.slice(1).map((line, index) => {
+          const values = line.split(',').map(v => v.trim().replace(/"/g, ''));
+          const row: any = {};
+          headers.forEach((header, i) => {
+            row[header] = values[i] || '';
+          });
+          row.rowIndex = index + 2; // +2 for 1-based indexing and header row
+          return row;
+        });
+
+        // Validate data
+        const errors: string[] = [];
+        data.forEach((row) => {
+          if (!row.Name) errors.push(`Row ${row.rowIndex}: Name is required`);
+          if (!row['Employee ID']) errors.push(`Row ${row.rowIndex}: Employee ID is required`);
+          if (!row.Status || !['Active', 'Inactive'].includes(row.Status)) {
+            errors.push(`Row ${row.rowIndex}: Status must be 'Active' or 'Inactive'`);
+          }
+        });
+
+        setImportErrors(errors);
+        setImportData(data);
+        setShowImportPreview(true);
+      } catch (error) {
+        setImportErrors(['Error parsing file. Please ensure it is a valid CSV file.']);
+      }
+    };
+    
+    reader.readAsText(file);
+  };
+
+  const processImport = () => {
+    if (importErrors.length > 0) return;
+    
+    // In a real application, this would save to database
+    console.log('Importing contractors:', importData);
+    
+    // Reset import state
+    setImportFile(null);
+    setImportData([]);
+    setImportErrors([]);
+    setShowImportPreview(false);
+    setShowImportModal(false);
+    
+    // Show success message (in real app, use toast)
+    alert(`Successfully imported ${importData.length} contractors`);
+  };
+
+  const handleExport = (format = 'csv') => {
+    const contractors = [
+      { name: 'John Doe', employeeId: 'EMP001', position: 'Senior Developer', department: 'IT', status: 'Active' },
+      { name: 'Jane Smith', employeeId: 'EMP002', position: 'Digital Marketer', department: 'Marketing', status: 'Active' },
+      { name: 'Mike Johnson', employeeId: 'EMP003', position: 'Project Manager', department: 'Operations', status: 'Active' }
+    ];
+
+    if (format === 'csv') {
+      const headers = 'Name,Employee ID,Position,Department,Status\n';
+      const csvContent = contractors.map(c => 
+        `"${c.name}","${c.employeeId}","${c.position}","${c.department}","${c.status}"`
+      ).join('\n');
+      
+      const blob = new Blob([headers + csvContent], { type: 'text/csv' });
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `contractors_${new Date().toISOString().split('T')[0]}.csv`;
+      a.click();
+      window.URL.revokeObjectURL(url);
+    } else if (format === 'json') {
+      const jsonContent = JSON.stringify(contractors, null, 2);
+      const blob = new Blob([jsonContent], { type: 'application/json' });
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `contractors_${new Date().toISOString().split('T')[0]}.json`;
+      a.click();
+      window.URL.revokeObjectURL(url);
+    }
+    
+    setShowExportModal(false);
+  };
+
+  const downloadTemplate = () => {
+    const template = 'Name,Employee ID,Position,Department,Status\n"John Doe","EMP001","Senior Developer","IT","Active"\n"Jane Smith","EMP002","Digital Marketer","Marketing","Active"';
+    const blob = new Blob([template], { type: 'text/csv' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'contractor_import_template.csv';
+    a.click();
+    window.URL.revokeObjectURL(url);
+  };
+
+  // Enhanced Contractor Management Component
+  const EnhancedContractorManagementContent = () => (
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <h3 className="text-lg font-semibold">Contractor Management</h3>
+        <div className="flex gap-2">
+          <Button onClick={() => setShowAddContractorModal(true)} className="bg-blue-600 hover:bg-blue-700">
+            <Users className="w-4 h-4 mr-2" />
+            Add New
+          </Button>
+          <Button variant="outline" onClick={() => setShowImportModal(true)}>
+            <Upload className="w-4 h-4 mr-2" />
+            Import
+          </Button>
+          <Button variant="outline" onClick={() => setShowExportModal(true)}>
+            <Download className="w-4 h-4 mr-2" />
+            Export
+          </Button>
+        </div>
+      </div>
+
+      <div className="space-y-4">
+        {[1, 2, 3].map((i) => (
+          <div key={i} className="flex items-center justify-between p-4 border rounded-lg bg-white">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center">
+                <Users className="w-5 h-5 text-gray-600" />
+              </div>
+              <div>
+                <div className="font-medium">Employee {i}</div>
+                <div className="text-sm text-muted-foreground">ID: EMP00{i}</div>
+              </div>
+            </div>
+            <div className="flex items-center gap-3">
+              <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200">
+                Active
+              </Badge>
+              <Button size="sm" variant="outline">
+                <Eye className="w-4 h-4 mr-1" />
+                View
+              </Button>
+              <Button size="sm" variant="outline">
+                <Edit className="w-4 h-4 mr-1" />
+                Edit
+              </Button>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Shield className="w-5 h-5" />
+            Compliance Status
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-3">
+          <div className="flex items-center justify-between">
+            <span className="text-sm">SARS Compliance</span>
+            <CheckCircle className="w-5 h-5 text-green-500" />
+          </div>
+          <div className="flex items-center justify-between">
+            <span className="text-sm">Labour Law</span>
+            <CheckCircle className="w-5 h-5 text-green-500" />
+          </div>
+          <div className="flex items-center justify-between">
+            <span className="text-sm">POPIA Compliance</span>
+            <CheckCircle className="w-5 h-5 text-green-500" />
+          </div>
+        </CardContent>
+      </Card>
+    </div>
+  );
   const ContractManagementContent = () => (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
@@ -1273,7 +1476,7 @@ const AddexPayDashboard = () => {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             <div className="lg:col-span-2 space-y-6">
               <PayrollDashboardContent userType="contractor" />
-              <EmployeeManagementContent userType="contractor" />
+              <EnhancedContractorManagementContent />
             </div>
             <div className="space-y-6">
               <ComplianceContent userType="contractor" />
@@ -1384,6 +1587,255 @@ const AddexPayDashboard = () => {
           <PayrollDocumentation />
         </TabsContent>
       </Tabs>
+
+      {/* Add New Contractor Modal */}
+      <Dialog open={showAddContractorModal} onOpenChange={setShowAddContractorModal}>
+        <DialogContent className="max-w-2xl">
+          <DialogHeader>
+            <DialogTitle>Add New Contractor</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="text-sm font-medium">Full Name</label>
+                <Input placeholder="Enter full name" />
+              </div>
+              <div>
+                <label className="text-sm font-medium">Employee ID</label>
+                <Input placeholder="Enter employee ID" />
+              </div>
+              <div>
+                <label className="text-sm font-medium">Position</label>
+                <Input placeholder="Enter position" />
+              </div>
+              <div>
+                <label className="text-sm font-medium">Department</label>
+                <Select>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select department" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="it">IT</SelectItem>
+                    <SelectItem value="marketing">Marketing</SelectItem>
+                    <SelectItem value="operations">Operations</SelectItem>
+                    <SelectItem value="finance">Finance</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div>
+                <label className="text-sm font-medium">Phone Number</label>
+                <Input placeholder="Enter phone number" />
+              </div>
+              <div>
+                <label className="text-sm font-medium">Email</label>
+                <Input type="email" placeholder="Enter email address" />
+              </div>
+              <div>
+                <label className="text-sm font-medium">Start Date</label>
+                <Input type="date" />
+              </div>
+              <div>
+                <label className="text-sm font-medium">Status</label>
+                <Select>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select status" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="active">Active</SelectItem>
+                    <SelectItem value="inactive">Inactive</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+            <div>
+              <label className="text-sm font-medium">Notes</label>
+              <Textarea placeholder="Additional notes..." rows={3} />
+            </div>
+            <div className="flex gap-2">
+              <Button className="flex-1">
+                <Users className="w-4 h-4 mr-2" />
+                Add Contractor
+              </Button>
+              <Button variant="outline" onClick={() => setShowAddContractorModal(false)}>
+                Cancel
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Import Modal */}
+      <Dialog open={showImportModal} onOpenChange={setShowImportModal}>
+        <DialogContent className="max-w-4xl">
+          <DialogHeader>
+            <DialogTitle>Import Contractors</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            {!showImportPreview ? (
+              <>
+                <Alert>
+                  <AlertCircle className="h-4 w-4" />
+                  <AlertDescription>
+                    Upload a CSV file with contractor data. The file should include columns: Name, Employee ID, Position, Department, Status.
+                  </AlertDescription>
+                </Alert>
+                
+                <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center">
+                  <Upload className="w-12 h-12 mx-auto text-gray-400 mb-4" />
+                  <div className="space-y-2">
+                    <p className="text-lg font-medium">Drop your CSV file here</p>
+                    <p className="text-sm text-gray-500">or click to browse</p>
+                    <input
+                      type="file"
+                      accept=".csv,.xlsx,.xls"
+                      onChange={handleFileUpload}
+                      className="hidden"
+                      id="file-upload"
+                    />
+                    <label htmlFor="file-upload" className="cursor-pointer">
+                      <Button asChild>
+                        <span>Choose File</span>
+                      </Button>
+                    </label>
+                  </div>
+                </div>
+
+                <div className="flex justify-between">
+                  <Button variant="outline" onClick={downloadTemplate}>
+                    <Download className="w-4 h-4 mr-2" />
+                    Download Template
+                  </Button>
+                  <Button variant="outline" onClick={() => setShowImportModal(false)}>
+                    Cancel
+                  </Button>
+                </div>
+              </>
+            ) : (
+              <>
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <h4 className="font-medium">Import Preview</h4>
+                    <Badge variant={importErrors.length > 0 ? 'destructive' : 'default'}>
+                      {importData.length} rows • {importErrors.length} errors
+                    </Badge>
+                  </div>
+                  
+                  {importErrors.length > 0 && (
+                    <Alert variant="destructive">
+                      <AlertTriangle className="h-4 w-4" />
+                      <AlertDescription>
+                        <div className="space-y-1">
+                          <p className="font-medium">Please fix the following errors:</p>
+                          <ul className="list-disc list-inside text-sm">
+                            {importErrors.slice(0, 5).map((error, i) => (
+                              <li key={i}>{error}</li>
+                            ))}
+                            {importErrors.length > 5 && (
+                              <li>...and {importErrors.length - 5} more errors</li>
+                            )}
+                          </ul>
+                        </div>
+                      </AlertDescription>
+                    </Alert>
+                  )}
+
+                  <div className="max-h-64 overflow-auto border rounded">
+                    <table className="w-full text-sm">
+                      <thead className="bg-gray-50 sticky top-0">
+                        <tr>
+                          <th className="p-2 text-left">Name</th>
+                          <th className="p-2 text-left">Employee ID</th>
+                          <th className="p-2 text-left">Position</th>
+                          <th className="p-2 text-left">Department</th>
+                          <th className="p-2 text-left">Status</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {importData.slice(0, 10).map((row, i) => (
+                          <tr key={i} className="border-t">
+                            <td className="p-2">{row.Name}</td>
+                            <td className="p-2">{row['Employee ID']}</td>
+                            <td className="p-2">{row.Position}</td>
+                            <td className="p-2">{row.Department}</td>
+                            <td className="p-2">{row.Status}</td>
+                          </tr>
+                        ))}
+                        {importData.length > 10 && (
+                          <tr>
+                            <td colSpan={5} className="p-2 text-center text-gray-500">
+                              ...and {importData.length - 10} more rows
+                            </td>
+                          </tr>
+                        )}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+
+                <div className="flex gap-2">
+                  <Button 
+                    onClick={processImport} 
+                    disabled={importErrors.length > 0}
+                    className="flex-1"
+                  >
+                    <Upload className="w-4 h-4 mr-2" />
+                    Import {importData.length} Contractors
+                  </Button>
+                  <Button variant="outline" onClick={() => {
+                    setShowImportPreview(false);
+                    setImportData([]);
+                    setImportErrors([]);
+                  }}>
+                    Back
+                  </Button>
+                  <Button variant="outline" onClick={() => setShowImportModal(false)}>
+                    Cancel
+                  </Button>
+                </div>
+              </>
+            )}
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Export Modal */}
+      <Dialog open={showExportModal} onOpenChange={setShowExportModal}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle>Export Contractors</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div>
+              <label className="text-sm font-medium mb-2 block">Export Format</label>
+              <div className="grid grid-cols-2 gap-2">
+                <Button variant="outline" onClick={() => handleExport('csv')} className="flex-col h-auto p-4">
+                  <FileText className="w-6 h-6 mb-2" />
+                  <span>CSV File</span>
+                  <span className="text-xs text-gray-500">Spreadsheet compatible</span>
+                </Button>
+                <Button variant="outline" onClick={() => handleExport('json')} className="flex-col h-auto p-4">
+                  <Database className="w-6 h-6 mb-2" />
+                  <span>JSON File</span>
+                  <span className="text-xs text-gray-500">Developer friendly</span>
+                </Button>
+              </div>
+            </div>
+            
+            <Alert>
+              <CheckCircle className="h-4 w-4" />
+              <AlertDescription>
+                Export will include all contractor records with their current status and details.
+              </AlertDescription>
+            </Alert>
+
+            <div className="flex gap-2">
+              <Button variant="outline" onClick={() => setShowExportModal(false)} className="flex-1">
+                Cancel
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
 
       {/* Contract Upload Modal */}
       <Dialog open={showContractUpload} onOpenChange={setShowContractUpload}>
