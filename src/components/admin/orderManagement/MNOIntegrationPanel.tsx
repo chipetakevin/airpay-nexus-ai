@@ -74,6 +74,7 @@ const MNOIntegrationPanel = () => {
   const [selectedProvider, setSelectedProvider] = useState<string>('');
   const [bulkOrderAmount, setBulkOrderAmount] = useState<string>('');
   const [selectedNetwork, setSelectedNetwork] = useState<string>('');
+  const [storageLocation, setStorageLocation] = useState<string>('');
 
   const handleSyncProvider = async (providerId: string) => {
     toast({
@@ -97,10 +98,10 @@ const MNOIntegrationPanel = () => {
   };
 
   const handleBulkOrder = async () => {
-    if (!selectedProvider || !bulkOrderAmount || !selectedNetwork) {
+    if (!selectedProvider || !bulkOrderAmount || !selectedNetwork || !storageLocation) {
       toast({
         title: "Missing Information",
-        description: "Please select provider, network, and enter amount",
+        description: "Please select provider, network, storage location, and enter amount",
         variant: "destructive"
       });
       return;
@@ -146,9 +147,15 @@ const MNOIntegrationPanel = () => {
     setTimeout(() => {
       const orderRef = `ORD-${Date.now()}-${Math.random().toString(36).substr(2, 8).toUpperCase()}`;
       
+      const storageDescription = storageLocation === 'onecard' 
+        ? 'OneCard Digital Wallet' 
+        : storageLocation === 'revenue' 
+        ? 'Revenue Management System' 
+        : 'Both Systems (Synchronized)';
+      
       toast({
         title: "Bulk Order Completed",
-        description: `✅ Order ${orderRef} placed successfully. R${bulkOrderAmount} credited to digital wallet.`,
+        description: `✅ Order ${orderRef} placed successfully. R${bulkOrderAmount} credited to ${storageDescription}.`,
       });
       
       // Update provider balance and add to order history
@@ -159,6 +166,7 @@ const MNOIntegrationPanel = () => {
       ));
       
       setBulkOrderAmount('');
+      setStorageLocation('');
     }, 3000);
   };
 
@@ -286,7 +294,7 @@ const MNOIntegrationPanel = () => {
               <p className="text-muted-foreground">Select provider, network, and amount for bulk airtime/data purchase</p>
             </CardHeader>
             <CardContent className="space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 <div className="space-y-2">
                   <Label className="text-base font-semibold">Provider</Label>
                   <Select value={selectedProvider} onValueChange={setSelectedProvider}>
@@ -317,6 +325,33 @@ const MNOIntegrationPanel = () => {
                     </SelectContent>
                   </Select>
                 </div>
+
+                <div className="space-y-2">
+                  <Label className="text-base font-semibold">Storage Location</Label>
+                  <Select value={storageLocation} onValueChange={setStorageLocation}>
+                    <SelectTrigger className="h-12 text-base">
+                      <SelectValue placeholder="Select storage option" />
+                    </SelectTrigger>
+                    <SelectContent className="z-50 bg-background">
+                      <SelectItem value="onecard" className="text-base">
+                        OneCard Digital Wallet
+                      </SelectItem>
+                      <SelectItem value="revenue" className="text-base">
+                        Revenue Management
+                      </SelectItem>
+                      <SelectItem value="both" className="text-base">
+                        Both Systems
+                      </SelectItem>
+                    </SelectContent>
+                  </Select>
+                  {storageLocation && (
+                    <p className="text-xs text-muted-foreground mt-1">
+                      {storageLocation === 'onecard' && "Purchases stored in OneCard wallet for cashback rewards"}
+                      {storageLocation === 'revenue' && "Purchases managed in revenue system for detailed reporting"}
+                      {storageLocation === 'both' && "Purchases synchronized across both systems"}
+                    </p>
+                  )}
+                </div>
                 
                 <div className="space-y-2">
                   <Label className="text-base font-semibold">Amount</Label>
@@ -333,7 +368,7 @@ const MNOIntegrationPanel = () => {
               <Button 
                 onClick={handleBulkOrder} 
                 className="w-full h-12 text-lg font-semibold bg-primary hover:bg-primary/90"
-                disabled={!selectedProvider || !selectedNetwork || !bulkOrderAmount}
+                disabled={!selectedProvider || !selectedNetwork || !bulkOrderAmount || !storageLocation}
               >
                 Place Bulk Order
               </Button>
