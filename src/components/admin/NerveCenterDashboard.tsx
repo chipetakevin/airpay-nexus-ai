@@ -47,11 +47,11 @@ const NerveCenterDashboard = () => {
     {
       id: 'addex-hub-baas',
       label: 'Addex-Hub (BaaS)',
-      icon: <Crown className="w-4 h-4" />,
+      icon: <img src="/lovable-uploads/788fddcb-574c-4f1d-9c73-54cc003a95d1.png" alt="Divine Mobile" className="w-4 h-4" />,
       color: 'blue',
       count: 8,
       items: [
-        { name: 'Addex-Hub (BaaS) Platform', desc: 'AI-Driven MVNX', icon: <Crown className="w-5 h-5" />, status: 'active' },
+        { name: 'Addex-Hub (BaaS) Platform', desc: 'AI-Driven MVNX', icon: <img src="/lovable-uploads/788fddcb-574c-4f1d-9c73-54cc003a95d1.png" alt="Divine Mobile" className="w-5 h-5" />, status: 'active' },
         { name: 'Cellular Services', desc: 'GSM Core & Bulk', icon: <Phone className="w-5 h-5" />, status: 'active' },
         { name: 'BSS/OSS Suite', desc: 'CRM & Billing', icon: <Database className="w-5 h-5" />, status: 'active' },
         { name: 'API Gateway', desc: 'Integration Hub', icon: <Globe className="w-5 h-5" />, status: 'active' },
@@ -204,7 +204,7 @@ const NerveCenterDashboard = () => {
         <div className="relative z-10">
           <div className="flex items-center gap-4 mb-4">
             <div className="p-3 bg-white/20 rounded-xl backdrop-blur-sm">
-              <Crown className="w-8 h-8 text-yellow-300" />
+              <img src="/lovable-uploads/788fddcb-574c-4f1d-9c73-54cc003a95d1.png" alt="Divine Mobile" className="w-8 h-8" />
             </div>
             <div>
               <h1 className="text-2xl sm:text-3xl font-bold mb-2">The Nerve Center</h1>

@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Shield, User, Store, Crown, LogOut, CheckCircle, ChevronDown, ChevronUp, Lock } from 'lucide-react';
+import { Shield, User, Store, LogOut, CheckCircle, ChevronDown, ChevronUp, Lock } from 'lucide-react';
 import { usePersistentAuth } from '@/components/auth/PersistentAuthProvider';
 import { useToast } from '@/hooks/use-toast';
 
@@ -82,7 +82,7 @@ const PermanentAuthStatus = () => {
               {currentUser.isUnifiedProfile && (
                 <div className="bg-gradient-to-r from-orange-100/80 to-yellow-100/80 rounded-lg p-2">
                   <div className="flex items-center gap-1 mb-1">
-                    <Crown className="w-3 h-3 text-orange-600" />
+                    <img src="/lovable-uploads/788fddcb-574c-4f1d-9c73-54cc003a95d1.png" alt="Divine Mobile" className="w-3 h-3" />
                     <span className="text-xs font-medium text-orange-800">Unified Access</span>
                   </div>
                   <div className="text-xs text-orange-700">
@@ -123,7 +123,7 @@ const PermanentAuthStatus = () => {
                   </Badge>
                   {currentUser.isUnifiedProfile && (
                     <Badge className="bg-orange-500 text-white text-xs px-1 py-0 h-5 flex items-center">
-                      <Crown className="w-2 h-2" />
+                      <img src="/lovable-uploads/788fddcb-574c-4f1d-9c73-54cc003a95d1.png" alt="Divine Mobile" className="w-2 h-2" />
                     </Badge>
                   )}
                 </div>

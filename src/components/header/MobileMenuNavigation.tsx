@@ -2,7 +2,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { 
-  Crown, Zap, Brain, Scan, FileCheck, Flame, Database, Sparkles, Globe
+  Zap, Brain, Scan, FileCheck, Flame, Database, Sparkles, Globe
 } from 'lucide-react';
 
 interface MobileMenuNavigationProps {
@@ -14,7 +14,7 @@ const MobileMenuNavigation = ({ toggleMenu }: MobileMenuNavigationProps) => {
     <div className="space-y-0">
       {/* Main Portal Access */}
       <Link to="/portal" className="flex items-center gap-2 p-1.5 rounded-md hover:bg-blue-50 active:bg-blue-100 transition-all duration-200 min-h-[32px] touch-manipulation" onClick={toggleMenu}>
-        <Crown className="w-3 h-3 text-blue-600 flex-shrink-0" />
+        <img src="/lovable-uploads/788fddcb-574c-4f1d-9c73-54cc003a95d1.png" alt="Divine Mobile" className="w-3 h-3 flex-shrink-0" />
         <span className="font-medium text-xs">Portal Dashboard</span>
       </Link>
 

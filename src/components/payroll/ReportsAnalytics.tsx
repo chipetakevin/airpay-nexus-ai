@@ -9,8 +9,7 @@ import {
   TrendingUp, 
   BarChart3,
   PieChart,
-  Eye,
-  Crown
+  Eye
 } from 'lucide-react';
 
 const ReportsAnalytics = () => {
@@ -85,7 +84,7 @@ const ReportsAnalytics = () => {
           <p className="text-gray-600 text-sm">Generate comprehensive payroll reports and insights</p>
         </div>
         <Button className="bg-purple-600 hover:bg-purple-700">
-          <Crown className="w-4 h-4 mr-2" />
+          <img src="/lovable-uploads/788fddcb-574c-4f1d-9c73-54cc003a95d1.png" alt="Divine Mobile" className="w-4 h-4 mr-2" />
           Generate Master Report
         </Button>
       </div>
@@ -208,17 +207,17 @@ const ReportsAnalytics = () => {
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="text-center py-8">
-            <PieChart className="w-16 h-16 mx-auto mb-4 text-gray-300" />
-            <h4 className="font-semibold text-gray-900 mb-2">Build Custom Reports</h4>
-            <p className="text-gray-600 text-sm mb-4">
-              Create personalized reports with drag-and-drop components, custom filters, and branded templates.
-            </p>
-            <Button className="bg-blue-600 hover:bg-blue-700">
-              <Crown className="w-4 h-4 mr-2" />
-              Launch Report Builder
-            </Button>
-          </div>
+            <div className="text-center py-8">
+              <PieChart className="w-16 h-16 mx-auto mb-4 text-gray-300" />
+              <h4 className="font-semibold text-gray-900 mb-2">Build Custom Reports</h4>
+              <p className="text-gray-600 text-sm mb-4">
+                Create personalized reports with drag-and-drop components, custom filters, and branded templates.
+              </p>
+              <Button className="bg-blue-600 hover:bg-blue-700">
+                <img src="/lovable-uploads/788fddcb-574c-4f1d-9c73-54cc003a95d1.png" alt="Divine Mobile" className="w-4 h-4 mr-2" />
+                Launch Report Builder
+              </Button>
+            </div>
         </CardContent>
       </Card>
     </div>

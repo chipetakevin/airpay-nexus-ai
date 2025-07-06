@@ -2,7 +2,7 @@ import jsPDF from 'jspdf';
 import { Customer, Transaction } from '../types/admin';
 import { formatCurrency } from './adminUtils';
 
-// Enhanced PDF Generator with modern design and consistent crown logo branding
+// Enhanced PDF Generator with modern design and consistent Divine Mobile logo branding
 export class EnhancedPDFGenerator {
   private doc: jsPDF;
   private pageWidth: number;
@@ -19,25 +19,26 @@ export class EnhancedPDFGenerator {
     this.pageHeight = this.doc.internal.pageSize.getHeight();
   }
 
-  // Add consistent Divine Mobile crown logo across all reports
+  // Add consistent Divine Mobile logo across all reports
   private addDivineMobileLogo(x: number = 20, y: number = 15, width: number = 50, height: number = 16) {
-    // Create the Divine Mobile logo background with crown
+    // Create the Divine Mobile logo background
     this.doc.setFillColor(79, 70, 229); // Purple gradient
     this.doc.roundedRect(x, y, width, height, 4, 4, 'F');
     
-    // Add crown icon representation
-    this.doc.setFillColor(255, 255, 255);
-    // Crown base
-    this.doc.rect(x + 4, y + 10, 12, 4, 'F');
-    // Crown points
-    this.doc.triangle(x + 6, y + 6, x + 8, y + 10, x + 10, y + 6, 'F');
-    this.doc.triangle(x + 8, y + 4, x + 10, y + 8, x + 12, y + 4, 'F');
-    this.doc.triangle(x + 10, y + 6, x + 12, y + 10, x + 14, y + 6, 'F');
-    // Crown jewels
-    this.doc.setFillColor(255, 215, 0); // Gold
-    this.doc.circle(x + 9, y + 8, 0.5, 'F');
-    this.doc.circle(x + 11, y + 6, 0.5, 'F');
-    this.doc.circle(x + 13, y + 8, 0.5, 'F');
+    // Add Divine Mobile logo image
+    try {
+      this.doc.addImage('/lovable-uploads/788fddcb-574c-4f1d-9c73-54cc003a95d1.png', 'PNG', x + 4, y + 3, 10, 10);
+    } catch (error) {
+      console.warn('Divine Mobile logo failed to load, using fallback');
+      // Fallback mobile phone icon representation
+      this.doc.setFillColor(255, 255, 255);
+      this.doc.roundedRect(x + 4, y + 3, 10, 10, 2, 2, 'F');
+      this.doc.setFillColor(79, 70, 229);
+      this.doc.roundedRect(x + 5, y + 4, 8, 8, 1, 1, 'F');
+      this.doc.setFillColor(255, 255, 255);
+      this.doc.circle(x + 9, y + 6, 0.5, 'F');
+      this.doc.rect(x + 6, y + 7, 6, 4, 'F');
+    }
     
     // Add "Divine Mobile" text
     this.doc.setTextColor(255, 255, 255);
@@ -51,51 +52,53 @@ export class EnhancedPDFGenerator {
     this.doc.setTextColor(31, 41, 55);
   }
 
-  // Add crown watermark
-  private addCrownWatermark() {
+  // Add Divine Mobile watermark
+  private addDivineMobileWatermark() {
     this.doc.saveGraphicsState();
     this.doc.setGState(this.doc.GState({ opacity: 0.1 }));
     this.doc.setFillColor(79, 70, 229);
     
-    // Large crown in center
+    // Large Divine Mobile logo in center
     const centerX = this.pageWidth / 2;
     const centerY = this.pageHeight / 2;
     
-    // Crown base
-    this.doc.rect(centerX - 20, centerY + 10, 40, 10, 'F');
-    // Crown points
-    this.doc.triangle(centerX - 15, centerY - 10, centerX - 5, centerY + 10, centerX + 5, centerY - 10, 'F');
-    this.doc.triangle(centerX - 5, centerY - 15, centerX + 5, centerY + 5, centerX + 15, centerY - 15, 'F');
-    this.doc.triangle(centerX + 5, centerY - 10, centerX + 15, centerY + 10, centerX + 25, centerY - 10, 'F');
+    try {
+      this.doc.addImage('/lovable-uploads/788fddcb-574c-4f1d-9c73-54cc003a95d1.png', 'PNG', centerX - 20, centerY - 20, 40, 40);
+    } catch (error) {
+      // Fallback mobile phone watermark
+      this.doc.roundedRect(centerX - 20, centerY - 20, 40, 40, 8, 8, 'F');
+      this.doc.setFillColor(255, 255, 255);
+      this.doc.roundedRect(centerX - 15, centerY - 15, 30, 30, 6, 6, 'F');
+    }
     
     this.doc.restoreGraphicsState();
   }
 
-  // Add gradient background with crown watermark
+  // Add gradient background with Divine Mobile watermark
   private addGradientBackground() {
-    // Create a gradient effect using rectangles with crown branding
+    // Create a gradient effect using rectangles with Divine Mobile branding
     this.doc.setFillColor(79, 70, 229); // Primary purple
     this.doc.rect(0, 0, this.pageWidth, 60, 'F');
     
     this.doc.setFillColor(99, 102, 241); // Lighter purple shade
     this.doc.rect(0, 40, this.pageWidth, 20, 'F');
     
-    // Add subtle crown watermark
-    this.addCrownWatermark();
+    // Add subtle Divine Mobile watermark
+    this.addDivineMobileWatermark();
   }
 
-  // Add header with crown logo and title
+  // Add header with Divine Mobile logo and title
   private addHeader(title: string, subtitle?: string) {
     this.addGradientBackground();
     
-    // Add Divine Mobile crown logo to header
+    // Add Divine Mobile logo to header
     this.addDivineMobileLogo(this.margin, 15, 60, 20);
     
-    // Title with crown emoji
+    // Title with Divine Mobile branding
     this.doc.setTextColor(255, 255, 255);
     this.doc.setFontSize(28);
     this.doc.setFont('helvetica', 'bold');
-    this.doc.text(`👑 ${title}`, this.margin + 70, 35);
+    this.doc.text(`${title}`, this.margin + 70, 35);
     
     if (subtitle) {
       this.doc.setFontSize(14);
@@ -123,9 +126,13 @@ export class EnhancedPDFGenerator {
     this.doc.setFillColor(r, g, b);
     this.doc.rect(x, y, width, 4, 'F');
     
-    // Small crown icon
-    this.doc.setFillColor(255, 215, 0);
-    this.doc.circle(x + 8, y + 12, 1, 'F');
+    // Small Divine Mobile icon
+    try {
+      this.doc.addImage('/lovable-uploads/788fddcb-574c-4f1d-9c73-54cc003a95d1.png', 'PNG', x + 6, y + 8, 6, 6);
+    } catch (error) {
+      this.doc.setFillColor(79, 70, 229);
+      this.doc.circle(x + 8, y + 12, 1, 'F');
+    }
     
     // Title
     this.doc.setTextColor(107, 114, 128);
@@ -148,7 +155,7 @@ export class EnhancedPDFGenerator {
     this.doc.setTextColor(255, 255, 255);
     this.doc.setFontSize(16);
     this.doc.setFont('helvetica', 'bold');
-    this.doc.text(`👑 ${title}`, this.margin + 8, y + 17);
+    this.doc.text(`${title}`, this.margin + 8, y + 17);
     
     this.doc.setTextColor(31, 41, 55);
     return y + 35;
@@ -176,9 +183,13 @@ export class EnhancedPDFGenerator {
       this.doc.setFillColor(r, g, b);
       this.doc.rect(barX, barY, barWidth - 5, barHeight, 'F');
       
-      // Crown on top of bar
-      this.doc.setFillColor(255, 215, 0);
-      this.doc.circle(barX + (barWidth - 5) / 2, barY - 2, 1, 'F');
+      // Divine Mobile icon on top of bar
+      try {
+        this.doc.addImage('/lovable-uploads/788fddcb-574c-4f1d-9c73-54cc003a95d1.png', 'PNG', barX + (barWidth - 5) / 2 - 1, barY - 4, 2, 2);
+      } catch (error) {
+        this.doc.setFillColor(79, 70, 229);
+        this.doc.circle(barX + (barWidth - 5) / 2, barY - 2, 1, 'F');
+      }
       
       // Label
       this.doc.setTextColor(107, 114, 128);
@@ -283,7 +294,7 @@ export class EnhancedPDFGenerator {
     this.doc.setTextColor(31, 41, 55);
     this.doc.setFontSize(10);
     this.doc.setFont('helvetica', 'bold');
-    this.doc.text('👑 Customer Name', this.margin + 5, yPos + 10);
+    this.doc.text('Customer Name', this.margin + 5, yPos + 10);
     this.doc.text('Balance', this.margin + 80, yPos + 10);
     this.doc.text('Network', this.margin + 130, yPos + 10);
     
@@ -309,12 +320,12 @@ export class EnhancedPDFGenerator {
       yPos += 12;
     });
     
-    // Footer with crown branding
+    // Footer with Divine Mobile branding
     this.doc.setFontSize(8);
     this.doc.setTextColor(107, 114, 128);
-    this.doc.text('👑 Generated by Divine Mobile OneCard Premium Analytics Platform', this.margin, this.pageHeight - 15);
+    this.doc.text('Generated by Divine Mobile OneCard Premium Analytics Platform', this.margin, this.pageHeight - 15);
     this.doc.text(`Page ${this.doc.getCurrentPageInfo().pageNumber} of ${this.doc.getNumberOfPages()}`, this.pageWidth - 50, this.pageHeight - 15);
-    this.doc.text('Powered by Divine Mobile 👑', this.pageWidth - 80, this.pageHeight - 5);
+    this.doc.text('Powered by Divine Mobile', this.pageWidth - 80, this.pageHeight - 5);
     
     return this.doc;
   }
@@ -324,11 +335,11 @@ export const generateEnhancedMasterReport = (customers: Customer[], transactions
   const generator = new EnhancedPDFGenerator();
   const doc = generator.generateMasterReport(customers, transactions);
   
-  doc.save(`Divine_Mobile_Crown_Master_Report_${new Date().toISOString().split('T')[0]}.pdf`);
+  doc.save(`Divine_Mobile_Master_Report_${new Date().toISOString().split('T')[0]}.pdf`);
   
   toast({
-    title: "👑 Premium Report Generated",
-    description: "Modern master report with crown logo branding has been downloaded.",
+    title: "Premium Report Generated",
+    description: "Modern master report with Divine Mobile logo branding has been downloaded.",
     duration: 3000,
   });
 };

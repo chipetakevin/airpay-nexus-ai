@@ -3,7 +3,7 @@ import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { ShoppingCart, User, Gift, Crown, X } from 'lucide-react';
+import { ShoppingCart, User, Gift, X } from 'lucide-react';
 
 interface EnhancedCartDisplayProps {
   isVisible: boolean;
@@ -29,7 +29,7 @@ const EnhancedCartDisplay = ({ isVisible, onClose, userName = "Kevin Chipeta" }:
           
           <div className="flex items-center gap-3">
             <div className="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center">
-              <Crown className="w-6 h-6 text-white" />
+              <img src="/lovable-uploads/788fddcb-574c-4f1d-9c73-54cc003a95d1.png" alt="Divine Mobile" className="w-6 h-6" />
             </div>
             <div>
               <CardTitle className="text-white text-lg font-bold">Smart Cart</CardTitle>

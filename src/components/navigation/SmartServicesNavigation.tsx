@@ -65,7 +65,7 @@ const SmartServicesNavigation: React.FC<SmartServicesNavigationProps> = ({
           className="h-16 bg-gradient-to-r from-purple-400 to-pink-500 hover:from-purple-500 hover:to-pink-600 text-white font-bold text-lg rounded-2xl shadow-xl"
         >
           <Link to="/portal">
-            <Crown className="w-6 h-6 mr-3" />
+            <img src="/lovable-uploads/788fddcb-574c-4f1d-9c73-54cc003a95d1.png" alt="Divine Mobile" className="w-6 h-6 mr-3" />
             Portal Dashboard
             <ArrowRight className="w-5 h-5 ml-auto" />
           </Link>
@@ -119,7 +119,7 @@ const SmartServicesNavigation: React.FC<SmartServicesNavigationProps> = ({
             value="admin" 
             className="data-[state=active]:bg-white/20 data-[state=active]:text-white text-white/70 rounded-xl py-2 text-sm font-medium"
           >
-            <Crown className="w-4 h-4 mr-1" />
+            <img src="/lovable-uploads/788fddcb-574c-4f1d-9c73-54cc003a95d1.png" alt="Divine Mobile" className="w-4 h-4 mr-1" />
             Admin
           </TabsTrigger>
         </TabsList>

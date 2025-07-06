@@ -1,7 +1,7 @@
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Crown, FileText, TrendingUp, Users, BarChart3, PieChart, Activity } from 'lucide-react';
+import { FileText, TrendingUp, Users, BarChart3, PieChart, Activity } from 'lucide-react';
 
 interface ReportsSectionProps {
   customers: any[];
@@ -19,12 +19,12 @@ const ReportsSection = ({ customers, transactions }: ReportsSectionProps) => {
       <div className="text-center space-y-3 mb-4 sm:mb-6">
         <div className="flex items-center justify-center gap-2 mb-2">
           <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-purple-500 to-blue-600 rounded-2xl flex items-center justify-center shadow-lg">
-            <Crown className="w-6 h-6 sm:w-7 sm:h-7 text-white" />
+            <img src="/lovable-uploads/788fddcb-574c-4f1d-9c73-54cc003a95d1.png" alt="Divine Mobile" className="w-6 h-6 sm:w-7 sm:h-7" />
           </div>
           <h1 className="text-xl sm:text-2xl font-bold text-gray-900">Reports & Analytics</h1>
         </div>
         <p className="text-gray-600 text-sm sm:text-base max-w-md mx-auto leading-relaxed">
-          Generate comprehensive platform reports with modern visualizations and king crown branding
+          Generate comprehensive platform reports with modern visualizations and Divine Mobile branding
         </p>
       </div>
 
@@ -33,7 +33,7 @@ const ReportsSection = ({ customers, transactions }: ReportsSectionProps) => {
         <CardContent className="p-4 sm:p-6">
           <div className="text-center space-y-4">
             <div className="w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br from-purple-500 to-blue-600 rounded-3xl flex items-center justify-center mx-auto mb-4 shadow-xl">
-              <Crown className="w-8 h-8 sm:w-10 sm:h-10 text-white" />
+              <img src="/lovable-uploads/788fddcb-574c-4f1d-9c73-54cc003a95d1.png" alt="Divine Mobile" className="w-8 h-8 sm:w-10 sm:h-10" />
             </div>
             
             <div className="space-y-2">
@@ -65,7 +65,7 @@ const ReportsSection = ({ customers, transactions }: ReportsSectionProps) => {
               </div>
               <div className="flex flex-col items-center gap-1">
                 <div className="w-10 h-10 sm:w-12 sm:h-12 bg-purple-100 rounded-xl flex items-center justify-center">
-                  <Crown className="w-5 h-5 sm:w-6 sm:h-6 text-purple-600" />
+                  <img src="/lovable-uploads/788fddcb-574c-4f1d-9c73-54cc003a95d1.png" alt="Divine Mobile" className="w-5 h-5 sm:w-6 sm:h-6" />
                 </div>
                 <span className="text-xs sm:text-sm text-gray-600 font-medium">Premium</span>
               </div>
@@ -77,7 +77,7 @@ const ReportsSection = ({ customers, transactions }: ReportsSectionProps) => {
               className="w-full sm:w-auto bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white font-semibold px-6 sm:px-8 py-3 sm:py-4 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 text-sm sm:text-base"
               size="lg"
             >
-              <Crown className="w-5 h-5 mr-2" />
+              <img src="/lovable-uploads/788fddcb-574c-4f1d-9c73-54cc003a95d1.png" alt="Divine Mobile" className="w-5 h-5 mr-2" />
               Generate Premium Report
             </Button>
             

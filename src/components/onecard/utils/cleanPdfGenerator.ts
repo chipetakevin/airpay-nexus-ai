@@ -2,23 +2,23 @@
 import jsPDF from 'jspdf';
 import { Transaction } from '../types/admin';
 
-// Simplified crown SVG that works with jsPDF
-const CROWN_SVG_BASE64 = "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA1MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICA8cGF0aCBkPSJNNSAzNUg0NUwzNSAyMEgzMEwyNSA1TDIwIDIwSDE1TDUgMzVaIiBmaWxsPSIjRkZENzAwIiBzdHJva2U9IiNGRkI3MDAiIHN0cm9rZS13aWR0aD0iMiIvPgo8L3N2Zz4K";
+// Divine Mobile logo for PDF reports
+const DIVINE_MOBILE_LOGO_BASE64 = "/lovable-uploads/788fddcb-574c-4f1d-9c73-54cc003a95d1.png";
 
 export const generateCleanPremiumReport = async (transactions: Transaction[], toast: any) => {
   try {
     console.log('Starting Premium Report generation...');
     const doc = new jsPDF();
     
-    // Add crown logo at the top center
+    // Add Divine Mobile logo at the top center
     const pageWidth = doc.internal.pageSize.getWidth();
     const logoWidth = 20;
     const logoHeight = 16;
     const logoX = (pageWidth - logoWidth) / 2;
     
     try {
-      // Add crown image - using PNG format for better compatibility
-      doc.addImage(CROWN_SVG_BASE64, 'PNG', logoX, 20, logoWidth, logoHeight);
+      // Add Divine Mobile logo - using PNG format for better compatibility
+      doc.addImage(DIVINE_MOBILE_LOGO_BASE64, 'PNG', logoX, 20, logoWidth, logoHeight);
     } catch (logoError) {
       console.warn('Logo failed to load, continuing without it:', logoError);
     }
@@ -128,15 +128,15 @@ export const generateCleanCustomerReport = async (transactions: Transaction[], t
     console.log('Starting Customer Report generation...');
     const doc = new jsPDF();
     
-    // Add crown logo at the top center
+    // Add Divine Mobile logo at the top center
     const pageWidth = doc.internal.pageSize.getWidth();
     const logoWidth = 20;
     const logoHeight = 16;
     const logoX = (pageWidth - logoWidth) / 2;
     
     try {
-      // Add crown image - using PNG format for better compatibility
-      doc.addImage(CROWN_SVG_BASE64, 'PNG', logoX, 20, logoWidth, logoHeight);
+      // Add Divine Mobile logo - using PNG format for better compatibility
+      doc.addImage(DIVINE_MOBILE_LOGO_BASE64, 'PNG', logoX, 20, logoWidth, logoHeight);
     } catch (logoError) {
       console.warn('Logo failed to load, continuing without it:', logoError);
     }

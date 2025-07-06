@@ -3,7 +3,7 @@ import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { LogOut, Shield, Crown, User, Store } from 'lucide-react';
+import { LogOut, Shield, User, Store } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
 interface LogoutSectionProps {
@@ -70,7 +70,7 @@ const LogoutSection: React.FC<LogoutSectionProps> = ({
           Admin
         </Badge>
         <Badge variant="outline" className="bg-orange-50 text-orange-700 border-orange-300">
-          <Crown className="w-3 h-3 mr-1" />
+          <img src="/lovable-uploads/788fddcb-574c-4f1d-9c73-54cc003a95d1.png" alt="Divine Mobile" className="w-3 h-3 mr-1" />
           Unified
         </Badge>
       </div>

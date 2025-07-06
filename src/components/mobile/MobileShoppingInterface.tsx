@@ -75,7 +75,7 @@ const MobileShoppingInterface = () => {
     {
       title: 'AI Platform',
       subtitle: 'Autonomous processing',
-      icon: <Crown className="w-8 h-8 text-white" />,
+      icon: <img src="/lovable-uploads/788fddcb-574c-4f1d-9c73-54cc003a95d1.png" alt="Divine Mobile" className="w-8 h-8" />,
       badge: 'Advanced',
       badgeColor: 'bg-purple-500',
       bgColor: 'bg-gradient-to-br from-purple-400 to-purple-600',

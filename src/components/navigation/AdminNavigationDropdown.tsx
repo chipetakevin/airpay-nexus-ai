@@ -61,7 +61,7 @@ const AdminNavigationDropdown: React.FC<AdminNavigationDropdownProps> = ({
         { 
           name: 'DM BaaS Platform', 
           path: '/devine-baas', 
-          icon: <Crown className="w-3 h-3" />,
+          icon: <img src="/lovable-uploads/788fddcb-574c-4f1d-9c73-54cc003a95d1.png" alt="Divine Mobile" className="w-3 h-3" />,
           description: 'AI-Driven MVNX'
         },
         { 
@@ -388,7 +388,7 @@ const AdminNavigationDropdown: React.FC<AdminNavigationDropdownProps> = ({
         <div className="absolute top-full left-1/2 transform -translate-x-1/2 mt-1 w-80 sm:w-96 bg-white border border-gray-200 rounded-lg shadow-xl z-50 max-h-96 overflow-y-auto">
           <div className="p-2 sm:p-3">
             <div className="flex items-center gap-2 mb-2 pb-2 border-b border-gray-100">
-              <Crown className="w-3 h-3 text-yellow-600 flex-shrink-0" />
+              <img src="/lovable-uploads/788fddcb-574c-4f1d-9c73-54cc003a95d1.png" alt="Divine Mobile" className="w-3 h-3 flex-shrink-0" />
               <h3 className="text-xs font-semibold text-gray-800">Divinely Mobile BaaS - AI-Driven MVNX Platform</h3>
             </div>
             

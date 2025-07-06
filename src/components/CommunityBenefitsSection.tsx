@@ -22,7 +22,7 @@ const CommunityBenefitsSection = () => {
       bgColor: "bg-green-50"
     },
     {
-      icon: <Crown className="w-6 h-6 text-purple-600" />,
+      icon: <img src="/lovable-uploads/788fddcb-574c-4f1d-9c73-54cc003a95d1.png" alt="Divine Mobile" className="w-6 h-6" />,
       title: "Customer rewards scale with loyalty",
       description: "Premium/VIP members get significant bonuses (up to 2x rewards)",
       badge: "Loyalty Program",

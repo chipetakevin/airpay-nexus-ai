@@ -243,7 +243,7 @@ const ReportsTabContent = () => {
         <Card className="max-w-md w-full text-center shadow-xl border-2 border-dashed border-gray-200">
           <CardContent className="p-8">
             <div className="w-16 h-16 bg-gradient-to-br from-gray-100 to-gray-200 rounded-full flex items-center justify-center mx-auto mb-6">
-              <Crown className="w-8 h-8 text-gray-400" />
+              <img src="/lovable-uploads/788fddcb-574c-4f1d-9c73-54cc003a95d1.png" alt="Divine Mobile" className="w-8 h-8" />
             </div>
             <h3 className="text-xl font-bold text-gray-800 mb-3">Unified Access Required</h3>
             <p className="text-gray-600 leading-relaxed">
@@ -261,7 +261,7 @@ const ReportsTabContent = () => {
       {/* Premium Header Badge */}
       <div className="flex justify-center mb-4">
         <Badge className="bg-gradient-to-r from-yellow-400 to-amber-500 text-black font-semibold px-4 py-2 text-sm border-0 shadow-lg">
-          <Crown className="w-4 h-4 mr-2" />
+          <img src="/lovable-uploads/788fddcb-574c-4f1d-9c73-54cc003a95d1.png" alt="Divine Mobile" className="w-4 h-4 mr-2" />
           OneCard Gold Premium
         </Badge>
       </div>
@@ -276,7 +276,7 @@ const ReportsTabContent = () => {
           <div className="flex items-start justify-between mb-6">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 sm:w-12 sm:h-12 bg-black/20 rounded-full flex items-center justify-center backdrop-blur-sm">
-                <Crown className="w-5 h-5 sm:w-6 sm:h-6 text-black" />
+                <img src="/lovable-uploads/788fddcb-574c-4f1d-9c73-54cc003a95d1.png" alt="Divine Mobile" className="w-5 h-5 sm:w-6 sm:h-6" />
               </div>
               <div>
                 <h2 className="text-lg sm:text-xl font-bold text-black">OneCard Gold</h2>
