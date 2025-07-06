@@ -9,6 +9,7 @@ import CustomerManagementPanel from './orderManagement/CustomerManagementPanel';
 import InventoryManagementSystem from './orderManagement/InventoryManagementSystem';
 import FinancialDistributionPanel from './orderManagement/FinancialDistributionPanel';
 import OneCardBalancePanel from './orderManagement/OneCardBalancePanel';
+import SecurityCenter from './orderManagement/SecurityCenter';
 
 const OrderManagement = () => {
   return (
@@ -19,13 +20,14 @@ const OrderManagement = () => {
       </div>
 
       <Tabs defaultValue="integration" className="w-full">
-        <TabsList className="grid w-full grid-cols-6">
+        <TabsList className="grid w-full grid-cols-7">
           <TabsTrigger value="integration">MNO Integration</TabsTrigger>
           <TabsTrigger value="processing">Real-Time Orders</TabsTrigger>
           <TabsTrigger value="customers">Customer Management</TabsTrigger>
           <TabsTrigger value="inventory">Inventory Control</TabsTrigger>
           <TabsTrigger value="financial">Financial Analytics</TabsTrigger>
           <TabsTrigger value="onecard">OneCard Balances</TabsTrigger>
+          <TabsTrigger value="security">Security Center</TabsTrigger>
         </TabsList>
 
         <TabsContent value="integration">
@@ -50,6 +52,10 @@ const OrderManagement = () => {
 
         <TabsContent value="onecard">
           <OneCardBalancePanel />
+        </TabsContent>
+
+        <TabsContent value="security">
+          <SecurityCenter />
         </TabsContent>
 
       </Tabs>
