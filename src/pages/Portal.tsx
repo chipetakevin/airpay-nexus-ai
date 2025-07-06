@@ -119,11 +119,11 @@ const Portal = () => {
           }
         })() : false;
 
-      // Admin-only tabs (Reports and Docs) require registered admin status
-      if (['unified-reports', 'documentation'].includes(tabValue)) {
-        console.log(`🔐 Admin-only tab ${tabValue}: ${isRegisteredAdmin ? 'ALLOWED' : 'DENIED'}`);
-        return isRegisteredAdmin;
-      }
+          // Admin-only tabs (Reports, Docs, Versions, and Addex Pay) require registered admin status
+          if (['unified-reports', 'documentation', 'version-manager', 'addex-pay'].includes(tabValue)) {
+            console.log(`🔐 Admin-only tab ${tabValue}: ${isRegisteredAdmin ? 'ALLOWED' : 'DENIED'}`);
+            return isRegisteredAdmin;
+          }
       
       // Admin registration tab - only show to non-admins
       if (tabValue === 'admin-reg') {
@@ -190,10 +190,10 @@ const Portal = () => {
         console.log(`❌ Tab access denied: ${value}`);
         
         // Provide specific feedback for admin-only tabs
-        if (['unified-reports', 'documentation'].includes(value)) {
+        if (['unified-reports', 'documentation', 'version-manager', 'addex-pay'].includes(value)) {
           toast({
             title: "Admin Access Required",
-            description: "Complete admin registration to access Reports and Documentation features.",
+            description: "Complete admin registration to access Reports, Documentation, Versions, and Payroll features.",
             variant: "default"
           });
         } else {

@@ -12,6 +12,7 @@ import TabSwitcher from './navigation/TabSwitcher';
 import ModernTabNavigation from './navigation/ModernTabNavigation';
 import DocumentationManager from './admin/DocumentationManager';
 import VersionManager from './admin/VersionManager';
+import AddexPayDashboard from './payroll/AddexPayDashboard';
 
 interface PortalTabsProps {
   activeTab: string;
@@ -114,6 +115,14 @@ const PortalTabs = ({
       description: 'Partner',
       color: 'blue',
       adminOnly: false
+    },
+    {
+      value: 'addex-pay',
+      label: 'Addex Pay',
+      icon: '💰',
+      description: 'Payroll System',
+      color: 'indigo',
+      adminOnly: true
     }
   ];
 
@@ -230,6 +239,10 @@ const PortalTabs = ({
           
           <TabsContent value="version-manager" className="mobile-section-spacing p-2 sm:p-3 md:p-4 lg:p-6 animate-fade-in">
             <VersionManager />
+          </TabsContent>
+          
+          <TabsContent value="addex-pay" className="mobile-section-spacing p-2 sm:p-3 md:p-4 lg:p-6 animate-fade-in">
+            <AddexPayDashboard />
           </TabsContent>
           
           <TabsContent value="admin-reg" className="mobile-section-spacing p-2 sm:p-3 md:p-4 lg:p-6 animate-fade-in">
