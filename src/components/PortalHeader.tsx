@@ -1,17 +1,33 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card } from '@/components/ui/card';
 import { Link } from 'react-router-dom';
-import { Home, Settings, Shield, User } from 'lucide-react';
+import { Home, Settings, User } from 'lucide-react';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 interface PortalHeaderProps {
   userType: 'customer' | 'vendor' | 'admin' | null;
   resetUserType: () => void;
+  onShowAdminBanner?: (show: boolean) => void;
+  showAdminBanner?: boolean;
+  isAdminAuthenticated?: boolean;
 }
 
-const PortalHeader = ({ userType, resetUserType }: PortalHeaderProps) => {
+const PortalHeader = ({ 
+  userType, 
+  resetUserType, 
+  onShowAdminBanner, 
+  showAdminBanner = false, 
+  isAdminAuthenticated = false 
+}: PortalHeaderProps) => {
+  const [isNavOpen, setIsNavOpen] = useState(false);
   const isUnified = localStorage.getItem('userCredentials') && 
     JSON.parse(localStorage.getItem('userCredentials') || '{}').password === 'Malawi@1976';
 
@@ -58,12 +74,42 @@ const PortalHeader = ({ userType, resetUserType }: PortalHeaderProps) => {
                 </div>
               </Link>
 
-              {/* Navigation Button - Functional */}
-              <div className="relative bg-gradient-to-r from-pink-100 to-red-100 hover:from-pink-200 hover:to-red-200 text-red-600 px-4 sm:px-5 py-2 sm:py-2.5 rounded-full flex items-center gap-2 transition-all duration-200 shadow-md hover:shadow-lg cursor-pointer">
-                <Settings className="w-4 h-4" />
-                <span className="text-sm font-medium">Nav</span>
-                <div className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full animate-pulse shadow-sm"></div>
-              </div>
+              {/* Navigation Button - Fully Functional */}
+              {isAdminAuthenticated && (
+                <DropdownMenu open={isNavOpen} onOpenChange={setIsNavOpen}>
+                  <DropdownMenuTrigger asChild>
+                    <div className="relative bg-gradient-to-r from-pink-100 to-red-100 hover:from-pink-200 hover:to-red-200 text-red-600 px-4 sm:px-5 py-2 sm:py-2.5 rounded-full flex items-center gap-2 transition-all duration-200 shadow-md hover:shadow-lg cursor-pointer">
+                      <Settings className="w-4 h-4" />
+                      <span className="text-sm font-medium">Nav</span>
+                      <div className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full animate-pulse shadow-sm"></div>
+                    </div>
+                  </DropdownMenuTrigger>
+                  
+                  <DropdownMenuContent 
+                    align="center" 
+                    className="w-56 bg-white border border-gray-200 shadow-lg rounded-lg p-1 mt-2"
+                    sideOffset={8}
+                  >
+                    <DropdownMenuItem
+                      onClick={() => onShowAdminBanner?.(!showAdminBanner)}
+                      className="flex items-center px-3 py-2 text-sm hover:bg-gray-50 rounded-md cursor-pointer"
+                    >
+                      <div className="w-2 h-2 bg-green-500 rounded-full mr-3"></div>
+                      {showAdminBanner ? 'Hide Admin Info' : 'Show Admin Info'}
+                    </DropdownMenuItem>
+                    
+                    <DropdownMenuItem className="flex items-center px-3 py-2 text-sm hover:bg-gray-50 rounded-md cursor-pointer">
+                      <div className="w-2 h-2 bg-blue-500 rounded-full mr-3"></div>
+                      Admin Settings
+                    </DropdownMenuItem>
+                    
+                    <DropdownMenuItem className="flex items-center px-3 py-2 text-sm hover:bg-gray-50 rounded-md cursor-pointer">
+                      <div className="w-2 h-2 bg-purple-500 rounded-full mr-3"></div>
+                      System Status
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              )}
             </div>
 
             {/* User Section */}

@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import PortalHeader from '@/components/PortalHeader';
 import PortalTabs from '@/components/PortalTabs';
-import AdminNavDropdown from '@/components/navigation/AdminNavDropdown';
 import { useToast } from "@/hooks/use-toast"
 import WhatsAppFloatingButton from '@/components/WhatsAppFloatingButton';
 import FloatingPlatformSwitcher from '@/components/navigation/FloatingPlatformSwitcher';
@@ -219,16 +218,15 @@ const Portal = () => {
   return (
     <div className="min-h-screen bg-gray-50 overflow-y-auto">
       <div className="bg-gradient-to-r from-blue-600 to-purple-600 p-2">
-        <PortalHeader userType={userType} resetUserType={resetUserType} />
+        <PortalHeader 
+          userType={userType} 
+          resetUserType={resetUserType}
+          onShowAdminBanner={setShowAdminBanner}
+          showAdminBanner={showAdminBanner}
+          isAdminAuthenticated={isAdminAuthenticated}
+        />
         
-        {/* Admin Navigation Dropdown */}
-        <div className="flex justify-end mt-2">
-          <AdminNavDropdown
-            onShowAdminBanner={setShowAdminBanner}
-            showAdminBanner={showAdminBanner}
-            isAdminAuthenticated={isAdminAuthenticated}
-          />
-        </div>
+        {/* Remove the separate AdminNavDropdown since it's now integrated into header */}
       </div>
       
       {/* Admin Banner positioned under navigation */}
