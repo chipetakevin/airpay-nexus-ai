@@ -50,6 +50,9 @@ const AddexPayDashboard = () => {
   const [showContractUpload, setShowContractUpload] = useState(false);
   const [showPayslipModal, setShowPayslipModal] = useState(false);
   const [showComplianceModal, setShowComplianceModal] = useState(false);
+  const [showBankingModal, setShowBankingModal] = useState(false);
+  const [showSARSPaymentModal, setShowSARSPaymentModal] = useState(false);
+  const [showReportsModal, setShowReportsModal] = useState(false);
 
   const payrollStats = {
     totalEmployees: 1247,
@@ -163,6 +166,84 @@ const AddexPayDashboard = () => {
     }
   ];
 
+  // Banking details data
+  const bankingDetails = [
+    {
+      id: 1,
+      employeeName: 'John Doe',
+      employeeId: 'EMP001',
+      bankName: 'Standard Bank',
+      accountNumber: '****-****-1234',
+      branchCode: '051001',
+      accountType: 'Cheque',
+      status: 'verified',
+      lastUpdated: '2024-01-15'
+    },
+    {
+      id: 2,
+      employeeName: 'Jane Smith',
+      employeeId: 'EMP002',
+      bankName: 'FNB',
+      accountNumber: '****-****-5678',
+      branchCode: '250655',
+      accountType: 'Savings',
+      status: 'pending',
+      lastUpdated: '2024-01-10'
+    }
+  ];
+
+  // SARS payment data
+  const sarsPayments = {
+    currentMonth: {
+      paye: 485000,
+      uif: 24500,
+      sdl: 18750,
+      total: 528250,
+      dueDate: '2024-02-07',
+      status: 'pending',
+      prn: 'PRN123456789012345678'
+    },
+    lastMonth: {
+      paye: 465000,
+      uif: 23500,
+      sdl: 18000,
+      total: 506500,
+      status: 'paid',
+      paidDate: '2024-01-05'
+    }
+  };
+
+  // Monthly reports data
+  const monthlyReports = [
+    {
+      id: 1,
+      name: 'Payroll Summary Report',
+      type: 'payroll_summary',
+      month: 'January 2024',
+      generated: '2024-01-31',
+      status: 'available',
+      accessLevel: 'directors'
+    },
+    {
+      id: 2,
+      name: 'Directors Remuneration Report',
+      type: 'directors_remuneration',
+      month: 'January 2024',
+      generated: '2024-01-31',
+      status: 'available',
+      accessLevel: 'directors'
+    },
+    {
+      id: 3,
+      name: 'SARS Tax Liability Report',
+      type: 'sars_liability',
+      month: 'January 2024',
+      generated: '2024-01-31',
+      status: 'available',
+      accessLevel: 'directors'
+    }
+  ];
+
   const subTabs = [
     {
       value: 'permanent-staff',
@@ -189,12 +270,28 @@ const AddexPayDashboard = () => {
       color: 'purple'
     },
     {
+      value: 'banking',
+      label: 'Banking & SARS',
+      icon: <Building2 className="w-4 h-4" />,
+      description: 'Banking details & SARS payments',
+      count: bankingDetails.length,
+      color: 'cyan'
+    },
+    {
       value: 'contracts',
       label: 'Contract Management',
       icon: <FileText className="w-4 h-4" />,
       description: 'Digital contracts & signatures',
       count: payrollStats.contractsSigned,
       color: 'indigo'
+    },
+    {
+      value: 'reports',
+      label: 'Director Reports',
+      icon: <FileCheck className="w-4 h-4" />,
+      description: 'Monthly payroll reports',
+      count: monthlyReports.length,
+      color: 'rose'
     },
     {
       value: 'compliance',
@@ -633,6 +730,343 @@ const AddexPayDashboard = () => {
     </Card>
   );
 
+  // Banking & SARS Management Component
+  const BankingSARSContent = () => (
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <h3 className="text-lg font-semibold">Banking Details & SARS Payment Management</h3>
+        <div className="flex gap-2">
+          <Button onClick={() => setShowBankingModal(true)}>
+            <Building2 className="w-4 h-4 mr-2" />
+            Manage Banking
+          </Button>
+          <Button onClick={() => setShowSARSPaymentModal(true)}>
+            <DollarSign className="w-4 h-4 mr-2" />
+            SARS Payment
+          </Button>
+        </div>
+      </div>
+
+      {/* SARS Payment Alert */}
+      <Alert className="border-orange-200 bg-orange-50">
+        <AlertTriangle className="h-4 w-4 text-orange-600" />
+        <AlertDescription className="text-orange-800">
+          <div className="flex items-center justify-between">
+            <span>SARS payment of R{sarsPayments.currentMonth.total.toLocaleString()} due by {sarsPayments.currentMonth.dueDate}</span>
+            <Button size="sm" onClick={() => setShowSARSPaymentModal(true)}>
+              Process Payment
+            </Button>
+          </div>
+        </AlertDescription>
+      </Alert>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {/* Banking Details Overview */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Building2 className="w-5 h-5" />
+              Employee Banking Details
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="grid grid-cols-2 gap-4">
+              <div className="p-3 bg-green-50 rounded-lg">
+                <div className="text-2xl font-bold text-green-800">{bankingDetails.filter(b => b.status === 'verified').length}</div>
+                <div className="text-sm text-green-600">Verified</div>
+              </div>
+              <div className="p-3 bg-orange-50 rounded-lg">
+                <div className="text-2xl font-bold text-orange-800">{bankingDetails.filter(b => b.status === 'pending').length}</div>
+                <div className="text-sm text-orange-600">Pending</div>
+              </div>
+            </div>
+            <div className="space-y-2">
+              {bankingDetails.map((bank) => (
+                <div key={bank.id} className="flex items-center justify-between p-3 border rounded-lg">
+                  <div>
+                    <div className="font-medium">{bank.employeeName}</div>
+                    <div className="text-sm text-muted-foreground">
+                      {bank.bankName} • {bank.accountNumber}
+                    </div>
+                  </div>
+                  <Badge variant={bank.status === 'verified' ? 'default' : 'outline'}>
+                    {bank.status === 'verified' ? (
+                      <CheckCircle className="w-3 h-3 mr-1" />
+                    ) : (
+                      <Clock className="w-3 h-3 mr-1" />
+                    )}
+                    {bank.status}
+                  </Badge>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* SARS Payment Status */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <DollarSign className="w-5 h-5" />
+              SARS Payment Status
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="p-4 border-l-4 border-l-orange-500 bg-orange-50">
+              <div className="flex items-center justify-between mb-2">
+                <h4 className="font-semibold">Current Month - January 2024</h4>
+                <Badge variant="outline" className="bg-orange-100">Pending</Badge>
+              </div>
+              <div className="space-y-1 text-sm">
+                <div className="flex justify-between">
+                  <span>PAYE:</span>
+                  <span>R{sarsPayments.currentMonth.paye.toLocaleString()}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span>UIF:</span>
+                  <span>R{sarsPayments.currentMonth.uif.toLocaleString()}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span>SDL:</span>
+                  <span>R{sarsPayments.currentMonth.sdl.toLocaleString()}</span>
+                </div>
+                <div className="flex justify-between font-semibold pt-2 border-t">
+                  <span>Total Due:</span>
+                  <span>R{sarsPayments.currentMonth.total.toLocaleString()}</span>
+                </div>
+              </div>
+              <div className="mt-3 text-xs text-muted-foreground">
+                PRN: {sarsPayments.currentMonth.prn}
+              </div>
+            </div>
+
+            <div className="p-4 border-l-4 border-l-green-500 bg-green-50">
+              <div className="flex items-center justify-between mb-2">
+                <h4 className="font-semibold">Last Month - December 2024</h4>
+                <Badge className="bg-green-100 text-green-800">Paid</Badge>
+              </div>
+              <div className="text-sm">
+                <div className="flex justify-between">
+                  <span>Total Paid:</span>
+                  <span>R{sarsPayments.lastMonth.total.toLocaleString()}</span>
+                </div>
+                <div className="text-xs text-muted-foreground mt-2">
+                  Paid on: {sarsPayments.lastMonth.paidDate}
+                </div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Multi-Factor Authentication Status */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Lock className="w-5 h-5" />
+            Security & Authentication
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="flex items-center gap-3 p-3 border rounded-lg">
+              <CheckCircle className="w-5 h-5 text-green-500" />
+              <div>
+                <div className="font-medium">Multi-Factor Auth</div>
+                <div className="text-sm text-muted-foreground">Active for all users</div>
+              </div>
+            </div>
+            <div className="flex items-center gap-3 p-3 border rounded-lg">
+              <CheckCircle className="w-5 h-5 text-green-500" />
+              <div>
+                <div className="font-medium">Data Encryption</div>
+                <div className="text-sm text-muted-foreground">AES-256 encryption</div>
+              </div>
+            </div>
+            <div className="flex items-center gap-3 p-3 border rounded-lg">
+              <CheckCircle className="w-5 h-5 text-green-500" />
+              <div>
+                <div className="font-medium">POPIA Compliant</div>
+                <div className="text-sm text-muted-foreground">Data protection active</div>
+              </div>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+    </div>
+  );
+
+  // Director Reports Component
+  const DirectorReportsContent = () => (
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <h3 className="text-lg font-semibold">Monthly Payroll Reports - Director Access Only</h3>
+        <div className="flex gap-2">
+          <Button onClick={() => setShowReportsModal(true)}>
+            <FileCheck className="w-4 h-4 mr-2" />
+            Generate Report
+          </Button>
+          <Button variant="outline">
+            <Download className="w-4 h-4 mr-2" />
+            Export All
+          </Button>
+        </div>
+      </div>
+
+      {/* Access Control Alert */}
+      <Alert className="border-blue-200 bg-blue-50">
+        <Lock className="h-4 w-4 text-blue-600" />
+        <AlertDescription className="text-blue-800">
+          <div className="flex items-center justify-between">
+            <span>These reports are restricted to Directors and authorized administrators only</span>
+            <Badge className="bg-blue-100 text-blue-800">
+              <Shield className="w-3 h-3 mr-1" />
+              Secure Access
+            </Badge>
+          </div>
+        </AlertDescription>
+      </Alert>
+
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <Card>
+          <CardContent className="p-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-muted-foreground">Available Reports</p>
+                <p className="text-2xl font-bold">{monthlyReports.length}</p>
+              </div>
+              <FileCheck className="w-8 h-8 text-blue-500" />
+            </div>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardContent className="p-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-muted-foreground">Last Generated</p>
+                <p className="text-2xl font-bold">Jan 31</p>
+              </div>
+              <Calendar className="w-8 h-8 text-green-500" />
+            </div>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardContent className="p-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-muted-foreground">Retention Period</p>
+                <p className="text-2xl font-bold">5 Years</p>
+              </div>
+              <Archive className="w-8 h-8 text-purple-500" />
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <FileCheck className="w-5 h-5" />
+            Monthly Report Overview
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-4">
+            {monthlyReports.map((report) => (
+              <div key={report.id} className="flex items-center justify-between p-4 border rounded-lg">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
+                    <FileCheck className="w-5 h-5 text-blue-600" />
+                  </div>
+                  <div>
+                    <div className="font-medium">{report.name}</div>
+                    <div className="text-sm text-muted-foreground">
+                      {report.month} • Generated: {report.generated}
+                    </div>
+                  </div>
+                </div>
+                <div className="flex items-center gap-3">
+                  <Badge className="bg-green-100 text-green-800">
+                    <CheckCircle className="w-3 h-3 mr-1" />
+                    {report.status}
+                  </Badge>
+                  <Button size="sm" variant="outline">
+                    <Download className="w-4 h-4 mr-1" />
+                    Download
+                  </Button>
+                  <Button size="sm" variant="outline">
+                    <Eye className="w-4 h-4 mr-1" />
+                    View
+                  </Button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Report Types Overview */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <TrendingUp className="w-5 h-5" />
+            Available Report Types
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="space-y-3">
+              <div className="flex items-center gap-3 p-3 border rounded-lg">
+                <Calculator className="w-5 h-5 text-blue-500" />
+                <div>
+                  <div className="font-medium">Payroll Summary</div>
+                  <div className="text-sm text-muted-foreground">Gross/net pay, deductions, totals</div>
+                </div>
+              </div>
+              <div className="flex items-center gap-3 p-3 border rounded-lg">
+                <Crown className="w-5 h-5 text-purple-500" />
+                <div>
+                  <div className="font-medium">Directors Remuneration</div>
+                  <div className="text-sm text-muted-foreground">Executive compensation details</div>
+                </div>
+              </div>
+              <div className="flex items-center gap-3 p-3 border rounded-lg">
+                <Building2 className="w-5 h-5 text-green-500" />
+                <div>
+                  <div className="font-medium">SARS Tax Liability</div>
+                  <div className="text-sm text-muted-foreground">PAYE, UIF, SDL calculations</div>
+                </div>
+              </div>
+            </div>
+            <div className="space-y-3">
+              <div className="flex items-center gap-3 p-3 border rounded-lg">
+                <Calendar className="w-5 h-5 text-orange-500" />
+                <div>
+                  <div className="font-medium">Leave & Absence</div>
+                  <div className="text-sm text-muted-foreground">Leave balances and usage</div>
+                </div>
+              </div>
+              <div className="flex items-center gap-3 p-3 border rounded-lg">
+                <Database className="w-5 h-5 text-cyan-500" />
+                <div>
+                  <div className="font-medium">Audit & Change Log</div>
+                  <div className="text-sm text-muted-foreground">All payroll data changes</div>
+                </div>
+              </div>
+              <div className="flex items-center gap-3 p-3 border rounded-lg">
+                <DollarSign className="w-5 h-5 text-indigo-500" />
+                <div>
+                  <div className="font-medium">Banking & Payments</div>
+                  <div className="text-sm text-muted-foreground">Payment details and status</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+    </div>
+  );
+
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -850,9 +1284,19 @@ const AddexPayDashboard = () => {
           </div>
         </TabsContent>
 
+        {/* Banking & SARS Tab */}
+        <TabsContent value="banking" className="space-y-6">
+          <BankingSARSContent />
+        </TabsContent>
+
         {/* Contracts Tab */}
         <TabsContent value="contracts" className="space-y-6">
           <ContractManagementContent />
+        </TabsContent>
+
+        {/* Director Reports Tab */}
+        <TabsContent value="reports" className="space-y-6">
+          <DirectorReportsContent />
         </TabsContent>
 
         {/* Compliance Tab */}
@@ -1015,6 +1459,233 @@ const AddexPayDashboard = () => {
                 Run Check
               </Button>
               <Button variant="outline" onClick={() => setShowComplianceModal(false)}>
+                Cancel
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Banking Details Modal */}
+      <Dialog open={showBankingModal} onOpenChange={setShowBankingModal}>
+        <DialogContent className="max-w-2xl">
+          <DialogHeader>
+            <DialogTitle>Banking Details Management</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <Alert className="border-blue-200 bg-blue-50">
+              <Lock className="h-4 w-4 text-blue-600" />
+              <AlertDescription className="text-blue-800">
+                All banking details are encrypted and protected with multi-factor authentication
+              </AlertDescription>
+            </Alert>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label className="text-sm font-medium">Employee</label>
+                <Select>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select employee" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="emp1">John Doe - EMP001</SelectItem>
+                    <SelectItem value="emp2">Jane Smith - EMP002</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div>
+                <label className="text-sm font-medium">Bank Name</label>
+                <Select>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select bank" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="standard">Standard Bank</SelectItem>
+                    <SelectItem value="fnb">FNB</SelectItem>
+                    <SelectItem value="absa">ABSA</SelectItem>
+                    <SelectItem value="nedbank">Nedbank</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div>
+                <label className="text-sm font-medium">Account Number</label>
+                <Input placeholder="Enter account number" type="password" />
+              </div>
+              <div>
+                <label className="text-sm font-medium">Branch Code</label>
+                <Input placeholder="Enter branch code" />
+              </div>
+              <div>
+                <label className="text-sm font-medium">Account Type</label>
+                <Select>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select type" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="cheque">Cheque Account</SelectItem>
+                    <SelectItem value="savings">Savings Account</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div>
+                <label className="text-sm font-medium">Account Holder</label>
+                <Input placeholder="Enter account holder name" />
+              </div>
+            </div>
+            <div className="flex gap-2">
+              <Button className="flex-1">
+                <CheckCircle className="w-4 h-4 mr-2" />
+                Validate & Save
+              </Button>
+              <Button variant="outline" onClick={() => setShowBankingModal(false)}>
+                Cancel
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* SARS Payment Modal */}
+      <Dialog open={showSARSPaymentModal} onOpenChange={setShowSARSPaymentModal}>
+        <DialogContent className="max-w-2xl">
+          <DialogHeader>
+            <DialogTitle>SARS Payment Processing</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <Alert className="border-orange-200 bg-orange-50">
+              <AlertTriangle className="h-4 w-4 text-orange-600" />
+              <AlertDescription className="text-orange-800">
+                Payment due by {sarsPayments.currentMonth.dueDate}. Ensure approval before processing.
+              </AlertDescription>
+            </Alert>
+            
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-lg">Payment Summary</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-3">
+                <div className="flex justify-between">
+                  <span>PAYE Tax:</span>
+                  <span className="font-medium">R{sarsPayments.currentMonth.paye.toLocaleString()}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span>UIF Contributions:</span>
+                  <span className="font-medium">R{sarsPayments.currentMonth.uif.toLocaleString()}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span>SDL Levy:</span>
+                  <span className="font-medium">R{sarsPayments.currentMonth.sdl.toLocaleString()}</span>
+                </div>
+                <div className="flex justify-between pt-3 border-t font-bold text-lg">
+                  <span>Total Amount:</span>
+                  <span>R{sarsPayments.currentMonth.total.toLocaleString()}</span>
+                </div>
+              </CardContent>
+            </Card>
+
+            <div className="space-y-3">
+              <div>
+                <label className="text-sm font-medium">SARS Beneficiary</label>
+                <div className="p-3 bg-gray-50 rounded border font-mono text-sm">
+                  SARS-PAYE (Pre-configured beneficiary)
+                </div>
+              </div>
+              <div>
+                <label className="text-sm font-medium">Payment Reference Number (PRN)</label>
+                <div className="p-3 bg-gray-50 rounded border font-mono text-sm">
+                  {sarsPayments.currentMonth.prn}
+                </div>
+              </div>
+              <div>
+                <label className="text-sm font-medium">Payment Method</label>
+                <Select>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select payment method" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="efiling">eFiling Credit Push</SelectItem>
+                    <SelectItem value="eft">Direct EFT</SelectItem>
+                    <SelectItem value="branch">Bank Branch Payment</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+
+            <Alert>
+              <Shield className="h-4 w-4" />
+              <AlertDescription>
+                This payment requires director/admin approval before processing. All actions are logged for audit compliance.
+              </AlertDescription>
+            </Alert>
+
+            <div className="flex gap-2">
+              <Button className="flex-1">
+                <DollarSign className="w-4 h-4 mr-2" />
+                Request Approval
+              </Button>
+              <Button variant="outline" onClick={() => setShowSARSPaymentModal(false)}>
+                Cancel
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Reports Generation Modal */}
+      <Dialog open={showReportsModal} onOpenChange={setShowReportsModal}>
+        <DialogContent className="max-w-lg">
+          <DialogHeader>
+            <DialogTitle>Generate Monthly Report</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <Alert className="border-blue-200 bg-blue-50">
+              <Lock className="h-4 w-4 text-blue-600" />
+              <AlertDescription className="text-blue-800">
+                Director-level access required. Reports are automatically encrypted and stored securely.
+              </AlertDescription>
+            </Alert>
+            <div>
+              <label className="text-sm font-medium">Report Type</label>
+              <Select>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select report type" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="payroll_summary">Payroll Summary Report</SelectItem>
+                  <SelectItem value="directors_remuneration">Directors Remuneration Report</SelectItem>
+                  <SelectItem value="sars_liability">SARS Tax Liability Report</SelectItem>
+                  <SelectItem value="leave_absence">Leave & Absence Report</SelectItem>
+                  <SelectItem value="audit_log">Audit & Change Log Report</SelectItem>
+                  <SelectItem value="banking_payments">Banking & Payment Report</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div>
+              <label className="text-sm font-medium">Period</label>
+              <Select>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select period" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="jan2024">January 2024</SelectItem>
+                  <SelectItem value="dec2024">December 2024</SelectItem>
+                  <SelectItem value="nov2024">November 2024</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="flex items-center gap-2">
+              <input type="checkbox" id="encrypt-report" defaultChecked />
+              <label htmlFor="encrypt-report" className="text-sm">Encrypt report with password</label>
+            </div>
+            <div className="flex items-center gap-2">
+              <input type="checkbox" id="email-directors" />
+              <label htmlFor="email-directors" className="text-sm">Email to all directors</label>
+            </div>
+            <div className="flex gap-2">
+              <Button className="flex-1">
+                <FileCheck className="w-4 h-4 mr-2" />
+                Generate Report
+              </Button>
+              <Button variant="outline" onClick={() => setShowReportsModal(false)}>
                 Cancel
               </Button>
             </div>
