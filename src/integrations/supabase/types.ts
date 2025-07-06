@@ -110,6 +110,45 @@ export type Database = {
           },
         ]
       }
+      allowances: {
+        Row: {
+          allowance_code: string
+          allowance_name: string
+          allowance_type: Database["public"]["Enums"]["allowance_type"]
+          calculation_method: string | null
+          created_at: string | null
+          default_amount: number | null
+          description: string | null
+          id: string
+          is_active: boolean | null
+          is_taxable: boolean | null
+        }
+        Insert: {
+          allowance_code: string
+          allowance_name: string
+          allowance_type: Database["public"]["Enums"]["allowance_type"]
+          calculation_method?: string | null
+          created_at?: string | null
+          default_amount?: number | null
+          description?: string | null
+          id?: string
+          is_active?: boolean | null
+          is_taxable?: boolean | null
+        }
+        Update: {
+          allowance_code?: string
+          allowance_name?: string
+          allowance_type?: Database["public"]["Enums"]["allowance_type"]
+          calculation_method?: string | null
+          created_at?: string | null
+          default_amount?: number | null
+          description?: string | null
+          id?: string
+          is_active?: boolean | null
+          is_taxable?: boolean | null
+        }
+        Relationships: []
+      }
       api_access_logs: {
         Row: {
           api_endpoint: string
@@ -609,6 +648,63 @@ export type Database = {
         }
         Relationships: []
       }
+      compliance_records: {
+        Row: {
+          check_date: string
+          compliance_status: Database["public"]["Enums"]["compliance_status"]
+          compliance_type: string
+          created_at: string | null
+          details: Json | null
+          employee_id: string | null
+          exceptions: string | null
+          id: string
+          payroll_run_id: string | null
+          resolved_at: string | null
+          resolved_by: string | null
+        }
+        Insert: {
+          check_date: string
+          compliance_status: Database["public"]["Enums"]["compliance_status"]
+          compliance_type: string
+          created_at?: string | null
+          details?: Json | null
+          employee_id?: string | null
+          exceptions?: string | null
+          id?: string
+          payroll_run_id?: string | null
+          resolved_at?: string | null
+          resolved_by?: string | null
+        }
+        Update: {
+          check_date?: string
+          compliance_status?: Database["public"]["Enums"]["compliance_status"]
+          compliance_type?: string
+          created_at?: string | null
+          details?: Json | null
+          employee_id?: string | null
+          exceptions?: string | null
+          id?: string
+          payroll_run_id?: string | null
+          resolved_at?: string | null
+          resolved_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "compliance_records_employee_id_fkey"
+            columns: ["employee_id"]
+            isOneToOne: false
+            referencedRelation: "payroll_employees"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "compliance_records_payroll_run_id_fkey"
+            columns: ["payroll_run_id"]
+            isOneToOne: false
+            referencedRelation: "payroll_runs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       comprehensive_user_profiles: {
         Row: {
           account_holder_name: string | null
@@ -1057,6 +1153,206 @@ export type Database = {
             columns: ["vendor_id"]
             isOneToOne: false
             referencedRelation: "vendors"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      deductions: {
+        Row: {
+          calculation_method: string | null
+          created_at: string | null
+          deduction_code: string
+          deduction_name: string
+          deduction_type: Database["public"]["Enums"]["deduction_type"]
+          default_amount: number | null
+          description: string | null
+          id: string
+          is_active: boolean | null
+          is_statutory: boolean | null
+          percentage: number | null
+        }
+        Insert: {
+          calculation_method?: string | null
+          created_at?: string | null
+          deduction_code: string
+          deduction_name: string
+          deduction_type: Database["public"]["Enums"]["deduction_type"]
+          default_amount?: number | null
+          description?: string | null
+          id?: string
+          is_active?: boolean | null
+          is_statutory?: boolean | null
+          percentage?: number | null
+        }
+        Update: {
+          calculation_method?: string | null
+          created_at?: string | null
+          deduction_code?: string
+          deduction_name?: string
+          deduction_type?: Database["public"]["Enums"]["deduction_type"]
+          default_amount?: number | null
+          description?: string | null
+          id?: string
+          is_active?: boolean | null
+          is_statutory?: boolean | null
+          percentage?: number | null
+        }
+        Relationships: []
+      }
+      employee_allowances: {
+        Row: {
+          allowance_id: string
+          amount: number
+          created_at: string | null
+          effective_date: string
+          employee_id: string
+          end_date: string | null
+          id: string
+          is_active: boolean | null
+          percentage: number | null
+        }
+        Insert: {
+          allowance_id: string
+          amount: number
+          created_at?: string | null
+          effective_date: string
+          employee_id: string
+          end_date?: string | null
+          id?: string
+          is_active?: boolean | null
+          percentage?: number | null
+        }
+        Update: {
+          allowance_id?: string
+          amount?: number
+          created_at?: string | null
+          effective_date?: string
+          employee_id?: string
+          end_date?: string | null
+          id?: string
+          is_active?: boolean | null
+          percentage?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "employee_allowances_allowance_id_fkey"
+            columns: ["allowance_id"]
+            isOneToOne: false
+            referencedRelation: "allowances"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "employee_allowances_employee_id_fkey"
+            columns: ["employee_id"]
+            isOneToOne: false
+            referencedRelation: "payroll_employees"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      employee_banking_details: {
+        Row: {
+          account_holder_name: string
+          account_number: string
+          account_type: string | null
+          bank_name: string
+          branch_code: string
+          created_at: string | null
+          employee_id: string
+          id: string
+          is_active: boolean | null
+          is_primary: boolean | null
+          is_verified: boolean | null
+          updated_at: string | null
+          verification_date: string | null
+        }
+        Insert: {
+          account_holder_name: string
+          account_number: string
+          account_type?: string | null
+          bank_name: string
+          branch_code: string
+          created_at?: string | null
+          employee_id: string
+          id?: string
+          is_active?: boolean | null
+          is_primary?: boolean | null
+          is_verified?: boolean | null
+          updated_at?: string | null
+          verification_date?: string | null
+        }
+        Update: {
+          account_holder_name?: string
+          account_number?: string
+          account_type?: string | null
+          bank_name?: string
+          branch_code?: string
+          created_at?: string | null
+          employee_id?: string
+          id?: string
+          is_active?: boolean | null
+          is_primary?: boolean | null
+          is_verified?: boolean | null
+          updated_at?: string | null
+          verification_date?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "employee_banking_details_employee_id_fkey"
+            columns: ["employee_id"]
+            isOneToOne: false
+            referencedRelation: "payroll_employees"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      employee_deductions: {
+        Row: {
+          amount: number
+          created_at: string | null
+          deduction_id: string
+          effective_date: string
+          employee_id: string
+          end_date: string | null
+          id: string
+          is_active: boolean | null
+          percentage: number | null
+        }
+        Insert: {
+          amount: number
+          created_at?: string | null
+          deduction_id: string
+          effective_date: string
+          employee_id: string
+          end_date?: string | null
+          id?: string
+          is_active?: boolean | null
+          percentage?: number | null
+        }
+        Update: {
+          amount?: number
+          created_at?: string | null
+          deduction_id?: string
+          effective_date?: string
+          employee_id?: string
+          end_date?: string | null
+          id?: string
+          is_active?: boolean | null
+          percentage?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "employee_deductions_deduction_id_fkey"
+            columns: ["deduction_id"]
+            isOneToOne: false
+            referencedRelation: "deductions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "employee_deductions_employee_id_fkey"
+            columns: ["employee_id"]
+            isOneToOne: false
+            referencedRelation: "payroll_employees"
             referencedColumns: ["id"]
           },
         ]
@@ -1870,6 +2166,59 @@ export type Database = {
         }
         Relationships: []
       }
+      payment_batches: {
+        Row: {
+          bank_name: string | null
+          bank_reference: string | null
+          batch_file_path: string | null
+          batch_number: string
+          batch_status: string | null
+          created_at: string | null
+          employee_count: number
+          id: string
+          payroll_run_id: string
+          processed_at: string | null
+          submitted_at: string | null
+          total_amount: number
+        }
+        Insert: {
+          bank_name?: string | null
+          bank_reference?: string | null
+          batch_file_path?: string | null
+          batch_number: string
+          batch_status?: string | null
+          created_at?: string | null
+          employee_count: number
+          id?: string
+          payroll_run_id: string
+          processed_at?: string | null
+          submitted_at?: string | null
+          total_amount: number
+        }
+        Update: {
+          bank_name?: string | null
+          bank_reference?: string | null
+          batch_file_path?: string | null
+          batch_number?: string
+          batch_status?: string | null
+          created_at?: string | null
+          employee_count?: number
+          id?: string
+          payroll_run_id?: string
+          processed_at?: string | null
+          submitted_at?: string | null
+          total_amount?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "payment_batches_payroll_run_id_fkey"
+            columns: ["payroll_run_id"]
+            isOneToOne: false
+            referencedRelation: "payroll_runs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       payment_cards: {
         Row: {
           billing_address: Json | null
@@ -1915,6 +2264,290 @@ export type Database = {
           updated_at?: string | null
           user_id?: string
           user_type?: string
+        }
+        Relationships: []
+      }
+      payroll_audit_logs: {
+        Row: {
+          action: string
+          created_at: string | null
+          id: string
+          ip_address: unknown | null
+          new_values: Json | null
+          old_values: Json | null
+          record_id: string | null
+          table_name: string | null
+          user_agent: string | null
+          user_id: string | null
+        }
+        Insert: {
+          action: string
+          created_at?: string | null
+          id?: string
+          ip_address?: unknown | null
+          new_values?: Json | null
+          old_values?: Json | null
+          record_id?: string | null
+          table_name?: string | null
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          action?: string
+          created_at?: string | null
+          id?: string
+          ip_address?: unknown | null
+          new_values?: Json | null
+          old_values?: Json | null
+          record_id?: string | null
+          table_name?: string | null
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      payroll_calculations: {
+        Row: {
+          base_salary: number
+          calculation_status: string | null
+          created_at: string | null
+          days_worked: number | null
+          employee_id: string
+          gross_salary: number
+          hours_worked: number | null
+          id: string
+          leave_amount: number | null
+          leave_days: number | null
+          net_salary: number
+          overtime_amount: number | null
+          overtime_hours: number | null
+          paye_tax: number | null
+          payroll_run_id: string
+          sdl_contribution: number | null
+          total_allowances: number | null
+          total_deductions: number | null
+          uif_contribution: number | null
+          updated_at: string | null
+        }
+        Insert: {
+          base_salary: number
+          calculation_status?: string | null
+          created_at?: string | null
+          days_worked?: number | null
+          employee_id: string
+          gross_salary: number
+          hours_worked?: number | null
+          id?: string
+          leave_amount?: number | null
+          leave_days?: number | null
+          net_salary: number
+          overtime_amount?: number | null
+          overtime_hours?: number | null
+          paye_tax?: number | null
+          payroll_run_id: string
+          sdl_contribution?: number | null
+          total_allowances?: number | null
+          total_deductions?: number | null
+          uif_contribution?: number | null
+          updated_at?: string | null
+        }
+        Update: {
+          base_salary?: number
+          calculation_status?: string | null
+          created_at?: string | null
+          days_worked?: number | null
+          employee_id?: string
+          gross_salary?: number
+          hours_worked?: number | null
+          id?: string
+          leave_amount?: number | null
+          leave_days?: number | null
+          net_salary?: number
+          overtime_amount?: number | null
+          overtime_hours?: number | null
+          paye_tax?: number | null
+          payroll_run_id?: string
+          sdl_contribution?: number | null
+          total_allowances?: number | null
+          total_deductions?: number | null
+          uif_contribution?: number | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "payroll_calculations_employee_id_fkey"
+            columns: ["employee_id"]
+            isOneToOne: false
+            referencedRelation: "payroll_employees"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "payroll_calculations_payroll_run_id_fkey"
+            columns: ["payroll_run_id"]
+            isOneToOne: false
+            referencedRelation: "payroll_runs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      payroll_employees: {
+        Row: {
+          base_salary: number
+          created_at: string | null
+          department: string | null
+          email: string | null
+          employee_code: string
+          employment_type: Database["public"]["Enums"]["employment_type"]
+          end_date: string | null
+          first_name: string
+          grade_level: number | null
+          id: string
+          id_number: string | null
+          is_active: boolean | null
+          last_name: string
+          manager_id: string | null
+          phone: string | null
+          position: string | null
+          start_date: string
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          base_salary: number
+          created_at?: string | null
+          department?: string | null
+          email?: string | null
+          employee_code: string
+          employment_type: Database["public"]["Enums"]["employment_type"]
+          end_date?: string | null
+          first_name: string
+          grade_level?: number | null
+          id?: string
+          id_number?: string | null
+          is_active?: boolean | null
+          last_name: string
+          manager_id?: string | null
+          phone?: string | null
+          position?: string | null
+          start_date: string
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          base_salary?: number
+          created_at?: string | null
+          department?: string | null
+          email?: string | null
+          employee_code?: string
+          employment_type?: Database["public"]["Enums"]["employment_type"]
+          end_date?: string | null
+          first_name?: string
+          grade_level?: number | null
+          id?: string
+          id_number?: string | null
+          is_active?: boolean | null
+          last_name?: string
+          manager_id?: string | null
+          phone?: string | null
+          position?: string | null
+          start_date?: string
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "payroll_employees_manager_id_fkey"
+            columns: ["manager_id"]
+            isOneToOne: false
+            referencedRelation: "payroll_employees"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      payroll_runs: {
+        Row: {
+          approved_at: string | null
+          approved_by: string | null
+          created_at: string | null
+          created_by: string | null
+          employee_count: number | null
+          id: string
+          pay_period_end: string
+          pay_period_start: string
+          payment_date: string
+          run_number: string
+          status: Database["public"]["Enums"]["payroll_status"] | null
+          total_deductions: number | null
+          total_gross: number | null
+          total_net: number | null
+          updated_at: string | null
+        }
+        Insert: {
+          approved_at?: string | null
+          approved_by?: string | null
+          created_at?: string | null
+          created_by?: string | null
+          employee_count?: number | null
+          id?: string
+          pay_period_end: string
+          pay_period_start: string
+          payment_date: string
+          run_number: string
+          status?: Database["public"]["Enums"]["payroll_status"] | null
+          total_deductions?: number | null
+          total_gross?: number | null
+          total_net?: number | null
+          updated_at?: string | null
+        }
+        Update: {
+          approved_at?: string | null
+          approved_by?: string | null
+          created_at?: string | null
+          created_by?: string | null
+          employee_count?: number | null
+          id?: string
+          pay_period_end?: string
+          pay_period_start?: string
+          payment_date?: string
+          run_number?: string
+          status?: Database["public"]["Enums"]["payroll_status"] | null
+          total_deductions?: number | null
+          total_gross?: number | null
+          total_net?: number | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      payroll_user_roles: {
+        Row: {
+          assigned_by: string | null
+          created_at: string | null
+          id: string
+          is_active: boolean | null
+          permissions: Json | null
+          role: Database["public"]["Enums"]["payroll_user_role"]
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          assigned_by?: string | null
+          created_at?: string | null
+          id?: string
+          is_active?: boolean | null
+          permissions?: Json | null
+          role: Database["public"]["Enums"]["payroll_user_role"]
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          assigned_by?: string | null
+          created_at?: string | null
+          id?: string
+          is_active?: boolean | null
+          permissions?: Json | null
+          role?: Database["public"]["Enums"]["payroll_user_role"]
+          updated_at?: string | null
+          user_id?: string
         }
         Relationships: []
       }
@@ -2632,6 +3265,42 @@ export type Database = {
           phone_number?: string
           status?: string | null
           verified_date?: string | null
+        }
+        Relationships: []
+      }
+      salary_structures: {
+        Row: {
+          created_at: string | null
+          currency: string | null
+          effective_date: string
+          grade_level: number
+          id: string
+          is_active: boolean | null
+          max_salary: number
+          min_salary: number
+          position_title: string
+        }
+        Insert: {
+          created_at?: string | null
+          currency?: string | null
+          effective_date: string
+          grade_level: number
+          id?: string
+          is_active?: boolean | null
+          max_salary: number
+          min_salary: number
+          position_title: string
+        }
+        Update: {
+          created_at?: string | null
+          currency?: string | null
+          effective_date?: string
+          grade_level?: number
+          id?: string
+          is_active?: boolean | null
+          max_salary?: number
+          min_salary?: number
+          position_title?: string
         }
         Relationships: []
       }
@@ -3631,7 +4300,24 @@ export type Database = {
       }
     }
     Enums: {
+      allowance_type:
+        | "basic"
+        | "housing"
+        | "transport"
+        | "medical"
+        | "overtime"
+        | "bonus"
+      compliance_status: "compliant" | "non_compliant" | "pending" | "exception"
+      deduction_type: "statutory" | "voluntary" | "loan" | "garnishment"
+      employment_type: "permanent" | "contract" | "temporary" | "intern"
       kyc_status: "pending" | "verified" | "rejected" | "requires_update"
+      payroll_status: "draft" | "processing" | "completed" | "cancelled"
+      payroll_user_role:
+        | "director"
+        | "hr_admin"
+        | "payroll_clerk"
+        | "employee"
+        | "field_worker"
       permission_type: "view" | "edit" | "export" | "share" | "manage" | "audit"
       resource_type:
         | "reports"
@@ -3774,7 +4460,26 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
+      allowance_type: [
+        "basic",
+        "housing",
+        "transport",
+        "medical",
+        "overtime",
+        "bonus",
+      ],
+      compliance_status: ["compliant", "non_compliant", "pending", "exception"],
+      deduction_type: ["statutory", "voluntary", "loan", "garnishment"],
+      employment_type: ["permanent", "contract", "temporary", "intern"],
       kyc_status: ["pending", "verified", "rejected", "requires_update"],
+      payroll_status: ["draft", "processing", "completed", "cancelled"],
+      payroll_user_role: [
+        "director",
+        "hr_admin",
+        "payroll_clerk",
+        "employee",
+        "field_worker",
+      ],
       permission_type: ["view", "edit", "export", "share", "manage", "audit"],
       resource_type: [
         "reports",
