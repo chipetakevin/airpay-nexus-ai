@@ -28,6 +28,8 @@ import RICARegistration from "./pages/RICARegistration";
 import RegistrationHub from "./pages/RegistrationHub";
 import AdminMVNEDashboard from "./pages/AdminMVNEDashboard";
 import MobileDashboard from "./pages/MobileDashboard";
+import CustomerAuth from "./pages/CustomerAuth";
+import CustomerPortal from "./pages/CustomerPortal";
 
 const queryClient = new QueryClient();
 
@@ -61,6 +63,8 @@ const App = () => (
             <Route path="/registration-hub" element={<RegistrationHub />} />
             <Route path="/admin-mvne" element={<AdminMVNEDashboard />} />
             <Route path="/mobile-dashboard" element={<MobileDashboard />} />
+            <Route path="/customer-auth" element={<CustomerAuth />} />
+            <Route path="/customer-portal" element={<CustomerPortal />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
