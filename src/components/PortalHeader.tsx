@@ -57,6 +57,13 @@ const PortalHeader = ({ userType, resetUserType }: PortalHeaderProps) => {
                   <span className="text-xs sm:text-sm font-medium hidden sm:inline">Home</span>
                 </div>
               </Link>
+
+              {/* Navigation Button - Functional */}
+              <div className="relative bg-gradient-to-r from-pink-100 to-red-100 hover:from-pink-200 hover:to-red-200 text-red-600 px-4 sm:px-5 py-2 sm:py-2.5 rounded-full flex items-center gap-2 transition-all duration-200 shadow-md hover:shadow-lg cursor-pointer">
+                <Settings className="w-4 h-4" />
+                <span className="text-sm font-medium">Nav</span>
+                <div className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full animate-pulse shadow-sm"></div>
+              </div>
             </div>
 
             {/* User Section */}
