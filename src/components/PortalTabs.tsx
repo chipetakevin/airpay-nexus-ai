@@ -11,6 +11,7 @@ import AirtimeDealsSystem from './AirtimeDealsSystem';
 import TabSwitcher from './navigation/TabSwitcher';
 import ModernTabNavigation from './navigation/ModernTabNavigation';
 import DocumentationManager from './admin/DocumentationManager';
+import VersionManager from './admin/VersionManager';
 
 interface PortalTabsProps {
   activeTab: string;
@@ -149,6 +150,14 @@ const PortalTabs = ({
       description: 'MVNE v3.0',
       color: 'blue',
       adminOnly: true
+    },
+    {
+      value: 'version-manager',
+      label: 'Versions',
+      icon: '🔄',
+      description: 'Auto-Update',
+      color: 'purple',
+      adminOnly: true
     }
   );
 
@@ -217,6 +226,10 @@ const PortalTabs = ({
           
           <TabsContent value="documentation" className="mobile-section-spacing p-2 sm:p-3 md:p-4 lg:p-6 animate-fade-in">
             <DocumentationManager />
+          </TabsContent>
+          
+          <TabsContent value="version-manager" className="mobile-section-spacing p-2 sm:p-3 md:p-4 lg:p-6 animate-fade-in">
+            <VersionManager />
           </TabsContent>
           
           <TabsContent value="admin-reg" className="mobile-section-spacing p-2 sm:p-3 md:p-4 lg:p-6 animate-fade-in">

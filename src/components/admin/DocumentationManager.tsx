@@ -547,7 +547,47 @@ This platform represents a complete, enterprise-grade MVNE solution specifically
         </AlertDescription>
       </Alert>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">..
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Version Manager Tab */}
+        <Card className="border-l-4 border-l-purple-500">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <RefreshCw className="w-5 h-5 text-purple-600" />
+              Version Control
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="text-center p-3 bg-purple-50 rounded-lg">
+              <div className="text-2xl font-bold text-purple-800">v{stats.completionPercentage / 10}.{stats.completed}.0</div>
+              <div className="text-sm text-purple-600">Current Version</div>
+            </div>
+            
+            <div className="space-y-2">
+              <div className="text-sm font-medium">Intelligent Versioning:</div>
+              <div className="space-y-1 text-sm text-muted-foreground">
+                <div>• Auto-increments on feature additions</div>
+                <div>• Semantic versioning (Major.Minor.Patch)</div>
+                <div>• Automatic changelog generation</div>
+              </div>
+            </div>
+            
+            <Button 
+              onClick={forceUpdateDocumentation}
+              disabled={isUpdating}
+              size="sm"
+              variant="outline"
+              className="w-full"
+            >
+              {isUpdating ? (
+                <Loader2 className="w-3 h-3 mr-1 animate-spin" />
+              ) : (
+                <RefreshCw className="w-3 h-3 mr-1" />
+              )}
+              Update Documentation
+            </Button>
+          </CardContent>
+        </Card>
+
         {/* Feature Statistics */}
         <Card className="border-l-4 border-l-green-500">
           <CardHeader>

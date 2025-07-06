@@ -3,6 +3,8 @@
  * Automatically maintains the Production Readiness Checklist and Core Features
  */
 
+import intelligentVersioning from './intelligentVersioning';
+
 export interface MVNEFeature {
   id: string;
   name: string;
@@ -144,18 +146,30 @@ export const MVNE_FEATURES: MVNEFeature[] = [
 ];
 
 /**
- * Add a new feature to the MVNE platform
+ * Add a new feature to the MVNE platform with intelligent versioning
  */
 export const addMVNEFeature = (feature: Omit<MVNEFeature, 'addedDate' | 'version'>) => {
+  const currentVersion = intelligentVersioning.getCurrentVersion();
+  
   const newFeature: MVNEFeature = {
     ...feature,
     addedDate: new Date().toISOString().split('T')[0],
-    version: '3.0'
+    version: currentVersion
   };
   
   MVNE_FEATURES.push(newFeature);
-  console.log(`✅ Added new MVNE feature: ${newFeature.name}`);
-  return newFeature;
+  
+  // Auto-increment version based on new feature
+  const versionChange = intelligentVersioning.autoIncrementVersion([newFeature]);
+  
+  if (versionChange) {
+    // Update the feature with the new version
+    newFeature.version = versionChange.version;
+    console.log(`🚀 Version incremented to ${versionChange.version} for new feature: ${newFeature.name}`);
+  }
+  
+  console.log(`✅ Added new MVNE feature: ${newFeature.name} (v${newFeature.version})`);
+  return { feature: newFeature, versionChange };
 };
 
 /**
@@ -255,21 +269,26 @@ export const getFeatureStatistics = () => {
 };
 
 /**
- * Automatically update documentation files (can be called by CI/CD or admin actions)
+ * Automatically update documentation files with version tracking
  */
 export const autoUpdateDocumentation = () => {
   const stats = getFeatureStatistics();
   const updates = updateDocumentationWithLatestFeatures();
+  const versionInfo = intelligentVersioning.getVersionStatistics();
+  const changelog = intelligentVersioning.generateChangelog();
   
   console.log('🔄 Auto-updating MVNE documentation...');
   console.log(`📊 Features: ${stats.completed}/${stats.total} complete (${stats.completionPercentage}%)`);
+  console.log(`🚀 Current version: ${versionInfo.currentVersion}`);
   console.log(`📅 Last updated: ${updates.lastUpdated}`);
   
   return {
     success: true,
     stats,
     updates,
-    message: 'Documentation automatically updated with latest features'
+    versionInfo,
+    changelog,
+    message: `Documentation automatically updated with latest features (v${versionInfo.currentVersion})`
   };
 };
 

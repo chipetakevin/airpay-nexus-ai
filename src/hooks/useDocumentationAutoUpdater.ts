@@ -19,19 +19,20 @@ export const useDocumentationAutoUpdater = () => {
   const addFeature = async (feature: Omit<MVNEFeature, 'addedDate' | 'version'>) => {
     setIsUpdating(true);
     try {
-      const newFeature = addMVNEFeature(feature);
+      const result = addMVNEFeature(feature);
+      const newFeature = result.feature;
       setFeatures([...documentationAutoUpdater.MVNE_FEATURES]);
       
       // Auto-update documentation
-      const result = documentationAutoUpdater.autoUpdateDocumentation();
-      setLastUpdated(result.updates.lastUpdated);
+      const docResult = documentationAutoUpdater.autoUpdateDocumentation();
+      setLastUpdated(docResult.updates.lastUpdated);
       
       toast({
         title: "Feature Added Successfully",
         description: `${newFeature.name} has been added and documentation updated automatically.`,
       });
       
-      console.log('🚀 Documentation auto-updated:', result);
+      console.log('🚀 Documentation auto-updated:', docResult);
       return newFeature;
     } catch (error) {
       console.error('Error adding feature:', error);
