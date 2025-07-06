@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
+import { useNavigate } from 'react-router-dom';
 import AdminDashboard from './admin/AdminDashboard';
 import RevenueReporting from './admin/RevenueReporting';
 import NetworkRevenue from './admin/NetworkRevenue';
@@ -24,6 +25,7 @@ interface AdminPortalProps {
 
 const AdminPortal: React.FC<AdminPortalProps> = ({ onAuthSuccess, showAdminBanner = false }) => {
   const { toast } = useToast();
+  const navigate = useNavigate();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [authCode, setAuthCode] = useState('');
@@ -68,7 +70,8 @@ const AdminPortal: React.FC<AdminPortalProps> = ({ onAuthSuccess, showAdminBanne
     
     if (authCode.toUpperCase() === storedCode) {
       setIsAuthenticated(true);
-      setIsCollapsed(true); // Auto-collapse after successful authentication
+      // Keep panel expanded after authentication so features are visible
+      setIsCollapsed(false);
       localStorage.setItem('adminAuthenticated', 'true');
       
       const adminCardNumber = 'ADM' + Math.random().toString(36).substr(2, 8).toUpperCase();
@@ -109,9 +112,21 @@ const AdminPortal: React.FC<AdminPortalProps> = ({ onAuthSuccess, showAdminBanne
     localStorage.removeItem('adminAuthCode');
     localStorage.removeItem('adminProfile');
     
+    // Navigate away from admin tab after logout
+    navigate('/portal?tab=deals', { replace: true });
+    
     toast({
       title: "Logged Out",
-      description: "Admin session ended. Authentication process restarted.",
+      description: "Admin session ended. Redirected to Smart Deals.",
+    });
+  };
+
+  const handleCloseAdminPanel = () => {
+    // Navigate to deals tab and show toast
+    navigate('/portal?tab=deals', { replace: true });
+    toast({
+      title: "Admin Panel Closed",
+      description: "Returned to Smart Deals tab.",
     });
   };
 
@@ -196,10 +211,10 @@ const AdminPortal: React.FC<AdminPortalProps> = ({ onAuthSuccess, showAdminBanne
             <Button 
               size="sm"
               variant="outline"
-              onClick={() => setIsCollapsed(true)}
-              className="text-xs"
+              onClick={handleCloseAdminPanel}
+              className="text-xs text-blue-600 border-blue-200 hover:bg-blue-50"
             >
-              Minimize
+              Close
             </Button>
             <Button 
               size="sm"
@@ -214,16 +229,76 @@ const AdminPortal: React.FC<AdminPortalProps> = ({ onAuthSuccess, showAdminBanne
 
         <Tabs defaultValue="nerve-center" className="w-full">
           <TabsList className="grid w-full grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-1 h-auto p-2 bg-muted/30">
-            <TabsTrigger value="nerve-center" className="text-xs sm:text-sm">Hub</TabsTrigger>
-            <TabsTrigger value="database-baas" className="text-xs sm:text-sm bg-gradient-to-r from-purple-100 to-indigo-100 text-purple-700 border border-purple-300 data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-600 data-[state=active]:to-indigo-600 data-[state=active]:text-white">Database</TabsTrigger>
-            <TabsTrigger value="security-monitor" className="text-xs sm:text-sm bg-gradient-to-r from-red-100 to-orange-100 text-red-700 border border-red-300 data-[state=active]:bg-gradient-to-r data-[state=active]:from-red-600 data-[state=active]:to-orange-600 data-[state=active]:text-white">Security</TabsTrigger>
-            <TabsTrigger value="permissions" className="text-xs sm:text-sm bg-gradient-to-r from-blue-100 to-cyan-100 text-blue-700 border border-blue-300 data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-600 data-[state=active]:to-cyan-600 data-[state=active]:text-white">Access</TabsTrigger>
-            <TabsTrigger value="balances" className="text-xs sm:text-sm">Balances</TabsTrigger>
-            <TabsTrigger value="dashboard" className="text-xs sm:text-sm">Dashboard</TabsTrigger>
-            <TabsTrigger value="revenue" className="text-xs sm:text-sm">Revenue</TabsTrigger>
-            <TabsTrigger value="networks" className="text-xs sm:text-sm">Networks</TabsTrigger>
-            <TabsTrigger value="orders" className="text-xs sm:text-sm">Orders</TabsTrigger>
-            <TabsTrigger value="versions" className="text-xs sm:text-sm">Versions</TabsTrigger>
+            <TabsTrigger 
+              value="nerve-center" 
+              className="text-xs sm:text-sm cursor-pointer hover:bg-gray-100 focus:bg-gray-200 transition-colors"
+              onClick={() => console.log('🔧 Admin Feature: Hub clicked')}
+            >
+              Hub
+            </TabsTrigger>
+            <TabsTrigger 
+              value="database-baas" 
+              className="text-xs sm:text-sm bg-gradient-to-r from-purple-100 to-indigo-100 text-purple-700 border border-purple-300 data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-600 data-[state=active]:to-indigo-600 data-[state=active]:text-white cursor-pointer hover:opacity-90 transition-opacity"
+              onClick={() => console.log('🔧 Admin Feature: Database BaaS clicked')}
+            >
+              Database
+            </TabsTrigger>
+            <TabsTrigger 
+              value="security-monitor" 
+              className="text-xs sm:text-sm bg-gradient-to-r from-red-100 to-orange-100 text-red-700 border border-red-300 data-[state=active]:bg-gradient-to-r data-[state=active]:from-red-600 data-[state=active]:to-orange-600 data-[state=active]:text-white cursor-pointer hover:opacity-90 transition-opacity"
+              onClick={() => console.log('🔧 Admin Feature: Security Monitor clicked')}
+            >
+              Security
+            </TabsTrigger>
+            <TabsTrigger 
+              value="permissions" 
+              className="text-xs sm:text-sm bg-gradient-to-r from-blue-100 to-cyan-100 text-blue-700 border border-blue-300 data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-600 data-[state=active]:to-cyan-600 data-[state=active]:text-white cursor-pointer hover:opacity-90 transition-opacity"
+              onClick={() => console.log('🔧 Admin Feature: Permissions clicked')}
+            >
+              Access
+            </TabsTrigger>
+            <TabsTrigger 
+              value="balances" 
+              className="text-xs sm:text-sm cursor-pointer hover:bg-gray-100 focus:bg-gray-200 transition-colors"
+              onClick={() => console.log('🔧 Admin Feature: Balances clicked')}
+            >
+              Balances
+            </TabsTrigger>
+            <TabsTrigger 
+              value="dashboard" 
+              className="text-xs sm:text-sm cursor-pointer hover:bg-gray-100 focus:bg-gray-200 transition-colors"
+              onClick={() => console.log('🔧 Admin Feature: Dashboard clicked')}
+            >
+              Dashboard
+            </TabsTrigger>
+            <TabsTrigger 
+              value="revenue" 
+              className="text-xs sm:text-sm cursor-pointer hover:bg-gray-100 focus:bg-gray-200 transition-colors"
+              onClick={() => console.log('🔧 Admin Feature: Revenue clicked')}
+            >
+              Revenue
+            </TabsTrigger>
+            <TabsTrigger 
+              value="networks" 
+              className="text-xs sm:text-sm cursor-pointer hover:bg-gray-100 focus:bg-gray-200 transition-colors"
+              onClick={() => console.log('🔧 Admin Feature: Networks clicked')}
+            >
+              Networks
+            </TabsTrigger>
+            <TabsTrigger 
+              value="orders" 
+              className="text-xs sm:text-sm cursor-pointer hover:bg-gray-100 focus:bg-gray-200 transition-colors"
+              onClick={() => console.log('🔧 Admin Feature: Orders clicked')}
+            >
+              Orders
+            </TabsTrigger>
+            <TabsTrigger 
+              value="versions" 
+              className="text-xs sm:text-sm cursor-pointer hover:bg-gray-100 focus:bg-gray-200 transition-colors"
+              onClick={() => console.log('🔧 Admin Feature: Versions clicked')}
+            >
+              Versions
+            </TabsTrigger>
           </TabsList>
 
           <TabsContent value="nerve-center" className="space-y-6">
