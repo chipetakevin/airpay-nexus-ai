@@ -13,6 +13,7 @@ import ModernTabNavigation from './navigation/ModernTabNavigation';
 import DocumentationManager from './admin/DocumentationManager';
 import VersionManager from './admin/VersionManager';
 import AddexPayDashboard from './payroll/AddexPayDashboard';
+import USSDManager from './ussd/USSDManager';
 
 interface PortalTabsProps {
   activeTab: string;
@@ -136,6 +137,14 @@ const PortalTabs = ({
       description: 'Payroll System',
       color: 'indigo',
       adminOnly: true
+    },
+    {
+      value: 'ussd-manager',
+      label: 'USSD Manager',
+      icon: '📱',
+      description: 'GSM Onboarding',
+      color: 'emerald',
+      adminOnly: false
     }
   ];
 
@@ -259,6 +268,10 @@ const PortalTabs = ({
           
           <TabsContent value="addex-pay" className="mobile-section-spacing p-2 sm:p-3 md:p-4 lg:p-6 animate-fade-in">
             <AddexPayDashboard />
+          </TabsContent>
+          
+          <TabsContent value="ussd-manager" className="mobile-section-spacing p-2 sm:p-3 md:p-4 lg:p-6 animate-fade-in">
+            <USSDManager />
           </TabsContent>
           
           <TabsContent value="admin-reg" className="mobile-section-spacing p-2 sm:p-3 md:p-4 lg:p-6 animate-fade-in">
