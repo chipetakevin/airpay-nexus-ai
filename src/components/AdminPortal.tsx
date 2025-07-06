@@ -19,9 +19,10 @@ import PermissionManager from './admin/PermissionManager';
 
 interface AdminPortalProps {
   onAuthSuccess?: () => void;
+  showAdminBanner?: boolean;
 }
 
-const AdminPortal: React.FC<AdminPortalProps> = ({ onAuthSuccess }) => {
+const AdminPortal: React.FC<AdminPortalProps> = ({ onAuthSuccess, showAdminBanner = false }) => {
   const { toast } = useToast();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(false);
@@ -176,11 +177,11 @@ const AdminPortal: React.FC<AdminPortalProps> = ({ onAuthSuccess }) => {
     );
   }
 
-  // Show collapsed admin indicator when authenticated but collapsed
-  if (isAuthenticated && isCollapsed) {
+  // Show collapsed admin indicator when authenticated but collapsed - only if banner should be shown
+  if (isAuthenticated && isCollapsed && showAdminBanner) {
     const adminData = JSON.parse(localStorage.getItem('adminProfile') || '{}');
     return (
-      <div className="fixed top-4 right-4 z-50">
+      <div className="fixed top-20 right-4 z-50 transition-all duration-300 ease-in-out">
         <Card className="border-green-200 bg-green-50 shadow-lg">
           <CardContent className="p-4">
             <div className="flex items-center gap-3">
