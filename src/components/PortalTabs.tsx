@@ -57,15 +57,28 @@ const PortalTabs = ({
     try {
       const credentials = localStorage.getItem('userCredentials');
       const adminData = localStorage.getItem('onecardAdmin');
-      if (credentials && adminData) {
-        const parsedCredentials = JSON.parse(credentials);
-        return parsedCredentials.userType === 'admin' && parsedCredentials.password === 'Malawi@1976';
+      
+      if (!credentials || !adminData) {
+        console.log('🔍 Admin check: No credentials or admin data found');
+        return false;
       }
-      return false;
-    } catch {
+      
+      const parsedCredentials = JSON.parse(credentials);
+      const parsedAdminData = JSON.parse(adminData);
+      
+      const isAdmin = parsedCredentials.userType === 'admin' && 
+                     parsedCredentials.password === 'Malawi@1976' &&
+                     parsedAdminData.firstName; // Ensure admin data exists
+      
+      console.log('🔍 Admin check result:', isAdmin);
+      return isAdmin;
+    } catch (error) {
+      console.log('🔍 Admin check error:', error);
       return false;
     }
   };
+
+  const isAdmin = isRegisteredAdmin();
 
   // Enhanced tabs with admin access control
   const baseTabs = [
@@ -121,7 +134,8 @@ const PortalTabs = ({
 
   // Add admin registration tab only for non-admins
   const tabs = [...baseTabs];
-  if (!isRegisteredAdmin()) {
+  if (!isAdmin) {
+    console.log('🔍 Adding Admin Registration tab for non-admin user');
     tabs.push({
       value: 'admin-reg',
       label: 'Admin Reg',
@@ -130,6 +144,8 @@ const PortalTabs = ({
       color: 'gray',
       adminOnly: false
     });
+  } else {
+    console.log('🔍 User is already admin, hiding Admin Registration tab');
   }
 
   if (showAdminTab) {
