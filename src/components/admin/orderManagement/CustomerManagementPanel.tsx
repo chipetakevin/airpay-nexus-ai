@@ -5,7 +5,9 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Checkbox } from '@/components/ui/checkbox';
 import { useToast } from '@/hooks/use-toast';
+import BulkActionsPanel from './BulkActionsPanel';
 
 interface Customer {
   id: string;
@@ -87,6 +89,11 @@ const CustomerManagementPanel = () => {
 
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCustomer, setSelectedCustomer] = useState<Customer | null>(null);
+  const [selectedCustomers, setSelectedCustomers] = useState<string[]>([]);
+  const [bulkActionModal, setBulkActionModal] = useState<{
+    isOpen: boolean;
+    action: 'sms' | 'topup' | 'rica' | null;
+  }>({ isOpen: false, action: null });
 
   const filteredCustomers = customers.filter(customer =>
     customer.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -106,6 +113,92 @@ const CustomerManagementPanel = () => {
       title: "Message Sent",
       description: `SMS notification sent to ${customer.name}`,
     });
+  };
+
+  // Bulk Actions Handlers
+  const handleBulkSMSCampaign = () => {
+    if (selectedCustomers.length === 0) {
+      toast({
+        title: "No Customers Selected",
+        description: "Please select customers for the SMS campaign",
+        variant: "destructive"
+      });
+      return;
+    }
+    setBulkActionModal({ isOpen: true, action: 'sms' });
+  };
+
+  const handleBulkTopUp = () => {
+    if (selectedCustomers.length === 0) {
+      toast({
+        title: "No Customers Selected", 
+        description: "Please select customers for bulk top-up",
+        variant: "destructive"
+      });
+      return;
+    }
+    setBulkActionModal({ isOpen: true, action: 'topup' });
+  };
+
+  const handleRICAStatusUpdate = () => {
+    if (selectedCustomers.length === 0) {
+      toast({
+        title: "No Customers Selected",
+        description: "Please select customers for RICA status update",
+        variant: "destructive"
+      });
+      return;
+    }
+    setBulkActionModal({ isOpen: true, action: 'rica' });
+  };
+
+  const handleExportCustomerData = () => {
+    // Generate CSV export
+    const csvData = filteredCustomers.map(customer => ({
+      ID: customer.id,
+      Name: customer.name,
+      Phone: customer.msisdn,
+      Network: customer.network,
+      'Registration Date': customer.registrationDate,
+      'Total Spent': customer.totalSpent,
+      'Total Orders': customer.totalOrders,
+      Status: customer.status,
+      'RICA Status': customer.ricaStatus
+    }));
+
+    const csv = [
+      Object.keys(csvData[0]).join(','),
+      ...csvData.map(row => Object.values(row).join(','))
+    ].join('\n');
+
+    const blob = new Blob([csv], { type: 'text/csv' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `customers_export_${new Date().toISOString().split('T')[0]}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+
+    toast({
+      title: "Export Completed",
+      description: `${filteredCustomers.length} customer records exported`,
+    });
+  };
+
+  const handleSelectCustomer = (customerId: string, isSelected: boolean) => {
+    if (isSelected) {
+      setSelectedCustomers(prev => [...prev, customerId]);
+    } else {
+      setSelectedCustomers(prev => prev.filter(id => id !== customerId));
+    }
+  };
+
+  const handleSelectAll = (isSelected: boolean) => {
+    if (isSelected) {
+      setSelectedCustomers(filteredCustomers.map(c => c.id));
+    } else {
+      setSelectedCustomers([]);
+    }
   };
 
   const getStatusColor = (status: string) => {
@@ -155,15 +248,46 @@ const CustomerManagementPanel = () => {
               </div>
             </CardHeader>
             <CardContent>
+              {/* Bulk Selection Controls */}
+              <div className="flex items-center gap-4 mb-4 p-3 bg-gray-50 rounded-lg">
+                <Checkbox
+                  checked={selectedCustomers.length === filteredCustomers.length && filteredCustomers.length > 0}
+                  onCheckedChange={handleSelectAll}
+                />
+                <span className="text-sm font-medium">
+                  Select All ({selectedCustomers.length} of {filteredCustomers.length} selected)
+                </span>
+                {selectedCustomers.length > 0 && (
+                  <div className="flex gap-2 ml-auto">
+                    <Button size="sm" onClick={handleBulkSMSCampaign}>
+                      📱 SMS ({selectedCustomers.length})
+                    </Button>
+                    <Button size="sm" variant="outline" onClick={handleBulkTopUp}>
+                      💳 Top-Up ({selectedCustomers.length})
+                    </Button>
+                    <Button size="sm" variant="outline" onClick={handleRICAStatusUpdate}>
+                      🔄 RICA ({selectedCustomers.length})
+                    </Button>
+                  </div>
+                )}
+              </div>
+
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {filteredCustomers.map((customer) => (
-                  <Card key={customer.id} className="cursor-pointer hover:shadow-md" onClick={() => setSelectedCustomer(customer)}>
+                  <Card key={customer.id} className={`cursor-pointer hover:shadow-md ${selectedCustomers.includes(customer.id) ? 'ring-2 ring-blue-500' : ''}`}>
                     <CardContent className="p-4">
                       <div className="flex justify-between items-start mb-3">
-                        <div>
-                          <h4 className="font-semibold">{customer.name}</h4>
-                          <p className="text-sm text-gray-600">{customer.msisdn}</p>
-                          <p className="text-xs text-gray-500">{customer.id}</p>
+                        <div className="flex items-start gap-2">
+                          <Checkbox
+                            checked={selectedCustomers.includes(customer.id)}
+                            onCheckedChange={(checked) => handleSelectCustomer(customer.id, !!checked)}
+                            onClick={(e) => e.stopPropagation()}
+                          />
+                          <div onClick={() => setSelectedCustomer(customer)}>
+                            <h4 className="font-semibold">{customer.name}</h4>
+                            <p className="text-sm text-gray-600">{customer.msisdn}</p>
+                            <p className="text-xs text-gray-500">{customer.id}</p>
+                          </div>
                         </div>
                         <div className="flex flex-col gap-1">
                           <Badge className={getStatusColor(customer.status)}>
@@ -278,19 +402,34 @@ const CustomerManagementPanel = () => {
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <Button className="h-20 flex flex-col">
+                <Button 
+                  className="h-20 flex flex-col bg-blue-600 hover:bg-blue-700" 
+                  onClick={() => handleBulkSMSCampaign()}
+                >
                   <span className="text-lg">📱</span>
                   <span>Bulk SMS Campaign</span>
                 </Button>
-                <Button className="h-20 flex flex-col" variant="outline">
+                <Button 
+                  className="h-20 flex flex-col" 
+                  variant="outline"
+                  onClick={() => handleBulkTopUp()}
+                >
                   <span className="text-lg">💳</span>
                   <span>Bulk Top-Up</span>
                 </Button>
-                <Button className="h-20 flex flex-col" variant="outline">
+                <Button 
+                  className="h-20 flex flex-col" 
+                  variant="outline"
+                  onClick={() => handleExportCustomerData()}
+                >
                   <span className="text-lg">📊</span>
                   <span>Export Customer Data</span>
                 </Button>
-                <Button className="h-20 flex flex-col" variant="outline">
+                <Button 
+                  className="h-20 flex flex-col" 
+                  variant="outline"
+                  onClick={() => handleRICAStatusUpdate()}
+                >
                   <span className="text-lg">🔄</span>
                   <span>RICA Status Update</span>
                 </Button>
@@ -361,6 +500,14 @@ const CustomerManagementPanel = () => {
           </Card>
         </div>
       )}
+
+      {/* Bulk Actions Modal */}
+      <BulkActionsPanel
+        isOpen={bulkActionModal.isOpen}
+        onClose={() => setBulkActionModal({ isOpen: false, action: null })}
+        action={bulkActionModal.action}
+        selectedCustomers={selectedCustomers}
+      />
     </div>
   );
 };
