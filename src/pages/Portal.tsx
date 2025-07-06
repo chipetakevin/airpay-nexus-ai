@@ -76,12 +76,15 @@ const Portal = () => {
     try {
       const isAuthenticated = localStorage.getItem('userAuthenticated') === 'true';
       const storedCredentials = localStorage.getItem('userCredentials');
+      const adminProfile = localStorage.getItem('adminProfile');
       
       if (isAuthenticated && storedCredentials) {
         const credentials = JSON.parse(storedCredentials);
-        if (credentials.userType === 'admin' || credentials.password === 'Malawi@1976') {
+        // Check if user is admin OR has completed admin authentication
+        if (credentials.userType === 'admin' || credentials.password === 'Malawi@1976' || adminProfile) {
           setShowAdminTab(true);
           setIsAdminAuthenticated(true);
+          console.log('✅ Admin access granted - showing Control Center tab');
         }
       }
     } catch (error) {
@@ -157,7 +160,13 @@ const Portal = () => {
           case 'admin-reg':
             return !isRegisteredAdmin; // Only for non-admins
           case 'admin':
-            return (currentUserType === 'admin' && isAdminAuthenticated) || isUnified;
+            // Allow admin tab if user is admin type, has unified access, OR has completed admin authentication
+            const adminProfile = localStorage.getItem('adminProfile');
+            const hasAdminAccess = (currentUserType === 'admin' && isAdminAuthenticated) || 
+                                 isUnified || 
+                                 adminProfile !== null;
+            console.log(`🔐 Admin tab access: ${hasAdminAccess ? 'ALLOWED' : 'DENIED'} (userType: ${currentUserType}, isAdminAuth: ${isAdminAuthenticated}, hasProfile: ${!!adminProfile})`);
+            return hasAdminAccess;
           default:
             return false;
         }
