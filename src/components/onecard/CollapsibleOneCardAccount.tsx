@@ -12,7 +12,7 @@ interface CollapsibleOneCardAccountProps {
 
 export const CollapsibleOneCardAccount = ({ 
   userData, 
-  defaultCollapsed = false,
+  defaultCollapsed = true,
   className 
 }: CollapsibleOneCardAccountProps) => {
   const [isCollapsed, setIsCollapsed] = useState(defaultCollapsed);
