@@ -6,6 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
+import { useDocumentationAutoUpdater } from '@/hooks/useDocumentationAutoUpdater';
 import { 
   FileText, 
   Download, 
@@ -16,7 +17,11 @@ import {
   FileDown,
   BookOpen,
   Settings,
-  Globe
+  Globe,
+  RefreshCw,
+  Plus,
+  BarChart3,
+  Clock
 } from 'lucide-react';
 
 const DocumentationManager = () => {
@@ -25,6 +30,16 @@ const DocumentationManager = () => {
   const [emailAddress, setEmailAddress] = useState('');
   const [emailMessage, setEmailMessage] = useState('Please find attached the MVNE Platform Version 3.0 documentation.');
   const { toast } = useToast();
+  
+  // Auto-updater hook
+  const {
+    features,
+    stats,
+    lastUpdated,
+    isUpdating,
+    forceUpdateDocumentation,
+    getProductionChecklist,
+  } = useDocumentationAutoUpdater();
 
   const mvneDocumentation = `
 # MVNE Platform Version 3.0 - Complete Documentation
@@ -102,6 +117,14 @@ This MVNE (Mobile Virtual Network Enabler) platform is a comprehensive, enterpri
 - RICA verification
 - Black-owned MVNO support
 - Regulatory reporting automation
+
+#### Payroll Management System
+- Employee lifecycle management
+- Automated payroll processing
+- South African tax compliance (PAYE, UIF, SDL)
+- Leave management and tracking
+- Performance evaluation system
+- Statutory reporting automation
 
 ## 🎯 Key Features & Capabilities
 
@@ -271,6 +294,8 @@ This MVNE (Mobile Virtual Network Enabler) platform is a comprehensive, enterpri
 - [x] Testing and quality assurance
 - [x] Deployment procedures
 - [x] Support processes established
+- [x] Payroll Management System
+- [x] Automated documentation updates
 
 ## 📄 Version History
 
@@ -490,7 +515,77 @@ This platform represents a complete, enterprise-grade MVNE solution specifically
         </AlertDescription>
       </Alert>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      {/* Auto-Update Status */}
+      <Alert className="border-l-4 border-l-blue-500 bg-gradient-to-r from-blue-50 to-white">
+        <RefreshCw className="h-4 w-4 text-blue-600" />
+        <AlertDescription>
+          <div className="flex items-center justify-between">
+            <div className="space-y-1">
+              <span className="text-blue-800 font-medium">
+                Auto-Update System Active - Documentation stays current with latest features
+              </span>
+              <div className="flex items-center gap-4 text-sm text-blue-600">
+                <span>✅ {stats.completed} Features Complete</span>
+                <span>🔄 Last Updated: {lastUpdated ? new Date(lastUpdated).toLocaleDateString() : 'Today'}</span>
+                <span>📊 {stats.completionPercentage}% Ready</span>
+              </div>
+            </div>
+            <Button 
+              onClick={forceUpdateDocumentation}
+              disabled={isUpdating}
+              size="sm"
+              variant="outline"
+            >
+              {isUpdating ? (
+                <Loader2 className="w-3 h-3 mr-1 animate-spin" />
+              ) : (
+                <RefreshCw className="w-3 h-3 mr-1" />
+              )}
+              Update Now
+            </Button>
+          </div>
+        </AlertDescription>
+      </Alert>
+
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">..
+        {/* Feature Statistics */}
+        <Card className="border-l-4 border-l-green-500">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <BarChart3 className="w-5 h-5 text-green-600" />
+              Platform Statistics
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="grid grid-cols-2 gap-4">
+              <div className="text-center p-3 bg-green-50 rounded-lg">
+                <div className="text-2xl font-bold text-green-800">{stats.completed}</div>
+                <div className="text-sm text-green-600">Complete</div>
+              </div>
+              <div className="text-center p-3 bg-blue-50 rounded-lg">
+                <div className="text-2xl font-bold text-blue-800">{stats.completionPercentage}%</div>
+                <div className="text-sm text-blue-600">Ready</div>
+              </div>
+            </div>
+            
+            <div className="space-y-2">
+              <div className="text-sm font-medium">Recent Features Added:</div>
+              <div className="space-y-1 text-sm text-muted-foreground">
+                <div>• Payroll Management System</div>
+                <div>• Automated Documentation Updates</div>
+                <div>• Production Readiness Monitoring</div>
+              </div>
+            </div>
+            
+            <Alert>
+              <Clock className="h-4 w-4" />
+              <AlertDescription className="text-sm">
+                Documentation automatically updates when new features are added to maintain version 3.0 completeness.
+              </AlertDescription>
+            </Alert>
+          </CardContent>
+        </Card>
+
         {/* PDF Download Section */}
         <Card className="border-l-4 border-l-blue-500">
           <CardHeader>
