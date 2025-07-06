@@ -9,6 +9,11 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import AIPayrollAutomation from './ai/AIPayrollAutomation';
+import EmployeeSelfService from './self-service/EmployeeSelfService';
+import RealTimePayroll from './realtime/RealTimePayroll';
+import AdvancedAnalytics from './analytics/AdvancedAnalytics';
+import PayrollDocumentation from './documentation/PayrollDocumentation';
 import { 
   Users, 
   UserCheck, 
@@ -41,7 +46,12 @@ import {
   Signature,
   Archive,
   Search,
-  Filter
+  Filter,
+  Brain,
+  User,
+  Zap,
+  BarChart3,
+  BookOpen
 } from 'lucide-react';
 
 const AddexPayDashboard = () => {
@@ -308,6 +318,46 @@ const AddexPayDashboard = () => {
       description: 'Audit trails & security logs',
       count: payrollStats.auditTrailEntries,
       color: 'orange'
+    },
+    {
+      value: 'ai-automation',
+      label: 'AI Automation',
+      icon: <Brain className="w-4 h-4" />,
+      description: 'AI-powered payroll automation',
+      count: 15,
+      color: 'violet'
+    },
+    {
+      value: 'self-service',
+      label: 'Self Service',
+      icon: <User className="w-4 h-4" />,
+      description: 'Employee self-service portal',
+      count: payrollStats.totalEmployees,
+      color: 'teal'
+    },
+    {
+      value: 'real-time',
+      label: 'Real-Time Pay',
+      icon: <Zap className="w-4 h-4" />,
+      description: 'Real-time payroll processing',
+      count: 3,
+      color: 'amber'
+    },
+    {
+      value: 'analytics',
+      label: 'Analytics',
+      icon: <BarChart3 className="w-4 h-4" />,
+      description: 'Advanced analytics & reporting',
+      count: 12,
+      color: 'red'
+    },
+    {
+      value: 'documentation',
+      label: 'Documentation',
+      icon: <BookOpen className="w-4 h-4" />,
+      description: 'System documentation',
+      count: 1,
+      color: 'slate'
     }
   ];
 
@@ -1307,6 +1357,31 @@ const AddexPayDashboard = () => {
         {/* Audit Tab */}
         <TabsContent value="audit" className="space-y-6">
           <AuditTrailContent />
+        </TabsContent>
+
+        {/* AI Automation Tab */}
+        <TabsContent value="ai-automation" className="space-y-6">
+          <AIPayrollAutomation />
+        </TabsContent>
+
+        {/* Self Service Tab */}
+        <TabsContent value="self-service" className="space-y-6">
+          <EmployeeSelfService />
+        </TabsContent>
+
+        {/* Real-Time Pay Tab */}
+        <TabsContent value="real-time" className="space-y-6">
+          <RealTimePayroll />
+        </TabsContent>
+
+        {/* Analytics Tab */}
+        <TabsContent value="analytics" className="space-y-6">
+          <AdvancedAnalytics />
+        </TabsContent>
+
+        {/* Documentation Tab */}
+        <TabsContent value="documentation" className="space-y-6">
+          <PayrollDocumentation />
         </TabsContent>
       </Tabs>
 
