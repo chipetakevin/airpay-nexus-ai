@@ -19,10 +19,9 @@ import PermissionManager from './admin/PermissionManager';
 
 interface AdminPortalProps {
   onAuthSuccess?: () => void;
-  showAdminBanner?: boolean;
 }
 
-const AdminPortal: React.FC<AdminPortalProps> = ({ onAuthSuccess, showAdminBanner = false }) => {
+const AdminPortal: React.FC<AdminPortalProps> = ({ onAuthSuccess }) => {
   const { toast } = useToast();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(false);
@@ -177,12 +176,12 @@ const AdminPortal: React.FC<AdminPortalProps> = ({ onAuthSuccess, showAdminBanne
     );
   }
 
-  // Show collapsed admin indicator when authenticated but collapsed - only if banner should be shown
-  if (isAuthenticated && isCollapsed && showAdminBanner) {
+  // Show collapsed admin indicator when authenticated but collapsed - intelligent auto-show
+  if (isAuthenticated && isCollapsed) {
     const adminData = JSON.parse(localStorage.getItem('adminProfile') || '{}');
     return (
-      <div className="fixed top-20 right-4 z-50 transition-all duration-300 ease-in-out">
-        <Card className="border-green-200 bg-green-50 shadow-lg">
+      <div className="fixed top-20 right-4 z-50 transition-all duration-500 ease-in-out animate-fade-in">
+        <Card className="border-green-200 bg-green-50/95 backdrop-blur-sm shadow-lg hover:shadow-xl transition-all duration-300">
           <CardContent className="p-4">
             <div className="flex items-center gap-3">
               <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
@@ -198,7 +197,7 @@ const AdminPortal: React.FC<AdminPortalProps> = ({ onAuthSuccess, showAdminBanne
                 <Button 
                   size="sm"
                   variant="outline"
-                  className="h-8 text-xs bg-white hover:bg-gray-50"
+                  className="h-8 text-xs bg-white hover:bg-gray-50 transition-all duration-200 hover:scale-105"
                   onClick={() => setIsCollapsed(false)}
                 >
                   Expand
@@ -206,7 +205,7 @@ const AdminPortal: React.FC<AdminPortalProps> = ({ onAuthSuccess, showAdminBanne
                 <Button 
                   size="sm"
                   variant="outline"
-                  className="h-8 text-xs bg-white hover:bg-red-50 text-red-600 border-red-200"
+                  className="h-8 text-xs bg-white hover:bg-red-50 text-red-600 border-red-200 transition-all duration-200 hover:scale-105"
                   onClick={handleLogout}
                 >
                   Logout

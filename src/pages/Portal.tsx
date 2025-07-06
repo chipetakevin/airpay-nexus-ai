@@ -8,7 +8,6 @@ import FloatingPlatformSwitcher from '@/components/navigation/FloatingPlatformSw
 import PermanentAuthStatus from '@/components/auth/PermanentAuthStatus';
 import { useSessionManager } from '@/hooks/useSessionManager';
 import { usePersistentAuth } from '@/components/auth/PersistentAuthProvider';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 type UserType = 'customer' | 'vendor' | 'admin' | null;
 
@@ -19,7 +18,6 @@ const Portal = () => {
   const [showAdminTab, setShowAdminTab] = useState(false);
   const [isAdminAuthenticated, setIsAdminAuthenticated] = useState(false);
   const [isUnifiedProfile, setIsUnifiedProfile] = useState(false);
-  const [showAdminBanner, setShowAdminBanner] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
   
@@ -220,24 +218,6 @@ const Portal = () => {
     <div className="min-h-screen bg-gray-50 overflow-y-auto">
       <div className="bg-gradient-to-r from-blue-600 to-purple-600 p-2">
         <PortalHeader userType={userType} resetUserType={resetUserType} />
-        
-        {/* Admin Control Dropdown - Only show if admin is authenticated */}
-        {isAdminAuthenticated && (
-          <div className="mt-2 flex justify-center">
-            <Select 
-              value={showAdminBanner ? "show-admin" : "hide-admin"} 
-              onValueChange={(value) => setShowAdminBanner(value === "show-admin")}
-            >
-              <SelectTrigger className="w-48 bg-white/90 backdrop-blur-sm border-white/20">
-                <SelectValue placeholder="Admin Controls" />
-              </SelectTrigger>
-              <SelectContent className="bg-white border border-gray-200 shadow-lg">
-                <SelectItem value="hide-admin">Hide Admin Info</SelectItem>
-                <SelectItem value="show-admin">Show Admin Info</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-        )}
       </div>
       
       <main className="container mx-auto px-2 sm:px-4 -mt-1 pb-20">
@@ -249,7 +229,6 @@ const Portal = () => {
           setIsAdminAuthenticated={setIsAdminAuthenticated}
           isUnifiedProfile={isUnifiedProfile}
           isAuthenticated={isAuthenticated}
-          showAdminBanner={showAdminBanner}
         />
       </main>
       
