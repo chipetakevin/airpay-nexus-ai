@@ -113,7 +113,27 @@ const PortalTabs = ({
       description: 'Partner',
       color: 'blue',
       adminOnly: false
-    },
+    }
+  ];
+
+  // Build tabs array with conditional admin content
+  const tabs = [...baseTabs];
+  
+  // Add admin registration tab for non-admins (positioned prominently)
+  if (!isAdmin) {
+    console.log('🔍 Adding Admin Registration tab for non-admin user');
+    tabs.push({
+      value: 'admin-reg',
+      label: 'Admin Reg',
+      icon: '🔐',
+      description: 'Register',
+      color: 'red',
+      adminOnly: false
+    });
+  }
+
+  // Add admin-only tabs
+  tabs.push(
     {
       value: 'unified-reports',
       label: 'Reports',
@@ -130,23 +150,9 @@ const PortalTabs = ({
       color: 'blue',
       adminOnly: true
     }
-  ];
+  );
 
-  // Add admin registration tab only for non-admins
-  const tabs = [...baseTabs];
-  if (!isAdmin) {
-    console.log('🔍 Adding Admin Registration tab for non-admin user');
-    tabs.push({
-      value: 'admin-reg',
-      label: 'Admin Reg',
-      icon: '🔐',
-      description: 'Register',
-      color: 'gray',
-      adminOnly: false
-    });
-  } else {
-    console.log('🔍 User is already admin, hiding Admin Registration tab');
-  }
+  console.log('🔍 Final tabs array:', tabs.map(t => `${t.label} (${t.value})`));
 
   if (showAdminTab) {
     tabs.push({

@@ -52,6 +52,9 @@ const ModernTabNavigation = ({
       yellow: isActive 
         ? "tab-active tab-yellow-active border-2 shadow-lg transform hover:shadow-xl" 
         : "tab-inactive tab-yellow-inactive border hover:tab-yellow-hover",
+      red: isActive 
+        ? "bg-red-600 text-white border-red-700 shadow-lg transform hover:shadow-xl" 
+        : "bg-red-50 text-red-700 border-red-200 hover:bg-red-100 hover:border-red-300",
       gray: isActive 
         ? "tab-active tab-gray-active border-2 shadow-lg transform hover:shadow-xl" 
         : "tab-inactive tab-gray-inactive border hover:tab-gray-hover"
@@ -71,9 +74,9 @@ const ModernTabNavigation = ({
 
   return (
     <div className="w-full max-w-7xl mx-auto px-3 sm:px-4 mb-6 sm:mb-8">
-      {/* Enhanced Mobile: 2x3 Grid with improved card sizing and typography */}
+      {/* Enhanced Mobile: Dynamic Grid with improved card sizing and typography */}
       <div className="grid grid-cols-2 gap-3 sm:hidden">
-        {tabs.slice(0, 6).map((tab) => (
+        {tabs.map((tab) => (
           <Card 
             key={tab.value}
             className={`
@@ -83,6 +86,7 @@ const ModernTabNavigation = ({
               hover:shadow-lg mobile-touch-target
               focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2
               overflow-hidden
+              ${tab.value === 'admin-reg' ? 'ring-2 ring-red-200 border-red-300' : ''}
             `}
             onClick={() => handleTabClick(tab)}
             role="button"
