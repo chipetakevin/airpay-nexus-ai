@@ -94,13 +94,9 @@ export const useShoppingCart = (initialDeal?: CartItem) => {
     // Ensure phone number is set before validation
     const phoneToUse = customerPhone || getRegisteredPhoneNumber();
     
+    // Don't show toast error for missing phone - let UI handle it seamlessly
     if (!phoneToUse) {
-      toast({
-        title: "Phone Number Required",
-        description: "Please ensure your phone number is properly saved in your profile.",
-        variant: "destructive"
-      });
-      return false;
+      return false; // Return false to trigger phone correction flow
     }
 
     // Update customerPhone if it was empty

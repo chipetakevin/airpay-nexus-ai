@@ -7,6 +7,7 @@ import { Separator } from '@/components/ui/separator';
 import { ShoppingCart, CreditCard, User, Users, Gift, CheckCircle } from 'lucide-react';
 import { CartItem } from '@/types/deals';
 import PaymentMethodSelector from './PaymentMethodSelector';
+import PhoneNumberCorrection from './PhoneNumberCorrection';
 import { useToast } from '@/hooks/use-toast';
 import { useShoppingCart } from '@/hooks/useShoppingCart';
 
@@ -19,6 +20,8 @@ const ShoppingCartContent: React.FC<ShoppingCartContentProps> = ({ initialDeal }
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<any>(null);
   const [userType, setUserType] = useState<'customer' | 'vendor' | 'admin'>('customer');
   const [hasAcceptedTerms, setHasAcceptedTerms] = useState(false);
+  const [showPhoneCorrection, setShowPhoneCorrection] = useState(false);
+  const [pendingPurchase, setPendingPurchase] = useState(false);
 
   const {
     cartItems,
@@ -93,6 +96,19 @@ const ShoppingCartContent: React.FC<ShoppingCartContentProps> = ({ initialDeal }
       return;
     }
 
+    // Check for phone number - show correction modal if needed
+    if (!customerPhone) {
+      console.log('📱 Phone number missing - showing correction modal');
+      setShowPhoneCorrection(true);
+      setPendingPurchase(true);
+      return;
+    }
+
+    // Continue with purchase
+    await processPurchaseFlow();
+  };
+
+  const processPurchaseFlow = async () => {
     // Enhanced validation for all user types
     let validationError = '';
     
@@ -100,8 +116,6 @@ const ShoppingCartContent: React.FC<ShoppingCartContentProps> = ({ initialDeal }
       validationError = 'Your cart is empty';
     } else if (purchaseMode === 'other' && (!recipientData.name || !recipientData.phone)) {
       validationError = 'Please provide recipient details for third-party purchases';
-    } else if (!customerPhone) {
-      validationError = 'Customer phone number is required';
     }
 
     console.log('📋 Validation check:', { validationError, customerPhone, userType });
@@ -115,6 +129,7 @@ const ShoppingCartContent: React.FC<ShoppingCartContentProps> = ({ initialDeal }
         setCartItems([]);
         setSelectedPaymentMethod(null);
         setHasAcceptedTerms(false);
+        setPendingPurchase(false);
         
         console.log('✅ Purchase completed successfully for user type:', userType);
       }
@@ -125,7 +140,30 @@ const ShoppingCartContent: React.FC<ShoppingCartContentProps> = ({ initialDeal }
         description: "Unable to complete purchase. Please try again.",
         variant: "destructive"
       });
+      setPendingPurchase(false);
     }
+  };
+
+  const handlePhoneUpdate = (phone: string) => {
+    setCustomerPhone(phone);
+    console.log('📱 Phone number updated:', phone);
+  };
+
+  const handleSaveAndContinue = () => {
+    setShowPhoneCorrection(false);
+    // Continue with the pending purchase
+    setTimeout(() => {
+      processPurchaseFlow();
+    }, 100);
+  };
+
+  const handleCancelPhoneCorrection = () => {
+    setShowPhoneCorrection(false);
+    setPendingPurchase(false);
+    toast({
+      title: "Purchase Cancelled",
+      description: "Please add your phone number to complete purchases.",
+    });
   };
 
   const totals = calculateTotals();
@@ -141,8 +179,18 @@ const ShoppingCartContent: React.FC<ShoppingCartContentProps> = ({ initialDeal }
   }
 
   return (
-    <div className="space-y-6">
-      {/* Cart Items */}
+    <>
+      {/* Phone Number Correction Modal */}
+      <PhoneNumberCorrection
+        isVisible={showPhoneCorrection}
+        currentPhone={customerPhone}
+        onPhoneUpdate={handlePhoneUpdate}
+        onSaveAndContinue={handleSaveAndContinue}
+        onCancel={handleCancelPhoneCorrection}
+      />
+
+      <div className="space-y-6">
+        {/* Cart Items */}
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
@@ -299,7 +347,8 @@ const ShoppingCartContent: React.FC<ShoppingCartContentProps> = ({ initialDeal }
           </p>
         </CardContent>
       </Card>
-    </div>
+      </div>
+    </>
   );
 };
 
