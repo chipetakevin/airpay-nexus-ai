@@ -19,9 +19,10 @@ import PermissionManager from './admin/PermissionManager';
 
 interface AdminPortalProps {
   onAuthSuccess?: () => void;
+  showAdminBanner?: boolean;
 }
 
-const AdminPortal: React.FC<AdminPortalProps> = ({ onAuthSuccess }) => {
+const AdminPortal: React.FC<AdminPortalProps> = ({ onAuthSuccess, showAdminBanner = false }) => {
   const { toast } = useToast();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(false);
@@ -176,46 +177,9 @@ const AdminPortal: React.FC<AdminPortalProps> = ({ onAuthSuccess }) => {
     );
   }
 
-  // Show collapsed admin indicator when authenticated but collapsed - intelligent auto-show
+  // Don't show collapsed banner here - it's now handled by the navigation dropdown
   if (isAuthenticated && isCollapsed) {
-    const adminData = JSON.parse(localStorage.getItem('adminProfile') || '{}');
-    return (
-      <div className="fixed top-20 right-4 z-50 transition-all duration-500 ease-in-out animate-fade-in">
-        <Card className="border-green-200 bg-green-50/95 backdrop-blur-sm shadow-lg hover:shadow-xl transition-all duration-300">
-          <CardContent className="p-4">
-            <div className="flex items-center gap-3">
-              <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
-              <div>
-                <p className="text-sm font-semibold text-green-800">
-                  🔑 Admin Authenticated
-                </p>
-                <p className="text-xs text-green-600">
-                  {adminData.firstName} • {adminData.cardType}
-                </p>
-              </div>
-              <div className="flex gap-2">
-                <Button 
-                  size="sm"
-                  variant="outline"
-                  className="h-8 text-xs bg-white hover:bg-gray-50 transition-all duration-200 hover:scale-105"
-                  onClick={() => setIsCollapsed(false)}
-                >
-                  Expand
-                </Button>
-                <Button 
-                  size="sm"
-                  variant="outline"
-                  className="h-8 text-xs bg-white hover:bg-red-50 text-red-600 border-red-200 transition-all duration-200 hover:scale-105"
-                  onClick={handleLogout}
-                >
-                  Logout
-                </Button>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-    );
+    return null;
   }
 
   // Show full admin dashboard when authenticated and expanded

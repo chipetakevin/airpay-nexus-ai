@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import PortalHeader from '@/components/PortalHeader';
 import PortalTabs from '@/components/PortalTabs';
+import AdminNavDropdown from '@/components/navigation/AdminNavDropdown';
 import { useToast } from "@/hooks/use-toast"
 import WhatsAppFloatingButton from '@/components/WhatsAppFloatingButton';
 import FloatingPlatformSwitcher from '@/components/navigation/FloatingPlatformSwitcher';
@@ -18,6 +19,7 @@ const Portal = () => {
   const [showAdminTab, setShowAdminTab] = useState(false);
   const [isAdminAuthenticated, setIsAdminAuthenticated] = useState(false);
   const [isUnifiedProfile, setIsUnifiedProfile] = useState(false);
+  const [showAdminBanner, setShowAdminBanner] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
   
@@ -218,7 +220,62 @@ const Portal = () => {
     <div className="min-h-screen bg-gray-50 overflow-y-auto">
       <div className="bg-gradient-to-r from-blue-600 to-purple-600 p-2">
         <PortalHeader userType={userType} resetUserType={resetUserType} />
+        
+        {/* Admin Navigation Dropdown */}
+        <div className="flex justify-end mt-2">
+          <AdminNavDropdown
+            onShowAdminBanner={setShowAdminBanner}
+            showAdminBanner={showAdminBanner}
+            isAdminAuthenticated={isAdminAuthenticated}
+          />
+        </div>
       </div>
+      
+      {/* Admin Banner positioned under navigation */}
+      {showAdminBanner && isAdminAuthenticated && (
+        <div className="relative">
+          <div className="absolute top-2 right-4 z-50 transition-all duration-500 ease-in-out animate-fade-in">
+            {(() => {
+              const adminData = JSON.parse(localStorage.getItem('adminProfile') || '{}');
+              return (
+                <div className="bg-gradient-to-r from-green-50 to-emerald-50 border border-green-200 rounded-lg shadow-lg p-4 backdrop-blur-sm">
+                  <div className="flex items-center gap-3">
+                    <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
+                    <div className="flex-1">
+                      <p className="text-sm font-semibold text-green-800 flex items-center gap-2">
+                        🔑 Admin Authenticated
+                      </p>
+                      <p className="text-xs text-green-600">
+                        {adminData.firstName} • {adminData.cardType}
+                      </p>
+                    </div>
+                    <div className="flex gap-2">
+                      <button 
+                        className="px-3 py-1 text-xs bg-white border border-gray-200 rounded-md hover:bg-gray-50 transition-all duration-200 hover:scale-105"
+                        onClick={() => setShowAdminBanner(false)}
+                      >
+                        Minimize
+                      </button>
+                      <button 
+                        className="px-3 py-1 text-xs bg-white border border-red-200 text-red-600 rounded-md hover:bg-red-50 transition-all duration-200 hover:scale-105"
+                        onClick={() => {
+                          setShowAdminBanner(false);
+                          setIsAdminAuthenticated(false);
+                          localStorage.removeItem('adminAuthenticated');
+                          localStorage.removeItem('adminAuthCode');
+                          localStorage.removeItem('adminProfile');
+                        }}
+                      >
+                        Logout
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              );
+            })()}
+          </div>
+        </div>
+      )}
       
       <main className="container mx-auto px-2 sm:px-4 -mt-1 pb-20">
         <PortalTabs 
@@ -229,6 +286,7 @@ const Portal = () => {
           setIsAdminAuthenticated={setIsAdminAuthenticated}
           isUnifiedProfile={isUnifiedProfile}
           isAuthenticated={isAuthenticated}
+          showAdminBanner={showAdminBanner}
         />
       </main>
       
