@@ -225,14 +225,14 @@ const Portal = () => {
         {isAdminAuthenticated && (
           <div className="mt-2 flex justify-center">
             <Select 
-              value={showAdminBanner ? "show-admin" : ""} 
+              value={showAdminBanner ? "show-admin" : "hide-admin"} 
               onValueChange={(value) => setShowAdminBanner(value === "show-admin")}
             >
               <SelectTrigger className="w-48 bg-white/90 backdrop-blur-sm border-white/20">
                 <SelectValue placeholder="Admin Controls" />
               </SelectTrigger>
               <SelectContent className="bg-white border border-gray-200 shadow-lg">
-                <SelectItem value="">Hide Admin Info</SelectItem>
+                <SelectItem value="hide-admin">Hide Admin Info</SelectItem>
                 <SelectItem value="show-admin">Show Admin Info</SelectItem>
               </SelectContent>
             </Select>
