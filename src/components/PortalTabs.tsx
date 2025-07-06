@@ -142,6 +142,19 @@ const PortalTabs = ({
   // Build tabs array with conditional admin content
   const tabs = [...baseTabs];
   
+  // Always add Control Center tab for admins (highest priority)
+  if (isAdmin || showAdminTab) {
+    console.log('🔍 Adding Control Center tab for admin user');
+    tabs.push({
+      value: 'admin',
+      label: 'Control Center',
+      icon: '⚙️',
+      description: 'Admin Portal',
+      color: 'gray',
+      adminOnly: true
+    });
+  }
+  
   // Add admin registration tab for non-admins (positioned prominently)
   if (!isAdmin) {
     console.log('🔍 Adding Admin Registration tab for non-admin user');
@@ -184,17 +197,7 @@ const PortalTabs = ({
   );
 
   console.log('🔍 Final tabs array:', tabs.map(t => `${t.label} (${t.value})`));
-
-  if (showAdminTab) {
-    tabs.push({
-      value: 'admin',
-      label: 'Control Center',
-      icon: '⚙️',
-      description: 'Admin Portal',
-      color: 'gray',
-      adminOnly: true
-    });
-  }
+  console.log('🔍 Control Center tab included:', tabs.some(t => t.value === 'admin'));
 
   // Enhanced tab change handler with debugging
   const enhancedHandleTabChange = (value: string) => {
@@ -262,7 +265,7 @@ const PortalTabs = ({
             <AdminRegistration />
           </TabsContent>
           
-          {showAdminTab && (
+          {(isAdmin || showAdminTab) && (
             <TabsContent value="admin" className="p-1 sm:p-2 md:p-4 lg:p-6 animate-fade-in">
               <AdminPortal 
                 onAuthSuccess={() => setIsAdminAuthenticated(true)} 
