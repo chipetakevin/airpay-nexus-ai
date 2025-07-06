@@ -246,22 +246,23 @@ const MNOIntegrationPanel = () => {
           </Card>
         </TabsContent>
 
-        <TabsContent value="bulk-orders" className="space-y-4">
-          <Card>
-            <CardHeader>
-              <CardTitle>Place Bulk Order</CardTitle>
+        <TabsContent value="bulk-orders" className="space-y-6">
+          <Card className="border-2">
+            <CardHeader className="pb-4">
+              <CardTitle className="text-2xl font-bold">Place Bulk Order</CardTitle>
+              <p className="text-muted-foreground">Select provider, network, and amount for bulk airtime/data purchase</p>
             </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div>
-                  <Label>Provider</Label>
+            <CardContent className="space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div className="space-y-2">
+                  <Label className="text-base font-semibold">Provider</Label>
                   <Select value={selectedProvider} onValueChange={setSelectedProvider}>
-                    <SelectTrigger>
+                    <SelectTrigger className="h-12 text-base">
                       <SelectValue placeholder="Select provider" />
                     </SelectTrigger>
-                    <SelectContent>
+                    <SelectContent className="z-50 bg-background">
                       {providers.filter(p => p.status === 'connected').map((provider) => (
-                        <SelectItem key={provider.id} value={provider.id}>
+                        <SelectItem key={provider.id} value={provider.id} className="text-base">
                           {provider.name} (R{provider.balance.toLocaleString()})
                         </SelectItem>
                       ))}
@@ -269,35 +270,75 @@ const MNOIntegrationPanel = () => {
                   </Select>
                 </div>
                 
-                <div>
-                  <Label>Network</Label>
+                <div className="space-y-2">
+                  <Label className="text-base font-semibold">Network</Label>
                   <Select value={selectedNetwork} onValueChange={setSelectedNetwork}>
-                    <SelectTrigger>
+                    <SelectTrigger className="h-12 text-base">
                       <SelectValue placeholder="Select network" />
                     </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="MTN">MTN</SelectItem>
-                      <SelectItem value="Vodacom">Vodacom</SelectItem>
-                      <SelectItem value="Cell C">Cell C</SelectItem>
-                      <SelectItem value="Telkom">Telkom</SelectItem>
+                    <SelectContent className="z-50 bg-background">
+                      <SelectItem value="MTN" className="text-base">MTN</SelectItem>
+                      <SelectItem value="Vodacom" className="text-base">Vodacom</SelectItem>
+                      <SelectItem value="Cell C" className="text-base">Cell C</SelectItem>
+                      <SelectItem value="Telkom" className="text-base">Telkom</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
                 
-                <div>
-                  <Label>Amount</Label>
+                <div className="space-y-2">
+                  <Label className="text-base font-semibold">Amount</Label>
                   <Input
                     type="number"
                     placeholder="Enter amount"
                     value={bulkOrderAmount}
                     onChange={(e) => setBulkOrderAmount(e.target.value)}
+                    className="h-12 text-base"
                   />
                 </div>
               </div>
               
-              <Button onClick={handleBulkOrder} className="w-full md:w-auto">
+              <Button 
+                onClick={handleBulkOrder} 
+                className="w-full h-12 text-lg font-semibold bg-primary hover:bg-primary/90"
+                disabled={!selectedProvider || !selectedNetwork || !bulkOrderAmount}
+              >
                 Place Bulk Order
               </Button>
+            </CardContent>
+          </Card>
+
+          {/* Enhanced Order History */}
+          <Card>
+            <CardHeader>
+              <CardTitle>Recent Bulk Orders</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-3">
+                {[
+                  { id: 'BO-001', provider: 'Freepaid', network: 'MTN', amount: 50000, status: 'completed', date: '2024-01-15' },
+                  { id: 'BO-002', provider: 'Blu Telecoms', network: 'Vodacom', amount: 25000, status: 'processing', date: '2024-01-15' },
+                  { id: 'BO-003', provider: 'Freepaid', network: 'Cell C', amount: 15000, status: 'pending', date: '2024-01-14' }
+                ].map((order) => (
+                  <div key={order.id} className="flex items-center justify-between p-4 border rounded-lg">
+                    <div className="flex items-center gap-4">
+                      <div>
+                        <p className="font-semibold">{order.id}</p>
+                        <p className="text-sm text-muted-foreground">{order.provider} • {order.network}</p>
+                      </div>
+                    </div>
+                    <div className="text-right">
+                      <p className="font-semibold">R{order.amount.toLocaleString()}</p>
+                      <Badge className={
+                        order.status === 'completed' ? 'bg-green-100 text-green-800' :
+                        order.status === 'processing' ? 'bg-blue-100 text-blue-800' :
+                        'bg-yellow-100 text-yellow-800'
+                      }>
+                        {order.status}
+                      </Badge>
+                    </div>
+                  </div>
+                ))}
+              </div>
             </CardContent>
           </Card>
         </TabsContent>

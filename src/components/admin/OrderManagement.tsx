@@ -7,6 +7,7 @@ import MNOIntegrationPanel from './orderManagement/MNOIntegrationPanel';
 import RealTimeOrderProcessor from './orderManagement/RealTimeOrderProcessor';
 import CustomerManagementPanel from './orderManagement/CustomerManagementPanel';
 import InventoryManagementSystem from './orderManagement/InventoryManagementSystem';
+import FinancialDistributionPanel from './orderManagement/FinancialDistributionPanel';
 
 const OrderManagement = () => {
   return (
@@ -17,11 +18,12 @@ const OrderManagement = () => {
       </div>
 
       <Tabs defaultValue="integration" className="w-full">
-        <TabsList className="grid w-full grid-cols-4">
+        <TabsList className="grid w-full grid-cols-5">
           <TabsTrigger value="integration">MNO Integration</TabsTrigger>
           <TabsTrigger value="processing">Real-Time Orders</TabsTrigger>
           <TabsTrigger value="customers">Customer Management</TabsTrigger>
           <TabsTrigger value="inventory">Inventory Control</TabsTrigger>
+          <TabsTrigger value="financial">Financial Analytics</TabsTrigger>
         </TabsList>
 
         <TabsContent value="integration">
@@ -38,6 +40,10 @@ const OrderManagement = () => {
 
         <TabsContent value="inventory">
           <InventoryManagementSystem />
+        </TabsContent>
+
+        <TabsContent value="financial">
+          <FinancialDistributionPanel />
         </TabsContent>
       </Tabs>
     </div>
