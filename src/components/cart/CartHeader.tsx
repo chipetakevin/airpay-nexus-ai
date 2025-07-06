@@ -74,8 +74,8 @@ const CartHeader = ({ onClose, currentUser, isVendor }: CartHeaderProps) => {
             <Link to="/" className="flex items-center gap-2 hover:scale-105 transition-transform duration-200">
               <div className="p-1.5 bg-white/90 rounded-lg shadow-sm">
                 <img 
-                  src="/lovable-uploads/5ef6be83-8590-459d-942d-7a0539064226.png" 
-                  alt="Divine Mobile Crown Logo"
+                  src="/lovable-uploads/788fddcb-574c-4f1d-9c73-54cc003a95d1.png" 
+                  alt="Divine Mobile Logo"
                   className="h-7 w-7 object-contain"
                 />
               </div>

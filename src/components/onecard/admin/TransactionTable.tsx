@@ -203,7 +203,7 @@ const TransactionTable = ({ transactions }: TransactionTableProps) => {
                 <div className="space-y-2">
                   <h2 className="text-xl font-bold text-gray-900">Premium Master Report</h2>
                   <p className="text-gray-600 text-sm max-w-sm mx-auto">
-                    Professional PDF with charts, crown logo, and comprehensive analytics
+                    Professional PDF with charts, Divine Mobile logo, and comprehensive analytics
                   </p>
                 </div>
 

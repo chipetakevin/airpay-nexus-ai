@@ -39,7 +39,7 @@ const ReportsSection = ({ customers, transactions }: ReportsSectionProps) => {
             <div className="space-y-2">
               <h2 className="text-lg sm:text-xl font-bold text-gray-900">Premium Master Report</h2>
               <p className="text-gray-600 text-sm sm:text-base max-w-sm mx-auto leading-relaxed">
-                Professional PDF with charts, crown logo, and comprehensive analytics
+                Professional PDF with charts, Divine Mobile logo, and comprehensive analytics
               </p>
             </div>
 
@@ -82,7 +82,7 @@ const ReportsSection = ({ customers, transactions }: ReportsSectionProps) => {
             </Button>
             
             <div className="text-xs sm:text-sm text-gray-500 mt-2">
-              ✨ One-click download • 👑 Crown logo included • 📊 Modern design
+              ✨ One-click download • 👑 Divine Mobile logo included • 📊 Modern design
             </div>
           </div>
         </CardContent>
@@ -154,7 +154,7 @@ const ReportsSection = ({ customers, transactions }: ReportsSectionProps) => {
               <h4 className="font-semibold text-gray-900 text-sm sm:text-base">Modern Design</h4>
               <div className="space-y-2">
                 {[
-                  { text: "Crown logo branding", color: "bg-purple-500" },
+                  { text: "Divine Mobile logo branding", color: "bg-purple-500" },
                   { text: "Interactive charts & graphs", color: "bg-blue-500" },
                   { text: "Customer performance metrics", color: "bg-green-500" },
                   { text: "Network distribution analytics", color: "bg-orange-500" }

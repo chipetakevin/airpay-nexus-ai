@@ -9,8 +9,8 @@ const AdminDashboardHeader = () => {
       <CardHeader>
         <CardTitle className="flex items-center gap-2 text-2xl">
           <img 
-            src="/lovable-uploads/5ef6be83-8590-459d-942d-7a0539064226.png" 
-            alt="Divine Mobile Crown Logo"
+            src="/lovable-uploads/788fddcb-574c-4f1d-9c73-54cc003a95d1.png" 
+            alt="Divine Mobile Logo"
             className="h-8 w-8 object-contain"
           />
           OneCard Admin Dashboard

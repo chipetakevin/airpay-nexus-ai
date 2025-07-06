@@ -17,7 +17,7 @@ const ReportsAnalytics = () => {
   const reportTypes = [
     {
       title: 'Payroll Summary Report',
-      description: 'Comprehensive monthly payroll breakdown with crown logo',
+      description: 'Comprehensive monthly payroll breakdown with Divine Mobile logo',
       type: 'Monthly',
       lastGenerated: '15 Jan 2025',
       size: '2.3 MB'

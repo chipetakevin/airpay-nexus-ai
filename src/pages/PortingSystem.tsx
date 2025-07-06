@@ -434,8 +434,8 @@ const PortingSystem = () => {
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-4">
           <div className="flex items-center gap-3">
             <img 
-              src="/lovable-uploads/638d9726-2690-4aba-acea-6054bc398c06.png"
-              alt="Crown Logo"
+              src="/lovable-uploads/788fddcb-574c-4f1d-9c73-54cc003a95d1.png"
+              alt="Divine Mobile Logo"
               className="w-8 h-8 sm:w-10 sm:h-10 object-contain"
             />
             <div>

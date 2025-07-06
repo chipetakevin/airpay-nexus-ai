@@ -26,8 +26,8 @@ const PortalHeader = ({ userType, resetUserType }: PortalHeaderProps) => {
             <div className="flex items-center gap-2 sm:gap-3 flex-shrink-0">
               <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center shadow-md">
                 <img 
-                  src="/lovable-uploads/5ef6be83-8590-459d-942d-7a0539064226.png" 
-                  alt="Divine Crown"
+                  src="/lovable-uploads/788fddcb-574c-4f1d-9c73-54cc003a95d1.png" 
+                  alt="Divine Mobile Logo"
                   className="w-6 h-6 sm:w-8 sm:h-8 object-contain"
                 />
               </div>

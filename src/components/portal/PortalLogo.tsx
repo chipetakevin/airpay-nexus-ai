@@ -15,8 +15,8 @@ const PortalLogo = ({ isUnifiedProfile }: PortalLogoProps) => {
     <div className="flex items-center gap-2 sm:gap-3 flex-shrink-0 min-w-0">
       <div className="flex items-center gap-2 sm:gap-3">
         <img 
-          src="/lovable-uploads/5ef6be83-8590-459d-942d-7a0539064226.png" 
-          alt="Divine Mobile Crown Logo"
+          src="/lovable-uploads/788fddcb-574c-4f1d-9c73-54cc003a95d1.png" 
+          alt="Divine Mobile Logo"
           className="h-10 sm:h-12 w-10 sm:w-12 object-contain flex-shrink-0"
         />
         <div className="flex flex-col min-w-0">
