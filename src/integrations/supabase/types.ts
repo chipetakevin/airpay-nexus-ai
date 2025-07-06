@@ -4197,6 +4197,23 @@ export type Database = {
         Args: { component_name_param: string }
         Returns: number
       }
+      calculate_paye: {
+        Args: {
+          gross_annual_income: number
+          employee_age?: number
+          pension_contribution?: number
+          medical_aid_contribution?: number
+        }
+        Returns: number
+      }
+      calculate_sdl: {
+        Args: { total_monthly_payroll: number; annual_payroll: number }
+        Returns: number
+      }
+      calculate_uif: {
+        Args: { monthly_gross: number }
+        Returns: Json
+      }
       capture_codebase_version: {
         Args: {
           p_version_number: string
@@ -4288,6 +4305,14 @@ export type Database = {
           p_files_restored?: number
           p_status?: string
         }
+        Returns: string
+      }
+      process_payroll_calculations: {
+        Args: { p_payroll_run_id: string; p_employee_id: string }
+        Returns: string
+      }
+      run_compliance_check: {
+        Args: { p_payroll_run_id: string; p_compliance_type: string }
         Returns: string
       }
       update_cashback_balance: {
