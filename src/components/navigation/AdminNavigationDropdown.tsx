@@ -38,7 +38,8 @@ import {
   Layers,
   Eye,
   Target,
-  Gauge
+  Gauge,
+  BookOpen
 } from 'lucide-react';
 
 interface AdminNavigationDropdownProps {
@@ -308,6 +309,30 @@ const AdminNavigationDropdown: React.FC<AdminNavigationDropdownProps> = ({
           path: '/whatsapp-assistant', 
           icon: <MessageCircle className="w-3 h-3" />,
           description: 'Chat Commerce'
+        }
+      ]
+    },
+    {
+      title: 'Documentation',
+      color: 'text-blue-600',
+      items: [
+        { 
+          name: 'Documentation Manager', 
+          path: '/portal?tab=documentation', 
+          icon: <FileText className="w-3 h-3" />,
+          description: 'PDF & Email Docs'
+        },
+        { 
+          name: 'MVNE v3.0 Specs', 
+          path: '/portal?tab=documentation&section=specs', 
+          icon: <BookOpen className="w-3 h-3" />,
+          description: 'Technical Specs'
+        },
+        { 
+          name: 'API Documentation', 
+          path: '/portal?tab=documentation&section=api', 
+          icon: <Globe className="w-3 h-3" />,
+          description: 'Integration Docs'
         }
       ]
     },

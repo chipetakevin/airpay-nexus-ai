@@ -10,6 +10,7 @@ import ReportsTabContent from './onecard/ReportsTabContent';
 import AirtimeDealsSystem from './AirtimeDealsSystem';
 import TabSwitcher from './navigation/TabSwitcher';
 import ModernTabNavigation from './navigation/ModernTabNavigation';
+import DocumentationManager from './admin/DocumentationManager';
 
 interface PortalTabsProps {
   activeTab: string;
@@ -89,6 +90,13 @@ const PortalTabs = ({
       color: 'yellow'
     },
     {
+      value: 'documentation',
+      label: 'Docs',
+      icon: '📋',
+      description: 'MVNE v3.0',
+      color: 'blue'
+    },
+    {
       value: 'admin-reg',
       label: 'Admin',
       icon: '🔐',
@@ -155,6 +163,10 @@ const PortalTabs = ({
 
           <TabsContent value="unified-reports" className="mobile-section-spacing p-2 sm:p-3 md:p-4 lg:p-6 animate-fade-in">
             <ReportsTabContent />
+          </TabsContent>
+          
+          <TabsContent value="documentation" className="mobile-section-spacing p-2 sm:p-3 md:p-4 lg:p-6 animate-fade-in">
+            <DocumentationManager />
           </TabsContent>
           
           <TabsContent value="admin-reg" className="mobile-section-spacing p-2 sm:p-3 md:p-4 lg:p-6 animate-fade-in">

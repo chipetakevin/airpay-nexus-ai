@@ -132,6 +132,8 @@ const Portal = () => {
             return true; // Available to all authenticated users
           case 'unified-reports':
             return isUnified;
+          case 'documentation':
+            return (currentUserType === 'admin' && isAdminAuthenticated) || isUnified;
           case 'admin-reg':
             return currentUserType === 'admin' || isUnified;
           case 'admin':
