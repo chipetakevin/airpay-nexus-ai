@@ -100,7 +100,33 @@ const CustomerRegistration = () => {
     
     const hasNoErrors = Object.keys(errors).length === 0;
     
-    return hasRequiredFields && hasNoErrors;
+    const isValid = hasRequiredFields && hasNoErrors;
+    
+    // Debug logging to help identify validation issues
+    console.log('🔍 Form validation status:', {
+      isValid,
+      formData: {
+        firstName: `"${formData.firstName}" (${formData.firstName.length} chars)`,
+        lastName: `"${formData.lastName}" (${formData.lastName.length} chars)`,
+        email: `"${formData.email}" (${formData.email.length} chars)`,
+        phoneNumber: `"${formData.phoneNumber}" (${formData.phoneNumber.length} digits)`,
+        agreeTerms: formData.agreeTerms
+      },
+      validation: {
+        hasFirstName: !!formData.firstName.trim(),
+        hasLastName: !!formData.lastName.trim(),
+        hasEmail: !!formData.email.trim(),
+        hasPhone: !!formData.phoneNumber.trim(),
+        phoneIs9Digits: formData.phoneNumber.length === 9,
+        termsAgreed: formData.agreeTerms,
+        hasRequiredFields,
+        hasNoErrors,
+        errorsCount: Object.keys(errors).length
+      },
+      errors: errors
+    });
+    
+    return isValid;
   };
 
   const handleFormSubmit = async (e: React.FormEvent) => {
