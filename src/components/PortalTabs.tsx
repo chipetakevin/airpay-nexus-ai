@@ -59,37 +59,48 @@ const PortalTabs = ({
 
   const { name: userName, isAuth: userAuthenticated } = getUserData();
 
-  // Check if user is registered admin
+  // Check if user is registered admin with comprehensive authentication detection
   const isRegisteredAdmin = () => {
     try {
       const credentials = localStorage.getItem('userCredentials');
       const adminData = localStorage.getItem('onecardAdmin');
       const adminProfile = localStorage.getItem('adminProfile');
+      const adminAuthenticated = localStorage.getItem('adminAuthenticated') === 'true';
+      const isUserAuthenticated = localStorage.getItem('userAuthenticated') === 'true';
       
-      if (!credentials) {
-        console.log('🔍 Admin check: No credentials found');
+      if (!credentials && !adminProfile && !adminAuthenticated) {
+        console.log('🔍 Admin check: No credentials or admin authentication found');
         return false;
       }
       
-      const parsedCredentials = JSON.parse(credentials);
+      // Check if admin is authenticated through any method
+      let isAdmin = false;
       
-      // Check multiple conditions for admin access
-      const isAdmin = parsedCredentials.userType === 'admin' && 
-                     parsedCredentials.password === 'Malawi@1976';
-      const hasAdminData = adminData !== null;
-      const hasAdminProfile = adminProfile !== null;
+      if (credentials) {
+        const parsedCredentials = JSON.parse(credentials);
+        isAdmin = parsedCredentials.userType === 'admin' || 
+                 parsedCredentials.password === 'Malawi@1976';
+      }
       
-      const result = isAdmin || hasAdminData || hasAdminProfile;
+      // Admin is considered authenticated if ANY of these conditions are true:
+      const hasAdminAccess = isAdmin || 
+                            adminData !== null || 
+                            adminProfile !== null || 
+                            adminAuthenticated ||
+                            (isUserAuthenticated && (adminProfile || adminAuthenticated));
       
-      console.log('🔍 Admin check result:', {
-        userType: parsedCredentials.userType,
-        hasCorrectPassword: parsedCredentials.password === 'Malawi@1976',
-        hasAdminData: hasAdminData,
-        hasAdminProfile: hasAdminProfile,
-        finalResult: result
+      console.log('🔍 Comprehensive admin check result:', {
+        hasCredentials: !!credentials,
+        userType: credentials ? JSON.parse(credentials).userType : 'none',
+        hasCorrectPassword: credentials ? JSON.parse(credentials).password === 'Malawi@1976' : false,
+        hasAdminData: !!adminData,
+        hasAdminProfile: !!adminProfile,
+        adminAuthenticated,
+        isUserAuthenticated,
+        finalResult: hasAdminAccess
       });
       
-      return result;
+      return hasAdminAccess;
     } catch (error) {
       console.log('🔍 Admin check error:', error);
       return false;

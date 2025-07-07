@@ -137,11 +137,22 @@ const Portal = () => {
           }
         })() : false;
 
-          // Admin-only tabs (Reports, Docs, Versions, and Addex Pay) require registered admin status
-          if (['unified-reports', 'documentation', 'version-manager', 'addex-pay'].includes(tabValue)) {
-            console.log(`🔐 Admin-only tab ${tabValue}: ${isRegisteredAdmin ? 'ALLOWED' : 'DENIED'}`);
-            return isRegisteredAdmin;
-          }
+        // Admin-only tabs (Reports, Docs, Versions, and Addex Pay) require admin authentication
+        if (['unified-reports', 'documentation', 'version-manager', 'addex-pay'].includes(tabValue)) {
+          // Check for admin authentication - any of these conditions grant access
+          const adminProfile = localStorage.getItem('adminProfile');
+          const adminAuthenticated = localStorage.getItem('adminAuthenticated') === 'true';
+          const hasAdminAccess = isRegisteredAdmin || 
+                                isAuthenticated && (adminProfile !== null || adminAuthenticated || 
+                                (storedCredentials && JSON.parse(storedCredentials).password === 'Malawi@1976'));
+          console.log(`🔐 Admin-only tab ${tabValue}: ${hasAdminAccess ? 'ALLOWED' : 'DENIED'}`, {
+            isRegisteredAdmin,
+            adminProfile: !!adminProfile,
+            adminAuthenticated,
+            isUnified: storedCredentials ? JSON.parse(storedCredentials).password === 'Malawi@1976' : false
+          });
+          return hasAdminAccess;
+        }
           
           // Field Workers tab - accessible to all authenticated users
           if (tabValue === 'field-workers') {
