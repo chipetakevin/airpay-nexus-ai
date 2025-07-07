@@ -195,6 +195,15 @@ const Portal = () => {
               finalResult: hasAdminAccess
             });
             return hasAdminAccess;
+          case 'admin-dashboard':
+            // Full admin dashboard access - same permissions as admin tab
+            const adminProfile2 = localStorage.getItem('adminProfile');
+            const adminAuthenticated2 = localStorage.getItem('adminAuthenticated') === 'true';
+            const hasFullAdminAccess = (currentUserType === 'admin' && isAdminAuthenticated) || 
+                                      isUnified || 
+                                      adminProfile2 !== null ||
+                                      adminAuthenticated2;
+            return hasFullAdminAccess;
           default:
             return false;
         }
@@ -285,6 +294,12 @@ const Portal = () => {
                       </p>
                     </div>
                     <div className="flex gap-2">
+                      <button 
+                        className="px-3 py-1 text-xs bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-all duration-200 hover:scale-105"
+                        onClick={() => navigate('/admin-dashboard')}
+                      >
+                        Admin Dashboard
+                      </button>
                       <button 
                         className="px-3 py-1 text-xs bg-white border border-gray-200 rounded-md hover:bg-gray-50 transition-all duration-200 hover:scale-105"
                         onClick={() => setShowAdminBanner(false)}
