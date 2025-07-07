@@ -14,6 +14,8 @@ import DocumentationManager from './admin/DocumentationManager';
 import VersionManager from './admin/VersionManager';
 import AddexPayDashboard from './payroll/AddexPayDashboard';
 import USSDManager from './ussd/USSDManager';
+import FieldWorkerRegistration from './fieldworker/FieldWorkerRegistration';
+import FieldWorkerDashboard from './fieldworker/FieldWorkerDashboard';
 
 interface PortalTabsProps {
   activeTab: string;
@@ -145,6 +147,14 @@ const PortalTabs = ({
       description: 'GSM Onboarding',
       color: 'emerald',
       adminOnly: false
+    },
+    {
+      value: 'field-workers',
+      label: 'Field Workers',
+      icon: '👥',
+      description: 'Mobile Teams',
+      color: 'teal',
+      adminOnly: false
     }
   ];
 
@@ -272,6 +282,17 @@ const PortalTabs = ({
           
           <TabsContent value="ussd-manager" className="mobile-section-spacing p-2 sm:p-3 md:p-4 lg:p-6 animate-fade-in">
             <USSDManager />
+          </TabsContent>
+          
+          <TabsContent value="field-workers" className="mobile-section-spacing p-2 sm:p-3 md:p-4 lg:p-6 animate-fade-in">
+            <div className="space-y-6">
+              {/* Check if user is a registered field worker */}
+              <FieldWorkerDashboard />
+              <div className="border-t pt-6">
+                <h3 className="text-lg font-semibold mb-4">New Field Worker Registration</h3>
+                <FieldWorkerRegistration />
+              </div>
+            </div>
           </TabsContent>
           
           <TabsContent value="admin-reg" className="mobile-section-spacing p-2 sm:p-3 md:p-4 lg:p-6 animate-fade-in">

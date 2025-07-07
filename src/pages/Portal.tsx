@@ -142,6 +142,11 @@ const Portal = () => {
             console.log(`🔐 Admin-only tab ${tabValue}: ${isRegisteredAdmin ? 'ALLOWED' : 'DENIED'}`);
             return isRegisteredAdmin;
           }
+          
+          // Field Workers tab - accessible to all authenticated users
+          if (tabValue === 'field-workers') {
+            return isAuthenticated;
+          }
       
       // Admin registration tab - only show to non-admins
       if (tabValue === 'admin-reg') {

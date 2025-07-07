@@ -1792,6 +1792,345 @@ export type Database = {
         }
         Relationships: []
       }
+      field_worker_activations: {
+        Row: {
+          activation_date: string | null
+          activation_location: Json | null
+          activation_type: string | null
+          commission_amount: number | null
+          commission_paid_at: string | null
+          commission_status: string | null
+          created_at: string | null
+          customer_email: string | null
+          customer_id_number: string
+          customer_name: string
+          customer_phone: string
+          field_worker_id: string
+          id: string
+          msisdn: string | null
+          network_provider: string
+          rica_reference: string | null
+          rica_status: string | null
+          sim_iccid: string | null
+          updated_at: string | null
+          verification_method: string | null
+        }
+        Insert: {
+          activation_date?: string | null
+          activation_location?: Json | null
+          activation_type?: string | null
+          commission_amount?: number | null
+          commission_paid_at?: string | null
+          commission_status?: string | null
+          created_at?: string | null
+          customer_email?: string | null
+          customer_id_number: string
+          customer_name: string
+          customer_phone: string
+          field_worker_id: string
+          id?: string
+          msisdn?: string | null
+          network_provider: string
+          rica_reference?: string | null
+          rica_status?: string | null
+          sim_iccid?: string | null
+          updated_at?: string | null
+          verification_method?: string | null
+        }
+        Update: {
+          activation_date?: string | null
+          activation_location?: Json | null
+          activation_type?: string | null
+          commission_amount?: number | null
+          commission_paid_at?: string | null
+          commission_status?: string | null
+          created_at?: string | null
+          customer_email?: string | null
+          customer_id_number?: string
+          customer_name?: string
+          customer_phone?: string
+          field_worker_id?: string
+          id?: string
+          msisdn?: string | null
+          network_provider?: string
+          rica_reference?: string | null
+          rica_status?: string | null
+          sim_iccid?: string | null
+          updated_at?: string | null
+          verification_method?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "field_worker_activations_field_worker_id_fkey"
+            columns: ["field_worker_id"]
+            isOneToOne: false
+            referencedRelation: "field_workers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      field_worker_commission_statements: {
+        Row: {
+          commission_per_activation: number | null
+          created_at: string | null
+          deductions: number | null
+          field_worker_id: string
+          generated_at: string | null
+          generated_by: string | null
+          gross_commission: number | null
+          id: string
+          net_commission: number | null
+          paye_deducted: number | null
+          payment_date: string | null
+          payment_reference: string | null
+          payment_status: string | null
+          statement_month: number
+          statement_period_end: string
+          statement_period_start: string
+          statement_year: number
+          total_activations: number | null
+          uif_deducted: number | null
+        }
+        Insert: {
+          commission_per_activation?: number | null
+          created_at?: string | null
+          deductions?: number | null
+          field_worker_id: string
+          generated_at?: string | null
+          generated_by?: string | null
+          gross_commission?: number | null
+          id?: string
+          net_commission?: number | null
+          paye_deducted?: number | null
+          payment_date?: string | null
+          payment_reference?: string | null
+          payment_status?: string | null
+          statement_month: number
+          statement_period_end: string
+          statement_period_start: string
+          statement_year: number
+          total_activations?: number | null
+          uif_deducted?: number | null
+        }
+        Update: {
+          commission_per_activation?: number | null
+          created_at?: string | null
+          deductions?: number | null
+          field_worker_id?: string
+          generated_at?: string | null
+          generated_by?: string | null
+          gross_commission?: number | null
+          id?: string
+          net_commission?: number | null
+          paye_deducted?: number | null
+          payment_date?: string | null
+          payment_reference?: string | null
+          payment_status?: string | null
+          statement_month?: number
+          statement_period_end?: string
+          statement_period_start?: string
+          statement_year?: number
+          total_activations?: number | null
+          uif_deducted?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "field_worker_commission_statements_field_worker_id_fkey"
+            columns: ["field_worker_id"]
+            isOneToOne: false
+            referencedRelation: "field_workers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      field_worker_documents: {
+        Row: {
+          created_at: string | null
+          document_name: string
+          document_type: string
+          document_url: string
+          field_worker_id: string
+          file_size: number | null
+          id: string
+          mime_type: string | null
+          uploaded_at: string | null
+          uploaded_by: string | null
+          verification_notes: string | null
+          verification_status: string | null
+          verified_at: string | null
+          verified_by: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          document_name: string
+          document_type: string
+          document_url: string
+          field_worker_id: string
+          file_size?: number | null
+          id?: string
+          mime_type?: string | null
+          uploaded_at?: string | null
+          uploaded_by?: string | null
+          verification_notes?: string | null
+          verification_status?: string | null
+          verified_at?: string | null
+          verified_by?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          document_name?: string
+          document_type?: string
+          document_url?: string
+          field_worker_id?: string
+          file_size?: number | null
+          id?: string
+          mime_type?: string | null
+          uploaded_at?: string | null
+          uploaded_by?: string | null
+          verification_notes?: string | null
+          verification_status?: string | null
+          verified_at?: string | null
+          verified_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "field_worker_documents_field_worker_id_fkey"
+            columns: ["field_worker_id"]
+            isOneToOne: false
+            referencedRelation: "field_workers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      field_workers: {
+        Row: {
+          account_number: string
+          account_type: string | null
+          bank_name: string
+          branch_code: string
+          city: string | null
+          commission_rate: number | null
+          contract_approved_at: string | null
+          contract_approved_by: string | null
+          contract_signed_at: string | null
+          contract_url: string | null
+          created_at: string | null
+          current_month_activations: number | null
+          email: string
+          full_name: string
+          id: string
+          id_document_url: string | null
+          id_number: string
+          is_active: boolean | null
+          kyc_status: string | null
+          last_activity_at: string | null
+          payment_cycle: string | null
+          phone: string
+          physical_address: string
+          popia_consent: boolean | null
+          popia_consent_at: string | null
+          postal_address: string | null
+          proof_of_address_url: string | null
+          province: string | null
+          qualification: string
+          qualification_certificate_url: string | null
+          region_assignment: string
+          registration_status: string | null
+          skills: string[] | null
+          terms_accepted: boolean | null
+          terms_accepted_at: string | null
+          total_activations: number | null
+          total_commissions_earned: number | null
+          updated_at: string | null
+          user_id: string | null
+          verification_status: string | null
+        }
+        Insert: {
+          account_number: string
+          account_type?: string | null
+          bank_name: string
+          branch_code: string
+          city?: string | null
+          commission_rate?: number | null
+          contract_approved_at?: string | null
+          contract_approved_by?: string | null
+          contract_signed_at?: string | null
+          contract_url?: string | null
+          created_at?: string | null
+          current_month_activations?: number | null
+          email: string
+          full_name: string
+          id?: string
+          id_document_url?: string | null
+          id_number: string
+          is_active?: boolean | null
+          kyc_status?: string | null
+          last_activity_at?: string | null
+          payment_cycle?: string | null
+          phone: string
+          physical_address: string
+          popia_consent?: boolean | null
+          popia_consent_at?: string | null
+          postal_address?: string | null
+          proof_of_address_url?: string | null
+          province?: string | null
+          qualification: string
+          qualification_certificate_url?: string | null
+          region_assignment: string
+          registration_status?: string | null
+          skills?: string[] | null
+          terms_accepted?: boolean | null
+          terms_accepted_at?: string | null
+          total_activations?: number | null
+          total_commissions_earned?: number | null
+          updated_at?: string | null
+          user_id?: string | null
+          verification_status?: string | null
+        }
+        Update: {
+          account_number?: string
+          account_type?: string | null
+          bank_name?: string
+          branch_code?: string
+          city?: string | null
+          commission_rate?: number | null
+          contract_approved_at?: string | null
+          contract_approved_by?: string | null
+          contract_signed_at?: string | null
+          contract_url?: string | null
+          created_at?: string | null
+          current_month_activations?: number | null
+          email?: string
+          full_name?: string
+          id?: string
+          id_document_url?: string | null
+          id_number?: string
+          is_active?: boolean | null
+          kyc_status?: string | null
+          last_activity_at?: string | null
+          payment_cycle?: string | null
+          phone?: string
+          physical_address?: string
+          popia_consent?: boolean | null
+          popia_consent_at?: string | null
+          postal_address?: string | null
+          proof_of_address_url?: string | null
+          province?: string | null
+          qualification?: string
+          qualification_certificate_url?: string | null
+          region_assignment?: string
+          registration_status?: string | null
+          skills?: string[] | null
+          terms_accepted?: boolean | null
+          terms_accepted_at?: string | null
+          total_activations?: number | null
+          total_commissions_earned?: number | null
+          updated_at?: string | null
+          user_id?: string | null
+          verification_status?: string | null
+        }
+        Relationships: []
+      }
       import_audit_logs: {
         Row: {
           created_at: string
@@ -4384,6 +4723,10 @@ export type Database = {
       calculate_component_health: {
         Args: { component_name_param: string }
         Returns: number
+      }
+      calculate_field_worker_commission: {
+        Args: { p_field_worker_id: string; p_month: number; p_year: number }
+        Returns: string
       }
       calculate_paye: {
         Args: {
