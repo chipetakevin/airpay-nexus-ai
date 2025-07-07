@@ -6,6 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useToast } from '@/hooks/use-toast';
+import { useFieldWorkerPermissions } from '@/hooks/useFieldWorkerPermissions';
 import { 
   Users, 
   Search, 
@@ -49,43 +50,15 @@ interface Permission {
 const CustomerManagementTab = () => {
   const [customers, setCustomers] = useState<AssignedCustomer[]>([]);
   const [salesData, setSalesData] = useState<CustomerSalesData[]>([]);
-  const [permissions, setPermissions] = useState<Permission[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [filterStatus, setFilterStatus] = useState('all');
   const { toast } = useToast();
+  const { hasPermission, loading: permissionsLoading } = useFieldWorkerPermissions();
 
   useEffect(() => {
     loadCustomerData();
-    loadPermissions();
   }, []);
-
-  const loadPermissions = async () => {
-    try {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) return;
-
-      // Get field worker ID
-      const { data: fieldWorker } = await supabase
-        .from('field_workers')
-        .select('id')
-        .eq('user_id', user.id)
-        .single();
-
-      if (!fieldWorker) return;
-
-      // Load permissions
-      const { data: permissionData, error } = await supabase
-        .from('field_worker_permissions')
-        .select('permission_name, is_enabled')
-        .eq('field_worker_id', fieldWorker.id);
-
-      if (error) throw error;
-      setPermissions(permissionData || []);
-    } catch (error) {
-      console.error('Error loading permissions:', error);
-    }
-  };
 
   const loadCustomerData = async () => {
     try {
@@ -169,10 +142,6 @@ const CustomerManagementTab = () => {
     } finally {
       setLoading(false);
     }
-  };
-
-  const hasPermission = (permissionName: string) => {
-    return permissions.find(p => p.permission_name === permissionName)?.is_enabled || false;
   };
 
   const filteredCustomers = customers.filter(customer => {
