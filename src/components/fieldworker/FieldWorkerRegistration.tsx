@@ -184,17 +184,39 @@ const FieldWorkerRegistration = () => {
 
     setIsSubmitting(true);
     try {
-      // Upload documents
-      const contractUrl = documents.contract ? await uploadFile(documents.contract, 'contract') : null;
-      const idDocumentUrl = documents.idDocument ? await uploadFile(documents.idDocument, 'id') : null;
-      const proofAddressUrl = documents.proofOfAddress ? await uploadFile(documents.proofOfAddress, 'address') : null;
-      const qualificationUrl = documents.qualificationCertificate ? await uploadFile(documents.qualificationCertificate, 'qualification') : null;
+      // Check if user is authenticated
+      const { data: { user }, error: authError } = await supabase.auth.getUser();
+      if (authError || !user) {
+        toast({
+          title: "Authentication Required",
+          description: "Please log in to submit your registration.",
+          variant: "destructive"
+        });
+        return;
+      }
 
-      // Create field worker record
+      // Validate contract signature (check if contract file is uploaded and contains signature)
+      if (!documents.contract) {
+        setErrors({ contract: 'Contract must be uploaded and signed' });
+        toast({
+          title: "Contract Required",
+          description: "Please upload your signed contract before submitting.",
+          variant: "destructive"
+        });
+        return;
+      }
+
+      // Upload documents to secure storage
+      const contractUrl = documents.contract ? await uploadFileToStorage(documents.contract, 'contracts') : null;
+      const idDocumentUrl = documents.idDocument ? await uploadFileToStorage(documents.idDocument, 'documents') : null;
+      const proofAddressUrl = documents.proofOfAddress ? await uploadFileToStorage(documents.proofOfAddress, 'documents') : null;
+      const qualificationUrl = documents.qualificationCertificate ? await uploadFileToStorage(documents.qualificationCertificate, 'documents') : null;
+
+      // Create field worker record with pending status
       const { data, error } = await supabase
         .from('field_workers')
         .insert({
-          user_id: (await supabase.auth.getUser()).data.user?.id,
+          user_id: user.id,
           full_name: formData.fullName,
           id_number: formData.idNumber,
           email: formData.email,
@@ -217,14 +239,24 @@ const FieldWorkerRegistration = () => {
           popia_consent: formData.popiaConsent,
           popia_consent_at: new Date().toISOString(),
           terms_accepted: formData.termsAccepted,
-          terms_accepted_at: new Date().toISOString()
-        });
+          terms_accepted_at: new Date().toISOString(),
+          registration_status: 'pending',  // Awaiting admin approval
+          verification_status: 'pending'
+        })
+        .select()
+        .single();
 
       if (error) throw error;
 
+      // Send notification to admin for contract approval
+      await sendAdminNotification(data.id, formData.fullName, formData.email);
+
+      // Add to Addex Pay payroll system
+      await registerInPayrollSystem(data.id, formData);
+
       toast({
-        title: "Registration Successful! 🎉",
-        description: "Your field worker registration has been submitted for review. You'll be notified once approved.",
+        title: "Registration Submitted! 🎉",
+        description: "Your application is pending admin approval. You'll receive an email notification once processed.",
       });
 
       // Reset form
@@ -246,6 +278,64 @@ const FieldWorkerRegistration = () => {
       });
     } finally {
       setIsSubmitting(false);
+    }
+  };
+
+  const uploadFileToStorage = async (file: File, folder: string): Promise<string> => {
+    const fileExt = file.name.split('.').pop();
+    const fileName = `${folder}/${Date.now()}-${Math.random().toString(36).substring(2)}.${fileExt}`;
+    
+    const { data, error } = await supabase.storage
+      .from('field-worker-documents')
+      .upload(fileName, file);
+
+    if (error) throw error;
+    
+    const { data: { publicUrl } } = supabase.storage
+      .from('field-worker-documents')
+      .getPublicUrl(fileName);
+
+    return publicUrl;
+  };
+
+  const sendAdminNotification = async (fieldWorkerId: string, fullName: string, email: string) => {
+    try {
+      await supabase.functions.invoke('send-admin-notification', {
+        body: {
+          type: 'field_worker_registration',
+          field_worker_id: fieldWorkerId,
+          field_worker_name: fullName,
+          field_worker_email: email,
+          message: `New field worker registration requires admin approval: ${fullName} (${email})`
+        }
+      });
+    } catch (error) {
+      console.error('Failed to send admin notification:', error);
+    }
+  };
+
+  const registerInPayrollSystem = async (fieldWorkerId: string, formData: FormData) => {
+    try {
+      await supabase.functions.invoke('register-payroll-worker', {
+        body: {
+          field_worker_id: fieldWorkerId,
+          employee_data: {
+            full_name: formData.fullName,
+            id_number: formData.idNumber,
+            email: formData.email,
+            phone: formData.phone,
+            bank_name: formData.bankName,
+            account_number: formData.accountNumber,
+            branch_code: formData.branchCode,
+            account_type: formData.accountType,
+            position: 'Field Worker',
+            department: formData.regionAssignment,
+            commission_rate: 50.00  // Default commission per activation
+          }
+        }
+      });
+    } catch (error) {
+      console.error('Failed to register in payroll system:', error);
     }
   };
 
