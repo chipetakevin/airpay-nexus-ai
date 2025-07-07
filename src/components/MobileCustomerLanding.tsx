@@ -11,6 +11,7 @@ import {
 } from 'lucide-react';
 import { useMobileAuth } from '@/hooks/useMobileAuth';
 import { Link } from 'react-router-dom';
+import DivineBaaSCard from '@/components/home/DivineBaaSCard';
 
 const MobileCustomerLanding = () => {
   const { currentUser, isAuthenticated } = useMobileAuth();
@@ -294,16 +295,7 @@ const MobileCustomerLanding = () => {
                 Complete mobile services ecosystem - from RICA to enterprise banking solutions
               </p>
               
-              <div className="bg-gradient-to-r from-purple-500 to-purple-600 rounded-2xl p-6 text-white">
-                <div className="flex items-center justify-between mb-4">
-                  <div className="text-lg font-bold">Divinely BaaS Platform</div>
-                  <Badge className="bg-red-500 text-white">ENTERPRISE</Badge>
-                </div>
-                <p className="text-purple-100 mb-4 text-sm">Complete Mobile & Banking Solutions</p>
-                <Button className="w-full bg-white text-purple-600 hover:bg-gray-100">
-                  Click to expand services
-                </Button>
-              </div>
+              <DivineBaaSCard />
             </div>
           </CardContent>
         )}

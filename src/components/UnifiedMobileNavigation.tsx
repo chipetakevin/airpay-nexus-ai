@@ -33,8 +33,8 @@ const UnifiedMobileNavigation = () => {
 
   const mainCategories = [
     {
-      id: 'divinely-baas',
-      title: "Divinely BaaS Platform",
+      id: 'divine-baas',
+      title: "Divine BaaS Platform",
       description: "Complete Mobile & Banking Solutions",
       icon: <Globe className="w-8 h-8 text-white" />,
       gradient: "from-purple-500 via-violet-500 to-purple-600",

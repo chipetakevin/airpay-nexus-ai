@@ -28,7 +28,7 @@ const MobileMenuNavigation = ({ toggleMenu }: MobileMenuNavigationProps) => {
       <div className="ml-2 space-y-0 border-l-2 border-gray-200 pl-2">
         <Link to="/devine-baas" className="flex items-center gap-2 p-1.5 rounded-md hover:bg-purple-50 active:bg-purple-100 transition-all duration-200 min-h-[32px] touch-manipulation" onClick={toggleMenu}>
           <Globe className="w-3 h-3 text-purple-600 flex-shrink-0" />
-          <span className="font-medium text-xs">Divinely BaaS Platform</span>
+          <span className="font-medium text-xs">Divine BaaS Platform</span>
         </Link>
         <Link to="/baas-platform" className="flex items-center gap-2 p-1.5 rounded-md hover:bg-cyan-50 active:bg-cyan-100 transition-all duration-200 min-h-[32px] touch-manipulation" onClick={toggleMenu}>
           <Database className="w-3 h-3 text-cyan-600 flex-shrink-0" />
