@@ -1049,6 +1049,51 @@ export type Database = {
         }
         Relationships: []
       }
+      customer_accounts: {
+        Row: {
+          airtime_balance: number | null
+          created_at: string | null
+          customer_name: string
+          data_balance_mb: number | null
+          email: string | null
+          id: string
+          last_recharge_at: string | null
+          phone_number: string
+          sim_iccid: string
+          sim_status: string | null
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          airtime_balance?: number | null
+          created_at?: string | null
+          customer_name: string
+          data_balance_mb?: number | null
+          email?: string | null
+          id?: string
+          last_recharge_at?: string | null
+          phone_number: string
+          sim_iccid: string
+          sim_status?: string | null
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          airtime_balance?: number | null
+          created_at?: string | null
+          customer_name?: string
+          data_balance_mb?: number | null
+          email?: string | null
+          id?: string
+          last_recharge_at?: string | null
+          phone_number?: string
+          sim_iccid?: string
+          sim_status?: string | null
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       customer_profiles: {
         Row: {
           created_at: string | null
@@ -1138,6 +1183,44 @@ export type Database = {
           user_id?: string | null
         }
         Relationships: []
+      }
+      customer_transactions: {
+        Row: {
+          amount: number
+          created_at: string | null
+          customer_account_id: string
+          description: string | null
+          id: string
+          status: string | null
+          transaction_type: string
+        }
+        Insert: {
+          amount: number
+          created_at?: string | null
+          customer_account_id: string
+          description?: string | null
+          id?: string
+          status?: string | null
+          transaction_type: string
+        }
+        Update: {
+          amount?: number
+          created_at?: string | null
+          customer_account_id?: string
+          description?: string | null
+          id?: string
+          status?: string | null
+          transaction_type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "customer_transactions_customer_account_id_fkey"
+            columns: ["customer_account_id"]
+            isOneToOne: false
+            referencedRelation: "customer_accounts"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       customers: {
         Row: {
@@ -1943,6 +2026,48 @@ export type Database = {
           },
         ]
       }
+      field_worker_customers: {
+        Row: {
+          assigned_at: string | null
+          assigned_by: string | null
+          customer_account_id: string
+          field_worker_id: string
+          id: string
+          is_active: boolean | null
+        }
+        Insert: {
+          assigned_at?: string | null
+          assigned_by?: string | null
+          customer_account_id: string
+          field_worker_id: string
+          id?: string
+          is_active?: boolean | null
+        }
+        Update: {
+          assigned_at?: string | null
+          assigned_by?: string | null
+          customer_account_id?: string
+          field_worker_id?: string
+          id?: string
+          is_active?: boolean | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "field_worker_customers_customer_account_id_fkey"
+            columns: ["customer_account_id"]
+            isOneToOne: false
+            referencedRelation: "customer_accounts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "field_worker_customers_field_worker_id_fkey"
+            columns: ["field_worker_id"]
+            isOneToOne: false
+            referencedRelation: "field_workers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       field_worker_documents: {
         Row: {
           created_at: string | null
@@ -1995,6 +2120,41 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "field_worker_documents_field_worker_id_fkey"
+            columns: ["field_worker_id"]
+            isOneToOne: false
+            referencedRelation: "field_workers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      field_worker_permissions: {
+        Row: {
+          field_worker_id: string
+          granted_at: string | null
+          granted_by: string | null
+          id: string
+          is_enabled: boolean | null
+          permission_name: string
+        }
+        Insert: {
+          field_worker_id: string
+          granted_at?: string | null
+          granted_by?: string | null
+          id?: string
+          is_enabled?: boolean | null
+          permission_name: string
+        }
+        Update: {
+          field_worker_id?: string
+          granted_at?: string | null
+          granted_by?: string | null
+          id?: string
+          is_enabled?: boolean | null
+          permission_name?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "field_worker_permissions_field_worker_id_fkey"
             columns: ["field_worker_id"]
             isOneToOne: false
             referencedRelation: "field_workers"
@@ -4860,6 +5020,15 @@ export type Database = {
           p_restoration_type?: string
           p_files_restored?: number
           p_status?: string
+        }
+        Returns: string
+      }
+      process_customer_purchase: {
+        Args: {
+          p_customer_account_id: string
+          p_transaction_type: string
+          p_amount: number
+          p_description?: string
         }
         Returns: string
       }

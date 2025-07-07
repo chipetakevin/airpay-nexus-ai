@@ -1,6 +1,6 @@
 
-import { Toaster } from "@/components/ui/toaster";
-import { Toaster as Sonner } from "@/components/ui/sonner";
+import Auth from "./pages/Auth";
+import CustomerDashboard from "./components/customer/CustomerDashboard";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
@@ -41,7 +41,8 @@ const App = () => (
         <Sonner />
         <BrowserRouter>
           <Routes>
-            <Route path="/" element={<Index />} />
+        <Route path="/auth" element={<Auth />} />
+        <Route path="/" element={<Index />} />
             <Route path="/portal" element={<Portal />} />
             <Route path="/whatsapp-assistant" element={<WhatsAppAssistant />} />
             <Route path="/scan-to-text-ai" element={<ScanToTextAI />} />

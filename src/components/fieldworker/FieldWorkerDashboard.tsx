@@ -192,6 +192,7 @@ const FieldWorkerDashboard = () => {
   // Show Customer Onboarding Tab if approved
   if (fieldWorker.registration_status === 'approved') {
     const CustomerOnboardingTab = React.lazy(() => import('./CustomerOnboardingTab'));
+    const CustomerManagementTab = React.lazy(() => import('./CustomerManagementTab'));
     
     return (
       <div className="space-y-6">
@@ -208,7 +209,18 @@ const FieldWorkerDashboard = () => {
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
           </div>
         }>
-          <CustomerOnboardingTab />
+          <Tabs defaultValue="onboard" className="w-full">
+            <TabsList className="grid w-full grid-cols-2">
+              <TabsTrigger value="onboard">Onboard Customer</TabsTrigger>
+              <TabsTrigger value="manage">Manage Customers</TabsTrigger>
+            </TabsList>
+            <TabsContent value="onboard">
+              <CustomerOnboardingTab />
+            </TabsContent>
+            <TabsContent value="manage">
+              <CustomerManagementTab />
+            </TabsContent>
+          </Tabs>
         </React.Suspense>
       </div>
     );
