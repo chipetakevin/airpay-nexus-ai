@@ -61,7 +61,7 @@ Content-Type: application/json
       <Tabs defaultValue="overview" className="w-full">
         {/* Enhanced Tab Navigation with Responsive Design */}
         <div className="w-full mb-6">
-          <TabsList className="grid w-full grid-cols-3 sm:grid-cols-4 lg:grid-cols-7 gap-1 h-auto p-1 bg-muted/50 rounded-xl">
+          <TabsList className="grid w-full grid-cols-3 sm:grid-cols-4 lg:grid-cols-8 gap-1 h-auto p-1 bg-muted/50 rounded-xl">
             <TabsTrigger 
               value="overview" 
               className="flex-col gap-1 h-16 text-xs font-semibold data-[state=active]:bg-background data-[state=active]:shadow-sm transition-all duration-200"
@@ -109,6 +109,14 @@ Content-Type: application/json
               <AlertCircle className="h-4 w-4" />
               <span className="hidden sm:inline">Challenges</span>
               <span className="sm:hidden">Issues</span>
+            </TabsTrigger>
+            <TabsTrigger 
+              value="south-africa" 
+              className="flex-col gap-1 h-16 text-xs font-semibold data-[state=active]:bg-background data-[state=active]:shadow-sm transition-all duration-200"
+            >
+              <Network className="h-4 w-4" />
+              <span className="hidden sm:inline">South Africa</span>
+              <span className="sm:hidden">SA</span>
             </TabsTrigger>
             <TabsTrigger 
               value="best-practices" 
@@ -654,6 +662,150 @@ Content-Type: application/json
                 <AlertCircle className="h-4 w-4" />
                 <AlertDescription>
                   <strong>Pro Tip:</strong> Address challenges proactively during the planning phase to avoid costly delays during implementation.
+                </AlertDescription>
+              </Alert>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        {/* South Africa Integration Tab */}
+        <TabsContent value="south-africa" className="space-y-6">
+          <Card className="border-l-4 border-l-green-500">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Network className="w-5 h-5 text-green-600" />
+                Enhanced South African MNO-MVNE Integration
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <Alert className="border-l-4 border-l-blue-500">
+                <AlertCircle className="h-4 w-4" />
+                <AlertDescription>
+                  Comprehensive framework for seamless, intelligent, and fully compliant integration between MVNE platforms and South African MNOs (MTN, Vodacom, Cell C, Telkom, Rain).
+                </AlertDescription>
+              </Alert>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <Card className="bg-red-50">
+                  <CardHeader className="pb-3">
+                    <CardTitle className="text-lg text-red-800">1. Regulatory Compliance</CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-2 text-sm">
+                    <div>• <strong>ICASA Requirements:</strong> Automated compliance validation</div>
+                    <div>• <strong>RICA Compliance:</strong> Real-time subscriber validation</div>
+                    <div>• <strong>Lawful Interception:</strong> SAPS integration endpoints</div>
+                    <div>• <strong>Data Residency:</strong> Local storage enforcement</div>
+                    <div>• <strong>MNP Compliance:</strong> Porting status validation</div>
+                    <div>• <strong>Consumer Protection:</strong> Dispute resolution integration</div>
+                  </CardContent>
+                </Card>
+
+                <Card className="bg-blue-50">
+                  <CardHeader className="pb-3">
+                    <CardTitle className="text-lg text-blue-800">2. Multi-MNO Framework</CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-2 text-sm">
+                    <div>• <strong>Universal Support:</strong> MTN, Vodacom, Cell C, Telkom, Rain</div>
+                    <div>• <strong>5G Integration:</strong> Rain 5G-specific modules</div>
+                    <div>• <strong>Operator Endpoints:</strong> Pre-built connectors</div>
+                    <div>• <strong>Configuration Templates:</strong> Per-operator setup</div>
+                    <div>• <strong>Protocol Support:</strong> Dedicated integration guides</div>
+                  </CardContent>
+                </Card>
+
+                <Card className="bg-green-50">
+                  <CardHeader className="pb-3">
+                    <CardTitle className="text-lg text-green-800">3. Local Payment Gateways</CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-2 text-sm">
+                    <div>• <strong>Bank APIs:</strong> Capitec, FNB, Standard Bank, Nedbank</div>
+                    <div>• <strong>USSD Systems:</strong> *120# payment flows</div>
+                    <div>• <strong>EFT Protocols:</strong> Real-time settlement</div>
+                    <div>• <strong>Instant Money:</strong> Standard Bank integration</div>
+                    <div>• <strong>Mobile Banking:</strong> Cross-bank compatibility</div>
+                  </CardContent>
+                </Card>
+
+                <Card className="bg-purple-50">
+                  <CardHeader className="pb-3">
+                    <CardTitle className="text-lg text-purple-800">4. Network Standards</CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-2 text-sm">
+                    <div>• <strong>Frequency Compliance:</strong> ICASA band validation</div>
+                    <div>• <strong>Emergency Services:</strong> 10111 call routing</div>
+                    <div>• <strong>USSD/SMS Standards:</strong> WASPA compliance</div>
+                    <div>• <strong>Coverage Maps:</strong> Regional metrics</div>
+                    <div>• <strong>Type Approval:</strong> Equipment certification</div>
+                  </CardContent>
+                </Card>
+
+                <Card className="bg-yellow-50">
+                  <CardHeader className="pb-3">
+                    <CardTitle className="text-lg text-yellow-800">5. Language & Cultural Support</CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-2 text-sm">
+                    <div>• <strong>Multi-Language APIs:</strong> All 11 official languages</div>
+                    <div>• <strong>Number Validation:</strong> SA mobile formats</div>
+                    <div>• <strong>Time Zone Handling:</strong> SAST standardization</div>
+                    <div>• <strong>Holiday Awareness:</strong> Local calendar integration</div>
+                    <div>• <strong>Cultural Adaptation:</strong> Localized interfaces</div>
+                  </CardContent>
+                </Card>
+
+                <Card className="bg-orange-50">
+                  <CardHeader className="pb-3">
+                    <CardTitle className="text-lg text-orange-800">6. Operational Support</CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-2 text-sm">
+                    <div>• <strong>Customer Care:</strong> Multi-language support</div>
+                    <div>• <strong>Fraud Management:</strong> SA-specific patterns</div>
+                    <div>• <strong>Revenue Assurance:</strong> Tax compliance</div>
+                    <div>• <strong>Network Monitoring:</strong> Performance dashboards</div>
+                    <div>• <strong>Security Certification:</strong> Local cybersecurity standards</div>
+                  </CardContent>
+                </Card>
+              </div>
+
+              <div className="bg-gradient-to-r from-green-50 to-blue-50 p-4 rounded-lg">
+                <h4 className="font-semibold mb-3">Essential South African API Endpoints</h4>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                  <div className="space-y-1">
+                    <div className="font-semibold text-green-700">/compliance/rica-verify</div>
+                    <div className="text-muted-foreground">Real-time RICA status checking</div>
+                    
+                    <div className="font-semibold text-blue-700 pt-2">/payment/local-gateway</div>
+                    <div className="text-muted-foreground">SA payment gateway integration</div>
+                    
+                    <div className="font-semibold text-purple-700 pt-2">/emergency/routing</div>
+                    <div className="text-muted-foreground">Emergency services call routing</div>
+                  </div>
+                  <div className="space-y-1">
+                    <div className="font-semibold text-orange-700">/porting/mnp-check</div>
+                    <div className="text-muted-foreground">Number portability validation</div>
+                    
+                    <div className="font-semibold text-red-700 pt-2">/ussd/local-codes</div>
+                    <div className="text-muted-foreground">Local USSD code management</div>
+                    
+                    <div className="font-semibold text-indigo-700 pt-2">/billing/eft</div>
+                    <div className="text-muted-foreground">Electronic Funds Transfer</div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="bg-gradient-to-r from-indigo-50 to-purple-50 p-4 rounded-lg">
+                <h4 className="font-semibold mb-3">Implementation Priority Framework</h4>
+                <div className="space-y-2 text-sm">
+                  <div className="flex justify-between"><span><strong>Immediate:</strong> RICA compliance, regulatory framework</span><span className="font-semibold text-red-600">Critical</span></div>
+                  <div className="flex justify-between"><span><strong>High:</strong> Multi-MNO integration (Vodacom, Cell C, Telkom)</span><span className="font-semibold text-orange-600">High</span></div>
+                  <div className="flex justify-between"><span><strong>Medium:</strong> Local payment gateways, USSD systems</span><span className="font-semibold text-yellow-600">Medium</span></div>
+                  <div className="flex justify-between"><span><strong>Ongoing:</strong> Language support, cultural adaptation</span><span className="font-semibold text-green-600">Ongoing</span></div>
+                </div>
+              </div>
+
+              <Alert className="border-l-4 border-l-green-500">
+                <CheckCircle className="h-4 w-4" />
+                <AlertDescription>
+                  <strong>Success Factor:</strong> Addressing regulatory, technical, and cultural requirements ensures seamless, intelligent, and fully compliant MVNE-MNO integration in South Africa.
                 </AlertDescription>
               </Alert>
             </CardContent>
