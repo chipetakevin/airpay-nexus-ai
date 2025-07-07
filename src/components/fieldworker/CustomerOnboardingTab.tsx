@@ -181,7 +181,7 @@ const CustomerOnboardingTab = () => {
       // Register customer in RICA compliance  
       const ricaReference = `RICA-${Date.now()}`;
       const { data: ricaData, error: ricaError } = await supabase
-        .from('rica_compliance_records')
+        .from('rica_registrations')
         .insert({
           full_name: customerData.fullName,
           id_number: customerData.idNumber,
@@ -191,13 +191,15 @@ const CustomerOnboardingTab = () => {
           date_of_birth: customerData.dateOfBirth,
           gender: customerData.gender,
           nationality: customerData.nationality,
-          sim_iccid: customerData.simIccid,
-          msisdn: customerData.msisdn,
-          network_provider: customerData.networkProvider,
-          id_document_url: idDocUrl,
-          proof_of_address_url: proofAddressUrl,
+          sim_serial_number: customerData.simIccid,
+          reference_number: ricaReference,
+          user_id: user.id,
+          user_type: 'customer',
+          id_type: 'SA_ID',
+          province: 'Gauteng', // Default province
           selfie_with_id_url: selfieUrl,
-          verification_status: 'pending'
+          proof_of_residence_url: proofAddressUrl,
+          registration_status: 'pending'
         })
         .select()
         .single();
@@ -482,7 +484,7 @@ const CustomerOnboardingTab = () => {
                   <div key={activation.id} className="flex items-center justify-between p-4 border rounded-lg">
                     <div className="flex items-center gap-4">
                       <div className="flex items-center gap-2">
-                        {getStatusIcon(activation.activation_status)}
+                        {getStatusIcon(activation.rica_status)}
                         <div>
                           <h4 className="font-semibold">{activation.customer_name}</h4>
                           <p className="text-sm text-gray-600">{activation.customer_phone}</p>
@@ -494,8 +496,8 @@ const CustomerOnboardingTab = () => {
                       </div>
                     </div>
                     <div className="flex items-center gap-3">
-                      <Badge className={getStatusColor(activation.activation_status)}>
-                        {activation.activation_status}
+                      <Badge className={getStatusColor(activation.rica_status)}>
+                        {activation.rica_status}
                       </Badge>
                       <div className="flex gap-2">
                         <Button variant="ghost" size="sm">
