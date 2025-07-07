@@ -32,6 +32,7 @@ import AdminMVNEDashboard from "./pages/AdminMVNEDashboard";
 import MobileDashboard from "./pages/MobileDashboard";
 import CustomerAuth from "./pages/CustomerAuth";
 import CustomerPortal from "./pages/CustomerPortal";
+import AdminDashboard from "./pages/AdminDashboard";
 
 const queryClient = new QueryClient();
 
