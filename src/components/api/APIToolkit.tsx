@@ -59,15 +59,67 @@ Content-Type: application/json
       </div>
 
       <Tabs defaultValue="overview" className="w-full">
-        <TabsList className="grid w-full grid-cols-7 gap-1">
-          <TabsTrigger value="overview">Overview</TabsTrigger>
-          <TabsTrigger value="security">Security</TabsTrigger>
-          <TabsTrigger value="endpoints">Endpoints</TabsTrigger>
-          <TabsTrigger value="examples">Examples</TabsTrigger>
-          <TabsTrigger value="integration">Integration Plan</TabsTrigger>
-          <TabsTrigger value="challenges">Challenges</TabsTrigger>
-          <TabsTrigger value="best-practices">Best Practices</TabsTrigger>
-        </TabsList>
+        {/* Enhanced Tab Navigation with Responsive Design */}
+        <div className="w-full mb-6">
+          <TabsList className="grid w-full grid-cols-3 sm:grid-cols-4 lg:grid-cols-7 gap-1 h-auto p-1 bg-muted/50 rounded-xl">
+            <TabsTrigger 
+              value="overview" 
+              className="flex-col gap-1 h-16 text-xs font-semibold data-[state=active]:bg-background data-[state=active]:shadow-sm transition-all duration-200"
+            >
+              <Network className="h-4 w-4" />
+              <span className="hidden sm:inline">Overview</span>
+              <span className="sm:hidden">Info</span>
+            </TabsTrigger>
+            <TabsTrigger 
+              value="security" 
+              className="flex-col gap-1 h-16 text-xs font-semibold data-[state=active]:bg-background data-[state=active]:shadow-sm transition-all duration-200"
+            >
+              <Shield className="h-4 w-4" />
+              <span className="hidden sm:inline">Security</span>
+              <span className="sm:hidden">Secure</span>
+            </TabsTrigger>
+            <TabsTrigger 
+              value="endpoints" 
+              className="flex-col gap-1 h-16 text-xs font-semibold data-[state=active]:bg-background data-[state=active]:shadow-sm transition-all duration-200"
+            >
+              <Database className="h-4 w-4" />
+              <span className="hidden sm:inline">Endpoints</span>
+              <span className="sm:hidden">APIs</span>
+            </TabsTrigger>
+            <TabsTrigger 
+              value="examples" 
+              className="flex-col gap-1 h-16 text-xs font-semibold data-[state=active]:bg-background data-[state=active]:shadow-sm transition-all duration-200"
+            >
+              <Code className="h-4 w-4" />
+              <span className="hidden sm:inline">Examples</span>
+              <span className="sm:hidden">Code</span>
+            </TabsTrigger>
+            <TabsTrigger 
+              value="integration" 
+              className="flex-col gap-1 h-16 text-xs font-semibold data-[state=active]:bg-background data-[state=active]:shadow-sm transition-all duration-200"
+            >
+              <Settings className="h-4 w-4" />
+              <span className="hidden sm:inline">Integration</span>
+              <span className="sm:hidden">Setup</span>
+            </TabsTrigger>
+            <TabsTrigger 
+              value="challenges" 
+              className="flex-col gap-1 h-16 text-xs font-semibold data-[state=active]:bg-background data-[state=active]:shadow-sm transition-all duration-200"
+            >
+              <AlertCircle className="h-4 w-4" />
+              <span className="hidden sm:inline">Challenges</span>
+              <span className="sm:hidden">Issues</span>
+            </TabsTrigger>
+            <TabsTrigger 
+              value="best-practices" 
+              className="flex-col gap-1 h-16 text-xs font-semibold data-[state=active]:bg-background data-[state=active]:shadow-sm transition-all duration-200"
+            >
+              <CheckCircle className="h-4 w-4" />
+              <span className="hidden sm:inline">Best Practices</span>
+              <span className="sm:hidden">Tips</span>
+            </TabsTrigger>
+          </TabsList>
+        </div>
 
         {/* Overview Tab */}
         <TabsContent value="overview" className="space-y-6">
