@@ -376,7 +376,7 @@ const ActivityLogsPanel = () => {
                         {date} at {time}
                       </span>
                       {log.ip_address && (
-                        <span>IP: {log.ip_address}</span>
+                        <span>IP: {String(log.ip_address)}</span>
                       )}
                       {log.success ? (
                         <span className="flex items-center gap-1 text-green-600">
