@@ -37,7 +37,7 @@ export const OverviewTabContent = ({
           </div>
         </div>
 
-        {/* Account Information Cards */}
+        {/* Single Card Display - Show Account Cards OR Visual Section, not both */}
         <AccountInfoCards
           userData={userData}
           showPhoneNumber={showPhoneNumber}
@@ -46,8 +46,17 @@ export const OverviewTabContent = ({
           onToggleCardVisibility={onToggleCardVisibility}
         />
 
-        {/* OneCard Visual and Rewards */}
-        <OneCardVisualSection onAccessRewards={onAccessRewards} />
+        {/* Access Rewards Button (without duplicate card) */}
+        <div className="mb-6">
+          <button
+            onClick={() => window.location.href = '/portal?tab=deals&network=addex-hub%20mobile&dealType=airtime'}
+            className="w-full bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-black font-bold py-4 rounded-xl shadow-lg transition-all duration-300 transform hover:scale-105 flex items-center justify-center gap-3"
+          >
+            <span className="text-xl">🎁</span>
+            <span className="text-lg">Access Addex-Hub Mobile Deals</span>
+            <span className="text-xl">→</span>
+          </button>
+        </div>
 
         {/* Enhanced Cashback Display */}
         <CashbackDisplay userData={userData} />

@@ -1,10 +1,13 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { MessageCircle, CreditCard } from 'lucide-react';
+import { MessageCircle, CreditCard, LogIn, LogOut, User } from 'lucide-react';
 import { navigationItems } from './NavigationConfig';
+import { useMobileAuth } from '@/hooks/useMobileAuth';
+import LoginModal from '../auth/LoginModal';
+import { useToast } from '@/hooks/use-toast';
 
 interface DesktopNavigationProps {
   isHomePage: boolean;
@@ -13,7 +16,27 @@ interface DesktopNavigationProps {
 
 const DesktopNavigation = ({ isHomePage, handleQuickShopClick }: DesktopNavigationProps) => {
   const location = useLocation();
+  const { isAuthenticated, currentUser } = useMobileAuth();
+  const [showLoginModal, setShowLoginModal] = useState(false);
+  const { toast } = useToast();
   const isActive = (path: string) => location.pathname === path;
+
+  const handleLogout = () => {
+    localStorage.removeItem('userAuthenticated');
+    localStorage.removeItem('adminAuthenticated');
+    localStorage.removeItem('userCredentials');
+    localStorage.removeItem('sessionStartTime');
+    
+    toast({
+      title: "🔐 Logged Out Successfully",
+      description: "Your profile information remains saved for quick re-login.",
+      duration: 3000,
+    });
+    
+    setTimeout(() => {
+      window.location.href = '/';
+    }, 1500);
+  };
 
   return (
     <>
@@ -59,8 +82,42 @@ const DesktopNavigation = ({ isHomePage, handleQuickShopClick }: DesktopNavigati
         )}
       </nav>
 
-      {/* WhatsApp Quick Access - Simplified */}
-      <div className="hidden md:flex items-center">
+      {/* Authentication Status & WhatsApp Support */}
+      <div className="hidden md:flex items-center space-x-3">
+        {/* Login/Logout Status */}
+        {isAuthenticated ? (
+          <div className="flex items-center space-x-2">
+            <div className="flex items-center gap-2 bg-white/10 text-white px-3 py-2 rounded-lg">
+              <User className="w-4 h-4" />
+              <span className="text-sm font-medium">
+                {currentUser?.firstName || 'User'}
+              </span>
+            </div>
+            <Button
+              onClick={handleLogout}
+              variant="outline"
+              size="sm"
+              className="bg-red-500/10 text-white border-red-300/30 hover:bg-red-500 hover:text-white transition-all duration-200 font-medium px-3"
+            >
+              <LogOut className="w-4 h-4 mr-2" />
+              <span className="hidden lg:inline">Logout</span>
+              <span className="lg:hidden">Out</span>
+            </Button>
+          </div>
+        ) : (
+          <Button
+            onClick={() => setShowLoginModal(true)}
+            variant="outline"
+            size="sm"
+            className="bg-white/10 text-white border-white/30 hover:bg-white hover:text-[#75B8FA] transition-all duration-200 font-medium px-3"
+          >
+            <LogIn className="w-4 h-4 mr-2" />
+            <span className="hidden lg:inline">Login</span>
+            <span className="lg:hidden">Login</span>
+          </Button>
+        )}
+
+        {/* WhatsApp Support */}
         <Button
           onClick={() => window.open('https://wa.me/27832466539', '_blank')}
           variant="outline"
@@ -72,6 +129,11 @@ const DesktopNavigation = ({ isHomePage, handleQuickShopClick }: DesktopNavigati
           <span className="lg:hidden">Support</span>
         </Button>
       </div>
+
+      <LoginModal 
+        isOpen={showLoginModal}
+        onClose={() => setShowLoginModal(false)}
+      />
     </>
   );
 };
