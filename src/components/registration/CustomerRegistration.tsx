@@ -110,14 +110,22 @@ const CustomerRegistration = () => {
     try {
       // Check if form is actually valid before showing error
       if (!isFormValid()) {
-        console.log('Form validation failed:', {
-          firstName: formData.firstName,
-          lastName: formData.lastName,
-          email: formData.email,
-          phoneNumber: formData.phoneNumber,
-          phoneNumberLength: formData.phoneNumber.length,
+        console.log('🔍 Form validation failed:', {
+          firstName: `"${formData.firstName}" (length: ${formData.firstName.length})`,
+          lastName: `"${formData.lastName}" (length: ${formData.lastName.length})`,
+          email: `"${formData.email}" (length: ${formData.email.length})`,
+          phoneNumber: `"${formData.phoneNumber}" (length: ${formData.phoneNumber.length})`,
           agreeTerms: formData.agreeTerms,
-          errors: errors
+          errors: errors,
+          validation: {
+            hasFirstName: !!formData.firstName.trim(),
+            hasLastName: !!formData.lastName.trim(),
+            hasEmail: !!formData.email.trim(),
+            hasPhone: !!formData.phoneNumber.trim(),
+            phoneIs9Digits: formData.phoneNumber.length === 9,
+            termsAgreed: formData.agreeTerms,
+            noErrors: Object.keys(errors).length === 0
+          }
         });
         
         // Don't show the error report if form is actually complete
