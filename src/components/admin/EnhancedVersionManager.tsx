@@ -34,17 +34,21 @@ interface CodebaseVersion {
   description?: string;
   created_at: string;
   created_by?: string;
+  updated_at: string;
   file_contents: any;
   file_count: number;
   total_size_bytes: number;
   lines_of_code: number;
   file_extensions: any;
   is_stable: boolean;
-  is_production_ready?: boolean;
+  is_active: boolean;
   commit_message?: string;
-  access_level?: string;
-  pdf_documentation_url?: string;
-  pdf_generated_at?: string;
+  branch_name?: string;
+  git_hash?: string;
+  restoration_count: number;
+  last_restored_at?: string;
+  capture_duration_ms?: number;
+  compression_ratio?: number;
 }
 
 const EnhancedVersionManager = () => {
@@ -157,7 +161,7 @@ const EnhancedVersionManager = () => {
 
       const { error } = await supabase
         .from('codebase_versions')
-        .insert({
+        .insert([{
           version_number: '4.0.0',
           version_name: newVersionName,
           description: newVersionDescription,
@@ -167,9 +171,9 @@ const EnhancedVersionManager = () => {
           lines_of_code: stats.linesOfCode,
           file_extensions: stats.extensions,
           is_stable: true,
-          is_production_ready: true,
-          commit_message: 'Version 4.0.0: Enhanced secure version management with admin access controls and PDF documentation'
-        });
+          commit_message: 'Version 4.0.0: Enhanced secure version management with admin access controls and PDF documentation',
+          branch_name: 'main'
+        } as any]);
 
       if (error) throw error;
 
@@ -374,29 +378,29 @@ const EnhancedVersionManager = () => {
               {versions.map((version) => (
                 <div key={version.id} className="p-4 border rounded-lg">
                   <div className="flex items-center justify-between mb-2">
-                    <div className="flex items-center gap-2">
-                      <Badge className="bg-blue-100 text-blue-800">
-                        v{version.version_number}
+                  <div className="flex items-center gap-2">
+                    <Badge className="bg-blue-100 text-blue-800">
+                      v{version.version_number}
+                    </Badge>
+                    {version.is_stable && (
+                      <Badge className="bg-green-100 text-green-800">
+                        <CheckCircle className="w-3 h-3 mr-1" />
+                        Stable
                       </Badge>
-                      {version.is_stable && (
-                        <Badge className="bg-green-100 text-green-800">
-                          <CheckCircle className="w-3 h-3 mr-1" />
-                          Stable
-                        </Badge>
-                      )}
-                      {version.is_production_ready && (
-                        <Badge className="bg-purple-100 text-purple-800">
-                          Production Ready
-                        </Badge>
-                      )}
-                    </div>
+                    )}
+                    {version.is_active && (
+                      <Badge className="bg-purple-100 text-purple-800">
+                        Active
+                      </Badge>
+                    )}
+                  </div>
                     <div className="flex items-center gap-2">
                       <span className="text-sm text-muted-foreground">
                         {new Date(version.created_at).toLocaleDateString()}
                       </span>
                       <Badge variant="outline" className="text-xs">
-                        <Shield className="w-3 h-3 mr-1" />
-                        {version.access_level}
+                        <GitBranch className="w-3 h-3 mr-1" />
+                        {version.branch_name || 'main'}
                       </Badge>
                     </div>
                   </div>
@@ -410,7 +414,7 @@ const EnhancedVersionManager = () => {
                     <div>Files: <span className="font-medium">{version.file_count}</span></div>
                     <div>Size: <span className="font-medium">{Math.round(version.total_size_bytes / 1024)}KB</span></div>
                     <div>Lines: <span className="font-medium">{version.lines_of_code.toLocaleString()}</span></div>
-                    <div>Extensions: <span className="font-medium">{Object.keys(version.file_extensions).length}</span></div>
+                    <div>Extensions: <span className="font-medium">{Object.keys(version.file_extensions || {}).length}</span></div>
                   </div>
 
                   <div className="flex gap-2">
@@ -436,12 +440,10 @@ const EnhancedVersionManager = () => {
                         </>
                       )}
                     </Button>
-                    {version.pdf_documentation_url && (
-                      <Button size="sm" variant="outline">
-                        <Download className="w-3 h-3 mr-1" />
-                        Download PDF
-                      </Button>
-                    )}
+                    <Button size="sm" variant="outline">
+                      <Download className="w-3 h-3 mr-1" />
+                      Export Version
+                    </Button>
                   </div>
                 </div>
               ))}
@@ -477,15 +479,15 @@ const EnhancedVersionManager = () => {
             </div>
             <div className="text-center">
               <div className="text-2xl font-bold text-green-800">
-                {versions.filter(v => v.is_production_ready).length}
+                {versions.filter(v => v.is_active).length}
               </div>
-              <div className="text-sm text-green-600">Production Ready</div>
+              <div className="text-sm text-green-600">Active Versions</div>
             </div>
             <div className="text-center">
               <div className="text-2xl font-bold text-orange-800">
-                {versions.filter(v => v.pdf_documentation_url).length}
+                {versions.reduce((sum, v) => sum + v.restoration_count, 0)}
               </div>
-              <div className="text-sm text-orange-600">With PDF Docs</div>
+              <div className="text-sm text-orange-600">Total Restorations</div>
             </div>
           </div>
         </AlertDescription>
