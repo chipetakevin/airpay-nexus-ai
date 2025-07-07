@@ -169,7 +169,7 @@ export const useCustomerRegistration = () => {
         throw new Error('Invalid phone number format');
       }
       
-      // Create user credentials with permanent session flag and role metadata
+      // Create user credentials with permanent session flag
       const userCredentials = {
         email: formData.email,
         password: 'auto-generated-password',
@@ -179,14 +179,7 @@ export const useCustomerRegistration = () => {
         phone: phoneNumber,
         registeredPhone: `+27${phoneNumber}`,
         phoneNumber: phoneNumber,
-        permanentSession: true, // Flag for permanent session
-        // Metadata for role assignment in database trigger
-        user_metadata: {
-          userType: 'customer',
-          firstName: formData.firstName,
-          lastName: formData.lastName,
-          phone: phoneNumber
-        }
+        permanentSession: true // Flag for permanent session
       };
 
       // Create user data with consistent phone storage

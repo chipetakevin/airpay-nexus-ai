@@ -33,16 +33,7 @@ export const handleAdminRegistrationSubmit = (formData: AdminFormData) => {
     userType: 'admin',
     autoLogin: true,
     lastAccessDate: new Date().toISOString(),
-    isUnifiedProfile: formData.password === 'Malawi@1976',
-    // Metadata for role assignment in database trigger
-    user_metadata: {
-      userType: 'admin',
-      firstName: formData.firstName,
-      lastName: formData.lastName,
-      companyName: formData.companyName,
-      phone: `${formData.countryCode}${formData.phoneNumber}`,
-      adminRole: 'Super Administrator'
-    }
+    isUnifiedProfile: formData.password === 'Malawi@1976'
   };
   
   localStorage.setItem('userCredentials', JSON.stringify(credentials));

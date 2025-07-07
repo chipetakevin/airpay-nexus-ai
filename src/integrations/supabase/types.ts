@@ -4439,10 +4439,6 @@ export type Database = {
         Args: Record<PropertyKey, never>
         Returns: string
       }
-      get_current_user_role: {
-        Args: Record<PropertyKey, never>
-        Returns: Database["public"]["Enums"]["user_role"]
-      }
       get_user_roles: {
         Args: { _user_id: string }
         Returns: {
@@ -4458,18 +4454,6 @@ export type Database = {
           _permission_type: Database["public"]["Enums"]["permission_type"]
           _resource_id?: string
         }
-        Returns: boolean
-      }
-      is_admin: {
-        Args: Record<PropertyKey, never>
-        Returns: boolean
-      }
-      is_customer: {
-        Args: Record<PropertyKey, never>
-        Returns: boolean
-      }
-      is_vendor: {
-        Args: Record<PropertyKey, never>
         Returns: boolean
       }
       log_bulk_operation: {

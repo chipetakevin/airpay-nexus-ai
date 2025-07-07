@@ -100,33 +100,7 @@ const CustomerRegistration = () => {
     
     const hasNoErrors = Object.keys(errors).length === 0;
     
-    const isValid = hasRequiredFields && hasNoErrors;
-    
-    // Debug logging to help identify validation issues
-    console.log('🔍 Form validation status:', {
-      isValid,
-      formData: {
-        firstName: `"${formData.firstName}" (${formData.firstName.length} chars)`,
-        lastName: `"${formData.lastName}" (${formData.lastName.length} chars)`,
-        email: `"${formData.email}" (${formData.email.length} chars)`,
-        phoneNumber: `"${formData.phoneNumber}" (${formData.phoneNumber.length} digits)`,
-        agreeTerms: formData.agreeTerms
-      },
-      validation: {
-        hasFirstName: !!formData.firstName.trim(),
-        hasLastName: !!formData.lastName.trim(),
-        hasEmail: !!formData.email.trim(),
-        hasPhone: !!formData.phoneNumber.trim(),
-        phoneIs9Digits: formData.phoneNumber.length === 9,
-        termsAgreed: formData.agreeTerms,
-        hasRequiredFields,
-        hasNoErrors,
-        errorsCount: Object.keys(errors).length
-      },
-      errors: errors
-    });
-    
-    return isValid;
+    return hasRequiredFields && hasNoErrors;
   };
 
   const handleFormSubmit = async (e: React.FormEvent) => {
@@ -134,23 +108,17 @@ const CustomerRegistration = () => {
     setIsSubmitting(true);
     
     try {
-      console.log('🚀 FORM SUBMISSION STARTED');
-      console.log('📋 Current form data:', {
-        firstName: `"${formData.firstName}" (${formData.firstName.length} chars)`,
-        lastName: `"${formData.lastName}" (${formData.lastName.length} chars)`,
-        email: `"${formData.email}" (${formData.email.length} chars)`,
-        phoneNumber: `"${formData.phoneNumber}" (${formData.phoneNumber.length} digits)`,
-        agreeTerms: formData.agreeTerms,
-        marketingConsent: formData.marketingConsent
-      });
-
       // Check if form is actually valid before showing error
-      const formIsValid = isFormValid();
-      console.log('✅ Form validation result:', formIsValid);
-      console.log('❌ Current errors:', errors);
-      
-      if (!formIsValid) {
-        console.log('🚫 FORM SUBMISSION BLOCKED - Validation failed');
+      if (!isFormValid()) {
+        console.log('Form validation failed:', {
+          firstName: formData.firstName,
+          lastName: formData.lastName,
+          email: formData.email,
+          phoneNumber: formData.phoneNumber,
+          phoneNumberLength: formData.phoneNumber.length,
+          agreeTerms: formData.agreeTerms,
+          errors: errors
+        });
         
         // Don't show the error report if form is actually complete
         const missingFields = [];
@@ -158,10 +126,7 @@ const CustomerRegistration = () => {
         if (!formData.lastName.trim()) missingFields.push('Last Name');
         if (!formData.email.trim()) missingFields.push('Email');
         if (!formData.phoneNumber.trim()) missingFields.push('Phone Number');
-        if (formData.phoneNumber.length !== 9) missingFields.push('Phone Number (must be 9 digits)');
         if (!formData.agreeTerms) missingFields.push('Terms Agreement');
-        
-        console.log('🔍 Missing fields:', missingFields);
         
         if (missingFields.length > 0) {
           toast({
@@ -169,17 +134,9 @@ const CustomerRegistration = () => {
             description: `Missing: ${missingFields.join(', ')}`,
             variant: "destructive"
           });
-        } else {
-          toast({
-            title: "Form Validation Error",
-            description: "Please check all fields and try again.",
-            variant: "destructive"
-          });
         }
         return;
       }
-
-      console.log('✅ FORM VALIDATION PASSED - Proceeding with submission');
 
       await handleSubmit(e);
       showSuccessReport('Customer registration completed successfully! Welcome to Addex-Hub Mobile.');
