@@ -59,11 +59,14 @@ Content-Type: application/json
       </div>
 
       <Tabs defaultValue="overview" className="w-full">
-        <TabsList className="grid w-full grid-cols-4">
+        <TabsList className="grid w-full grid-cols-7 gap-1">
           <TabsTrigger value="overview">Overview</TabsTrigger>
           <TabsTrigger value="security">Security</TabsTrigger>
-          <TabsTrigger value="endpoints">API Endpoints</TabsTrigger>
+          <TabsTrigger value="endpoints">Endpoints</TabsTrigger>
           <TabsTrigger value="examples">Examples</TabsTrigger>
+          <TabsTrigger value="integration">Integration Plan</TabsTrigger>
+          <TabsTrigger value="challenges">Challenges</TabsTrigger>
+          <TabsTrigger value="best-practices">Best Practices</TabsTrigger>
         </TabsList>
 
         {/* Overview Tab */}
@@ -409,6 +412,314 @@ Content-Type: application/json
                   <div className="text-sm text-muted-foreground">Deploy with monitoring and comprehensive logging</div>
                 </div>
               </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        {/* Integration Plan Tab */}
+        <TabsContent value="integration" className="space-y-6">
+          <Card className="border-l-4 border-l-indigo-500">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Code className="w-5 h-5 text-indigo-600" />
+                End-to-End Integration Plan
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              <Alert className="border-l-4 border-l-blue-500">
+                <AlertCircle className="h-4 w-4" />
+                <AlertDescription>
+                  Structured multi-phase approach for seamless MNO-MVNE integration from setup to full launch.
+                </AlertDescription>
+              </Alert>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <Card className="bg-blue-50">
+                  <CardHeader className="pb-3">
+                    <CardTitle className="text-lg text-blue-800">Phase 1-2: Foundation</CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-3 text-sm">
+                    <div className="font-semibold">1. Preparation & Alignment</div>
+                    <div>• Define objectives and KPIs</div>
+                    <div>• Stakeholder engagement</div>
+                    <div>• Regulatory assessment</div>
+                    <div>• Project governance</div>
+                    
+                    <div className="font-semibold pt-2">2. Solution Design</div>
+                    <div>• Platform selection</div>
+                    <div>• Integration model definition</div>
+                    <div>• Security planning (TLS, mTLS, OAuth)</div>
+                    <div>• Multi-tenancy architecture</div>
+                  </CardContent>
+                </Card>
+
+                <Card className="bg-green-50">
+                  <CardHeader className="pb-3">
+                    <CardTitle className="text-lg text-green-800">Phase 3-4: Infrastructure</CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-3 text-sm">
+                    <div className="font-semibold">3. Infrastructure Setup</div>
+                    <div>• Secure VPN/dedicated links</div>
+                    <div>• Core system integration</div>
+                    <div>• API gateway deployment</div>
+                    
+                    <div className="font-semibold pt-2">4. Platform Configuration</div>
+                    <div>• BSS/OSS setup</div>
+                    <div>• Provisioning systems</div>
+                    <div>• Service catalog definition</div>
+                    <div>• Portal customization</div>
+                  </CardContent>
+                </Card>
+
+                <Card className="bg-purple-50">
+                  <CardHeader className="pb-3">
+                    <CardTitle className="text-lg text-purple-800">Phase 5-6: Testing & Training</CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-3 text-sm">
+                    <div className="font-semibold">5. Integration & Testing</div>
+                    <div>• API implementation</div>
+                    <div>• Security validation</div>
+                    <div>• Functional testing</div>
+                    <div>• Performance & compliance testing</div>
+                    
+                    <div className="font-semibold pt-2">6. Onboarding & Training</div>
+                    <div>• MVNO onboarding tools</div>
+                    <div>• User training programs</div>
+                    <div>• Documentation preparation</div>
+                  </CardContent>
+                </Card>
+
+                <Card className="bg-orange-50">
+                  <CardHeader className="pb-3">
+                    <CardTitle className="text-lg text-orange-800">Phase 7-8: Launch & Operations</CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-3 text-sm">
+                    <div className="font-semibold">7. Go-Live & Launch</div>
+                    <div>• Pilot launch with selected MVNOs</div>
+                    <div>• Operational readiness confirmation</div>
+                    <div>• Full rollout</div>
+                    <div>• Continuous monitoring</div>
+                    
+                    <div className="font-semibold pt-2">8. Post-Launch Operations</div>
+                    <div>• Support & maintenance</div>
+                    <div>• Analytics & reporting</div>
+                    <div>• Scalability planning</div>
+                  </CardContent>
+                </Card>
+              </div>
+
+              <div className="bg-gradient-to-r from-indigo-50 to-purple-50 p-4 rounded-lg">
+                <h4 className="font-semibold mb-3">Integration Timeline Summary</h4>
+                <div className="space-y-2 text-sm">
+                  <div className="flex justify-between"><span>Preparation & Design:</span><span className="font-semibold">2-4 weeks</span></div>
+                  <div className="flex justify-between"><span>Infrastructure Setup:</span><span className="font-semibold">3-6 weeks</span></div>
+                  <div className="flex justify-between"><span>Testing & Training:</span><span className="font-semibold">4-8 weeks</span></div>
+                  <div className="flex justify-between"><span>Launch & Optimization:</span><span className="font-semibold">2-4 weeks</span></div>
+                  <div className="border-t pt-2 mt-3 flex justify-between font-bold"><span>Total Duration:</span><span>11-22 weeks</span></div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        {/* Challenges Tab */}
+        <TabsContent value="challenges" className="space-y-6">
+          <Card className="border-l-4 border-l-red-500">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <AlertCircle className="w-5 h-5 text-red-600" />
+                Technical Challenges & Solutions
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <Card className="bg-red-50">
+                  <CardHeader className="pb-3">
+                    <CardTitle className="text-lg text-red-800">Legacy Systems Integration</CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-3 text-sm">
+                    <div className="font-semibold text-red-700">Challenge:</div>
+                    <div>Different technology stacks and limited API support in legacy systems</div>
+                    
+                    <div className="font-semibold text-green-700 pt-2">Solutions:</div>
+                    <div>• Use middleware/integration platforms</div>
+                    <div>• Adopt standardized REST/SOAP APIs</div>
+                    <div>• Plan phased migration</div>
+                    <div>• Ensure backward compatibility</div>
+                  </CardContent>
+                </Card>
+
+                <Card className="bg-blue-50">
+                  <CardHeader className="pb-3">
+                    <CardTitle className="text-lg text-blue-800">Data Synchronization</CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-3 text-sm">
+                    <div className="font-semibold text-red-700">Challenge:</div>
+                    <div>Real-time sync across different data models and update frequencies</div>
+                    
+                    <div className="font-semibold text-green-700 pt-2">Solutions:</div>
+                    <div>• Event-driven architectures</div>
+                    <div>• Robust data validation</div>
+                    <div>• Regular reconciliation processes</div>
+                    <div>• Consistency checks</div>
+                  </CardContent>
+                </Card>
+
+                <Card className="bg-purple-50">
+                  <CardHeader className="pb-3">
+                    <CardTitle className="text-lg text-purple-800">Security & Compliance</CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-3 text-sm">
+                    <div className="font-semibold text-red-700">Challenge:</div>
+                    <div>Protecting data while meeting diverse regulatory requirements</div>
+                    
+                    <div className="font-semibold text-green-700 pt-2">Solutions:</div>
+                    <div>• Strong authentication (OAuth 2.0, mTLS)</div>
+                    <div>• Role-based access control</div>
+                    <div>• End-to-end encryption</div>
+                    <div>• Regular security audits</div>
+                  </CardContent>
+                </Card>
+
+                <Card className="bg-green-50">
+                  <CardHeader className="pb-3">
+                    <CardTitle className="text-lg text-green-800">Scalability & Performance</CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-3 text-sm">
+                    <div className="font-semibold text-red-700">Challenge:</div>
+                    <div>Handling increased loads without bottlenecks or downtime</div>
+                    
+                    <div className="font-semibold text-green-700 pt-2">Solutions:</div>
+                    <div>• Microservices architecture</div>
+                    <div>• Cloud-native design</div>
+                    <div>• Load balancing & auto-scaling</div>
+                    <div>• Performance monitoring</div>
+                  </CardContent>
+                </Card>
+              </div>
+
+              <Alert className="border-l-4 border-l-orange-500">
+                <AlertCircle className="h-4 w-4" />
+                <AlertDescription>
+                  <strong>Pro Tip:</strong> Address challenges proactively during the planning phase to avoid costly delays during implementation.
+                </AlertDescription>
+              </Alert>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        {/* Best Practices Tab */}
+        <TabsContent value="best-practices" className="space-y-6">
+          <Card className="border-l-4 border-l-green-500">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <CheckCircle className="w-5 h-5 text-green-600" />
+                Interoperability Best Practices
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <Card className="bg-blue-50">
+                  <CardHeader className="pb-3">
+                    <CardTitle className="text-lg text-blue-800">Standards & APIs</CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-2 text-sm">
+                    <div>• Use 3GPP standards for network interfaces</div>
+                    <div>• Implement REST/SOAP for API communications</div>
+                    <div>• Design with OpenAPI/Swagger documentation</div>
+                    <div>• Employ semantic versioning</div>
+                    <div>• Event-driven architecture patterns</div>
+                  </CardContent>
+                </Card>
+
+                <Card className="bg-green-50">
+                  <CardHeader className="pb-3">
+                    <CardTitle className="text-lg text-green-800">Architecture Design</CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-2 text-sm">
+                    <div>• Microservices approach</div>
+                    <div>• Loosely coupled components</div>
+                    <div>• Multi-tenant support</div>
+                    <div>• Logical data separation</div>
+                    <div>• Horizontal scalability</div>
+                  </CardContent>
+                </Card>
+
+                <Card className="bg-purple-50">
+                  <CardHeader className="pb-3">
+                    <CardTitle className="text-lg text-purple-800">Data Management</CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-2 text-sm">
+                    <div>• Centralized subscriber database</div>
+                    <div>• Single source of truth</div>
+                    <div>• Real-time synchronization</div>
+                    <div>• Event-driven updates</div>
+                    <div>• Regular data reconciliation</div>
+                  </CardContent>
+                </Card>
+
+                <Card className="bg-orange-50">
+                  <CardHeader className="pb-3">
+                    <CardTitle className="text-lg text-orange-800">Security Framework</CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-2 text-sm">
+                    <div>• OAuth 2.0 with JWT tokens</div>
+                    <div>• Mutual TLS (mTLS) authentication</div>
+                    <div>• Role-based access control</div>
+                    <div>• API gateway deployment</div>
+                    <div>• Comprehensive audit logging</div>
+                  </CardContent>
+                </Card>
+              </div>
+
+              <div className="bg-gradient-to-r from-green-50 to-blue-50 p-4 rounded-lg">
+                <h4 className="font-semibold mb-3">Implementation Checklist</h4>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                  <div className="space-y-1">
+                    <div className="flex items-center gap-2">
+                      <CheckCircle className="w-4 h-4 text-green-500" />
+                      <span>API documentation complete</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <CheckCircle className="w-4 h-4 text-green-500" />
+                      <span>Security protocols implemented</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <CheckCircle className="w-4 h-4 text-green-500" />
+                      <span>Testing framework established</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <CheckCircle className="w-4 h-4 text-green-500" />
+                      <span>Monitoring systems deployed</span>
+                    </div>
+                  </div>
+                  <div className="space-y-1">
+                    <div className="flex items-center gap-2">
+                      <CheckCircle className="w-4 h-4 text-green-500" />
+                      <span>SLA agreements defined</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <CheckCircle className="w-4 h-4 text-green-500" />
+                      <span>Governance framework active</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <CheckCircle className="w-4 h-4 text-green-500" />
+                      <span>Training programs completed</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <CheckCircle className="w-4 h-4 text-green-500" />
+                      <span>Scalability tested</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <Alert className="border-l-4 border-l-green-500">
+                <CheckCircle className="h-4 w-4" />
+                <AlertDescription>
+                  <strong>Success Factor:</strong> Regular collaboration between MNO, MVNE, and MVNO teams ensures alignment and rapid issue resolution.
+                </AlertDescription>
+              </Alert>
             </CardContent>
           </Card>
         </TabsContent>
