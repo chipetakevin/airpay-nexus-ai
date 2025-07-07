@@ -1,6 +1,7 @@
 
-import React from 'react';
+import React, { useMemo } from 'react';
 import { Tabs, TabsContent } from '@/components/ui/tabs';
+import { useRoleBasedAccess } from '@/hooks/useRoleBasedAccess';
 import CustomerRegistration from './CustomerRegistration';
 import VendorRegistration from './VendorRegistration';
 import AdminRegistration from './AdminRegistration';
@@ -37,183 +38,151 @@ const PortalTabs = ({
   showAdminBanner = false
 }: PortalTabsProps) => {
   
-  // Get user data for tab switcher
-  const getUserData = () => {
-    try {
-      const credentials = localStorage.getItem('userCredentials');
-      if (credentials) {
-        const userCreds = JSON.parse(credentials);
-        const userData = localStorage.getItem('onecardUser');
-        if (userData) {
-          const user = JSON.parse(userData);
-          return { name: user.firstName, isAuth: true };
-        }
-      }
-    } catch (error) {
-      console.log('No user data found');
-    }
-    return { name: '', isAuth: false };
-  };
+  // Use role-based access control
+  const { user, permissions, loading, hasTabAccess, getRoleDisplayName } = useRoleBasedAccess();
 
-  const { name: userName, isAuth: userAuthenticated } = getUserData();
-
-  // Check if user is registered admin
-  const isRegisteredAdmin = () => {
-    try {
-      const credentials = localStorage.getItem('userCredentials');
-      const adminData = localStorage.getItem('onecardAdmin');
-      const adminProfile = localStorage.getItem('adminProfile');
-      
-      if (!credentials) {
-        console.log('🔍 Admin check: No credentials found');
-        return false;
+  // Memoize tabs based on user role and permissions
+  const tabs = useMemo(() => {
+    const baseTabs = [
+      {
+        value: 'deals',
+        label: 'Smart Deals',
+        icon: '🔥',
+        description: 'Live Offers',
+        color: 'orange',
+        requiredRole: null // Available to all
+      },
+      {
+        value: 'onecard',
+        label: 'OneCard',
+        icon: '💳',
+        description: 'My Card', 
+        color: 'purple',
+        requiredRole: null // Available to all authenticated users
+      },
+      {
+        value: 'registration',
+        label: 'Customer',
+        icon: '👤',
+        description: 'Sign Up',
+        color: 'green',
+        requiredRole: null // Available to all
+      },
+      {
+        value: 'vendor',
+        label: 'Vendor',
+        icon: '🏪',
+        description: 'Partner',
+        color: 'blue',
+        requiredRole: null // Available to all for registration
       }
-      
-      const parsedCredentials = JSON.parse(credentials);
-      
-      // Check multiple conditions for admin access
-      const isAdmin = parsedCredentials.userType === 'admin' && 
-                     parsedCredentials.password === 'Malawi@1976';
-      const hasAdminData = adminData !== null;
-      const hasAdminProfile = adminProfile !== null;
-      
-      const result = isAdmin || hasAdminData || hasAdminProfile;
-      
-      console.log('🔍 Admin check result:', {
-        userType: parsedCredentials.userType,
-        hasCorrectPassword: parsedCredentials.password === 'Malawi@1976',
-        hasAdminData: hasAdminData,
-        hasAdminProfile: hasAdminProfile,
-        finalResult: result
+    ];
+
+    // Add role-specific tabs based on permissions
+    if (permissions.canAccessVendorFeatures) {
+      baseTabs.push({
+        value: 'ussd-manager',
+        label: 'USSD Manager',
+        icon: '📱',
+        description: 'GSM Onboarding',
+        color: 'emerald',
+        requiredRole: 'vendor'
       });
-      
-      return result;
-    } catch (error) {
-      console.log('🔍 Admin check error:', error);
-      return false;
     }
-  };
 
-  const isAdmin = isRegisteredAdmin();
-
-  // Enhanced tabs with admin access control
-  const baseTabs = [
-    {
-      value: 'deals',
-      label: 'Smart Deals',
-      icon: '🔥',
-      description: 'Live Offers',
-      color: 'orange',
-      adminOnly: false
-    },
-    {
-      value: 'onecard',
-      label: 'OneCard',
-      icon: '💳',
-      description: 'My Card',
-      color: 'purple',
-      adminOnly: false
-    },
-    {
-      value: 'registration',
-      label: 'Customer',
-      icon: '👤',
-      description: 'Sign Up',
-      color: 'green',
-      adminOnly: false
-    },
-    {
-      value: 'vendor',
-      label: 'Vendor',
-      icon: '🏪',
-      description: 'Partner',
-      color: 'blue',
-      adminOnly: false
-    },
-    {
-      value: 'addex-pay',
-      label: 'Addex Pay',
-      icon: '💰',
-      description: 'Payroll System',
-      color: 'indigo',
-      adminOnly: true
-    },
-    {
-      value: 'ussd-manager',
-      label: 'USSD Manager',
-      icon: '📱',
-      description: 'GSM Onboarding',
-      color: 'emerald',
-      adminOnly: false
+    if (permissions.canAccessAdminFeatures) {
+      baseTabs.push(
+        {
+          value: 'admin',
+          label: 'Control Center',
+          icon: '⚙️',
+          description: 'Admin Portal',
+          color: 'gray',
+          requiredRole: 'admin'
+        },
+        {
+          value: 'addex-pay',
+          label: 'Addex Pay',
+          icon: '💰',
+          description: 'Payroll System',
+          color: 'indigo',
+          requiredRole: 'admin'
+        },
+        {
+          value: 'unified-reports',
+          label: 'Reports',
+          icon: '👑',
+          description: 'Gold Access',
+          color: 'yellow',
+          requiredRole: 'admin'
+        },
+        {
+          value: 'documentation',
+          label: 'Docs',
+          icon: '📋',
+          description: 'MVNE v3.0',
+          color: 'blue',
+          requiredRole: 'admin'
+        },
+        {
+          value: 'version-manager',
+          label: 'Versions',
+          icon: '🔄',
+          description: 'Auto-Update',
+          color: 'purple',
+          requiredRole: 'admin'
+        }
+      );
     }
-  ];
 
-  // Build tabs array with conditional admin content
-  const tabs = [...baseTabs];
-  
-  // Always add Control Center tab for admins (highest priority)
-  if (isAdmin || showAdminTab) {
-    console.log('🔍 Adding Control Center tab for admin user');
-    tabs.push({
-      value: 'admin',
-      label: 'Control Center',
-      icon: '⚙️',
-      description: 'Admin Portal',
-      color: 'gray',
-      adminOnly: true
+    // Add admin registration for non-admin users
+    if (!permissions.isAdmin) {
+      baseTabs.push({
+        value: 'admin-reg',
+        label: 'Admin Reg',
+        icon: '🔐',
+        description: 'Register',
+        color: 'red',
+        requiredRole: null
+      });
+    }
+
+    console.log('🔍 Role-based tabs generated:', {
+      userRole: permissions.role,
+      tabCount: baseTabs.length,
+      tabs: baseTabs.map(t => t.label)
     });
-  }
-  
-  // Add admin registration tab for non-admins (positioned prominently)
-  if (!isAdmin) {
-    console.log('🔍 Adding Admin Registration tab for non-admin user');
-    tabs.push({
-      value: 'admin-reg',
-      label: 'Admin Reg',
-      icon: '🔐',
-      description: 'Register',
-      color: 'red',
-      adminOnly: false
-    });
-  }
 
-  // Add admin-only tabs
-  tabs.push(
-    {
-      value: 'unified-reports',
-      label: 'Reports',
-      icon: '👑',
-      description: 'Gold Access',
-      color: 'yellow',
-      adminOnly: true
-    },
-    {
-      value: 'documentation',
-      label: 'Docs',
-      icon: '📋',
-      description: 'MVNE v3.0',
-      color: 'blue',
-      adminOnly: true
-    },
-    {
-      value: 'version-manager',
-      label: 'Versions',
-      icon: '🔄',
-      description: 'Auto-Update',
-      color: 'purple',
-      adminOnly: true
-    }
-  );
+    return baseTabs;
+  }, [permissions]);
 
-  console.log('🔍 Final tabs array:', tabs.map(t => `${t.label} (${t.value})`));
-  console.log('🔍 Control Center tab included:', tabs.some(t => t.value === 'admin'));
-
-  // Enhanced tab change handler with debugging
+  // Enhanced tab change handler with role-based access control
   const enhancedHandleTabChange = (value: string) => {
     console.log(`🔄 Tab change requested: ${value}`);
-    console.log(`✅ Is tab allowed: ${isTabAllowed(value)}`);
-    handleTabChange(value);
+    
+    if (hasTabAccess(value)) {
+      console.log(`✅ Access granted for tab: ${value}`);
+      handleTabChange(value);
+    } else {
+      console.log(`❌ Access denied for tab: ${value}`);
+      // Optionally show a message or redirect to allowed tab
+    }
   };
+
+  // Get user display name for tab switcher
+  const userName = user ? (user.user_metadata?.firstName || user.email?.split('@')[0] || 'User') : '';
+  const userAuthenticated = !!user;
+
+  if (loading) {
+    return (
+      <div className="w-full max-w-6xl mx-auto pt-3 sm:pt-4 mobile-content-container mobile-safe-bottom">
+        <div className="flex items-center justify-center p-8">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+          <span className="ml-2 text-blue-600">Loading user permissions...</span>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="w-full max-w-6xl mx-auto pt-3 sm:pt-4 mobile-content-container mobile-safe-bottom">
@@ -278,7 +247,7 @@ const PortalTabs = ({
             <AdminRegistration />
           </TabsContent>
           
-          {(isAdmin || showAdminTab) && (
+          {(permissions.isAdmin || showAdminTab) && (
             <TabsContent value="admin" className="p-1 sm:p-2 md:p-4 lg:p-6 animate-fade-in">
               <AdminPortal 
                 onAuthSuccess={() => setIsAdminAuthenticated(true)} 

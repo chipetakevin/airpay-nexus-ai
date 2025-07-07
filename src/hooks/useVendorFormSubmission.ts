@@ -39,7 +39,15 @@ export const useVendorFormSubmission = () => {
         password: formData.password,
         userType: 'vendor',
         phone: finalPhone,
-        permanentSession: true
+        permanentSession: true,
+        // Metadata for role assignment in database trigger
+        user_metadata: {
+          userType: 'vendor',
+          firstName: formData.firstName,
+          lastName: formData.lastName,
+          companyName: formData.companyName,
+          phone: finalPhone
+        }
       };
 
       const userData = {
