@@ -73,19 +73,19 @@ const ModernTabNavigation = ({
   };
 
   return (
-    <div className="w-full max-w-7xl mx-auto px-3 sm:px-4 mb-6 sm:mb-8">
-      {/* Enhanced Mobile: Dynamic Grid with improved card sizing and typography */}
-      <div className="grid grid-cols-2 gap-3 sm:hidden">
+    <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 mb-8 sm:mb-10">
+      {/* Enhanced Mobile: Dynamic Grid with improved spacing and visibility */}
+      <div className="grid grid-cols-2 gap-4 sm:hidden">
         {tabs.map((tab) => (
           <Card 
             key={tab.value}
             className={`
               ${getTabStyles(tab)}
               transition-all duration-300 cursor-pointer
-              min-h-[100px] flex flex-col items-center justify-center p-3
-              hover:shadow-lg mobile-touch-target
+              min-h-[120px] flex flex-col items-center justify-center p-4
+              hover:shadow-xl hover:-translate-y-1 mobile-touch-target
               focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2
-              overflow-hidden
+              overflow-hidden rounded-lg
               ${tab.value === 'admin-reg' ? 'ring-2 ring-red-200 border-red-300' : ''}
             `}
             onClick={() => handleTabClick(tab)}
@@ -93,22 +93,22 @@ const ModernTabNavigation = ({
             tabIndex={0}
             aria-label={`${tab.label} - ${tab.description}`}
           >
-            <div className="text-xl mb-1.5 flex items-center gap-1">
+            <div className="text-2xl mb-2 flex items-center gap-2">
               {tab.icon}
               {tab.adminOnly && !isTabAllowed(tab.value) && (
-                <span className="text-xs">🔒</span>
+                <span className="text-sm">🔒</span>
               )}
             </div>
-            <div className="text-center w-full max-w-full">
-              <div className="text-sm font-bold leading-tight truncate px-1 max-w-full overflow-hidden flex items-center justify-center gap-1">
+            <div className="text-center w-full max-w-full px-2">
+              <div className="text-sm font-bold leading-snug mb-1 max-w-full overflow-hidden flex items-center justify-center gap-1">
                 {tab.label}
                 {tab.adminOnly && isTabAllowed(tab.value) && (
-                  <Badge className="text-xs px-1 py-0 h-4 bg-yellow-100 text-yellow-800 border-yellow-200">
+                  <Badge className="text-xs px-1.5 py-0.5 h-5 bg-yellow-100 text-yellow-800 border-yellow-200 font-semibold">
                     ADMIN
                   </Badge>
                 )}
               </div>
-              <div className="text-xs opacity-90 leading-tight mt-0.5 truncate px-1 max-w-full overflow-hidden">{tab.description}</div>
+              <div className="text-xs text-muted-foreground leading-snug mt-1 max-w-full overflow-hidden">{tab.description}</div>
             </div>
             {activeTab === tab.value && (
               <div className="flex items-center gap-1 mt-1.5">
@@ -121,40 +121,40 @@ const ModernTabNavigation = ({
         ))}
       </div>
 
-      {/* Enhanced Tablet: 3 columns with improved touch targets */}
-      <div className="hidden sm:grid lg:hidden grid-cols-3 gap-4">
+      {/* Enhanced Tablet: 3 columns with improved spacing and touch targets */}
+      <div className="hidden sm:grid lg:hidden grid-cols-3 gap-6">
         {tabs.map((tab) => (
           <Card 
             key={tab.value}
             className={`
               ${getTabStyles(tab)}
               transition-all duration-300 cursor-pointer
-              min-h-[110px] flex flex-col items-center justify-center p-5
-              hover:shadow-lg
+              min-h-[130px] flex flex-col items-center justify-center p-6
+              hover:shadow-xl hover:-translate-y-1
               focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2
-              overflow-hidden
+              overflow-hidden rounded-lg
             `}
             onClick={() => handleTabClick(tab)}
             role="button"
             tabIndex={0}
             aria-label={`${tab.label} - ${tab.description}`}
           >
-            <div className="text-2xl mb-2 flex items-center gap-1">
+            <div className="text-3xl mb-3 flex items-center gap-2">
               {tab.icon}
               {tab.adminOnly && !isTabAllowed(tab.value) && (
-                <span className="text-sm">🔒</span>
+                <span className="text-lg">🔒</span>
               )}
             </div>
-            <div className="text-center max-w-full">
-              <div className="text-sm font-bold leading-tight truncate max-w-full overflow-hidden flex items-center justify-center gap-1">
+            <div className="text-center max-w-full px-2">
+              <div className="text-base font-bold leading-snug mb-2 max-w-full overflow-hidden flex items-center justify-center gap-2">
                 {tab.label}
                 {tab.adminOnly && isTabAllowed(tab.value) && (
-                  <Badge className="text-xs px-1 py-0 h-4 bg-yellow-100 text-yellow-800 border-yellow-200">
+                  <Badge className="text-xs px-2 py-1 h-5 bg-yellow-100 text-yellow-800 border-yellow-200 font-semibold">
                     ADMIN
                   </Badge>
                 )}
               </div>
-              <div className="text-sm opacity-85 leading-tight mt-1 truncate max-w-full overflow-hidden">{tab.description}</div>
+              <div className="text-sm text-muted-foreground leading-snug mt-1 max-w-full overflow-hidden">{tab.description}</div>
             </div>
             {activeTab === tab.value && (
               <div className="flex items-center gap-1 mt-2">
@@ -167,36 +167,36 @@ const ModernTabNavigation = ({
         ))}
       </div>
 
-      {/* Desktop: Single row with optimal spacing */}
-      <div className="hidden lg:flex gap-4 justify-center">
+      {/* Desktop: Single row with enhanced spacing and visibility */}
+      <div className="hidden lg:flex gap-6 justify-center flex-wrap">
         {tabs.map((tab) => (
           <Card 
             key={tab.value}
             className={`
               ${getTabStyles(tab)}
               transition-all duration-300 cursor-pointer
-              min-h-[100px] w-[140px] flex flex-col items-center justify-center p-4
-              hover:shadow-lg hover:-translate-y-1
-              overflow-hidden
+              min-h-[120px] w-[160px] flex flex-col items-center justify-center p-6
+              hover:shadow-xl hover:-translate-y-2
+              overflow-hidden rounded-lg
             `}
             onClick={() => handleTabClick(tab)}
           >
-            <div className="text-2xl mb-2 flex items-center gap-1">
+            <div className="text-3xl mb-3 flex items-center gap-2">
               {tab.icon}
               {tab.adminOnly && !isTabAllowed(tab.value) && (
-                <span className="text-sm">🔒</span>
+                <span className="text-lg">🔒</span>
               )}
             </div>
-            <div className="text-center max-w-full">
-              <div className="text-sm font-bold leading-tight truncate max-w-full overflow-hidden flex items-center justify-center gap-1">
+            <div className="text-center max-w-full px-2">
+              <div className="text-base font-bold leading-snug mb-2 max-w-full overflow-hidden flex items-center justify-center gap-2">
                 {tab.label}
                 {tab.adminOnly && isTabAllowed(tab.value) && (
-                  <Badge className="text-xs px-1 py-0 h-4 bg-yellow-100 text-yellow-800 border-yellow-200">
+                  <Badge className="text-xs px-2 py-1 h-5 bg-yellow-100 text-yellow-800 border-yellow-200 font-semibold">
                     ADMIN
                   </Badge>
                 )}
               </div>
-              <div className="text-xs opacity-75 leading-tight mt-1 truncate max-w-full overflow-hidden">{tab.description}</div>
+              <div className="text-sm text-muted-foreground leading-snug mt-1 max-w-full overflow-hidden">{tab.description}</div>
             </div>
             {activeTab === tab.value && (
               <div className="flex items-center gap-1 mt-2">

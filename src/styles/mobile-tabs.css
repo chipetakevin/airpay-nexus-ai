@@ -2,18 +2,39 @@
 @layer utilities {
   /* Enhanced Tab System - Using Design System Tokens */
   
-  /* Base tab styles */
+  /* Enhanced base tab styles with improved spacing and visibility */
   .tab-active {
     color: white;
     font-weight: 700;
+    font-size: 16px;
+    padding: 16px 24px;
+    margin: 0 8px;
+    border-radius: 12px;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transform: translateY(-1px);
   }
   
   .tab-inactive {
     background: hsl(var(--card));
     color: hsl(var(--foreground));
     font-weight: 600;
+    font-size: 16px;
+    padding: 16px 24px;
+    margin: 0 8px;
+    border-radius: 12px;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  }
+  
+  .tab-inactive:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+  
+  .tab-inactive:focus {
+    outline: 2px solid hsl(var(--ring));
+    outline-offset: 2px;
   }
   
   /* Tab color variants using design system */
