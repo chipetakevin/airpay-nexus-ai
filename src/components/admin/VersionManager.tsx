@@ -8,6 +8,7 @@ import { Input } from '@/components/ui/input';
 import { useToast } from '@/hooks/use-toast';
 import intelligentVersioning, { VersionChange } from '@/utils/intelligentVersioning';
 import { MVNEFeature } from '@/utils/documentationAutoUpdater';
+import EnhancedVersionManager from './EnhancedVersionManager';
 import { 
   GitBranch, 
   Tag, 
@@ -18,7 +19,9 @@ import {
   AlertCircle,
   CheckCircle,
   GitCommit,
-  Loader2
+  Loader2,
+  Shield,
+  ExternalLink
 } from 'lucide-react';
 
 const VersionManager = () => {
@@ -101,15 +104,15 @@ const VersionManager = () => {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
-      <div className="flex items-center justify-between">
+      {/* Version Selection */}
+      <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-3">
           <div className="p-3 bg-gradient-to-br from-purple-500 to-indigo-500 rounded-xl shadow-lg">
             <GitBranch className="w-8 h-8 text-white" />
           </div>
           <div>
-            <h2 className="text-2xl font-bold">Intelligent Version Manager</h2>
-            <p className="text-muted-foreground">Automated semantic versioning and change tracking</p>
+            <h2 className="text-2xl font-bold">Version Management System</h2>
+            <p className="text-muted-foreground">Choose your version management interface</p>
           </div>
         </div>
         <Badge className="bg-purple-100 text-purple-800 text-lg px-4 py-2">
@@ -118,7 +121,99 @@ const VersionManager = () => {
         </Badge>
       </div>
 
-      {/* Version Statistics */}
+      {/* Version Selection Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+        <Card className="border-l-4 border-l-blue-500">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <GitBranch className="w-5 h-5 text-blue-600" />
+              Standard Version Manager
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-sm text-muted-foreground mb-4">
+              Basic version management with feature tracking and automated changelog generation.
+              Perfect for development workflow management.
+            </p>
+            <div className="flex items-center gap-2 text-xs text-muted-foreground mb-3">
+              <CheckCircle className="w-3 h-3 text-green-500" />
+              <span>Feature tracking</span>
+            </div>
+            <div className="flex items-center gap-2 text-xs text-muted-foreground mb-3">
+              <CheckCircle className="w-3 h-3 text-green-500" />
+              <span>Automated versioning</span>
+            </div>
+            <div className="flex items-center gap-2 text-xs text-muted-foreground mb-4">
+              <CheckCircle className="w-3 h-3 text-green-500" />
+              <span>Changelog generation</span>
+            </div>
+            <Badge className="bg-green-100 text-green-800">Version 3.0.0 Compatible</Badge>
+          </CardContent>
+        </Card>
+
+        <Card className="border-l-4 border-l-red-500 relative">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Shield className="w-5 h-5 text-red-600" />
+              Enhanced Version Manager (v4.0.0)
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-sm text-muted-foreground mb-4">
+              Advanced secure version management with admin authentication, PDF documentation, 
+              and comprehensive codebase snapshots.
+            </p>
+            <div className="flex items-center gap-2 text-xs text-muted-foreground mb-3">
+              <CheckCircle className="w-3 h-3 text-green-500" />
+              <span>Secure admin access</span>
+            </div>
+            <div className="flex items-center gap-2 text-xs text-muted-foreground mb-3">
+              <CheckCircle className="w-3 h-3 text-green-500" />
+              <span>PDF documentation</span>
+            </div>
+            <div className="flex items-center gap-2 text-xs text-muted-foreground mb-3">
+              <CheckCircle className="w-3 h-3 text-green-500" />
+              <span>Complete codebase snapshots</span>
+            </div>
+            <div className="flex items-center gap-2 text-xs text-muted-foreground mb-4">
+              <CheckCircle className="w-3 h-3 text-green-500" />
+              <span>Version restoration</span>
+            </div>
+            <div className="flex gap-2">
+              <Badge className="bg-red-100 text-red-800">Version 4.0.0</Badge>
+              <Badge className="bg-yellow-100 text-yellow-800">Admin Required</Badge>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Enhanced Version Manager Link */}
+      <Alert className="border-l-4 border-l-red-500 bg-gradient-to-r from-red-50 to-white">
+        <Shield className="h-4 w-4 text-red-600" />
+        <AlertDescription>
+          <div className="flex items-center justify-between">
+            <div>
+              <h4 className="font-semibold text-red-800 mb-1">Access Version 4.0.0 Enhanced Manager</h4>
+              <p className="text-sm text-red-600">
+                Secure version management with admin authentication (Password: Malawi@1976)
+              </p>
+            </div>
+            <Button 
+              onClick={() => window.open('/enhanced-version-manager', '_blank')}
+              className="bg-red-600 hover:bg-red-700"
+            >
+              <ExternalLink className="w-4 h-4 mr-2" />
+              Open Enhanced Manager
+            </Button>
+          </div>
+        </AlertDescription>
+      </Alert>
+
+      {/* Standard Version Manager Interface */}
+      <div className="border-t pt-6">
+        <h3 className="text-xl font-semibold mb-4">Standard Version Manager (v3.0.0)</h3>
+
+        {/* Version Statistics */}
       <Alert className="border-l-4 border-l-purple-500 bg-gradient-to-r from-purple-50 to-white">
         <TrendingUp className="h-4 w-4 text-purple-600" />
         <AlertDescription>
@@ -282,6 +377,7 @@ const VersionManager = () => {
           </p>
         </CardContent>
       </Card>
+      </div>
     </div>
   );
 };
