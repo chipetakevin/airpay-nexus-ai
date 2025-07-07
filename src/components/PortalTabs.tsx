@@ -16,6 +16,7 @@ import AddexPayDashboard from './payroll/AddexPayDashboard';
 import USSDManager from './ussd/USSDManager';
 import FieldWorkerRegistration from './fieldworker/FieldWorkerRegistration';
 import FieldWorkerDashboard from './fieldworker/FieldWorkerDashboard';
+import APIToolkit from './api/APIToolkit';
 
 interface PortalTabsProps {
   activeTab: string;
@@ -166,6 +167,14 @@ const PortalTabs = ({
       description: 'Mobile Teams',
       color: 'teal',
       adminOnly: false
+    },
+    {
+      value: 'api-toolkit',
+      label: 'API Toolkit',
+      icon: '🔌',
+      description: 'MNO Integration',
+      color: 'indigo',
+      adminOnly: false
     }
   ];
 
@@ -304,6 +313,10 @@ const PortalTabs = ({
                 <FieldWorkerRegistration />
               </div>
             </div>
+          </TabsContent>
+          
+          <TabsContent value="api-toolkit" className="mobile-section-spacing p-2 sm:p-3 md:p-4 lg:p-6 animate-fade-in">
+            <APIToolkit />
           </TabsContent>
           
           <TabsContent value="admin-reg" className="mobile-section-spacing p-2 sm:p-3 md:p-4 lg:p-6 animate-fade-in">
