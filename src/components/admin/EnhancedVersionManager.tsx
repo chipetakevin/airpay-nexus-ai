@@ -7,6 +7,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
+import { generateVersion4PDF, generateVersion4Data } from '@/utils/version4PDFGenerator';
 import { 
   GitBranch, 
   Tag, 
@@ -201,22 +202,31 @@ const EnhancedVersionManager = () => {
     }
   };
 
-  // Generate PDF documentation
+  // Generate PDF documentation for Version 4.0
   const generatePDFDocumentation = async (versionId: string) => {
     setIsGeneratingPDF(true);
     try {
-      // In a real implementation, this would call an edge function to generate PDF
-      // For now, we'll simulate the process and update the database
+      // Generate the PDF using our Version 4.0 PDF generator
+      const documentationData = generateVersion4Data();
+      const pdf = generateVersion4PDF(documentationData);
       
-      // Simulate PDF generation delay
-      await new Promise(resolve => setTimeout(resolve, 3000));
+      // Save the PDF
+      const pdfBlob = pdf.output('blob');
+      const pdfUrl = URL.createObjectURL(pdfBlob);
       
-      const pdfUrl = `/documentation/mvne-platform-v4.0.0-${Date.now()}.pdf`;
+      // Create download link
+      const link = document.createElement('a');
+      link.href = pdfUrl;
+      link.download = `MVNE-Platform-v4.0.0-Documentation-${Date.now()}.pdf`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
       
+      // Update database with PDF generation info
       const { error } = await supabase
         .from('codebase_versions')
         .update({
-          description: `${versions.find(v => v.id === versionId)?.description} [PDF Generated: ${pdfUrl}]`
+          description: `${versions.find(v => v.id === versionId)?.description} [PDF Generated: ${new Date().toISOString()}]`
         })
         .eq('id', versionId);
 
@@ -224,7 +234,7 @@ const EnhancedVersionManager = () => {
 
       toast({
         title: "PDF Documentation Generated",
-        description: "Comprehensive documentation PDF has been created.",
+        description: "Version 4.0.0 documentation PDF downloaded successfully.",
       });
 
       await loadVersions();
