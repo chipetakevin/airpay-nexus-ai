@@ -1,10 +1,13 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { CreditCard } from 'lucide-react';
+import { CreditCard, LogIn, LogOut, User } from 'lucide-react';
 import { navigationItems } from './NavigationConfig';
+import { useMobileAuth } from '@/hooks/useMobileAuth';
+import LoginModal from '../auth/LoginModal';
+import { useToast } from '@/hooks/use-toast';
 
 interface MobileMenuOverlayProps {
   isMenuOpen: boolean;
@@ -15,7 +18,28 @@ interface MobileMenuOverlayProps {
 
 const MobileMenuOverlay = ({ isMenuOpen, closeMenu, isHomePage, handleQuickShopClick }: MobileMenuOverlayProps) => {
   const location = useLocation();
+  const { isAuthenticated, currentUser } = useMobileAuth();
+  const [showLoginModal, setShowLoginModal] = useState(false);
+  const { toast } = useToast();
   const isActive = (path: string) => location.pathname === path;
+
+  const handleLogout = () => {
+    localStorage.removeItem('userAuthenticated');
+    localStorage.removeItem('adminAuthenticated');
+    localStorage.removeItem('userCredentials');
+    localStorage.removeItem('sessionStartTime');
+    
+    toast({
+      title: "🔐 Logged Out Successfully",
+      description: "Your profile information remains saved for quick re-login.",
+      duration: 3000,
+    });
+    
+    closeMenu();
+    setTimeout(() => {
+      window.location.href = '/';
+    }, 1500);
+  };
 
   if (!isMenuOpen) return null;
 
@@ -33,6 +57,49 @@ const MobileMenuOverlay = ({ isMenuOpen, closeMenu, isHomePage, handleQuickShopC
         className="md:hidden fixed left-0 right-0 top-16 bg-white shadow-2xl border-t-2 border-[#75B8FA]/20 z-[95] max-h-[calc(100vh-4rem)] overflow-y-auto"
       >
         <nav className="p-4 space-y-2">
+          {/* Authentication Status - Top Priority */}
+          <div className="border-b border-gray-200 pb-4 mb-4">
+            {isAuthenticated ? (
+              <div className="space-y-3">
+                {/* User Info */}
+                <div className="flex items-center gap-3 bg-green-50 px-4 py-3 rounded-xl border-2 border-green-200">
+                  <div className="flex items-center justify-center w-8 h-8 bg-green-600 rounded-full">
+                    <User className="w-4 h-4 text-white" />
+                  </div>
+                  <div className="flex-1">
+                    <p className="text-sm font-semibold text-green-800">
+                      {currentUser?.firstName || 'User'}
+                    </p>
+                    <p className="text-xs text-green-600">
+                      {currentUser?.userType?.toUpperCase()} Account
+                    </p>
+                  </div>
+                </div>
+                
+                {/* Logout Button */}
+                <Button
+                  onClick={handleLogout}
+                  className="w-full bg-red-500 hover:bg-red-600 text-white font-medium py-3 rounded-xl shadow-lg transition-all duration-200"
+                >
+                  <LogOut className="w-5 h-5 mr-2" />
+                  Logout
+                </Button>
+              </div>
+            ) : (
+              <Button
+                onClick={() => {
+                  setShowLoginModal(true);
+                  closeMenu();
+                }}
+                className="w-full bg-blue-500 hover:bg-blue-600 text-white font-medium py-3 rounded-xl shadow-lg transition-all duration-200"
+              >
+                <LogIn className="w-5 h-5 mr-2" />
+                Login
+              </Button>
+            )}
+          </div>
+
+          {/* Navigation Items */}
           {navigationItems.map((item) => (
             <Link
               key={item.path}
@@ -77,6 +144,11 @@ const MobileMenuOverlay = ({ isMenuOpen, closeMenu, isHomePage, handleQuickShopC
             </Badge>
           </button>
         </nav>
+        
+        <LoginModal 
+          isOpen={showLoginModal}
+          onClose={() => setShowLoginModal(false)}
+        />
       </div>
     </>
   );
