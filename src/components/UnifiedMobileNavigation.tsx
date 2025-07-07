@@ -64,7 +64,7 @@ const UnifiedMobileNavigation = () => {
           ]
         },
         {
-          title: "Mobile Divinely BaaS Portal",
+          title: "Mobile Divine BaaS Portal",
           description: "Banking & Mobile Platform Access",
           icon: <Sparkles className="w-6 h-6 text-white" />,
           gradient: "from-blue-500 via-cyan-500 to-teal-600",

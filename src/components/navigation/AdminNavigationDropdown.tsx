@@ -389,7 +389,7 @@ const AdminNavigationDropdown: React.FC<AdminNavigationDropdownProps> = ({
           <div className="p-2 sm:p-3">
             <div className="flex items-center gap-2 mb-2 pb-2 border-b border-gray-100">
               <img src="/lovable-uploads/788fddcb-574c-4f1d-9c73-54cc003a95d1.png" alt="Divine Mobile" className="w-3 h-3 flex-shrink-0" />
-              <h3 className="text-xs font-semibold text-gray-800">Divinely Mobile BaaS - AI-Driven MVNX Platform</h3>
+              <h3 className="text-xs font-semibold text-gray-800">Divine Mobile BaaS - AI-Driven MVNX Platform</h3>
             </div>
             
             <div className="grid grid-cols-1 gap-3">

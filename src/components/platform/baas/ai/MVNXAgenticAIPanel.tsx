@@ -161,7 +161,7 @@ const AgenticBaaSAIPanel = () => {
           </div>
         </div>
         <h2 className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
-          Divinely Mobile Agentic BaaS AI Platform
+          Divine Mobile Agentic BaaS AI Platform
         </h2>
         <p className="text-sm md:text-base text-gray-600 max-w-3xl mx-auto px-4">
           Revolutionary autonomous AI agents powering intelligent operations, predictive analytics, and real-time decision making for telecommunications platforms
