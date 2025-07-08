@@ -13,7 +13,7 @@ import ModernTabNavigation from './navigation/ModernTabNavigation';
 import DocumentationManager from './admin/DocumentationManager';
 import VersionManager from './admin/VersionManager';
 import AddexPayDashboard from './payroll/AddexPayDashboard';
-import USSDManager from './ussd/USSDManager';
+import EnhancedUSSDManager from './ussd/EnhancedUSSDManager';
 import FieldWorkerRegistration from './fieldworker/FieldWorkerRegistration';
 import FieldWorkerDashboard from './fieldworker/FieldWorkerDashboard';
 import APIToolkit from './api/APIToolkit';
@@ -301,7 +301,7 @@ const PortalTabs = ({
           </TabsContent>
           
           <TabsContent value="ussd-manager" className="mobile-section-spacing p-2 sm:p-3 md:p-4 lg:p-6 animate-fade-in">
-            <USSDManager />
+            <EnhancedUSSDManager />
           </TabsContent>
           
           {(isAdmin || showAdminTab) && (
