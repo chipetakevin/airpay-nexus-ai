@@ -230,7 +230,7 @@ const BaaSSecurityPanel = () => {
           <CardContent>
             <div className="space-y-3">
               {[
-                { time: '2 minutes ago', event: 'Admin role assigned to user john@company.com', status: 'info' },
+                { time: '2 minutes ago', event: 'Admin role assigned to user admin@divinemobile.co.za', status: 'info' },
                 { time: '15 minutes ago', event: 'Failed login attempt blocked from suspicious IP', status: 'warning' },
                 { time: '1 hour ago', event: 'MFA enabled for 15 new users', status: 'success' },
                 { time: '3 hours ago', event: 'API rate limit exceeded for client app-mobile', status: 'warning' },

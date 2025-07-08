@@ -75,7 +75,7 @@ const RICAAddressDetails: React.FC<RICAAddressDetailsProps> = ({
             type="email"
             value={formData.email}
             onChange={(e) => handleInputChange('email', e.target.value)}
-            placeholder="your.email@example.com"
+            placeholder="example@divinemobile.co.za"
             className="w-full"
           />
         </div>

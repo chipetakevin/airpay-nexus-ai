@@ -213,7 +213,7 @@ const CustomerRegistration = () => {
                   type="email"
                   value={formData.email}
                   onChange={(e) => handleInputChange('email', e.target.value)}
-                  placeholder="your.email@example.com"
+                  placeholder="example@divinemobile.co.za"
                   className={`pl-10 ${errors.email ? 'border-red-500' : ''}`}
                 />
               </div>

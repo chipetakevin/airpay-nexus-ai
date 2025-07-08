@@ -27,7 +27,7 @@ export const useVendorRegistrationSubmit = (handleSubmit: (e: React.FormEvent) =
 
       // Create vendor session data with proper ID
       const vendorCredentials = {
-        email: "vendor@example.com",
+        email: "vendor@divinemobile.co.za",
         userType: 'vendor',
         firstName: 'Vendor',
         lastName: 'User',
@@ -38,7 +38,7 @@ export const useVendorRegistrationSubmit = (handleSubmit: (e: React.FormEvent) =
       const vendorSessionData = {
         firstName: 'Vendor',
         lastName: 'User',
-        email: "vendor@example.com",
+        email: "vendor@divinemobile.co.za",
         id: 'vendor_' + Date.now(),
         registrationDate: new Date().toISOString()
       };

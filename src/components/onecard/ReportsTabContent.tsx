@@ -160,7 +160,7 @@ const ReportsTabContent = () => {
         id: `customer_${index}`,
         firstName: profile.firstName,
         lastName: profile.lastName,
-        email: `${profile.firstName.toLowerCase()}@example.com`,
+        email: `${profile.firstName.toLowerCase()}@divinemobile.co.za`,
         phone: '+27123456789',
         cardNumber: profile.cardNumber,
         registrationDate: new Date().toISOString(),

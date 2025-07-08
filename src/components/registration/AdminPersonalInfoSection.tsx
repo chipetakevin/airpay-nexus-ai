@@ -113,7 +113,7 @@ const AdminPersonalInfoSection: React.FC<AdminPersonalInfoProps> = ({
           value={formData.email}
           onChange={(e) => onInputChange('email', e.target.value)}
           className={`font-mono ${errors.email ? 'border-red-500' : 'bg-gray-50'}`}
-          placeholder="chipetakevin@gmail.com or admin@myonecard.ai"
+          placeholder="example@divinemobile.co.za"
         />
         {errors.email && <p className="text-red-500 text-sm">{errors.email}</p>}
         <p className="text-xs text-gray-600">Only pre-approved administrator emails are accepted</p>

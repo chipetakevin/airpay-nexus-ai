@@ -129,7 +129,7 @@ const PaymentStepOne = ({
           <label className="block text-sm font-medium mb-1">Email Address</label>
           <Input
             type="email"
-            placeholder="john@example.com"
+            placeholder="example@divinemobile.co.za"
             value={formData.email}
             onChange={(e) => onInputChange('email', e.target.value)}
             className={errors.email ? 'border-red-500' : ''}

@@ -550,7 +550,7 @@ const APIToolkit = () => {
                       {[
                         { event: 'Failed login attempt detected', time: '2 min ago', severity: 'warning', source: 'IP: 203.0.113.42' },
                         { event: 'Rate limit exceeded', time: '15 min ago', severity: 'warning', source: 'API Key: dk_***abc123' },
-                        { event: 'New API key generated', time: '1 hour ago', severity: 'info', source: 'Admin: john@divine.com' },
+                        { event: 'New API key generated', time: '1 hour ago', severity: 'info', source: 'Admin: admin@divinemobile.co.za' },
                         { event: 'User role updated to admin', time: '3 hours ago', severity: 'info', source: 'Admin: admin@divine.com' },
                         { event: 'Suspicious USSD pattern detected', time: '6 hours ago', severity: 'warning', source: 'USSD Gateway' }
                       ].map((event, index) => (
@@ -810,7 +810,7 @@ const APIToolkit = () => {
                   <div>
                     <label className="text-sm font-medium mb-2 block">Request Body</label>
                     <Textarea 
-                      placeholder={`{\n  "username": "user@example.com",\n  "password": "your_password"\n}`}
+                      placeholder={`{\n  "username": "example@divinemobile.co.za",\n  "password": "your_password"\n}`}
                       className="font-mono text-sm" 
                       rows={4}
                     />
@@ -953,7 +953,7 @@ const APIToolkit = () => {
                     <div className="mb-2 text-gray-400"># Example: Authenticate User</div>
                     <div className="mb-2">$ curl -X POST "https://api.divinemobile.com/v1/auth/login" \</div>
                     <div className="mb-2 ml-6">-H "Content-Type: application/json" \</div>
-                    <div className="mb-4 ml-6">-d {`'{"username": "user@example.com", "password": "your_password"}'`}</div>
+                    <div className="mb-4 ml-6">-d {`'{"username": "example@divinemobile.co.za", "password": "your_password"}'`}</div>
                     <div className="text-blue-400 mb-2"># Response:</div>
                     <div className="text-white">
                       {JSON.stringify({
@@ -962,7 +962,7 @@ const APIToolkit = () => {
                         user: {
                           id: "12345",
                           name: "John Doe",
-                          email: "user@example.com",
+                          email: "example@divinemobile.co.za",
                           role: "customer"
                         },
                         expires_in: 3600

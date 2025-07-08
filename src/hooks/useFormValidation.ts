@@ -93,7 +93,7 @@ export const useFormValidation = () => {
           message = 'Email address is required';
         } else if (!EMAIL_REGEX.test(value.trim())) {
           isValid = false;
-          message = 'Please enter a valid email address (e.g., john@example.com)';
+          message = 'Please enter a valid email address (e.g., example@divinemobile.co.za)';
         }
         break;
 

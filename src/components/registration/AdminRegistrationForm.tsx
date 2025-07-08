@@ -101,7 +101,7 @@ const AdminRegistrationForm = () => {
                 type="email"
                 value={formData.email || ''}
                 onChange={(e) => handleInputChange('email', e.target.value)}
-                placeholder="admin@example.com"
+                placeholder="example@divinemobile.co.za"
                 className={errors.email ? 'border-red-500' : ''}
               />
               {errors.email && <p className="text-red-500 text-sm">{errors.email}</p>}
