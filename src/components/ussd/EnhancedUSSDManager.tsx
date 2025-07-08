@@ -52,6 +52,7 @@ import NotificationCampaignManager from './NotificationCampaignManager';
 import SIMActivationManager from './SIMActivationManager';
 import MultiLanguageUSSDMenu from './MultiLanguageUSSDMenu';
 import ComplianceMonitor from './ComplianceMonitor';
+import AIAnalyticsEngine from './AIAnalyticsEngine';
 
 interface MenuBuilderState {
   menuItems: Array<{
