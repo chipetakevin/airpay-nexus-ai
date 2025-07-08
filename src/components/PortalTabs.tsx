@@ -158,7 +158,7 @@ const PortalTabs = ({
       icon: '📱',
       description: 'GSM Onboarding',
       color: 'emerald',
-      adminOnly: false
+      adminOnly: true
     },
     {
       value: 'field-workers',
@@ -166,7 +166,7 @@ const PortalTabs = ({
       icon: '👥',
       description: 'Mobile Teams',
       color: 'teal',
-      adminOnly: false
+      adminOnly: true
     },
     {
       value: 'api-toolkit',
@@ -174,7 +174,7 @@ const PortalTabs = ({
       icon: '🔌',
       description: 'MNO Integration',
       color: 'indigo',
-      adminOnly: false
+      adminOnly: true
     }
   ];
 
@@ -300,24 +300,30 @@ const PortalTabs = ({
             <AddexPayDashboard />
           </TabsContent>
           
-          <TabsContent value="ussd-manager" className="mobile-section-spacing p-2 sm:p-3 md:p-4 lg:p-6 animate-fade-in">
-            <USSDManager />
-          </TabsContent>
+          {(isAdmin || showAdminTab) && (
+            <TabsContent value="ussd-manager" className="mobile-section-spacing p-2 sm:p-3 md:p-4 lg:p-6 animate-fade-in">
+              <USSDManager />
+            </TabsContent>
+          )}
           
-          <TabsContent value="field-workers" className="mobile-section-spacing p-2 sm:p-3 md:p-4 lg:p-6 animate-fade-in">
-            <div className="space-y-6">
-              {/* Check if user is a registered field worker */}
-              <FieldWorkerDashboard />
-              <div className="border-t pt-6">
-                <h3 className="text-lg font-semibold mb-4">New Field Worker Registration</h3>
-                <FieldWorkerRegistration />
+          {(isAdmin || showAdminTab) && (
+            <TabsContent value="field-workers" className="mobile-section-spacing p-2 sm:p-3 md:p-4 lg:p-6 animate-fade-in">
+              <div className="space-y-6">
+                {/* Check if user is a registered field worker */}
+                <FieldWorkerDashboard />
+                <div className="border-t pt-6">
+                  <h3 className="text-lg font-semibold mb-4">New Field Worker Registration</h3>
+                  <FieldWorkerRegistration />
+                </div>
               </div>
-            </div>
-          </TabsContent>
+            </TabsContent>
+          )}
           
-          <TabsContent value="api-toolkit" className="mobile-section-spacing p-2 sm:p-3 md:p-4 lg:p-6 animate-fade-in">
-            <APIToolkit />
-          </TabsContent>
+          {(isAdmin || showAdminTab) && (
+            <TabsContent value="api-toolkit" className="mobile-section-spacing p-2 sm:p-3 md:p-4 lg:p-6 animate-fade-in">
+              <APIToolkit />
+            </TabsContent>
+          )}
           
           <TabsContent value="admin-reg" className="mobile-section-spacing p-2 sm:p-3 md:p-4 lg:p-6 animate-fade-in">
             <AdminRegistration />
