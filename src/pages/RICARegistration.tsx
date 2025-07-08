@@ -419,7 +419,7 @@ const RICARegistration = () => {
           <div className="bg-white rounded-lg max-w-md w-full max-h-[90vh] overflow-y-auto">
             <div className="p-4 border-b">
               <div className="flex items-center justify-between">
-                <h2 className="text-lg font-semibold">Divine Mobile Unified Registration Form</h2>
+                <h2 className="text-lg font-semibold">Divine Mobile Unified Form</h2>
                 <Button 
                   variant="ghost" 
                   size="sm" 
