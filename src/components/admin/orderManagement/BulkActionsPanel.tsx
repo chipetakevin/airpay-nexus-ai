@@ -278,7 +278,7 @@ const BulkActionsPanel: React.FC<BulkActionModalProps> = ({
                     <SelectValue placeholder="Auto-detect from phone number" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">Auto-detect</SelectItem>
+                    <SelectItem value="auto">Auto-detect</SelectItem>
                     <SelectItem value="MTN">MTN</SelectItem>
                     <SelectItem value="Vodacom">Vodacom</SelectItem>
                     <SelectItem value="Cell C">Cell C</SelectItem>

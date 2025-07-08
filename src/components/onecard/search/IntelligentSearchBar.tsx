@@ -223,8 +223,8 @@ export const IntelligentSearchBar = ({ onSearch, totalTransactions }: Intelligen
                 <SelectTrigger>
                   <SelectValue placeholder="All Networks" />
                 </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="">All Networks</SelectItem>
+                  <SelectContent>
+                    <SelectItem value="all">All Networks</SelectItem>
                   <SelectItem value="MTN">MTN</SelectItem>
                   <SelectItem value="Vodacom">Vodacom</SelectItem>
                   <SelectItem value="Cell C">Cell C</SelectItem>
@@ -241,8 +241,8 @@ export const IntelligentSearchBar = ({ onSearch, totalTransactions }: Intelligen
                 <SelectTrigger>
                   <SelectValue placeholder="All Types" />
                 </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="">All Types</SelectItem>
+                  <SelectContent>
+                    <SelectItem value="all">All Types</SelectItem>
                   <SelectItem value="self_purchase">Self Purchase</SelectItem>
                   <SelectItem value="third_party_purchase">Gift Purchase</SelectItem>
                   <SelectItem value="vendor_purchase">Vendor Sale</SelectItem>
@@ -257,8 +257,8 @@ export const IntelligentSearchBar = ({ onSearch, totalTransactions }: Intelligen
                 <SelectTrigger>
                   <SelectValue placeholder="All Statuses" />
                 </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="">All Statuses</SelectItem>
+                  <SelectContent>
+                    <SelectItem value="all">All Statuses</SelectItem>
                   <SelectItem value="completed">Completed</SelectItem>
                   <SelectItem value="pending">Pending</SelectItem>
                   <SelectItem value="failed">Failed</SelectItem>

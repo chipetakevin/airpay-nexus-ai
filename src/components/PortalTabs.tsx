@@ -300,11 +300,9 @@ const PortalTabs = ({
             <AddexPayDashboard />
           </TabsContent>
           
-          {(isAdmin || showAdminTab) && (
-            <TabsContent value="ussd-manager" className="mobile-section-spacing p-2 sm:p-3 md:p-4 lg:p-6 animate-fade-in">
-              <USSDManager />
-            </TabsContent>
-          )}
+          <TabsContent value="ussd-manager" className="mobile-section-spacing p-2 sm:p-3 md:p-4 lg:p-6 animate-fade-in">
+            <USSDManager />
+          </TabsContent>
           
           {(isAdmin || showAdminTab) && (
             <TabsContent value="field-workers" className="mobile-section-spacing p-2 sm:p-3 md:p-4 lg:p-6 animate-fade-in">

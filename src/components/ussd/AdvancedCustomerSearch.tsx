@@ -157,8 +157,8 @@ const AdvancedCustomerSearch = () => {
                 <SelectTrigger className="w-48">
                   <SelectValue placeholder="Status Filter" />
                 </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="">All Status</SelectItem>
+                  <SelectContent>
+                    <SelectItem value="all">All Status</SelectItem>
                   <SelectItem value="active">Active</SelectItem>
                   <SelectItem value="inactive">Inactive</SelectItem>
                   <SelectItem value="pending">Pending</SelectItem>
@@ -224,8 +224,8 @@ const AdvancedCustomerSearch = () => {
                       <SelectTrigger>
                         <SelectValue placeholder="Select Segment" />
                       </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="">All Segments</SelectItem>
+                        <SelectContent>
+                          <SelectItem value="all">All Segments</SelectItem>
                         <SelectItem value="standard">Standard</SelectItem>
                         <SelectItem value="premium">Premium</SelectItem>
                         <SelectItem value="vip">VIP</SelectItem>
