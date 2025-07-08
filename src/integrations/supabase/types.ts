@@ -4596,6 +4596,74 @@ export type Database = {
         }
         Relationships: []
       }
+      sim_activation_requests: {
+        Row: {
+          activation_attempts: number | null
+          activation_code: string | null
+          activation_method: string | null
+          activation_status: string | null
+          completed_at: string | null
+          created_at: string | null
+          error_message: string | null
+          id: string
+          language_preference: string | null
+          last_attempt_at: string | null
+          metadata: Json | null
+          phone_number: string
+          rica_required: boolean | null
+          rica_status: string | null
+          sim_iccid: string
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          activation_attempts?: number | null
+          activation_code?: string | null
+          activation_method?: string | null
+          activation_status?: string | null
+          completed_at?: string | null
+          created_at?: string | null
+          error_message?: string | null
+          id?: string
+          language_preference?: string | null
+          last_attempt_at?: string | null
+          metadata?: Json | null
+          phone_number: string
+          rica_required?: boolean | null
+          rica_status?: string | null
+          sim_iccid: string
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          activation_attempts?: number | null
+          activation_code?: string | null
+          activation_method?: string | null
+          activation_status?: string | null
+          completed_at?: string | null
+          created_at?: string | null
+          error_message?: string | null
+          id?: string
+          language_preference?: string | null
+          last_attempt_at?: string | null
+          metadata?: Json | null
+          phone_number?: string
+          rica_required?: boolean | null
+          rica_status?: string | null
+          sim_iccid?: string
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "sim_activation_requests_language_preference_fkey"
+            columns: ["language_preference"]
+            isOneToOne: false
+            referencedRelation: "south_african_languages"
+            referencedColumns: ["language_code"]
+          },
+        ]
+      }
       sim_cards: {
         Row: {
           activated_at: string | null
@@ -4804,6 +4872,33 @@ export type Database = {
           total_failed?: number
           total_recipients?: number
           total_sent?: number
+        }
+        Relationships: []
+      }
+      south_african_languages: {
+        Row: {
+          created_at: string | null
+          id: string
+          is_active: boolean | null
+          language_code: string
+          language_name: string
+          native_name: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          is_active?: boolean | null
+          language_code: string
+          language_name: string
+          native_name: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          is_active?: boolean | null
+          language_code?: string
+          language_name?: string
+          native_name?: string
         }
         Relationships: []
       }
@@ -5514,6 +5609,47 @@ export type Database = {
         }
         Relationships: []
       }
+      ussd_menu_configurations: {
+        Row: {
+          created_at: string | null
+          id: string
+          is_active: boolean | null
+          language_code: string
+          menu_key: string
+          menu_options: Json | null
+          menu_text: string
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          is_active?: boolean | null
+          language_code: string
+          menu_key: string
+          menu_options?: Json | null
+          menu_text: string
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          is_active?: boolean | null
+          language_code?: string
+          menu_key?: string
+          menu_options?: Json | null
+          menu_text?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ussd_menu_configurations_language_code_fkey"
+            columns: ["language_code"]
+            isOneToOne: false
+            referencedRelation: "south_african_languages"
+            referencedColumns: ["language_code"]
+          },
+        ]
+      }
       ussd_menu_items: {
         Row: {
           created_at: string | null
@@ -5565,6 +5701,241 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "ussd_codes"
             referencedColumns: ["id"]
+          },
+        ]
+      }
+      ussd_notification_campaigns: {
+        Row: {
+          campaign_name: string
+          campaign_status: string | null
+          campaign_type: string | null
+          completed_at: string | null
+          created_at: string | null
+          created_by: string | null
+          id: string
+          message_template: Json
+          messages_delivered: number | null
+          messages_failed: number | null
+          messages_sent: number | null
+          scheduled_at: string | null
+          started_at: string | null
+          target_audience: string | null
+          total_recipients: number | null
+          updated_at: string | null
+        }
+        Insert: {
+          campaign_name: string
+          campaign_status?: string | null
+          campaign_type?: string | null
+          completed_at?: string | null
+          created_at?: string | null
+          created_by?: string | null
+          id?: string
+          message_template: Json
+          messages_delivered?: number | null
+          messages_failed?: number | null
+          messages_sent?: number | null
+          scheduled_at?: string | null
+          started_at?: string | null
+          target_audience?: string | null
+          total_recipients?: number | null
+          updated_at?: string | null
+        }
+        Update: {
+          campaign_name?: string
+          campaign_status?: string | null
+          campaign_type?: string | null
+          completed_at?: string | null
+          created_at?: string | null
+          created_by?: string | null
+          id?: string
+          message_template?: Json
+          messages_delivered?: number | null
+          messages_failed?: number | null
+          messages_sent?: number | null
+          scheduled_at?: string | null
+          started_at?: string | null
+          target_audience?: string | null
+          total_recipients?: number | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      ussd_notification_logs: {
+        Row: {
+          campaign_id: string | null
+          delivered_at: string | null
+          delivery_attempt: number | null
+          delivery_status: string | null
+          error_message: string | null
+          failed_at: string | null
+          id: string
+          language_used: string | null
+          message_content: string
+          message_type: string | null
+          metadata: Json | null
+          phone_number: string
+          response_received: string | null
+          sent_at: string | null
+          session_id: string | null
+          user_id: string | null
+        }
+        Insert: {
+          campaign_id?: string | null
+          delivered_at?: string | null
+          delivery_attempt?: number | null
+          delivery_status?: string | null
+          error_message?: string | null
+          failed_at?: string | null
+          id?: string
+          language_used?: string | null
+          message_content: string
+          message_type?: string | null
+          metadata?: Json | null
+          phone_number: string
+          response_received?: string | null
+          sent_at?: string | null
+          session_id?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          campaign_id?: string | null
+          delivered_at?: string | null
+          delivery_attempt?: number | null
+          delivery_status?: string | null
+          error_message?: string | null
+          failed_at?: string | null
+          id?: string
+          language_used?: string | null
+          message_content?: string
+          message_type?: string | null
+          metadata?: Json | null
+          phone_number?: string
+          response_received?: string | null
+          sent_at?: string | null
+          session_id?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ussd_notification_logs_campaign_id_fkey"
+            columns: ["campaign_id"]
+            isOneToOne: false
+            referencedRelation: "ussd_notification_campaigns"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ussd_notification_logs_language_used_fkey"
+            columns: ["language_used"]
+            isOneToOne: false
+            referencedRelation: "south_african_languages"
+            referencedColumns: ["language_code"]
+          },
+        ]
+      }
+      ussd_session_states: {
+        Row: {
+          created_at: string | null
+          current_menu: string | null
+          expires_at: string | null
+          id: string
+          language_preference: string | null
+          last_activity_at: string | null
+          phone_number: string
+          session_data: Json | null
+          session_id: string
+          session_status: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          current_menu?: string | null
+          expires_at?: string | null
+          id?: string
+          language_preference?: string | null
+          last_activity_at?: string | null
+          phone_number: string
+          session_data?: Json | null
+          session_id: string
+          session_status?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          current_menu?: string | null
+          expires_at?: string | null
+          id?: string
+          language_preference?: string | null
+          last_activity_at?: string | null
+          phone_number?: string
+          session_data?: Json | null
+          session_id?: string
+          session_status?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ussd_session_states_language_preference_fkey"
+            columns: ["language_preference"]
+            isOneToOne: false
+            referencedRelation: "south_african_languages"
+            referencedColumns: ["language_code"]
+          },
+        ]
+      }
+      ussd_user_preferences: {
+        Row: {
+          activation_status: string | null
+          created_at: string | null
+          id: string
+          is_opted_in: boolean | null
+          last_interaction_at: string | null
+          opted_in_at: string | null
+          opted_out_at: string | null
+          phone_number: string
+          preferred_language: string | null
+          rica_status: string | null
+          sim_iccid: string | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          activation_status?: string | null
+          created_at?: string | null
+          id?: string
+          is_opted_in?: boolean | null
+          last_interaction_at?: string | null
+          opted_in_at?: string | null
+          opted_out_at?: string | null
+          phone_number: string
+          preferred_language?: string | null
+          rica_status?: string | null
+          sim_iccid?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          activation_status?: string | null
+          created_at?: string | null
+          id?: string
+          is_opted_in?: boolean | null
+          last_interaction_at?: string | null
+          opted_in_at?: string | null
+          opted_out_at?: string | null
+          phone_number?: string
+          preferred_language?: string | null
+          rica_status?: string | null
+          sim_iccid?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ussd_user_preferences_preferred_language_fkey"
+            columns: ["preferred_language"]
+            isOneToOne: false
+            referencedRelation: "south_african_languages"
+            referencedColumns: ["language_code"]
           },
         ]
       }

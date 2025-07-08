@@ -48,6 +48,9 @@ import { useUSSDData } from '@/hooks/useUSSDData';
 import AdvancedCustomerSearch from './AdvancedCustomerSearch';
 import AnalyticsDashboard from './AnalyticsDashboard';
 import RealTimeSessionManager from './RealTimeSessionManager';
+import NotificationCampaignManager from './NotificationCampaignManager';
+import SIMActivationManager from './SIMActivationManager';
+import MultiLanguageUSSDMenu from './MultiLanguageUSSDMenu';
 
 interface MenuBuilderState {
   menuItems: Array<{
@@ -394,7 +397,7 @@ const EnhancedUSSDManager = () => {
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
           <div className="bg-white/80 backdrop-blur-sm rounded-xl border shadow-sm overflow-hidden">
             <TabsList className="w-full h-auto p-2 bg-transparent">
-              <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 w-full">
+              <div className="grid grid-cols-2 lg:grid-cols-6 gap-2 w-full">
                 <TabsTrigger 
                   value="menu-builder" 
                   className="flex flex-col items-center gap-2 p-3 data-[state=active]:bg-primary data-[state=active]:text-white rounded-lg transition-all hover:bg-muted/50"
@@ -403,18 +406,32 @@ const EnhancedUSSDManager = () => {
                   <span className="text-xs font-medium">Menu Builder</span>
                 </TabsTrigger>
                 <TabsTrigger 
+                  value="notifications" 
+                  className="flex flex-col items-center gap-2 p-3 data-[state=active]:bg-primary data-[state=active]:text-white rounded-lg transition-all hover:bg-muted/50"
+                >
+                  <MessageSquare className="w-4 h-4" />
+                  <span className="text-xs font-medium">Notifications</span>
+                </TabsTrigger>
+                <TabsTrigger 
+                  value="activation" 
+                  className="flex flex-col items-center gap-2 p-3 data-[state=active]:bg-primary data-[state=active]:text-white rounded-lg transition-all hover:bg-muted/50"
+                >
+                  <Smartphone className="w-4 h-4" />
+                  <span className="text-xs font-medium">SIM Activation</span>
+                </TabsTrigger>
+                <TabsTrigger 
+                  value="multilang" 
+                  className="flex flex-col items-center gap-2 p-3 data-[state=active]:bg-primary data-[state=active]:text-white rounded-lg transition-all hover:bg-muted/50"
+                >
+                  <Globe className="w-4 h-4" />
+                  <span className="text-xs font-medium">Multi-Language</span>
+                </TabsTrigger>
+                <TabsTrigger 
                   value="analytics" 
                   className="flex flex-col items-center gap-2 p-3 data-[state=active]:bg-primary data-[state=active]:text-white rounded-lg transition-all hover:bg-muted/50"
                 >
                   <BarChart3 className="w-4 h-4" />
                   <span className="text-xs font-medium">Analytics</span>
-                </TabsTrigger>
-                <TabsTrigger 
-                  value="customers" 
-                  className="flex flex-col items-center gap-2 p-3 data-[state=active]:bg-primary data-[state=active]:text-white rounded-lg transition-all hover:bg-muted/50"
-                >
-                  <Users className="w-4 h-4" />
-                  <span className="text-xs font-medium">Customers</span>
                 </TabsTrigger>
                 <TabsTrigger 
                   value="sessions" 
@@ -433,12 +450,20 @@ const EnhancedUSSDManager = () => {
               <MenuBuilderTab />
             </TabsContent>
             
-            <TabsContent value="analytics" className="mt-0">
-              <AnalyticsTab />
+            <TabsContent value="notifications" className="mt-0">
+              <NotificationCampaignManager />
             </TabsContent>
             
-            <TabsContent value="customers" className="mt-0">
-              <CustomersTab />
+            <TabsContent value="activation" className="mt-0">
+              <SIMActivationManager />
+            </TabsContent>
+            
+            <TabsContent value="multilang" className="mt-0">
+              <MultiLanguageUSSDMenu />
+            </TabsContent>
+            
+            <TabsContent value="analytics" className="mt-0">
+              <AnalyticsTab />
             </TabsContent>
             
             <TabsContent value="sessions" className="mt-0">
