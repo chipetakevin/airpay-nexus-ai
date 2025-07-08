@@ -5,6 +5,7 @@ import HeaderLogo from './header/HeaderLogo';
 import DesktopNavigation from './header/DesktopNavigation';
 import MobileMenuButton from './header/MobileMenuButton';
 import MobileMenuOverlay from './header/MobileMenuOverlay';
+import HeaderActions from './header/HeaderActions';
 
 interface HeaderProps {
   onQuickShopToggle?: () => void;
@@ -77,8 +78,8 @@ const Header = ({ onQuickShopToggle, isQuickShopOpen }: HeaderProps) => {
               handleQuickShopClick={handleQuickShopClick}
             />
 
-            {/* Mobile Menu Button */}
-            <MobileMenuButton 
+            {/* Header Actions - includes login/auth buttons */}
+            <HeaderActions 
               isMenuOpen={isMenuOpen}
               toggleMenu={toggleMenu}
             />

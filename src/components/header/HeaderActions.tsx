@@ -11,7 +11,7 @@ import { useMobileAuth } from '@/hooks/useMobileAuth';
 
 interface HeaderActionsProps {
   isMenuOpen: boolean;
-  toggleMenu: () => void;
+  toggleMenu: (e?: React.MouseEvent) => void;
 }
 
 const HeaderActions = ({ isMenuOpen, toggleMenu }: HeaderActionsProps) => {
