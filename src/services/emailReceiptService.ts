@@ -36,7 +36,7 @@ export const useEmailReceiptService = () => {
   const generateDetailedEmailHTML = (data: EmailReceiptData): string => {
     const itemsRows = data.items.map(item => `
       <tr style="border-bottom: 1px solid #e5e7eb;">
-        <td style="padding: 12px; text-align: left;">${item.name.replace('DIVINELY', 'ADDEX-HUB')}</td>
+        <td style="padding: 12px; text-align: left;">${item.name.replace('DIVINE', 'ADDEX-HUB')}</td>
         <td style="padding: 12px; text-align: center;">${item.quantity}</td>
         <td style="padding: 12px; text-align: right;">R${item.unitPrice.toFixed(2)}</td>
         <td style="padding: 12px; text-align: right; font-weight: bold;">R${item.subtotal.toFixed(2)}</td>

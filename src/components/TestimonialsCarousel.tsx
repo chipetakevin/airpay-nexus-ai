@@ -18,7 +18,7 @@ const TestimonialsCarousel = () => {
       name: "Thabo Mthembu",
       location: "Johannesburg",
       rating: 5,
-      comment: "Divinely Mobile has completely changed how I buy airtime. Their OneCard Cash-Back rewards are amazing and the service is always reliable! Happy to be a paid up member of this Agentic Movement.",
+      comment: "Divine Mobile has completely changed how I buy airtime. Their OneCard Cash-Back rewards are amazing and the service is always reliable! Happy to be a paid up member of this Agentic Movement.",
       avatar: "TM"
     },
     {

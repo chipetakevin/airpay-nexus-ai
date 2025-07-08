@@ -29,7 +29,7 @@ export const WhatsAppHandler = ({ transaction }: WhatsAppHandlerProps) => {
       
       // Convert transaction to cart items format
       const cartItems = [{
-        network: transaction.network || 'DIVINELY',
+        network: transaction.network || 'DIVINE',
         amount: transaction.amount || 0,
         discountedPrice: transaction.discounted_price || transaction.amount || 0,
         dealType: transaction.transaction_type?.includes('airtime') ? 'airtime' : 'data'

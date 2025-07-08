@@ -30,7 +30,7 @@ export const loadCustomerData = (): Customer[] => {
       id: 'admin-kevin',
       firstName: 'Kevin',
       lastName: 'Chipeta',
-      email: 'kevin@divinely.com',
+      email: 'kevin@divine.com',
       phone: '+27832466539',
       cardNumber: 'DC2024001',
       onecardBalance: 1500.00,

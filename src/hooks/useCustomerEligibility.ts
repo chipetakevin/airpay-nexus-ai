@@ -56,7 +56,7 @@ export const useCustomerEligibility = () => {
       
       toast({
         title: "📱 Data Purchase Successful",
-        description: `${amount * 100}MB data activated. You can now access Divinely Mobile deals!`,
+        description: `${amount * 100}MB data activated. You can now access Divine Mobile deals!`,
       });
     }
   };

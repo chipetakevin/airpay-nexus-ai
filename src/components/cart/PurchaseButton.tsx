@@ -74,7 +74,7 @@ const PurchaseButton = ({
             </li>
             <li className="flex items-center gap-1">
               <ArrowRight className="w-3 h-3 text-purple-500" />
-              <span>Continue shopping at Divinely Mobile</span>
+              <span>Continue shopping at Divine Mobile</span>
             </li>
           </ul>
         </div>

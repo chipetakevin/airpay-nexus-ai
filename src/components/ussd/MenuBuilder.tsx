@@ -34,7 +34,7 @@ const MenuBuilder = ({ ussdCodeId }: MenuBuilderProps) => {
   const [editingItem, setEditingItem] = useState<string | null>(null);
   const [networkStatus, setNetworkStatus] = useState([
     { 
-      name: 'Divinely Mobile', 
+      name: 'Divine Mobile', 
       status: 'Active', 
       uptime: '99.9%', 
       color: 'green',

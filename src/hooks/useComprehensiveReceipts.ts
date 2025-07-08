@@ -24,7 +24,7 @@ export const useComprehensiveReceipts = () => {
       
       // Map cart items to receipt format
       const receiptItems = cartItems.map(item => ({
-        name: `${item.network?.toUpperCase() || 'DIVINELY'} ${item.dealType?.toUpperCase() || 'AIRTIME'} R${item.amount}`,
+        name: `${item.network?.toUpperCase() || 'DIVINE'} ${item.dealType?.toUpperCase() || 'AIRTIME'} R${item.amount}`,
         quantity: 1,
         unitPrice: item.discountedPrice || item.price,
         subtotal: item.discountedPrice || item.price,

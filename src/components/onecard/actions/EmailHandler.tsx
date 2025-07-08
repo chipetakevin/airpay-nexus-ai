@@ -57,11 +57,11 @@ export const EmailHandler = ({ transaction }: EmailHandlerProps) => {
           email: customerInfo.email
         },
         items: [{
-          name: `${transaction.network?.toUpperCase() || 'DIVINELY'} MOBILE SERVICE`,
+          name: `${transaction.network?.toUpperCase() || 'DIVINE'} MOBILE SERVICE`,
           quantity: 1,
           unitPrice: transaction.amount || 0,
           subtotal: transaction.amount || 0,
-          network: transaction.network || 'DIVINELY',
+          network: transaction.network || 'DIVINE',
           type: transaction.transaction_type?.includes('airtime') ? 'airtime' : 'data'
         }],
         subtotal: transaction.amount || 0,
@@ -76,8 +76,8 @@ export const EmailHandler = ({ transaction }: EmailHandlerProps) => {
       const emailContent = generateProfessionalEmailReceipt(receiptData);
       
       // Create email with the generated content
-      const subject = `Divinely Mobile Receipt - ${receiptData.transactionId}`;
-      const body = `Please find your professional receipt attached.\n\nTransaction ID: ${receiptData.transactionId}\nDate: ${receiptData.dateTime}\nAmount: R${receiptData.totalPaid.toFixed(2)}\n\nThank you for choosing Divinely Mobile!`;
+       const subject = `Divine Mobile Receipt - ${receiptData.transactionId}`;
+       const body = `Please find your professional receipt attached.\n\nTransaction ID: ${receiptData.transactionId}\nDate: ${receiptData.dateTime}\nAmount: R${receiptData.totalPaid.toFixed(2)}\n\nThank you for choosing Divine Mobile!`;
       
       const mailtoLink = `mailto:${customerInfo.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
       

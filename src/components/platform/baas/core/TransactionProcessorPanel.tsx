@@ -107,7 +107,7 @@ const TransactionProcessorPanel = () => {
       id: 'TXN-8474',
       type: 'Airtime',
       amount: 'R 25.00',
-      network: 'Divinely Mobile',
+      network: 'Divine Mobile',
       status: 'completed',
       timestamp: '5 mins ago',
       customer: 'client@example.com'

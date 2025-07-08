@@ -27,7 +27,7 @@ const EnhancedWhatsAppAssistant = () => {
     {
       id: 1,
       type: 'bot',
-      message: `👋 Welcome to Divinely Mobile AI Assistant!
+      message: `👋 Welcome to Divine Mobile AI Assistant!
 Your intelligent shopping companion for airtime & data!
 
 🌟 What can I help you with today?
@@ -423,7 +423,7 @@ What would you like to do? 😊`;
             <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-green-400 rounded-full border-2 border-white"></div>
           </div>
           <div className="flex-1">
-            <h3 className="font-bold text-lg">Divinely Mobile AI</h3>
+            <h3 className="font-bold text-lg">Divine Mobile AI</h3>
             <div className="flex items-center gap-2 text-sm opacity-90">
               <div className="w-2 h-2 bg-green-300 rounded-full animate-pulse"></div>
               <span>Online • Always here to help</span>

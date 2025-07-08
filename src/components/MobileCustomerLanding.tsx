@@ -378,7 +378,7 @@ const MobileCustomerLanding = () => {
                 Discover Your Earning Potential
               </div>
               <p className="text-sm text-gray-600">
-                See how profitable the Divinely Mobile platform is for each user type when purchasing R100 weekly
+                See how profitable the Divine Mobile platform is for each user type when purchasing R100 weekly
               </p>
               
               <div className="bg-gradient-to-r from-green-500/10 to-emerald-500/10 rounded-xl p-6 border border-green-200">

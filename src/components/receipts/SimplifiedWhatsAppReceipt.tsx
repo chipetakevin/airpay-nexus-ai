@@ -24,8 +24,8 @@ export const useSimplifiedWhatsAppReceipt = () => {
 
   const generateSimplifiedWhatsAppReceipt = (data: SimplifiedReceiptData): string => {
     const itemsList = data.items.map(item => 
-      `• **${item.network.toUpperCase().replace('DIVINELY', 'ADDEX-HUB')} ${item.type.toUpperCase()} R${item.amount}**
-📱 Network: ${item.network.toUpperCase().replace('DIVINELY', 'ADDEX-HUB')}
+       `• **${item.network.toUpperCase().replace('DIVINE', 'ADDEX-HUB')} ${item.type.toUpperCase()} R${item.amount}**
+📱 Network: ${item.network.toUpperCase().replace('DIVINE', 'ADDEX-HUB')}
 💎 Service: ${item.type.toUpperCase()}
 💰 Amount: R${item.price.toFixed(2)}`
     ).join('\n\n');

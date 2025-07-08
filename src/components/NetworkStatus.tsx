@@ -24,7 +24,7 @@ const NetworkStatus = () => {
       statusColor: "bg-green-100 text-green-800"
     },
     {
-      name: "Divinely Mobile",
+      name: "Divine Mobile",
       status: "Operational",
       uptime: "99.89%",
       transactions: "21,456",

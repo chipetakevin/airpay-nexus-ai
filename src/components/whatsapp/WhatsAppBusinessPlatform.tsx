@@ -56,13 +56,13 @@ const WhatsAppBusinessPlatform = () => {
     },
     {
       title: 'AI Business Assistant',
-      description: 'Automated customer service with Divinely Mobile AI integration',
+      description: 'Automated customer service with Divine Mobile AI integration',
       icon: <Bot className="w-5 h-5" />,
       features: ['24/7 Customer Support', 'Order Processing', 'FAQ Automation', 'Product Recommendations']
     },
     {
       title: 'Payment Processing',
-      description: 'Secure payments directly through WhatsApp for Divinely Mobile services',
+      description: 'Secure payments directly through WhatsApp for Divine Mobile services',
       icon: <CreditCard className="w-5 h-5" />,
       features: ['Instant Payments', 'Airtime Top-ups', 'Data Bundles', 'Bill Payments']
     },
@@ -104,7 +104,7 @@ const WhatsAppBusinessPlatform = () => {
   const handleStartWhatsAppBusiness = () => {
     const phoneNumber = '27832466539'; // Business number
     const message = isAuthenticated ? encodeURIComponent(
-      `🏢 Hi Divinely Mobile Business Team!\n\n` +
+       `🏢 Hi Divine Mobile Business Team!\n\n` +
       `I'm ${currentUser?.firstName} ${currentUser?.lastName}\n` +
       `OneCard: ${currentUser?.cardNumber}\n\n` +
       `I'd like to set up WhatsApp Business with:\n` +
@@ -114,7 +114,7 @@ const WhatsAppBusinessPlatform = () => {
       `• Business Catalog\n\n` +
       `Please help me get started! 🚀`
     ) : encodeURIComponent(
-      `🏢 Hi Divinely Mobile Business Team!\n\n` +
+      `🏢 Hi Divine Mobile Business Team!\n\n` +
       `I'm interested in WhatsApp Business solutions:\n\n` +
       `• AI Business Assistant\n` +
       `• Payment Processing\n` +
@@ -152,7 +152,7 @@ const WhatsAppBusinessPlatform = () => {
         </div>
         <p className="text-gray-600 max-w-3xl mx-auto text-lg">
           Connect, communicate, and conduct business with the world's most trusted messaging platform. 
-          Enhanced with Divinely Mobile AI for seamless mobile services.
+          Enhanced with Divine Mobile AI for seamless mobile services.
         </p>
         <div className="flex flex-wrap gap-3 justify-center">
           <Badge className="bg-green-100 text-green-800">2+ Billion Users</Badge>
@@ -204,7 +204,7 @@ const WhatsAppBusinessPlatform = () => {
               <h3 className="text-2xl font-bold mb-2">Ready to Get Started?</h3>
               <p className="text-gray-600 mb-6 max-w-2xl mx-auto">
                 Join millions of businesses worldwide using WhatsApp to connect with customers, 
-                showcase products, and grow their business with Divinely Mobile's AI-powered platform.
+                showcase products, and grow their business with Divine Mobile's AI-powered platform.
               </p>
               <Button 
                 onClick={handleStartWhatsAppBusiness}
@@ -249,7 +249,7 @@ const WhatsAppBusinessPlatform = () => {
         <TabsContent value="payments" className="space-y-6">
           <div className="text-center mb-8">
             <h2 className="text-2xl font-bold mb-2">Seamless WhatsApp Payments</h2>
-            <p className="text-gray-600">Process payments directly through WhatsApp for all Divinely Mobile services</p>
+            <p className="text-gray-600">Process payments directly through WhatsApp for all Divine Mobile services</p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -357,7 +357,7 @@ const WhatsAppBusinessPlatform = () => {
                   <p className="text-gray-600 mb-4">
                     When you send a message, it's encrypted on your device before it's sent over the internet. 
                     The message can only be decrypted on the recipient's device, ensuring that no one else 
-                    (including WhatsApp and Divinely Mobile) can read your conversations.
+                    (including WhatsApp and Divine Mobile) can read your conversations.
                   </p>
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
                     <div className="flex items-center gap-2">

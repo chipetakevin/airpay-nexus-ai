@@ -17,7 +17,7 @@ const FAQSection = () => {
       answer: "Our AI-powered system processes airtime purchases in under 30 seconds. Most transactions are completed instantly with real-time confirmation."
     },
     {
-      question: "Is it safe to use Divinely Mobile?",
+      question: "Is it safe to use Divine Mobile?",
       answer: "Yes, absolutely. We use bank-level encryption and are PCI DSS compliant. All transactions are secured with the latest security protocols to protect your data and money."
     },
     {
@@ -26,7 +26,7 @@ const FAQSection = () => {
     },
     {
       question: "What is the USSD code?",
-      answer: "You can access Divinely Mobile services by dialing *120*888# from any mobile phone. This works on all networks without needing the app or internet connection."
+      answer: "You can access Divine Mobile services by dialing *120*888# from any mobile phone. This works on all networks without needing the app or internet connection."
     }
   ];
 
@@ -38,7 +38,7 @@ const FAQSection = () => {
             Frequently Asked Questions
           </h2>
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            Everything you need to know about Divinely Mobile
+            Everything you need to know about Divine Mobile
           </p>
         </div>
 

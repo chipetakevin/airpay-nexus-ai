@@ -229,7 +229,7 @@ export const IntelligentSearchBar = ({ onSearch, totalTransactions }: Intelligen
                   <SelectItem value="Vodacom">Vodacom</SelectItem>
                   <SelectItem value="Cell C">Cell C</SelectItem>
                   <SelectItem value="Telkom">Telkom</SelectItem>
-                  <SelectItem value="Divinely Mobile">Divinely Mobile</SelectItem>
+                  <SelectItem value="Divine Mobile">Divine Mobile</SelectItem>
                 </SelectContent>
               </Select>
             </div>

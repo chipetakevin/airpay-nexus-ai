@@ -12,11 +12,11 @@ const UnifiedMobileNavigation = () => {
   const [expandedCategory, setExpandedCategory] = useState<string | null>(null);
 
   const handleStartRICA = () => {
-    window.location.href = '/portal?tab=onecard&network=divinely%20mobile&dealType=airtime&action=rica';
+    window.location.href = '/portal?tab=onecard&network=divine%20mobile&dealType=airtime&action=rica';
   };
 
   const handleStartPorting = () => {
-    window.location.href = '/portal?tab=onecard&network=divinely%20mobile&dealType=porting&action=port';
+    window.location.href = '/portal?tab=onecard&network=divine%20mobile&dealType=porting&action=port';
   };
 
   const handleBaaSPortal = () => {

@@ -136,7 +136,7 @@ export const generateMobilePDFReceipt = (receiptData: ReceiptData): jsPDF => {
   doc.setFont('helvetica', 'normal');
 
   receiptData.items.forEach((item) => {
-    const itemName = item.name.replace('DIVINELY', 'DIVINE');
+    const itemName = item.name.replace('DIVINE', 'DIVINE');
     doc.text(itemName, margin + 2, yPos + 5);
     doc.text(item.quantity.toString(), margin + 80, yPos + 5);
     doc.text(`R${item.unitPrice.toFixed(2)}`, margin + 100, yPos + 5);

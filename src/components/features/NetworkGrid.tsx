@@ -7,7 +7,7 @@ const NetworkGrid = () => {
     { name: 'Vodacom', color: 'from-red-500 to-pink-500' },
     { name: 'Cell C', color: 'from-blue-500 to-indigo-500' },
     { name: 'Telkom', color: 'from-purple-500 to-violet-500' },
-    { name: 'Divinely Mobile', color: 'from-green-500 to-emerald-500' },
+    { name: 'Divine Mobile', color: 'from-green-500 to-emerald-500' },
     { name: 'Virgin Mobile', color: 'from-pink-500 to-rose-500' }
   ];
 
@@ -23,9 +23,9 @@ const NetworkGrid = () => {
               <div className={`w-14 h-14 sm:w-16 sm:h-16 lg:w-18 lg:h-18 bg-gradient-to-br ${network.color} rounded-2xl flex items-center justify-center text-white font-bold text-xs sm:text-sm shadow-lg transform hover:scale-110 transition-all duration-300 group-hover:shadow-2xl`} 
                    style={{ animationDelay: `${index * 0.1}s` }}>
                 <span className="text-center leading-tight px-1">
-                  {network.name === 'Divinely Mobile' ? (
+                  {network.name === 'Divine Mobile' ? (
                     <span className="block">
-                      <span className="block text-[10px] sm:text-xs">Divinely</span>
+                      <span className="block text-[10px] sm:text-xs">Divine</span>
                       <span className="block text-[10px] sm:text-xs -mt-1">Mobile</span>
                     </span>
                   ) : network.name === 'Virgin Mobile' ? (

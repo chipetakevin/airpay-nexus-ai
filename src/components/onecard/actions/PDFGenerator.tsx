@@ -31,7 +31,7 @@ export const PDFGenerator = ({ transaction }: PDFGeneratorProps) => {
     doc.setFillColor(79, 70, 229); // Primary blue
     doc.rect(0, 0, pageWidth, 70, 'F');
     
-    // Divinely Mobile logo area with consistent branding
+    // Divine Mobile logo area with consistent branding
     doc.setFillColor(255, 255, 255);
     doc.roundedRect(margin, 15, 60, 20, 4, 4, 'F');
     
@@ -42,11 +42,11 @@ export const PDFGenerator = ({ transaction }: PDFGeneratorProps) => {
     doc.circle(margin + 11, 22, 1, 'F');
     doc.rect(margin + 7, 25, 8, 6, 'F');
     
-    // Company name with consistent Divinely Mobile branding
+    // Company name with consistent Divine Mobile branding
     doc.setTextColor(79, 70, 229);
     doc.setFontSize(12);
     doc.setFont('helvetica', 'bold');
-    doc.text('Divinely', margin + 20, 24);
+    doc.text('Divine', margin + 20, 24);
     doc.setTextColor(59, 130, 246);
     doc.text('Mobile', margin + 20, 30);
     
@@ -160,14 +160,14 @@ export const PDFGenerator = ({ transaction }: PDFGeneratorProps) => {
     doc.setFont('helvetica', 'bold');
     doc.text('✓ Transaction Successful', pageWidth - margin - 60, yPos + 17);
     
-    // Footer with Divinely Mobile branding
+    // Footer with Divine Mobile branding
     yPos = doc.internal.pageSize.height - 30;
     doc.setTextColor(107, 114, 128);
     doc.setFontSize(8);
     doc.setFont('helvetica', 'normal');
-    doc.text('Thank you for choosing Divinely Mobile!', margin, yPos);
-    doc.text(`Generated: ${new Date().toLocaleString('en-ZA')}`, margin, yPos + 10);
-    doc.text('OneCard Platform - Powered by Divinely Mobile', pageWidth - margin - 70, yPos + 5);
+     doc.text('Thank you for choosing Divine Mobile!', margin, yPos);
+     doc.text(`Generated: ${new Date().toLocaleString('en-ZA')}`, margin, yPos + 10);
+     doc.text('OneCard Platform - Powered by Divine Mobile', pageWidth - margin - 70, yPos + 5);
     
     return doc;
   };
@@ -185,7 +185,7 @@ export const PDFGenerator = ({ transaction }: PDFGeneratorProps) => {
     try {
       const doc = generateModernTransactionPDF(transaction);
       const transactionId = `AP${transaction.timestamp?.replace(/[^0-9]/g, '').slice(-8) || 'N/A'}`;
-      doc.save(`Divinely_Mobile_Receipt_${transactionId}.pdf`);
+      doc.save(`Divine_Mobile_Receipt_${transactionId}.pdf`);
       
       toast({
         title: "📄 Modern Receipt Downloaded",

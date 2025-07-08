@@ -9,8 +9,8 @@ import { Badge } from '@/components/ui/badge';
 const Footer = () => {
   const [isFooterExpanded, setIsFooterExpanded] = useState(false);
 
-  // Enhanced Futuristic Divinely Mobile Logo Component
-  const DivinelyLogoIcon = () => (
+  // Enhanced Futuristic Divine Mobile Logo Component
+  const DivineLogoIcon = () => (
     <div className="relative w-6 h-6 flex items-center justify-center">
       {/* Outer ring with enhanced gradient */}
       <div className="absolute inset-0 rounded-full bg-gradient-to-br from-cyan-400 via-blue-500 to-purple-600 p-0.5">
@@ -41,8 +41,8 @@ const Footer = () => {
           className="bg-gradient-to-r from-blue-600 via-purple-600 to-cyan-600 hover:from-blue-700 hover:via-purple-700 hover:to-cyan-700 text-white px-6 py-3 rounded-t-2xl shadow-2xl border-0 transition-all duration-300 hover:scale-105 animate-pulse-glow"
         >
           <div className="flex items-center gap-2">
-            <DivinelyLogoIcon />
-            <span className="font-bold text-sm">Divinely Mobile</span>
+            <DivineLogoIcon />
+            <span className="font-bold text-sm">Divine Mobile</span>
             {isFooterExpanded ? (
               <ChevronDown className="w-4 h-4 transition-transform duration-300" />
             ) : (
@@ -146,10 +146,10 @@ const Footer = () => {
                 {/* Logo and Description */}
                 <div className="space-y-2">
                   <div className="flex items-center space-x-2">
-                    <DivinelyLogoIcon />
+                    <DivineLogoIcon />
                     <div className="flex flex-col">
                       <span className="text-sm font-bold bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-600 bg-clip-text text-transparent leading-tight">
-                        Divinely
+                        Divine
                       </span>
                       <span className="text-xs font-light tracking-wider uppercase -mt-1 bg-gradient-to-r from-gray-400 to-gray-300 bg-clip-text text-transparent">
                         Mobile
@@ -225,7 +225,7 @@ const Footer = () => {
 
               <div className="border-t border-gray-700 mt-3 pt-3 text-center">
                 <p className="text-gray-400 text-xs">
-                  © 2024 Divinely Mobile. All rights reserved. | Powered by Kukaya Labs
+                  © 2024 Divine Mobile. All rights reserved. | Powered by Kukaya Labs
                 </p>
               </div>
             </div>

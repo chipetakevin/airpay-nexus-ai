@@ -51,7 +51,7 @@
     }
   }
 
-  @keyframes divinely-glow {
+  @keyframes divine-glow {
     0%, 100% {
       border-color: #3b82f6;
       box-shadow: 0 0 15px rgba(59, 130, 246, 0.3);
@@ -122,8 +122,8 @@
     animation: blue-flash 2s ease-in-out infinite;
   }
 
-  .animate-divinely-glow {
-    animation: divinely-glow 3s ease-in-out infinite;
+   .animate-divine-glow {
+     animation: divine-glow 3s ease-in-out infinite;
   }
 
   .animate-dm-default-flash {

@@ -61,8 +61,8 @@ export const useEnhancedReceiptGenerator = () => {
 
   const generateComprehensiveWhatsAppReceipt = (data: EnhancedReceiptData): string => {
     const itemsSection = data.items.map(item => 
-      `• **${item.name.replace('DIVINELY', 'ADDEX-HUB').replace('Divinely', 'Addex-Hub')}**
-  📱 Network: ${item.network.toUpperCase().replace('DIVINELY', 'ADDEX-HUB').replace('Divinely', 'Addex-Hub')}
+       `• **${item.name.replace('DIVINE', 'ADDEX-HUB').replace('Divine', 'Addex-Hub')}**
+   📱 Network: ${item.network.toUpperCase().replace('DIVINE', 'ADDEX-HUB').replace('Divine', 'Addex-Hub')}
   💎 Service: ${item.type.toUpperCase()}
   💰 Amount: R${item.subtotal.toFixed(2)}`
     ).join('\n\n');
@@ -139,7 +139,7 @@ ${data.vendor ? `━━━━━━━━━━━━━━━━━━━━━
   const generateProfessionalEmailReceipt = (data: EnhancedReceiptData): string => {
     const itemsRows = data.items.map(item => `
       <tr>
-        <td style="padding: 12px; border-bottom: 1px solid #e5e7eb;">${item.name.replace('DIVINELY', 'ADDEX-HUB').replace('Divinely', 'Addex-Hub')}</td>
+        <td style="padding: 12px; border-bottom: 1px solid #e5e7eb;">${item.name.replace('DIVINE', 'ADDEX-HUB').replace('Divine', 'Addex-Hub')}</td>
         <td style="padding: 12px; border-bottom: 1px solid #e5e7eb; text-align: center;">${item.quantity}</td>
         <td style="padding: 12px; border-bottom: 1px solid #e5e7eb; text-align: right;">R${item.unitPrice.toFixed(2)}</td>
         <td style="padding: 12px; border-bottom: 1px solid #e5e7eb; text-align: right; font-weight: bold;">R${item.subtotal.toFixed(2)}</td>

@@ -35,7 +35,7 @@ const USSDPaymentProcessor = ({ deal, recipientPhone, onPaymentComplete }: USSDP
       const codes = {
         mtn: '*141#',
         vodacom: '*136#',
-        'divinely mobile': '*180*2827#',
+        'divine mobile': '*180*2827#',
         telkom: '*180#'
       };
       return codes[deal.network.toLowerCase() as keyof typeof codes] || '*100#';

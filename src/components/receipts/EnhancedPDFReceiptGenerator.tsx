@@ -180,7 +180,7 @@ export const useEnhancedPDFReceiptGenerator = () => {
       doc.setFillColor(...bgColor as [number, number, number]);
       doc.rect(margin, yPos, pageWidth - (margin * 2), 8, 'F');
       
-      const itemName = item.name.replace('DIVINELY', 'ADDEX-HUB');
+      const itemName = item.name.replace('DIVINE', 'ADDEX-HUB');
       doc.text(itemName, margin + 3, yPos + 5);
       doc.text(item.quantity.toString(), margin + 100, yPos + 5);
       doc.text(`R${item.unitPrice.toFixed(2)}`, margin + 120, yPos + 5);

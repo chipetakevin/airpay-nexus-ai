@@ -104,7 +104,7 @@ const CommunityBenefitsSection = () => {
           </h2>
           
           <p className="text-lg sm:text-xl text-gray-600 max-w-3xl mx-auto mb-8">
-            See how profitable the Divinely Mobile platform is for each user type when purchasing R100 weekly
+            See how profitable the Divine Mobile platform is for each user type when purchasing R100 weekly
           </p>
         </div>
 
@@ -181,7 +181,7 @@ const CommunityBenefitsSection = () => {
               </div>
               
               <p className="text-blue-100 mb-6 text-lg">
-                Join thousands of community members already earning with Divinely Mobile
+                Join thousands of community members already earning with Divine Mobile
               </p>
               
               <div className="flex flex-col sm:flex-row gap-4 justify-center max-w-md mx-auto">

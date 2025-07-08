@@ -28,7 +28,7 @@ const MobileShoppingHeader: React.FC<MobileShoppingHeaderProps> = ({
             <Smartphone className="w-7 h-7 text-green-600" />
           </div>
           <div className="flex-1">
-            <h3 className="font-bold text-lg">Divinely Mobile</h3>
+            <h3 className="font-bold text-lg">Divine Mobile</h3>
             <p className="text-xs opacity-90 flex items-center gap-1">
               <div className="w-2 h-2 bg-green-300 rounded-full animate-pulse"></div>
               Mobile Services • Always Available

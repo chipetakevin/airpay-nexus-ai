@@ -401,7 +401,7 @@ const DGXStation = () => {
               <div className="flex-1 min-w-0">
                 <h3 className="font-bold text-gray-900 mb-2">BaaS Integration Active</h3>
                 <p className="text-gray-600 text-sm">
-                  DGX Station is fully integrated with Divinely Mobile's BaaS platform, providing 
+                  DGX Station is fully integrated with Divine Mobile's BaaS platform, providing 
                   enterprise-grade data center capabilities for resource-intensive Agentic workflows 
                   and AI processing tasks.
                 </p>

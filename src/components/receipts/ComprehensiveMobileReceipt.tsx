@@ -52,7 +52,7 @@ export const ComprehensiveMobileReceipt = ({ receiptData, onShare, onDownload }:
               <span className="text-2xl">📱</span>
             </div>
             <div>
-              <h1 className="text-xl font-bold">DIVINELY MOBILE</h1>
+              <h1 className="text-xl font-bold">DIVINE MOBILE</h1>
               <p className="text-sm opacity-90">Official Receipt</p>
             </div>
           </div>
@@ -203,7 +203,7 @@ export const ComprehensiveMobileReceipt = ({ receiptData, onShare, onDownload }:
 
       {/* Footer */}
       <div className="bg-gray-800 text-white p-4 text-center">
-        <p className="text-sm font-bold mb-1">Thank you for choosing Divinely Mobile!</p>
+        <p className="text-sm font-bold mb-1">Thank you for choosing Divine Mobile!</p>
         <p className="text-xs opacity-75 italic">Fast • Secure • Reliable</p>
         <div className="mt-2 pt-2 border-t border-gray-600">
           <p className="text-xs opacity-60">Support: +27 100 2827 | myonecard.co.za</p>
