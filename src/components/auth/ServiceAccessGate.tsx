@@ -23,14 +23,8 @@ const ServiceAccessGate: React.FC<ServiceAccessGateProps> = ({
   }
 
   return (
-    <div className="relative min-h-[50vh]">
-      {/* Show blurred preview of the service */}
-      <div className="blur-sm pointer-events-none opacity-40">
-        {children}
-      </div>
-      
-      {/* Overlay with registration prompt */}
-      <div className="absolute inset-0 flex items-center justify-center bg-white/95 backdrop-blur-sm p-4">
+    <div className="flex items-center justify-center py-8">
+      {/* Registration prompt - no overlay, direct display */}
         <Card className="w-full max-w-sm shadow-2xl border-2 border-orange-200">
           <CardContent className="p-4 text-center">
             <div className="w-12 h-12 bg-gradient-to-r from-orange-500 to-red-500 rounded-full flex items-center justify-center mx-auto mb-3">
@@ -65,7 +59,6 @@ const ServiceAccessGate: React.FC<ServiceAccessGateProps> = ({
             </div>
           </CardContent>
         </Card>
-      </div>
     </div>
   );
 };
