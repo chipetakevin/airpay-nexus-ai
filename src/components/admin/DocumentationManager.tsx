@@ -129,11 +129,11 @@ const DocumentationManager = () => {
       {
         id: 'v4.0.0',
         version: '4.0.0',
-        name: 'Enhanced Security & PDF Documentation',
-        linesOfCode: 18500,
-        featuresCount: 15,
+        name: 'Enhanced Security & Intelligent Documentation',
+        linesOfCode: 19750,
+        featuresCount: 17,
         releaseDate: '2025-07-08',
-        description: 'Major release with enhanced security, PDF generation, and comprehensive version management',
+        description: 'Major release with enhanced security, intelligent PDF generation, code growth tracking, and improved navigation',
         isStable: true
       },
       {
@@ -779,7 +779,7 @@ Last Updated: ${new Date().toLocaleDateString()} - Intelligent versioning system
         </div>
         <Badge className="bg-green-100 text-green-800">
           <CheckCircle className="w-4 h-4 mr-1" />
-          Version 3.0 Ready
+          Version 4.0 Ready
         </Badge>
       </div>
 

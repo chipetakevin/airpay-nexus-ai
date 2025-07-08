@@ -22,8 +22,8 @@ export interface SemanticVersion {
   patch: number;
 }
 
-// Current version state
-let currentVersion: SemanticVersion = { major: 3, minor: 0, patch: 0 };
+// Current version state - Updated to Version 4.0
+let currentVersion: SemanticVersion = { major: 4, minor: 0, patch: 0 };
 let versionHistory: VersionChange[] = [];
 
 /**
@@ -293,7 +293,7 @@ export const getVersionStatistics = () => {
   };
 };
 
-// Initialize with base version
+// Initialize with base versions - Both 3.0 and 4.0 are maintained
 versionHistory.push({
   id: 'v3.0.0-base',
   version: '3.0.0',
@@ -301,6 +301,46 @@ versionHistory.push({
   features: [],
   releaseDate: '2025-07-06',
   description: 'Initial MVNE Platform v3.0 - Complete enterprise-grade solution',
+  breaking: true,
+  impact: 'high'
+});
+
+// Add Version 4.0.0 - Enhanced Security & Intelligent Documentation
+versionHistory.push({
+  id: 'v4.0.0-enhanced',
+  version: '4.0.0',
+  changeType: 'major',
+  features: [
+    {
+      id: 'intelligent-docs',
+      name: 'Intelligent Documentation System',
+      description: 'Auto-generating PDF docs with version-specific content and code growth tracking',
+      category: 'operations',
+      status: 'complete',
+      addedDate: '2025-07-08',
+      version: '4.0.0'
+    },
+    {
+      id: 'secure-version-mgmt',
+      name: 'Enhanced Version Management',
+      description: 'Secure admin authentication and comprehensive codebase snapshots',
+      category: 'security',
+      status: 'complete',
+      addedDate: '2025-07-08',
+      version: '4.0.0'
+    },
+    {
+      id: 'navigation-enhancement',
+      name: 'Enhanced Navigation System',
+      description: 'Intelligent WhatsApp Shopping redirect and improved portal navigation',
+      category: 'integration',
+      status: 'complete',
+      addedDate: '2025-07-08',
+      version: '4.0.0'
+    }
+  ],
+  releaseDate: '2025-07-08',
+  description: 'Enhanced Security & Intelligent Documentation with code growth tracking and improved navigation',
   breaking: true,
   impact: 'high'
 });
