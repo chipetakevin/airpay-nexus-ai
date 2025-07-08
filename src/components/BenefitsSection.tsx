@@ -14,7 +14,9 @@ const BenefitsSection = () => {
         { label: "Cashback Rate", value: "2.5%" },
         { label: "Processing Time", value: "<30s" }
       ],
-      description: "Save money on every airtime purchase while earning rewards"
+      description: "Save money on every airtime purchase while earning rewards",
+      buttonText: "Register as Customer",
+      link: "/portal"
     },
     {
       title: "For Vendors",
@@ -23,14 +25,38 @@ const BenefitsSection = () => {
         { label: "Customer Retention", value: "85%" },
         { label: "Setup Time", value: "24hrs" }
       ],
-      description: "Expand your business with our comprehensive distribution network"
+      description: "Expand your business with our comprehensive distribution network",
+      buttonText: "Become a Vendor",
+      link: "/portal"
+    },
+    {
+      title: "For Field Workers",
+      stats: [
+        { label: "Commission Rate", value: "12%" },
+        { label: "Mobile Coverage", value: "95%" },
+        { label: "Training Time", value: "4hrs" }
+      ],
+      description: "Join our field team and earn competitive commissions on mobile activations",
+      buttonText: "Join Field Team",
+      link: "/portal"
+    },
+    {
+      title: "For Admins",
+      stats: [
+        { label: "System Uptime", value: "99.9%" },
+        { label: "Data Analytics", value: "Real-time" },
+        { label: "Access Control", value: "Multi-tier" }
+      ],
+      description: "Comprehensive admin tools for efficient platform management and oversight",
+      buttonText: "Admin Access",
+      link: "/portal"
     }
   ];
 
   return (
     <section className="py-16 sm:py-24">
       <div className="container mx-auto px-4 sm:px-6">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+        <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-2 gap-8 lg:gap-12">
           {benefits.map((benefit, index) => (
             <Card key={index} className="overflow-hidden">
               <div className="bg-gradient-to-r from-blue-600 to-purple-600 p-8 text-white">
@@ -47,9 +73,9 @@ const BenefitsSection = () => {
                 </div>
               </div>
               <CardContent className="p-8">
-                <Link to="/portal">
+                <Link to={benefit.link}>
                   <Button className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700">
-                    {index === 0 ? 'Register as Customer' : 'Become a Vendor'}
+                    {benefit.buttonText}
                     <ArrowRight className="ml-2 w-4 h-4" />
                   </Button>
                 </Link>
