@@ -217,53 +217,98 @@ const MenuBuilder = ({ ussdCodeId }: MenuBuilderProps) => {
   };
 
   return (
-    <div className="space-y-6">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <h2 className="text-2xl font-bold flex items-center">
-          <Code className="w-6 h-6 mr-2" />
-          Menu Builder
-        </h2>
-        <div className="flex items-center space-x-2">
-          <Button variant="outline">
-            <Play className="w-4 h-4 mr-2" />
-            Test Menu
-          </Button>
-          <Button>
-            <Save className="w-4 h-4 mr-2" />
-            Save Changes
-          </Button>
+    <div className="space-y-8">
+      {/* Enhanced Header Section */}
+      <div className="bg-gradient-to-r from-blue-50 to-purple-50 p-6 rounded-xl border border-blue-100 shadow-sm">
+        <div className="flex items-center justify-between">
+          {/* Left Section with Navigation */}
+          <div className="flex items-center space-x-4">
+            <div className="flex items-center space-x-2 bg-white px-3 py-2 rounded-lg border shadow-sm">
+              <Button variant="ghost" size="sm" className="p-1 h-8 w-8">
+                <Code className="w-4 h-4" />
+              </Button>
+              <div className="w-px h-6 bg-gray-200" />
+              <Button variant="ghost" size="sm" className="p-1 h-8 w-8">
+                <Code className="w-4 h-4" />
+              </Button>
+            </div>
+            <div>
+              <h2 className="text-2xl font-bold text-gray-800 flex items-center">
+                Menu Builder
+              </h2>
+              <p className="text-sm text-gray-600 mt-1">
+                Design and configure USSD menu structures
+              </p>
+            </div>
+          </div>
+
+          {/* Right Section with Action Buttons */}
+          <div className="flex items-center space-x-3">
+            <Button 
+              variant="outline" 
+              className="bg-white border-gray-200 hover:bg-gray-50 shadow-sm"
+            >
+              <Play className="w-4 h-4 mr-2" />
+              Test Menu
+            </Button>
+            <Button 
+              className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white shadow-md"
+            >
+              <Save className="w-4 h-4 mr-2" />
+              Save Changes
+            </Button>
+          </div>
         </div>
       </div>
 
-      {/* Add New Menu Item */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Add New Menu Item</CardTitle>
+      {/* Enhanced Add New Menu Item Section */}
+      <Card className="border-0 shadow-lg bg-gradient-to-br from-white to-gray-50">
+        <CardHeader className="bg-gradient-to-r from-emerald-50 to-blue-50 border-b">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-3">
+              <div className="p-2 bg-emerald-100 rounded-lg">
+                <Plus className="w-5 h-5 text-emerald-600" />
+              </div>
+              <div>
+                <CardTitle className="text-xl text-gray-800">Add New Menu Item</CardTitle>
+                <p className="text-sm text-gray-600 mt-1">
+                  Create new USSD menu options and configure their behavior
+                </p>
+              </div>
+            </div>
+          </div>
         </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div>
-              <label className="text-sm font-medium">Menu Item Name</label>
+        <CardContent className="p-6 space-y-6">
+          {/* Primary Fields */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="space-y-2">
+              <label className="text-sm font-semibold text-gray-700 flex items-center">
+                <span className="w-2 h-2 bg-blue-500 rounded-full mr-2"></span>
+                Menu Item Name
+              </label>
               <Input
                 placeholder="e.g., Check Balance"
                 value={newMenuItem.name}
                 onChange={(e) => setNewMenuItem({ ...newMenuItem, name: e.target.value })}
+                className="border-gray-200 focus:border-blue-500 focus:ring-blue-500/20"
               />
             </div>
             
-            <div>
-              <label className="text-sm font-medium">USSD Code</label>
+            <div className="space-y-2">
+              <label className="text-sm font-semibold text-gray-700 flex items-center">
+                <span className="w-2 h-2 bg-purple-500 rounded-full mr-2"></span>
+                USSD Code
+              </label>
               <Select
                 value={newMenuItem.ussd_code_id}
                 onValueChange={(value) => setNewMenuItem({ ...newMenuItem, ussd_code_id: value })}
               >
-                <SelectTrigger>
+                <SelectTrigger className="border-gray-200 focus:border-purple-500">
                   <SelectValue placeholder="Select USSD Code" />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent className="bg-white border border-gray-200 shadow-xl">
                   {ussdCodes.map((code) => (
-                    <SelectItem key={code.id} value={code.id}>
+                    <SelectItem key={code.id} value={code.id} className="hover:bg-gray-50">
                       {code.code} - {code.description}
                     </SelectItem>
                   ))}
@@ -271,8 +316,11 @@ const MenuBuilder = ({ ussdCodeId }: MenuBuilderProps) => {
               </Select>
             </div>
             
-            <div>
-              <label className="text-sm font-medium">Parent Menu Item</label>
+            <div className="space-y-2">
+              <label className="text-sm font-semibold text-gray-700 flex items-center">
+                <span className="w-2 h-2 bg-green-500 rounded-full mr-2"></span>
+                Parent Menu Item
+              </label>
               <Select
                 value={newMenuItem.parent_id || 'none'}
                 onValueChange={(value) => setNewMenuItem({ 
@@ -281,15 +329,15 @@ const MenuBuilder = ({ ussdCodeId }: MenuBuilderProps) => {
                   level: value === 'none' ? 1 : 2 
                 })}
               >
-                <SelectTrigger>
+                <SelectTrigger className="border-gray-200 focus:border-green-500">
                   <SelectValue placeholder="Select Parent (optional)" />
                 </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="none">Root Level</SelectItem>
+                <SelectContent className="bg-white border border-gray-200 shadow-xl">
+                  <SelectItem value="none" className="hover:bg-gray-50">Root Level</SelectItem>
                   {filteredMenuItems
                     .filter(item => item.level === 1)
                     .map((item) => (
-                    <SelectItem key={item.id} value={item.id}>
+                    <SelectItem key={item.id} value={item.id} className="hover:bg-gray-50">
                       {item.name}
                     </SelectItem>
                   ))}
@@ -298,9 +346,13 @@ const MenuBuilder = ({ ussdCodeId }: MenuBuilderProps) => {
             </div>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div>
-              <label className="text-sm font-medium">Display Order</label>
+          {/* Secondary Fields */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-4 border-t border-gray-100">
+            <div className="space-y-2">
+              <label className="text-sm font-semibold text-gray-700 flex items-center">
+                <span className="w-2 h-2 bg-orange-500 rounded-full mr-2"></span>
+                Display Order
+              </label>
               <Input
                 type="number"
                 placeholder="0"
@@ -309,11 +361,15 @@ const MenuBuilder = ({ ussdCodeId }: MenuBuilderProps) => {
                   ...newMenuItem, 
                   display_order: parseInt(e.target.value) || 0 
                 })}
+                className="border-gray-200 focus:border-orange-500 focus:ring-orange-500/20"
               />
             </div>
             
-            <div>
-              <label className="text-sm font-medium">Service Assignment</label>
+            <div className="space-y-2">
+              <label className="text-sm font-semibold text-gray-700 flex items-center">
+                <span className="w-2 h-2 bg-indigo-500 rounded-full mr-2"></span>
+                Service Assignment
+              </label>
               <Select
                 value={newMenuItem.service_id || 'none'}
                 onValueChange={(value) => setNewMenuItem({ 
@@ -321,21 +377,24 @@ const MenuBuilder = ({ ussdCodeId }: MenuBuilderProps) => {
                   service_id: value === 'none' ? null : value 
                 })}
               >
-                <SelectTrigger>
+                <SelectTrigger className="border-gray-200 focus:border-indigo-500">
                   <SelectValue placeholder="Select Service (optional)" />
                 </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="none">No Service</SelectItem>
-                  <SelectItem value="balance_check">Balance Check</SelectItem>
-                  <SelectItem value="airtime_purchase">Airtime Purchase</SelectItem>
-                  <SelectItem value="data_purchase">Data Purchase</SelectItem>
-                  <SelectItem value="banking">Banking Services</SelectItem>
+                <SelectContent className="bg-white border border-gray-200 shadow-xl">
+                  <SelectItem value="none" className="hover:bg-gray-50">No Service</SelectItem>
+                  <SelectItem value="balance_check" className="hover:bg-gray-50">Balance Check</SelectItem>
+                  <SelectItem value="airtime_purchase" className="hover:bg-gray-50">Airtime Purchase</SelectItem>
+                  <SelectItem value="data_purchase" className="hover:bg-gray-50">Data Purchase</SelectItem>
+                  <SelectItem value="banking" className="hover:bg-gray-50">Banking Services</SelectItem>
                 </SelectContent>
               </Select>
             </div>
             
-            <div>
-              <label className="text-sm font-medium">Status</label>
+            <div className="space-y-2">
+              <label className="text-sm font-semibold text-gray-700 flex items-center">
+                <span className="w-2 h-2 bg-red-500 rounded-full mr-2"></span>
+                Status
+              </label>
               <Select
                 value={newMenuItem.status}
                 onValueChange={(value) => setNewMenuItem({ 
@@ -343,21 +402,27 @@ const MenuBuilder = ({ ussdCodeId }: MenuBuilderProps) => {
                   status: value as 'active' | 'inactive' 
                 })}
               >
-                <SelectTrigger>
+                <SelectTrigger className="border-gray-200 focus:border-red-500">
                   <SelectValue />
                 </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="active">Active</SelectItem>
-                  <SelectItem value="inactive">Inactive</SelectItem>
+                <SelectContent className="bg-white border border-gray-200 shadow-xl">
+                  <SelectItem value="active" className="hover:bg-gray-50">Active</SelectItem>
+                  <SelectItem value="inactive" className="hover:bg-gray-50">Inactive</SelectItem>
                 </SelectContent>
               </Select>
             </div>
           </div>
           
-          <Button onClick={handleCreateMenuItem} className="w-full md:w-auto">
-            <Plus className="w-4 h-4 mr-2" />
-            Add Menu Item
-          </Button>
+          {/* Action Button */}
+          <div className="pt-4 border-t border-gray-100">
+            <Button 
+              onClick={handleCreateMenuItem} 
+              className="bg-gradient-to-r from-emerald-600 to-emerald-700 hover:from-emerald-700 hover:to-emerald-800 text-white shadow-md w-full md:w-auto px-8"
+            >
+              <Plus className="w-4 h-4 mr-2" />
+              Add Menu Item
+            </Button>
+          </div>
         </CardContent>
       </Card>
 
