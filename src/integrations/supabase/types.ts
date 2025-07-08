@@ -190,6 +190,50 @@ export type Database = {
         }
         Relationships: []
       }
+      api_metrics: {
+        Row: {
+          average_latency_ms: number | null
+          created_at: string | null
+          endpoint_id: string | null
+          error_count: number | null
+          id: string
+          max_latency_ms: number | null
+          request_count: number | null
+          success_rate: number | null
+          timestamp: string | null
+        }
+        Insert: {
+          average_latency_ms?: number | null
+          created_at?: string | null
+          endpoint_id?: string | null
+          error_count?: number | null
+          id?: string
+          max_latency_ms?: number | null
+          request_count?: number | null
+          success_rate?: number | null
+          timestamp?: string | null
+        }
+        Update: {
+          average_latency_ms?: number | null
+          created_at?: string | null
+          endpoint_id?: string | null
+          error_count?: number | null
+          id?: string
+          max_latency_ms?: number | null
+          request_count?: number | null
+          success_rate?: number | null
+          timestamp?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "api_metrics_endpoint_id_fkey"
+            columns: ["endpoint_id"]
+            isOneToOne: false
+            referencedRelation: "portal_api_endpoints"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       banking_profiles: {
         Row: {
           account_holder_name: string
@@ -749,9 +793,11 @@ export type Database = {
       comprehensive_user_profiles: {
         Row: {
           account_holder_name: string | null
+          account_manager: string | null
           account_number: string | null
           account_type: string | null
           additional_data: Json | null
+          additional_identifiers: Json | null
           admin_percentage: number | null
           bank_name: string | null
           bank_statement_url: string | null
@@ -766,11 +812,14 @@ export type Database = {
           commission_rate: number | null
           country: string | null
           created_at: string | null
+          customer_segment: string | null
+          data_privacy_consent: boolean | null
           date_of_birth: string | null
           email: string | null
           emergency_contact_name: string | null
           emergency_contact_phone: string | null
           emergency_contact_relationship: string | null
+          engagement_score: number | null
           first_name: string | null
           full_name: string | null
           gender: string | null
@@ -780,21 +829,30 @@ export type Database = {
           id_type: string | null
           is_active: boolean | null
           kyc_status: string | null
+          last_active_date: string | null
           last_login: string | null
           last_name: string | null
+          lifetime_value: number | null
           marketing_consent: boolean | null
           nationality: string | null
+          notes: string | null
           onecard_balance: number | null
+          opt_in_status: boolean | null
           phone: string | null
           physical_address: string | null
+          platform_ids: Json | null
           postal_address: string | null
           postal_code: string | null
           privacy_policy_accepted: boolean | null
           proof_of_address_url: string | null
           province: string | null
+          registered_platforms: string[] | null
           registration_number: string | null
           rica_status: string | null
           selfie_url: string | null
+          service_enrollments: string[] | null
+          session_count: number | null
+          tags: string[] | null
           tax_certificate_url: string | null
           tax_number: string | null
           terms_accepted: boolean | null
@@ -809,9 +867,11 @@ export type Database = {
         }
         Insert: {
           account_holder_name?: string | null
+          account_manager?: string | null
           account_number?: string | null
           account_type?: string | null
           additional_data?: Json | null
+          additional_identifiers?: Json | null
           admin_percentage?: number | null
           bank_name?: string | null
           bank_statement_url?: string | null
@@ -826,11 +886,14 @@ export type Database = {
           commission_rate?: number | null
           country?: string | null
           created_at?: string | null
+          customer_segment?: string | null
+          data_privacy_consent?: boolean | null
           date_of_birth?: string | null
           email?: string | null
           emergency_contact_name?: string | null
           emergency_contact_phone?: string | null
           emergency_contact_relationship?: string | null
+          engagement_score?: number | null
           first_name?: string | null
           full_name?: string | null
           gender?: string | null
@@ -840,21 +903,30 @@ export type Database = {
           id_type?: string | null
           is_active?: boolean | null
           kyc_status?: string | null
+          last_active_date?: string | null
           last_login?: string | null
           last_name?: string | null
+          lifetime_value?: number | null
           marketing_consent?: boolean | null
           nationality?: string | null
+          notes?: string | null
           onecard_balance?: number | null
+          opt_in_status?: boolean | null
           phone?: string | null
           physical_address?: string | null
+          platform_ids?: Json | null
           postal_address?: string | null
           postal_code?: string | null
           privacy_policy_accepted?: boolean | null
           proof_of_address_url?: string | null
           province?: string | null
+          registered_platforms?: string[] | null
           registration_number?: string | null
           rica_status?: string | null
           selfie_url?: string | null
+          service_enrollments?: string[] | null
+          session_count?: number | null
+          tags?: string[] | null
           tax_certificate_url?: string | null
           tax_number?: string | null
           terms_accepted?: boolean | null
@@ -869,9 +941,11 @@ export type Database = {
         }
         Update: {
           account_holder_name?: string | null
+          account_manager?: string | null
           account_number?: string | null
           account_type?: string | null
           additional_data?: Json | null
+          additional_identifiers?: Json | null
           admin_percentage?: number | null
           bank_name?: string | null
           bank_statement_url?: string | null
@@ -886,11 +960,14 @@ export type Database = {
           commission_rate?: number | null
           country?: string | null
           created_at?: string | null
+          customer_segment?: string | null
+          data_privacy_consent?: boolean | null
           date_of_birth?: string | null
           email?: string | null
           emergency_contact_name?: string | null
           emergency_contact_phone?: string | null
           emergency_contact_relationship?: string | null
+          engagement_score?: number | null
           first_name?: string | null
           full_name?: string | null
           gender?: string | null
@@ -900,21 +977,30 @@ export type Database = {
           id_type?: string | null
           is_active?: boolean | null
           kyc_status?: string | null
+          last_active_date?: string | null
           last_login?: string | null
           last_name?: string | null
+          lifetime_value?: number | null
           marketing_consent?: boolean | null
           nationality?: string | null
+          notes?: string | null
           onecard_balance?: number | null
+          opt_in_status?: boolean | null
           phone?: string | null
           physical_address?: string | null
+          platform_ids?: Json | null
           postal_address?: string | null
           postal_code?: string | null
           privacy_policy_accepted?: boolean | null
           proof_of_address_url?: string | null
           province?: string | null
+          registered_platforms?: string[] | null
           registration_number?: string | null
           rica_status?: string | null
           selfie_url?: string | null
+          service_enrollments?: string[] | null
+          session_count?: number | null
+          tags?: string[] | null
           tax_certificate_url?: string | null
           tax_number?: string | null
           terms_accepted?: boolean | null
@@ -1048,6 +1134,53 @@ export type Database = {
           updated_at?: string
         }
         Relationships: []
+      }
+      cross_platform_sessions: {
+        Row: {
+          created_at: string | null
+          end_time: string | null
+          id: string
+          last_activity: string | null
+          platform: string
+          session_data: Json | null
+          shared_session_id: string
+          start_time: string | null
+          status: Database["public"]["Enums"]["session_status"] | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          end_time?: string | null
+          id?: string
+          last_activity?: string | null
+          platform: string
+          session_data?: Json | null
+          shared_session_id: string
+          start_time?: string | null
+          status?: Database["public"]["Enums"]["session_status"] | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          end_time?: string | null
+          id?: string
+          last_activity?: string | null
+          platform?: string
+          session_data?: Json | null
+          shared_session_id?: string
+          start_time?: string | null
+          status?: Database["public"]["Enums"]["session_status"] | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cross_platform_sessions_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "comprehensive_user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       customer_accounts: {
         Row: {
@@ -3265,6 +3398,33 @@ export type Database = {
         }
         Relationships: []
       }
+      platforms: {
+        Row: {
+          created_at: string | null
+          description: string | null
+          id: string
+          is_active: boolean | null
+          name: string
+          platform_type: Database["public"]["Enums"]["platform_type"]
+        }
+        Insert: {
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          is_active?: boolean | null
+          name: string
+          platform_type: Database["public"]["Enums"]["platform_type"]
+        }
+        Update: {
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          is_active?: boolean | null
+          name?: string
+          platform_type?: Database["public"]["Enums"]["platform_type"]
+        }
+        Relationships: []
+      }
       policy_acknowledgments: {
         Row: {
           acknowledged_at: string
@@ -3421,6 +3581,47 @@ export type Database = {
           version?: string
         }
         Relationships: []
+      }
+      portal_api_endpoints: {
+        Row: {
+          api_url: string
+          auth_type: string | null
+          created_at: string | null
+          id: string
+          method: string
+          portal_id: string | null
+          status: Database["public"]["Enums"]["ussd_status"] | null
+          updated_at: string | null
+        }
+        Insert: {
+          api_url: string
+          auth_type?: string | null
+          created_at?: string | null
+          id?: string
+          method?: string
+          portal_id?: string | null
+          status?: Database["public"]["Enums"]["ussd_status"] | null
+          updated_at?: string | null
+        }
+        Update: {
+          api_url?: string
+          auth_type?: string | null
+          created_at?: string | null
+          id?: string
+          method?: string
+          portal_id?: string | null
+          status?: Database["public"]["Enums"]["ussd_status"] | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "portal_api_endpoints_portal_id_fkey"
+            columns: ["portal_id"]
+            isOneToOne: false
+            referencedRelation: "website_portals"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       porting_analytics: {
         Row: {
@@ -4689,6 +4890,173 @@ export type Database = {
         }
         Relationships: []
       }
+      ussd_admin_audit: {
+        Row: {
+          action: string
+          admin_id: string | null
+          created_at: string | null
+          entity_id: string | null
+          entity_type: string
+          id: string
+          ip_address: unknown | null
+          new_values: Json | null
+          old_values: Json | null
+          user_agent: string | null
+        }
+        Insert: {
+          action: string
+          admin_id?: string | null
+          created_at?: string | null
+          entity_id?: string | null
+          entity_type: string
+          id?: string
+          ip_address?: unknown | null
+          new_values?: Json | null
+          old_values?: Json | null
+          user_agent?: string | null
+        }
+        Update: {
+          action?: string
+          admin_id?: string | null
+          created_at?: string | null
+          entity_id?: string | null
+          entity_type?: string
+          id?: string
+          ip_address?: unknown | null
+          new_values?: Json | null
+          old_values?: Json | null
+          user_agent?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ussd_admin_audit_admin_id_fkey"
+            columns: ["admin_id"]
+            isOneToOne: false
+            referencedRelation: "comprehensive_user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ussd_code_platform_assignments: {
+        Row: {
+          assigned_at: string | null
+          id: string
+          platform_id: string | null
+          status: Database["public"]["Enums"]["ussd_status"] | null
+          ussd_code_id: string | null
+        }
+        Insert: {
+          assigned_at?: string | null
+          id?: string
+          platform_id?: string | null
+          status?: Database["public"]["Enums"]["ussd_status"] | null
+          ussd_code_id?: string | null
+        }
+        Update: {
+          assigned_at?: string | null
+          id?: string
+          platform_id?: string | null
+          status?: Database["public"]["Enums"]["ussd_status"] | null
+          ussd_code_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ussd_code_platform_assignments_platform_id_fkey"
+            columns: ["platform_id"]
+            isOneToOne: false
+            referencedRelation: "platforms"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ussd_code_platform_assignments_ussd_code_id_fkey"
+            columns: ["ussd_code_id"]
+            isOneToOne: false
+            referencedRelation: "ussd_codes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ussd_codes: {
+        Row: {
+          code: string
+          created_at: string | null
+          description: string
+          id: string
+          status: Database["public"]["Enums"]["ussd_status"] | null
+          updated_at: string | null
+        }
+        Insert: {
+          code: string
+          created_at?: string | null
+          description: string
+          id?: string
+          status?: Database["public"]["Enums"]["ussd_status"] | null
+          updated_at?: string | null
+        }
+        Update: {
+          code?: string
+          created_at?: string | null
+          description?: string
+          id?: string
+          status?: Database["public"]["Enums"]["ussd_status"] | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      ussd_menu_items: {
+        Row: {
+          created_at: string | null
+          display_order: number
+          id: string
+          level: number
+          name: string
+          parent_id: string | null
+          service_id: string | null
+          status: Database["public"]["Enums"]["ussd_status"] | null
+          updated_at: string | null
+          ussd_code_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          display_order?: number
+          id?: string
+          level?: number
+          name: string
+          parent_id?: string | null
+          service_id?: string | null
+          status?: Database["public"]["Enums"]["ussd_status"] | null
+          updated_at?: string | null
+          ussd_code_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          display_order?: number
+          id?: string
+          level?: number
+          name?: string
+          parent_id?: string | null
+          service_id?: string | null
+          status?: Database["public"]["Enums"]["ussd_status"] | null
+          updated_at?: string | null
+          ussd_code_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ussd_menu_items_parent_id_fkey"
+            columns: ["parent_id"]
+            isOneToOne: false
+            referencedRelation: "ussd_menu_items"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ussd_menu_items_ussd_code_id_fkey"
+            columns: ["ussd_code_id"]
+            isOneToOne: false
+            referencedRelation: "ussd_codes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       vendor_profiles: {
         Row: {
           account_number: string | null
@@ -4867,6 +5235,134 @@ export type Database = {
             columns: ["version_id"]
             isOneToOne: false
             referencedRelation: "codebase_versions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      website_portals: {
+        Row: {
+          analytics_enabled: boolean | null
+          created_at: string | null
+          description: string | null
+          id: string
+          name: string
+          status: Database["public"]["Enums"]["ussd_status"] | null
+          updated_at: string | null
+        }
+        Insert: {
+          analytics_enabled?: boolean | null
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          name: string
+          status?: Database["public"]["Enums"]["ussd_status"] | null
+          updated_at?: string | null
+        }
+        Update: {
+          analytics_enabled?: boolean | null
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          name?: string
+          status?: Database["public"]["Enums"]["ussd_status"] | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      whatsapp_api_configs: {
+        Row: {
+          api_key_reference: string | null
+          business_phone_number: string
+          created_at: string | null
+          id: string
+          last_sync: string | null
+          status: Database["public"]["Enums"]["ussd_status"] | null
+          updated_at: string | null
+          webhook_url: string
+        }
+        Insert: {
+          api_key_reference?: string | null
+          business_phone_number: string
+          created_at?: string | null
+          id?: string
+          last_sync?: string | null
+          status?: Database["public"]["Enums"]["ussd_status"] | null
+          updated_at?: string | null
+          webhook_url: string
+        }
+        Update: {
+          api_key_reference?: string | null
+          business_phone_number?: string
+          created_at?: string | null
+          id?: string
+          last_sync?: string | null
+          status?: Database["public"]["Enums"]["ussd_status"] | null
+          updated_at?: string | null
+          webhook_url?: string
+        }
+        Relationships: []
+      }
+      whatsapp_sessions: {
+        Row: {
+          agent_id: string | null
+          chatbot_state: Json | null
+          created_at: string | null
+          end_time: string | null
+          fallback_time: string | null
+          fallback_triggered: boolean | null
+          fallback_type: Database["public"]["Enums"]["fallback_type"] | null
+          id: string
+          last_activity: string | null
+          platform: string | null
+          session_id: string
+          start_time: string | null
+          status: Database["public"]["Enums"]["session_status"] | null
+          transcript_ref: string | null
+          user_id: string | null
+          whatsapp_number: string
+        }
+        Insert: {
+          agent_id?: string | null
+          chatbot_state?: Json | null
+          created_at?: string | null
+          end_time?: string | null
+          fallback_time?: string | null
+          fallback_triggered?: boolean | null
+          fallback_type?: Database["public"]["Enums"]["fallback_type"] | null
+          id?: string
+          last_activity?: string | null
+          platform?: string | null
+          session_id: string
+          start_time?: string | null
+          status?: Database["public"]["Enums"]["session_status"] | null
+          transcript_ref?: string | null
+          user_id?: string | null
+          whatsapp_number: string
+        }
+        Update: {
+          agent_id?: string | null
+          chatbot_state?: Json | null
+          created_at?: string | null
+          end_time?: string | null
+          fallback_time?: string | null
+          fallback_triggered?: boolean | null
+          fallback_type?: Database["public"]["Enums"]["fallback_type"] | null
+          id?: string
+          last_activity?: string | null
+          platform?: string | null
+          session_id?: string
+          start_time?: string | null
+          status?: Database["public"]["Enums"]["session_status"] | null
+          transcript_ref?: string | null
+          user_id?: string | null
+          whatsapp_number?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "whatsapp_sessions_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "comprehensive_user_profiles"
             referencedColumns: ["id"]
           },
         ]
@@ -5060,6 +5556,7 @@ export type Database = {
       compliance_status: "compliant" | "non_compliant" | "pending" | "exception"
       deduction_type: "statutory" | "voluntary" | "loan" | "garnishment"
       employment_type: "permanent" | "contract" | "temporary" | "intern"
+      fallback_type: "default" | "contextual" | "human_handover"
       kyc_status: "pending" | "verified" | "rejected" | "requires_update"
       payroll_status: "draft" | "processing" | "completed" | "cancelled"
       payroll_user_role:
@@ -5069,6 +5566,7 @@ export type Database = {
         | "employee"
         | "field_worker"
       permission_type: "view" | "edit" | "export" | "share" | "manage" | "audit"
+      platform_type: "gsm" | "whatsapp" | "website"
       resource_type:
         | "reports"
         | "suspicious_activity"
@@ -5077,6 +5575,7 @@ export type Database = {
         | "system_settings"
         | "compliance_data"
       rica_status: "pending" | "verified" | "rejected" | "expired"
+      session_status: "active" | "ended" | "suspended"
       sim_status: "inactive" | "active" | "suspended" | "deactivated"
       telecom_role:
         | "super_admin"
@@ -5095,6 +5594,7 @@ export type Database = {
         | "manager"
         | "contractor"
         | "support"
+      ussd_status: "active" | "inactive"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -5233,6 +5733,7 @@ export const Constants = {
       compliance_status: ["compliant", "non_compliant", "pending", "exception"],
       deduction_type: ["statutory", "voluntary", "loan", "garnishment"],
       employment_type: ["permanent", "contract", "temporary", "intern"],
+      fallback_type: ["default", "contextual", "human_handover"],
       kyc_status: ["pending", "verified", "rejected", "requires_update"],
       payroll_status: ["draft", "processing", "completed", "cancelled"],
       payroll_user_role: [
@@ -5243,6 +5744,7 @@ export const Constants = {
         "field_worker",
       ],
       permission_type: ["view", "edit", "export", "share", "manage", "audit"],
+      platform_type: ["gsm", "whatsapp", "website"],
       resource_type: [
         "reports",
         "suspicious_activity",
@@ -5252,6 +5754,7 @@ export const Constants = {
         "compliance_data",
       ],
       rica_status: ["pending", "verified", "rejected", "expired"],
+      session_status: ["active", "ended", "suspended"],
       sim_status: ["inactive", "active", "suspended", "deactivated"],
       telecom_role: [
         "super_admin",
@@ -5272,6 +5775,7 @@ export const Constants = {
         "contractor",
         "support",
       ],
+      ussd_status: ["active", "inactive"],
     },
   },
 } as const
