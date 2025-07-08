@@ -190,6 +190,62 @@ export type Database = {
         }
         Relationships: []
       }
+      api_gateway_configs: {
+        Row: {
+          api_name: string
+          authentication_method: string
+          created_at: string | null
+          endpoint_url: string
+          health_check_url: string | null
+          id: string
+          integration_status: string | null
+          monitoring_enabled: boolean | null
+          mvno_partner_id: string | null
+          rate_limit_per_minute: number | null
+          tm_forum_certified: boolean | null
+          updated_at: string | null
+          version: string
+        }
+        Insert: {
+          api_name: string
+          authentication_method: string
+          created_at?: string | null
+          endpoint_url: string
+          health_check_url?: string | null
+          id?: string
+          integration_status?: string | null
+          monitoring_enabled?: boolean | null
+          mvno_partner_id?: string | null
+          rate_limit_per_minute?: number | null
+          tm_forum_certified?: boolean | null
+          updated_at?: string | null
+          version: string
+        }
+        Update: {
+          api_name?: string
+          authentication_method?: string
+          created_at?: string | null
+          endpoint_url?: string
+          health_check_url?: string | null
+          id?: string
+          integration_status?: string | null
+          monitoring_enabled?: boolean | null
+          mvno_partner_id?: string | null
+          rate_limit_per_minute?: number | null
+          tm_forum_certified?: boolean | null
+          updated_at?: string | null
+          version?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "api_gateway_configs_mvno_partner_id_fkey"
+            columns: ["mvno_partner_id"]
+            isOneToOne: false
+            referencedRelation: "mvno_partners"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       api_metrics: {
         Row: {
           average_latency_ms: number | null
@@ -230,6 +286,65 @@ export type Database = {
             columns: ["endpoint_id"]
             isOneToOne: false
             referencedRelation: "portal_api_endpoints"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      automated_support_tickets: {
+        Row: {
+          auto_resolved: boolean | null
+          automated_response: string | null
+          chatbot_handled: boolean | null
+          created_at: string | null
+          customer_satisfaction_score: number | null
+          escalation_level: number | null
+          final_resolution: string | null
+          id: string
+          mvno_partner_id: string | null
+          resolution_time_minutes: number | null
+          resolved_at: string | null
+          severity_level: string
+          subscriber_id: string
+          ticket_type: string
+        }
+        Insert: {
+          auto_resolved?: boolean | null
+          automated_response?: string | null
+          chatbot_handled?: boolean | null
+          created_at?: string | null
+          customer_satisfaction_score?: number | null
+          escalation_level?: number | null
+          final_resolution?: string | null
+          id?: string
+          mvno_partner_id?: string | null
+          resolution_time_minutes?: number | null
+          resolved_at?: string | null
+          severity_level: string
+          subscriber_id: string
+          ticket_type: string
+        }
+        Update: {
+          auto_resolved?: boolean | null
+          automated_response?: string | null
+          chatbot_handled?: boolean | null
+          created_at?: string | null
+          customer_satisfaction_score?: number | null
+          escalation_level?: number | null
+          final_resolution?: string | null
+          id?: string
+          mvno_partner_id?: string | null
+          resolution_time_minutes?: number | null
+          resolved_at?: string | null
+          severity_level?: string
+          subscriber_id?: string
+          ticket_type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "automated_support_tickets_mvno_partner_id_fkey"
+            columns: ["mvno_partner_id"]
+            isOneToOne: false
+            referencedRelation: "mvno_partners"
             referencedColumns: ["id"]
           },
         ]
@@ -1975,6 +2090,65 @@ export type Database = {
         }
         Relationships: []
       }
+      esim_provisioning: {
+        Row: {
+          activated_at: string | null
+          activation_attempts: number | null
+          activation_code: string | null
+          download_status: string | null
+          eid: string
+          expires_at: string | null
+          iccid: string
+          id: string
+          instant_activation: boolean | null
+          mvno_partner_id: string | null
+          provisioned_at: string | null
+          provisioning_method: string | null
+          qr_code_url: string | null
+          subscriber_id: string
+        }
+        Insert: {
+          activated_at?: string | null
+          activation_attempts?: number | null
+          activation_code?: string | null
+          download_status?: string | null
+          eid: string
+          expires_at?: string | null
+          iccid: string
+          id?: string
+          instant_activation?: boolean | null
+          mvno_partner_id?: string | null
+          provisioned_at?: string | null
+          provisioning_method?: string | null
+          qr_code_url?: string | null
+          subscriber_id: string
+        }
+        Update: {
+          activated_at?: string | null
+          activation_attempts?: number | null
+          activation_code?: string | null
+          download_status?: string | null
+          eid?: string
+          expires_at?: string | null
+          iccid?: string
+          id?: string
+          instant_activation?: boolean | null
+          mvno_partner_id?: string | null
+          provisioned_at?: string | null
+          provisioning_method?: string | null
+          qr_code_url?: string | null
+          subscriber_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "esim_provisioning_mvno_partner_id_fkey"
+            columns: ["mvno_partner_id"]
+            isOneToOne: false
+            referencedRelation: "mvno_partners"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       feature_access_logs: {
         Row: {
           action: string
@@ -2593,6 +2767,62 @@ export type Database = {
           },
         ]
       }
+      mvne_analytics_kpis: {
+        Row: {
+          automated_alert_triggered: boolean | null
+          created_at: string | null
+          id: string
+          improvement_suggestions: Json | null
+          kpi_type: string
+          measured_at: string | null
+          measurement_period: string | null
+          measurement_unit: string | null
+          measurement_value: number | null
+          mvno_partner_id: string | null
+          target_value: number | null
+          threshold_max: number | null
+          threshold_min: number | null
+        }
+        Insert: {
+          automated_alert_triggered?: boolean | null
+          created_at?: string | null
+          id?: string
+          improvement_suggestions?: Json | null
+          kpi_type: string
+          measured_at?: string | null
+          measurement_period?: string | null
+          measurement_unit?: string | null
+          measurement_value?: number | null
+          mvno_partner_id?: string | null
+          target_value?: number | null
+          threshold_max?: number | null
+          threshold_min?: number | null
+        }
+        Update: {
+          automated_alert_triggered?: boolean | null
+          created_at?: string | null
+          id?: string
+          improvement_suggestions?: Json | null
+          kpi_type?: string
+          measured_at?: string | null
+          measurement_period?: string | null
+          measurement_unit?: string | null
+          measurement_value?: number | null
+          mvno_partner_id?: string | null
+          target_value?: number | null
+          threshold_max?: number | null
+          threshold_min?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "mvne_analytics_kpis_mvno_partner_id_fkey"
+            columns: ["mvno_partner_id"]
+            isOneToOne: false
+            referencedRelation: "mvno_partners"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       mvne_compliant_transactions: {
         Row: {
           amount: number
@@ -2823,6 +3053,60 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      mvno_partners: {
+        Row: {
+          brand_name: string
+          branding_config: Json | null
+          business_model: string
+          contract_end_date: string | null
+          contract_start_date: string | null
+          created_at: string | null
+          customer_base_limit: number | null
+          id: string
+          is_active: boolean | null
+          isolated_environment_config: Json | null
+          mvno_name: string
+          onboarding_status: string | null
+          pricing_config: Json | null
+          revenue_share_percentage: number | null
+          updated_at: string | null
+        }
+        Insert: {
+          brand_name: string
+          branding_config?: Json | null
+          business_model: string
+          contract_end_date?: string | null
+          contract_start_date?: string | null
+          created_at?: string | null
+          customer_base_limit?: number | null
+          id?: string
+          is_active?: boolean | null
+          isolated_environment_config?: Json | null
+          mvno_name: string
+          onboarding_status?: string | null
+          pricing_config?: Json | null
+          revenue_share_percentage?: number | null
+          updated_at?: string | null
+        }
+        Update: {
+          brand_name?: string
+          branding_config?: Json | null
+          business_model?: string
+          contract_end_date?: string | null
+          contract_start_date?: string | null
+          created_at?: string | null
+          customer_base_limit?: number | null
+          id?: string
+          is_active?: boolean | null
+          isolated_environment_config?: Json | null
+          mvno_name?: string
+          onboarding_status?: string | null
+          pricing_config?: Json | null
+          revenue_share_percentage?: number | null
+          updated_at?: string | null
+        }
+        Relationships: []
       }
       onecard_accounts: {
         Row: {
@@ -3763,6 +4047,177 @@ export type Database = {
         }
         Relationships: []
       }
+      real_time_billing_events: {
+        Row: {
+          billing_cycle_id: string | null
+          currency: string | null
+          event_type: string
+          fraud_check_passed: boolean | null
+          id: string
+          mvno_partner_id: string | null
+          processed_at: string | null
+          rated_amount: number | null
+          rating_engine_version: string | null
+          real_time_charged: boolean | null
+          reconciliation_status: string | null
+          subscriber_id: string
+          timestamp: string | null
+          usage_amount: number | null
+          usage_unit: string | null
+        }
+        Insert: {
+          billing_cycle_id?: string | null
+          currency?: string | null
+          event_type: string
+          fraud_check_passed?: boolean | null
+          id?: string
+          mvno_partner_id?: string | null
+          processed_at?: string | null
+          rated_amount?: number | null
+          rating_engine_version?: string | null
+          real_time_charged?: boolean | null
+          reconciliation_status?: string | null
+          subscriber_id: string
+          timestamp?: string | null
+          usage_amount?: number | null
+          usage_unit?: string | null
+        }
+        Update: {
+          billing_cycle_id?: string | null
+          currency?: string | null
+          event_type?: string
+          fraud_check_passed?: boolean | null
+          id?: string
+          mvno_partner_id?: string | null
+          processed_at?: string | null
+          rated_amount?: number | null
+          rating_engine_version?: string | null
+          real_time_charged?: boolean | null
+          reconciliation_status?: string | null
+          subscriber_id?: string
+          timestamp?: string | null
+          usage_amount?: number | null
+          usage_unit?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "real_time_billing_events_mvno_partner_id_fkey"
+            columns: ["mvno_partner_id"]
+            isOneToOne: false
+            referencedRelation: "mvno_partners"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      regulatory_automation: {
+        Row: {
+          automated_report_generated: boolean | null
+          compliance_check_type: string
+          compliance_score: number | null
+          corrective_actions: Json | null
+          created_at: string | null
+          id: string
+          last_checked_at: string | null
+          mvno_partner_id: string | null
+          next_check_due: string | null
+          regulation_type: string
+          violations_detected: Json | null
+        }
+        Insert: {
+          automated_report_generated?: boolean | null
+          compliance_check_type: string
+          compliance_score?: number | null
+          corrective_actions?: Json | null
+          created_at?: string | null
+          id?: string
+          last_checked_at?: string | null
+          mvno_partner_id?: string | null
+          next_check_due?: string | null
+          regulation_type: string
+          violations_detected?: Json | null
+        }
+        Update: {
+          automated_report_generated?: boolean | null
+          compliance_check_type?: string
+          compliance_score?: number | null
+          corrective_actions?: Json | null
+          created_at?: string | null
+          id?: string
+          last_checked_at?: string | null
+          mvno_partner_id?: string | null
+          next_check_due?: string | null
+          regulation_type?: string
+          violations_detected?: Json | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "regulatory_automation_mvno_partner_id_fkey"
+            columns: ["mvno_partner_id"]
+            isOneToOne: false
+            referencedRelation: "mvno_partners"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      revenue_reconciliation: {
+        Row: {
+          auto_reconciled: boolean | null
+          billing_period_end: string
+          billing_period_start: string
+          created_at: string | null
+          discrepancies_detected: Json | null
+          id: string
+          manual_review_required: boolean | null
+          mno_settlement_amount: number | null
+          mvne_fee: number | null
+          mvno_partner_id: string | null
+          mvno_share: number | null
+          processed_at: string | null
+          reconciliation_status: string | null
+          total_revenue: number | null
+        }
+        Insert: {
+          auto_reconciled?: boolean | null
+          billing_period_end: string
+          billing_period_start: string
+          created_at?: string | null
+          discrepancies_detected?: Json | null
+          id?: string
+          manual_review_required?: boolean | null
+          mno_settlement_amount?: number | null
+          mvne_fee?: number | null
+          mvno_partner_id?: string | null
+          mvno_share?: number | null
+          processed_at?: string | null
+          reconciliation_status?: string | null
+          total_revenue?: number | null
+        }
+        Update: {
+          auto_reconciled?: boolean | null
+          billing_period_end?: string
+          billing_period_start?: string
+          created_at?: string | null
+          discrepancies_detected?: Json | null
+          id?: string
+          manual_review_required?: boolean | null
+          mno_settlement_amount?: number | null
+          mvne_fee?: number | null
+          mvno_partner_id?: string | null
+          mvno_share?: number | null
+          processed_at?: string | null
+          reconciliation_status?: string | null
+          total_revenue?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "revenue_reconciliation_mvno_partner_id_fkey"
+            columns: ["mvno_partner_id"]
+            isOneToOne: false
+            referencedRelation: "mvno_partners"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       rica_audit_logs: {
         Row: {
           action: string
@@ -4399,6 +4854,62 @@ export type Database = {
           user_type?: string
         }
         Relationships: []
+      }
+      subscriber_lifecycle: {
+        Row: {
+          automated_support_enabled: boolean | null
+          churn_risk_score: number | null
+          created_at: string | null
+          customer_id: string
+          engagement_metrics: Json | null
+          esim_provisioned: boolean | null
+          id: string
+          instant_activation_enabled: boolean | null
+          kyc_verification_method: string | null
+          lifecycle_stage: string
+          mvno_partner_id: string | null
+          onboarding_completed_at: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          automated_support_enabled?: boolean | null
+          churn_risk_score?: number | null
+          created_at?: string | null
+          customer_id: string
+          engagement_metrics?: Json | null
+          esim_provisioned?: boolean | null
+          id?: string
+          instant_activation_enabled?: boolean | null
+          kyc_verification_method?: string | null
+          lifecycle_stage: string
+          mvno_partner_id?: string | null
+          onboarding_completed_at?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          automated_support_enabled?: boolean | null
+          churn_risk_score?: number | null
+          created_at?: string | null
+          customer_id?: string
+          engagement_metrics?: Json | null
+          esim_provisioned?: boolean | null
+          id?: string
+          instant_activation_enabled?: boolean | null
+          kyc_verification_method?: string | null
+          lifecycle_stage?: string
+          mvno_partner_id?: string | null
+          onboarding_completed_at?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "subscriber_lifecycle_mvno_partner_id_fkey"
+            columns: ["mvno_partner_id"]
+            isOneToOne: false
+            referencedRelation: "mvno_partners"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       system_health_metrics: {
         Row: {
@@ -5367,6 +5878,65 @@ export type Database = {
           },
         ]
       }
+      workflow_orchestrations: {
+        Row: {
+          automation_level: string | null
+          avg_execution_time_seconds: number | null
+          created_at: string | null
+          error_handling_config: Json | null
+          id: string
+          is_active: boolean | null
+          mvno_partner_id: string | null
+          retry_policy: Json | null
+          sla_requirements: Json | null
+          steps_configuration: Json
+          success_rate: number | null
+          updated_at: string | null
+          workflow_name: string
+          workflow_type: string
+        }
+        Insert: {
+          automation_level?: string | null
+          avg_execution_time_seconds?: number | null
+          created_at?: string | null
+          error_handling_config?: Json | null
+          id?: string
+          is_active?: boolean | null
+          mvno_partner_id?: string | null
+          retry_policy?: Json | null
+          sla_requirements?: Json | null
+          steps_configuration: Json
+          success_rate?: number | null
+          updated_at?: string | null
+          workflow_name: string
+          workflow_type: string
+        }
+        Update: {
+          automation_level?: string | null
+          avg_execution_time_seconds?: number | null
+          created_at?: string | null
+          error_handling_config?: Json | null
+          id?: string
+          is_active?: boolean | null
+          mvno_partner_id?: string | null
+          retry_policy?: Json | null
+          sla_requirements?: Json | null
+          steps_configuration?: Json
+          success_rate?: number | null
+          updated_at?: string | null
+          workflow_name?: string
+          workflow_type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "workflow_orchestrations_mvno_partner_id_fkey"
+            columns: ["mvno_partner_id"]
+            isOneToOne: false
+            referencedRelation: "mvno_partners"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
@@ -5383,6 +5953,10 @@ export type Database = {
       calculate_field_worker_commission: {
         Args: { p_field_worker_id: string; p_month: number; p_year: number }
         Returns: string
+      }
+      calculate_mvno_churn_rate: {
+        Args: { p_mvno_id: string; p_period_months?: number }
+        Returns: number
       }
       calculate_paye: {
         Args: {
@@ -5534,6 +6108,10 @@ export type Database = {
       }
       run_compliance_check: {
         Args: { p_payroll_run_id: string; p_compliance_type: string }
+        Returns: string
+      }
+      trigger_automated_workflow: {
+        Args: { p_workflow_name: string; p_mvno_id: string; p_context?: Json }
         Returns: string
       }
       update_cashback_balance: {
