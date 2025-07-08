@@ -30,6 +30,7 @@ import RICAConfirmation from '@/components/rica/RICAConfirmation';
 import CustomerRegistration from '@/components/registration/CustomerRegistration';
 import VendorRegistration from '@/components/VendorRegistration';
 import AdminRegistration from '@/components/AdminRegistration';
+import FieldWorkerRegistration from '@/components/fieldworker/FieldWorkerRegistration';
 import { CollapsibleOneCardAccount } from '@/components/onecard/CollapsibleOneCardAccount';
 
 type RegistrationStep = 'personal' | 'address' | 'sim' | 'declaration' | 'confirmation';
@@ -53,7 +54,7 @@ const RICARegistration = () => {
   }, []);
   const [isRegistered, setIsRegistered] = useState(false);
   const [showRegistrationForm, setShowRegistrationForm] = useState(false);
-  const [selectedUserType, setSelectedUserType] = useState<'customer' | 'vendor' | 'admin'>('customer');
+  const [selectedUserType, setSelectedUserType] = useState<'customer' | 'vendor' | 'admin' | 'fieldworker'>('customer');
   const [formData, setFormData] = useState({
     // Personal Information
     fullName: userProfile?.firstName ? `${userProfile.firstName} ${userProfile.lastName}` : '',
@@ -474,6 +475,17 @@ const RICARegistration = () => {
                       <div className="text-xs opacity-75">Administrative access and management</div>
                     </div>
                   </Button>
+                  
+                  <Button
+                    onClick={() => setSelectedUserType('fieldworker')}
+                    variant={selectedUserType === 'fieldworker' ? 'default' : 'outline'}
+                    className="justify-start p-4 h-auto"
+                  >
+                    <div className="text-left">
+                      <div className="font-medium">Field Workers</div>
+                      <div className="text-xs opacity-75">Regional operations and customer registration</div>
+                    </div>
+                  </Button>
                 </div>
               </div>
               
@@ -487,6 +499,9 @@ const RICARegistration = () => {
                 )}
                 {selectedUserType === 'admin' && (
                   <AdminRegistration />
+                )}
+                {selectedUserType === 'fieldworker' && (
+                  <FieldWorkerRegistration />
                 )}
               </div>
             </div>
