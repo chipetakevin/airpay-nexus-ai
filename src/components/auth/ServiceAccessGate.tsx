@@ -23,45 +23,43 @@ const ServiceAccessGate: React.FC<ServiceAccessGateProps> = ({
   }
 
   return (
-    <div className="relative">
+    <div className="relative min-h-[50vh]">
       {/* Show blurred preview of the service */}
-      <div className="blur-sm pointer-events-none opacity-60">
+      <div className="blur-sm pointer-events-none opacity-40">
         {children}
       </div>
       
       {/* Overlay with registration prompt */}
-      <div className="absolute inset-0 flex items-center justify-center bg-white/90 backdrop-blur-sm">
-        <Card className="max-w-md mx-4 shadow-2xl border-2 border-orange-200">
-          <CardContent className="p-6 text-center">
-            <div className="w-16 h-16 bg-gradient-to-r from-orange-500 to-red-500 rounded-full flex items-center justify-center mx-auto mb-4">
-              <Lock className="w-8 h-8 text-white" />
+      <div className="absolute inset-0 flex items-center justify-center bg-white/95 backdrop-blur-sm p-4">
+        <Card className="w-full max-w-sm shadow-2xl border-2 border-orange-200">
+          <CardContent className="p-4 text-center">
+            <div className="w-12 h-12 bg-gradient-to-r from-orange-500 to-red-500 rounded-full flex items-center justify-center mx-auto mb-3">
+              <Lock className="w-6 h-6 text-white" />
             </div>
             
-            <h3 className="text-xl font-bold text-gray-900 mb-2">
+            <h3 className="text-lg font-bold text-gray-900 mb-2">
               Registration Required
             </h3>
             
-            <p className="text-gray-600 mb-4">
+            <p className="text-gray-600 text-sm mb-3">
               To access {serviceName}, please complete your registration first.
             </p>
             
-            <div className="flex flex-col gap-3">
+            <div className="space-y-3">
               <Button
                 onClick={onNavigateToRegistration}
-                className="bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white font-medium"
+                className="w-full bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white font-medium h-10"
               >
                 <UserPlus className="w-4 h-4 mr-2" />
                 Register Now - It's Free!
               </Button>
               
-              <div className="flex items-center justify-center gap-2 text-sm text-gray-500">
-                <CreditCard className="w-4 h-4" />
+              <div className="flex items-center justify-center gap-2 text-xs text-gray-500">
+                <CreditCard className="w-3 h-3" />
                 <span>Quick registration • Instant access</span>
               </div>
-            </div>
-            
-            <div className="mt-4 pt-4 border-t">
-              <Badge className="bg-green-100 text-green-800">
+              
+              <Badge className="bg-green-100 text-green-800 text-xs">
                 ✓ Browse freely • Register to purchase
               </Badge>
             </div>
