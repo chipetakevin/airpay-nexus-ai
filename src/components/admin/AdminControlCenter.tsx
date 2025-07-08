@@ -384,6 +384,22 @@ const AdminControlCenter: React.FC<AdminControlCenterProps> = ({
               }}
               onClick={() => {}}
             />
+
+            <ActionCard
+              title="USSD Management"
+              description="Configure USSD codes, menu structures, real-time sessions, and cross-platform integration"
+              icon={Settings}
+              badge={{ text: "ACTIVE", variant: "default", className: "bg-emerald-100 text-emerald-800" }}
+              buttonText="Manage USSD"
+              color={{
+                border: 'border-l-emerald-500',
+                bg: 'from-emerald-50 to-white',
+                iconBg: 'bg-emerald-100',
+                icon: 'text-emerald-600',
+                button: 'bg-emerald-600 hover:bg-emerald-700 text-white'
+              }}
+              onClick={() => window.open('/ussd-system', '_blank')}
+            />
           </div>
 
           {/* Profile Management Section */}
