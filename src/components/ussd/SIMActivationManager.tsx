@@ -35,6 +35,7 @@ interface SIMActivationRequest {
   created_at: string;
   last_attempt_at: string | null;
   error_message: string | null;
+  metadata?: any;
 }
 
 interface UserPreference {
@@ -101,23 +102,59 @@ const SIMActivationManager = () => {
 
   const sendActivationUSSD = async (phoneNumber: string, language: string = 'en') => {
     try {
-      // Simulate USSD activation trigger
+      // Validation: Check if phone number is valid
+      if (!/^\+?[1-9]\d{10,14}$/.test(phoneNumber.replace(/\s/g, ''))) {
+        toast({
+          title: "Invalid Phone Number",
+          description: "Please provide a valid phone number.",
+          variant: "destructive"
+        });
+        return;
+      }
+
+      // Send USSD with confirmation flow
       const { error } = await supabase.functions.invoke('notify-sim-activation', {
         body: {
           phone_number: phoneNumber,
           language: language,
-          activation_type: 'ussd_push'
+          activation_type: 'ussd_push',
+          message_template: {
+            [language]: `Welcome to Divine Mobile! Press 1 to activate your SIM, 2 to cancel. Press 9 for other languages.`
+          },
+          requires_confirmation: true
         }
       });
 
       if (error) throw error;
 
-      // Update the activation attempt
+      // Log compliance activity
+      await supabase.from('ussd_notification_logs').insert({
+        phone_number: phoneNumber,
+        message_type: 'ussd',
+        message_content: `SIM activation prompt sent in ${getLanguageDisplay(language)}`,
+        language_used: language,
+        delivery_status: 'sent',
+        metadata: {
+          activation_type: 'ussd_push',
+          requires_confirmation: true,
+          compliance_checked: true
+        }
+      });
+
+      // Update the activation attempt with enhanced tracking
+      const currentRequest = activationRequests.find(req => req.phone_number === phoneNumber);
       await supabase
         .from('sim_activation_requests')
         .update({
-          activation_attempts: activationRequests.find(req => req.phone_number === phoneNumber)?.activation_attempts + 1 || 1,
-          last_attempt_at: new Date().toISOString()
+          activation_attempts: (currentRequest?.activation_attempts || 0) + 1,
+          last_attempt_at: new Date().toISOString(),
+          language_preference: language,
+          metadata: {
+            ...currentRequest?.metadata,
+            last_ussd_sent: new Date().toISOString(),
+            confirmation_required: true,
+            compliance_verified: true
+          }
         })
         .eq('phone_number', phoneNumber);
 
@@ -125,13 +162,25 @@ const SIMActivationManager = () => {
 
       toast({
         title: "USSD Sent",
-        description: `Activation USSD sent to ${phoneNumber}`,
+        description: `Activation USSD with confirmation prompt sent to ${phoneNumber} in ${getLanguageDisplay(language)}`,
       });
     } catch (error) {
       console.error('Error sending USSD:', error);
+      
+      // Log error for compliance
+      await supabase.from('ussd_notification_logs').insert({
+        phone_number: phoneNumber,
+        message_type: 'ussd',
+        message_content: 'Failed to send activation USSD',
+        language_used: language,
+        delivery_status: 'failed',
+        error_message: error.message,
+        metadata: { error_type: 'ussd_send_failure' }
+      });
+
       toast({
         title: "Error",
-        description: "Failed to send activation USSD.",
+        description: "Failed to send activation USSD. Error logged for review.",
         variant: "destructive"
       });
     }

@@ -51,6 +51,7 @@ import RealTimeSessionManager from './RealTimeSessionManager';
 import NotificationCampaignManager from './NotificationCampaignManager';
 import SIMActivationManager from './SIMActivationManager';
 import MultiLanguageUSSDMenu from './MultiLanguageUSSDMenu';
+import ComplianceMonitor from './ComplianceMonitor';
 
 interface MenuBuilderState {
   menuItems: Array<{
@@ -397,7 +398,7 @@ const EnhancedUSSDManager = () => {
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
           <div className="bg-white/80 backdrop-blur-sm rounded-xl border shadow-sm overflow-hidden">
             <TabsList className="w-full h-auto p-2 bg-transparent">
-              <div className="grid grid-cols-2 lg:grid-cols-6 gap-2 w-full">
+              <div className="grid grid-cols-2 lg:grid-cols-7 gap-2 w-full">
                 <TabsTrigger 
                   value="menu-builder" 
                   className="flex flex-col items-center gap-2 p-3 data-[state=active]:bg-primary data-[state=active]:text-white rounded-lg transition-all hover:bg-muted/50"
@@ -440,6 +441,13 @@ const EnhancedUSSDManager = () => {
                   <Activity className="w-4 h-4" />
                   <span className="text-xs font-medium">Live Sessions</span>
                 </TabsTrigger>
+                <TabsTrigger 
+                  value="compliance" 
+                  className="flex flex-col items-center gap-2 p-3 data-[state=active]:bg-primary data-[state=active]:text-white rounded-lg transition-all hover:bg-muted/50"
+                >
+                  <Shield className="w-4 h-4" />
+                  <span className="text-xs font-medium">Compliance</span>
+                </TabsTrigger>
               </div>
             </TabsList>
           </div>
@@ -468,6 +476,10 @@ const EnhancedUSSDManager = () => {
             
             <TabsContent value="sessions" className="mt-0">
               <SessionsTab />
+            </TabsContent>
+            
+            <TabsContent value="compliance" className="mt-0">
+              <ComplianceMonitor />
             </TabsContent>
           </div>
         </Tabs>
