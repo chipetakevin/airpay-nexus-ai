@@ -104,16 +104,14 @@ const MobileMenuAuth = ({ isAuthenticated, toggleMenu }: MobileMenuAuthProps) =>
             </Link>
 
             {/* Login Button */}
-            <Button
-              onClick={() => {
-                setShowLoginModal(true);
-                toggleMenu();
-              }}
-              className="w-full bg-blue-600 hover:bg-blue-700 min-h-[36px] text-xs mt-2"
-            >
-              <LogIn className="w-3 h-3 mr-1" />
-              Login (Existing Users)
-            </Button>
+            <Link to="/registration-hub" onClick={toggleMenu}>
+              <Button
+                className="w-full bg-blue-600 hover:bg-blue-700 min-h-[36px] text-xs mt-2"
+              >
+                <LogIn className="w-3 h-3 mr-1" />
+                Login (Existing Users)
+              </Button>
+            </Link>
           </div>
         </>
       )}
