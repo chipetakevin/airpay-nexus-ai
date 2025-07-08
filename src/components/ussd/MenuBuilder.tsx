@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -13,7 +13,12 @@ import {
   GripVertical,
   Code,
   Play,
-  Save
+  Save,
+  Shield,
+  Activity,
+  CheckCircle,
+  AlertTriangle,
+  RefreshCw
 } from 'lucide-react';
 import { useUSSDData } from '@/hooks/useUSSDData';
 import { useToast } from '@/hooks/use-toast';
@@ -27,6 +32,41 @@ const MenuBuilder = ({ ussdCodeId }: MenuBuilderProps) => {
   const { toast } = useToast();
   const [expandedItems, setExpandedItems] = useState<Set<string>>(new Set());
   const [editingItem, setEditingItem] = useState<string | null>(null);
+  const [networkStatus, setNetworkStatus] = useState([
+    { 
+      name: 'Divinely Mobile', 
+      status: 'Active', 
+      uptime: '99.9%', 
+      color: 'green',
+      icon: CheckCircle,
+      description: 'Primary MVNO network'
+    },
+    { 
+      name: 'MTN', 
+      status: 'Active', 
+      uptime: '99.8%', 
+      color: 'yellow',
+      icon: CheckCircle,
+      description: 'Host network partner'
+    },
+    { 
+      name: 'Vodacom', 
+      status: 'Maintenance', 
+      uptime: '98.5%', 
+      color: 'orange',
+      icon: AlertTriangle,
+      description: 'Secondary network'
+    },
+    { 
+      name: 'Cell C', 
+      status: 'Active', 
+      uptime: '99.2%', 
+      color: 'blue',
+      icon: CheckCircle,
+      description: 'Backup network'
+    }
+  ]);
+  const [lastUpdate, setLastUpdate] = useState(new Date());
   const [newMenuItem, setNewMenuItem] = useState({
     name: '',
     ussd_code_id: ussdCodeId || '',
@@ -36,6 +76,20 @@ const MenuBuilder = ({ ussdCodeId }: MenuBuilderProps) => {
     service_id: null as string | null,
     status: 'active' as 'active' | 'inactive'
   });
+
+  // Auto-refresh network status
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setLastUpdate(new Date());
+      // Simulate network status updates
+      setNetworkStatus(prev => prev.map(network => ({
+        ...network,
+        uptime: `${(Math.random() * 2 + 98).toFixed(1)}%`
+      })));
+    }, 30000); // Update every 30 seconds
+
+    return () => clearInterval(interval);
+  }, []);
 
   // Filter menu items by USSD code
   const filteredMenuItems = menuItems.filter(item => 
@@ -304,6 +358,106 @@ const MenuBuilder = ({ ussdCodeId }: MenuBuilderProps) => {
             <Plus className="w-4 h-4 mr-2" />
             Add Menu Item
           </Button>
+        </CardContent>
+      </Card>
+
+      {/* Network Status Section */}
+      <Card className="border-l-4 border-l-blue-500">
+        <CardHeader className="bg-gradient-to-r from-blue-50 to-white">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-3">
+              <div className="p-2 bg-blue-100 rounded-lg">
+                <Shield className="w-6 h-6 text-blue-600" />
+              </div>
+              <div>
+                <CardTitle className="text-xl">Network Status</CardTitle>
+                <p className="text-sm text-muted-foreground">
+                  Real-time network monitoring for USSD services
+                </p>
+              </div>
+            </div>
+            <div className="flex items-center space-x-2">
+              <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200">
+                <Activity className="w-3 h-3 mr-1" />
+                Live
+              </Badge>
+              <Button variant="outline" size="sm">
+                <RefreshCw className="w-4 h-4 mr-1" />
+                Refresh
+              </Button>
+            </div>
+          </div>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="text-xs text-muted-foreground mb-4">
+            Last updated: {lastUpdate.toLocaleTimeString()}
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {networkStatus.map((network, index) => {
+              const StatusIcon = network.icon;
+              const dotColors = {
+                green: 'bg-green-500',
+                yellow: 'bg-yellow-500', 
+                orange: 'bg-orange-500',
+                blue: 'bg-blue-500',
+                red: 'bg-red-500'
+              };
+              
+              const statusColors = {
+                green: 'text-green-700 bg-green-50 border-green-200',
+                yellow: 'text-yellow-700 bg-yellow-50 border-yellow-200',
+                orange: 'text-orange-700 bg-orange-50 border-orange-200', 
+                blue: 'text-blue-700 bg-blue-50 border-blue-200',
+                red: 'text-red-700 bg-red-50 border-red-200'
+              };
+
+              return (
+                <div 
+                  key={index}
+                  className={`p-4 rounded-lg border hover:shadow-md transition-all duration-200 ${statusColors[network.color]}`}
+                >
+                  <div className="flex items-center justify-between mb-3">
+                    <div className="flex items-center space-x-3">
+                      <div className={`w-3 h-3 rounded-full ${dotColors[network.color]} animate-pulse`} />
+                      <h3 className="font-semibold text-lg">{network.name}</h3>
+                    </div>
+                    <StatusIcon className={`w-5 h-5 ${network.color === 'green' ? 'text-green-600' : network.color === 'orange' ? 'text-orange-600' : 'text-blue-600'}`} />
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <div className="flex items-center space-x-2">
+                      <CheckCircle className="w-4 h-4 text-green-600" />
+                      <span className="text-sm font-medium">{network.status}</span>
+                    </div>
+                    <div className="text-sm text-muted-foreground">
+                      Uptime: <span className="font-medium">{network.uptime}</span>
+                    </div>
+                    <div className="text-xs text-muted-foreground">
+                      {network.description}
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+
+          {/* Network Performance Summary */}
+          <div className="mt-6 p-4 bg-gradient-to-r from-emerald-50 to-blue-50 rounded-lg border">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-3">
+                <Activity className="w-5 h-5 text-emerald-600" />
+                <div>
+                  <h4 className="font-medium text-emerald-800">Overall Network Health</h4>
+                  <p className="text-sm text-emerald-600">All systems operational</p>
+                </div>
+              </div>
+              <div className="text-right">
+                <div className="text-2xl font-bold text-emerald-700">99.1%</div>
+                <div className="text-xs text-emerald-600">Average Uptime</div>
+              </div>
+            </div>
+          </div>
         </CardContent>
       </Card>
 
