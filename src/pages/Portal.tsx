@@ -96,6 +96,8 @@ const Portal = () => {
         if (isAdminUser || hasAdminAuth) {
           setShowAdminTab(true);
           setIsAdminAuthenticated(true);
+          // Ensure localStorage is synchronized
+          localStorage.setItem('adminAuthenticated', 'true');
           console.log('✅ Admin access granted - showing Control Center tab');
         } else {
           console.log('❌ Admin access denied');
