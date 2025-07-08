@@ -15,7 +15,10 @@ const RICABottomTabs: React.FC<RICABottomTabsProps> = ({ currentPath = '/rica-re
       id: 'whatsapp',
       label: 'Continue to WhatsApp Shopping',
       icon: MessageCircle,
-      action: () => navigate('/portal?tab=deals'),
+      action: () => {
+        console.log('Navigating to WhatsApp Shopping...');
+        navigate('/portal?tab=deals');
+      },
       className: 'bg-green-600 hover:bg-green-700 text-white'
     },
     {
