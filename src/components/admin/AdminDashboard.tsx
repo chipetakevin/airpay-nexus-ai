@@ -3,15 +3,26 @@ import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
+import { useNavigate } from 'react-router-dom';
 
 const AdminDashboard = () => {
   const { toast } = useToast();
+  const navigate = useNavigate();
 
   const redirectToSection = (section: string) => {
-    toast({
-      title: `Accessing ${section}`,
-      description: `Redirecting to ${section} management section`,
-    });
+    if (section === 'USSD Management') {
+      // Navigate to USSD System page
+      navigate('/ussd-system');
+      toast({
+        title: `Accessing ${section}`,
+        description: `Redirecting to ${section} management section`,
+      });
+    } else {
+      toast({
+        title: `Accessing ${section}`,
+        description: `${section} management section - feature coming soon`,
+      });
+    }
   };
 
   return (
