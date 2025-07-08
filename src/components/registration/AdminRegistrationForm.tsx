@@ -45,7 +45,7 @@ const AdminRegistrationForm = () => {
   const isBankingComplete = formData.bankName && formData.accountNumber && formData.branchCode;
 
   return (
-    <div className="max-w-2xl mx-auto space-y-6 p-4">
+    <div className="max-w-2xl mx-auto space-y-6 p-4 pb-32">
       <Card className="border-purple-200 bg-purple-50/30">
         <CardHeader className="text-center pb-3">
           <CardTitle className="text-2xl flex items-center justify-center gap-2 text-purple-800">
