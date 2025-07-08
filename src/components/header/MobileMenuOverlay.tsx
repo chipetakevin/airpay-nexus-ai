@@ -86,16 +86,18 @@ const MobileMenuOverlay = ({ isMenuOpen, closeMenu, isHomePage, handleQuickShopC
                 </Button>
               </div>
             ) : (
-              <Button
-                onClick={() => {
-                  setShowLoginModal(true);
-                  closeMenu();
-                }}
-                className="w-full bg-blue-500 hover:bg-blue-600 text-white font-medium py-3 rounded-xl shadow-lg transition-all duration-200"
+              <Link
+                to="/rica-registration"
+                onClick={closeMenu}
+                className="block w-full"
               >
-                <LogIn className="w-5 h-5 mr-2" />
-                Login
-              </Button>
+                <Button
+                  className="w-full bg-blue-500 hover:bg-blue-600 text-white font-medium py-3 rounded-xl shadow-lg transition-all duration-200"
+                >
+                  <LogIn className="w-5 h-5 mr-2" />
+                  Login
+                </Button>
+              </Link>
             )}
           </div>
 
