@@ -24,7 +24,7 @@ const UniversalExitTabs: React.FC<ExitTabsProps> = ({
         id: 'whatsapp',
         label: 'Continue to WhatsApp Shopping',
         icon: MessageCircle,
-        action: () => navigate('/whatsapp-assistant'),
+        action: () => navigate('/portal?tab=deals'),
         className: 'bg-green-600 hover:bg-green-700 text-white',
         primary: true
       },
