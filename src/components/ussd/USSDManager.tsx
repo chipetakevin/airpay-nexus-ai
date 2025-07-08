@@ -37,6 +37,11 @@ import {
   EyeOff
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { useUSSDData } from '@/hooks/useUSSDData';
+import MenuBuilder from './MenuBuilder';
+import AdvancedCustomerSearch from './AdvancedCustomerSearch';
+import AnalyticsDashboard from './AnalyticsDashboard';
+import RealTimeSessionManager from './RealTimeSessionManager';
 
 interface OnboardingStats {
   totalActivations: number;
@@ -1037,15 +1042,15 @@ const USSDManager = () => {
         </TabsList>
 
         <TabsContent value="codes-management" className="mt-6">
-          <USSDCodesManagement />
+          <MenuBuilder />
         </TabsContent>
 
         <TabsContent value="customers" className="mt-6">
-          <CustomerManagement />
+          <AdvancedCustomerSearch />
         </TabsContent>
 
         <TabsContent value="whatsapp" className="mt-6">
-          <WhatsAppManagement />
+          <RealTimeSessionManager />
         </TabsContent>
 
         <TabsContent value="website" className="mt-6">
@@ -1053,7 +1058,7 @@ const USSDManager = () => {
         </TabsContent>
 
         <TabsContent value="analytics" className="mt-6">
-          <AnalyticsPanel />
+          <AnalyticsDashboard />
         </TabsContent>
 
         <TabsContent value="security" className="mt-6">
