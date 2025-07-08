@@ -104,7 +104,7 @@ const MobileMenuAuth = ({ isAuthenticated, toggleMenu }: MobileMenuAuthProps) =>
             </Link>
 
             {/* Login Button */}
-            <Link to="/registration-hub" onClick={toggleMenu}>
+            <Link to="/rica-registration" onClick={toggleMenu}>
               <Button
                 className="w-full bg-blue-600 hover:bg-blue-700 min-h-[36px] text-xs mt-2"
               >
