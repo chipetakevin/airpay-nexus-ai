@@ -9,6 +9,7 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { supabase } from '@/integrations/supabase/client';
 import AIPayrollAutomation from './ai/AIPayrollAutomation';
 import EmployeeSelfService from './self-service/EmployeeSelfService';
@@ -52,7 +53,11 @@ import {
   User,
   Zap,
   BarChart3,
-  BookOpen
+  BookOpen,
+  ChevronDown,
+  ChevronUp,
+  Minimize2,
+  Maximize2
 } from 'lucide-react';
 
 const AddexPayDashboard = () => {
@@ -71,6 +76,33 @@ const AddexPayDashboard = () => {
   const [importData, setImportData] = useState([]);
   const [importErrors, setImportErrors] = useState([]);
   const [showImportPreview, setShowImportPreview] = useState(false);
+  
+  // Collapse state management
+  const [collapsedCards, setCollapsedCards] = useState<Record<string, boolean>>({});
+  const [minimizedView, setMinimizedView] = useState(false);
+  
+  const toggleCardCollapse = (cardId: string) => {
+    setCollapsedCards(prev => ({
+      ...prev,
+      [cardId]: !prev[cardId]
+    }));
+  };
+
+  const toggleMinimizedView = () => {
+    setMinimizedView(!minimizedView);
+  };
+
+  const collapseAllCards = () => {
+    const newState: Record<string, boolean> = {};
+    subTabs.forEach(tab => {
+      newState[tab.value] = true;
+    });
+    setCollapsedCards(newState);
+  };
+
+  const expandAllCards = () => {
+    setCollapsedCards({});
+  };
 
   const payrollStats = {
     totalEmployees: 1247,
@@ -1434,6 +1466,35 @@ const AddexPayDashboard = () => {
           </div>
         </div>
         <div className="flex items-center gap-2">
+          <div className="hidden md:flex items-center gap-2 mr-4">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={expandAllCards}
+              className="text-green-600 border-green-200 hover:bg-green-50"
+            >
+              <Maximize2 className="w-4 h-4 mr-1" />
+              Expand All
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={collapseAllCards}
+              className="text-blue-600 border-blue-200 hover:bg-blue-50"
+            >
+              <Minimize2 className="w-4 h-4 mr-1" />
+              Collapse All
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={toggleMinimizedView}
+              className={`${minimizedView ? 'text-orange-600 border-orange-200 hover:bg-orange-50' : 'text-purple-600 border-purple-200 hover:bg-purple-50'}`}
+            >
+              {minimizedView ? <Maximize2 className="w-4 h-4 mr-1" /> : <Minimize2 className="w-4 h-4 mr-1" />}
+              {minimizedView ? 'Full View' : 'Mini View'}
+            </Button>
+          </div>
           <Badge className="bg-green-100 text-green-800">
             <CheckCircle className="w-4 h-4 mr-1" />
             SARS Compliant
@@ -1528,30 +1589,81 @@ const AddexPayDashboard = () => {
 
       {/* Main Payroll Tabs */}
       <Tabs value={activeSubTab} onValueChange={setActiveSubTab} className="w-full">
-        <div className="grid grid-cols-1 md:grid-cols-3 xl:grid-cols-4 gap-4 mb-6">
+        <div className={`grid gap-4 mb-6 transition-all duration-300 ${
+          minimizedView 
+            ? 'grid-cols-2 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8' 
+            : 'grid-cols-1 md:grid-cols-3 xl:grid-cols-4'
+        }`}>
           {subTabs.map((tab) => {
             const colors = getColorClasses(tab.color, activeSubTab === tab.value);
+            const isCollapsed = collapsedCards[tab.value];
+            
             return (
-              <Card 
-                key={tab.value}
-                className={`cursor-pointer transition-all duration-300 hover:scale-105 hover:shadow-lg ${
-                  colors.card || 'hover:border-gray-300 hover:shadow-md'
-                }`}
-                onClick={() => setActiveSubTab(tab.value)}
-              >
-                <CardContent className="p-6">
-                  <div className="flex items-center justify-between mb-4">
-                    <div className={`p-3 rounded-xl shadow-lg ${colors.icon}`}>
-                      {React.cloneElement(tab.icon, { className: "w-6 h-6 text-white" })}
+              <Collapsible key={tab.value} open={!isCollapsed}>
+                <Card 
+                  className={`transition-all duration-300 hover:shadow-lg ${
+                    colors.card || 'hover:border-gray-300 hover:shadow-md'
+                  } ${minimizedView ? 'aspect-square' : ''} ${isCollapsed ? 'opacity-60' : ''}`}
+                >
+                  <CardContent className={`${minimizedView ? 'p-3' : 'p-6'}`}>
+                    <div className={`flex items-center ${minimizedView ? 'flex-col gap-2' : 'justify-between mb-4'}`}>
+                      <div 
+                        className={`${minimizedView ? 'p-2' : 'p-3'} rounded-xl shadow-lg ${colors.icon} cursor-pointer`}
+                        onClick={() => setActiveSubTab(tab.value)}
+                      >
+                        {React.cloneElement(tab.icon, { 
+                          className: `${minimizedView ? 'w-4 h-4' : 'w-6 h-6'} text-white` 
+                        })}
+                      </div>
+                      
+                      {!minimizedView && (
+                        <div className="flex items-center gap-2">
+                          <Badge className={`font-semibold border ${colors.badge} ${minimizedView ? 'text-xs px-1 py-0' : ''}`}>
+                            {tab.count} Active
+                          </Badge>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="h-6 w-6 p-0 hover:bg-gray-100"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              toggleCardCollapse(tab.value);
+                            }}
+                          >
+                            {isCollapsed ? (
+                              <ChevronDown className="w-4 h-4 text-gray-500" />
+                            ) : (
+                              <ChevronUp className="w-4 h-4 text-gray-500" />
+                            )}
+                          </Button>
+                        </div>
+                      )}
                     </div>
-                    <Badge className={`font-semibold border ${colors.badge}`}>
-                      {tab.count} Active
-                    </Badge>
-                  </div>
-                  <h3 className="font-bold text-lg mb-2 text-gray-800">{tab.label}</h3>
-                  <p className="text-sm text-gray-600 leading-relaxed">{tab.description}</p>
-                </CardContent>
-              </Card>
+                    
+                    <CollapsibleTrigger asChild>
+                      <div className="cursor-pointer" onClick={() => !minimizedView && setActiveSubTab(tab.value)}>
+                        <h3 className={`font-bold mb-2 text-gray-800 ${
+                          minimizedView ? 'text-xs text-center leading-tight' : 'text-lg'
+                        }`}>
+                          {tab.label}
+                        </h3>
+                        
+                        <CollapsibleContent>
+                          {!minimizedView && (
+                            <p className="text-sm text-gray-600 leading-relaxed">{tab.description}</p>
+                          )}
+                        </CollapsibleContent>
+                      </div>
+                    </CollapsibleTrigger>
+                    
+                    {minimizedView && (
+                      <Badge className={`font-semibold border ${colors.badge} text-xs px-1 py-0 mx-auto block w-fit`}>
+                        {tab.count}
+                      </Badge>
+                    )}
+                  </CardContent>
+                </Card>
+              </Collapsible>
             );
           })}
         </div>
