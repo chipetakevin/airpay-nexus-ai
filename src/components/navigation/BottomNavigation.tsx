@@ -37,7 +37,7 @@ const BottomNavigation = () => {
       id: 'transact',
       label: 'Transact',
       icon: ArrowUpRight,
-      path: '/ai-powered-deals'
+      path: '/portal?tab=deals'
     },
     {
       id: 'messages',
