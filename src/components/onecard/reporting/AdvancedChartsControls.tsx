@@ -157,7 +157,7 @@ export const AdvancedChartsControls = ({
                   mode="range"
                   defaultMonth={dateRange.from}
                   selected={dateRange}
-                  onSelect={handleDateRangeChange}
+                  onSelect={(range: any) => handleDateRangeChange(range || { from: undefined, to: undefined })}
                   numberOfMonths={2}
                   className={cn("p-3 pointer-events-auto")}
                 />

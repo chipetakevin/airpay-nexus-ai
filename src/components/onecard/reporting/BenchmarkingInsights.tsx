@@ -96,7 +96,7 @@ export const BenchmarkingInsights = ({ userData, viewMode, isLoading = false }: 
         <CardTitle className="flex items-center gap-2 text-amber-800">
           <Target className="w-5 h-5" />
           Performance Benchmarking
-          <Badge className={`ml-auto bg-${performance.color}-100 text-${performance.color}-700`}>
+          <Badge variant="outline" className="ml-auto bg-amber-100 text-amber-700">
             {currentBenchmark.percentile}th percentile
           </Badge>
         </CardTitle>
@@ -140,13 +140,13 @@ export const BenchmarkingInsights = ({ userData, viewMode, isLoading = false }: 
             <Card className="bg-white border-amber-200">
               <CardContent className="p-4 text-center">
                 <div className="flex items-center justify-center mb-2">
-                  <PerformanceIcon className={`w-6 h-6 text-${performance.color}-600`} />
+                  <PerformanceIcon className="w-6 h-6 text-amber-600" />
                 </div>
-                <div className={`text-2xl font-bold text-${performance.color}-600 mb-1`}>
+                <div className="text-2xl font-bold text-amber-600 mb-1">
                   {currentBenchmark.userValue.toLocaleString()}
                 </div>
                 <div className="text-sm text-gray-600">Your Performance</div>
-                <Badge variant="outline" className={`mt-2 bg-${performance.color}-50 text-${performance.color}-700`}>
+                <Badge variant="outline" className="mt-2 bg-amber-50 text-amber-700">
                   {performance.status}
                 </Badge>
               </CardContent>
@@ -257,7 +257,7 @@ export const BenchmarkingInsights = ({ userData, viewMode, isLoading = false }: 
               
               <div className="space-y-3 text-sm">
                 <div className="flex items-start gap-3 p-3 bg-amber-50 rounded-lg">
-                  <PerformanceIcon className={`w-5 h-5 text-${performance.color}-600 mt-0.5`} />
+                  <PerformanceIcon className="w-5 h-5 text-amber-600 mt-0.5" />
                   <div>
                     <p className="font-medium text-gray-900">
                       You're performing {performance.status} compared to similar customers
@@ -293,7 +293,7 @@ export const BenchmarkingInsights = ({ userData, viewMode, isLoading = false }: 
                     <p className="font-medium text-gray-900">Trend Analysis</p>
                     <p className="text-gray-600 mt-1">
                       Your performance trend is{' '}
-                      <span className={`font-semibold text-${currentBenchmark.trend === 'up' ? 'green' : currentBenchmark.trend === 'down' ? 'red' : 'yellow'}-600`}>
+                      <span className={`font-semibold ${currentBenchmark.trend === 'up' ? 'text-green-600' : currentBenchmark.trend === 'down' ? 'text-red-600' : 'text-yellow-600'}`}>
                         {currentBenchmark.trend === 'up' ? 'improving' : currentBenchmark.trend === 'down' ? 'declining' : 'stable'}
                       </span>
                       {' '}over the last 3 months.
