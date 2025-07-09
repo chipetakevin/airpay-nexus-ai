@@ -149,39 +149,74 @@ export class EnhancedPDFGenerator {
 
   // Add section header
   private addSectionHeader(title: string, y: number): number {
+    // Validate inputs
+    const validY = Number(y) || 0;
+    const validMargin = Number(this.margin) || 20;
+    const validPageWidth = Number(this.pageWidth) || 210;
+    const headerWidth = validPageWidth - (validMargin * 2);
+    
+    // Ensure width is positive
+    if (headerWidth <= 0) {
+      console.log('Invalid header width calculation:', { validPageWidth, validMargin, headerWidth });
+      return validY + 35;
+    }
+    
     this.doc.setFillColor(79, 70, 229);
-    this.doc.rect(this.margin, y, this.pageWidth - (this.margin * 2), 25, 'F');
+    this.doc.rect(validMargin, validY, headerWidth, 25, 'F');
     
     this.doc.setTextColor(255, 255, 255);
     this.doc.setFontSize(16);
     this.doc.setFont('helvetica', 'bold');
-    this.doc.text(`${title}`, this.margin + 8, y + 17);
+    this.doc.text(`${title}`, validMargin + 8, validY + 17);
     
     this.doc.setTextColor(31, 41, 55);
-    return y + 35;
+    return validY + 35;
   }
 
   // Simple bar chart
   private addBarChart(x: number, y: number, width: number, height: number, data: {label: string, value: number, color: string}[]) {
+    // Validate inputs
+    if (!data || data.length === 0 || width <= 0 || height <= 0) {
+      console.log('Invalid chart data or dimensions:', { data, width, height });
+      return;
+    }
+    
     const maxValue = Math.max(...data.map(d => d.value));
+    if (maxValue <= 0) {
+      console.log('No valid data values for chart');
+      return;
+    }
+    
     const barWidth = (width - 40) / data.length;
     const chartAreaHeight = height - 40;
     
+    // Ensure all values are valid numbers
+    const validX = Number(x) || 0;
+    const validY = Number(y) || 0;
+    const validWidth = Number(width) || 100;
+    const validHeight = Number(height) || 100;
+    
     // Chart background
     this.doc.setFillColor(248, 250, 252);
-    this.doc.rect(x, y, width, height, 'F');
+    this.doc.rect(validX, validY, validWidth, validHeight, 'F');
     this.doc.setDrawColor(226, 232, 240);
-    this.doc.rect(x, y, width, height, 'S');
+    this.doc.rect(validX, validY, validWidth, validHeight, 'S');
     
     // Draw bars with crown tops
     data.forEach((item, index) => {
       const barHeight = (item.value / maxValue) * chartAreaHeight;
-      const barX = x + 20 + (index * barWidth);
-      const barY = y + height - 20 - barHeight;
+      const barX = validX + 20 + (index * barWidth);
+      const barY = validY + validHeight - 20 - barHeight;
+      
+      // Validate bar dimensions
+      if (barWidth <= 5 || barHeight <= 0 || !isFinite(barX) || !isFinite(barY)) {
+        console.log('Skipping invalid bar:', { barX, barY, barWidth, barHeight });
+        return;
+      }
       
       const [r, g, b] = this.hexToRgb(item.color);
       this.doc.setFillColor(r, g, b);
-      this.doc.rect(barX, barY, barWidth - 5, barHeight, 'F');
+      this.doc.rect(barX, barY, Math.max(1, barWidth - 5), Math.max(1, barHeight), 'F');
       
       // Divine Mobile icon on top of bar
       try {
@@ -194,7 +229,7 @@ export class EnhancedPDFGenerator {
       // Label
       this.doc.setTextColor(107, 114, 128);
       this.doc.setFontSize(8);
-      this.doc.text(item.label, barX, y + height - 5);
+      this.doc.text(item.label, barX, validY + validHeight - 5);
       
       // Value
       this.doc.setFontSize(9);
