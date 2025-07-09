@@ -285,7 +285,6 @@ const InventoryDashboard = () => {
           </Card>
         )})}
       </div>
-      </div>
 
       {/* Storage Location Capacity */}
       <Card>
