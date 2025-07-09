@@ -320,74 +320,127 @@ export const BulkServicesInterface: React.FC = () => {
       {/* Data Table Card */}
       <Card className="bg-card/80 backdrop-blur-sm shadow-lg border border-border/50 rounded-2xl">
         <CardContent className="p-0">
-          <div className="overflow-x-auto">
-            <table className="w-full border-collapse">
-              <thead>
-                <tr className="border-b bg-gray-50">
-                  <th className="text-left p-3 font-medium">Status</th>
-                  <th className="text-left p-3 font-medium">MSISDN</th>
-                  <th className="text-left p-3 font-medium">Code</th>
-                  <th className="text-left p-3 font-medium">Value</th>
-                  <th className="text-left p-3 font-medium">Validity Days</th>
-                  <th className="text-left p-3 font-medium">Transaction ID</th>
-                  <th className="text-left p-3 font-medium">Charge Amount</th>
-                  <th className="text-left p-3 font-medium">Processed</th>
-                  <th className="text-left p-3 font-medium">Created</th>
-                  <th className="text-left p-3 font-medium">Response</th>
-                  <th className="text-left p-3 font-medium">Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {filteredRecords.map((record) => (
-                  <tr key={record.id} className="border-b hover:bg-gray-50">
-                    <td className="p-3">
-                      <div className="flex items-center gap-2">
-                        {getStatusIcon(record.status)}
-                        <Badge className={getStatusColor(record.status)}>
-                          {record.status}
-                        </Badge>
-                      </div>
-                    </td>
-                    <td className="p-3 font-mono text-sm">{record.msisdn}</td>
-                    <td className="p-3">{record.code}</td>
-                    <td className="p-3">{record.value}</td>
-                    <td className="p-3">
-                      <Badge variant="outline">{record.validityDays} DAYS</Badge>
-                    </td>
-                    <td className="p-3 font-mono text-sm">{record.transactionId || 'null'}</td>
-                    <td className="p-3 font-semibold">R{record.chargeAmount}</td>
-                    <td className="p-3 text-sm">{record.processed || '-'}</td>
-                    <td className="p-3 text-sm">{record.created}</td>
-                    <td className="p-3">
-                      <span className={`text-sm ${record.status === 'completed' ? 'text-green-600' : 
-                        record.status === 'failed' ? 'text-red-600' : 'text-blue-600'}`}>
-                        {record.response}
-                      </span>
-                    </td>
-                    <td className="p-3">
-                      <div className="flex gap-1">
-                        <Button size="sm" variant="outline">
-                          <Eye className="w-3 h-3" />
-                        </Button>
-                        {record.status === 'failed' && (
-                          <Button size="sm" variant="outline">
-                            <RefreshCw className="w-3 h-3" />
-                          </Button>
-                        )}
-                      </div>
-                    </td>
+          {/* Enhanced Data Table */}
+          <div className="overflow-hidden rounded-2xl border border-border/20">
+            <div className="overflow-x-auto">
+              <table className="w-full border-collapse bg-background">
+                <thead>
+                  <tr className="border-b border-border/20 bg-muted/30">
+                    <th className="text-left p-4 font-semibold text-foreground">Status</th>
+                    <th className="text-left p-4 font-semibold text-foreground">MSISDN</th>
+                    <th className="text-left p-4 font-semibold text-foreground">Code</th>
+                    <th className="text-left p-4 font-semibold text-foreground">Value</th>
+                    <th className="text-left p-4 font-semibold text-foreground">Validity Days</th>
+                    <th className="text-left p-4 font-semibold text-foreground">Transaction ID</th>
+                    <th className="text-left p-4 font-semibold text-foreground">Charge Amount</th>
+                    <th className="text-left p-4 font-semibold text-foreground">Processed</th>
+                    <th className="text-left p-4 font-semibold text-foreground">Created</th>
+                    <th className="text-left p-4 font-semibold text-foreground">Response</th>
+                    <th className="text-left p-4 font-semibold text-foreground">Actions</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {filteredRecords.map((record, index) => (
+                    <tr 
+                      key={record.id} 
+                      className={`border-b border-border/10 hover:bg-muted/20 transition-colors duration-200 ${
+                        index % 2 === 0 ? 'bg-background' : 'bg-muted/5'
+                      }`}
+                    >
+                      <td className="p-4">
+                        <div className="flex items-center gap-3">
+                          {getStatusIcon(record.status)}
+                          <Badge 
+                            className={`${getStatusColor(record.status)} text-white font-medium px-3 py-1 rounded-full text-sm`}
+                          >
+                            {record.status}
+                          </Badge>
+                        </div>
+                      </td>
+                      <td className="p-4">
+                        <span className="font-mono text-sm font-medium text-foreground">
+                          {record.msisdn}
+                        </span>
+                      </td>
+                      <td className="p-4">
+                        <span className="text-sm font-medium text-foreground">
+                          {record.code}
+                        </span>
+                      </td>
+                      <td className="p-4">
+                        <span className="text-sm font-medium text-foreground">
+                          {record.value}
+                        </span>
+                      </td>
+                      <td className="p-4">
+                        <Badge 
+                          variant="outline" 
+                          className="border-primary/20 text-primary bg-primary/5 font-medium"
+                        >
+                          {record.validityDays} DAYS
+                        </Badge>
+                      </td>
+                      <td className="p-4">
+                        <span className="font-mono text-sm text-muted-foreground">
+                          {record.transactionId || 'null'}
+                        </span>
+                      </td>
+                      <td className="p-4">
+                        <span className="font-semibold text-lg text-foreground">
+                          R{record.chargeAmount}
+                        </span>
+                      </td>
+                      <td className="p-4">
+                        <span className="text-sm text-muted-foreground">
+                          {record.processed || '-'}
+                        </span>
+                      </td>
+                      <td className="p-4">
+                        <span className="text-sm text-muted-foreground">
+                          {record.created}
+                        </span>
+                      </td>
+                      <td className="p-4">
+                        <span className={`text-sm font-medium ${
+                          record.status === 'completed' ? 'text-green-600' : 
+                          record.status === 'failed' ? 'text-red-600' : 'text-blue-600'
+                        }`}>
+                          {record.response}
+                        </span>
+                      </td>
+                      <td className="p-4">
+                        <div className="flex gap-2">
+                          <Button 
+                            size="sm" 
+                            variant="outline" 
+                            className="h-8 w-8 p-0 rounded-lg border-border/50 hover:bg-muted hover:border-primary/30 transition-all duration-200"
+                          >
+                            <Eye className="w-3.5 h-3.5" />
+                          </Button>
+                          {record.status === 'failed' && (
+                            <Button 
+                              size="sm" 
+                              variant="outline" 
+                              className="h-8 w-8 p-0 rounded-lg border-border/50 hover:bg-muted hover:border-primary/30 transition-all duration-200"
+                            >
+                              <RefreshCw className="w-3.5 h-3.5" />
+                            </Button>
+                          )}
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
           
-          <div className="flex items-center justify-between mt-4 pt-4 border-t mx-6 pb-6">
-            <div className="text-sm text-muted-foreground">
+          <div className="flex items-center justify-between mt-6 pt-6 border-t border-border/20 mx-6 pb-6">
+            <div className="text-sm text-muted-foreground font-medium">
               Showing {filteredRecords.length} record(s) found
             </div>
             <div className="text-sm text-muted-foreground">
-              File: <span className="font-mono">080725 Bulk Services Cullinan & Nellmapius.xlsx</span>
+              File: <span className="font-mono text-foreground">080725 Bulk Services Cullinan & Nellmapius.xlsx</span>
             </div>
           </div>
         </CardContent>
