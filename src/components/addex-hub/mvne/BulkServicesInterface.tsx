@@ -231,90 +231,91 @@ export const BulkServicesInterface: React.FC = () => {
         </Card>
       </div>
 
-      {/* Main Interface Card - Matching the exact image layout */}
-      <Card className="bg-gradient-to-r from-muted/30 to-background border border-border/30 rounded-3xl shadow-lg overflow-hidden">
-        <CardContent className="p-8 sm:p-12">
-          {/* Header Section - Exact match to image */}
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6 mb-8">
-            <div className="flex items-center gap-6">
-              <div className="p-6 bg-primary/10 rounded-3xl shrink-0">
-                <FileText className="w-12 h-12 text-primary" />
-              </div>
-              <div className="min-w-0 flex-1">
-                <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-primary mb-2">
-                  Bulk Service
-                </h1>
-                <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-primary">
-                  Operations
-                </h1>
-              </div>
+      {/* Main Interface Card - Mobile-First Enhanced Layout */}
+      <Card className="bg-gradient-to-br from-background via-muted/20 to-background border border-border/20 rounded-3xl shadow-xl overflow-hidden">
+        <CardContent className="p-6 sm:p-8 lg:p-12">
+          {/* Header Section - Centered for Mobile */}
+          <div className="text-center mb-10">
+            {/* Icon */}
+            <div className="inline-flex p-6 bg-primary/10 rounded-3xl mb-6">
+              <FileText className="w-16 h-16 sm:w-20 sm:h-20 text-primary" />
             </div>
             
-            {/* Action Buttons - Exact positioning from image */}
-            <div className="flex gap-4 shrink-0">
-              <Button 
-                className="bg-green-600 hover:bg-green-700 text-white px-8 py-4 rounded-2xl text-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 flex items-center gap-3"
-                onClick={handleFileUpload}
-              >
-                <Download className="w-6 h-6" />
-                Template
-              </Button>
-              <Button 
-                className="bg-primary hover:bg-primary/90 text-primary-foreground px-8 py-4 rounded-2xl text-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 flex items-center gap-3"
-                onClick={handleFileUpload}
-              >
-                <Upload className="w-6 h-6" />
-                Upload
-              </Button>
-            </div>
+            {/* Title */}
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-primary leading-tight">
+              Bulk Service
+              <br />
+              Operations
+            </h1>
+          </div>
+
+          {/* Primary Action Buttons - Full Width Stacked */}
+          <div className="space-y-4 mb-10">
+            <Button 
+              className="w-full bg-green-600 hover:bg-green-700 text-white h-16 rounded-2xl text-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] flex items-center justify-center gap-4"
+              onClick={handleFileUpload}
+            >
+              <Download className="w-6 h-6" />
+              Template
+            </Button>
+            <Button 
+              className="w-full bg-primary hover:bg-primary/90 text-primary-foreground h-16 rounded-2xl text-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] flex items-center justify-center gap-4"
+              onClick={handleFileUpload}
+            >
+              <Upload className="w-6 h-6" />
+              Upload
+            </Button>
           </div>
           
-          {/* Search Section - Matching image layout */}
+          {/* Search & Filters Section */}
           <div className="space-y-6">
-            {/* Large Search Bar */}
-            <div className="relative max-w-4xl mx-auto">
-              <Search className="absolute left-6 top-1/2 transform -translate-y-1/2 text-muted-foreground w-6 h-6" />
+            {/* Search Bar - Full Width */}
+            <div className="relative">
+              <Search className="absolute left-6 top-1/2 transform -translate-y-1/2 text-muted-foreground w-6 h-6 z-10" />
               <Input
-                placeholder="Search by MSISDN, Code, or..."
+                placeholder="Search by MSISDN, Code"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-16 pr-6 py-6 text-xl border-2 border-border/50 rounded-2xl focus:border-primary shadow-sm focus:shadow-md transition-all duration-300 bg-background/80 backdrop-blur-sm placeholder:text-muted-foreground/70"
+                className="w-full pl-16 pr-6 h-16 text-lg border-2 border-border/50 rounded-2xl focus:border-primary shadow-sm focus:shadow-lg transition-all duration-300 bg-background/90 backdrop-blur-sm placeholder:text-muted-foreground/70 font-medium"
               />
             </div>
             
-            {/* Filter Controls Row - Exact layout from image */}
-            <div className="flex flex-wrap gap-4 items-center justify-between">
-              <div className="flex gap-4 items-center">
-                <Select value={statusFilter} onValueChange={setStatusFilter}>
-                  <SelectTrigger className="w-48 h-14 rounded-2xl border-2 border-border/50 bg-background/80 text-lg">
-                    <Filter className="w-5 h-5 mr-3" />
+            {/* Filter Controls - Stacked for Mobile */}
+            <div className="space-y-4">
+              {/* Status Filter */}
+              <Select value={statusFilter} onValueChange={setStatusFilter}>
+                <SelectTrigger className="w-full h-16 rounded-2xl border-2 border-border/50 bg-background/90 text-lg font-medium">
+                  <div className="flex items-center gap-3">
+                    <Filter className="w-5 h-5" />
                     <SelectValue placeholder="All Status" />
-                  </SelectTrigger>
-                  <SelectContent className="bg-background border border-border rounded-2xl shadow-xl">
-                    <SelectItem value="all">All Status</SelectItem>
-                    <SelectItem value="completed">Completed</SelectItem>
-                    <SelectItem value="processing">Processing</SelectItem>
-                    <SelectItem value="failed">Failed</SelectItem>
-                    <SelectItem value="pending">Pending</SelectItem>
-                  </SelectContent>
-                </Select>
+                  </div>
+                </SelectTrigger>
+                <SelectContent className="bg-background border border-border rounded-2xl shadow-2xl z-50">
+                  <SelectItem value="all" className="text-lg py-3">All Status</SelectItem>
+                  <SelectItem value="completed" className="text-lg py-3">Completed</SelectItem>
+                  <SelectItem value="processing" className="text-lg py-3">Processing</SelectItem>
+                  <SelectItem value="failed" className="text-lg py-3">Failed</SelectItem>
+                  <SelectItem value="pending" className="text-lg py-3">Pending</SelectItem>
+                </SelectContent>
+              </Select>
 
-                <Select value={itemsPerPage} onValueChange={setItemsPerPage}>
-                  <SelectTrigger className="w-48 h-14 rounded-2xl border-2 border-border/50 bg-background/80 text-lg">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent className="bg-background border border-border rounded-2xl shadow-xl">
-                    <SelectItem value="10">10 per page</SelectItem>
-                    <SelectItem value="20">20 per page</SelectItem>
-                    <SelectItem value="50">50 per page</SelectItem>
-                    <SelectItem value="100">100 per page</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
+              {/* Items Per Page */}
+              <Select value={itemsPerPage} onValueChange={setItemsPerPage}>
+                <SelectTrigger className="w-full h-16 rounded-2xl border-2 border-border/50 bg-background/90 text-lg font-medium">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent className="bg-background border border-border rounded-2xl shadow-2xl z-50">
+                  <SelectItem value="10" className="text-lg py-3">10 per page</SelectItem>
+                  <SelectItem value="20" className="text-lg py-3">20 per page</SelectItem>
+                  <SelectItem value="50" className="text-lg py-3">50 per page</SelectItem>
+                  <SelectItem value="100" className="text-lg py-3">100 per page</SelectItem>
+                </SelectContent>
+              </Select>
 
+              {/* Export Button */}
               <Button 
                 variant="outline" 
-                className="h-14 px-8 rounded-2xl border-2 border-border/50 bg-background/80 hover:bg-muted/50 transition-all duration-300 text-lg flex items-center gap-3"
+                className="w-full h-16 rounded-2xl border-2 border-border/50 bg-background/90 hover:bg-muted/60 transition-all duration-300 text-lg font-medium flex items-center justify-center gap-4 shadow-sm hover:shadow-md"
               >
                 <Download className="w-5 h-5" />
                 Export
