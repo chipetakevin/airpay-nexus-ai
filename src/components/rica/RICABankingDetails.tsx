@@ -197,9 +197,13 @@ const RICABankingDetails: React.FC<RICABankingDetailsProps> = ({
           <Input
             id="branchCode"
             value={formData.branchCode || ''}
-            placeholder="Auto-filled from bank selection"
+            placeholder={formData.branchCode ? formData.branchCode : "Auto-filled from bank selection"}
             readOnly
-            className="bg-blue-50 border-blue-200 font-mono text-blue-700 font-semibold"
+            className={`font-mono font-semibold ${
+              formData.branchCode 
+                ? 'bg-green-50 border-green-300 text-green-700' 
+                : 'bg-blue-50 border-blue-200 text-blue-700'
+            }`}
           />
           <div className="flex items-center gap-2 text-xs text-blue-600">
             <Info className="w-3 h-3" />
