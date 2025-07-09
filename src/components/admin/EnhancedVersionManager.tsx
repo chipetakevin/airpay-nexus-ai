@@ -210,32 +210,51 @@ const EnhancedVersionManager = () => {
       const documentationData = generateVersion4Data();
       const pdf = generateVersion4PDF(documentationData);
       
-      // Save the PDF
-      const pdfBlob = pdf.output('blob');
-      const pdfUrl = URL.createObjectURL(pdfBlob);
-      
-      // Create download link
-      const link = document.createElement('a');
-      link.href = pdfUrl;
-      link.download = `MVNE-Platform-v4.0.0-Documentation-${Date.now()}.pdf`;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
+      // Save the PDF with proper error handling
+      try {
+        const pdfBlob = pdf.output('blob');
+        const pdfUrl = URL.createObjectURL(pdfBlob);
+        
+        // Create download link
+        const link = document.createElement('a');
+        link.href = pdfUrl;
+        link.download = `MVNE-Platform-v4.0.0-Documentation-${Date.now()}.pdf`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        
+        // Clean up URL
+        URL.revokeObjectURL(pdfUrl);
+        
+        toast({
+          title: "PDF Documentation Generated",
+          description: "Version 4.0.0 documentation PDF downloaded successfully.",
+        });
+      } catch (pdfError) {
+        console.error('PDF output error:', pdfError);
+        throw new Error('Failed to generate PDF output');
+      }
       
       // Update database with PDF generation info
-      const { error } = await supabase
-        .from('codebase_versions')
-        .update({
-          description: `${versions.find(v => v.id === versionId)?.description} [PDF Generated: ${new Date().toISOString()}]`
-        })
-        .eq('id', versionId);
+      try {
+        const currentVersion = versions.find(v => v.id === versionId);
+        if (currentVersion) {
+          const { error } = await supabase
+            .from('codebase_versions')
+            .update({
+              description: `${currentVersion.description || ''} [PDF Generated: ${new Date().toISOString()}]`
+            })
+            .eq('id', versionId);
 
-      if (error) throw error;
-
-      toast({
-        title: "PDF Documentation Generated",
-        description: "Version 4.0.0 documentation PDF downloaded successfully.",
-      });
+          if (error) {
+            console.warn('Database update error:', error);
+            // Don't throw here as PDF was generated successfully
+          }
+        }
+      } catch (dbError) {
+        console.warn('Database update failed:', dbError);
+        // Don't throw here as PDF was generated successfully
+      }
 
       await loadVersions();
 
@@ -243,7 +262,7 @@ const EnhancedVersionManager = () => {
       console.error('Error generating PDF:', error);
       toast({
         title: "Error Generating PDF",
-        description: "Failed to generate PDF documentation.",
+        description: `Failed to generate version-specific PDF. Please try again.`,
         variant: "destructive",
       });
     } finally {
