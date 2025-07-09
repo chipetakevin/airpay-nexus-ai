@@ -98,7 +98,7 @@ const Portal = () => {
           setIsAdminAuthenticated(true);
           // Ensure localStorage is synchronized
           localStorage.setItem('adminAuthenticated', 'true');
-          console.log('✅ Admin access granted - showing Control Center tab');
+          console.log('✅ Admin access granted - showing The Nerve Center tab');
         } else {
           console.log('❌ Admin access denied');
         }

@@ -162,7 +162,7 @@ const AdminControlCenter: React.FC<AdminControlCenterProps> = ({
           </div>
           <div>
             <h1 className="text-3xl font-bold bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent">
-              Admin Control Center
+              The Nerve Center
             </h1>
             <p className="text-muted-foreground">Complete system administration and oversight</p>
           </div>

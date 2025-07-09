@@ -181,12 +181,12 @@ const PortalTabs = ({
   // Build tabs array with conditional admin content
   const tabs = [...baseTabs];
   
-  // Always add Control Center tab for admins (highest priority)
+  // Always add The Nerve Center tab for admins (highest priority)
   if (isAdmin || showAdminTab) {
-    console.log('🔍 Adding Control Center tab for admin user');
+    console.log('🔍 Adding The Nerve Center tab for admin user');
     tabs.push({
       value: 'admin',
-      label: 'Control Center',
+      label: 'The Nerve Center',
       icon: '⚙️',
       description: 'Admin Portal',
       color: 'gray',
@@ -236,7 +236,7 @@ const PortalTabs = ({
   );
 
   console.log('🔍 Final tabs array:', tabs.map(t => `${t.label} (${t.value})`));
-  console.log('🔍 Control Center tab included:', tabs.some(t => t.value === 'admin'));
+  console.log('🔍 The Nerve Center tab included:', tabs.some(t => t.value === 'admin'));
 
   // Enhanced tab change handler with debugging
   const enhancedHandleTabChange = (value: string) => {

@@ -273,7 +273,7 @@ const AdminPortal: React.FC<AdminPortalProps> = ({ onAuthSuccess, showAdminBanne
         {/* Admin header with collapse option */}
         <div className="flex justify-between items-center">
           <div className="text-center flex-1">
-            <h2 className="text-2xl font-bold mb-2">🛡️ Admin Control Center</h2>
+            <h2 className="text-2xl font-bold mb-2">🛡️ Admin The Nerve Center</h2>
             <p className="text-gray-600">Complete system administration and oversight</p>
           </div>
           <div className="flex gap-2">
