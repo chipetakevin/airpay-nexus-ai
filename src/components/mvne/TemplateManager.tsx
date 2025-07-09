@@ -181,41 +181,58 @@ sample_value_4,sample_value_5,sample_value_6`;
         </CardContent>
       </Card>
 
-      {/* Download Template Section */}
-      <Card className="bg-gradient-to-br from-blue-50 to-blue-100 border-blue-200">
-        <CardHeader className="text-center">
-          <CardTitle className="text-blue-700">Available Templates</CardTitle>
-          <CardDescription>Download pre-configured templates for bulk operations</CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4">
+      {/* Available Templates Section - Mobile First Grid Layout */}
+      <div className="space-y-4">
+        <div className="text-center">
+          <h2 className="text-2xl font-bold text-blue-700 mb-2">Available Templates</h2>
+          <p className="text-muted-foreground">Download pre-configured templates for bulk operations</p>
+        </div>
+        
+        <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4 md:gap-6">
           {templates.map((template) => (
-            <div key={template.id} className="flex items-center justify-between p-4 bg-white rounded-lg border">
-              <div className="flex items-center gap-3">
-                <FileText className="h-8 w-8 text-blue-600" />
-                <div>
-                  <h3 className="font-semibold">{template.name}</h3>
-                  <p className="text-sm text-muted-foreground">{template.description}</p>
-                  <div className="flex gap-2 mt-1">
-                    <span className="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded">
+            <Card key={template.id} className="bg-gradient-to-br from-blue-50 to-white border-blue-200 hover:shadow-lg transition-all duration-300 hover:scale-[1.02]">
+              <CardHeader className="pb-3">
+                <div className="flex items-start gap-3 mb-3">
+                  <div className="p-2 bg-blue-100 rounded-lg">
+                    <FileText className="h-6 w-6 text-blue-600" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <CardTitle className="text-lg leading-tight mb-2 text-gray-900">
+                      {template.name}
+                    </CardTitle>
+                  </div>
+                </div>
+                
+                <CardDescription className="text-sm leading-relaxed text-gray-600">
+                  {template.description}
+                </CardDescription>
+              </CardHeader>
+
+              <CardContent className="pt-0">
+                <div className="flex items-center justify-between mb-4">
+                  <div className="flex gap-2">
+                    <span className="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded-md font-medium">
                       v{template.version}
                     </span>
-                    <span className="text-xs bg-gray-100 text-gray-700 px-2 py-1 rounded">
+                    <span className="text-xs bg-gray-100 text-gray-700 px-2 py-1 rounded-md">
                       {template.fields.length} fields
                     </span>
                   </div>
                 </div>
-              </div>
-              <Button
-                onClick={() => handleDownloadTemplate(template)}
-                className="bg-blue-600 hover:bg-blue-700"
-              >
-                <Download className="h-4 w-4 mr-2" />
-                Download Template
-              </Button>
-            </div>
+                
+                <Button
+                  onClick={() => handleDownloadTemplate(template)}
+                  className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2.5"
+                  size="sm"
+                >
+                  <Download className="h-4 w-4 mr-2" />
+                  Download Template
+                </Button>
+              </CardContent>
+            </Card>
           ))}
-        </CardContent>
-      </Card>
+        </div>
+      </div>
 
       {/* Upload Section */}
       <Card className="bg-gradient-to-br from-green-50 to-emerald-100 border-green-200">
