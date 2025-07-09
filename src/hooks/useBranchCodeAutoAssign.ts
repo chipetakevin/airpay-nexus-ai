@@ -92,10 +92,17 @@ export const useBranchCodeAutoAssign = () => {
   const { toast } = useToast();
 
   const getBranchCodeForBank = useCallback((bankName: string): string => {
+    console.log(`🔍 Looking up branch code for: "${bankName}"`);
+    
     const bankMapping = SOUTH_AFRICAN_BANK_BRANCHES[bankName];
     if (bankMapping) {
-      return bankMapping.universalBranchCode;
+      const branchCode = bankMapping.universalBranchCode;
+      console.log(`✅ Found branch code ${branchCode} for ${bankName}`);
+      return branchCode;
     }
+    
+    console.warn(`❌ No branch code mapping found for: "${bankName}"`);
+    console.log('Available banks:', Object.keys(SOUTH_AFRICAN_BANK_BRANCHES));
     return '';
   }, []);
 

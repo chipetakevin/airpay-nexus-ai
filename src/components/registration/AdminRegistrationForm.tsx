@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -11,6 +11,7 @@ import { useAdminRegistration } from '@/hooks/useAdminRegistration';
 import AdminPhoneSection from '@/components/forms/AdminPhoneSection';
 import EnhancedSouthAfricanBankAutocomplete from '@/components/banking/EnhancedSouthAfricanBankAutocomplete';
 import { useToast } from '@/hooks/use-toast';
+import { validateBankingSystem, listAllBanksWithBranchCodes } from '@/utils/bankingSystemValidation';
 
 const AdminRegistrationForm = () => {
   const { formData, errors, handleInputChange, handleBankSelect, handleSubmit } = useAdminRegistration();
@@ -19,11 +20,19 @@ const AdminRegistrationForm = () => {
   const [lastSaved, setLastSaved] = useState<Date | null>(null);
   const { toast } = useToast();
 
+  // Validate banking system on component mount
+  useEffect(() => {
+    console.log('🚀 AdminRegistrationForm mounted - validating banking system...');
+    validateBankingSystem();
+    listAllBanksWithBranchCodes();
+  }, []);
+
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
 
   const handleEnhancedBankSelect = (bankName: string, routing: string, branchCode: string, bankDetails?: any) => {
+    console.log(`🏦 Bank selected: ${bankName}, Branch Code: ${branchCode}`, bankDetails);
     handleBankSelect(bankName, routing, branchCode);
     
     // Simulate auto-save
@@ -33,11 +42,20 @@ const AdminRegistrationForm = () => {
       setLastSaved(new Date());
     }, 1500);
     
-    if (bankDetails) {
+    if (bankDetails && branchCode) {
       toast({
-        title: "Bank Selected! 🏦",
-        description: `${bankName} with branch code ${branchCode} has been selected and auto-saved.`,
+        title: `✅ ${bankName} Selected!`,
+        description: `Branch code ${branchCode} has been auto-assigned and saved.`,
         duration: 3000
+      });
+      console.log(`✅ Branch code ${branchCode} successfully assigned for ${bankName}`);
+    } else if (!branchCode) {
+      console.error(`❌ No branch code received for ${bankName}`);
+      toast({
+        title: "Branch Code Missing",
+        description: `Unable to auto-assign branch code for ${bankName}. Please contact support.`,
+        variant: "destructive",
+        duration: 5000
       });
     }
   };
