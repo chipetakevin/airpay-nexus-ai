@@ -20,13 +20,16 @@ export const useEnhancedAuth = () => {
   const { toast } = useToast();
   const { saveProfilePermanently, getProfileByEmail } = useDeviceStorage();
 
-  const PERSISTENT_SESSION_HOURS = 8760; // 1 year = permanent session
+  const ADMIN_SESSION_HOURS = 360; // 15 days for admin
+  const PERSISTENT_SESSION_HOURS = 8760; // 1 year = permanent session for others
   const UNIFIED_PASSWORD = 'Malawi@1976';
 
   const createPersistentSession = useCallback((userData: any, userCredentials: any) => {
     try {
       const expiryTime = new Date();
-      expiryTime.setHours(expiryTime.getHours() + PERSISTENT_SESSION_HOURS);
+      // Set 15-day expiry for admin users, 1 year for others
+      const sessionHours = userCredentials.userType === 'admin' ? ADMIN_SESSION_HOURS : PERSISTENT_SESSION_HOURS;
+      expiryTime.setHours(expiryTime.getHours() + sessionHours);
 
       const sessionData = {
         user: userData,
@@ -67,7 +70,8 @@ export const useEnhancedAuth = () => {
 
       setCurrentUser(authUser);
 
-      console.log(`✅ Permanent ${userCredentials.userType} session created for:`, userCredentials.email);
+      const sessionDuration = userCredentials.userType === 'admin' ? '15 days' : 'permanent';
+      console.log(`✅ ${sessionDuration} ${userCredentials.userType} session created for:`, userCredentials.email);
     } catch (error) {
       console.error('Error creating persistent session:', error);
     }
@@ -176,9 +180,13 @@ export const useEnhancedAuth = () => {
                 // Convert legacy session to permanent session
                 createPersistentSession(parsedData, userCreds);
                 
+                const sessionMsg = userCreds.userType === 'admin' ? 
+                  "Admin session active for 15 days from now." : 
+                  "Your session is now permanent until manual logout.";
+                
                 toast({
                   title: "Session Upgraded 🔒",
-                  description: "Your session is now permanent until manual logout.",
+                  description: sessionMsg,
                 });
               }
             } catch (error) {
