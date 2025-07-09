@@ -43,7 +43,7 @@ export const loadCustomerData = (): Customer[] => {
     {
       id: 'cust-001',
       firstName: 'Sarah',
-      lastName: 'Johnson',
+      lastName: 'Mokwena',
       email: 'sarah@divinemobile.co.za',
       phone: '+27821234567',
       cardNumber: 'DC2024002',
@@ -57,7 +57,7 @@ export const loadCustomerData = (): Customer[] => {
     {
       id: 'cust-002',
       firstName: 'Michael',
-      lastName: 'Smith',
+      lastName: 'Van der Merwe',
       email: 'michael@divinemobile.co.za',
       phone: '+27837654321',
       cardNumber: 'DC2024003',
@@ -93,7 +93,7 @@ export const loadTransactionData = (): Transaction[] => {
       {
         id: 'txn-002',
         customerId: 'cust-001',
-        customerName: 'Sarah Johnson',
+        customerName: 'Sarah Mokwena',
         amount: 50.00,
         cashbackEarned: 2.50,
         network: 'MTN',

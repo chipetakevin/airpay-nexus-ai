@@ -65,7 +65,7 @@ const SupportTicketsPanel: React.FC<SupportTicketsPanelProps> = ({ customers }) 
     {
       id: 'TKT001',
       customerId: 'CUST002',
-      customerName: 'Sarah Johnson',
+      customerName: 'Sarah Mokwena',
       customerPhone: '+27829876543',
       subject: 'Unable to access data services',
       description: 'Customer reports inability to connect to mobile data despite having active plan',
@@ -80,7 +80,7 @@ const SupportTicketsPanel: React.FC<SupportTicketsPanelProps> = ({ customers }) 
     {
       id: 'TKT002',
       customerId: 'CUST003',
-      customerName: 'Michael Brown',
+      customerName: 'Michael Nkomo',
       customerPhone: '+27825555555',
       subject: 'Billing inquiry - overcharge',
       description: 'Customer disputes recent charges on account',

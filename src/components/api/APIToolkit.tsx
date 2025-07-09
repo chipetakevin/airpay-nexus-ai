@@ -961,7 +961,7 @@ const APIToolkit = () => {
                         token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
                         user: {
                           id: "12345",
-                          name: "John Doe",
+                          name: "John Mthembu",
                           email: "example@divinemobile.co.za",
                           role: "customer"
                         },

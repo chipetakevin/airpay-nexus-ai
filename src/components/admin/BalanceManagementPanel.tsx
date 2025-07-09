@@ -62,7 +62,7 @@ const BalanceManagementPanel: React.FC<BalanceManagementPanelProps> = ({ custome
     {
       id: 'TXN001',
       customerId: 'CUST001',
-      customerName: 'John Doe',
+      customerName: 'John Mthembu',
       type: 'topup',
       amount: 100.00,
       description: 'Account top-up via card payment',
@@ -75,7 +75,7 @@ const BalanceManagementPanel: React.FC<BalanceManagementPanelProps> = ({ custome
     {
       id: 'TXN002',
       customerId: 'CUST002',
-      customerName: 'Sarah Johnson',
+      customerName: 'Sarah Mokwena',
       type: 'usage',
       amount: -25.75,
       description: 'Data usage charges',
@@ -88,7 +88,7 @@ const BalanceManagementPanel: React.FC<BalanceManagementPanelProps> = ({ custome
     {
       id: 'TXN003',
       customerId: 'CUST003',
-      customerName: 'Michael Brown',
+      customerName: 'Michael Nkomo',
       type: 'adjustment',
       amount: 5.00,
       description: 'Customer service credit adjustment',

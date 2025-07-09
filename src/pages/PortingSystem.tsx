@@ -266,7 +266,7 @@ const PortingSystem = () => {
             compliance: true,
             extractedData: {
               idNumber: "8001015009087",
-              fullName: "John Doe",
+              fullName: "John Mthembu",
               address: "123 Main St, Cape Town"
             },
             fraudScore: Math.random() * 0.05, // 0-0.05

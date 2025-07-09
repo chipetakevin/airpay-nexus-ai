@@ -87,7 +87,7 @@ const AIPayrollAutomation = () => {
       {
         id: '1',
         employee_id: 'EMP001',
-        employee_name: 'John Doe',
+        employee_name: 'John Mthembu',
         anomaly_type: 'salary_spike',
         severity: 'high',
         description: 'Salary increase of 45% detected without corresponding promotion record',

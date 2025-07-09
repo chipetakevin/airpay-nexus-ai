@@ -24,7 +24,7 @@ const RealTimeOrderProcessor = () => {
   const [orders, setOrders] = useState<OrderRequest[]>([
     {
       id: 'ORD-2024-001',
-      customer: 'John Doe',
+      customer: 'John Mthembu',
       msisdn: '0821234567',
       network: 'MTN',
       type: 'airtime',

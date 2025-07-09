@@ -40,7 +40,7 @@ const EmployeeManagement = () => {
     },
     {
       id: 'EMP002',
-      name: 'Sarah Johnson',
+      name: 'Sarah Mokwena',
       position: 'HR Manager',
       department: 'Human Resources',
       salary: 'R 55,000',

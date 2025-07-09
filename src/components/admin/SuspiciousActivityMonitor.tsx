@@ -59,7 +59,7 @@ const SuspiciousActivityMonitor: React.FC = () => {
       id: '1',
       timestamp: new Date(Date.now() - 300000).toISOString(),
       user_id: 'usr_001',
-      user_name: 'John Doe',
+      user_name: 'John Mthembu',
       user_type: 'contractor',
       ip_address: '203.0.113.45',
       location: 'Unknown (Foreign)',

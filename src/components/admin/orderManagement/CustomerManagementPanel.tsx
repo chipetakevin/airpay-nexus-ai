@@ -33,7 +33,7 @@ const CustomerManagementPanel = () => {
   const [customers] = useState<Customer[]>([
     {
       id: 'CUST-001',
-      name: 'John Doe',
+      name: 'John Mthembu',
       msisdn: '0821234567',
       network: 'MTN',
       registrationDate: '2024-01-10',

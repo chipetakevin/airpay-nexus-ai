@@ -62,7 +62,7 @@ const SecurityCompliance = () => {
   ];
 
   const accessLogs = [
-    { user: 'Sarah Johnson (HR Manager)', action: 'Viewed employee records', time: '10:30 AM', ip: '192.168.1.45' },
+    { user: 'Sarah Mokwena (HR Manager)', action: 'Viewed employee records', time: '10:30 AM', ip: '192.168.1.45' },
     { user: 'Admin System', action: 'Automated backup completed', time: '02:00 AM', ip: 'System' },
     { user: 'Thabo Mthembu (Payroll)', action: 'Generated payslips', time: 'Yesterday 4:15 PM', ip: '192.168.1.23' },
     { user: 'Finance Team', action: 'Downloaded compliance report', time: 'Yesterday 2:30 PM', ip: '192.168.1.67' }

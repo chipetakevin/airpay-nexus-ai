@@ -90,7 +90,7 @@ const AddexPayDashboard = () => {
   const contracts = [
     {
       id: 1,
-      employeeName: 'John Doe',
+      employeeName: 'John Mthembu',
       employeeId: 'EMP001',
       type: 'Permanent',
       status: 'signed',
@@ -163,7 +163,7 @@ const AddexPayDashboard = () => {
       timestamp: '2024-01-06 14:30:25',
       user: 'HR Manager',
       action: 'Contract Signed',
-      resource: 'EMP001 - John Doe Contract',
+      resource: 'EMP001 - John Mthembu Contract',
       status: 'success'
     },
     {
@@ -188,7 +188,7 @@ const AddexPayDashboard = () => {
   const bankingDetails = [
     {
       id: 1,
-      employeeName: 'John Doe',
+      employeeName: 'John Mthembu',
       employeeId: 'EMP001',
       bankName: 'Standard Bank',
       accountNumber: '****-****-1234',
@@ -475,7 +475,7 @@ const AddexPayDashboard = () => {
 
   const handleExport = (format = 'csv') => {
     const contractors = [
-      { name: 'John Doe', employeeId: 'EMP001', position: 'Senior Developer', department: 'IT', status: 'Active' },
+      { name: 'John Mthembu', employeeId: 'EMP001', position: 'Senior Developer', department: 'IT', status: 'Active' },
       { name: 'Jane Smith', employeeId: 'EMP002', position: 'Digital Marketer', department: 'Marketing', status: 'Active' },
       { name: 'Mike Johnson', employeeId: 'EMP003', position: 'Project Manager', department: 'Operations', status: 'Active' }
     ];
@@ -508,7 +508,7 @@ const AddexPayDashboard = () => {
   };
 
   const downloadTemplate = () => {
-    const template = 'Name,Employee ID,Position,Department,Status\n"John Doe","EMP001","Senior Developer","IT","Active"\n"Jane Smith","EMP002","Digital Marketer","Marketing","Active"';
+    const template = 'Name,Employee ID,Position,Department,Status\n"John Mthembu","EMP001","Senior Developer","IT","Active"\n"Jane Pretorius","EMP002","Digital Marketer","Marketing","Active"';
     const blob = new Blob([template], { type: 'text/csv' });
     const url = window.URL.createObjectURL(blob);
     const a = document.createElement('a');
@@ -1883,7 +1883,7 @@ const AddexPayDashboard = () => {
                   <SelectValue placeholder="Select employee" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="emp1">John Doe - EMP001</SelectItem>
+                  <SelectItem value="emp1">John Mthembu - EMP001</SelectItem>
                   <SelectItem value="emp2">Jane Smith - EMP002</SelectItem>
                 </SelectContent>
               </Select>
@@ -2046,7 +2046,7 @@ const AddexPayDashboard = () => {
                     <SelectValue placeholder="Select employee" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="emp1">John Doe - EMP001</SelectItem>
+                    <SelectItem value="emp1">John Mthembu - EMP001</SelectItem>
                     <SelectItem value="emp2">Jane Smith - EMP002</SelectItem>
                   </SelectContent>
                 </Select>

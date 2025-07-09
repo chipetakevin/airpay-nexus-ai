@@ -68,7 +68,7 @@ const FraudDetectionDashboard = () => {
         id: '1',
         transactionId: 'TXN001234',
         customerId: 'CUST001',
-        customerName: 'John Doe',
+        customerName: 'John Mthembu',
         alertType: 'High Risk Transaction',
         riskScore: 95,
         confidenceScore: 87,

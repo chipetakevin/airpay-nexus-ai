@@ -16,7 +16,7 @@ import {
 const TimeAttendance = () => {
   const attendanceData = [
     { employee: 'Thabo Mthembu', timeIn: '08:15', timeOut: '17:30', hours: '8h 45m', status: 'Present' },
-    { employee: 'Sarah Johnson', timeIn: '08:00', timeOut: '17:00', hours: '8h 30m', status: 'Present' },
+    { employee: 'Sarah Mokwena', timeIn: '08:00', timeOut: '17:00', hours: '8h 30m', status: 'Present' },
     { employee: 'Mohamed Hassan', timeIn: '-', timeOut: '-', hours: '0h', status: 'On Leave' },
     { employee: 'Zanele Ndlovu', timeIn: '08:30', timeOut: '17:45', hours: '8h 45m', status: 'Overtime' }
   ];

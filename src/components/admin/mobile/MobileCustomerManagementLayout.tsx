@@ -70,7 +70,7 @@ const MobileCustomerManagementLayout: React.FC<MobileCustomerManagementLayoutPro
       {
         id: 'CUST001',
         firstName: 'John',
-        lastName: 'Doe',
+        lastName: 'Mthembu',
         email: 'john@divinemobile.co.za',
         phone: '+27821234567',
         mvno: 'Divine Mobile',
@@ -88,7 +88,7 @@ const MobileCustomerManagementLayout: React.FC<MobileCustomerManagementLayoutPro
       {
         id: 'CUST002', 
         firstName: 'Sarah',
-        lastName: 'Johnson',
+        lastName: 'Mokwena',
         email: 'sarah@divinemobile.co.za',
         phone: '+27829876543',
         mvno: 'Divine Mobile',
@@ -106,7 +106,7 @@ const MobileCustomerManagementLayout: React.FC<MobileCustomerManagementLayoutPro
       {
         id: 'CUST003',
         firstName: 'Michael',
-        lastName: 'Brown',
+        lastName: 'Nkomo',
         email: 'michael@divinemobile.co.za',
         phone: '+27825555555',
         mvno: 'Partner MVNO',

@@ -27,7 +27,7 @@ const NotificationCenter = () => {
     {
       id: 'N001',
       type: 'Transaction Receipt',
-      recipient: 'Customer - John Doe',
+      recipient: 'Customer - John Mthembu',
       channel: 'Email + WhatsApp',
       status: 'Sent',
       timestamp: '2 min ago',

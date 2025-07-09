@@ -341,7 +341,7 @@ const USSDManager = () => {
         <CardContent>
           <div className="space-y-3">
             {[
-              { name: 'John Doe', phone: '+27821234567', platform: 'WhatsApp', status: 'Active', registered: '2024-01-15' },
+              { name: 'John Mthembu', phone: '+27821234567', platform: 'WhatsApp', status: 'Active', registered: '2024-01-15' },
               { name: 'Jane Smith', phone: '+27829876543', platform: 'GSM', status: 'Active', registered: '2024-01-14' },
               { name: 'Mike Johnson', phone: '+27825551234', platform: 'Website', status: 'Inactive', registered: '2024-01-13' },
               { name: 'Sarah Wilson', phone: '+27823334444', platform: 'GSM', status: 'Active', registered: '2024-01-12' },

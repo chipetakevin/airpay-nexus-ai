@@ -84,9 +84,9 @@ const EmployeeSelfService = () => {
   // Mock data - in real implementation, this would come from API
   const [employee] = useState<EmployeeProfile>({
     id: '1',
-    name: 'John Doe',
+    name: 'John Mthembu',
     employee_id: 'EMP001',
-    email: 'john.doe@company.com',
+    email: 'john.mthembu@divinemobile.co.za',
     phone: '+27 11 123 4567',
     department: 'IT Development',
     position: 'Senior Developer',

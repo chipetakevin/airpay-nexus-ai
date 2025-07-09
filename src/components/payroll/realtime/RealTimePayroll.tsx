@@ -112,7 +112,7 @@ const RealTimePayroll = () => {
       {
         id: '2',
         employee_id: 'EMP045',
-        employee_name: 'Sarah Johnson',
+        employee_name: 'Sarah Mokwena',
         amount_requested: 3500,
         earned_amount: 12000,
         fee: 35,

@@ -395,7 +395,7 @@ const UniversalCardDetailsForm: React.FC<UniversalCardDetailsFormProps> = ({
                   <Label htmlFor="holderName">Cardholder Name *</Label>
                   <Input
                     id="holderName"
-                    placeholder="JOHN DOE"
+                    placeholder="JOHN MTHEMBU"
                     value={formData.holderName}
                     onChange={(e) => handleInputChange('holderName', e.target.value)}
                     className={errors.holderName ? 'border-red-500' : ''}

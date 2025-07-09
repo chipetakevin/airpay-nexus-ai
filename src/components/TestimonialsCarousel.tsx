@@ -22,7 +22,7 @@ const TestimonialsCarousel = () => {
       avatar: "TM"
     },
     {
-      name: "Sarah Johnson",
+      name: "Sarah Mokwena",
       location: "Cape Town",
       rating: 5,
       comment: "As a vendor, OneCard has increased my revenue by 40%. The platform is easy to use and my customers love it.",
