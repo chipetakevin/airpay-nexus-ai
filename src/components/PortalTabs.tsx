@@ -17,6 +17,7 @@ import SimpleUSSDManager from './ussd/SimpleUSSDManager';
 import FieldWorkerRegistration from './fieldworker/FieldWorkerRegistration';
 import FieldWorkerDashboard from './fieldworker/FieldWorkerDashboard';
 import APIToolkit from './api/APIToolkit';
+import MVNEPortal from './mvne/MVNEPortal';
 
 interface PortalTabsProps {
   activeTab: string;
@@ -175,6 +176,14 @@ const PortalTabs = ({
       description: 'MNO Integration',
       color: 'indigo',
       adminOnly: true
+    },
+    {
+      value: 'mvne-platform',
+      label: 'MVNE Platform',
+      icon: '📡',
+      description: 'Telecom Infrastructure',
+      color: 'cyan',
+      adminOnly: true
     }
   ];
 
@@ -322,6 +331,12 @@ const PortalTabs = ({
           {(isAdmin || showAdminTab) && (
             <TabsContent value="api-toolkit" className="mobile-section-spacing p-2 sm:p-3 md:p-4 lg:p-6 animate-fade-in">
               <APIToolkit />
+            </TabsContent>
+          )}
+          
+          {(isAdmin || showAdminTab) && (
+            <TabsContent value="mvne-platform" className="mobile-section-spacing p-1 sm:p-2 animate-fade-in">
+              <MVNEPortal />
             </TabsContent>
           )}
           
