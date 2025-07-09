@@ -15,9 +15,10 @@ import { toast } from 'sonner';
 interface PremiumMasterReportProps {
   userData: any;
   userType?: 'customer' | 'vendor' | 'admin' | 'fieldworker';
+  onNavigateToTab?: (tab: string) => void;
 }
 
-export const PremiumMasterReport = ({ userData, userType = 'customer' }: PremiumMasterReportProps) => {
+export const PremiumMasterReport = ({ userData, userType = 'customer', onNavigateToTab }: PremiumMasterReportProps) => {
   const [isGenerating, setIsGenerating] = useState(false);
   const [selectedDateRange, setSelectedDateRange] = useState<any>(null);
   const [selectedTimeframe, setSelectedTimeframe] = useState('6months');
@@ -113,34 +114,74 @@ export const PremiumMasterReport = ({ userData, userType = 'customer' }: Premium
     // Notification toggle logic handled in AdvancedChartsControls
   };
 
+  const handleFeatureClick = (featureTitle: string) => {
+    if (!onNavigateToTab) return;
+    
+    switch (featureTitle) {
+      case 'Charts':
+        onNavigateToTab('ai-analytics');
+        toast.success('Navigating to AI Analytics', {
+          description: 'View interactive charts and visualizations.',
+        });
+        break;
+      case 'Trends':
+        onNavigateToTab('history');
+        toast.success('Navigating to History', {
+          description: 'Explore trends and historical data analysis.',
+        });
+        break;
+      case 'Insights':
+        onNavigateToTab('ai-analytics');
+        toast.success('Navigating to AI Analytics', {
+          description: 'Access AI-powered insights and recommendations.',
+        });
+        break;
+      case 'Premium':
+        toast.success('Premium Features Active', {
+          description: 'You are currently viewing premium content and features.',
+        });
+        break;
+      default:
+        break;
+    }
+  };
+
   const features = [
     {
       icon: BarChart3,
       title: 'Charts',
       description: 'Interactive visualizations',
       bgColor: 'bg-green-50',
-      iconColor: 'text-green-600'
+      iconColor: 'text-green-600',
+      hoverColor: 'hover:bg-green-100',
+      action: () => handleFeatureClick('Charts')
     },
     {
       icon: TrendingUp,
       title: 'Trends',
       description: 'Automated analysis',
       bgColor: 'bg-blue-50',
-      iconColor: 'text-blue-600'
+      iconColor: 'text-blue-600',
+      hoverColor: 'hover:bg-blue-100',
+      action: () => handleFeatureClick('Trends')
     },
     {
       icon: Lightbulb,
       title: 'Insights',
       description: 'AI-powered recommendations',
       bgColor: 'bg-orange-50',
-      iconColor: 'text-orange-600'
+      iconColor: 'text-orange-600',
+      hoverColor: 'hover:bg-orange-100',
+      action: () => handleFeatureClick('Insights')
     },
     {
       icon: Crown,
       title: 'Premium',
       description: 'Professional reports',
       bgColor: 'bg-purple-50',
-      iconColor: 'text-purple-600'
+      iconColor: 'text-purple-600',
+      hoverColor: 'hover:bg-purple-100',
+      action: () => handleFeatureClick('Premium')
     }
   ];
 
@@ -162,20 +203,31 @@ export const PremiumMasterReport = ({ userData, userType = 'customer' }: Premium
         </div>
       </div>
 
-      {/* Feature Grid */}
+      {/* Feature Grid - Fully Clickable */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto">
         {features.map((feature, index) => {
           const Icon = feature.icon;
           return (
-            <Card key={index} className={`${feature.bgColor} border-none shadow-sm hover:shadow-md transition-shadow`}>
-              <CardContent className="p-6 text-center">
-                <div className={`w-12 h-12 mx-auto ${feature.bgColor} rounded-2xl flex items-center justify-center mb-3`}>
-                  <Icon className={`w-6 h-6 ${feature.iconColor}`} />
-                </div>
-                <h3 className="font-semibold text-gray-900 mb-1">{feature.title}</h3>
-                <p className="text-sm text-gray-600">{feature.description}</p>
-              </CardContent>
-            </Card>
+            <Button
+              key={index}
+              onClick={feature.action}
+              variant="ghost"
+              className={`${feature.bgColor} ${feature.hoverColor} border-none shadow-sm hover:shadow-lg hover:scale-105 transition-all duration-300 p-0 h-auto w-full cursor-pointer group focus:ring-4 focus:ring-blue-300 focus:outline-none`}
+              asChild
+            >
+              <Card className="border-none bg-transparent shadow-none">
+                <CardContent className="p-6 text-center">
+                  <div className={`w-12 h-12 mx-auto ${feature.bgColor} rounded-2xl flex items-center justify-center mb-3 group-hover:scale-110 transition-transform duration-300`}>
+                    <Icon className={`w-6 h-6 ${feature.iconColor} group-hover:animate-pulse`} />
+                  </div>
+                  <h3 className="font-semibold text-gray-900 mb-1 group-hover:text-gray-800">{feature.title}</h3>
+                  <p className="text-sm text-gray-600 group-hover:text-gray-700">{feature.description}</p>
+                  <div className="mt-2 text-xs text-gray-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                    Click to explore
+                  </div>
+                </CardContent>
+              </Card>
+            </Button>
           );
         })}
       </div>

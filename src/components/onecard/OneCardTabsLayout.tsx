@@ -130,6 +130,7 @@ const OneCardTabsLayout = ({
           <PremiumMasterReport 
             userData={userData}
             userType={userInfo.userType}
+            onNavigateToTab={setActiveTab}
           />
         </TabsContent>
 
