@@ -180,30 +180,46 @@ export const PremiumMasterReport = ({ userData, userType = 'customer' }: Premium
         })}
       </div>
 
-      {/* Premium Report Generator */}
-      <Card className="max-w-4xl mx-auto bg-gradient-to-r from-purple-600 to-blue-600 border-none text-white">
+      {/* Premium Report Generator - Enhanced Clickability */}
+      <Card className="max-w-4xl mx-auto bg-gradient-to-r from-purple-600 to-blue-600 border-none text-white shadow-2xl hover:shadow-3xl transition-all duration-300">
         <CardContent className="p-8 text-center">
-          <div className="w-12 h-8 bg-white rounded-lg flex items-center justify-center mx-auto mb-4">
+          <div className="w-12 h-8 bg-white rounded-lg flex items-center justify-center mx-auto mb-6 shadow-lg">
             <span className="text-xs font-bold text-purple-600">CF</span>
           </div>
+          
+          <h3 className="text-xl font-bold mb-2">Generate Your Premium Report</h3>
+          <p className="text-purple-100 mb-6 text-sm">Professional PDF with Divine Mobile branding and comprehensive analytics</p>
           
           <Button 
             onClick={handleGeneratePremiumReport}
             disabled={isGenerating}
-            className="bg-white text-purple-600 hover:bg-gray-100 font-semibold px-8 py-3 text-lg rounded-xl"
+            className="bg-white text-purple-600 hover:bg-purple-50 hover:scale-105 font-semibold px-10 py-4 text-lg rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 border-2 border-transparent hover:border-purple-200 focus:ring-4 focus:ring-purple-300 focus:outline-none"
+            type="button"
+            role="button"
+            aria-label="Generate Premium Report with Divine Mobile branding"
+            style={{ 
+              cursor: isGenerating ? 'not-allowed' : 'pointer',
+              minHeight: '56px',
+              minWidth: '280px'
+            }}
           >
             {isGenerating ? (
-              <>
-                <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-purple-600 mr-2" />
-                Generating Report...
-              </>
+              <div className="flex items-center justify-center">
+                <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-purple-600 mr-3" />
+                <span>Generating Premium Report...</span>
+              </div>
             ) : (
-              <>
-                <Crown className="w-5 h-5 mr-2" />
-                Generate Premium Report
-              </>
+              <div className="flex items-center justify-center">
+                <Crown className="w-6 h-6 mr-3" />
+                <span>Generate Premium Report</span>
+                <Sparkles className="w-5 h-5 ml-3" />
+              </div>
             )}
           </Button>
+          
+          <div className="mt-4 text-xs text-purple-200">
+            ✨ Click to generate your professional PDF report with charts and analytics
+          </div>
         </CardContent>
       </Card>
 
