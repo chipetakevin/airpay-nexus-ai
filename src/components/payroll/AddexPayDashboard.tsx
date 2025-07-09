@@ -369,6 +369,79 @@ const AddexPayDashboard = () => {
     }
   ];
 
+  // Helper function to get color classes for each tab
+  const getColorClasses = (color: string, isActive: boolean) => {
+    const colorMap = {
+      blue: {
+        card: isActive ? 'ring-2 ring-blue-500 bg-gradient-to-br from-blue-50 to-blue-100 border-blue-200' : '',
+        icon: 'bg-gradient-to-br from-blue-500 to-blue-600',
+        badge: 'bg-blue-100 text-blue-800 border-blue-200'
+      },
+      green: {
+        card: isActive ? 'ring-2 ring-green-500 bg-gradient-to-br from-green-50 to-green-100 border-green-200' : '',
+        icon: 'bg-gradient-to-br from-green-500 to-green-600',
+        badge: 'bg-green-100 text-green-800 border-green-200'
+      },
+      purple: {
+        card: isActive ? 'ring-2 ring-purple-500 bg-gradient-to-br from-purple-50 to-purple-100 border-purple-200' : '',
+        icon: 'bg-gradient-to-br from-purple-500 to-purple-600',
+        badge: 'bg-purple-100 text-purple-800 border-purple-200'
+      },
+      cyan: {
+        card: isActive ? 'ring-2 ring-cyan-500 bg-gradient-to-br from-cyan-50 to-cyan-100 border-cyan-200' : '',
+        icon: 'bg-gradient-to-br from-cyan-500 to-cyan-600',
+        badge: 'bg-cyan-100 text-cyan-800 border-cyan-200'
+      },
+      indigo: {
+        card: isActive ? 'ring-2 ring-indigo-500 bg-gradient-to-br from-indigo-50 to-indigo-100 border-indigo-200' : '',
+        icon: 'bg-gradient-to-br from-indigo-500 to-indigo-600',
+        badge: 'bg-indigo-100 text-indigo-800 border-indigo-200'
+      },
+      rose: {
+        card: isActive ? 'ring-2 ring-rose-500 bg-gradient-to-br from-rose-50 to-rose-100 border-rose-200' : '',
+        icon: 'bg-gradient-to-br from-rose-500 to-rose-600',
+        badge: 'bg-rose-100 text-rose-800 border-rose-200'
+      },
+      emerald: {
+        card: isActive ? 'ring-2 ring-emerald-500 bg-gradient-to-br from-emerald-50 to-emerald-100 border-emerald-200' : '',
+        icon: 'bg-gradient-to-br from-emerald-500 to-emerald-600',
+        badge: 'bg-emerald-100 text-emerald-800 border-emerald-200'
+      },
+      orange: {
+        card: isActive ? 'ring-2 ring-orange-500 bg-gradient-to-br from-orange-50 to-orange-100 border-orange-200' : '',
+        icon: 'bg-gradient-to-br from-orange-500 to-orange-600',
+        badge: 'bg-orange-100 text-orange-800 border-orange-200'
+      },
+      violet: {
+        card: isActive ? 'ring-2 ring-violet-500 bg-gradient-to-br from-violet-50 to-violet-100 border-violet-200' : '',
+        icon: 'bg-gradient-to-br from-violet-500 to-violet-600',
+        badge: 'bg-violet-100 text-violet-800 border-violet-200'
+      },
+      teal: {
+        card: isActive ? 'ring-2 ring-teal-500 bg-gradient-to-br from-teal-50 to-teal-100 border-teal-200' : '',
+        icon: 'bg-gradient-to-br from-teal-500 to-teal-600',
+        badge: 'bg-teal-100 text-teal-800 border-teal-200'
+      },
+      amber: {
+        card: isActive ? 'ring-2 ring-amber-500 bg-gradient-to-br from-amber-50 to-amber-100 border-amber-200' : '',
+        icon: 'bg-gradient-to-br from-amber-500 to-amber-600',
+        badge: 'bg-amber-100 text-amber-800 border-amber-200'
+      },
+      red: {
+        card: isActive ? 'ring-2 ring-red-500 bg-gradient-to-br from-red-50 to-red-100 border-red-200' : '',
+        icon: 'bg-gradient-to-br from-red-500 to-red-600',
+        badge: 'bg-red-100 text-red-800 border-red-200'
+      },
+      slate: {
+        card: isActive ? 'ring-2 ring-slate-500 bg-gradient-to-br from-slate-50 to-slate-100 border-slate-200' : '',
+        icon: 'bg-gradient-to-br from-slate-500 to-slate-600',
+        badge: 'bg-slate-100 text-slate-800 border-slate-200'
+      }
+    };
+    
+    return colorMap[color as keyof typeof colorMap] || colorMap.blue;
+  };
+
   // Enhanced Contractor Management with Import/Export functionality
   const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -1374,50 +1447,58 @@ const AddexPayDashboard = () => {
 
       {/* Key Metrics */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <Card className="border-l-4 border-l-blue-500">
+        <Card className="border-l-4 border-l-blue-500 bg-gradient-to-br from-blue-50 to-blue-100 hover:shadow-lg transition-shadow">
           <CardContent className="p-4">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-muted-foreground">Total Employees</p>
-                <p className="text-2xl font-bold">{payrollStats.totalEmployees.toLocaleString()}</p>
+                <p className="text-sm text-blue-700 font-medium">Total Employees</p>
+                <p className="text-2xl font-bold text-blue-800">{payrollStats.totalEmployees.toLocaleString()}</p>
               </div>
-              <Users className="w-8 h-8 text-blue-500" />
+              <div className="p-3 rounded-xl bg-gradient-to-br from-blue-500 to-blue-600 shadow-lg">
+                <Users className="w-8 h-8 text-white" />
+              </div>
             </div>
           </CardContent>
         </Card>
 
-        <Card className="border-l-4 border-l-green-500">
+        <Card className="border-l-4 border-l-green-500 bg-gradient-to-br from-green-50 to-green-100 hover:shadow-lg transition-shadow">
           <CardContent className="p-4">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-muted-foreground">Monthly Payroll</p>
-                <p className="text-2xl font-bold">R{(payrollStats.monthlyPayroll / 1000000).toFixed(1)}M</p>
+                <p className="text-sm text-green-700 font-medium">Monthly Payroll</p>
+                <p className="text-2xl font-bold text-green-800">R{(payrollStats.monthlyPayroll / 1000000).toFixed(1)}M</p>
               </div>
-              <DollarSign className="w-8 h-8 text-green-500" />
+              <div className="p-3 rounded-xl bg-gradient-to-br from-green-500 to-green-600 shadow-lg">
+                <DollarSign className="w-8 h-8 text-white" />
+              </div>
             </div>
           </CardContent>
         </Card>
 
-        <Card className="border-l-4 border-l-orange-500">
+        <Card className="border-l-4 border-l-orange-500 bg-gradient-to-br from-orange-50 to-orange-100 hover:shadow-lg transition-shadow">
           <CardContent className="p-4">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-muted-foreground">Pending Approvals</p>
-                <p className="text-2xl font-bold">{payrollStats.pendingApprovals}</p>
+                <p className="text-sm text-orange-700 font-medium">Pending Approvals</p>
+                <p className="text-2xl font-bold text-orange-800">{payrollStats.pendingApprovals}</p>
               </div>
-              <Clock className="w-8 h-8 text-orange-500" />
+              <div className="p-3 rounded-xl bg-gradient-to-br from-orange-500 to-orange-600 shadow-lg">
+                <Clock className="w-8 h-8 text-white" />
+              </div>
             </div>
           </CardContent>
         </Card>
 
-        <Card className="border-l-4 border-l-purple-500">
+        <Card className="border-l-4 border-l-purple-500 bg-gradient-to-br from-purple-50 to-purple-100 hover:shadow-lg transition-shadow">
           <CardContent className="p-4">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-muted-foreground">Compliance Score</p>
-                <p className="text-2xl font-bold">{payrollStats.complianceScore}%</p>
+                <p className="text-sm text-purple-700 font-medium">Compliance Score</p>
+                <p className="text-2xl font-bold text-purple-800">{payrollStats.complianceScore}%</p>
               </div>
-              <TrendingUp className="w-8 h-8 text-purple-500" />
+              <div className="p-3 rounded-xl bg-gradient-to-br from-purple-500 to-purple-600 shadow-lg">
+                <TrendingUp className="w-8 h-8 text-white" />
+              </div>
             </div>
           </CardContent>
         </Card>
@@ -1447,26 +1528,33 @@ const AddexPayDashboard = () => {
 
       {/* Main Payroll Tabs */}
       <Tabs value={activeSubTab} onValueChange={setActiveSubTab} className="w-full">
-        <TabsList className="grid w-full grid-cols-3 gap-2">
-          {subTabs.map((tab) => (
-            <TabsTrigger 
-              key={tab.value} 
-              value={tab.value}
-              className="flex flex-col items-center p-4 h-auto"
-            >
-              <div className="flex items-center gap-2 mb-1">
-                {tab.icon}
-                <span className="font-medium">{tab.label}</span>
-              </div>
-              <div className="text-xs text-muted-foreground text-center">
-                <div>{tab.description}</div>
-                <Badge variant="outline" className="mt-1">
-                  {tab.count} Active
-                </Badge>
-              </div>
-            </TabsTrigger>
-          ))}
-        </TabsList>
+        <div className="grid grid-cols-1 md:grid-cols-3 xl:grid-cols-4 gap-4 mb-6">
+          {subTabs.map((tab) => {
+            const colors = getColorClasses(tab.color, activeSubTab === tab.value);
+            return (
+              <Card 
+                key={tab.value}
+                className={`cursor-pointer transition-all duration-300 hover:scale-105 hover:shadow-lg ${
+                  colors.card || 'hover:border-gray-300 hover:shadow-md'
+                }`}
+                onClick={() => setActiveSubTab(tab.value)}
+              >
+                <CardContent className="p-6">
+                  <div className="flex items-center justify-between mb-4">
+                    <div className={`p-3 rounded-xl shadow-lg ${colors.icon}`}>
+                      {React.cloneElement(tab.icon, { className: "w-6 h-6 text-white" })}
+                    </div>
+                    <Badge className={`font-semibold border ${colors.badge}`}>
+                      {tab.count} Active
+                    </Badge>
+                  </div>
+                  <h3 className="font-bold text-lg mb-2 text-gray-800">{tab.label}</h3>
+                  <p className="text-sm text-gray-600 leading-relaxed">{tab.description}</p>
+                </CardContent>
+              </Card>
+            );
+          })}
+        </div>
 
         {/* Permanent Staff Tab */}
         <TabsContent value="permanent-staff" className="space-y-6">
