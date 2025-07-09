@@ -231,71 +231,95 @@ export const BulkServicesInterface: React.FC = () => {
         </Card>
       </div>
 
-      {/* Bulk Services Table */}
-      <Card>
-        <CardHeader>
-          <div className="flex items-center justify-between mb-4">
-            <CardTitle className="flex items-center gap-2">
-              <FileText className="w-6 h-6 text-blue-600" />
-              Bulk Service Operations
-            </CardTitle>
-            <div className="flex gap-2">
-              <Button className="bg-green-600 hover:bg-green-700">
-                <Download className="w-4 h-4 mr-2" />
+      {/* Main Interface Card - Updated to match image layout */}
+      <Card className="bg-gradient-to-r from-primary/5 to-primary/10 border border-primary/20 rounded-2xl shadow-lg">
+        <CardContent className="p-6 sm:p-8">
+          {/* Header Section */}
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+            <div className="flex items-center gap-4">
+              <div className="p-3 sm:p-4 bg-primary/10 rounded-2xl shrink-0">
+                <FileText className="w-8 h-8 sm:w-10 sm:h-10 text-primary" />
+              </div>
+              <div className="min-w-0 flex-1">
+                <h2 className="text-2xl sm:text-3xl font-bold text-primary mb-2">
+                  Bulk Service Operations
+                </h2>
+              </div>
+            </div>
+            <div className="flex gap-3 shrink-0">
+              <Button 
+                className="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-xl text-lg font-semibold shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
+                onClick={handleFileUpload}
+              >
+                <Download className="w-5 h-5 mr-2" />
                 Template
               </Button>
-              <Button className="bg-blue-600 hover:bg-blue-700">
-                <Upload className="w-4 h-4 mr-2" />
+              <Button 
+                className="bg-primary hover:bg-primary/90 text-primary-foreground px-6 py-3 rounded-xl text-lg font-semibold shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
+                onClick={handleFileUpload}
+              >
+                <Upload className="w-5 h-5 mr-2" />
                 Upload
               </Button>
             </div>
           </div>
           
-          <div className="flex flex-wrap gap-4 items-center">
-            <div className="relative flex-1 min-w-64">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+          {/* Search and Filter Section */}
+          <div className="space-y-4">
+            {/* Search Bar */}
+            <div className="relative max-w-2xl">
+              <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-muted-foreground w-5 h-5" />
               <Input
-                placeholder="Search by MSISDN, Code, or Value..."
+                placeholder="Search by MSISDN, Code, or..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-10"
+                className="pl-12 pr-4 py-3 text-lg border-2 border-border/50 rounded-xl focus:border-primary shadow-sm focus:shadow-md transition-all duration-300 bg-background/80 backdrop-blur-sm"
               />
             </div>
             
-            <Select value={statusFilter} onValueChange={setStatusFilter}>
-              <SelectTrigger className="w-40">
-                <Filter className="w-4 h-4 mr-2" />
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Status</SelectItem>
-                <SelectItem value="completed">Completed</SelectItem>
-                <SelectItem value="processing">Processing</SelectItem>
-                <SelectItem value="failed">Failed</SelectItem>
-                <SelectItem value="pending">Pending</SelectItem>
-              </SelectContent>
-            </Select>
+            {/* Filter Controls */}
+            <div className="flex flex-wrap gap-4 items-center">
+              <Select value={statusFilter} onValueChange={setStatusFilter}>
+                <SelectTrigger className="w-40 h-12 rounded-xl border-2 border-border/50 bg-background/80">
+                  <Filter className="w-4 h-4 mr-2" />
+                  <SelectValue placeholder="All Status" />
+                </SelectTrigger>
+                <SelectContent className="bg-background border border-border rounded-xl shadow-lg">
+                  <SelectItem value="all">All Status</SelectItem>
+                  <SelectItem value="completed">Completed</SelectItem>
+                  <SelectItem value="processing">Processing</SelectItem>
+                  <SelectItem value="failed">Failed</SelectItem>
+                  <SelectItem value="pending">Pending</SelectItem>
+                </SelectContent>
+              </Select>
 
-            <Select value={itemsPerPage} onValueChange={setItemsPerPage}>
-              <SelectTrigger className="w-32">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="10">10 per page</SelectItem>
-                <SelectItem value="20">20 per page</SelectItem>
-                <SelectItem value="50">50 per page</SelectItem>
-                <SelectItem value="100">100 per page</SelectItem>
-              </SelectContent>
-            </Select>
+              <Select value={itemsPerPage} onValueChange={setItemsPerPage}>
+                <SelectTrigger className="w-36 h-12 rounded-xl border-2 border-border/50 bg-background/80">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent className="bg-background border border-border rounded-xl shadow-lg">
+                  <SelectItem value="10">10 per page</SelectItem>
+                  <SelectItem value="20">20 per page</SelectItem>
+                  <SelectItem value="50">50 per page</SelectItem>
+                  <SelectItem value="100">100 per page</SelectItem>
+                </SelectContent>
+              </Select>
 
-            <Button variant="outline">
-              <Download className="w-4 h-4 mr-2" />
-              Export
-            </Button>
+              <Button 
+                variant="outline" 
+                className="h-12 px-6 rounded-xl border-2 border-border/50 bg-background/80 hover:bg-muted/50 transition-all duration-300"
+              >
+                <Download className="w-4 h-4 mr-2" />
+                Export
+              </Button>
+            </div>
           </div>
-        </CardHeader>
-        
-        <CardContent>
+        </CardContent>
+      </Card>
+
+      {/* Data Table Card */}
+      <Card className="bg-card/80 backdrop-blur-sm shadow-lg border border-border/50 rounded-2xl">
+        <CardContent className="p-0">
           <div className="overflow-x-auto">
             <table className="w-full border-collapse">
               <thead>
@@ -358,11 +382,11 @@ export const BulkServicesInterface: React.FC = () => {
             </table>
           </div>
           
-          <div className="flex items-center justify-between mt-4 pt-4 border-t">
-            <div className="text-sm text-gray-600">
+          <div className="flex items-center justify-between mt-4 pt-4 border-t mx-6 pb-6">
+            <div className="text-sm text-muted-foreground">
               Showing {filteredRecords.length} record(s) found
             </div>
-            <div className="text-sm text-gray-600">
+            <div className="text-sm text-muted-foreground">
               File: <span className="font-mono">080725 Bulk Services Cullinan & Nellmapius.xlsx</span>
             </div>
           </div>

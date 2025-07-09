@@ -52,17 +52,29 @@ export const AnalyticsDashboard: React.FC = () => {
         </Card>
       </div>
 
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <BarChart3 className="w-6 h-6 text-blue-600" />
-            Predictive Analytics Dashboard
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="text-center py-8 text-gray-500">
-            <Activity className="w-12 h-12 mx-auto mb-4 opacity-50" />
-            <p>Advanced analytics and reporting interface</p>
+      {/* Main Analytics Interface Card - Updated to match image layout */}
+      <Card className="bg-gradient-to-r from-primary/5 to-primary/10 border border-primary/20 rounded-2xl shadow-lg">
+        <CardContent className="p-6 sm:p-8">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+            <div className="flex items-center gap-4">
+              <div className="p-3 sm:p-4 bg-primary/10 rounded-2xl shrink-0">
+                <BarChart3 className="w-8 h-8 sm:w-10 sm:h-10 text-primary" />
+              </div>
+              <div className="min-w-0 flex-1">
+                <h2 className="text-2xl sm:text-3xl font-bold text-primary mb-2">
+                  Predictive Analytics Dashboard
+                </h2>
+                <p className="text-primary/80 text-lg">
+                  Advanced analytics and reporting interface
+                </p>
+              </div>
+            </div>
+          </div>
+          
+          <div className="text-center py-12 text-muted-foreground">
+            <Activity className="w-16 h-16 mx-auto mb-6 opacity-50" />
+            <p className="text-lg">Advanced analytics and reporting interface coming soon</p>
+            <p className="text-sm mt-2">Real-time insights and predictive modeling</p>
           </div>
         </CardContent>
       </Card>
