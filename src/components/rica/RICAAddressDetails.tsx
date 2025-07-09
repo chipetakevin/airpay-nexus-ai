@@ -145,7 +145,7 @@ const RICAAddressDetails: React.FC<RICAAddressDetailsProps> = ({
             disabled={!isStepValid()}
             className="flex-1 h-12"
           >
-            Next: SIM Details
+            Next: Banking Details
             <ChevronRight className="w-4 h-4 ml-2" />
           </Button>
         </div>

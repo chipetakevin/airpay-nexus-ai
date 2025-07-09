@@ -24,6 +24,7 @@ import RICADocumentValidator from '@/components/rica/RICADocumentValidator';
 import UniversalExitTabs from '@/components/navigation/UniversalExitTabs';
 import RICAPersonalInfo from '@/components/rica/RICAPersonalInfo';
 import RICAAddressDetails from '@/components/rica/RICAAddressDetails';
+import RICABankingDetails from '@/components/rica/RICABankingDetails';
 import RICASIMDetails from '@/components/rica/RICASIMDetails';
 import RICADeclaration from '@/components/rica/RICADeclaration';
 import RICAConfirmation from '@/components/rica/RICAConfirmation';
@@ -33,7 +34,7 @@ import AdminRegistration from '@/components/AdminRegistration';
 import FieldWorkerRegistration from '@/components/fieldworker/FieldWorkerRegistration';
 import { CollapsibleOneCardAccount } from '@/components/onecard/CollapsibleOneCardAccount';
 
-type RegistrationStep = 'personal' | 'address' | 'sim' | 'declaration' | 'confirmation';
+type RegistrationStep = 'personal' | 'address' | 'banking' | 'sim' | 'declaration' | 'confirmation';
 
 const RICARegistration = () => {
   const { toast } = useToast();
@@ -71,6 +72,11 @@ const RICARegistration = () => {
     province: '',
     proofOfResidence: null as File | null,
     
+    // Banking Information
+    bankName: '',
+    accountNumber: '',
+    branchCode: '',
+    
     // SIM Details
     simSerialNumber: '',
     selfieWithId: null as File | null,
@@ -83,7 +89,8 @@ const RICARegistration = () => {
   const steps = [
     { id: 'personal', title: 'Personal Info', icon: User, completed: false },
     { id: 'address', title: 'Address', icon: MapPin, completed: false },
-    { id: 'sim', title: 'SIM Details', icon: CreditCard, completed: false },
+    { id: 'banking', title: 'Banking', icon: CreditCard, completed: false },
+    { id: 'sim', title: 'SIM Details', icon: Phone, completed: false },
     { id: 'declaration', title: 'Declaration', icon: Shield, completed: false }
   ];
 
@@ -93,7 +100,7 @@ const RICARegistration = () => {
   };
 
   const handleNext = () => {
-    const stepOrder: RegistrationStep[] = ['personal', 'address', 'sim', 'declaration', 'confirmation'];
+    const stepOrder: RegistrationStep[] = ['personal', 'address', 'banking', 'sim', 'declaration', 'confirmation'];
     const currentIndex = stepOrder.indexOf(currentStep);
     if (currentIndex < stepOrder.length - 1) {
       setCurrentStep(stepOrder[currentIndex + 1]);
@@ -101,7 +108,7 @@ const RICARegistration = () => {
   };
 
   const handlePrevious = () => {
-    const stepOrder: RegistrationStep[] = ['personal', 'address', 'sim', 'declaration', 'confirmation'];
+    const stepOrder: RegistrationStep[] = ['personal', 'address', 'banking', 'sim', 'declaration', 'confirmation'];
     const currentIndex = stepOrder.indexOf(currentStep);
     if (currentIndex > 0) {
       setCurrentStep(stepOrder[currentIndex - 1]);
@@ -379,6 +386,15 @@ const RICARegistration = () => {
                 
                 {currentStep === 'address' && (
                   <RICAAddressDetails 
+                    formData={formData}
+                    setFormData={setFormData}
+                    onNext={handleNext}
+                    onPrevious={handlePrevious}
+                  />
+                )}
+                
+                {currentStep === 'banking' && (
+                  <RICABankingDetails 
                     formData={formData}
                     setFormData={setFormData}
                     onNext={handleNext}
