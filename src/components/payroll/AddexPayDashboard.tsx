@@ -801,45 +801,90 @@ const AddexPayDashboard = () => {
 
   // Compliance Monitoring Component
   const ComplianceMonitoringContent = () => (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <h3 className="text-lg font-semibold">South African Compliance Monitoring</h3>
-        <div className="flex gap-2">
-          <Button onClick={() => setShowComplianceModal(true)}>
-            <RefreshCw className="w-4 h-4 mr-2" />
-            Run Compliance Check
-          </Button>
-          <Button variant="outline">
-            <Download className="w-4 h-4 mr-2" />
-            Export Report
-          </Button>
+    <div className="space-y-4 md:space-y-6">
+      {/* Mobile-First Header */}
+      <div className="space-y-4">
+        <div className="flex flex-col space-y-3 md:flex-row md:items-center md:justify-between md:space-y-0">
+          <h3 className="text-xl md:text-2xl font-bold text-gray-900 leading-tight">
+            South African Compliance Monitoring
+          </h3>
+          
+          {/* Action Buttons - Stack on mobile, inline on desktop */}
+          <div className="flex flex-col sm:flex-row gap-2 md:gap-3">
+            <Button 
+              onClick={() => setShowComplianceModal(true)}
+              className="bg-blue-600 hover:bg-blue-700 text-white shadow-lg flex-1 sm:flex-none"
+              size="default"
+            >
+              <RefreshCw className="w-4 h-4 mr-2" />
+              Run Compliance Check
+            </Button>
+            <Button 
+              variant="outline" 
+              className="border-gray-300 hover:bg-gray-50 flex-1 sm:flex-none"
+              size="default"
+            >
+              <Download className="w-4 h-4 mr-2" />
+              Export Report
+            </Button>
+          </div>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Shield className="w-5 h-5" />
+      {/* Enhanced Mobile-First Layout */}
+      <div className="space-y-6">
+        {/* Compliance Status Card - Full width and mobile optimized */}
+        <Card className="shadow-lg border-0 bg-white/95 backdrop-blur-sm">
+          <CardHeader className="pb-4">
+            <CardTitle className="flex items-center gap-3 text-lg md:text-xl">
+              <div className="p-2 bg-gradient-to-br from-green-500 to-emerald-600 rounded-lg shadow-md">
+                <Shield className="w-5 h-5 md:w-6 md:h-6 text-white" />
+              </div>
               Compliance Status
             </CardTitle>
           </CardHeader>
-          <CardContent className="space-y-4">
+          <CardContent className="space-y-3">
             {complianceChecks.map((check, index) => (
-              <div key={index} className="flex items-center justify-between p-3 border rounded-lg">
-                <div>
-                  <div className="font-medium">{check.category}</div>
-                  <div className="text-sm text-muted-foreground">
+              <div 
+                key={index} 
+                className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 p-4 border border-gray-200 rounded-xl bg-gradient-to-r from-gray-50 to-white hover:shadow-md transition-all duration-200"
+              >
+                <div className="flex-1">
+                  <div className="font-semibold text-gray-900 text-base md:text-lg">
+                    {check.category}
+                  </div>
+                  <div className="text-sm text-gray-600 mt-1">
                     Last checked: {check.lastCheck}
                   </div>
-                </div>
-                <div className="flex items-center gap-2">
-                  {check.status === 'compliant' ? (
-                    <CheckCircle className="w-5 h-5 text-green-500" />
-                  ) : (
-                    <AlertTriangle className="w-5 h-5 text-orange-500" />
+                  {check.nextCheck && (
+                    <div className="text-xs text-gray-500 mt-1">
+                      Next check: {check.nextCheck}
+                    </div>
                   )}
-                  <Badge variant={check.status === 'compliant' ? 'default' : 'destructive'}>
+                </div>
+                
+                <div className="flex items-center gap-3 justify-between sm:justify-end">
+                  <div className="flex items-center gap-2">
+                    {check.status === 'compliant' ? (
+                      <div className="p-1 bg-green-100 rounded-full">
+                        <CheckCircle className="w-5 h-5 text-green-600" />
+                      </div>
+                    ) : (
+                      <div className="p-1 bg-orange-100 rounded-full">
+                        <AlertTriangle className="w-5 h-5 text-orange-600" />
+                      </div>
+                    )}
+                  </div>
+                  
+                  <Badge 
+                    className={`px-4 py-2 font-semibold text-sm rounded-full ${
+                      check.status === 'compliant' 
+                        ? 'bg-green-100 text-green-800 border-green-200' 
+                        : check.status === 'warning'
+                        ? 'bg-orange-100 text-orange-800 border-orange-200'
+                        : 'bg-red-100 text-red-800 border-red-200'
+                    }`}
+                  >
                     {check.status}
                   </Badge>
                 </div>
@@ -848,48 +893,73 @@ const AddexPayDashboard = () => {
           </CardContent>
         </Card>
 
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <TrendingUp className="w-5 h-5" />
+        {/* Compliance Score Card - Mobile optimized */}
+        <Card className="shadow-lg border-0 bg-gradient-to-br from-blue-50 to-indigo-50">
+          <CardHeader className="pb-4">
+            <CardTitle className="flex items-center gap-3 text-lg md:text-xl">
+              <div className="p-2 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-lg shadow-md">
+                <TrendingUp className="w-5 h-5 md:w-6 md:h-6 text-white" />
+              </div>
               Compliance Score
             </CardTitle>
           </CardHeader>
-          <CardContent className="space-y-4">
+          <CardContent className="space-y-6">
             <div className="text-center">
-              <div className="text-4xl font-bold text-green-600">{payrollStats.complianceScore}%</div>
-              <div className="text-sm text-muted-foreground">Overall Compliance</div>
+              <div className="text-5xl md:text-6xl font-bold text-transparent bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text">
+                {payrollStats.complianceScore}%
+              </div>
+              <div className="text-sm md:text-base text-gray-600 mt-2">Overall Compliance Score</div>
             </div>
-            <Progress value={payrollStats.complianceScore} className="w-full" />
-            <div className="space-y-2">
-              <div className="flex justify-between text-sm">
-                <span>SARS Compliance</span>
-                <span className="text-green-600">100%</span>
+            
+            <div className="relative">
+              <Progress 
+                value={payrollStats.complianceScore} 
+                className="w-full h-3 bg-gray-200 rounded-full overflow-hidden"
+              />
+              <div className="absolute inset-0 bg-gradient-to-r from-green-500 via-emerald-500 to-green-600 rounded-full opacity-20"></div>
+            </div>
+            
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              <div className="text-center p-3 bg-white/60 rounded-lg border border-gray-200">
+                <div className="text-lg font-bold text-green-600">100%</div>
+                <div className="text-xs text-gray-600">SARS Compliance</div>
               </div>
-              <div className="flex justify-between text-sm">
-                <span>Labour Law</span>
-                <span className="text-green-600">100%</span>
+              <div className="text-center p-3 bg-white/60 rounded-lg border border-gray-200">
+                <div className="text-lg font-bold text-green-600">100%</div>
+                <div className="text-xs text-gray-600">Labour Law</div>
               </div>
-              <div className="flex justify-between text-sm">
-                <span>POPIA Compliance</span>
-                <span className="text-orange-600">95%</span>
+              <div className="text-center p-3 bg-white/60 rounded-lg border border-gray-200">
+                <div className="text-lg font-bold text-orange-600">95%</div>
+                <div className="text-xs text-gray-600">POPIA Compliance</div>
               </div>
             </div>
           </CardContent>
         </Card>
-      </div>
 
-      <Alert className="border-orange-200 bg-orange-50">
-        <AlertTriangle className="h-4 w-4 text-orange-600" />
-        <AlertDescription className="text-orange-800">
-          <div className="flex items-center justify-between">
-            <span>2 POPIA compliance issues require attention</span>
-            <Button size="sm" variant="outline">
-              View Details
-            </Button>
+        {/* Issues Alert - Mobile optimized */}
+        <Alert className="border-l-4 border-l-orange-500 bg-gradient-to-r from-orange-50 to-yellow-50 shadow-md">
+          <div className="flex items-start gap-3">
+            <div className="p-1 bg-orange-100 rounded-full flex-shrink-0 mt-0.5">
+              <AlertTriangle className="h-5 w-5 text-orange-600" />
+            </div>
+            <AlertDescription className="text-orange-800 flex-1">
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                <div>
+                  <div className="font-semibold">Attention Required</div>
+                  <div className="text-sm">2 POPIA compliance issues need immediate attention</div>
+                </div>
+                <Button 
+                  size="sm" 
+                  variant="outline" 
+                  className="border-orange-200 text-orange-700 hover:bg-orange-100 self-start sm:self-center"
+                >
+                  View Details
+                </Button>
+              </div>
+            </AlertDescription>
           </div>
-        </AlertDescription>
-      </Alert>
+        </Alert>
+      </div>
     </div>
   );
 
