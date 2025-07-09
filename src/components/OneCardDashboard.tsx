@@ -50,7 +50,8 @@ const OneCardDashboard = () => {
   }
 
   const handleAccessRewards = () => {
-    setActiveTab('deals');
+    // Navigate to deals tab with proper URL
+    window.location.href = '/portal?tab=deals&network=addex-hub%20mobile&dealType=airtime';
   };
 
   const togglePhoneVisibility = () => {
