@@ -301,7 +301,9 @@ const PortalTabs = ({
           </TabsContent>
           
           <TabsContent value="ussd-manager" className="mobile-section-spacing p-2 sm:p-3 md:p-4 lg:p-6 animate-fade-in">
-            <EnhancedUSSDManager />
+            <div className="min-h-[400px] w-full">
+              <EnhancedUSSDManager />
+            </div>
           </TabsContent>
           
           {(isAdmin || showAdminTab) && (
