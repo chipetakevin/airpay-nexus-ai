@@ -1,5 +1,4 @@
-
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
@@ -35,6 +34,63 @@ const AdminPortal: React.FC<AdminPortalProps> = ({ onAuthSuccess, showAdminBanne
 
   const adminEmail = 'kev***@divinemobile.co.za';
   const fullAdminEmail = 'kevin@divinemobile.co.za';
+
+  // Check for existing admin session on component mount
+  useEffect(() => {
+    const checkAdminSession = () => {
+      const adminAuthenticated = localStorage.getItem('adminAuthenticated') === 'true';
+      const adminProfile = localStorage.getItem('adminProfile');
+      const userCredentials = localStorage.getItem('userCredentials');
+      
+      // Check if admin has valid session from enhanced auth
+      let hasValidAdminSession: boolean = adminAuthenticated && !!adminProfile;
+      
+      // Also check if user has admin credentials with Malawi@1976 password
+      if (!hasValidAdminSession && userCredentials) {
+        try {
+          const credentials = JSON.parse(userCredentials);
+          if (credentials.password === 'Malawi@1976' || credentials.userType === 'admin') {
+            hasValidAdminSession = true;
+            
+            // Auto-create admin profile if doesn't exist
+            if (!adminProfile) {
+              const adminCardNumber = 'ADM' + Math.random().toString(36).substr(2, 8).toUpperCase();
+              const adminData = {
+                firstName: 'Kevin',
+                lastName: 'ADMIN Account',
+                email: 'kevin@divinemobile.co.za',
+                cardNumber: adminCardNumber,
+                cardType: 'OneCard Platinum',
+                privileges: 'Full System Access',
+                cashbackBalance: 3145.75,
+                totalEarned: 15739.50,
+                totalSpent: 62958.00
+              };
+              
+              localStorage.setItem('adminProfile', JSON.stringify(adminData));
+              localStorage.setItem('adminAuthenticated', 'true');
+            }
+          }
+        } catch (error) {
+          console.error('Error parsing user credentials:', error);
+        }
+      }
+      
+      if (hasValidAdminSession) {
+        setIsAuthenticated(true);
+        setIsCollapsed(false);
+        onAuthSuccess?.();
+        
+        toast({
+          title: "Admin Session Restored 🔑",
+          description: "Welcome back Kevin! 15-day session active.",
+          duration: 3000,
+        });
+      }
+    };
+
+    checkAdminSession();
+  }, [onAuthSuccess, toast]);
 
   const handleSendCode = () => {
     // Check if we've reached the 50-time limit
@@ -231,7 +287,7 @@ const AdminPortal: React.FC<AdminPortalProps> = ({ onAuthSuccess, showAdminBanne
         {/* Replace complex tabs with simplified admin control center */}
         <AdminControlCenterFixed 
           activeAdminTab="hub"
-          setActiveAdminTab={(tab) => console.log(`Admin tab switched to: ${tab}`)}
+          setActiveAdminTab={(tab: string) => console.log(`Admin tab switched to: ${tab}`)}
         />
       </div>
     );
