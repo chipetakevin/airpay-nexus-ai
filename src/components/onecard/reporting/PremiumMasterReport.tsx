@@ -7,6 +7,8 @@ import { CashbackMetricsGrid } from './CashbackMetricsGrid';
 import { CashbackTrendChart } from './CashbackTrendChart';
 import { CategoryBreakdownChart } from './CategoryBreakdownChart';
 import { AIInsightsPanel } from './AIInsightsPanel';
+import { AdvancedChartsControls } from './AdvancedChartsControls';
+import { BenchmarkingInsights } from './BenchmarkingInsights';
 import { generateEnhancedMasterReport } from '../utils/enhancedPdfGenerator';
 import { toast } from 'sonner';
 
@@ -17,6 +19,8 @@ interface PremiumMasterReportProps {
 
 export const PremiumMasterReport = ({ userData, userType = 'customer' }: PremiumMasterReportProps) => {
   const [isGenerating, setIsGenerating] = useState(false);
+  const [selectedDateRange, setSelectedDateRange] = useState<any>(null);
+  const [selectedTimeframe, setSelectedTimeframe] = useState('6months');
 
   // Mock data for demonstration
   const mockData = {
@@ -46,12 +50,19 @@ export const PremiumMasterReport = ({ userData, userType = 'customer' }: Premium
     setIsGenerating(true);
     
     try {
-      // Simulate report generation
+      // Simulate report generation with enhanced data
       await new Promise(resolve => setTimeout(resolve, 2000));
       
-      // Generate PDF using the enhanced PDF generator
+      // Generate PDF using the enhanced PDF generator with date range
+      const reportData = {
+        ...userData,
+        dateRange: selectedDateRange,
+        timeframe: selectedTimeframe,
+        generatedAt: new Date()
+      };
+      
       generateEnhancedMasterReport(
-        [userData || { firstName: 'Divine', lastName: 'Customer', onecardBalance: 2150.75 }],
+        [reportData || { firstName: 'Divine', lastName: 'Customer', onecardBalance: 2150.75 }],
         mockTrendData.map((item, index) => ({
           id: `txn_${index}`,
           amount: item.amount,
@@ -69,6 +80,27 @@ export const PremiumMasterReport = ({ userData, userType = 'customer' }: Premium
     } finally {
       setIsGenerating(false);
     }
+  };
+
+  const handleDateRangeChange = (range: any) => {
+    setSelectedDateRange(range);
+    toast.success('Date range updated', {
+      description: 'Charts and analytics will reflect the new date range.',
+    });
+  };
+
+  const handleExportChart = (format: 'png' | 'pdf' | 'svg') => {
+    toast.success(`Exporting chart as ${format.toUpperCase()}`, {
+      description: 'Your chart export will begin shortly.',
+    });
+  };
+
+  const handleTimeframeChange = (timeframe: string) => {
+    setSelectedTimeframe(timeframe);
+  };
+
+  const handleNotificationToggle = (enabled: boolean) => {
+    // Notification toggle logic handled in AdvancedChartsControls
   };
 
   const features = [
@@ -183,12 +215,21 @@ export const PremiumMasterReport = ({ userData, userType = 'customer' }: Premium
 
       {/* Analytics Sections */}
       <div className="max-w-6xl mx-auto space-y-6">
+        {/* Advanced Controls */}
+        <AdvancedChartsControls 
+          onDateRangeChange={handleDateRangeChange}
+          onExportChart={handleExportChart}
+          onTimeframeChange={handleTimeframeChange}
+          onNotificationToggle={handleNotificationToggle}
+        />
+
         {/* Metrics Overview */}
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <BarChart3 className="w-5 h-5 text-blue-600" />
-              Charts & Metrics
+              Interactive Charts & Metrics
+              <Badge variant="outline" className="bg-blue-50 text-blue-600">Live Data</Badge>
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -236,7 +277,8 @@ export const PremiumMasterReport = ({ userData, userType = 'customer' }: Premium
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Lightbulb className="w-5 h-5 text-orange-600" />
-                AI Insights
+                AI-Powered Insights
+                <Badge variant="outline" className="bg-orange-50 text-orange-600">Smart Analytics</Badge>
               </CardTitle>
             </CardHeader>
             <CardContent>
@@ -262,6 +304,12 @@ export const PremiumMasterReport = ({ userData, userType = 'customer' }: Premium
             </CardContent>
           </Card>
         </div>
+
+        {/* Benchmarking Section */}
+        <BenchmarkingInsights 
+          userData={userData}
+          viewMode="individual"
+        />
       </div>
 
       {/* Financial Summary */}
