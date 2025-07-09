@@ -151,6 +151,49 @@ export const BulkServicesInterface: React.FC = () => {
 
   return (
     <div className="space-y-6">
+      {/* Top Navigation Cards - Following USSD Manager Pattern */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <Card className="cursor-pointer transition-all duration-300 hover:shadow-lg hover:-translate-y-1 bg-gradient-to-br from-blue-50 to-blue-100 border-blue-200">
+          <CardContent className="p-6 text-center">
+            <div className="w-12 h-12 bg-blue-600 rounded-lg flex items-center justify-center mx-auto mb-3">
+              <FileText className="w-6 h-6 text-white" />
+            </div>
+            <h3 className="font-bold text-blue-900">Template Manager</h3>
+            <p className="text-sm text-blue-700 mt-1">Download & configure templates</p>
+          </CardContent>
+        </Card>
+
+        <Card className="cursor-pointer transition-all duration-300 hover:shadow-lg hover:-translate-y-1 bg-gradient-to-br from-gray-50 to-gray-100 border-gray-200">
+          <CardContent className="p-6 text-center">
+            <div className="w-12 h-12 bg-gray-600 rounded-lg flex items-center justify-center mx-auto mb-3">
+              <BarChart3 className="w-6 h-6 text-white" />
+            </div>
+            <h3 className="font-bold text-gray-900">Analytics</h3>
+            <p className="text-sm text-gray-700 mt-1">Performance metrics</p>
+          </CardContent>
+        </Card>
+
+        <Card className="cursor-pointer transition-all duration-300 hover:shadow-lg hover:-translate-y-1 bg-gradient-to-br from-gray-50 to-gray-100 border-gray-200">
+          <CardContent className="p-6 text-center">
+            <div className="w-12 h-12 bg-gray-600 rounded-lg flex items-center justify-center mx-auto mb-3">
+              <RefreshCw className="w-6 h-6 text-white" />
+            </div>
+            <h3 className="font-bold text-gray-900">Processing</h3>
+            <p className="text-sm text-gray-700 mt-1">Monitor operations</p>
+          </CardContent>
+        </Card>
+
+        <Card className="cursor-pointer transition-all duration-300 hover:shadow-lg hover:-translate-y-1 bg-gradient-to-br from-gray-50 to-gray-100 border-gray-200">
+          <CardContent className="p-6 text-center">
+            <div className="w-12 h-12 bg-gray-600 rounded-lg flex items-center justify-center mx-auto mb-3">
+              <Zap className="w-6 h-6 text-white" />
+            </div>
+            <h3 className="font-bold text-gray-900">Settings</h3>
+            <p className="text-sm text-gray-700 mt-1">Configure parameters</p>
+          </CardContent>
+        </Card>
+      </div>
+
       {/* Stats Overview */}
       <div className="grid grid-cols-1 md:grid-cols-7 gap-4">
         <Card className="bg-gradient-to-br from-blue-50 to-cyan-50 border-blue-200">
@@ -231,101 +274,116 @@ export const BulkServicesInterface: React.FC = () => {
         </Card>
       </div>
 
-      {/* Main Interface Card - Mobile-First Enhanced Layout */}
-      <Card className="bg-gradient-to-br from-background via-muted/20 to-background border border-border/20 rounded-3xl shadow-xl overflow-hidden">
-        <CardContent className="p-6 sm:p-8 lg:p-12">
-          {/* Header Section - Centered for Mobile */}
-          <div className="text-center mb-10">
-            {/* Icon */}
-            <div className="inline-flex p-6 bg-primary/10 rounded-3xl mb-6">
-              <FileText className="w-16 h-16 sm:w-20 sm:h-20 text-primary" />
-            </div>
-            
-            {/* Title */}
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-primary leading-tight">
-              Bulk Service
-              <br />
-              Operations
-            </h1>
-          </div>
-
-          {/* Primary Action Buttons - Full Width Stacked */}
-          <div className="space-y-4 mb-10">
+      {/* Template Manager Section */}
+      <Card className="bg-gradient-to-br from-blue-50 to-indigo-50 border-blue-200">
+        <CardHeader>
+          <CardTitle className="text-xl font-bold text-blue-900">Template Manager</CardTitle>
+          <p className="text-blue-700">Download templates and upload bulk service files</p>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="flex gap-4">
             <Button 
-              className="w-full bg-green-600 hover:bg-green-700 text-white h-16 rounded-2xl text-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] flex items-center justify-center gap-4"
+              className="flex-1 bg-white hover:bg-gray-50 text-gray-700 border border-gray-200 shadow-sm"
               onClick={handleFileUpload}
             >
-              <Download className="w-6 h-6" />
-              Template
-            </Button>
-            <Button 
-              className="w-full bg-primary hover:bg-primary/90 text-primary-foreground h-16 rounded-2xl text-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] flex items-center justify-center gap-4"
-              onClick={handleFileUpload}
-            >
-              <Upload className="w-6 h-6" />
-              Upload
+              <Play className="w-4 h-4 mr-2" />
+              Test Template
             </Button>
           </div>
-          
-          {/* Search & Filters Section */}
-          <div className="space-y-6">
-            {/* Search Bar - Full Width */}
-            <div className="relative">
-              <Search className="absolute left-6 top-1/2 transform -translate-y-1/2 text-muted-foreground w-6 h-6 z-10" />
-              <Input
-                placeholder="Search by MSISDN, Code"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-16 pr-6 h-16 text-lg border-2 border-border/50 rounded-2xl focus:border-primary shadow-sm focus:shadow-lg transition-all duration-300 bg-background/90 backdrop-blur-sm placeholder:text-muted-foreground/70 font-medium"
-              />
-            </div>
-            
-            {/* Filter Controls - Stacked for Mobile */}
-            <div className="space-y-4">
-              {/* Status Filter */}
-              <Select value={statusFilter} onValueChange={setStatusFilter}>
-                <SelectTrigger className="w-full h-16 rounded-2xl border-2 border-border/50 bg-background/90 text-lg font-medium">
-                  <div className="flex items-center gap-3">
-                    <Filter className="w-5 h-5" />
-                    <SelectValue placeholder="All Status" />
-                  </div>
-                </SelectTrigger>
-                <SelectContent className="bg-background border border-border rounded-2xl shadow-2xl z-50">
-                  <SelectItem value="all" className="text-lg py-3">All Status</SelectItem>
-                  <SelectItem value="completed" className="text-lg py-3">Completed</SelectItem>
-                  <SelectItem value="processing" className="text-lg py-3">Processing</SelectItem>
-                  <SelectItem value="failed" className="text-lg py-3">Failed</SelectItem>
-                  <SelectItem value="pending" className="text-lg py-3">Pending</SelectItem>
-                </SelectContent>
-              </Select>
-
-              {/* Items Per Page */}
-              <Select value={itemsPerPage} onValueChange={setItemsPerPage}>
-                <SelectTrigger className="w-full h-16 rounded-2xl border-2 border-border/50 bg-background/90 text-lg font-medium">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent className="bg-background border border-border rounded-2xl shadow-2xl z-50">
-                  <SelectItem value="10" className="text-lg py-3">10 per page</SelectItem>
-                  <SelectItem value="20" className="text-lg py-3">20 per page</SelectItem>
-                  <SelectItem value="50" className="text-lg py-3">50 per page</SelectItem>
-                  <SelectItem value="100" className="text-lg py-3">100 per page</SelectItem>
-                </SelectContent>
-              </Select>
-
-              {/* Export Button */}
-              <Button 
-                variant="outline" 
-                className="w-full h-16 rounded-2xl border-2 border-border/50 bg-background/90 hover:bg-muted/60 transition-all duration-300 text-lg font-medium flex items-center justify-center gap-4 shadow-sm hover:shadow-md"
-              >
-                <Download className="w-5 h-5" />
-                Export
-              </Button>
-            </div>
+          <div className="flex gap-4">
+            <Button 
+              className="flex-1 bg-blue-600 hover:bg-blue-700 text-white"
+              onClick={handleFileUpload}
+            >
+              <Download className="w-4 h-4 mr-2" />
+              Download Template
+            </Button>
           </div>
         </CardContent>
       </Card>
-      {/* Data Table Card */}
-      <Card className="bg-card/80 backdrop-blur-sm shadow-lg border border-border/50 rounded-2xl">
+
+      {/* Upload New Operation Section */}
+      <Card className="bg-gradient-to-br from-green-50 to-emerald-50 border-green-200">
+        <CardContent className="p-6">
+          <div className="flex items-center gap-4">
+            <div className="w-12 h-12 bg-green-600 rounded-lg flex items-center justify-center">
+              <Upload className="w-6 h-6 text-white" />
+            </div>
+            <div className="flex-1">
+              <h3 className="text-lg font-bold text-green-900">Upload New Bulk Operation</h3>
+              <p className="text-green-700">Upload CSV files to process bulk service operations and configure their behavior</p>
+            </div>
+            <Button 
+              className="bg-green-600 hover:bg-green-700 text-white"
+              onClick={handleFileUpload}
+            >
+              <Upload className="w-4 h-4 mr-2" />
+              Upload File
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Search and Filter Section */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Search className="w-5 h-5" />
+            Search & Filter Operations
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
+            <Input
+              placeholder="Search by MSISDN, Code"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="pl-10"
+            />
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <Select value={statusFilter} onValueChange={setStatusFilter}>
+              <SelectTrigger>
+                <SelectValue placeholder="All Status" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Status</SelectItem>
+                <SelectItem value="completed">Completed</SelectItem>
+                <SelectItem value="processing">Processing</SelectItem>
+                <SelectItem value="failed">Failed</SelectItem>
+                <SelectItem value="pending">Pending</SelectItem>
+              </SelectContent>
+            </Select>
+
+            <Select value={itemsPerPage} onValueChange={setItemsPerPage}>
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="10">10 per page</SelectItem>
+                <SelectItem value="20">20 per page</SelectItem>
+                <SelectItem value="50">50 per page</SelectItem>
+                <SelectItem value="100">100 per page</SelectItem>
+              </SelectContent>
+            </Select>
+
+            <Button variant="outline" className="flex items-center gap-2">
+              <Download className="w-4 h-4" />
+              Export
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+      {/* Current Operations Section */}
+      <Card>
+        <CardHeader className="border-b border-border/10">
+          <div className="flex items-center gap-2">
+            <Database className="w-5 h-5 text-blue-600" />
+            <CardTitle>Current Operations</CardTitle>
+          </div>
+        </CardHeader>
         <CardContent className="p-6">
           {/* Enhanced Data Table */}
           <div className="overflow-hidden rounded-2xl border border-border/20">
