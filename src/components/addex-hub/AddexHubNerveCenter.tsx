@@ -264,144 +264,142 @@ const AddexHubNerveCenter: React.FC<AddexHubNerveCenterProps> = ({
         </Card>
       </div>
 
-      {/* Enhanced Main Navigation Tabs */}
-      <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4 sm:space-y-6">
-        <div className="overflow-x-auto">
-          <TabsList className="grid grid-cols-3 sm:grid-cols-5 lg:grid-cols-10 min-w-max h-auto p-1.5 sm:p-2 bg-card/80 backdrop-blur-sm rounded-xl shadow-lg border border-border/50">
-            {nerveCenterSections.map((section) => (
-              <TabsTrigger
-                key={section.id}
-                value={section.id}
-                className="flex flex-col items-center gap-1.5 sm:gap-2 p-2 sm:p-4 data-[state=active]:bg-primary/10 data-[state=active]:text-primary data-[state=active]:shadow-sm min-w-max transition-all duration-300 hover:scale-105"
-              >
-                <section.icon className="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6 shrink-0" />
-                <span className="text-xs sm:text-sm font-medium leading-tight text-center">{section.label}</span>
-              </TabsTrigger>
-            ))}
-          </TabsList>
+      {/* Enhanced Main Navigation Tabs - Vertical Layout */}
+      <div className="flex flex-col lg:flex-row gap-4 sm:gap-6">
+        {/* Vertical Tab Navigation */}
+        <div className="lg:w-64 xl:w-72 shrink-0">
+          <Card className="bg-card/80 backdrop-blur-sm shadow-lg border border-border/50">
+            <CardHeader className="pb-3">
+              <CardTitle className="text-lg font-semibold">Navigation</CardTitle>
+            </CardHeader>
+            <CardContent className="pt-0">
+              <div className="space-y-1">
+                {nerveCenterSections.map((section) => (
+                  <Button
+                    key={section.id}
+                    variant={activeTab === section.id ? "default" : "ghost"}
+                    className={`w-full justify-start gap-3 p-3 sm:p-4 h-auto transition-all duration-300 hover:bg-muted/50 ${
+                      activeTab === section.id 
+                        ? 'bg-primary/10 text-primary shadow-sm border-l-2 border-l-primary' 
+                        : ''
+                    }`}
+                    onClick={() => setActiveTab(section.id)}
+                  >
+                    <section.icon className="w-4 h-4 sm:w-5 sm:h-5 shrink-0" />
+                    <div className="flex flex-col items-start text-left">
+                      <span className="text-sm font-medium">{section.label}</span>
+                      <span className="text-xs text-muted-foreground leading-tight">{section.title}</span>
+                    </div>
+                  </Button>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
         </div>
 
-        {/* Tab Content */}
-        <TabsContent value="overview" className="space-y-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {/* System Health Cards */}
-            <Card className="bg-gradient-to-br from-green-50 to-emerald-50 border-green-200">
-              <CardContent className="p-6">
-                <div className="flex items-center justify-between mb-4">
-                  <div className="p-3 bg-green-100 rounded-lg">
-                    <CheckCircle className="w-8 h-8 text-green-600" />
+        {/* Tab Content Area */}
+        <div className="flex-1 min-w-0">
+          <Card className="bg-card/80 backdrop-blur-sm shadow-lg border border-border/50">
+            <CardContent className="p-6">
+              {activeTab === 'overview' && (
+                <div className="space-y-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    {/* System Health Cards */}
+                    <Card className="bg-gradient-to-br from-green-50 to-emerald-50 border-green-200">
+                      <CardContent className="p-6">
+                        <div className="flex items-center justify-between mb-4">
+                          <div className="p-3 bg-green-100 rounded-lg">
+                            <CheckCircle className="w-8 h-8 text-green-600" />
+                          </div>
+                          <Badge className="bg-green-500">Live</Badge>
+                        </div>
+                        <h3 className="text-2xl font-bold text-green-700 mb-2">{systemHealth.uptime}</h3>
+                        <p className="text-green-600">System Uptime</p>
+                      </CardContent>
+                    </Card>
+
+                    <Card className="bg-gradient-to-br from-blue-50 to-cyan-50 border-blue-200">
+                      <CardContent className="p-6">
+                        <div className="flex items-center justify-between mb-4">
+                          <div className="p-3 bg-blue-100 rounded-lg">
+                            <Users className="w-8 h-8 text-blue-600" />
+                          </div>
+                          <Badge className="bg-blue-500">Active</Badge>
+                        </div>
+                        <h3 className="text-2xl font-bold text-blue-700 mb-2">{systemHealth.activeUsers.toLocaleString()}</h3>
+                        <p className="text-blue-600">Active Users</p>
+                      </CardContent>
+                    </Card>
+
+                    <Card className="bg-gradient-to-br from-purple-50 to-pink-50 border-purple-200">
+                      <CardContent className="p-6">
+                        <div className="flex items-center justify-between mb-4">
+                          <div className="p-3 bg-purple-100 rounded-lg">
+                            <TrendingUp className="w-8 h-8 text-purple-600" />
+                          </div>
+                          <Badge className="bg-purple-500">Processing</Badge>
+                        </div>
+                        <h3 className="text-2xl font-bold text-purple-700 mb-2">{systemHealth.transactions.toLocaleString()}</h3>
+                        <p className="text-purple-600">Transactions Today</p>
+                      </CardContent>
+                    </Card>
+
+                    <Card className="bg-gradient-to-br from-orange-50 to-red-50 border-orange-200">
+                      <CardContent className="p-6">
+                        <div className="flex items-center justify-between mb-4">
+                          <div className="p-3 bg-orange-100 rounded-lg">
+                            <Zap className="w-8 h-8 text-orange-600" />
+                          </div>
+                          <Badge className="bg-orange-500">Autonomous</Badge>
+                        </div>
+                        <h3 className="text-2xl font-bold text-orange-700 mb-2">{systemHealth.agentic_tasks}</h3>
+                        <p className="text-orange-600">AI Tasks Running</p>
+                      </CardContent>
+                    </Card>
                   </div>
-                  <Badge className="bg-green-500">Live</Badge>
+
+                  {/* Quick Actions Grid */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {nerveCenterSections.slice(1).map((section) => (
+                      <Card 
+                        key={section.id}
+                        className="group hover:shadow-xl transition-all duration-300 hover:-translate-y-1 cursor-pointer border-l-4 border-l-primary bg-gradient-to-br from-card to-primary/5"
+                        onClick={() => setActiveTab(section.id)}
+                      >
+                        <CardContent className="p-6">
+                          <div className="flex items-center justify-between mb-4">
+                            <div className="p-3 rounded-xl bg-primary/10 group-hover:scale-110 transition-transform duration-300">
+                              <section.icon className="w-8 h-8 text-primary" />
+                            </div>
+                            <Badge variant="default" className="bg-primary animate-pulse">
+                              ACTIVE
+                            </Badge>
+                          </div>
+                          <h3 className="text-xl font-bold mb-2 group-hover:text-primary transition-colors">{section.title}</h3>
+                          <p className="text-muted-foreground text-sm mb-4 leading-relaxed">{section.description}</p>
+                          <Button className="w-full group-hover:scale-105 transition-transform duration-200">
+                            Access Module
+                          </Button>
+                        </CardContent>
+                      </Card>
+                    ))}
+                  </div>
                 </div>
-                <h3 className="text-2xl font-bold text-green-700 mb-2">{systemHealth.uptime}</h3>
-                <p className="text-green-600">System Uptime</p>
-              </CardContent>
-            </Card>
+              )}
 
-            <Card className="bg-gradient-to-br from-blue-50 to-cyan-50 border-blue-200">
-              <CardContent className="p-6">
-                <div className="flex items-center justify-between mb-4">
-                  <div className="p-3 bg-blue-100 rounded-lg">
-                    <Users className="w-8 h-8 text-blue-600" />
-                  </div>
-                  <Badge className="bg-blue-500">Active</Badge>
-                </div>
-                <h3 className="text-2xl font-bold text-blue-700 mb-2">{systemHealth.activeUsers.toLocaleString()}</h3>
-                <p className="text-blue-600">Active Users</p>
-              </CardContent>
-            </Card>
-
-            <Card className="bg-gradient-to-br from-purple-50 to-pink-50 border-purple-200">
-              <CardContent className="p-6">
-                <div className="flex items-center justify-between mb-4">
-                  <div className="p-3 bg-purple-100 rounded-lg">
-                    <TrendingUp className="w-8 h-8 text-purple-600" />
-                  </div>
-                  <Badge className="bg-purple-500">Processing</Badge>
-                </div>
-                <h3 className="text-2xl font-bold text-purple-700 mb-2">{systemHealth.transactions.toLocaleString()}</h3>
-                <p className="text-purple-600">Transactions Today</p>
-              </CardContent>
-            </Card>
-
-            <Card className="bg-gradient-to-br from-orange-50 to-red-50 border-orange-200">
-              <CardContent className="p-6">
-                <div className="flex items-center justify-between mb-4">
-                  <div className="p-3 bg-orange-100 rounded-lg">
-                    <Zap className="w-8 h-8 text-orange-600" />
-                  </div>
-                  <Badge className="bg-orange-500">Autonomous</Badge>
-                </div>
-                <h3 className="text-2xl font-bold text-orange-700 mb-2">{systemHealth.agentic_tasks}</h3>
-                <p className="text-orange-600">AI Tasks Running</p>
-              </CardContent>
-            </Card>
-          </div>
-
-          {/* Quick Actions Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {nerveCenterSections.slice(1).map((section) => (
-              <Card 
-                key={section.id}
-                className="group hover:shadow-xl transition-all duration-300 hover:-translate-y-1 cursor-pointer border-l-4 border-l-blue-500 bg-gradient-to-br from-white to-blue-50"
-                onClick={() => setActiveTab(section.id)}
-              >
-                <CardContent className="p-6">
-                  <div className="flex items-center justify-between mb-4">
-                    <div className="p-3 rounded-xl bg-blue-100 group-hover:scale-110 transition-transform duration-300">
-                      <section.icon className="w-8 h-8 text-blue-600" />
-                    </div>
-                    <Badge variant="default" className="bg-blue-500 animate-pulse">
-                      ACTIVE
-                    </Badge>
-                  </div>
-                  <h3 className="text-xl font-bold mb-2 group-hover:text-blue-600 transition-colors">{section.title}</h3>
-                  <p className="text-gray-600 text-sm mb-4 leading-relaxed">{section.description}</p>
-                  <Button className="w-full group-hover:scale-105 transition-transform duration-200 bg-blue-600 hover:bg-blue-700">
-                    Access Module
-                  </Button>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </TabsContent>
-
-        <TabsContent value="customers">
-          <IntelligentCustomerManagement />
-        </TabsContent>
-
-        <TabsContent value="subscriber">
-          <SubscriberDetailsTabs />
-        </TabsContent>
-
-        <TabsContent value="workflows">
-          <AgenticWorkflowPanel />
-        </TabsContent>
-
-        <TabsContent value="bulk">
-          <BulkOperationsHub />
-        </TabsContent>
-
-        <TabsContent value="bulkservices">
-          <BulkServicesInterface />
-        </TabsContent>
-
-        <TabsContent value="financial">
-          <FinancialManagementHub />
-        </TabsContent>
-
-        <TabsContent value="address">
-          <AddressManagementSystem />
-        </TabsContent>
-
-        <TabsContent value="analytics">
-          <AnalyticsDashboard />
-        </TabsContent>
-
-        <TabsContent value="monitoring">
-          <RealTimeMonitoring />
-        </TabsContent>
-      </Tabs>
+              {activeTab === 'customers' && <IntelligentCustomerManagement />}
+              {activeTab === 'subscriber' && <SubscriberDetailsTabs />}
+              {activeTab === 'workflows' && <AgenticWorkflowPanel />}
+              {activeTab === 'bulk' && <BulkOperationsHub />}
+              {activeTab === 'bulkservices' && <BulkServicesInterface />}
+              {activeTab === 'financial' && <FinancialManagementHub />}
+              {activeTab === 'address' && <AddressManagementSystem />}
+              {activeTab === 'analytics' && <AnalyticsDashboard />}
+              {activeTab === 'monitoring' && <RealTimeMonitoring />}
+            </CardContent>
+          </Card>
+        </div>
+      </div>
     </div>
   );
 };
