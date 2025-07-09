@@ -92,7 +92,7 @@ const TransactionProcessorPanel = () => {
       network: 'MTN',
       status: 'completed',
       timestamp: '2 mins ago',
-      customer: 'customer@email.com'
+      customer: 'customer@divinemobile.co.za'
     },
     {
       id: 'TXN-8473',

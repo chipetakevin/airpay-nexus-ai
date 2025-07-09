@@ -63,7 +63,7 @@ export const AdminDataPoolManager = ({ onPoolUpdate }: AdminDataPoolManagerProps
     console.log(`WhatsApp sent to Admin: Data pool topped up with R${amount}. New balance: R${newBalance}`);
     
     // Simulate Email notification
-    console.log(`Email sent to chipetakevin@gmail.com: Data pool replenishment confirmation - R${amount} added`);
+    console.log(`Email sent to admin@divinemobile.co.za: Data pool replenishment confirmation - R${amount} added`);
   };
 
   return (
@@ -127,7 +127,7 @@ export const AdminDataPoolManager = ({ onPoolUpdate }: AdminDataPoolManagerProps
           </div>
           <div className="flex items-center gap-1">
             <Mail className="w-3 h-3" />
-            <span>Email alerts to chipetakevin@gmail.com</span>
+            <span>Email alerts to admin@divinemobile.co.za</span>
           </div>
         </div>
       </CardContent>

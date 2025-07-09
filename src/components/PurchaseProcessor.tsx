@@ -92,7 +92,7 @@ const PurchaseProcessor = ({ purchaseData, onComplete, onCancel }: PurchaseProce
     console.log(`Email receipt sent for transaction ${txId}`);
     
     // Simulate admin notification
-    console.log(`Admin notification sent to chipetakevin@gmail.com for transaction ${txId}`);
+    console.log(`Admin notification sent to admin@divinemobile.co.za for transaction ${txId}`);
   };
 
   const generateReceipt = () => {

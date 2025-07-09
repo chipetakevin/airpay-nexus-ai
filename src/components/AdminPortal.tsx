@@ -32,8 +32,8 @@ const AdminPortal: React.FC<AdminPortalProps> = ({ onAuthSuccess, showAdminBanne
   const [isLoading, setIsLoading] = useState(false);
   const [autofillCount, setAutofillCount] = useState(0);
 
-  const adminEmail = 'chi***akevin@gmail.com';
-  const fullAdminEmail = 'chipetakevin@gmail.com';
+  const adminEmail = 'kev***@divinemobile.co.za';
+  const fullAdminEmail = 'kevin@divinemobile.co.za';
 
   const handleSendCode = () => {
     // Check if we've reached the 50-time limit

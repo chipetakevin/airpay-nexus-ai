@@ -12,7 +12,7 @@ export const loadCustomerData = (): Customer[] => {
       id: customer.cardNumber || 'user-1',
       firstName: customer.firstName || 'Unknown',
       lastName: customer.lastName || 'User',
-      email: customer.email || 'unknown@email.com',
+      email: customer.email || 'customer@divinemobile.co.za',
       phone: customer.registeredPhone || 'Unknown',
       cardNumber: customer.cardNumber || 'Unknown',
       onecardBalance: Number(customer.onecardBalance) || 0,
