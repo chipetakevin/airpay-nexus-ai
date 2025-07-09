@@ -283,8 +283,8 @@ const AdminControlCenterFixed: React.FC<AdminControlCenterProps> = ({
         ))}
       </div>
 
-      {/* Additional Quick Actions */}
-      <Card>
+      {/* Quick Actions - Enhanced with Functionality */}
+      <Card className="shadow-lg">
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Zap className="w-5 h-5 text-blue-600" />
@@ -292,22 +292,64 @@ const AdminControlCenterFixed: React.FC<AdminControlCenterProps> = ({
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <Button variant="outline" className="h-auto p-4 flex flex-col gap-2">
-              <RefreshCw className="w-6 h-6" />
-              <span className="text-sm">Refresh System</span>
+          <div className="grid grid-cols-2 gap-4">
+            <Button 
+              variant="outline" 
+              className="h-24 flex flex-col items-center justify-center space-y-3 transition-all duration-300 hover:scale-105 bg-gradient-to-br from-blue-50 to-blue-100 hover:from-blue-100 hover:to-blue-200 border-blue-200 text-blue-700"
+              onClick={() => {
+                toast({
+                  title: "System Refresh Initiated",
+                  description: "Refreshing system state and updating data...",
+                });
+                setTimeout(() => {
+                  window.location.reload();
+                }, 1000);
+              }}
+            >
+              <RefreshCw className="w-8 h-8" />
+              <span className="text-sm font-medium">Refresh System</span>
             </Button>
-            <Button variant="outline" className="h-auto p-4 flex flex-col gap-2">
-              <Users className="w-6 h-6" />
-              <span className="text-sm">User Management</span>
+            <Button 
+              variant="outline" 
+              className="h-24 flex flex-col items-center justify-center space-y-3 transition-all duration-300 hover:scale-105 bg-gradient-to-br from-green-50 to-green-100 hover:from-green-100 hover:to-green-200 border-green-200 text-green-700"
+              onClick={() => {
+                toast({
+                  title: "User Management",
+                  description: "Opening user management interface...",
+                });
+                handleSectionClick('access');
+              }}
+            >
+              <Users className="w-8 h-8" />
+              <span className="text-sm font-medium">User Management</span>
             </Button>
-            <Button variant="outline" className="h-auto p-4 flex flex-col gap-2">
-              <Settings className="w-6 h-6" />
-              <span className="text-sm">System Settings</span>
+            <Button 
+              variant="outline" 
+              className="h-24 flex flex-col items-center justify-center space-y-3 transition-all duration-300 hover:scale-105 bg-gradient-to-br from-purple-50 to-purple-100 hover:from-purple-100 hover:to-purple-200 border-purple-200 text-purple-700"
+              onClick={() => {
+                toast({
+                  title: "System Settings",
+                  description: "Accessing system configuration panel...",
+                });
+                handleSectionClick('hub');
+              }}
+            >
+              <Settings className="w-8 h-8" />
+              <span className="text-sm font-medium">System Settings</span>
             </Button>
-            <Button variant="outline" className="h-auto p-4 flex flex-col gap-2">
-              <BarChart3 className="w-6 h-6" />
-              <span className="text-sm">Analytics</span>
+            <Button 
+              variant="outline" 
+              className="h-24 flex flex-col items-center justify-center space-y-3 transition-all duration-300 hover:scale-105 bg-gradient-to-br from-orange-50 to-orange-100 hover:from-orange-100 hover:to-orange-200 border-orange-200 text-orange-700"
+              onClick={() => {
+                toast({
+                  title: "Analytics Dashboard",
+                  description: "Loading analytics and reporting interface...",
+                });
+                handleSectionClick('dashboard');
+              }}
+            >
+              <BarChart3 className="w-8 h-8" />
+              <span className="text-sm font-medium">Analytics</span>
             </Button>
           </div>
         </CardContent>
