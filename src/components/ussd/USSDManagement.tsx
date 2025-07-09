@@ -1,10 +1,13 @@
 
 import React, { useState } from 'react';
-import { Smartphone, Send, History, Settings } from 'lucide-react';
+import { Smartphone, Send, History, Settings, Code, Users, TestTube } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import USSDServiceBuilder from './USSDServiceBuilder';
+import USSDSessionManager from './USSDSessionManager';
+import USSDTestingSuite from './USSDTestingSuite';
 
 const USSDManagement = () => {
   const [ussdCode, setUssdCode] = useState('');
@@ -43,11 +46,23 @@ const USSDManagement = () => {
         </CardHeader>
         <CardContent>
           <Tabs defaultValue="send" className="w-full">
-            <TabsList className="grid w-full grid-cols-1 sm:grid-cols-3 mb-6">
+            <TabsList className="grid w-full grid-cols-2 lg:grid-cols-6 mb-6">
               <TabsTrigger value="send" className="flex items-center">
                 <Send className="w-4 h-4 mr-2" />
                 <span className="hidden sm:inline">Send Code</span>
                 <span className="sm:hidden">Send</span>
+              </TabsTrigger>
+              <TabsTrigger value="builder" className="flex items-center">
+                <Code className="w-4 h-4 mr-2" />
+                <span className="hidden sm:inline">Builder</span>
+              </TabsTrigger>
+              <TabsTrigger value="sessions" className="flex items-center">
+                <Users className="w-4 h-4 mr-2" />
+                <span className="hidden sm:inline">Sessions</span>
+              </TabsTrigger>
+              <TabsTrigger value="testing" className="flex items-center">
+                <TestTube className="w-4 h-4 mr-2" />
+                <span className="hidden sm:inline">Testing</span>
               </TabsTrigger>
               <TabsTrigger value="history" className="flex items-center">
                 <History className="w-4 h-4 mr-2" />
@@ -117,6 +132,18 @@ const USSDManagement = () => {
                   ))}
                 </div>
               </div>
+            </TabsContent>
+
+            <TabsContent value="builder">
+              <USSDServiceBuilder />
+            </TabsContent>
+
+            <TabsContent value="sessions">
+              <USSDSessionManager />
+            </TabsContent>
+
+            <TabsContent value="testing">
+              <USSDTestingSuite />
             </TabsContent>
 
             <TabsContent value="history" className="space-y-4">
