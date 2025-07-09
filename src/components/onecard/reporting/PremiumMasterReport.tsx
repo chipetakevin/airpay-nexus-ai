@@ -48,15 +48,18 @@ export const PremiumMasterReport = ({ userData, userType = 'customer', onNavigat
   ];
 
   const handleGeneratePremiumReport = async () => {
+    console.log('🔄 Premium Report button clicked - starting generation...');
     setIsGenerating(true);
     
     try {
       // Show immediate feedback
+      console.log('✅ Showing toast notification...');
       toast.info('Generating premium report...', {
         description: 'Processing your data with Divine Mobile branding.',
       });
       
       // Simulate report generation with enhanced data
+      console.log('⏳ Starting 2-second simulation...');
       await new Promise(resolve => setTimeout(resolve, 2000));
       
       // Generate PDF using the enhanced PDF generator with date range
@@ -67,6 +70,7 @@ export const PremiumMasterReport = ({ userData, userType = 'customer', onNavigat
         generatedAt: new Date()
       };
       
+      console.log('🔄 Calling generateEnhancedMasterReport...');
       generateEnhancedMasterReport(
         [reportData || { firstName: 'Divine', lastName: 'Customer', onecardBalance: 2150.75 }],
         mockTrendData.map((item, index) => ({
@@ -80,15 +84,18 @@ export const PremiumMasterReport = ({ userData, userType = 'customer', onNavigat
       );
       
       // Show success message
+      console.log('✅ Report generation completed successfully');
       toast.success('Premium Report Generated Successfully!', {
         description: 'Professional PDF with Divine Mobile logo and comprehensive analytics has been downloaded.',
       });
       
     } catch (error) {
+      console.error('❌ Error generating report:', error);
       toast.error('Failed to generate report', {
         description: 'Please try again later.',
       });
     } finally {
+      console.log('🔄 Setting isGenerating to false');
       setIsGenerating(false);
     }
   };
