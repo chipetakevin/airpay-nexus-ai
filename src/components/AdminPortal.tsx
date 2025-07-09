@@ -31,12 +31,14 @@ const AdminPortal: React.FC<AdminPortalProps> = ({ onAuthSuccess, showAdminBanne
   const [authCode, setAuthCode] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [autofillCount, setAutofillCount] = useState(0);
+  const [sessionChecked, setSessionChecked] = useState(false); // Prevent multiple checks
 
   const adminEmail = 'kev***@divinemobile.co.za';
   const fullAdminEmail = 'kevin@divinemobile.co.za';
 
-  // Check for existing admin session on component mount
+  // Check for existing admin session on component mount - ONLY ONCE
   useEffect(() => {
+    if (sessionChecked) return; // Prevent multiple checks
     const checkAdminSession = () => {
       const adminAuthenticated = localStorage.getItem('adminAuthenticated') === 'true';
       const adminProfile = localStorage.getItem('adminProfile');
@@ -81,16 +83,24 @@ const AdminPortal: React.FC<AdminPortalProps> = ({ onAuthSuccess, showAdminBanne
         setIsCollapsed(false);
         onAuthSuccess?.();
         
-        toast({
-          title: "Admin Session Restored 🔑",
-          description: "Welcome back Kevin! 15-day session active.",
-          duration: 3000,
-        });
+        // Only show toast for actual session restoration, not initial load
+        const isInitialLoad = !localStorage.getItem('adminSessionToastShown');
+        if (!isInitialLoad) {
+          toast({
+            title: "Admin Session Restored 🔑",
+            description: "Welcome back Kevin! 15-day session active.",
+            duration: 3000,
+          });
+        } else {
+          localStorage.setItem('adminSessionToastShown', 'true');
+        }
       }
+      
+      setSessionChecked(true); // Mark as checked to prevent re-runs
     };
 
     checkAdminSession();
-  }, [onAuthSuccess, toast]);
+  }, []); // Empty dependency array - run only once on mount
 
   const handleSendCode = () => {
     // Check if we've reached the 50-time limit
@@ -165,9 +175,11 @@ const AdminPortal: React.FC<AdminPortalProps> = ({ onAuthSuccess, showAdminBanne
     setIsAuthenticated(false);
     setIsCollapsed(false);
     setAuthCode('');
+    setSessionChecked(false); // Reset session check for next login
     localStorage.removeItem('adminAuthenticated');
     localStorage.removeItem('adminAuthCode');
     localStorage.removeItem('adminProfile');
+    localStorage.removeItem('adminSessionToastShown'); // Clear toast flag
     
     // Navigate away from admin tab after logout
     navigate('/portal?tab=deals', { replace: true });
