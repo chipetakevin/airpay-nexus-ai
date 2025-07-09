@@ -3,8 +3,7 @@ import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Input } from '@/components/ui/input';
-import { CreditCard, LogIn, LogOut, User, Shield, MessageCircle, ShoppingCart, Phone } from 'lucide-react';
+import { CreditCard, LogIn, LogOut, User } from 'lucide-react';
 import { navigationItems } from './NavigationConfig';
 import { useMobileAuth } from '@/hooks/useMobileAuth';
 import LoginModal from '../auth/LoginModal';
@@ -21,47 +20,8 @@ const MobileMenuOverlay = ({ isMenuOpen, closeMenu, isHomePage, handleQuickShopC
   const location = useLocation();
   const { isAuthenticated, currentUser } = useMobileAuth();
   const [showLoginModal, setShowLoginModal] = useState(false);
-  const [showAdminPasswordInput, setShowAdminPasswordInput] = useState(false);
-  const [adminPassword, setAdminPassword] = useState('');
   const { toast } = useToast();
   const isActive = (path: string) => location.pathname === path;
-
-  const handleAdminPortalAccess = () => {
-    if (adminPassword === 'Malawi@1976') {
-      // Set admin authentication
-      localStorage.setItem('adminAuthenticated', 'true');
-      localStorage.setItem('userAuthenticated', 'true');
-      localStorage.setItem('userCredentials', JSON.stringify({
-        userType: 'admin',
-        password: 'Malawi@1976',
-        firstName: 'Kevin',
-        isUnifiedProfile: true
-      }));
-      
-      toast({
-        title: "🔐 Admin Access Granted",
-        description: "Welcome Kevin! Redirecting to Admin Portal...",
-        duration: 2000,
-      });
-      
-      closeMenu();
-      setShowAdminPasswordInput(false);
-      setAdminPassword('');
-      
-      // Navigate to admin portal
-      setTimeout(() => {
-        window.location.href = '/portal?tab=admin-reg';
-      }, 1000);
-    } else {
-      toast({
-        title: "❌ Access Denied",
-        description: "Invalid admin password. Please try again.",
-        variant: "destructive",
-        duration: 3000,
-      });
-      setAdminPassword('');
-    }
-  };
 
   const handleLogout = () => {
     localStorage.removeItem('userAuthenticated');
@@ -108,30 +68,10 @@ const MobileMenuOverlay = ({ isMenuOpen, closeMenu, isHomePage, handleQuickShopC
                   </div>
                   <div className="flex-1">
                     <p className="text-sm font-semibold text-green-800">
-                      {(() => {
-                        const adminAuth = localStorage.getItem('adminAuthenticated') === 'true';
-                        const storedCredentials = localStorage.getItem('userCredentials');
-                        if (adminAuth && storedCredentials) {
-                          const credentials = JSON.parse(storedCredentials);
-                          if (credentials.password === 'Malawi@1976') {
-                            return 'Kevin';
-                          }
-                        }
-                        return currentUser?.firstName || 'User';
-                      })()}
+                      {currentUser?.firstName || 'User'}
                     </p>
                     <p className="text-xs text-green-600">
-                      {(() => {
-                        const adminAuth = localStorage.getItem('adminAuthenticated') === 'true';
-                        const storedCredentials = localStorage.getItem('userCredentials');
-                        if (adminAuth && storedCredentials) {
-                          const credentials = JSON.parse(storedCredentials);
-                          if (credentials.password === 'Malawi@1976') {
-                            return 'ADMIN Account';
-                          }
-                        }
-                        return currentUser?.userType?.toUpperCase() + ' Account' || 'User Account';
-                      })()}
+                      {currentUser?.userType?.toUpperCase()} Account
                     </p>
                   </div>
                 </div>
@@ -161,110 +101,50 @@ const MobileMenuOverlay = ({ isMenuOpen, closeMenu, isHomePage, handleQuickShopC
             )}
           </div>
 
-          {/* Main Navigation Menu - Matching Second Image */}
-          
-          {/* Home */}
-          <Link
-            to="/"
-            onClick={closeMenu}
-            className="w-full flex items-center gap-4 px-6 py-4 rounded-2xl transition-all duration-200 text-lg font-medium bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-lg"
-          >
-            <div className="flex items-center justify-center w-8 h-8">
-              <User className="w-5 h-5" />
-            </div>
-            <span className="flex-1">Home</span>
-          </Link>
-
-          {/* Deals Hub */}
-          <Link
-            to="/portal?tab=deals"
-            onClick={closeMenu}
-            className="w-full flex items-center gap-4 px-6 py-4 rounded-2xl transition-all duration-200 text-lg font-medium text-blue-600 hover:bg-blue-50 border-2 border-transparent hover:border-blue-100"
-          >
-            <div className="flex items-center justify-center w-8 h-8">
-              <ShoppingCart className="w-5 h-5" />
-            </div>
-            <span className="flex-1">Deals Hub</span>
-            <Badge className="bg-blue-100 text-blue-700 text-xs px-3 py-1">
-              USSD
-            </Badge>
-          </Link>
-
-          {/* WhatsApp Shopping */}
-          <Link
-            to="/whatsapp-store"
-            onClick={closeMenu}
-            className="w-full flex items-center gap-4 px-6 py-4 rounded-2xl transition-all duration-200 text-lg font-medium text-blue-600 hover:bg-blue-50 border-2 border-transparent hover:border-blue-100"
-          >
-            <div className="flex items-center justify-center w-8 h-8">
-              <MessageCircle className="w-5 h-5" />
-            </div>
-            <span className="flex-1">WhatsApp Shopping</span>
-            <Badge className="bg-blue-100 text-blue-700 text-xs px-3 py-1">
-              AI
-            </Badge>
-          </Link>
-
-          {/* Number Porting */}
-          <Link
-            to="/number-porting"
-            onClick={closeMenu}
-            className="w-full flex items-center gap-4 px-6 py-4 rounded-2xl transition-all duration-200 text-lg font-medium text-blue-600 hover:bg-blue-50 border-2 border-transparent hover:border-blue-100"
-          >
-            <div className="flex items-center justify-center w-8 h-8">
-              <Phone className="w-5 h-5" />
-            </div>
-            <span className="flex-1">Number Porting</span>
-            <Badge className="bg-blue-100 text-blue-700 text-xs px-3 py-1">
-              NEW
-            </Badge>
-          </Link>
-
-          {/* Portal - Admin Access with Password */}
-          {showAdminPasswordInput ? (
-            <div className="w-full space-y-3 px-6 py-4 rounded-2xl bg-orange-50 border-2 border-orange-200">
-              <div className="flex items-center gap-2">
-                <Shield className="w-5 h-5 text-orange-600" />
-                <span className="text-lg font-medium text-orange-800">Admin Portal Access</span>
-              </div>
-              <Input
-                type="password"
-                placeholder="Enter admin password"
-                value={adminPassword}
-                onChange={(e) => setAdminPassword(e.target.value)}
-                className="w-full"
-                onKeyPress={(e) => e.key === 'Enter' && handleAdminPortalAccess()}
-              />
-              <div className="flex gap-2">
-                <Button
-                  onClick={handleAdminPortalAccess}
-                  className="flex-1 bg-green-600 hover:bg-green-700 text-white text-sm"
-                >
-                  Access Portal
-                </Button>
-                <Button
-                  onClick={() => {
-                    setShowAdminPasswordInput(false);
-                    setAdminPassword('');
-                  }}
-                  variant="outline"
-                  className="flex-1 text-sm"
-                >
-                  Cancel
-                </Button>
-              </div>
-            </div>
-          ) : (
-            <button
-              onClick={() => setShowAdminPasswordInput(true)}
-              className="w-full flex items-center gap-4 px-6 py-4 rounded-2xl transition-all duration-200 text-lg font-medium text-blue-600 hover:bg-blue-50 border-2 border-transparent hover:border-blue-100"
+          {/* Navigation Items */}
+          {navigationItems.map((item) => (
+            <Link
+              key={item.path}
+              to={item.path}
+              onClick={closeMenu}
+              className={`flex items-center gap-4 px-6 py-4 rounded-2xl transition-all duration-200 text-lg font-medium ${
+                isActive(item.path)
+                  ? 'bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-lg transform scale-[1.02]'
+                  : 'text-blue-600 hover:bg-blue-50 border-2 border-transparent hover:border-blue-100'
+              }`}
             >
               <div className="flex items-center justify-center w-8 h-8">
-                <Shield className="w-5 h-5" />
+                {item.icon}
               </div>
-              <span className="flex-1">Portal</span>
-            </button>
-          )}
+              <span className="flex-1">{item.label}</span>
+              {item.badge && (
+                <Badge className={`text-xs px-3 py-1 ${
+                  isActive(item.path) 
+                    ? 'bg-white/20 text-white border-white/30' 
+                    : 'bg-blue-100 text-blue-700'
+                }`}>
+                  {item.badge}
+                </Badge>
+              )}
+            </Link>
+          ))}
+          
+          {/* Buy Airtime & Data - Special styling to match green theme */}
+          <button
+            onClick={() => {
+              handleQuickShopClick();
+              closeMenu();
+            }}
+            className="w-full flex items-center gap-4 px-6 py-4 rounded-2xl transition-all duration-200 text-lg font-medium text-green-700 hover:bg-green-50 border-2 border-green-200 bg-green-50/70 shadow-sm"
+          >
+            <div className="flex items-center justify-center w-8 h-8">
+              <CreditCard className="w-5 h-5" />
+            </div>
+            <span className="flex-1">Buy Airtime & Data</span>
+            <Badge className="bg-green-600 text-white text-xs px-3 py-1">
+              Quick
+            </Badge>
+          </button>
         </nav>
         
         <LoginModal 
