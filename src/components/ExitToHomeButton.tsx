@@ -7,18 +7,18 @@ import { useLocation } from 'react-router-dom';
 const ExitToHomeButton = () => {
   const location = useLocation();
 
-  const handleExitToAIDeals = () => {
-    // Always redirect to AI-Powered Deals page seamlessly using the correct design
-    window.location.href = '/ai-powered-deals';
+  const handleTransact = () => {
+    // Redirect to portal deals page
+    window.location.href = '/portal?tab=deals';
   };
 
   return (
     <Button
-      onClick={handleExitToAIDeals}
+      onClick={handleTransact}
       className="w-full bg-gradient-to-r from-green-400 to-blue-500 hover:from-green-500 hover:to-blue-600 text-white font-bold text-lg rounded-2xl shadow-xl transition-all duration-300 transform hover:scale-105"
-      title="Get Started"
+      title="Transact"
     >
-      Get Started
+      Transact
       <ArrowRight className="w-5 h-5 ml-3" />
     </Button>
   );
