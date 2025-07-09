@@ -158,7 +158,7 @@ const PortalTabs = ({
       icon: '📱',
       description: 'GSM Onboarding',
       color: 'emerald',
-      adminOnly: true
+      adminOnly: false
     },
     {
       value: 'field-workers',
