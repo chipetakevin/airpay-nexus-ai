@@ -6,6 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 import { 
   Smartphone, 
   Users, 
@@ -34,10 +35,12 @@ import {
   Search,
   Filter,
   Eye,
-  EyeOff
+  EyeOff,
+  RefreshCw,
+  Loader2
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-import { useUSSDData } from '@/hooks/useUSSDData';
+import { supabase } from '@/integrations/supabase/client';
 import MenuBuilder from './MenuBuilder';
 import AdvancedCustomerSearch from './AdvancedCustomerSearch';
 import AnalyticsDashboard from './AnalyticsDashboard';
@@ -48,6 +51,36 @@ interface OnboardingStats {
   successfulActivations: number;
   failedActivations: number;
   activeUsers: number;
+}
+
+interface USSDCode {
+  id: string;
+  code: string;
+  description: string;
+  status: string;
+  created_at: string;
+  updated_at: string;
+}
+
+interface Campaign {
+  id: string;
+  campaign_name: string;
+  campaign_type: string;
+  campaign_status: string;
+  target_audience: string;
+  total_recipients: number;
+  messages_sent: number;
+  messages_delivered: number;
+  created_at: string;
+}
+
+interface ActivationRequest {
+  id: string;
+  phone_number: string;
+  sim_iccid: string;
+  activation_status: string;
+  activation_method: string;
+  created_at: string;
 }
 
 interface USSDTransaction {
@@ -64,40 +97,201 @@ const USSDManager = () => {
   const { toast } = useToast();
   const [activeTab, setActiveTab] = useState('codes-management');
   const [stats, setStats] = useState<OnboardingStats>({
-    totalActivations: 1247,
-    successfulActivations: 1198,
-    failedActivations: 49,
-    activeUsers: 1150
+    totalActivations: 0,
+    successfulActivations: 0,
+    failedActivations: 0,
+    activeUsers: 0
   });
 
-  const [recentTransactions, setRecentTransactions] = useState<USSDTransaction[]>([
-    {
-      id: '1',
-      msisdn: '+27821234567',
-      ussdCode: '*123#',
-      action: 'SIM Activation',
-      status: 'success',
-      timestamp: '2 minutes ago'
-    },
-    {
-      id: '2',
-      msisdn: '+27829876543',
-      ussdCode: '*102*50#',
-      action: 'Buy Airtime',
-      amount: 50,
-      status: 'success',
-      timestamp: '5 minutes ago'
-    },
-    {
-      id: '3',
-      msisdn: '+27825551234',
-      ussdCode: '*103*100#',
-      action: 'Buy Data',
-      amount: 100,
-      status: 'pending',
-      timestamp: '8 minutes ago'
+  // Loading and error states
+  const [isLoading, setIsLoading] = useState({
+    menu: false,
+    campaigns: false,
+    activations: false,
+    compliance: false
+  });
+
+  const [errors, setErrors] = useState({
+    menu: false,
+    campaigns: false,
+    activations: false,
+    compliance: false
+  });
+
+  const [recentTransactions, setRecentTransactions] = useState<USSDTransaction[]>([]);
+
+  // Error Alert Component
+  const ErrorAlert = ({ error, retry }: { error: boolean; retry: () => void }) => {
+    if (!error) return null;
+    return (
+      <Alert className="bg-red-50 border-red-200 mb-4">
+        <div className="flex items-center justify-between w-full">
+          <AlertDescription className="text-red-800 flex items-center gap-2">
+            <AlertCircle className="h-4 w-4 text-red-600" />
+            Failed to fetch data. Please try again.
+          </AlertDescription>
+          <Button 
+            variant="outline" 
+            size="sm"
+            onClick={retry}
+            className="border-red-200 text-red-600 hover:bg-red-50"
+          >
+            <RefreshCw className="h-4 w-4 mr-1" />
+            Retry
+          </Button>
+        </div>
+      </Alert>
+    );
+  };
+
+  // Loading Skeleton Component
+  const LoadingSkeleton = () => (
+    <div className="space-y-4 animate-pulse">
+      <div className="h-12 w-full bg-gray-100 rounded" />
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+        {[1,2,3,4].map(i => (
+          <div key={i} className="h-24 w-full bg-gray-100 rounded" />
+        ))}
+      </div>
+      <div className="h-64 w-full bg-gray-100 rounded" />
+    </div>
+  );
+
+  // Data fetching functions
+  const fetchMenuData = async () => {
+    setIsLoading(prev => ({ ...prev, menu: true }));
+    setErrors(prev => ({ ...prev, menu: false }));
+    
+    try {
+      const { data, error } = await supabase
+        .from('ussd_menu_items')
+        .select('*')
+        .order('level,display_order', { ascending: true });
+        
+      if (error) throw error;
+      
+      // Process menu data
+      console.log('Menu data:', data);
+      
+    } catch (err) {
+      console.error('Error fetching menu data:', err);
+      setErrors(prev => ({ ...prev, menu: true }));
+      toast({
+        title: "Error",
+        description: "Failed to fetch menu configurations",
+        variant: "destructive"
+      });
+    } finally {
+      setIsLoading(prev => ({ ...prev, menu: false }));
     }
-  ]);
+  };
+
+  const fetchCampaigns = async () => {
+    setIsLoading(prev => ({ ...prev, campaigns: true }));
+    setErrors(prev => ({ ...prev, campaigns: false }));
+    
+    try {
+      const { data, error } = await supabase
+        .from('ussd_notification_campaigns')
+        .select('*')
+        .order('created_at', { ascending: false });
+        
+      if (error) throw error;
+      
+      // Process campaigns data
+      console.log('Campaign data:', data);
+      
+    } catch (err) {
+      console.error('Error fetching campaigns:', err);
+      setErrors(prev => ({ ...prev, campaigns: true }));
+      toast({
+        title: "Error",
+        description: "Failed to fetch campaigns",
+        variant: "destructive"
+      });
+    } finally {
+      setIsLoading(prev => ({ ...prev, campaigns: false }));
+    }
+  };
+
+  const fetchActivationRequests = async () => {
+    setIsLoading(prev => ({ ...prev, activations: true }));
+    setErrors(prev => ({ ...prev, activations: false }));
+    
+    try {
+      const { data, error } = await supabase
+        .from('sim_activation_requests')
+        .select('*')
+        .order('created_at', { ascending: false })
+        .limit(10);
+        
+      if (error) throw error;
+      
+      // Calculate activation statistics
+      if (data) {
+        const total = data.length;
+        const successful = data.filter(r => r.activation_status === 'completed').length;
+        const failed = data.filter(r => r.activation_status === 'failed').length;
+        
+        setStats({
+          totalActivations: total,
+          successfulActivations: successful,
+          failedActivations: failed,
+          activeUsers: total - failed
+        });
+        
+        // Map to transactions format
+        setRecentTransactions(data.map(r => ({
+          id: r.id,
+          msisdn: r.phone_number,
+          ussdCode: '*123#',
+          action: 'SIM Activation',
+          status: r.activation_status === 'completed' ? 'success' : 
+                 r.activation_status === 'failed' ? 'failed' : 'pending',
+          timestamp: new Date(r.created_at).toLocaleString()
+        })));
+      }
+      
+    } catch (err) {
+      console.error('Error fetching activation requests:', err);
+      setErrors(prev => ({ ...prev, activations: true }));
+      toast({
+        title: "Error",
+        description: "Failed to fetch activation requests",
+        variant: "destructive"
+      });
+    } finally {
+      setIsLoading(prev => ({ ...prev, activations: false }));
+    }
+  };
+
+  const fetchComplianceMetrics = async () => {
+    setIsLoading(prev => ({ ...prev, compliance: true }));
+    setErrors(prev => ({ ...prev, compliance: false }));
+    
+    try {
+      // Fetch various compliance metrics from database...
+      
+    } catch (err) {
+      console.error('Error fetching compliance metrics:', err);
+      setErrors(prev => ({ ...prev, compliance: true }));
+      toast({
+        title: "Error",
+        description: "Failed to fetch compliance metrics",
+        variant: "destructive"
+      });
+    } finally {
+      setIsLoading(prev => ({ ...prev, compliance: false }));
+    }
+  };
+
+  // Initial data fetch
+  useEffect(() => {
+    fetchMenuData();
+    fetchCampaigns();
+    fetchActivationRequests();
+    fetchComplianceMetrics();
+  }, []);
 
   // USSD Codes Management Panel
   const USSDCodesManagement = () => (
@@ -1042,15 +1236,27 @@ const USSDManager = () => {
         </TabsList>
 
         <TabsContent value="codes-management" className="mt-6">
-          <MenuBuilder />
+          {errors.menu ? (
+            <ErrorAlert error={errors.menu} retry={fetchMenuData} />
+          ) : (
+            isLoading.menu ? <LoadingSkeleton /> : <MenuBuilder />
+          )}
         </TabsContent>
 
         <TabsContent value="customers" className="mt-6">
-          <AdvancedCustomerSearch />
+          {errors.activations ? (
+            <ErrorAlert error={errors.activations} retry={fetchActivationRequests} />
+          ) : (
+            isLoading.activations ? <LoadingSkeleton /> : <AdvancedCustomerSearch />
+          )}
         </TabsContent>
 
         <TabsContent value="whatsapp" className="mt-6">
-          <RealTimeSessionManager />
+          {errors.campaigns ? (
+            <ErrorAlert error={errors.campaigns} retry={fetchCampaigns} />
+          ) : (
+            isLoading.campaigns ? <LoadingSkeleton /> : <RealTimeSessionManager />
+          )}
         </TabsContent>
 
         <TabsContent value="website" className="mt-6">
@@ -1058,11 +1264,26 @@ const USSDManager = () => {
         </TabsContent>
 
         <TabsContent value="analytics" className="mt-6">
-          <AnalyticsDashboard />
+          {errors.activations || errors.campaigns ? (
+            <div className="space-y-4">
+              {errors.activations && (
+                <ErrorAlert error={errors.activations} retry={fetchActivationRequests} />
+              )}
+              {errors.campaigns && (
+                <ErrorAlert error={errors.campaigns} retry={fetchCampaigns} />
+              )}
+            </div>
+          ) : (
+            isLoading.activations || isLoading.campaigns ? <LoadingSkeleton /> : <AnalyticsDashboard />
+          )}
         </TabsContent>
 
         <TabsContent value="security" className="mt-6">
-          <SecurityPanel />
+          {errors.compliance ? (
+            <ErrorAlert error={errors.compliance} retry={fetchComplianceMetrics} />
+          ) : (
+            isLoading.compliance ? <LoadingSkeleton /> : <SecurityPanel />
+          )}
         </TabsContent>
 
         {/* Legacy tabs for backward compatibility */}

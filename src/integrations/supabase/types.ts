@@ -6413,6 +6413,10 @@ export type Database = {
         Args: Record<PropertyKey, never>
         Returns: boolean
       }
+      is_admin_simple: {
+        Args: Record<PropertyKey, never>
+        Returns: boolean
+      }
       is_customer: {
         Args: Record<PropertyKey, never>
         Returns: boolean
