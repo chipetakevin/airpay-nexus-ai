@@ -394,79 +394,155 @@ const APIToolkit = () => {
         {/* Tab Content */}
         <div className="mt-6">
           <TabsContent value="endpoints" className="mt-0">
-            <div className="space-y-4">
-              <div className="flex justify-between items-center">
-                <h3 className="text-lg font-semibold">API Endpoints</h3>
-                <div className="flex gap-2">
-                  <Button variant="outline" onClick={generateAPIKey}>
-                    <Key className="w-4 h-4 mr-2" />
-                    Generate API Key
-                  </Button>
-                  <Button className="bg-primary hover:bg-primary/90">
-                    <Plus className="w-4 h-4 mr-2" />
-                    Add Endpoint
-                  </Button>
+            <div className="space-y-4 animate-fade-in">
+              {/* Header with buttons */}
+              <div className="bg-gradient-to-r from-blue-500/10 to-indigo-500/10 rounded-xl p-4 md:p-6 border">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                  <div>
+                    <h3 className="text-xl md:text-2xl font-bold mb-2">API Endpoints</h3>
+                    <p className="text-sm md:text-base text-muted-foreground">
+                      Manage and monitor your MNO integration endpoints
+                    </p>
+                  </div>
+                  <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
+                    <Button 
+                      variant="outline" 
+                      onClick={generateAPIKey}
+                      className="w-full sm:w-auto flex items-center justify-center gap-2 hover:bg-primary/10 border-2"
+                    >
+                      <Key className="w-4 h-4" />
+                      Generate API Key
+                    </Button>
+                    <Button 
+                      className="w-full sm:w-auto flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700"
+                    >
+                      <Plus className="w-4 h-4" />
+                      Add Endpoint
+                    </Button>
+                  </div>
                 </div>
               </div>
-              
+
+              {/* Endpoint Cards */}
               <div className="grid gap-4">
-                {endpoints.map((endpoint) => (
-                  <Card key={endpoint.id} className="hover:shadow-md transition-shadow">
-                    <CardContent className="p-4">
-                      <div className="flex items-center justify-between mb-3">
-                        <div className="flex items-center gap-3">
-                          <Badge className={`${getMethodColor(endpoint.method)} text-white`}>
+                {endpoints.map((endpoint, index) => (
+                  <Card 
+                    key={endpoint.id} 
+                    className="hover:shadow-lg transition-all duration-300 border-l-4 border-l-transparent hover:border-l-primary animate-scale-in"
+                    style={{ animationDelay: `${index * 100}ms` }}
+                  >
+                    <CardContent className="p-4 sm:p-6">
+                      {/* Top Row - Method, Path and Status */}
+                      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-4">
+                        <div className="flex flex-wrap items-center gap-2 sm:gap-3">
+                          <Badge className={`${getMethodColor(endpoint.method)} text-white font-semibold px-3 py-1`}>
                             {endpoint.method}
                           </Badge>
-                          <code className="text-sm bg-gray-100 px-2 py-1 rounded font-mono">
+                          <code className="text-sm sm:text-base bg-muted px-3 py-1 rounded-md font-mono flex-1 sm:flex-none">
                             {endpoint.path}
                           </code>
-                          <Badge variant="outline" className={`${getStatusColor(endpoint.status)} text-white border-0`}>
-                            {endpoint.status}
+                          <Badge 
+                            variant="outline" 
+                            className={`${getStatusColor(endpoint.status)} text-white border-0 px-2 py-1`}
+                          >
+                            active
                           </Badge>
                         </div>
-                        <div className="flex items-center gap-2">
-                          <div className="flex items-center gap-1 text-sm text-muted-foreground">
-                            {getSecurityIcon(endpoint.security)}
-                            <span className="capitalize">{endpoint.security}</span>
-                          </div>
+                        <div className="flex items-center gap-2 self-end sm:self-auto">
+                          <Button 
+                            variant="ghost" 
+                            size="sm"
+                            className="h-8 w-8 p-0 opacity-0 group-hover:opacity-100 transition-opacity"
+                          >
+                            <Key className="w-3 h-3" />
+                          </Button>
+                        </div>
+                      </div>
+
+                      {/* Metrics Grid */}
+                      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
+                        <div>
+                          <p className="text-sm text-muted-foreground mb-1">Requests:</p>
+                          <p className="text-lg sm:text-xl font-bold text-foreground">
+                            {endpoint.requestCount.toLocaleString()}
+                          </p>
+                        </div>
+                        <div>
+                          <p className="text-sm text-muted-foreground mb-1">Error Rate:</p>
+                          <p className={`text-lg sm:text-xl font-bold ${
+                            endpoint.errorRate > 1 ? 'text-red-600' : 'text-green-600'
+                          }`}>
+                            {endpoint.errorRate}%
+                          </p>
+                        </div>
+                        <div>
+                          <p className="text-sm text-muted-foreground mb-1">Last Used:</p>
+                          <p className="text-lg sm:text-xl font-bold text-foreground">
+                            {endpoint.lastUsed}
+                          </p>
+                        </div>
+                        <div>
+                          <p className="text-sm text-muted-foreground mb-1">Status:</p>
+                          <p className="text-lg sm:text-xl font-bold text-foreground capitalize">
+                            {endpoint.status}
+                          </p>
+                        </div>
+                      </div>
+
+                      {/* Description */}
+                      <p className="text-sm sm:text-base text-muted-foreground mb-4 leading-relaxed">
+                        {endpoint.description}
+                      </p>
+
+                      {/* Action Row */}
+                      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 pt-3 border-t">
+                        <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                          {getSecurityIcon(endpoint.security)}
+                          <span className="capitalize font-medium">{endpoint.security}</span>
+                        </div>
+                        <div className="flex items-center gap-2 w-full sm:w-auto">
                           <Button 
                             variant="outline" 
                             size="sm"
                             onClick={() => testEndpoint(endpoint)}
+                            className="flex-1 sm:flex-none"
                           >
                             <Play className="w-3 h-3 mr-1" />
                             Test
                           </Button>
+                          <Button 
+                            variant="ghost" 
+                            size="sm"
+                            className="h-8 w-8 p-0"
+                          >
+                            <Edit className="w-3 h-3" />
+                          </Button>
                         </div>
                       </div>
-                      
-                      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm mb-3">
-                        <div>
-                          <span className="text-muted-foreground">Requests:</span>
-                          <div className="font-medium">{endpoint.requestCount.toLocaleString()}</div>
-                        </div>
-                        <div>
-                          <span className="text-muted-foreground">Error Rate:</span>
-                          <div className={`font-medium ${endpoint.errorRate > 1 ? 'text-red-600' : 'text-green-600'}`}>
-                            {endpoint.errorRate}%
-                          </div>
-                        </div>
-                        <div>
-                          <span className="text-muted-foreground">Last Used:</span>
-                          <div className="font-medium">{endpoint.lastUsed}</div>
-                        </div>
-                        <div>
-                          <span className="text-muted-foreground">Status:</span>
-                          <div className="font-medium capitalize">{endpoint.status}</div>
-                        </div>
-                      </div>
-                      
-                      <p className="text-sm text-muted-foreground">{endpoint.description}</p>
                     </CardContent>
                   </Card>
                 ))}
               </div>
+
+              {/* Add New Endpoint Card */}
+              <Card className="border-dashed border-2 border-muted hover:border-primary/50 transition-colors cursor-pointer">
+                <CardContent className="p-8 text-center">
+                  <div className="flex flex-col items-center gap-3">
+                    <div className="w-12 h-12 bg-muted rounded-full flex items-center justify-center">
+                      <Plus className="w-6 h-6 text-muted-foreground" />
+                    </div>
+                    <div>
+                      <h4 className="font-semibold mb-1">Add New Endpoint</h4>
+                      <p className="text-sm text-muted-foreground">
+                        Configure a new API endpoint for your integration
+                      </p>
+                    </div>
+                    <Button variant="outline" className="mt-2">
+                      Create Endpoint
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
             </div>
           </TabsContent>
 
