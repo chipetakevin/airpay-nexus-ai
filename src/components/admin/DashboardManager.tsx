@@ -77,6 +77,30 @@ const DashboardManager = () => {
       label: 'Analytics', 
       icon: '📈',
       description: 'Predictive Analytics'
+    },
+    { 
+      id: 'template-manager', 
+      label: 'Template Manager', 
+      icon: '📄',
+      description: 'Download & configure templates'
+    },
+    { 
+      id: 'performance-analytics', 
+      label: 'Performance Analytics', 
+      icon: '📊',
+      description: 'Performance metrics'
+    },
+    { 
+      id: 'processing', 
+      label: 'Processing', 
+      icon: '🔄',
+      description: 'Monitor operations'
+    },
+    { 
+      id: 'settings', 
+      label: 'Settings', 
+      icon: '⚡',
+      description: 'Configure parameters'
     }
   ];
 
@@ -309,6 +333,157 @@ const DashboardManager = () => {
                 <div className="p-4 bg-accent/50 rounded-lg">
                   <h4 className="font-semibold mb-2">Real-time Visualization</h4>
                   <p className="text-sm text-muted-foreground">Interactive dashboards and custom reports</p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        );
+
+      case 'template-manager':
+        return (
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <span className="text-xl">📄</span>
+                Template Manager
+              </CardTitle>
+              <p className="text-muted-foreground">Download & configure templates</p>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                <div className="p-4 bg-blue-50 rounded-lg border border-blue-200">
+                  <h4 className="font-semibold text-blue-700 mb-2">Document Templates</h4>
+                  <p className="text-sm text-muted-foreground mb-3">Pre-configured templates for contracts, invoices, and reports</p>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <button className="p-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+                      Download Contract Template
+                    </button>
+                    <button className="p-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+                      Download Invoice Template
+                    </button>
+                  </div>
+                </div>
+                <div className="p-4 bg-accent/50 rounded-lg">
+                  <h4 className="font-semibold mb-2">Configuration Templates</h4>
+                  <p className="text-sm text-muted-foreground">System and service configuration templates</p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        );
+
+      case 'performance-analytics':
+        return (
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <span className="text-xl">📊</span>
+                Performance Analytics
+              </CardTitle>
+              <p className="text-muted-foreground">Performance metrics</p>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div className="p-4 bg-green-50 rounded-lg border border-green-200">
+                    <h4 className="font-semibold text-green-700 mb-1">Response Time</h4>
+                    <p className="text-2xl font-bold text-green-600">142ms</p>
+                    <p className="text-sm text-muted-foreground">Avg API response</p>
+                  </div>
+                  <div className="p-4 bg-orange-50 rounded-lg border border-orange-200">
+                    <h4 className="font-semibold text-orange-700 mb-1">Throughput</h4>
+                    <p className="text-2xl font-bold text-orange-600">1,247</p>
+                    <p className="text-sm text-muted-foreground">Requests/min</p>
+                  </div>
+                  <div className="p-4 bg-purple-50 rounded-lg border border-purple-200">
+                    <h4 className="font-semibold text-purple-700 mb-1">Success Rate</h4>
+                    <p className="text-2xl font-bold text-purple-600">99.8%</p>
+                    <p className="text-sm text-muted-foreground">Error-free</p>
+                  </div>
+                </div>
+                <div className="p-4 bg-accent/50 rounded-lg">
+                  <h4 className="font-semibold mb-2">Performance Monitoring</h4>
+                  <p className="text-sm text-muted-foreground">Real-time system performance tracking and alerting</p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        );
+
+      case 'processing':
+        return (
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <span className="text-xl">🔄</span>
+                Processing
+              </CardTitle>
+              <p className="text-muted-foreground">Monitor operations</p>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                <div className="p-4 bg-indigo-50 rounded-lg border border-indigo-200">
+                  <h4 className="font-semibold text-indigo-700 mb-2">Active Operations</h4>
+                  <div className="space-y-2">
+                    <div className="flex items-center justify-between p-2 bg-white rounded border">
+                      <span className="text-sm">Bulk SIM Provisioning</span>
+                      <span className="text-xs bg-green-100 text-green-700 px-2 py-1 rounded">Running</span>
+                    </div>
+                    <div className="flex items-center justify-between p-2 bg-white rounded border">
+                      <span className="text-sm">Customer Data Export</span>
+                      <span className="text-xs bg-yellow-100 text-yellow-700 px-2 py-1 rounded">Queued</span>
+                    </div>
+                    <div className="flex items-center justify-between p-2 bg-white rounded border">
+                      <span className="text-sm">Report Generation</span>
+                      <span className="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded">Completed</span>
+                    </div>
+                  </div>
+                </div>
+                <div className="p-4 bg-accent/50 rounded-lg">
+                  <h4 className="font-semibold mb-2">Processing Queue</h4>
+                  <p className="text-sm text-muted-foreground">Monitor and manage background operations and tasks</p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        );
+
+      case 'settings':
+        return (
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <span className="text-xl">⚡</span>
+                Settings
+              </CardTitle>
+              <p className="text-muted-foreground">Configure parameters</p>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                <div className="p-4 bg-yellow-50 rounded-lg border border-yellow-200">
+                  <h4 className="font-semibold text-yellow-700 mb-2">System Configuration</h4>
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm">API Rate Limiting</span>
+                      <span className="text-xs bg-green-100 text-green-700 px-2 py-1 rounded">Enabled</span>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm">Auto-scaling</span>
+                      <span className="text-xs bg-green-100 text-green-700 px-2 py-1 rounded">Active</span>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm">Backup Schedule</span>
+                      <span className="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded">Daily 2AM</span>
+                    </div>
+                  </div>
+                </div>
+                <div className="p-4 bg-accent/50 rounded-lg">
+                  <h4 className="font-semibold mb-2">Network Parameters</h4>
+                  <p className="text-sm text-muted-foreground">Configure network settings, thresholds, and operational parameters</p>
+                </div>
+                <div className="p-4 bg-accent/50 rounded-lg">
+                  <h4 className="font-semibold mb-2">Security Settings</h4>
+                  <p className="text-sm text-muted-foreground">Authentication, authorization, and access control configuration</p>
                 </div>
               </div>
             </CardContent>
