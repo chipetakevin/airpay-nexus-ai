@@ -1,0 +1,319 @@
+import React, { useState, useEffect } from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { useToast } from '@/hooks/use-toast';
+import { 
+  Shield, 
+  TrendingUp, 
+  Users, 
+  AlertTriangle, 
+  Activity, 
+  CreditCard, 
+  RefreshCw,
+  Bell,
+  ChevronRight,
+  BarChart3,
+  Settings,
+  Eye,
+  Zap,
+  Database,
+  Network,
+  FileText,
+  GitBranch
+} from 'lucide-react';
+
+interface AdminControlCenterProps {
+  activeAdminTab: string;
+  setActiveAdminTab: (tab: string) => void;
+}
+
+const AdminControlCenterFixed: React.FC<AdminControlCenterProps> = ({
+  activeAdminTab,
+  setActiveAdminTab
+}) => {
+  const { toast } = useToast();
+  const [systemStats, setSystemStats] = useState({
+    totalUsers: 1247,
+    activeUsers: 892,
+    totalTransactions: 5632,
+    systemHealth: 99.2,
+    alertsCount: 3,
+    oneCardBalance: 0.00
+  });
+
+  const ActionCard = ({ title, description, icon: Icon, onClick, color, badge, buttonText = "Access" }) => (
+    <Card className={`group hover:shadow-xl transition-all duration-300 hover:-translate-y-1 cursor-pointer border-l-4 ${color.border} bg-gradient-to-br ${color.bg}`} onClick={onClick}>
+      <CardContent className="p-6">
+        <div className="flex items-center justify-between mb-4">
+          <div className={`p-3 rounded-xl ${color.iconBg} group-hover:scale-110 transition-transform duration-300`}>
+            <Icon className={`w-8 h-8 ${color.icon}`} />
+          </div>
+          {badge && (
+            <Badge variant={badge.variant} className={`${badge.className} animate-pulse`}>
+              {badge.text}
+            </Badge>
+          )}
+        </div>
+        <h3 className="text-xl font-bold mb-2 group-hover:text-primary transition-colors">{title}</h3>
+        <p className="text-muted-foreground text-sm mb-4 leading-relaxed">{description}</p>
+        <Button className={`w-full group-hover:scale-105 transition-transform duration-200 ${color.button}`}>
+          {buttonText}
+          <ChevronRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
+        </Button>
+      </CardContent>
+    </Card>
+  );
+
+  const adminSections = [
+    {
+      id: 'hub',
+      label: 'Hub',
+      icon: Activity,
+      title: 'Addex Hub Nerve Center',
+      description: 'System Central Command Portal - All Systems',
+      color: {
+        border: 'border-l-blue-500',
+        bg: 'from-blue-50 to-white',
+        iconBg: 'bg-blue-100',
+        icon: 'text-blue-600',
+        button: 'bg-blue-600 hover:bg-blue-700 text-white'
+      }
+    },
+    {
+      id: 'database',
+      label: 'Database',
+      icon: Database,
+      title: 'Database Management',
+      description: 'Database monitoring, backups, and analytics',
+      color: {
+        border: 'border-l-purple-500',
+        bg: 'from-purple-50 to-white',
+        iconBg: 'bg-purple-100',
+        icon: 'text-purple-600',
+        button: 'bg-purple-600 hover:bg-purple-700 text-white'
+      }
+    },
+    {
+      id: 'security',
+      label: 'Security',
+      icon: Shield,
+      title: 'Security Monitor',
+      description: 'Real-time security monitoring and fraud detection',
+      color: {
+        border: 'border-l-red-500',
+        bg: 'from-red-50 to-white',
+        iconBg: 'bg-red-100',
+        icon: 'text-red-600',
+        button: 'bg-red-600 hover:bg-red-700 text-white'
+      }
+    },
+    {
+      id: 'access',
+      label: 'Access',
+      icon: Eye,
+      title: 'Access Control',
+      description: 'User permissions and access management',
+      color: {
+        border: 'border-l-cyan-500',
+        bg: 'from-cyan-50 to-white',
+        iconBg: 'bg-cyan-100',
+        icon: 'text-cyan-600',
+        button: 'bg-cyan-600 hover:bg-cyan-700 text-white'
+      }
+    },
+    {
+      id: 'balances',
+      label: 'Balances',
+      icon: CreditCard,
+      title: 'Balance Management',
+      description: 'OneCard balances and financial oversight',
+      color: {
+        border: 'border-l-green-500',
+        bg: 'from-green-50 to-white',
+        iconBg: 'bg-green-100',
+        icon: 'text-green-600',
+        button: 'bg-green-600 hover:bg-green-700 text-white'
+      }
+    },
+    {
+      id: 'dashboard',
+      label: 'Dashboard',
+      icon: BarChart3,
+      title: 'Analytics Dashboard',
+      description: 'System analytics and performance metrics',
+      color: {
+        border: 'border-l-indigo-500',
+        bg: 'from-indigo-50 to-white',
+        iconBg: 'bg-indigo-100',
+        icon: 'text-indigo-600',
+        button: 'bg-indigo-600 hover:bg-indigo-700 text-white'
+      }
+    },
+    {
+      id: 'revenue',
+      label: 'Revenue',
+      icon: TrendingUp,
+      title: 'Revenue Reporting',
+      description: 'Financial reports and revenue analytics',
+      color: {
+        border: 'border-l-emerald-500',
+        bg: 'from-emerald-50 to-white',
+        iconBg: 'bg-emerald-100',
+        icon: 'text-emerald-600',
+        button: 'bg-emerald-600 hover:bg-emerald-700 text-white'
+      }
+    },
+    {
+      id: 'networks',
+      label: 'Networks',
+      icon: Network,
+      title: 'Network Management',
+      description: 'Network monitoring and configuration',
+      color: {
+        border: 'border-l-orange-500',
+        bg: 'from-orange-50 to-white',
+        iconBg: 'bg-orange-100',
+        icon: 'text-orange-600',
+        button: 'bg-orange-600 hover:bg-orange-700 text-white'
+      }
+    },
+    {
+      id: 'orders',
+      label: 'Orders',
+      icon: FileText,
+      title: 'Order Management',
+      description: 'Order processing and fulfillment',
+      color: {
+        border: 'border-l-pink-500',
+        bg: 'from-pink-50 to-white',
+        iconBg: 'bg-pink-100',
+        icon: 'text-pink-600',
+        button: 'bg-pink-600 hover:bg-pink-700 text-white'
+      }
+    },
+    {
+      id: 'versions',
+      label: 'Versions',
+      icon: GitBranch,
+      title: 'Version Control',
+      description: 'Codebase versioning and deployment management',
+      color: {
+        border: 'border-l-slate-500',
+        bg: 'from-slate-50 to-white',
+        iconBg: 'bg-slate-100',
+        icon: 'text-slate-600',
+        button: 'bg-slate-600 hover:bg-slate-700 text-white'
+      }
+    }
+  ];
+
+  const handleSectionClick = (sectionId: string) => {
+    console.log(`🔧 Admin Section clicked: ${sectionId}`);
+    setActiveAdminTab(sectionId);
+    toast({
+      title: "Section Activated",
+      description: `Switched to ${sectionId.charAt(0).toUpperCase() + sectionId.slice(1)} section`,
+    });
+  };
+
+  return (
+    <div className="space-y-8 pb-20">
+      {/* Enhanced Header Section */}
+      <div className="text-center space-y-4">
+        <div className="flex items-center justify-center gap-3 mb-4">
+          <div className="p-3 bg-gradient-to-br from-red-500 to-orange-500 rounded-xl shadow-lg">
+            <Shield className="w-8 h-8 text-white" />
+          </div>
+          <div>
+            <h1 className="text-3xl font-bold bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent">
+              Admin Control Center
+            </h1>
+            <p className="text-muted-foreground">Complete system administration and oversight</p>
+          </div>
+        </div>
+
+        {/* Live System Status Indicators */}
+        <div className="grid grid-cols-3 gap-4 max-w-md mx-auto">
+          <div className="flex items-center gap-2 p-2 bg-green-50 rounded-lg">
+            <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
+            <span className="text-xs font-medium text-green-700">Network Online</span>
+          </div>
+          <div className="flex items-center gap-2 p-2 bg-blue-50 rounded-lg">
+            <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse" />
+            <span className="text-xs font-medium text-blue-700">Deals Active</span>
+          </div>
+          <div className="flex items-center gap-2 p-2 bg-emerald-50 rounded-lg">
+            <div className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse" />
+            <span className="text-xs font-medium text-emerald-700">System Optimal</span>
+          </div>
+        </div>
+      </div>
+
+      {/* Alert Section */}
+      {systemStats.alertsCount > 0 && (
+        <Alert className="border-l-4 border-l-red-500 bg-gradient-to-r from-red-50 to-orange-50">
+          <AlertTriangle className="h-4 w-4 text-red-600" />
+          <AlertDescription className="flex items-center justify-between">
+            <span className="text-red-800 font-medium">
+              {systemStats.alertsCount} system alerts require immediate attention
+            </span>
+            <Button size="sm" variant="outline" className="border-red-300 text-red-700 hover:bg-red-100">
+              <Bell className="w-4 h-4 mr-2" />
+              View Alerts
+            </Button>
+          </AlertDescription>
+        </Alert>
+      )}
+
+      {/* Admin Control Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        {adminSections.map((section) => (
+          <ActionCard
+            key={section.id}
+            title={section.title}
+            description={section.description}
+            icon={section.icon}
+            color={section.color}
+            badge={{ text: "ACTIVE", variant: "default", className: "bg-green-500 text-white" }}
+            onClick={() => handleSectionClick(section.id)}
+          />
+        ))}
+      </div>
+
+      {/* Additional Quick Actions */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Zap className="w-5 h-5 text-blue-600" />
+            Quick Actions
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <Button variant="outline" className="h-auto p-4 flex flex-col gap-2">
+              <RefreshCw className="w-6 h-6" />
+              <span className="text-sm">Refresh System</span>
+            </Button>
+            <Button variant="outline" className="h-auto p-4 flex flex-col gap-2">
+              <Users className="w-6 h-6" />
+              <span className="text-sm">User Management</span>
+            </Button>
+            <Button variant="outline" className="h-auto p-4 flex flex-col gap-2">
+              <Settings className="w-6 h-6" />
+              <span className="text-sm">System Settings</span>
+            </Button>
+            <Button variant="outline" className="h-auto p-4 flex flex-col gap-2">
+              <BarChart3 className="w-6 h-6" />
+              <span className="text-sm">Analytics</span>
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+    </div>
+  );
+};
+
+export default AdminControlCenterFixed;

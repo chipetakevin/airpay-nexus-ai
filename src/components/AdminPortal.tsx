@@ -17,6 +17,7 @@ import AddexHubNerveCenter from './admin/AddexHubNerveCenter';
 import DatabaseBaaSPanel from './admin/DatabaseBaaSPanel';
 import SuspiciousActivityMonitor from './admin/SuspiciousActivityMonitor';
 import PermissionManager from './admin/PermissionManager';
+import AdminControlCenterFixed from './admin/AdminControlCenterFixed';
 
 interface AdminPortalProps {
   onAuthSuccess?: () => void;
@@ -227,120 +228,11 @@ const AdminPortal: React.FC<AdminPortalProps> = ({ onAuthSuccess, showAdminBanne
           </div>
         </div>
 
-        <Tabs defaultValue="nerve-center" className="w-full">
-          <TabsList className="grid w-full grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-1 h-auto p-2 bg-muted/30">
-            <TabsTrigger 
-              value="nerve-center" 
-              className="text-xs sm:text-sm cursor-pointer hover:bg-gray-100 focus:bg-gray-200 transition-colors"
-              onClick={() => console.log('🔧 Admin Feature: Hub clicked')}
-            >
-              Hub
-            </TabsTrigger>
-            <TabsTrigger 
-              value="database-baas" 
-              className="text-xs sm:text-sm bg-gradient-to-r from-purple-100 to-indigo-100 text-purple-700 border border-purple-300 data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-600 data-[state=active]:to-indigo-600 data-[state=active]:text-white cursor-pointer hover:opacity-90 transition-opacity"
-              onClick={() => console.log('🔧 Admin Feature: Database BaaS clicked')}
-            >
-              Database
-            </TabsTrigger>
-            <TabsTrigger 
-              value="security-monitor" 
-              className="text-xs sm:text-sm bg-gradient-to-r from-red-100 to-orange-100 text-red-700 border border-red-300 data-[state=active]:bg-gradient-to-r data-[state=active]:from-red-600 data-[state=active]:to-orange-600 data-[state=active]:text-white cursor-pointer hover:opacity-90 transition-opacity"
-              onClick={() => console.log('🔧 Admin Feature: Security Monitor clicked')}
-            >
-              Security
-            </TabsTrigger>
-            <TabsTrigger 
-              value="permissions" 
-              className="text-xs sm:text-sm bg-gradient-to-r from-blue-100 to-cyan-100 text-blue-700 border border-blue-300 data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-600 data-[state=active]:to-cyan-600 data-[state=active]:text-white cursor-pointer hover:opacity-90 transition-opacity"
-              onClick={() => console.log('🔧 Admin Feature: Permissions clicked')}
-            >
-              Access
-            </TabsTrigger>
-            <TabsTrigger 
-              value="balances" 
-              className="text-xs sm:text-sm cursor-pointer hover:bg-gray-100 focus:bg-gray-200 transition-colors"
-              onClick={() => console.log('🔧 Admin Feature: Balances clicked')}
-            >
-              Balances
-            </TabsTrigger>
-            <TabsTrigger 
-              value="dashboard" 
-              className="text-xs sm:text-sm cursor-pointer hover:bg-gray-100 focus:bg-gray-200 transition-colors"
-              onClick={() => console.log('🔧 Admin Feature: Dashboard clicked')}
-            >
-              Dashboard
-            </TabsTrigger>
-            <TabsTrigger 
-              value="revenue" 
-              className="text-xs sm:text-sm cursor-pointer hover:bg-gray-100 focus:bg-gray-200 transition-colors"
-              onClick={() => console.log('🔧 Admin Feature: Revenue clicked')}
-            >
-              Revenue
-            </TabsTrigger>
-            <TabsTrigger 
-              value="networks" 
-              className="text-xs sm:text-sm cursor-pointer hover:bg-gray-100 focus:bg-gray-200 transition-colors"
-              onClick={() => console.log('🔧 Admin Feature: Networks clicked')}
-            >
-              Networks
-            </TabsTrigger>
-            <TabsTrigger 
-              value="orders" 
-              className="text-xs sm:text-sm cursor-pointer hover:bg-gray-100 focus:bg-gray-200 transition-colors"
-              onClick={() => console.log('🔧 Admin Feature: Orders clicked')}
-            >
-              Orders
-            </TabsTrigger>
-            <TabsTrigger 
-              value="versions" 
-              className="text-xs sm:text-sm cursor-pointer hover:bg-gray-100 focus:bg-gray-200 transition-colors"
-              onClick={() => console.log('🔧 Admin Feature: Versions clicked')}
-            >
-              Versions
-            </TabsTrigger>
-          </TabsList>
-
-          <TabsContent value="nerve-center" className="space-y-6">
-            <AddexHubNerveCenter />
-          </TabsContent>
-
-          <TabsContent value="database-baas" className="space-y-6">
-            <DatabaseBaaSPanel />
-          </TabsContent>
-
-          <TabsContent value="security-monitor" className="space-y-6">
-            <SuspiciousActivityMonitor />
-          </TabsContent>
-
-          <TabsContent value="permissions" className="space-y-6">
-            <PermissionManager />
-          </TabsContent>
-
-          <TabsContent value="balances" className="space-y-6">
-            <DashboardManager />
-          </TabsContent>
-
-          <TabsContent value="dashboard" className="space-y-6">
-            <AdminDashboard />
-          </TabsContent>
-
-          <TabsContent value="revenue" className="space-y-6">
-            <RevenueReporting />
-          </TabsContent>
-
-          <TabsContent value="networks" className="space-y-6">
-            <NetworkRevenue />
-          </TabsContent>
-
-          <TabsContent value="orders" className="space-y-6">
-            <OrderManagement />
-          </TabsContent>
-
-          <TabsContent value="versions" className="space-y-6">
-            <VersionRestoration />
-          </TabsContent>
-        </Tabs>
+        {/* Replace complex tabs with simplified admin control center */}
+        <AdminControlCenterFixed 
+          activeAdminTab="hub"
+          setActiveAdminTab={(tab) => console.log(`Admin tab switched to: ${tab}`)}
+        />
       </div>
     );
   }
