@@ -9,7 +9,7 @@ import {
   Workflow, 
   Play, 
   Pause, 
-  Stop, 
+  Square, 
   RotateCcw,
   CheckCircle,
   Clock,
@@ -396,7 +396,7 @@ export const AgenticWorkflowPanel: React.FC = () => {
                     variant="destructive"
                     onClick={() => handleWorkflowAction('stop', selectedWorkflow.id)}
                   >
-                    <Stop className="w-4 h-4 mr-2" />
+                    <Square className="w-4 h-4 mr-2" />
                     Stop
                   </Button>
                 </div>
