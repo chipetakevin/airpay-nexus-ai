@@ -156,6 +156,7 @@ const AdminRegistrationForm = () => {
               error={errors.bankName}
               defaultValue={formData.bankName}
               showBranchDetails={true}
+              showBranchCodeField={false}
             />
 
             <div className="space-y-2">
@@ -175,12 +176,15 @@ const AdminRegistrationForm = () => {
               <Input
                 id="branchCode"
                 value={formData.branchCode || ''}
-                placeholder="Auto-filled from bank selection"
+                placeholder={formData.branchCode ? formData.branchCode : "Auto-filled from bank selection"}
                 readOnly
-                className="bg-gray-50 font-mono"
+                className={`${formData.branchCode ? 'bg-green-50 border-green-200 text-green-800' : 'bg-gray-50'} font-mono`}
               />
-              <p className="text-xs text-green-600">
-                ℹ️ Branch code automatically assigned from your bank selection
+              <p className={`text-xs ${formData.branchCode ? 'text-green-600' : 'text-gray-500'}`}>
+                {formData.branchCode ? 
+                  `✅ Branch code ${formData.branchCode} auto-assigned successfully` : 
+                  'ℹ️ Branch code will be automatically assigned from your bank selection'
+                }
               </p>
             </div>
 
