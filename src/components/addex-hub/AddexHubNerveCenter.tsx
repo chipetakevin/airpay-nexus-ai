@@ -176,75 +176,83 @@ const AddexHubNerveCenter: React.FC<AddexHubNerveCenterProps> = ({
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 p-6">
+    <div className="min-h-screen bg-gradient-to-br from-background to-muted/20 p-3 sm:p-6">
       {/* Header with ADDEX-HUB Branding */}
-      <div className="mb-8">
-        <div className="flex items-center justify-between mb-6">
-          <div className="flex items-center gap-4">
-            <div className="p-3 bg-gradient-to-br from-blue-600 to-purple-600 rounded-xl shadow-lg">
-              <Brain className="w-10 h-10 text-white" />
+      <div className="mb-6 sm:mb-8">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+          <div className="flex items-center gap-3 sm:gap-4">
+            <div className="p-2.5 sm:p-3 bg-gradient-to-br from-primary to-secondary rounded-xl shadow-lg shrink-0">
+              <Brain className="w-8 h-8 sm:w-10 sm:h-10 text-primary-foreground" />
             </div>
-            <div>
-              <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+            <div className="min-w-0 flex-1">
+              <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent leading-tight">
                 ADDEX-HUB Nerve Center
               </h1>
-              <p className="text-gray-600 text-lg">Intelligent MVNO Management Platform</p>
+              <p className="text-muted-foreground text-base sm:text-lg leading-relaxed">
+                Intelligent MVNO Management Platform
+              </p>
             </div>
           </div>
           
-          <div className="flex items-center gap-4">
-            <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200">
-              <CheckCircle className="w-4 h-4 mr-2" />
-              System Optimal
+          <div className="flex items-center gap-2 sm:gap-4 shrink-0">
+            <Badge variant="outline" className="bg-emerald-50 text-emerald-700 border-emerald-200 px-2 py-1">
+              <CheckCircle className="w-3 h-3 sm:w-4 sm:h-4 mr-1.5" />
+              <span className="text-xs sm:text-sm font-medium">System Optimal</span>
             </Badge>
-            <Button variant="outline" size="sm">
-              <Bell className="w-4 h-4 mr-2" />
-              {systemHealth.alerts} Alerts
+            <Button variant="outline" size="sm" className="px-2 sm:px-3">
+              <Bell className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
+              <span className="text-xs sm:text-sm">{systemHealth.alerts}</span>
             </Button>
           </div>
         </div>
 
-        {/* Intelligent Search Bar */}
-        <div className="relative max-w-2xl mx-auto">
-          <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-          <Input
-            placeholder="Ask anything... (Natural language queries supported)"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            onKeyPress={(e) => e.key === 'Enter' && handleSearch(searchQuery)}
-            className="pl-12 pr-4 py-3 text-lg border-2 border-gray-200 rounded-xl focus:border-blue-500 transition-all duration-300"
-          />
-          <Button 
-            size="sm" 
-            className="absolute right-2 top-1/2 transform -translate-y-1/2"
-            onClick={() => handleSearch(searchQuery)}
-          >
-            <Sparkles className="w-4 h-4" />
-          </Button>
+        {/* Enhanced Intelligent Search Bar */}
+        <div className="relative max-w-3xl mx-auto">
+          <div className="relative">
+            <Search className="absolute left-3 sm:left-4 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4 sm:w-5 sm:h-5" />
+            <Input
+              placeholder="Ask anything... (Natural language queries supported)"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              onKeyPress={(e) => e.key === 'Enter' && handleSearch(searchQuery)}
+              className="pl-10 sm:pl-12 pr-12 sm:pr-16 py-3 sm:py-4 text-base sm:text-lg border-2 border-border/50 rounded-xl focus:border-primary shadow-sm focus:shadow-md transition-all duration-300 bg-background/80 backdrop-blur-sm"
+            />
+            <Button 
+              size="sm" 
+              className="absolute right-1.5 sm:right-2 top-1/2 transform -translate-y-1/2 px-2 sm:px-3 py-1.5 sm:py-2"
+              onClick={() => handleSearch(searchQuery)}
+            >
+              <Sparkles className="w-3 h-3 sm:w-4 sm:h-4" />
+            </Button>
+          </div>
         </div>
       </div>
 
-      {/* AI Insights Panel */}
-      <div className="mb-8">
-        <Card className="border-2 border-blue-200 bg-gradient-to-r from-blue-50 to-purple-50">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Brain className="w-6 h-6 text-blue-600" />
-              AI-Powered Insights
+      {/* Enhanced AI Insights Panel */}
+      <div className="mb-6 sm:mb-8">
+        <Card className="border-2 border-primary/20 bg-gradient-to-r from-primary/5 to-secondary/5 shadow-lg">
+          <CardHeader className="pb-4">
+            <CardTitle className="flex items-center gap-2 text-lg sm:text-xl">
+              <Brain className="w-5 h-5 sm:w-6 sm:h-6 text-primary" />
+              <span className="bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent font-bold">
+                AI-Powered Insights
+              </span>
             </CardTitle>
           </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <CardContent className="pt-0">
+            <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4">
               {aiInsights.map((insight, index) => (
-                <div key={index} className="p-4 bg-white rounded-lg border border-gray-200">
-                  <div className="flex items-center justify-between mb-2">
-                    <h4 className="font-semibold text-gray-900">{insight.title}</h4>
-                    <Badge variant="secondary">{insight.confidence}% Confidence</Badge>
+                <div key={index} className="p-4 sm:p-5 bg-card rounded-xl border border-border/50 shadow-sm hover:shadow-md transition-all duration-300 hover:scale-[1.02]">
+                  <div className="flex items-start justify-between mb-3">
+                    <h4 className="font-semibold text-foreground text-sm sm:text-base leading-tight">{insight.title}</h4>
+                    <Badge variant="secondary" className="text-xs font-medium shrink-0 ml-2">
+                      {insight.confidence}%
+                    </Badge>
                   </div>
-                  <p className="text-sm text-gray-600 mb-3">{insight.description}</p>
+                  <p className="text-xs sm:text-sm text-muted-foreground mb-4 leading-relaxed">{insight.description}</p>
                   <Button 
                     size="sm" 
-                    className="w-full"
+                    className="w-full text-xs sm:text-sm py-2 hover:scale-105 transition-transform duration-200"
                     onClick={() => handleAgenticAction(insight.action)}
                   >
                     {insight.action}
@@ -256,18 +264,18 @@ const AddexHubNerveCenter: React.FC<AddexHubNerveCenterProps> = ({
         </Card>
       </div>
 
-      {/* Main Navigation Tabs */}
-      <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
+      {/* Enhanced Main Navigation Tabs */}
+      <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4 sm:space-y-6">
         <div className="overflow-x-auto">
-          <TabsList className="grid grid-cols-5 lg:grid-cols-10 min-w-max h-auto p-2 bg-white rounded-xl shadow-lg">
+          <TabsList className="grid grid-cols-3 sm:grid-cols-5 lg:grid-cols-10 min-w-max h-auto p-1.5 sm:p-2 bg-card/80 backdrop-blur-sm rounded-xl shadow-lg border border-border/50">
             {nerveCenterSections.map((section) => (
               <TabsTrigger
                 key={section.id}
                 value={section.id}
-                className="flex flex-col items-center gap-2 p-4 data-[state=active]:bg-blue-50 data-[state=active]:text-blue-700 min-w-max"
+                className="flex flex-col items-center gap-1.5 sm:gap-2 p-2 sm:p-4 data-[state=active]:bg-primary/10 data-[state=active]:text-primary data-[state=active]:shadow-sm min-w-max transition-all duration-300 hover:scale-105"
               >
-                <section.icon className="w-6 h-6" />
-                <span className="text-sm font-medium">{section.label}</span>
+                <section.icon className="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6 shrink-0" />
+                <span className="text-xs sm:text-sm font-medium leading-tight text-center">{section.label}</span>
               </TabsTrigger>
             ))}
           </TabsList>
