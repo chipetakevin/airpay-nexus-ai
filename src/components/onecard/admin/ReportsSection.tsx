@@ -1,7 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { FileText, TrendingUp, Users, BarChart3, PieChart, Activity } from 'lucide-react';
+import { generateEnhancedMasterReport } from '../utils/enhancedPdfGenerator';
+import { useToast } from '@/hooks/use-toast';
 
 interface ReportsSectionProps {
   customers: any[];
@@ -9,8 +11,82 @@ interface ReportsSectionProps {
 }
 
 const ReportsSection = ({ customers, transactions }: ReportsSectionProps) => {
-  const handleGenerateMasterReport = () => {
-    console.log('Generating master report with data:', { customers, transactions });
+  const [isGenerating, setIsGenerating] = useState(false);
+  const { toast } = useToast();
+
+  const handleGenerateMasterReport = async (event?: React.MouseEvent<HTMLButtonElement>) => {
+    console.log('🔄 ReportsSection Generate Premium Report button clicked - starting generation...');
+    
+    // Prevent any event bubbling
+    if (event) {
+      event.preventDefault();
+      event.stopPropagation();
+    }
+
+    setIsGenerating(true);
+
+    try {
+      console.log('✅ Starting master report generation...');
+      
+      // Show immediate feedback
+      toast({
+        title: "Generating Premium Master Report",
+        description: "Processing data with Divine Mobile branding...",
+      });
+
+      // Small delay for better UX
+      await new Promise(resolve => setTimeout(resolve, 500));
+
+      console.log('🔄 Processing data:', { customers: customers.length, transactions: transactions.length });
+      
+      // Use provided data or create mock data if none provided
+      const reportCustomers = customers.length > 0 ? customers : [
+        {
+          id: "default-customer",
+          firstName: "Divine",
+          lastName: "Customer",
+          email: "customer@divinemobile.co.za",
+          phone: "+27123456789",
+          cardNumber: "DC2024001",
+          onecardBalance: 1500,
+          totalCashback: 245.5,
+          registrationDate: new Date().toISOString(),
+          networkProvider: "Vodacom",
+          ricaVerified: true,
+          isActive: true
+        }
+      ];
+
+      const reportTransactions = transactions.length > 0 ? transactions : [
+        {
+          id: "default-txn",
+          customerId: "default-customer",
+          customerName: "Divine Customer",
+          amount: 100,
+          cashbackEarned: 5,
+          network: "Vodacom",
+          status: "completed",
+          timestamp: new Date().toISOString(),
+          transactionType: "airtime_purchase"
+        }
+      ];
+
+      console.log('🔄 Calling generateEnhancedMasterReport...');
+      generateEnhancedMasterReport(reportCustomers, reportTransactions, toast);
+
+      console.log('✅ Master report generation completed successfully');
+
+    } catch (error) {
+      console.error('❌ Error generating master report:', error);
+      toast({
+        title: "Report Generation Failed",
+        description: "There was an error generating the report. Please try again.",
+        variant: "destructive"
+      });
+    } finally {
+      console.log('🔄 Setting isGenerating to false');
+      setIsGenerating(false);
+    }
   };
 
   return (
@@ -74,15 +150,33 @@ const ReportsSection = ({ customers, transactions }: ReportsSectionProps) => {
             {/* One-Click Download Button - Mobile Optimized */}
             <Button 
               onClick={handleGenerateMasterReport} 
-              className="w-full sm:w-auto bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white font-semibold px-6 sm:px-8 py-3 sm:py-4 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 text-sm sm:text-base"
+              disabled={isGenerating}
+              className="w-full sm:w-auto bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white font-semibold px-6 sm:px-8 py-3 sm:py-4 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 text-sm sm:text-base hover:scale-105 focus:ring-4 focus:ring-purple-300 focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
               size="lg"
+              type="button"
+              role="button"
+              aria-label="Generate premium master report with Divine Mobile branding"
+              style={{ 
+                cursor: isGenerating ? 'not-allowed' : 'pointer',
+                pointerEvents: 'auto',
+                minHeight: '48px'
+              }}
             >
-              <img src="/lovable-uploads/788fddcb-574c-4f1d-9c73-54cc003a95d1.png" alt="Divine Mobile" className="w-5 h-5 mr-2" />
-              Generate Premium Report
+              {isGenerating ? (
+                <div className="flex items-center justify-center">
+                  <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2" />
+                  <span>Generating...</span>
+                </div>
+              ) : (
+                <>
+                  <img src="/lovable-uploads/788fddcb-574c-4f1d-9c73-54cc003a95d1.png" alt="Divine Mobile" className="w-5 h-5 mr-2" />
+                  Generate Premium Report
+                </>
+              )}
             </Button>
             
-            <div className="text-xs sm:text-sm text-gray-500 mt-2">
-              ✨ One-click download • 👑 Divine Mobile logo included • 📊 Modern design
+            <div className="text-xs sm:text-sm text-gray-500 mt-2 animate-fade-in">
+              ✨ {isGenerating ? 'Processing your data...' : 'One-click download • 👑 Divine Mobile logo included • 📊 Modern design'}
             </div>
           </div>
         </CardContent>

@@ -153,8 +153,24 @@ const ReportsTabContent = () => {
     return `GOLD${baseNumber}`;
   };
 
-  const handleGenerateReport = () => {
+  const handleGenerateReport = async (event?: React.MouseEvent<HTMLButtonElement>) => {
+    console.log('🔄 Reports tab Generate Report button clicked - starting generation...');
+    
+    // Prevent any event bubbling
+    if (event) {
+      event.preventDefault();
+      event.stopPropagation();
+    }
+
     try {
+      console.log('✅ Starting report generation process...');
+      
+      // Show immediate feedback
+      toast({
+        title: "Generating Unified Report",
+        description: "Processing your unified profile data...",
+      });
+
       // Mock data for demonstration - replace with actual data
       const mockCustomers = unifiedProfiles.map((profile, index) => ({
         id: `customer_${index}`,
@@ -183,10 +199,13 @@ const ReportsTabContent = () => {
         }))
       );
 
+      console.log('🔄 Calling generateEnhancedMasterReport...');
       generateEnhancedMasterReport(mockCustomers, mockTransactions, toast);
 
+      console.log('✅ Report generation completed successfully');
+
     } catch (error) {
-      console.error('Error generating report:', error);
+      console.error('❌ Error generating report:', error);
       toast({
         title: "Report Generation Failed",
         description: "There was an error generating the report. Please try again.",
@@ -276,11 +295,19 @@ const ReportsTabContent = () => {
             </div>
             <Button 
               onClick={handleGenerateReport}
-              className="w-full sm:w-auto bg-gradient-to-r from-yellow-500 to-amber-600 hover:from-yellow-600 hover:to-amber-700 text-black font-semibold px-6 py-3 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300"
+              className="w-full sm:w-auto bg-gradient-to-r from-yellow-500 to-amber-600 hover:from-yellow-600 hover:to-amber-700 text-black font-semibold px-6 py-3 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 focus:ring-4 focus:ring-yellow-300 focus:outline-none"
               size="lg"
+              type="button"
+              role="button"
+              aria-label="Generate unified premium report with analytics"
+              style={{ 
+                cursor: 'pointer',
+                pointerEvents: 'auto',
+                minHeight: '48px'
+              }}
             >
-              <TrendingUp className="w-4 h-4 mr-2" />
-              Generate Report
+              <TrendingUp className="w-4 h-4 mr-2 animate-pulse" />
+              Generate Premium Report
               <ArrowRight className="w-4 h-4 ml-2" />
             </Button>
           </div>

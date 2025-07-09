@@ -337,9 +337,20 @@ export const generateEnhancedMasterReport = (customers: Customer[], transactions
   
   doc.save(`Divine_Mobile_Master_Report_${new Date().toISOString().split('T')[0]}.pdf`);
   
-  toast({
-    title: "Premium Report Generated",
-    description: "Modern master report with Divine Mobile logo branding has been downloaded.",
-    duration: 3000,
-  });
+  // Handle different toast function signatures
+  if (typeof toast === 'function') {
+    try {
+      // Try sonner-style toast first
+      toast.success("Premium Report Generated Successfully!", {
+        description: "Modern master report with Divine Mobile logo branding has been downloaded.",
+      });
+    } catch (error) {
+      // Fallback to useToast-style object
+      toast({
+        title: "Premium Report Generated",
+        description: "Modern master report with Divine Mobile logo branding has been downloaded.",
+        duration: 3000,
+      });
+    }
+  }
 };

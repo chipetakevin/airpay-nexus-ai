@@ -47,8 +47,15 @@ export const PremiumMasterReport = ({ userData, userType = 'customer', onNavigat
     { category: 'Shopping', amount: 219.07, percentage: 10 }
   ];
 
-  const handleGeneratePremiumReport = async () => {
+  const handleGeneratePremiumReport = async (event?: React.MouseEvent<HTMLButtonElement>) => {
     console.log('🔄 Premium Report button clicked - starting generation...');
+    
+    // Prevent any event bubbling
+    if (event) {
+      event.preventDefault();
+      event.stopPropagation();
+    }
+    
     setIsGenerating(true);
     
     try {
@@ -252,32 +259,33 @@ export const PremiumMasterReport = ({ userData, userType = 'customer', onNavigat
           <Button 
             onClick={handleGeneratePremiumReport}
             disabled={isGenerating}
-            className="bg-white text-purple-600 hover:bg-purple-50 hover:scale-105 font-semibold px-10 py-4 text-lg rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 border-2 border-transparent hover:border-purple-200 focus:ring-4 focus:ring-purple-300 focus:outline-none"
+            className="bg-white text-purple-600 hover:bg-purple-50 hover:scale-105 font-semibold px-10 py-4 text-lg rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 border-2 border-transparent hover:border-purple-200 focus:ring-4 focus:ring-purple-300 focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
             type="button"
             role="button"
             aria-label="Generate Premium Report with Divine Mobile branding"
             style={{ 
               cursor: isGenerating ? 'not-allowed' : 'pointer',
               minHeight: '56px',
-              minWidth: '280px'
+              minWidth: '280px',
+              pointerEvents: 'auto'
             }}
           >
             {isGenerating ? (
-              <div className="flex items-center justify-center">
+              <div className="flex items-center justify-center animate-pulse">
                 <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-purple-600 mr-3" />
                 <span>Generating Premium Report...</span>
               </div>
             ) : (
-              <div className="flex items-center justify-center">
-                <Crown className="w-6 h-6 mr-3" />
+              <div className="flex items-center justify-center group">
+                <Crown className="w-6 h-6 mr-3 group-hover:animate-bounce" />
                 <span>Generate Premium Report</span>
-                <Sparkles className="w-5 h-5 ml-3" />
+                <Sparkles className="w-5 h-5 ml-3 group-hover:animate-pulse" />
               </div>
             )}
           </Button>
           
-          <div className="mt-4 text-xs text-purple-200">
-            ✨ Click to generate your professional PDF report with charts and analytics
+          <div className="mt-4 text-xs text-purple-200 animate-fade-in">
+            ✨ {isGenerating ? 'Processing your data...' : 'Click to generate your professional PDF report with charts and analytics'}
           </div>
         </CardContent>
       </Card>
