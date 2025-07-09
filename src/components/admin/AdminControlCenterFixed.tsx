@@ -5,6 +5,7 @@ import { Badge } from '@/components/ui/badge';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useToast } from '@/hooks/use-toast';
+import AddexHubNerveCenter from '../addex-hub/AddexHubNerveCenter';
 import { 
   Shield, 
   TrendingUp, 
@@ -43,6 +44,7 @@ const AdminControlCenterFixed: React.FC<AdminControlCenterProps> = ({
     alertsCount: 3,
     oneCardBalance: 0.00
   });
+  const [hubActiveTab, setHubActiveTab] = useState('overview');
 
   const ActionCard = ({ title, description, icon: Icon, onClick, color, badge, buttonText = "Access" }) => (
     <Card className={`group hover:shadow-xl transition-all duration-300 hover:-translate-y-1 cursor-pointer border-l-4 ${color.border} bg-gradient-to-br ${color.bg}`} onClick={onClick}>
@@ -218,6 +220,28 @@ const AdminControlCenterFixed: React.FC<AdminControlCenterProps> = ({
       description: `Switched to ${sectionId.charAt(0).toUpperCase() + sectionId.slice(1)} section`,
     });
   };
+
+  // If hub section is active, render the full AddexHubNerveCenter
+  if (activeAdminTab === 'hub') {
+    return (
+      <div className="space-y-4">
+        <div className="flex items-center gap-4 mb-6">
+          <Button 
+            variant="outline" 
+            onClick={() => setActiveAdminTab('')}
+            className="bg-white hover:bg-gray-50"
+          >
+            ← Back to Admin Control
+          </Button>
+          <h2 className="text-2xl font-bold text-gray-900">Addex Hub Nerve Center</h2>
+        </div>
+        <AddexHubNerveCenter 
+          activeTab={hubActiveTab}
+          setActiveTab={setHubActiveTab}
+        />
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-8 pb-20">
