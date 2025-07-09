@@ -49,8 +49,10 @@ export const AdvancedChartsControls = ({
   const [notificationsEnabled, setNotificationsEnabled] = useState(false);
 
   const handleDateRangeChange = (range: DateRange) => {
-    setDateRange(range);
-    onDateRangeChange(range);
+    if (range && (range.from || range.to)) {
+      setDateRange(range);
+      onDateRangeChange(range);
+    }
   };
 
   const handleTimeframeChange = (value: string) => {

@@ -50,6 +50,11 @@ export const PremiumMasterReport = ({ userData, userType = 'customer' }: Premium
     setIsGenerating(true);
     
     try {
+      // Show immediate feedback
+      toast.info('Generating premium report...', {
+        description: 'Processing your data with Divine Mobile branding.',
+      });
+      
       // Simulate report generation with enhanced data
       await new Promise(resolve => setTimeout(resolve, 2000));
       
@@ -72,6 +77,11 @@ export const PremiumMasterReport = ({ userData, userType = 'customer' }: Premium
         })),
         toast
       );
+      
+      // Show success message
+      toast.success('Premium Report Generated Successfully!', {
+        description: 'Professional PDF with Divine Mobile logo and comprehensive analytics has been downloaded.',
+      });
       
     } catch (error) {
       toast.error('Failed to generate report', {
