@@ -29,13 +29,18 @@ import {
   Workflow,
   Eye,
   Target,
-  Sparkles
+  Sparkles,
+  MapPin
 } from 'lucide-react';
 import { IntelligentCustomerManagement } from './IntelligentCustomerManagement';
 import { AgenticWorkflowPanel } from './AgenticWorkflowPanel';
 import { BulkOperationsHub } from './BulkOperationsHub';
 import { AnalyticsDashboard } from './AnalyticsDashboard';
 import { RealTimeMonitoring } from './RealTimeMonitoring';
+import { SubscriberDetailsTabs } from './mvne/SubscriberDetailsTabs';
+import { BulkServicesInterface } from './mvne/BulkServicesInterface';
+import { FinancialManagementHub } from './mvne/FinancialManagementHub';
+import { AddressManagementSystem } from './mvne/AddressManagementSystem';
 
 interface AddexHubNerveCenterProps {
   activeTab: string;
@@ -113,6 +118,13 @@ const AddexHubNerveCenter: React.FC<AddexHubNerveCenterProps> = ({
       description: 'AI-powered customer insights and management'
     },
     {
+      id: 'subscriber',
+      label: 'Subscriber Management',
+      icon: Users,
+      title: 'Comprehensive Subscriber Management',
+      description: 'Complete subscriber lifecycle and details management'
+    },
+    {
       id: 'workflows',
       label: 'Agentic Workflows',
       icon: Workflow,
@@ -125,6 +137,27 @@ const AddexHubNerveCenter: React.FC<AddexHubNerveCenterProps> = ({
       icon: Database,
       title: 'Intelligent Bulk Operations',
       description: 'Smart batch processing and automation'
+    },
+    {
+      id: 'bulkservices',
+      label: 'Bulk Services',
+      icon: FileText,
+      title: 'Bulk Service Operations',
+      description: 'Mass service provisioning and management'
+    },
+    {
+      id: 'financial',
+      label: 'Financial Hub',
+      icon: CreditCard,
+      title: 'Financial Management Center',
+      description: 'Billing, credits, and financial controls'
+    },
+    {
+      id: 'address',
+      label: 'Address Management',
+      icon: MapPin,
+      title: 'Address & Contact System',
+      description: 'Physical and postal address management'
     },
     {
       id: 'analytics',
@@ -225,18 +258,20 @@ const AddexHubNerveCenter: React.FC<AddexHubNerveCenterProps> = ({
 
       {/* Main Navigation Tabs */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-        <TabsList className="grid grid-cols-6 w-full h-auto p-2 bg-white rounded-xl shadow-lg">
-          {nerveCenterSections.map((section) => (
-            <TabsTrigger
-              key={section.id}
-              value={section.id}
-              className="flex flex-col items-center gap-2 p-4 data-[state=active]:bg-blue-50 data-[state=active]:text-blue-700"
-            >
-              <section.icon className="w-6 h-6" />
-              <span className="text-sm font-medium">{section.label}</span>
-            </TabsTrigger>
-          ))}
-        </TabsList>
+        <div className="overflow-x-auto">
+          <TabsList className="grid grid-cols-5 lg:grid-cols-10 min-w-max h-auto p-2 bg-white rounded-xl shadow-lg">
+            {nerveCenterSections.map((section) => (
+              <TabsTrigger
+                key={section.id}
+                value={section.id}
+                className="flex flex-col items-center gap-2 p-4 data-[state=active]:bg-blue-50 data-[state=active]:text-blue-700 min-w-max"
+              >
+                <section.icon className="w-6 h-6" />
+                <span className="text-sm font-medium">{section.label}</span>
+              </TabsTrigger>
+            ))}
+          </TabsList>
+        </div>
 
         {/* Tab Content */}
         <TabsContent value="overview" className="space-y-6">
@@ -327,12 +362,28 @@ const AddexHubNerveCenter: React.FC<AddexHubNerveCenterProps> = ({
           <IntelligentCustomerManagement />
         </TabsContent>
 
+        <TabsContent value="subscriber">
+          <SubscriberDetailsTabs />
+        </TabsContent>
+
         <TabsContent value="workflows">
           <AgenticWorkflowPanel />
         </TabsContent>
 
         <TabsContent value="bulk">
           <BulkOperationsHub />
+        </TabsContent>
+
+        <TabsContent value="bulkservices">
+          <BulkServicesInterface />
+        </TabsContent>
+
+        <TabsContent value="financial">
+          <FinancialManagementHub />
+        </TabsContent>
+
+        <TabsContent value="address">
+          <AddressManagementSystem />
         </TabsContent>
 
         <TabsContent value="analytics">
