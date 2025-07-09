@@ -72,7 +72,7 @@ const MVNEPortal = () => {
         {/* Header */}
         <div className="text-center space-y-4 py-8">
           <h1 className="text-5xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-blue-800 bg-clip-text text-transparent">
-            MVNE Platform
+            Addex Hub Platform
           </h1>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
             Mobile Virtual Network Enabler - Comprehensive telecommunications infrastructure management platform

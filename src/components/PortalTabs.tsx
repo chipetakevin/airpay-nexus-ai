@@ -179,7 +179,7 @@ const PortalTabs = ({
     },
     {
       value: 'mvne-platform',
-      label: 'MVNE Platform',
+      label: 'Addex Hub Platform',
       icon: '📡',
       description: 'Telecom Infrastructure',
       color: 'cyan',
