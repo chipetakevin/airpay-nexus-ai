@@ -120,13 +120,14 @@ const Portal = () => {
     try {
         // Always allow core navigation tabs for seamless user experience
         if (['deals', 'registration', 'vendor', 'ussd-manager'].includes(tabValue)) {
-          console.log(`✅ Always allowed tab: ${tabValue}`);
           return true;
         }
       
       const isAuthenticated = localStorage.getItem('userAuthenticated') === 'true';
       const storedCredentials = localStorage.getItem('userCredentials');
       const adminData = localStorage.getItem('onecardAdmin');
+      const adminProfile = localStorage.getItem('adminProfile');
+      const adminAuthenticated = localStorage.getItem('adminAuthenticated') === 'true';
       
       // Check if user is registered admin
       const isRegisteredAdmin = storedCredentials && adminData ? 
@@ -139,27 +140,19 @@ const Portal = () => {
           }
         })() : false;
 
-        // Admin-only tabs (Reports, Docs, Versions, and Addex Pay) require admin authentication
+        // Admin-only tabs require admin authentication
         if (['unified-reports', 'documentation', 'version-manager', 'addex-pay'].includes(tabValue)) {
-          // Check for admin authentication - any of these conditions grant access
-          const adminProfile = localStorage.getItem('adminProfile');
-          const adminAuthenticated = localStorage.getItem('adminAuthenticated') === 'true';
           const hasAdminAccess = isRegisteredAdmin || 
                                 isAuthenticated && (adminProfile !== null || adminAuthenticated || 
                                 (storedCredentials && JSON.parse(storedCredentials).password === 'Malawi@1976'));
-          console.log(`🔐 Admin-only tab ${tabValue}: ${hasAdminAccess ? 'ALLOWED' : 'DENIED'}`, {
-            isRegisteredAdmin,
-            adminProfile: !!adminProfile,
-            adminAuthenticated,
-            isUnified: storedCredentials ? JSON.parse(storedCredentials).password === 'Malawi@1976' : false
-          });
+          
           return hasAdminAccess;
         }
           
-          // Field Workers tab - accessible to all authenticated users
-          if (tabValue === 'field-workers') {
-            return isAuthenticated;
-          }
+        // Field Workers tab - accessible to all authenticated users
+        if (tabValue === 'field-workers') {
+          return isAuthenticated;
+        }
       
       // Admin registration tab - only show to non-admins
       if (tabValue === 'admin-reg') {
@@ -186,36 +179,21 @@ const Portal = () => {
           case 'onecard':
           case 'deals':
             return true; // Available to all authenticated users
-          case 'unified-reports':
-          case 'documentation':
-            return isRegisteredAdmin; // Only for registered admins
           case 'admin-reg':
             return !isRegisteredAdmin; // Only for non-admins
           case 'admin':
             // Allow admin tab if user is admin type, has unified access, OR has completed admin authentication
-            const adminProfile = localStorage.getItem('adminProfile');
-            const adminAuthenticated = localStorage.getItem('adminAuthenticated') === 'true';
             const hasAdminAccess = (currentUserType === 'admin' && isAdminAuthenticated) || 
                                  isUnified || 
                                  adminProfile !== null ||
                                  adminAuthenticated;
-            console.log(`🔐 Control Center tab access check:`, {
-              currentUserType,
-              isAdminAuthenticated,
-              isUnified,
-              hasAdminProfile: !!adminProfile,
-              adminAuthenticated,
-              finalResult: hasAdminAccess
-            });
             return hasAdminAccess;
           case 'admin-dashboard':
             // Full admin dashboard access - same permissions as admin tab
-            const adminProfile2 = localStorage.getItem('adminProfile');
-            const adminAuthenticated2 = localStorage.getItem('adminAuthenticated') === 'true';
             const hasFullAdminAccess = (currentUserType === 'admin' && isAdminAuthenticated) || 
                                       isUnified || 
-                                      adminProfile2 !== null ||
-                                      adminAuthenticated2;
+                                      adminProfile !== null ||
+                                      adminAuthenticated;
             return hasFullAdminAccess;
           default:
             return false;
