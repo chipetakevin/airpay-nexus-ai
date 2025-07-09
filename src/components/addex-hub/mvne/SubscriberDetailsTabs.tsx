@@ -19,7 +19,7 @@ export const SubscriberDetailsTabs: React.FC = () => {
     msisdn: '+27821234567',
     imsi: '655012345678901',
     iccid: '8927011234567890123',
-    name: 'John Doe',
+    name: 'Thabo Mthembu',
     status: 'active',
     tariffType: 'Postpaid Premium',
     ratePlan: 'Divine Unlimited Pro',
@@ -213,17 +213,31 @@ export const SubscriberDetailsTabs: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      {/* Subscriber Header */}
-      <Card className="bg-gradient-to-r from-blue-50 to-purple-50 border-blue-200">
+      {/* Modern Subscriber Header */}
+      <Card className="bg-gradient-to-r from-blue-50 to-indigo-100 border-blue-200 shadow-lg">
         <CardContent className="p-6">
-          <div className="flex items-center justify-between">
-            <div>
-              <h2 className="text-2xl font-bold text-blue-900">{activeSubscriber.name}</h2>
-              <p className="text-blue-700">{activeSubscriber.msisdn} • {activeSubscriber.tariffType}</p>
+          <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+            <div className="flex items-center gap-4">
+              <div className="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center">
+                <User className="w-6 h-6 text-white" />
+              </div>
+              <div>
+                <h2 className="text-2xl font-bold bg-gradient-to-r from-blue-700 to-blue-900 bg-clip-text text-transparent">
+                  {activeSubscriber.name}
+                </h2>
+                <div className="flex flex-col sm:flex-row sm:items-center gap-2 mt-1">
+                  <span className="text-blue-600 font-medium">{activeSubscriber.msisdn}</span>
+                  <span className="hidden sm:block text-gray-400">•</span>
+                  <span className="text-blue-700">{activeSubscriber.tariffType}</span>
+                </div>
+              </div>
             </div>
-            <div className="flex gap-2">
-              <Badge className="bg-green-500">Active</Badge>
-              <Button variant="outline" size="sm">
+            <div className="flex gap-3">
+              <Badge className="bg-green-500 hover:bg-green-600 px-3 py-1">
+                <CheckCircle className="w-3 h-3 mr-1" />
+                Active
+              </Badge>
+              <Button variant="outline" size="sm" className="border-blue-300 text-blue-700 hover:bg-blue-50">
                 <Edit className="w-4 h-4 mr-2" />
                 Edit
               </Button>
@@ -233,23 +247,29 @@ export const SubscriberDetailsTabs: React.FC = () => {
       </Card>
 
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-        {/* Subscriber Functions Sidebar */}
-        <Card className="lg:col-span-1">
-          <CardHeader>
-            <CardTitle className="text-sm">Subscriber Functions</CardTitle>
+        {/* Modern Subscriber Functions Sidebar */}
+        <Card className="lg:col-span-1 border-blue-200 shadow-sm">
+          <CardHeader className="bg-gradient-to-r from-blue-50 to-indigo-50 border-b border-blue-100">
+            <CardTitle className="text-sm font-semibold text-blue-900 flex items-center gap-2">
+              <Wrench className="w-4 h-4" />
+              Subscriber Functions
+            </CardTitle>
           </CardHeader>
-          <CardContent>
+          <CardContent className="p-3">
             <ScrollArea className="h-96">
-              <div className="space-y-2">
-                {subscriberFunctions.map((func) => (
+              <div className="space-y-1">
+                {subscriberFunctions.map((func, index) => (
                   <Button
                     key={func.id}
                     variant="ghost"
                     size="sm"
-                    className="w-full justify-start text-xs"
+                    className="w-full justify-start text-xs h-9 hover:bg-blue-50 hover:text-blue-700 transition-colors"
                     onClick={() => handleFunctionAction(func.action)}
                   >
-                    {func.label}
+                    <div className="flex items-center gap-2 w-full">
+                      <div className="w-1.5 h-1.5 bg-blue-400 rounded-full flex-shrink-0"></div>
+                      <span className="truncate">{func.label}</span>
+                    </div>
                   </Button>
                 ))}
               </div>

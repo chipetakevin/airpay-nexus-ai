@@ -187,9 +187,9 @@ const PortalTabs = ({
     tabs.push({
       value: 'admin',
       label: 'The Nerve Center',
-      icon: '⚙️',
+      icon: '🧠',
       description: 'Admin Portal',
-      color: 'gray',
+      color: 'blue',
       adminOnly: true
     });
   }

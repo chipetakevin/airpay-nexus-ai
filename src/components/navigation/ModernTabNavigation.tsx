@@ -31,9 +31,17 @@ const ModernTabNavigation = ({
   const getTabStyles = (tab: TabItem) => {
     const isActive = activeTab === tab.value;
     const isAllowed = isTabAllowed(tab.value);
+    const isNerveCenter = tab.value === 'admin';
     
     if (!isAllowed) {
       return "opacity-50 cursor-not-allowed bg-muted border-border text-muted-foreground";
+    }
+    
+    // Special styling for The Nerve Center
+    if (isNerveCenter) {
+      return isActive 
+        ? "bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-800 text-white border-2 border-blue-500 shadow-xl transform hover:shadow-2xl ring-2 ring-blue-300 ring-opacity-50" 
+        : "bg-gradient-to-br from-blue-50 via-blue-100 to-indigo-100 text-blue-800 border-2 border-blue-300 hover:from-blue-100 hover:via-blue-200 hover:to-indigo-200 hover:border-blue-400 shadow-lg hover:shadow-xl ring-1 ring-blue-200";
     }
     
     const colorMap = {
@@ -100,15 +108,28 @@ const ModernTabNavigation = ({
               )}
             </div>
             <div className="text-center w-full max-w-full px-2">
-              <div className="text-sm font-bold leading-snug mb-1 max-w-full overflow-hidden flex items-center justify-center gap-1">
+              <div className={`text-sm font-bold leading-snug mb-1 max-w-full overflow-hidden flex items-center justify-center gap-1 ${
+                tab.value === 'admin' ? 'text-shadow' : ''
+              }`}>
                 {tab.label}
-                {tab.adminOnly && isTabAllowed(tab.value) && (
+                {tab.value === 'admin' && (
+                  <Badge className="text-xs px-1.5 py-0.5 h-5 bg-white/20 text-current border-white/30 font-bold backdrop-blur-sm">
+                    NEURAL
+                  </Badge>
+                )}
+                {tab.adminOnly && isTabAllowed(tab.value) && tab.value !== 'admin' && (
                   <Badge className="text-xs px-1.5 py-0.5 h-5 bg-yellow-100 text-yellow-800 border-yellow-200 font-semibold">
                     ADMIN
                   </Badge>
                 )}
               </div>
-              <div className="text-xs text-muted-foreground leading-snug mt-1 max-w-full overflow-hidden">{tab.description}</div>
+              <div className={`text-xs leading-snug mt-1 max-w-full overflow-hidden ${
+                tab.value === 'admin' 
+                  ? (activeTab === tab.value ? 'text-blue-100' : 'text-blue-700') 
+                  : 'text-muted-foreground'
+              }`}>
+                {tab.description}
+              </div>
             </div>
             {activeTab === tab.value && (
               <div className="flex items-center gap-1 mt-1.5">
@@ -146,15 +167,28 @@ const ModernTabNavigation = ({
               )}
             </div>
             <div className="text-center max-w-full px-2">
-              <div className="text-base font-bold leading-snug mb-2 max-w-full overflow-hidden flex items-center justify-center gap-2">
+              <div className={`text-base font-bold leading-snug mb-2 max-w-full overflow-hidden flex items-center justify-center gap-2 ${
+                tab.value === 'admin' ? 'text-shadow' : ''
+              }`}>
                 {tab.label}
-                {tab.adminOnly && isTabAllowed(tab.value) && (
+                {tab.value === 'admin' && (
+                  <Badge className="text-xs px-2 py-1 h-5 bg-white/20 text-current border-white/30 font-bold backdrop-blur-sm">
+                    NEURAL
+                  </Badge>
+                )}
+                {tab.adminOnly && isTabAllowed(tab.value) && tab.value !== 'admin' && (
                   <Badge className="text-xs px-2 py-1 h-5 bg-yellow-100 text-yellow-800 border-yellow-200 font-semibold">
                     ADMIN
                   </Badge>
                 )}
               </div>
-              <div className="text-sm text-muted-foreground leading-snug mt-1 max-w-full overflow-hidden">{tab.description}</div>
+              <div className={`text-sm leading-snug mt-1 max-w-full overflow-hidden ${
+                tab.value === 'admin' 
+                  ? (activeTab === tab.value ? 'text-blue-100' : 'text-blue-700') 
+                  : 'text-muted-foreground'
+              }`}>
+                {tab.description}
+              </div>
             </div>
             {activeTab === tab.value && (
               <div className="flex items-center gap-1 mt-2">
@@ -188,15 +222,28 @@ const ModernTabNavigation = ({
               )}
             </div>
             <div className="text-center max-w-full px-2">
-              <div className="text-base font-bold leading-snug mb-2 max-w-full overflow-hidden flex items-center justify-center gap-2">
+              <div className={`text-base font-bold leading-snug mb-2 max-w-full overflow-hidden flex items-center justify-center gap-2 ${
+                tab.value === 'admin' ? 'text-shadow' : ''
+              }`}>
                 {tab.label}
-                {tab.adminOnly && isTabAllowed(tab.value) && (
+                {tab.value === 'admin' && (
+                  <Badge className="text-xs px-2 py-1 h-5 bg-white/20 text-current border-white/30 font-bold backdrop-blur-sm">
+                    NEURAL
+                  </Badge>
+                )}
+                {tab.adminOnly && isTabAllowed(tab.value) && tab.value !== 'admin' && (
                   <Badge className="text-xs px-2 py-1 h-5 bg-yellow-100 text-yellow-800 border-yellow-200 font-semibold">
                     ADMIN
                   </Badge>
                 )}
               </div>
-              <div className="text-sm text-muted-foreground leading-snug mt-1 max-w-full overflow-hidden">{tab.description}</div>
+              <div className={`text-sm leading-snug mt-1 max-w-full overflow-hidden ${
+                tab.value === 'admin' 
+                  ? (activeTab === tab.value ? 'text-blue-100' : 'text-blue-700') 
+                  : 'text-muted-foreground'
+              }`}>
+                {tab.description}
+              </div>
             </div>
             {activeTab === tab.value && (
               <div className="flex items-center gap-1 mt-2">

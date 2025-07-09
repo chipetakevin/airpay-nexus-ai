@@ -47,7 +47,7 @@ export const AddressManagementSystem: React.FC = () => {
       postalCode: '2196',
       delivery: 'Standard',
       activeFrom: '2024-01-15',
-      modifiedBy: 'John Doe',
+      modifiedBy: 'Thabo Mthembu',
       modifiedOn: '2024-01-15 10:30:00',
       isActive: true,
       isPrimary: true
@@ -94,7 +94,7 @@ export const AddressManagementSystem: React.FC = () => {
       action: 'Created',
       addressId: 'ADDR001',
       details: 'Physical address created',
-      modifiedBy: 'John Doe',
+      modifiedBy: 'Thabo Mthembu',
       timestamp: '2024-01-15 10:30:00'
     },
     {
