@@ -32,7 +32,7 @@ const UniversalExitTabs: React.FC<ExitTabsProps> = ({
         id: 'deals',
         label: 'Browse Deals',
         icon: CreditCard,
-        action: () => navigate('/ai-powered-deals'),
+        action: () => navigate('/portal?tab=deals'),
         className: 'bg-blue-600 hover:bg-blue-700 text-white',
         primary: false
       }
@@ -50,7 +50,7 @@ const UniversalExitTabs: React.FC<ExitTabsProps> = ({
         id: 'deals',
         label: 'Browse Deals',
         icon: CreditCard,
-        action: () => navigate('/ai-powered-deals'),
+        action: () => navigate('/portal?tab=deals'),
         className: 'bg-blue-600 hover:bg-blue-700 text-white',
         primary: false
       }
