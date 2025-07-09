@@ -252,9 +252,9 @@ const AdminControlCenterFixed: React.FC<AdminControlCenterProps> = ({
             <Shield className="w-8 h-8 text-white" />
           </div>
           <div>
-            <h1 className="text-3xl font-bold bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent">
-              The Nerve Center
-            </h1>
+             <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent">
+               The Nerve Center
+             </h1>
             <p className="text-muted-foreground">Complete system administration and oversight</p>
           </div>
         </div>
