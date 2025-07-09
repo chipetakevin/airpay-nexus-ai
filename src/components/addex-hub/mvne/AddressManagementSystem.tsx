@@ -321,24 +321,31 @@ export const AddressManagementSystem: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      {/* Customer Selection */}
-      <Card className="bg-gradient-to-r from-blue-50 to-purple-50 border-blue-200">
-        <CardContent className="p-6">
-          <div className="flex items-center justify-between">
+      {/* Customer Selection - Updated to match the image layout */}
+      <Card className="bg-gradient-to-r from-primary/5 to-primary/10 border border-primary/20 rounded-2xl shadow-lg">
+        <CardContent className="p-6 sm:p-8">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div className="flex items-center gap-4">
-              <div className="p-3 bg-blue-100 rounded-lg">
-                <User className="w-6 h-6 text-blue-600" />
+              <div className="p-3 sm:p-4 bg-primary/10 rounded-2xl shrink-0">
+                <User className="w-8 h-8 sm:w-10 sm:h-10 text-primary" />
               </div>
-              <div>
-                <h2 className="text-xl font-bold text-blue-900">Address Management</h2>
-                <p className="text-blue-700">Customer: {selectedCustomer}</p>
+              <div className="min-w-0 flex-1">
+                <h2 className="text-2xl sm:text-3xl font-bold text-primary mb-2">
+                  Address Management
+                </h2>
+                <p className="text-primary/80 text-lg font-medium">
+                  Customer:
+                </p>
+                <p className="text-primary text-xl font-semibold">
+                  {selectedCustomer}
+                </p>
               </div>
             </div>
             <Button 
-              className="bg-blue-600 hover:bg-blue-700"
+              className="bg-primary hover:bg-primary/90 text-primary-foreground px-6 py-3 rounded-xl text-lg font-semibold shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 shrink-0"
               onClick={() => setShowAddForm(true)}
             >
-              <Plus className="w-4 h-4 mr-2" />
+              <Plus className="w-5 h-5 mr-2" />
               Add Address
             </Button>
           </div>
