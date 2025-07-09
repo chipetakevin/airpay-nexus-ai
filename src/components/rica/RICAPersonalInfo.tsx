@@ -27,67 +27,77 @@ const RICAPersonalInfo: React.FC<RICAPersonalInfoProps> = ({ formData, setFormDa
   };
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle className="flex items-center gap-2">
-          <User className="w-5 h-5 text-blue-600" />
-          Step 1: Personal Information
+    <Card className="w-full max-w-md mx-auto">
+      <CardHeader className="px-4 py-4 sm:px-6 sm:py-6">
+        <CardTitle className="flex items-center gap-2 text-lg sm:text-xl">
+          <User className="w-5 h-5 text-blue-600 flex-shrink-0" />
+          <span className="truncate">Step 1: Personal Information</span>
         </CardTitle>
       </CardHeader>
-      <CardContent className="space-y-4">
+      <CardContent className="px-4 pb-4 sm:px-6 sm:pb-6 space-y-4 sm:space-y-6">
+        {/* Full Name */}
         <div className="space-y-2">
-          <Label htmlFor="fullName">Full Name and Surname *</Label>
+          <Label htmlFor="fullName" className="text-sm font-medium">
+            Full Name and Surname *
+          </Label>
           <Input
             id="fullName"
             value={formData.fullName}
             onChange={(e) => handleInputChange('fullName', e.target.value)}
             placeholder="Enter your full name"
-            className="w-full"
+            className="w-full h-12 text-base"
           />
         </div>
 
+        {/* Date of Birth */}
         <div className="space-y-2">
-          <Label htmlFor="dateOfBirth">Date of Birth *</Label>
+          <Label htmlFor="dateOfBirth" className="text-sm font-medium">
+            Date of Birth *
+          </Label>
           <Input
             id="dateOfBirth"
             type="date"
             value={formData.dateOfBirth}
             onChange={(e) => handleInputChange('dateOfBirth', e.target.value)}
-            className="w-full"
+            className="w-full h-12 text-base"
           />
         </div>
 
-        <div className="space-y-2">
-          <Label>Gender *</Label>
-          <Select value={formData.gender} onValueChange={(value) => handleInputChange('gender', value)}>
-            <SelectTrigger>
-              <SelectValue placeholder="Select gender" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="male">Male</SelectItem>
-              <SelectItem value="female">Female</SelectItem>
-              <SelectItem value="other">Other</SelectItem>
-            </SelectContent>
-          </Select>
+        {/* Gender and Nationality in mobile-responsive grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="space-y-2">
+            <Label className="text-sm font-medium">Gender *</Label>
+            <Select value={formData.gender} onValueChange={(value) => handleInputChange('gender', value)}>
+              <SelectTrigger className="h-12 text-base">
+                <SelectValue placeholder="Select gender" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="male">Male</SelectItem>
+                <SelectItem value="female">Female</SelectItem>
+                <SelectItem value="other">Other</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div className="space-y-2">
+            <Label className="text-sm font-medium">Nationality *</Label>
+            <Select value={formData.nationality} onValueChange={(value) => handleInputChange('nationality', value)}>
+              <SelectTrigger className="h-12 text-base">
+                <SelectValue placeholder="Select nationality" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="South African">South African</SelectItem>
+                <SelectItem value="Foreign National">Foreign National</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
         </div>
 
+        {/* ID Type */}
         <div className="space-y-2">
-          <Label>Nationality *</Label>
-          <Select value={formData.nationality} onValueChange={(value) => handleInputChange('nationality', value)}>
-            <SelectTrigger>
-              <SelectValue placeholder="Select nationality" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="South African">South African</SelectItem>
-              <SelectItem value="Foreign National">Foreign National</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
-
-        <div className="space-y-2">
-          <Label>Type of ID Document *</Label>
+          <Label className="text-sm font-medium">Type of ID Document *</Label>
           <Select value={formData.idType} onValueChange={(value) => handleInputChange('idType', value)}>
-            <SelectTrigger>
+            <SelectTrigger className="h-12 text-base">
               <SelectValue placeholder="Select ID type" />
             </SelectTrigger>
             <SelectContent>
@@ -99,21 +109,25 @@ const RICAPersonalInfo: React.FC<RICAPersonalInfoProps> = ({ formData, setFormDa
           </Select>
         </div>
 
+        {/* ID Number */}
         <div className="space-y-2">
-          <Label htmlFor="idNumber">ID/Passport Number *</Label>
+          <Label htmlFor="idNumber" className="text-sm font-medium">
+            ID/Passport Number *
+          </Label>
           <Input
             id="idNumber"
             value={formData.idNumber}
             onChange={(e) => handleInputChange('idNumber', e.target.value)}
             placeholder={formData.idType === 'SA ID' ? '13-digit ID number' : 'Passport number'}
-            className="w-full"
+            className="w-full h-12 text-base font-mono"
           />
         </div>
 
+        {/* Next Button */}
         <Button 
           onClick={onNext} 
           disabled={!isStepValid()}
-          className="w-full mt-6 h-12"
+          className="w-full mt-6 h-12 text-base sm:h-14 sm:text-lg"
         >
           Next: Address Details
           <ChevronRight className="w-4 h-4 ml-2" />

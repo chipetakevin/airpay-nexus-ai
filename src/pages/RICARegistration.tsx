@@ -201,15 +201,19 @@ const RICARegistration = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 pb-32">
-      {/* Header */}
-      <div className="bg-white shadow-sm border-b px-4 py-6">
+      {/* Mobile-First Header */}
+      <div className="bg-white shadow-sm border-b px-4 py-4 sm:py-6">
         <div className="max-w-md mx-auto">
-          <h1 className="text-2xl font-bold text-gray-900 mb-2">SIM Card Registration (RICA)</h1>
-          <p className="text-gray-600">Comply with South African law by registering your SIM card</p>
+          <h1 className="text-xl sm:text-2xl font-bold text-gray-900 mb-2">
+            SIM Card Registration (RICA)
+          </h1>
+          <p className="text-sm sm:text-base text-gray-600">
+            Comply with South African law by registering your SIM card
+          </p>
         </div>
       </div>
 
-      <div className="max-w-md mx-auto p-4 space-y-6">
+      <div className="max-w-md mx-auto p-4 space-y-4 sm:space-y-6">
         {/* Collapsible OneCard Account */}
         {isAuthenticated && currentUser && (
           <CollapsibleOneCardAccount 
@@ -219,59 +223,63 @@ const RICARegistration = () => {
           />
         )}
 
-        {/* User Greeting */}
+        {/* Mobile-Optimized User Greeting */}
         {isAuthenticated && currentUser && (
-          <Card className="border-blue-200 bg-blue-50/30">
-            <CardContent className="p-4">
+          <Card className="border-blue-200 bg-blue-50/30 animate-fade-in">
+            <CardContent className="p-3 sm:p-4">
               <div className="flex items-center gap-3 mb-3">
-                <div className="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center">
-                  <User className="w-6 h-6 text-white" />
+                <div className="w-10 h-10 sm:w-12 sm:h-12 bg-blue-600 rounded-full flex items-center justify-center flex-shrink-0">
+                  <User className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
                 </div>
-                <div>
-                  <h3 className="font-semibold text-gray-900">
+                <div className="min-w-0 flex-1">
+                  <h3 className="font-semibold text-gray-900 text-sm sm:text-base truncate">
                     👋 Welcome, {currentUser.firstName || 'User'}!
                   </h3>
-                  <p className="text-sm text-gray-600">
-                    📱 Phone: {currentUser.registeredPhone || 'Not provided'}
+                  <p className="text-xs sm:text-sm text-gray-600 truncate">
+                    📱 {currentUser.registeredPhone || 'Phone not provided'}
                   </p>
                 </div>
               </div>
-              <p className="text-sm text-blue-700">
+              <p className="text-xs sm:text-sm text-blue-700">
                 Ready to help you with SIM registration and compliance.
               </p>
             </CardContent>
           </Card>
         )}
 
-        {/* Main Content Tabs */}
+        {/* Mobile-First Tab Navigation */}
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="grid w-full grid-cols-2">
-            <TabsTrigger value="register">Register SIM</TabsTrigger>
-            <TabsTrigger value="history">History & Status</TabsTrigger>
+          <TabsList className="grid w-full grid-cols-2 h-12 sm:h-auto">
+            <TabsTrigger value="register" className="text-sm sm:text-base">
+              Register SIM
+            </TabsTrigger>
+            <TabsTrigger value="history" className="text-sm sm:text-base">
+              History & Status
+            </TabsTrigger>
           </TabsList>
           
-          <TabsContent value="register" className="space-y-6 mt-6">
-            {/* Registration Status */}
+          <TabsContent value="register" className="space-y-4 sm:space-y-6 mt-4 sm:mt-6">
+            {/* Mobile-Optimized Registration Status */}
             {!(existingRegistration || localExistingRegistration) && (
-              <Card className="border-red-200 bg-red-50">
-                <CardContent className="p-6 text-center space-y-4">
+              <Card className="border-red-200 bg-red-50 animate-fade-in">
+                <CardContent className="p-4 sm:p-6 text-center space-y-3 sm:space-y-4">
                   <div className="flex justify-center">
-                    <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center">
-                      <AlertCircle className="w-8 h-8 text-red-600" />
+                    <div className="w-12 h-12 sm:w-16 sm:h-16 bg-red-100 rounded-full flex items-center justify-center">
+                      <AlertCircle className="w-6 h-6 sm:w-8 sm:h-8 text-red-600" />
                     </div>
                   </div>
                   
-                  <div>
-                    <h3 className="text-lg font-semibold text-red-800 mb-2">
+                  <div className="space-y-3">
+                    <h3 className="text-base sm:text-lg font-semibold text-red-800">
                       ⚠️ Registration Required for WhatsApp Shopping
                     </h3>
-                    <p className="text-sm text-red-600 mb-4">
+                    <p className="text-sm text-red-600">
                       Complete RICA registration to comply with South African law
                     </p>
                     <div className="bg-red-100 rounded-lg p-3">
                       <p className="text-xs text-red-700 flex items-center justify-center gap-1">
-                        <FileText className="w-3 h-3" />
-                        Your profile information is permanently saved for convenience
+                        <FileText className="w-3 h-3 flex-shrink-0" />
+                        <span className="text-center">Your profile information is permanently saved for convenience</span>
                       </p>
                     </div>
                   </div>
@@ -303,36 +311,36 @@ const RICARegistration = () => {
               </Card>
             )}
 
-            {/* Progress Section - Only show if not registered */}
+            {/* Mobile-First Progress Section - Only show if not registered */}
             {!(existingRegistration || localExistingRegistration) && (
-              <Card className="border-blue-200 bg-blue-50/30">
-                <CardHeader className="pb-3">
-                  <CardTitle className="text-lg text-blue-800">Registration Progress</CardTitle>
+              <Card className="border-blue-200 bg-blue-50/30 animate-fade-in">
+                <CardHeader className="px-4 py-3 sm:px-6 sm:py-4">
+                  <CardTitle className="text-base sm:text-lg text-blue-800">Registration Progress</CardTitle>
                 </CardHeader>
-                <CardContent>
+                <CardContent className="px-4 pb-4 sm:px-6 sm:pb-6">
                   <div className="mb-4">
-                    <div className="flex justify-between text-sm text-blue-700 mb-2">
+                    <div className="flex justify-between text-xs sm:text-sm text-blue-700 mb-2">
                       <span>Complete your RICA registration</span>
-                      <span>{Math.round(calculateProgress())}%</span>
+                      <span className="font-medium">{Math.round(calculateProgress())}%</span>
                     </div>
                     <Progress value={calculateProgress()} className="h-2" />
                   </div>
                   
-                  <div className="grid grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                     {steps.map((step, index) => {
                       const isActive = step.id === currentStep;
                       const isCompleted = steps.findIndex(s => s.id === currentStep) > index;
                       
                       return (
-                        <div key={step.id} className="flex items-center gap-2">
+                        <div key={step.id} className="flex items-center gap-2 p-2 rounded-lg transition-colors hover:bg-white/50">
                           {isCompleted ? (
-                            <CheckCircle className="w-5 h-5 text-green-600" />
+                            <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5 text-green-600 flex-shrink-0" />
                           ) : isActive ? (
-                            <step.icon className="w-5 h-5 text-blue-600" />
+                            <step.icon className="w-4 h-4 sm:w-5 sm:h-5 text-blue-600 flex-shrink-0" />
                           ) : (
-                            <step.icon className="w-5 h-5 text-gray-400" />
+                            <step.icon className="w-4 h-4 sm:w-5 sm:h-5 text-gray-400 flex-shrink-0" />
                           )}
-                          <span className={`text-sm ${
+                          <span className={`text-xs sm:text-sm truncate ${
                             isCompleted ? 'text-green-700 font-medium' : 
                             isActive ? 'text-blue-700 font-medium' : 
                             'text-gray-600'
