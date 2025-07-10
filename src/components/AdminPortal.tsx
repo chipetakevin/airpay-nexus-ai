@@ -271,29 +271,39 @@ const AdminPortal: React.FC<AdminPortalProps> = ({ onAuthSuccess, showAdminBanne
   if (isAuthenticated && !isCollapsed) {
     return (
       <div className="space-y-6 pb-20">
-        {/* Admin header with collapse option */}
-        <div className="flex justify-between items-center">
-          <div className="text-center flex-1">
-            <h2 className="text-2xl font-bold mb-2">🛡️ Admin The Nerve Center</h2>
-            <p className="text-gray-600">Complete system administration and oversight</p>
-          </div>
-          <div className="flex gap-2">
-            <Button 
-              size="sm"
-              variant="outline"
-              onClick={handleCloseAdminPanel}
-              className="text-xs text-blue-600 border-blue-200 hover:bg-blue-50"
-            >
-              Close
-            </Button>
-            <Button 
-              size="sm"
-              variant="outline"
-              onClick={handleLogout}
-              className="text-xs text-red-600 border-red-200 hover:bg-red-50"
-            >
-              Logout
-            </Button>
+        {/* Enhanced Admin Header with intelligent spacing and visual consistency */}
+        <div className="bg-gradient-to-r from-blue-50/80 via-white to-purple-50/80 rounded-2xl shadow-lg border border-gray-200/60 backdrop-blur-sm p-6">
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+            {/* Title Section - Left */}
+            <div className="text-center sm:text-left flex-1 min-w-0">
+              <h2 className="text-xl sm:text-2xl font-bold mb-2 text-gray-800 flex items-center justify-center sm:justify-start gap-2">
+                🛡️ Admin The Nerve Center
+                <div className="px-3 py-1 bg-gradient-to-r from-orange-400 to-orange-500 text-white text-xs font-bold rounded-full shadow-md animate-pulse">
+                  ADMIN
+                </div>
+              </h2>
+              <p className="text-gray-600 text-sm sm:text-base">Complete system administration and oversight</p>
+            </div>
+
+            {/* Action Buttons - Right */}
+            <div className="flex items-center gap-3 sm:gap-4 flex-shrink-0">
+              <Button 
+                size="sm"
+                variant="outline"
+                onClick={handleCloseAdminPanel}
+                className="px-4 sm:px-6 py-2 sm:py-3 text-sm font-medium text-blue-600 border-2 border-blue-200 hover:bg-blue-50 hover:border-blue-300 transition-all duration-200 rounded-xl shadow-sm hover:shadow-md transform hover:scale-[1.02] active:scale-[0.98]"
+              >
+                Close
+              </Button>
+              <Button 
+                size="sm"
+                variant="outline"
+                onClick={handleLogout}
+                className="px-4 sm:px-6 py-2 sm:py-3 text-sm font-medium text-red-600 border-2 border-red-200 hover:bg-red-50 hover:border-red-300 transition-all duration-200 rounded-xl shadow-sm hover:shadow-md transform hover:scale-[1.02] active:scale-[0.98]"
+              >
+                Logout
+              </Button>
+            </div>
           </div>
         </div>
 
