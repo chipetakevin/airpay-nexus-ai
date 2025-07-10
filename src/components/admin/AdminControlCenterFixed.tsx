@@ -307,7 +307,11 @@ const AdminControlCenterFixed: React.FC<AdminControlCenterProps> = ({
             </TabsTrigger>
             <TabsTrigger 
               value="hub" 
-              className="data-[state=active]:bg-white data-[state=active]:shadow-lg data-[state=active]:border data-[state=active]:border-blue-200/30 rounded-lg px-4 py-3 font-medium transition-all duration-300"
+              className="data-[state=active]:bg-white data-[state=active]:shadow-lg data-[state=active]:border data-[state=active]:border-blue-200/30 rounded-lg px-4 py-3 font-medium transition-all duration-300 cursor-pointer hover:bg-white/70"
+              onClick={() => {
+                console.log('🚀 Addex Hub Platform tab clicked directly');
+                setActiveAdminTab('hub');
+              }}
             >
               Addex Hub Platform
             </TabsTrigger>
