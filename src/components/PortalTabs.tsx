@@ -189,7 +189,7 @@ const PortalTabs = ({
       icon: '👥',
       description: 'Mobile Teams',
       color: 'teal',
-      adminOnly: true
+      adminOnly: false
     },
     {
       value: 'api-toolkit',
