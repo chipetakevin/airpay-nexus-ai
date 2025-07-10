@@ -43,7 +43,7 @@ const WhatsAppCart: React.FC<WhatsAppCartProps> = ({
   }
 
   return (
-    <div className="flex flex-col h-full bg-gray-50">
+    <div className="flex flex-col h-full bg-gray-50 animate-fade-in">
       {/* Header Section */}
       <div className="bg-white p-4 border-b border-gray-200">
         <div className="flex items-center justify-between mb-4">
@@ -62,8 +62,8 @@ const WhatsAppCart: React.FC<WhatsAppCartProps> = ({
 
       {/* Cart Items */}
       <div className="flex-1 p-4 space-y-3 overflow-y-auto">
-        {items.map((item) => (
-          <Card key={item.id} className="bg-white p-4 border border-gray-200 rounded-2xl shadow-sm">
+        {items.map((item, index) => (
+          <Card key={item.id} className="bg-white p-4 border border-gray-200 rounded-2xl shadow-sm hover-scale animate-fade-in transition-all duration-300" style={{ animationDelay: `${index * 0.1}s` }}>
             <div className="flex items-center gap-3">
               {/* Item Icon */}
               <div className="w-12 h-12 bg-gray-100 rounded-xl flex items-center justify-center">
@@ -129,12 +129,15 @@ const WhatsAppCart: React.FC<WhatsAppCartProps> = ({
       </div>
 
       {/* Total and Checkout Section */}
-      <div className="bg-white border-t border-gray-200 p-4 space-y-4">
+      <div className="bg-white border-t border-gray-200 p-4 space-y-4 animate-slide-in-right">
         {/* Total Display */}
-        <Card className="bg-green-50 border-2 border-green-200 p-4 rounded-2xl">
+        <Card className="bg-green-50 border-2 border-green-200 p-4 rounded-2xl animate-scale-in">
           <div className="flex items-center justify-between">
             <span className="text-lg font-bold text-gray-900">Total:</span>
-            <span className="text-2xl font-bold text-green-600">R{total}</span>
+            <span className="text-2xl font-bold text-green-600 animate-pulse">R{total}</span>
+          </div>
+          <div className="text-sm text-green-700 mt-1">
+            {totalItems} item{totalItems !== 1 ? 's' : ''} • Ready for checkout
           </div>
         </Card>
 
@@ -142,26 +145,31 @@ const WhatsAppCart: React.FC<WhatsAppCartProps> = ({
         <Button
           onClick={onCheckout}
           disabled={isProcessing || items.length === 0}
-          className="w-full h-14 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white font-bold text-lg rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300"
+          className="w-full h-14 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white font-bold text-lg rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 hover-scale animate-fade-in"
         >
           {isProcessing ? (
             <div className="flex items-center gap-2">
               <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-              Processing...
+              Processing Payment...
             </div>
           ) : (
             <div className="flex items-center gap-2">
               <CreditCard className="w-6 h-6" />
-              Secure Checkout
+              🚀 Secure WhatsApp Checkout
             </div>
           )}
         </Button>
 
         {/* Security Info */}
-        <div className="text-center">
+        <div className="text-center space-y-2 animate-fade-in">
           <p className="text-xs text-gray-600">
             🔒 Secure payment • ⚡ Instant delivery • 📱 Mobile optimized
           </p>
+          <div className="flex items-center justify-center gap-4 text-xs text-green-600">
+            <span>✅ End-to-end encrypted</span>
+            <span>✅ WhatsApp receipt</span>
+            <span>✅ 24/7 support</span>
+          </div>
         </div>
       </div>
     </div>

@@ -39,8 +39,8 @@ export const useWhatsAppShopping = () => {
     });
 
     toast({
-      title: "Added to Cart! 🛒",
-      description: `${item.name} has been added to your cart`,
+      title: "🛒 Added to Cart!",
+      description: `${item.name} has been added to your WhatsApp cart • Total: ${cart.length + 1} items`,
       duration: 2000,
     });
   };
@@ -58,10 +58,11 @@ export const useWhatsAppShopping = () => {
   };
 
   const removeFromCart = (itemId: string) => {
+    const removedItem = cart.find(item => item.id === itemId);
     setCart(prev => prev.filter(item => item.id !== itemId));
     toast({
-      title: "Item Removed",
-      description: "Item has been removed from your cart",
+      title: "🗑️ Item Removed",
+      description: `${removedItem?.name || 'Item'} has been removed from your WhatsApp cart`,
       duration: 2000,
     });
   };
@@ -146,8 +147,8 @@ export const useWhatsAppShopping = () => {
       setCart([]);
 
       toast({
-        title: "Payment Successful! ✅",
-        description: `Transaction ${transactionId} completed securely!`,
+        title: "🎉 Payment Successful!",
+        description: `Transaction ${transactionId} completed securely via WhatsApp! Receipt sent automatically.`,
         duration: 5000,
       });
 
