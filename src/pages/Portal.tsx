@@ -189,8 +189,14 @@ const Portal = () => {
 
       const hasAdminAccess = isRegisteredAdmin();
 
+      // Field Workers tab should always be accessible
+      if (tabValue === 'field-workers') {
+        console.log(`✅ Field Workers tab access granted`);
+        return true;
+      }
+
       // Admin-only tabs require admin authentication
-      if (['unified-reports', 'documentation', 'version-manager', 'addex-pay', 'api-toolkit', 'mvne-platform', 'field-workers', 'admin'].includes(tabValue)) {
+      if (['unified-reports', 'documentation', 'version-manager', 'addex-pay', 'api-toolkit', 'mvne-platform', 'admin'].includes(tabValue)) {
         console.log(`🔐 Admin tab check for ${tabValue}: ${hasAdminAccess ? '✅ Allowed' : '❌ Denied'}`);
         return hasAdminAccess;
       }
