@@ -54,6 +54,15 @@
     letter-spacing: -0.02em;
   }
 
+  /* Tab base styles */
+  .tab-active {
+    transform: translateY(-1px);
+  }
+  
+  .tab-inactive {
+    /* Base styles for inactive tabs */
+  }
+
   /* Teal tab styles */
   .tab-teal-active {
     background: hsl(var(--tab-teal));
@@ -70,5 +79,23 @@
   .tab-teal-hover:hover {
     background: hsl(var(--tab-teal-muted));
     border-color: hsl(var(--tab-teal));
+  }
+
+  /* Gray tab styles for fallback */
+  .tab-gray-active {
+    background: hsl(var(--tab-gray));
+    color: white;
+    border-color: hsl(var(--tab-gray));
+  }
+  
+  .tab-gray-inactive {
+    background: hsl(var(--tab-gray-light));
+    color: hsl(var(--tab-gray));
+    border-color: hsl(var(--tab-gray-muted));
+  }
+  
+  .tab-gray-hover:hover {
+    background: hsl(var(--tab-gray-muted));
+    border-color: hsl(var(--tab-gray));
   }
 }

@@ -34,6 +34,17 @@ const ModernTabNavigation = ({
     const isAllowed = isTabAllowed(tab.value);
     const isNerveCenter = tab.value === 'admin';
     
+    // Debug logging for Field Workers tab
+    if (tab.value === 'field-workers') {
+      console.log(`🎨 Field Workers tab styling debug:`, {
+        tabValue: tab.value,
+        activeTab,
+        isActive,
+        isAllowed,
+        color: tab.color
+      });
+    }
+    
     if (!isAllowed) {
       return "opacity-50 cursor-not-allowed bg-muted border-border text-muted-foreground";
     }
@@ -72,7 +83,14 @@ const ModernTabNavigation = ({
         : "tab-inactive tab-gray-inactive border hover:tab-gray-hover"
     };
     
-    return colorMap[tab.color] || colorMap.gray;
+    const selectedStyle = colorMap[tab.color] || colorMap.gray;
+    
+    // Debug logging for Field Workers tab styling
+    if (tab.value === 'field-workers') {
+      console.log(`🎨 Field Workers final style:`, selectedStyle);
+    }
+    
+    return selectedStyle;
   };
 
   const handleTabClick = (tab: TabItem) => {
