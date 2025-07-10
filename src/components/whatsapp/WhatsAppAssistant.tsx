@@ -7,6 +7,9 @@ import WhatsAppTabNavigation from './WhatsAppTabNavigation';
 import WhatsAppCategoryGrid from './WhatsAppCategoryGrid';
 import WhatsAppProductsList from './WhatsAppProductsList';
 import WhatsAppCart from './WhatsAppCart';
+import WhatsAppLanguageSelector from './WhatsAppLanguageSelector';
+import WhatsAppPaymentProcessor from './WhatsAppPaymentProcessor';
+import WhatsAppReceiptGenerator from './WhatsAppReceiptGenerator';
 import { CreditCard, X, Minimize2 } from 'lucide-react';
 
 const WhatsAppAssistant = () => {
@@ -14,6 +17,7 @@ const WhatsAppAssistant = () => {
   const [activeCategory, setActiveCategory] = useState('airtime');
   const [isMinimized, setIsMinimized] = useState(false);
   const [isClosed, setIsClosed] = useState(false);
+  const [showLanguageSelector, setShowLanguageSelector] = useState(false);
   
   const {
     cart,
@@ -23,8 +27,18 @@ const WhatsAppAssistant = () => {
     getCartTotal,
     getCartCount,
     processCheckout,
+    completePayment,
+    sendWhatsAppReceipt,
     isProcessing,
-    isAuthenticated
+    isAuthenticated,
+    currentUser,
+    selectedLanguage,
+    setSelectedLanguage,
+    showPaymentProcessor,
+    setShowPaymentProcessor,
+    showReceipt,
+    setShowReceipt,
+    lastTransaction
   } = useWhatsAppShopping();
 
   const handleExitToHome = () => {
@@ -43,8 +57,76 @@ const WhatsAppAssistant = () => {
     setIsClosed(true);
   };
 
+  const handleLanguageSelect = (language: string) => {
+    setSelectedLanguage(language);
+    setShowLanguageSelector(false);
+  };
+
+  const handlePaymentComplete = async (paymentData: any) => {
+    const success = await completePayment(paymentData);
+    if (success) {
+      // Receipt will be shown via state
+    }
+  };
+
+  const handleSendToWhatsApp = () => {
+    if (lastTransaction) {
+      sendWhatsAppReceipt(lastTransaction);
+    }
+  };
+
+  const handleDownloadReceipt = () => {
+    // Implementation for downloading receipt as PDF/image
+    console.log('Download receipt functionality');
+  };
+
   if (isClosed) {
     return null;
+  }
+
+  // Show language selector on first visit or when requested
+  if (showLanguageSelector) {
+    return (
+      <div className="bg-white rounded-t-3xl overflow-hidden flex flex-col h-[600px] p-6">
+        <WhatsAppLanguageSelector 
+          onLanguageSelect={handleLanguageSelect}
+          currentLanguage={selectedLanguage}
+        />
+      </div>
+    );
+  }
+
+  // Show payment processor
+  if (showPaymentProcessor && currentUser) {
+    return (
+      <div className="bg-white rounded-t-3xl overflow-hidden flex flex-col h-[600px] p-6">
+        <WhatsAppPaymentProcessor 
+          items={cart}
+          total={getCartTotal()}
+          customerData={currentUser}
+          onPaymentComplete={handlePaymentComplete}
+          onBack={() => setShowPaymentProcessor(false)}
+          language={selectedLanguage}
+        />
+      </div>
+    );
+  }
+
+  // Show receipt
+  if (showReceipt && lastTransaction) {
+    return (
+      <div className="bg-white rounded-t-3xl overflow-hidden flex flex-col h-[600px] p-6">
+        <WhatsAppReceiptGenerator 
+          receiptData={lastTransaction}
+          onSendToWhatsApp={handleSendToWhatsApp}
+          onDownload={handleDownloadReceipt}
+          onClose={() => {
+            setShowReceipt(false);
+            setActiveTab('shop');
+          }}
+        />
+      </div>
+    );
   }
 
   const products = [
@@ -94,9 +176,7 @@ const WhatsAppAssistant = () => {
     
     const success = await processCheckout();
     if (success) {
-      setTimeout(() => {
-        setActiveTab('shop');
-      }, 3000);
+      // Payment processor will be shown via state
     }
   };
 
