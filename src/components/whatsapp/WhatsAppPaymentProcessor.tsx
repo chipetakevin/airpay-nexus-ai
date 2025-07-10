@@ -33,7 +33,7 @@ const WhatsAppPaymentProcessor: React.FC<WhatsAppPaymentProcessorProps> = ({
     en: {
       securePayment: 'Secure Payment',
       selectMethod: 'Select Payment Method',
-      whatsappPay: 'WhatsApp Pay',
+      whatsappPay: 'Divine Pay, Powered By OneCard',
       bankTransfer: 'Bank Transfer',
       paymentGateway: 'Payment Gateway',
       total: 'Total',
@@ -51,7 +51,7 @@ const WhatsAppPaymentProcessor: React.FC<WhatsAppPaymentProcessorProps> = ({
     af: {
       securePayment: 'Veilige Betaling',
       selectMethod: 'Kies Betaalmetode',
-      whatsappPay: 'WhatsApp Betaal',
+      whatsappPay: 'Divine Pay, Aangedryf Deur OneCard',
       bankTransfer: 'Bankoordrag',
       paymentGateway: 'Betaalpoort',
       total: 'Totaal',
@@ -69,7 +69,7 @@ const WhatsAppPaymentProcessor: React.FC<WhatsAppPaymentProcessorProps> = ({
     zu: {
       securePayment: 'Ukukhokha Okuphephile',
       selectMethod: 'Khetha Indlela Yokukhokha',
-      whatsappPay: 'WhatsApp Ukukhokha',
+      whatsappPay: 'Divine Pay, Amandla One Card',
       bankTransfer: 'Ukudlulisela Ebhange',
       paymentGateway: 'Isango Lokukhokha',
       total: 'Isamba',
@@ -93,7 +93,7 @@ const WhatsAppPaymentProcessor: React.FC<WhatsAppPaymentProcessorProps> = ({
       id: 'whatsapp-pay',
       name: t.whatsappPay,
       icon: <Smartphone className="w-6 h-6" />,
-      description: 'Instant, secure payment via WhatsApp',
+      description: 'Instant, secure payment via OneCard',
       recommended: true
     },
     {
