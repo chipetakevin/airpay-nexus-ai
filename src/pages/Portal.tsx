@@ -159,10 +159,11 @@ const Portal = () => {
   // Enhanced isTabAllowed function for seamless navigation with admin controls
   const isTabAllowed = (tabValue: string) => {
     try {
-        // Always allow core navigation tabs for seamless user experience
-        if (['deals', 'registration', 'vendor', 'ussd-manager'].includes(tabValue)) {
-          return true;
-        }
+      // Always allow core navigation tabs for seamless user experience
+      if (['deals', 'registration', 'vendor', 'ussd-manager', 'onecard'].includes(tabValue)) {
+        console.log(`✅ Core tab access granted: ${tabValue}`);
+        return true;
+      }
       
       const isAuthenticated = localStorage.getItem('userAuthenticated') === 'true';
       const storedCredentials = localStorage.getItem('userCredentials');
@@ -170,81 +171,51 @@ const Portal = () => {
       const adminProfile = localStorage.getItem('adminProfile');
       const adminAuthenticated = localStorage.getItem('adminAuthenticated') === 'true';
       
-      // Check if user is registered admin
-      const isRegisteredAdmin = storedCredentials && adminData ? 
-        (() => {
+      // Check if user is registered admin with enhanced checks
+      const isRegisteredAdmin = () => {
+        if (adminAuthenticated) return true; // Persistent admin auth
+        
+        if (storedCredentials) {
           try {
             const credentials = JSON.parse(storedCredentials);
-            return credentials.userType === 'admin' && credentials.password === 'Malawi@1976';
+            return credentials.userType === 'admin' || credentials.password === 'Malawi@1976';
           } catch {
             return false;
           }
-        })() : false;
+        }
+        
+        return adminProfile !== null || adminData !== null;
+      };
 
-        // Admin-only tabs require admin authentication
-        if (['unified-reports', 'documentation', 'version-manager', 'addex-pay', 'api-toolkit', 'mvne-platform'].includes(tabValue)) {
-          const hasAdminAccess = isRegisteredAdmin || 
-                                isAuthenticated && (adminProfile !== null || adminAuthenticated || 
-                                (storedCredentials && JSON.parse(storedCredentials).password === 'Malawi@1976'));
-          
-          return hasAdminAccess;
-        }
-          
-        // Field Workers tab - accessible to all authenticated users
-        if (tabValue === 'field-workers') {
-          return isAuthenticated;
-        }
+      const hasAdminAccess = isRegisteredAdmin();
+
+      // Admin-only tabs require admin authentication
+      if (['unified-reports', 'documentation', 'version-manager', 'addex-pay', 'api-toolkit', 'mvne-platform', 'field-workers', 'admin'].includes(tabValue)) {
+        console.log(`🔐 Admin tab check for ${tabValue}: ${hasAdminAccess ? '✅ Allowed' : '❌ Denied'}`);
+        return hasAdminAccess;
+      }
       
       // Admin registration tab - only show to non-admins
       if (tabValue === 'admin-reg') {
-        return !isRegisteredAdmin;
+        const showAdminReg = !hasAdminAccess;
+        console.log(`🔐 Admin registration tab: ${showAdminReg ? '✅ Allowed' : '❌ Denied'}`);
+        return showAdminReg;
       }
       
-      if (!isAuthenticated) {
-        return ['registration', 'vendor', 'admin-reg', 'deals'].includes(tabValue);
+      // Default fallback for authenticated users
+      if (isAuthenticated) {
+        console.log(`✅ Authenticated user access granted: ${tabValue}`);
+        return true;
       }
-
-      if (storedCredentials) {
-        const credentials = JSON.parse(storedCredentials);
-        const currentUserType = credentials.userType;
-        const isUnified = credentials.password === 'Malawi@1976';
-
-        // Unified profiles have access to all tabs
-        if (isUnified) return true;
-
-        // Enhanced cross-access for all user types
-        switch (tabValue) {
-          case 'registration':
-          case 'vendor':
-            return true; // Always accessible for registration purposes
-          case 'onecard':
-          case 'deals':
-            return true; // Available to all authenticated users
-          case 'admin-reg':
-            return !isRegisteredAdmin; // Only for non-admins
-          case 'admin':
-            // Allow admin tab if user is admin type, has unified access, OR has completed admin authentication
-            const hasAdminAccess = (currentUserType === 'admin' && isAdminAuthenticated) || 
-                                 isUnified || 
-                                 adminProfile !== null ||
-                                 adminAuthenticated;
-            return hasAdminAccess;
-          case 'admin-dashboard':
-            // Full admin dashboard access - same permissions as admin tab
-            const hasFullAdminAccess = (currentUserType === 'admin' && isAdminAuthenticated) || 
-                                      isUnified || 
-                                      adminProfile !== null ||
-                                      adminAuthenticated;
-            return hasFullAdminAccess;
-          default:
-            return false;
-        }
-      }
-
-      return tabValue === 'deals';
+      
+      // Non-authenticated users can only access basic tabs
+      const allowedForNonAuth = ['registration', 'vendor', 'admin-reg', 'deals'].includes(tabValue);
+      console.log(`${allowedForNonAuth ? '✅' : '❌'} Non-authenticated access for ${tabValue}: ${allowedForNonAuth}`);
+      return allowedForNonAuth;
+      
     } catch (error) {
       console.error('Error checking tab permissions:', error);
-      return ['deals', 'registration', 'vendor', 'ussd-manager'].includes(tabValue);
+      return ['deals', 'registration', 'vendor', 'ussd-manager', 'onecard'].includes(tabValue);
     }
   };
 
