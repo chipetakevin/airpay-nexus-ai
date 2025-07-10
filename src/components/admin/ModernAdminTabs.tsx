@@ -58,29 +58,29 @@ const ModernAdminTabs: React.FC<ModernAdminTabsProps> = ({
       {/* Desktop: Horizontal tabs */}
       <div className="hidden md:block">
         <div className={cn(
-          "flex items-center justify-center rounded-xl p-1.5 shadow-lg border backdrop-blur-sm",
+          "flex items-center justify-center rounded-lg p-1 shadow-md border backdrop-blur-sm",
           variant === 'primary'
             ? "bg-gradient-to-r from-primary/5 to-primary/10 border-primary/20"
             : "bg-gradient-to-r from-muted/50 to-muted/70 border-border/50"
         )}>
-          <div className="flex items-center gap-1">
+          <div className="flex items-center gap-0.5">
             {tabs.map((tab) => (
               <button
                 key={tab.id}
                 onClick={() => onTabChange(tab.id)}
                 className={cn(
-                  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-lg px-3 py-2.5 text-sm font-medium transition-all duration-300 cursor-pointer",
+                  "inline-flex items-center justify-center gap-1 whitespace-nowrap rounded-md px-2 py-1.5 text-xs font-medium transition-all duration-200 cursor-pointer",
                   activeTab === tab.id
                     ? variant === 'primary'
-                      ? "bg-primary text-primary-foreground shadow-lg shadow-primary/20 border border-primary/30"
-                      : "bg-background text-foreground shadow-lg shadow-secondary/20 border border-border/30"
-                    : "hover:bg-background/70 hover:shadow-md text-muted-foreground hover:text-foreground"
+                      ? "bg-primary text-primary-foreground shadow-md shadow-primary/20"
+                      : "bg-background text-foreground shadow-md shadow-secondary/20"
+                    : "hover:bg-background/50 text-muted-foreground hover:text-foreground"
                 )}
               >
-                <span>{tab.label}</span>
+                <span className="text-xs">{tab.label}</span>
                 {tab.count && (
                   <span className={cn(
-                    "px-2 py-1 rounded-full text-xs font-medium",
+                    "px-1 py-0.5 rounded text-xs font-medium min-w-4 text-center",
                     activeTab === tab.id
                       ? variant === 'primary'
                         ? "bg-primary-foreground/20 text-primary-foreground"
