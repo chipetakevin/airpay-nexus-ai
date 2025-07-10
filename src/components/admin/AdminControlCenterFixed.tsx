@@ -292,12 +292,9 @@ const AdminControlCenterFixed: React.FC<AdminControlCenterProps> = ({
         </div>
       </div>
 
-      {/* Main Content Container with Tabs */}
+      {/* Main Content Container with Enhanced Accessible Tabs */}
       <div className="max-w-7xl mx-auto px-3 sm:px-6 py-4 sm:py-6">
-        <Tabs value={activeAdminTab || 'overview'} onValueChange={(value) => {
-          console.log('🔄 Tab changed to:', value);
-          setActiveAdminTab(value);
-        }} className="w-full">
+        <div className="w-full">
           {/* Production-Ready Accessible Tabs */}
           <div 
             role="tablist" 
@@ -533,7 +530,7 @@ const AdminControlCenterFixed: React.FC<AdminControlCenterProps> = ({
             </div>
           </div>
 
-        </Tabs>
+        </div>
       </div>
     </div>
   );
