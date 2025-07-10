@@ -1,10 +1,11 @@
 export const adminTabs = [
   { id: 'dashboard', label: 'Dashboard' },
-  { id: 'balances', label: 'Balances' },
-  { id: 'revenue', label: 'Revenue' },
-  { id: 'networks', label: 'Networks' },
+  { id: 'security', label: 'Security' },
+  { id: 'monitoring', label: 'Monitor' },
+  { id: 'onecard', label: 'OneCard' },
   { id: 'orders', label: 'Orders' },
-  { id: 'versions', label: 'Versions' }
+  { id: 'version-control', label: 'Versions' },
+  { id: 'system', label: 'System' }
 ];
 
 export const profileTabs = [
