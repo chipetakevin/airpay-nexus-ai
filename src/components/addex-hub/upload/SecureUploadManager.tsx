@@ -292,8 +292,20 @@ export const SecureUploadManager: React.FC = () => {
   }, []);
 
   const handleFileInput = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      handleFiles(e.target.files);
+    e.preventDefault();
+    const files = e.target.files;
+    if (files && files.length > 0) {
+      handleFiles(files);
+      // Reset input to allow same file upload again
+      if (fileInputRef.current) {
+        fileInputRef.current.value = '';
+      }
+    }
+  };
+
+  const handleUploadClick = () => {
+    if (fileInputRef.current) {
+      fileInputRef.current.click();
     }
   };
 
@@ -377,11 +389,12 @@ export const SecureUploadManager: React.FC = () => {
               </div>
               <Button 
                 className="bg-green-600 hover:bg-green-700"
-                onClick={() => fileInputRef.current?.click()}
+                onClick={handleUploadClick}
                 disabled={isUploading}
+                type="button"
               >
                 <Upload className="h-4 w-4 mr-2" />
-                {isUploading ? 'Processing...' : 'Select Files'}
+                {isUploading ? 'Processing...' : 'Upload File'}
               </Button>
               <input
                 ref={fileInputRef}
@@ -390,6 +403,7 @@ export const SecureUploadManager: React.FC = () => {
                 className="hidden"
                 accept={SECURITY_CONFIG.allowedTypes.join(',')}
                 onChange={handleFileInput}
+                style={{ display: 'none' }}
               />
             </div>
           </div>
