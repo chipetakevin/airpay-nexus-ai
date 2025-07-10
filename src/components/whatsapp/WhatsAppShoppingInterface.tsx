@@ -39,35 +39,35 @@ const WhatsAppShoppingInterface = () => {
       id: '1',
       name: 'R10 Airtime',
       type: 'airtime',
-      network: 'All Networks',
+      network: 'Divine Mobile',
       amount: '10',
       price: 10,
       category: 'airtime',
       icon: <CreditCard className="w-6 h-6" />,
-      description: 'All Networks • R10'
+      description: 'Divine Mobile • R10'
     },
     {
       id: '2',
       name: 'R20 Airtime',
       type: 'airtime',
-      network: 'All Networks',
+      network: 'Divine Mobile',
       amount: '20',
       price: 20,
       category: 'airtime',
       icon: <CreditCard className="w-6 h-6" />,
-      description: 'All Networks • R20',
+      description: 'Divine Mobile • R20',
       popular: true
     },
     {
       id: '3',
       name: 'R50 Airtime',
       type: 'airtime',
-      network: 'All Networks',
+      network: 'Divine Mobile',
       amount: '50',
       price: 50,
       category: 'airtime',
       icon: <CreditCard className="w-6 h-6" />,
-      description: 'All Networks • R50'
+      description: 'Divine Mobile • R50'
     }
   ];
 

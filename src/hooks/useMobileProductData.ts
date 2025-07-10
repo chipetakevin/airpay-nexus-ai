@@ -24,8 +24,8 @@ export const useMobileProductData = () => {
       category: 'airtime',
       icon: '📞',
       description: 'Perfect for quick top-ups',
-      features: ['Instant delivery', 'All networks', 'Never expires'],
-      network: 'All Networks',
+      features: ['Instant delivery', 'Divine Mobile', 'Never expires'],
+      network: 'Divine Mobile',
       popular: true
     },
     {
@@ -61,8 +61,8 @@ export const useMobileProductData = () => {
       category: 'airtime',
       icon: '📞',
       description: 'Emergency top-up',
-      features: ['Instant delivery', 'All networks', 'SMS & calls'],
-      network: 'All Networks'
+      features: ['Instant delivery', 'Divine Mobile', 'SMS & calls'],
+      network: 'Divine Mobile'
     },
     {
       id: 5,
@@ -71,8 +71,8 @@ export const useMobileProductData = () => {
       category: 'airtime',
       icon: '📞',
       description: 'Standard top-up',
-      features: ['Instant delivery', 'All networks', 'Bonus minutes'],
-      network: 'All Networks'
+      features: ['Instant delivery', 'Divine Mobile', 'Bonus minutes'],
+      network: 'Divine Mobile'
     },
     {
       id: 6,
@@ -81,8 +81,8 @@ export const useMobileProductData = () => {
       category: 'airtime',
       icon: '📞',
       description: 'Premium top-up',
-      features: ['Instant delivery', 'All networks', 'Extra bonuses'],
-      network: 'All Networks'
+      features: ['Instant delivery', 'Divine Mobile', 'Extra bonuses'],
+      network: 'Divine Mobile'
     }
   ], []);
 

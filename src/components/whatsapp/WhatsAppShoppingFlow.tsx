@@ -41,7 +41,7 @@ const WhatsAppShoppingFlow: React.FC<ShoppingFlowProps> = ({
       id: 'air-10',
       name: 'R10 Airtime',
       type: 'airtime',
-      network: 'All Networks',
+      network: 'Divine Mobile',
       amount: 'R10',
       price: 10,
       icon: <CreditCard className="w-4 h-4" />
@@ -50,7 +50,7 @@ const WhatsAppShoppingFlow: React.FC<ShoppingFlowProps> = ({
       id: 'air-20',
       name: 'R20 Airtime',
       type: 'airtime',
-      network: 'All Networks',
+      network: 'Divine Mobile',
       amount: 'R20',
       price: 20,
       popular: true,
@@ -60,7 +60,7 @@ const WhatsAppShoppingFlow: React.FC<ShoppingFlowProps> = ({
       id: 'air-50',
       name: 'R50 Airtime',
       type: 'airtime',
-      network: 'All Networks',
+      network: 'Divine Mobile',
       amount: 'R50',
       price: 50,
       icon: <CreditCard className="w-4 h-4" />
@@ -69,7 +69,7 @@ const WhatsAppShoppingFlow: React.FC<ShoppingFlowProps> = ({
       id: 'air-100',
       name: 'R100 Airtime',
       type: 'airtime',
-      network: 'All Networks',
+      network: 'Divine Mobile',
       amount: 'R100',
       price: 100,
       icon: <CreditCard className="w-4 h-4" />
