@@ -47,126 +47,185 @@ const HeroSection = () => {
       <div className="container mx-auto px-4 sm:px-6 relative z-10">
         {/* Two-column layout: text left, phone mockup right */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center max-w-7xl mx-auto">
-          {/* Left column: Content */}
-          <div className="text-center lg:text-left text-white order-2 lg:order-1">
-            {/* Main headline with enhanced glassmorphism background */}
-            <div className="relative mb-6">
-              <div className="absolute inset-0 bg-white/10 backdrop-blur-sm rounded-3xl border border-white/20 shadow-2xl"></div>
+          {/* Left column: Enhanced Content with sophisticated blending */}
+          <div className="text-center lg:text-left text-white order-2 lg:order-1 relative">
+            {/* Ambient background effects for content area */}
+            <div className="absolute -inset-4 bg-gradient-to-r from-blue-500/5 via-purple-500/8 to-teal-500/5 blur-2xl rounded-3xl animate-gentle-pulse"></div>
+            
+            {/* Main headline with enhanced glassmorphism and depth */}
+            <div className="relative mb-6 group">
+              {/* Multi-layered glassmorphism background */}
+              <div className="absolute inset-0 bg-white/12 backdrop-blur-md rounded-3xl border border-white/25 shadow-2xl"></div>
+              <div className="absolute inset-1 bg-gradient-to-br from-white/8 to-white/2 rounded-[1.4rem] border border-white/15"></div>
+              
+              {/* Interactive light overlay */}
+              <div className="absolute inset-0 bg-gradient-to-r from-yellow-400/5 via-orange-400/8 to-pink-400/5 rounded-3xl opacity-0 group-hover:opacity-100 transition-all duration-700"></div>
+              
               <h1 className="relative text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold py-6 lg:py-8 px-4 lg:px-6 leading-tight">
-                Airtime & Data
-                <span className="block bg-gradient-to-r from-yellow-400 to-orange-400 bg-clip-text text-transparent">
+                <span className="inline-block transform group-hover:scale-105 transition-all duration-500">
+                  Airtime & Data
+                </span>
+                <span className="block bg-gradient-to-r from-yellow-400 via-orange-400 to-yellow-300 bg-clip-text text-transparent transform group-hover:scale-105 transition-all duration-500 delay-100">
                   AI-Powered Deals
                 </span>
               </h1>
+              
+              {/* Subtle accent lines */}
+              <div className="absolute bottom-2 left-6 w-12 h-0.5 bg-gradient-to-r from-yellow-400/60 to-orange-400/60 rounded-full"></div>
+              <div className="absolute top-2 right-6 w-8 h-0.5 bg-gradient-to-r from-purple-400/40 to-blue-400/40 rounded-full"></div>
             </div>
             
-            {/* Subheadline with glassmorphism */}
-            <div className="relative mb-8">
-              <div className="absolute inset-0 bg-white/5 backdrop-blur-sm rounded-2xl border border-white/10"></div>
-              <p className="relative text-lg sm:text-xl lg:text-2xl py-4 lg:py-6 px-4 lg:px-6 text-blue-100">
-                Best airtime and data deals with our AI-driven platform. 
-                Earn OneCard rewards on every purchase and save more with recommendations.
+            {/* Enhanced subheadline with sophisticated layering */}
+            <div className="relative mb-8 group">
+              <div className="absolute inset-0 bg-white/8 backdrop-blur-lg rounded-2xl border border-white/15 shadow-lg"></div>
+              <div className="absolute inset-0 bg-gradient-to-br from-blue-400/5 via-transparent to-purple-400/5 rounded-2xl opacity-70"></div>
+              
+              <p className="relative text-lg sm:text-xl lg:text-2xl py-4 lg:py-6 px-4 lg:px-6 text-blue-50 leading-relaxed">
+                Best airtime and data deals with our{' '}
+                <span className="text-yellow-300 font-semibold">AI-driven platform</span>. 
+                Earn <span className="text-green-300 font-semibold">OneCard rewards</span> on every purchase and save more with intelligent recommendations.
               </p>
+              
+              {/* Floating accent dots */}
+              <div className="absolute -top-2 -right-2 w-2 h-2 bg-yellow-400/50 rounded-full animate-pulse"></div>
+              <div className="absolute -bottom-2 -left-2 w-1.5 h-1.5 bg-purple-400/40 rounded-full animate-pulse delay-500"></div>
             </div>
             
-            {/* Enhanced key benefits with glassmorphism */}
+            {/* Enhanced key benefits with unified color harmonization */}
             <div className="flex flex-wrap justify-center lg:justify-start gap-4 lg:gap-6 mb-8 lg:mb-12">
-              <div className="group relative">
-                <div className="absolute inset-0 bg-gradient-to-r from-yellow-400/20 to-orange-400/20 backdrop-blur-md rounded-full border border-yellow-300/30 shadow-lg group-hover:shadow-xl transition-all duration-300"></div>
+              <div className="group relative transform hover:scale-105 transition-all duration-300">
+                <div className="absolute inset-0 bg-gradient-to-r from-yellow-400/25 to-orange-400/25 backdrop-blur-lg rounded-full border border-yellow-300/40 shadow-lg group-hover:shadow-xl group-hover:shadow-yellow-400/25 transition-all duration-300"></div>
+                <div className="absolute inset-0.5 bg-gradient-to-r from-yellow-400/10 to-orange-400/10 rounded-full"></div>
                 <div className="relative flex items-center space-x-2 px-4 lg:px-6 py-2 lg:py-3">
-                  <Zap className="w-4 h-4 lg:w-5 lg:h-5 text-yellow-400" />
-                  <span className="text-xs lg:text-sm font-medium">Instant Rewards</span>
+                  <Zap className="w-4 h-4 lg:w-5 lg:h-5 text-yellow-300 group-hover:text-yellow-200 transition-colors duration-300" />
+                  <span className="text-xs lg:text-sm font-medium group-hover:text-yellow-100 transition-colors duration-300">Instant Rewards</span>
                 </div>
               </div>
               
-              <div className="group relative">
-                <div className="absolute inset-0 bg-gradient-to-r from-green-400/20 to-emerald-400/20 backdrop-blur-md rounded-full border border-green-300/30 shadow-lg group-hover:shadow-xl transition-all duration-300"></div>
+              <div className="group relative transform hover:scale-105 transition-all duration-300">
+                <div className="absolute inset-0 bg-gradient-to-r from-green-400/25 to-emerald-400/25 backdrop-blur-lg rounded-full border border-green-300/40 shadow-lg group-hover:shadow-xl group-hover:shadow-green-400/25 transition-all duration-300"></div>
+                <div className="absolute inset-0.5 bg-gradient-to-r from-green-400/10 to-emerald-400/10 rounded-full"></div>
                 <div className="relative flex items-center space-x-2 px-4 lg:px-6 py-2 lg:py-3">
-                  <Shield className="w-4 h-4 lg:w-5 lg:h-5 text-green-400" />
-                  <span className="text-xs lg:text-sm font-medium">Secure Transactions</span>
+                  <Shield className="w-4 h-4 lg:w-5 lg:h-5 text-green-300 group-hover:text-green-200 transition-colors duration-300" />
+                  <span className="text-xs lg:text-sm font-medium group-hover:text-green-100 transition-colors duration-300">Secure Transactions</span>
                 </div>
               </div>
               
-              <div className="group relative">
-                <div className="absolute inset-0 bg-gradient-to-r from-purple-400/20 to-pink-400/20 backdrop-blur-md rounded-full border border-purple-300/30 shadow-lg group-hover:shadow-xl transition-all duration-300"></div>
+              <div className="group relative transform hover:scale-105 transition-all duration-300">
+                <div className="absolute inset-0 bg-gradient-to-r from-purple-400/25 to-pink-400/25 backdrop-blur-lg rounded-full border border-purple-300/40 shadow-lg group-hover:shadow-xl group-hover:shadow-purple-400/25 transition-all duration-300"></div>
+                <div className="absolute inset-0.5 bg-gradient-to-r from-purple-400/10 to-pink-400/10 rounded-full"></div>
                 <div className="relative flex items-center space-x-2 px-4 lg:px-6 py-2 lg:py-3">
-                  <Star className="w-4 h-4 lg:w-5 lg:h-5 text-purple-400" />
-                  <span className="text-xs lg:text-sm font-medium">Best Deals</span>
+                  <Star className="w-4 h-4 lg:w-5 lg:h-5 text-purple-300 group-hover:text-purple-200 transition-colors duration-300" />
+                  <span className="text-xs lg:text-sm font-medium group-hover:text-purple-100 transition-colors duration-300">Best Deals</span>
                 </div>
               </div>
             </div>
             
-            {/* Enhanced CTA Buttons with glassmorphism */}
+            {/* Enhanced CTA Buttons with sophisticated visual effects */}
             <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start items-center mb-8 lg:mb-12">
               <div className="group relative w-full sm:w-auto">
-                <div className="absolute inset-0 bg-gradient-to-r from-yellow-400/20 to-orange-400/20 backdrop-blur-sm rounded-xl border border-yellow-300/30 shadow-2xl group-hover:shadow-3xl transition-all duration-300"></div>
+                {/* Multi-layered button background */}
+                <div className="absolute inset-0 bg-gradient-to-r from-yellow-400/30 to-orange-400/30 backdrop-blur-md rounded-xl border border-yellow-300/40 shadow-2xl group-hover:shadow-3xl group-hover:shadow-yellow-400/30 transition-all duration-300"></div>
+                <div className="absolute inset-0.5 bg-gradient-to-r from-yellow-400/15 to-orange-400/15 rounded-[0.7rem]"></div>
+                
                 <Button
                   onClick={handleStartEarning}
                   size="lg"
-                  className="relative bg-yellow-500 hover:bg-yellow-600 text-black font-bold px-6 lg:px-8 py-3 lg:py-4 text-base lg:text-lg rounded-xl transform hover:scale-105 transition-all duration-300 w-full sm:w-auto border-0"
+                  className="relative bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-400 hover:to-orange-400 text-black font-bold px-6 lg:px-8 py-3 lg:py-4 text-base lg:text-lg rounded-xl transform hover:scale-105 transition-all duration-300 w-full sm:w-auto border-0 shadow-lg hover:shadow-xl"
                 >
                   Start Earning Rewards
-                  <ArrowRight className="ml-2 w-4 h-4 lg:w-5 lg:h-5" />
+                  <ArrowRight className="ml-2 w-4 h-4 lg:w-5 lg:h-5 group-hover:translate-x-1 transition-transform duration-300" />
                 </Button>
               </div>
               
               <div className="group relative w-full sm:w-auto">
-                <div className="absolute inset-0 bg-white/20 backdrop-blur-sm rounded-xl border border-white/30 shadow-2xl group-hover:shadow-3xl transition-all duration-300"></div>
+                <div className="absolute inset-0 bg-white/25 backdrop-blur-md rounded-xl border border-white/40 shadow-2xl group-hover:shadow-3xl group-hover:bg-white/30 transition-all duration-300"></div>
+                <div className="absolute inset-0.5 bg-white/5 rounded-[0.7rem]"></div>
+                
                 <Button
                   onClick={handleBecomeVendor}
                   size="lg"
                   variant="outline"
-                  className="relative bg-transparent hover:bg-white/10 text-white font-bold border-white/50 hover:border-white/70 px-6 lg:px-8 py-3 lg:py-4 text-base lg:text-lg rounded-xl transform hover:scale-105 transition-all duration-300 w-full sm:w-auto"
+                  className="relative bg-transparent hover:bg-white/15 text-white font-bold border-white/60 hover:border-white/80 px-6 lg:px-8 py-3 lg:py-4 text-base lg:text-lg rounded-xl transform hover:scale-105 transition-all duration-300 w-full sm:w-auto"
                 >
                   Check Out Our Smart Deals
                 </Button>
               </div>
             </div>
             
-            {/* Enhanced stats preview with glassmorphism */}
+            {/* Enhanced stats with unified design language */}
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 lg:gap-6">
-              <div className="group relative">
-                <div className="absolute inset-0 bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 shadow-lg group-hover:shadow-xl transition-all duration-300"></div>
+              <div className="group relative transform hover:scale-105 transition-all duration-300">
+                <div className="absolute inset-0 bg-white/12 backdrop-blur-lg rounded-2xl border border-white/25 shadow-lg group-hover:shadow-xl group-hover:bg-white/15 transition-all duration-300"></div>
+                <div className="absolute inset-1 bg-gradient-to-br from-yellow-400/10 to-orange-400/5 rounded-xl"></div>
                 <div className="relative text-center p-4 lg:p-6">
-                  <div className="text-2xl lg:text-3xl font-bold text-yellow-400 mb-1">50K+</div>
+                  <div className="text-2xl lg:text-3xl font-bold text-yellow-300 mb-1 group-hover:text-yellow-200 transition-colors duration-300">50K+</div>
                   <div className="text-xs lg:text-sm text-blue-100">Happy Customers</div>
                 </div>
               </div>
               
-              <div className="group relative">
-                <div className="absolute inset-0 bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 shadow-lg group-hover:shadow-xl transition-all duration-300"></div>
+              <div className="group relative transform hover:scale-105 transition-all duration-300">
+                <div className="absolute inset-0 bg-white/12 backdrop-blur-lg rounded-2xl border border-white/25 shadow-lg group-hover:shadow-xl group-hover:bg-white/15 transition-all duration-300"></div>
+                <div className="absolute inset-1 bg-gradient-to-br from-green-400/10 to-emerald-400/5 rounded-xl"></div>
                 <div className="relative text-center p-4 lg:p-6">
-                  <div className="text-2xl lg:text-3xl font-bold text-green-400 mb-1">R2.5M+</div>
+                  <div className="text-2xl lg:text-3xl font-bold text-green-300 mb-1 group-hover:text-green-200 transition-colors duration-300">R2.5M+</div>
                   <div className="text-xs lg:text-sm text-blue-100">Rewards Earned</div>
                 </div>
               </div>
               
-              <div className="group relative">
-                <div className="absolute inset-0 bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 shadow-lg group-hover:shadow-xl transition-all duration-300"></div>
+              <div className="group relative transform hover:scale-105 transition-all duration-300">
+                <div className="absolute inset-0 bg-white/12 backdrop-blur-lg rounded-2xl border border-white/25 shadow-lg group-hover:shadow-xl group-hover:bg-white/15 transition-all duration-300"></div>
+                <div className="absolute inset-1 bg-gradient-to-br from-purple-400/10 to-pink-400/5 rounded-xl"></div>
                 <div className="relative text-center p-4 lg:p-6">
-                  <div className="text-2xl lg:text-3xl font-bold text-purple-400 mb-1">99.9%</div>
+                  <div className="text-2xl lg:text-3xl font-bold text-purple-300 mb-1 group-hover:text-purple-200 transition-colors duration-300">99.9%</div>
                   <div className="text-xs lg:text-sm text-blue-100">Uptime</div>
                 </div>
               </div>
             </div>
           </div>
 
-          {/* Right column: Phone mockup */}
-          <div className="flex justify-center lg:justify-end order-1 lg:order-2">
-            <div className="relative group">
-              {/* Glassmorphism background for phone */}
-              <div className="absolute inset-0 bg-white/5 backdrop-blur-md rounded-3xl border border-white/20 shadow-2xl transform rotate-3 group-hover:rotate-6 transition-all duration-500"></div>
+          {/* Right column: Enhanced Phone mockup with advanced blending */}
+          <div className="flex justify-center lg:justify-end order-1 lg:order-2 relative">
+            {/* Multiple layered background effects for depth */}
+            <div className="absolute inset-0 bg-gradient-to-br from-purple-400/10 via-blue-400/15 to-teal-400/10 blur-3xl rounded-full transform scale-150 animate-pulse"></div>
+            <div className="absolute inset-0 bg-gradient-to-tl from-yellow-400/5 via-orange-400/10 to-pink-400/5 blur-2xl rounded-full transform scale-125 animate-pulse delay-1000"></div>
+            
+            {/* Main phone container with sophisticated effects */}
+            <div className="relative group z-10">
+              {/* Primary glassmorphism background */}
+              <div className="absolute inset-0 bg-white/8 backdrop-blur-lg rounded-[2.5rem] border border-white/25 shadow-2xl transform rotate-2 group-hover:rotate-3 transition-all duration-700 ease-out"></div>
               
-              {/* Phone mockup image */}
-              <img
-                src="/lovable-uploads/813385b3-918b-4473-806c-5aaf935282f5.png"
-                alt="Divine Mobile app on smartphone"
-                className="relative z-10 max-w-[280px] sm:max-w-[320px] lg:max-w-[360px] xl:max-w-[400px] w-full h-auto transform hover:scale-105 transition-all duration-500 drop-shadow-2xl"
-              />
+              {/* Secondary depth layer */}
+              <div className="absolute inset-2 bg-gradient-to-br from-white/5 to-transparent rounded-[2rem] transform -rotate-1 group-hover:rotate-0 transition-all duration-500"></div>
               
-              {/* Subtle glow effect around phone */}
-              <div className="absolute inset-0 bg-gradient-to-r from-purple-400/20 to-blue-400/20 blur-xl rounded-3xl opacity-70 transform scale-110"></div>
+              {/* Phone mockup with enhanced effects */}
+              <div className="relative z-20 transform group-hover:scale-105 transition-all duration-700 ease-out">
+                <img
+                  src="/lovable-uploads/813385b3-918b-4473-806c-5aaf935282f5.png"
+                  alt="Divine Mobile app on smartphone showcasing AI-powered deals interface"
+                  className="max-w-[280px] sm:max-w-[320px] lg:max-w-[360px] xl:max-w-[420px] w-full h-auto filter drop-shadow-2xl"
+                  style={{
+                    filter: 'drop-shadow(0 25px 50px rgba(0, 0, 0, 0.3)) drop-shadow(0 10px 30px rgba(147, 51, 234, 0.2))'
+                  }}
+                />
+              </div>
+              
+              {/* Ambient glow effects */}
+              <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full h-full bg-gradient-radial from-purple-400/20 via-blue-400/10 to-transparent blur-xl scale-110 animate-pulse"></div>
+              
+              {/* Interactive light rays */}
+              <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-1 h-full bg-gradient-to-b from-yellow-400/30 via-transparent to-transparent blur-sm group-hover:w-2 transition-all duration-500"></div>
+              <div className="absolute bottom-0 right-1/4 transform w-1 h-3/4 bg-gradient-to-t from-blue-400/20 via-transparent to-transparent blur-sm group-hover:h-full transition-all duration-700"></div>
+              
+              {/* Floating accent elements */}
+              <div className="absolute -top-4 -right-4 w-6 h-6 bg-yellow-400/40 rounded-full blur-sm animate-bounce delay-300"></div>
+              <div className="absolute -bottom-6 -left-6 w-4 h-4 bg-purple-400/30 rounded-full blur-sm animate-pulse delay-700"></div>
+              <div className="absolute top-1/3 -left-8 w-3 h-3 bg-blue-400/25 rounded-full blur-sm animate-bounce delay-1000"></div>
             </div>
+            
+            {/* Parallax background elements */}
+            <div className="absolute top-10 right-10 w-32 h-32 bg-gradient-to-br from-white/5 to-transparent rounded-full blur-xl animate-float delay-200"></div>
+            <div className="absolute bottom-20 left-5 w-24 h-24 bg-gradient-to-tl from-purple-400/10 to-transparent rounded-full blur-lg animate-float delay-500"></div>
           </div>
         </div>
 
