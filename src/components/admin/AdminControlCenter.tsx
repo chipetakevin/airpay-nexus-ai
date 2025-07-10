@@ -13,6 +13,8 @@ import MobileCustomerManagementLayout from './mobile/MobileCustomerManagementLay
 import { adminTabs, profileTabs, dataTabs } from './AdminTabsConfig';
 import { useIsMobile } from '@/hooks/use-mobile';
 import VersionRestoration from './VersionRestoration';
+import AdminProfileSection from './sections/AdminProfileSection';
+import { useDashboardData } from '@/hooks/useDashboardData';
 import { 
   Shield, 
   TrendingUp, 
@@ -67,6 +69,7 @@ const AdminControlCenter: React.FC<AdminControlCenterProps> = ({
   setActiveDataTab
 }) => {
   const isMobile = useIsMobile();
+  const { adminData } = useDashboardData();
   const [systemStats, setSystemStats] = useState({
     totalUsers: 1247,
     activeUsers: 892,
@@ -468,20 +471,18 @@ const AdminControlCenter: React.FC<AdminControlCenterProps> = ({
                 </TabsContent>
 
                 <TabsContent value="admin-profile" className="mt-6">
-                  <ActionCard
-                    title="Admin Profile Management"
-                    description="System administration settings, admin account management, and security configurations"
-                    icon={Shield}
-                    badge={{ text: "ADMIN", variant: "outline", className: "bg-gray-100 text-gray-800" }}
-                    color={{
-                      border: 'border-l-gray-500',
-                      bg: 'from-gray-50 to-white',
-                      iconBg: 'bg-gray-100',
-                      icon: 'text-gray-600',
-                      button: 'bg-gray-600 hover:bg-gray-700 text-white'
-                    }}
-                    onClick={() => {}}
-                  />
+                  <Card>
+                    <CardHeader>
+                      <CardTitle className="flex items-center gap-2">
+                        <Shield className="w-6 h-6 text-gray-600" />
+                        Admin Profile Management
+                      </CardTitle>
+                      <p className="text-muted-foreground">System administration settings and account management</p>
+                    </CardHeader>
+                    <CardContent>
+                      <AdminProfileSection adminData={adminData} />
+                    </CardContent>
+                  </Card>
                 </TabsContent>
               </Tabs>
             </div>
