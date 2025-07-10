@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { ArrowRight, Zap, Shield, Star } from 'lucide-react';
 import { useLogoutNotification } from '@/hooks/useLogoutNotification';
+import cleanMockup from '@/assets/divine-mobile-clean-mockup.png';
 
 const HeroSection = () => {
   const navigate = useNavigate();
@@ -211,8 +212,8 @@ const HeroSection = () => {
                   <div className="absolute inset-0 bg-gradient-radial from-transparent 50% to-teal-500/40 blur-sm z-10 rounded-[2.5rem] pointer-events-none"></div>
                   
                   <img
-                    src="/lovable-uploads/73666f4e-cc28-47ba-9b4c-ec789bcb3f8a.png"
-                    alt="Divine Mobile app on smartphone showcasing company information and development services"
+                    src={cleanMockup}
+                    alt="Divine Mobile app on smartphone with clean static background and enhanced logo visibility"
                     className="max-w-[280px] sm:max-w-[320px] lg:max-w-[360px] xl:max-w-[420px] w-full h-auto relative z-0"
                     style={{
                       filter: 'drop-shadow(0 25px 50px rgba(0, 0, 0, 0.3)) drop-shadow(0 10px 30px rgba(147, 51, 234, 0.2))',
