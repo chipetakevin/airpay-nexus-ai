@@ -122,11 +122,11 @@ const DesktopNavigation = ({ isHomePage, handleQuickShopClick }: DesktopNavigati
           onClick={() => window.open('https://wa.me/27832466539', '_blank')}
           variant="outline"
           size="sm"
-          className="bg-white/10 text-white border-white/30 hover:bg-white hover:text-[#75B8FA] transition-all duration-200 font-medium px-3"
+          className="bg-white/10 text-white border-white/30 hover:bg-white hover:text-[#75B8FA] transition-all duration-200 font-medium px-3 shadow-sm"
         >
           <MessageCircle className="w-4 h-4 mr-2" />
-          <span className="hidden lg:inline">WhatsApp Support</span>
-          <span className="lg:hidden">Support</span>
+          <span className="hidden lg:inline text-white font-semibold">WhatsApp Support</span>
+          <span className="lg:hidden text-white font-semibold">Support</span>
         </Button>
       </div>
 
