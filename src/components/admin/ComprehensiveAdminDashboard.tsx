@@ -4,7 +4,9 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
+import { useIsMobile } from '@/hooks/use-mobile';
 import { supabase } from '@/integrations/supabase/client';
+import MobileLayout from '@/components/navigation/MobileLayout';
 import { 
   BarChart3, Shield, Activity, CreditCard, Package, GitBranch, 
   Settings, Users, FileCheck, TrendingUp, Zap, FileText, Bell,
@@ -32,6 +34,7 @@ interface AdminStats {
 
 const ComprehensiveAdminDashboard: React.FC = () => {
   const { toast } = useToast();
+  const isMobile = useIsMobile();
   const [activeTab, setActiveTab] = useState('dashboard');
   const [adminStats, setAdminStats] = useState<AdminStats>({
     totalUsers: 0,
@@ -135,29 +138,29 @@ const ComprehensiveAdminDashboard: React.FC = () => {
     );
   }
 
-  return (
+  const AdminContent = () => (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-purple-900 text-white">
       {/* Header */}
-      <div className="border-b border-white/20 px-6 py-4">
+      <div className="border-b border-white/20 px-3 md:px-6 py-4">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <div>
-            <h1 className="text-3xl font-bold mb-1">🛡️ Admin Control Center</h1>
-            <p className="text-blue-200">Complete system administration and oversight</p>
+            <h1 className={`font-bold mb-1 ${isMobile ? 'text-xl' : 'text-3xl'}`}>🛡️ Admin Center</h1>
+            <p className="text-blue-200 text-sm md:text-base">System administration</p>
           </div>
-          <div className="flex items-center gap-3">
-            <Badge className="bg-green-500/20 text-green-300 border-green-500/30">
-              System Online
+          <div className="flex items-center gap-2">
+            <Badge className="bg-green-500/20 text-green-300 border-green-500/30 text-xs">
+              Online
             </Badge>
-            <Badge className="bg-blue-500/20 text-blue-300 border-blue-500/30">
-              {adminStats.systemHealth}% Health
+            <Badge className="bg-blue-500/20 text-blue-300 border-blue-500/30 text-xs">
+              {adminStats.systemHealth}%
             </Badge>
           </div>
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto p-6">
+      <div className="max-w-7xl mx-auto p-3 md:p-6">
         {/* Overview Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+        <div className={`grid gap-4 mb-6 md:mb-8 ${isMobile ? 'grid-cols-2' : 'grid-cols-1 md:grid-cols-2 lg:grid-cols-4'}`}>
           <Card className="bg-white/10 border-white/20 backdrop-blur-sm">
             <CardContent className="p-4">
               <div className="flex items-center justify-between">
@@ -214,25 +217,31 @@ const ComprehensiveAdminDashboard: React.FC = () => {
         {/* Main Admin Tabs */}
         <Card className="bg-white/10 border-white/20 backdrop-blur-sm">
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-            <TabsList className="grid grid-cols-7 lg:grid-cols-13 gap-1 h-auto p-2 bg-black/20">
+            <TabsList className={`grid gap-1 h-auto p-2 bg-black/20 ${
+              isMobile 
+                ? 'grid-cols-4 overflow-x-auto' 
+                : 'grid-cols-7 lg:grid-cols-13'
+            }`}>
               {adminTabs.map((tab) => {
                 const IconComponent = tab.icon;
                 return (
                   <TabsTrigger
                     key={tab.id}
                     value={tab.id}
-                    className="flex flex-col items-center gap-1 text-xs font-medium h-auto py-2 data-[state=active]:bg-white/20 data-[state=active]:text-white"
+                    className={`flex flex-col items-center gap-1 text-xs font-medium h-auto py-2 data-[state=active]:bg-white/20 data-[state=active]:text-white ${
+                      isMobile ? 'min-w-[60px]' : ''
+                    }`}
                   >
                     <IconComponent className="w-4 h-4" />
-                    <span className="hidden lg:block">{tab.label}</span>
+                    <span className={isMobile ? 'text-[10px]' : 'hidden lg:block'}>{tab.label}</span>
                   </TabsTrigger>
                 );
               })}
             </TabsList>
 
             {/* Dashboard Tab */}
-            <TabsContent value="dashboard" className="space-y-6 mt-6">
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <TabsContent value="dashboard" className="space-y-4 md:space-y-6 mt-4 md:mt-6">
+              <div className={`grid gap-4 md:gap-6 ${isMobile ? 'grid-cols-1' : 'grid-cols-1 lg:grid-cols-2'}`}>
                 <Card className="bg-white/5 border-white/20">
                   <CardHeader>
                     <CardTitle className="flex items-center gap-2 text-white">
@@ -288,7 +297,7 @@ const ComprehensiveAdminDashboard: React.FC = () => {
                   <CardTitle className="text-white">Security Dashboard</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4 text-white">
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div className={`grid gap-4 ${isMobile ? 'grid-cols-1' : 'grid-cols-1 md:grid-cols-3'}`}>
                     <div className="p-4 bg-green-500/20 rounded-lg">
                       <Lock className="w-6 h-6 text-green-400 mb-2" />
                       <h3 className="font-semibold text-green-400">Access Control</h3>
@@ -316,7 +325,7 @@ const ComprehensiveAdminDashboard: React.FC = () => {
                   <CardTitle className="text-white">Real-time Monitoring</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4 text-white">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                   <div className={`grid gap-4 ${isMobile ? 'grid-cols-1' : 'grid-cols-1 md:grid-cols-2'}`}>
                     <div className="p-4 bg-red-500/20 rounded-lg">
                       <Wifi className="w-6 h-6 text-red-400 mb-2" />
                       <h3 className="font-semibold text-red-400">Network Status</h3>
@@ -376,7 +385,7 @@ const ComprehensiveAdminDashboard: React.FC = () => {
                   <CardTitle className="text-white">System Configuration</CardTitle>
                 </CardHeader>
                 <CardContent className="text-white">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className={`grid gap-4 ${isMobile ? 'grid-cols-1' : 'grid-cols-1 md:grid-cols-2'}`}>
                     <Button className="h-auto p-4 flex-col gap-2 bg-white/10 hover:bg-white/20">
                       <Settings className="w-6 h-6" />
                       System Settings
@@ -398,7 +407,7 @@ const ComprehensiveAdminDashboard: React.FC = () => {
                 </CardHeader>
                 <CardContent className="text-white">
                   <p className="text-gray-300">Manage user accounts, permissions, and access levels.</p>
-                  <div className="mt-4 grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div className={`mt-4 grid gap-4 ${isMobile ? 'grid-cols-1' : 'grid-cols-1 md:grid-cols-3'}`}>
                     <div className="p-4 bg-green-500/20 rounded-lg">
                       <h3 className="font-semibold text-green-400">Active Users</h3>
                       <p className="text-2xl font-bold text-green-300">{adminStats.activeUsers}</p>
@@ -440,7 +449,7 @@ const ComprehensiveAdminDashboard: React.FC = () => {
                 </CardHeader>
                 <CardContent className="text-white">
                   <p className="text-gray-300">Advanced analytics and business intelligence.</p>
-                  <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+                   <div className={`mt-4 grid gap-4 ${isMobile ? 'grid-cols-1' : 'grid-cols-1 md:grid-cols-2'}`}>
                     <div className="p-4 bg-blue-500/20 rounded-lg">
                       <h3 className="font-semibold text-blue-400">Revenue</h3>
                       <p className="text-2xl font-bold text-blue-300">R{adminStats.revenue.toLocaleString()}</p>
@@ -478,7 +487,7 @@ const ComprehensiveAdminDashboard: React.FC = () => {
                 </CardHeader>
                 <CardContent className="text-white">
                   <p className="text-gray-300">Generate and export comprehensive reports.</p>
-                  <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className={`mt-4 grid gap-4 ${isMobile ? 'grid-cols-1' : 'grid-cols-1 md:grid-cols-2'}`}>
                     <Button className="h-auto p-4 flex-col gap-2 bg-white/10 hover:bg-white/20">
                       <FileText className="w-6 h-6" />
                       Generate Report
@@ -521,6 +530,14 @@ const ComprehensiveAdminDashboard: React.FC = () => {
         </Card>
       </div>
     </div>
+  );
+
+  return isMobile ? (
+    <MobileLayout showBottomNav={false}>
+      <AdminContent />
+    </MobileLayout>
+  ) : (
+    <AdminContent />
   );
 };
 

@@ -7,6 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { useIsMobile } from '@/hooks/use-mobile';
 import {
   Upload,
   FileText,
@@ -131,6 +132,7 @@ const CLOUD_STORAGE_CONFIGS: CloudStorageConfig[] = [
 
 export const IntelligentUploadSystem: React.FC = () => {
   const { toast } = useToast();
+  const isMobile = useIsMobile();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const csvInputRef = useRef<HTMLInputElement>(null);
   const [documents, setDocuments] = useState<UploadedDocument[]>([]);
@@ -802,32 +804,36 @@ export const IntelligentUploadSystem: React.FC = () => {
   };
 
   return (
-    <div className="space-y-6">
+    <div className={`${isMobile ? 'space-y-4' : 'space-y-6'}`}>
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <TabsList className="grid w-full grid-cols-5">
-          <TabsTrigger value="upload">
-            <Upload className="h-4 w-4 mr-2" />
-            Upload
+        <TabsList className={`grid w-full ${isMobile ? 'grid-cols-3' : 'grid-cols-5'}`}>
+          <TabsTrigger value="upload" className={isMobile ? 'text-xs' : ''}>
+            <Upload className={`h-4 w-4 ${isMobile ? '' : 'mr-2'}`} />
+            {!isMobile && 'Upload'}
           </TabsTrigger>
-          <TabsTrigger value="bulk">
-            <ClipboardList className="h-4 w-4 mr-2" />
-            Bulk Upload
+          <TabsTrigger value="bulk" className={isMobile ? 'text-xs' : ''}>
+            <ClipboardList className={`h-4 w-4 ${isMobile ? '' : 'mr-2'}`} />
+            {isMobile ? 'Bulk' : 'Bulk Upload'}
           </TabsTrigger>
-          <TabsTrigger value="schedule">
-            <Calendar className="h-4 w-4 mr-2" />
-            Automation
+          <TabsTrigger value="analytics" className={isMobile ? 'text-xs' : ''}>
+            <BarChart className={`h-4 w-4 ${isMobile ? '' : 'mr-2'}`} />
+            {isMobile ? 'Stats' : 'Analytics'}
           </TabsTrigger>
-          <TabsTrigger value="analytics">
-            <BarChart className="h-4 w-4 mr-2" />
-            Analytics
-          </TabsTrigger>
-          <TabsTrigger value="settings">
-            <Settings className="h-4 w-4 mr-2" />
-            Settings
-          </TabsTrigger>
+          {!isMobile && (
+            <>
+              <TabsTrigger value="schedule">
+                <Calendar className="h-4 w-4 mr-2" />
+                Automation
+              </TabsTrigger>
+              <TabsTrigger value="settings">
+                <Settings className="h-4 w-4 mr-2" />
+                Settings
+              </TabsTrigger>
+            </>
+          )}
         </TabsList>
 
-        <TabsContent value="upload" className="space-y-6">
+        <TabsContent value="upload" className={isMobile ? 'space-y-4' : 'space-y-6'}>
           {/* Main Upload Section */}
           <Card className="bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-blue-900/20 dark:to-indigo-900/20 border-blue-200 dark:border-blue-800">
             <CardHeader>
@@ -1067,7 +1073,7 @@ export const IntelligentUploadSystem: React.FC = () => {
           </Card>
         </TabsContent>
 
-        <TabsContent value="bulk" className="space-y-6">
+        <TabsContent value="bulk" className={isMobile ? 'space-y-4' : 'space-y-6'}>
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
@@ -1145,7 +1151,7 @@ export const IntelligentUploadSystem: React.FC = () => {
           </Card>
         </TabsContent>
 
-        <TabsContent value="schedule" className="space-y-6">
+        <TabsContent value="schedule" className={isMobile ? 'space-y-4' : 'space-y-6'}>
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
@@ -1231,7 +1237,7 @@ export const IntelligentUploadSystem: React.FC = () => {
           </Card>
         </TabsContent>
 
-        <TabsContent value="analytics" className="space-y-6">
+        <TabsContent value="analytics" className={isMobile ? 'space-y-4' : 'space-y-6'}>
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
@@ -1290,7 +1296,7 @@ export const IntelligentUploadSystem: React.FC = () => {
           </Card>
         </TabsContent>
 
-        <TabsContent value="settings" className="space-y-6">
+        <TabsContent value="settings" className={isMobile ? 'space-y-4' : 'space-y-6'}>
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
