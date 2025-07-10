@@ -234,7 +234,7 @@ const AdminControlCenterFixed: React.FC<AdminControlCenterProps> = ({
               <div className="flex items-center gap-3 sm:gap-4">
                 <Button 
                   variant="outline" 
-                  onClick={() => setActiveAdminTab('')}
+                  onClick={() => setActiveAdminTab('overview')}
                   className="bg-white hover:bg-gray-50 flex-shrink-0"
                   size="sm"
                 >
