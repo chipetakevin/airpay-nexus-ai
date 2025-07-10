@@ -42,31 +42,39 @@ const DesktopNavigation = ({ isHomePage, handleQuickShopClick }: DesktopNavigati
     <>
       {/* Desktop Navigation - Cleaner Layout */}
       <nav className="hidden md:flex items-center space-x-2 lg:space-x-3">
-        {navigationItems.map((item) => (
-          <Link
-            key={item.path}
-            to={item.path}
-            className={`relative px-2 py-2 rounded-lg transition-all duration-200 flex items-center gap-1 text-sm font-medium whitespace-nowrap ${
-              isActive(item.path)
-                ? 'bg-white text-[#75B8FA] shadow-sm'
-                : item.isHighlight
-                  ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white hover:from-blue-700 hover:to-purple-700 shadow-sm'
-                  : 'text-white hover:bg-white/15 hover:text-white'
-            }`}
-          >
-            <span className="text-base">{item.icon}</span>
-            <span className="hidden lg:inline text-xs">{item.label}</span>
-            <span className="lg:hidden text-xs">{item.label.split(' ')[0]}</span>
-            {item.badge && (
-              <Badge 
-                variant="secondary" 
-                className="bg-yellow-400 text-black text-xs px-1 py-0.5 font-semibold border-0"
-              >
-                {item.badge}
-              </Badge>
-            )}
-          </Link>
-        ))}
+        {navigationItems
+          .filter(item => {
+            // On homepage, only show essential navigation items
+            if (isHomePage) {
+              return ['/', '/portal?tab=deals', '/whatsapp-assistant'].includes(item.path);
+            }
+            return true;
+          })
+          .map((item) => (
+            <Link
+              key={item.path}
+              to={item.path}
+              className={`relative px-2 py-2 rounded-lg transition-all duration-200 flex items-center gap-1 text-sm font-medium whitespace-nowrap ${
+                isActive(item.path)
+                  ? 'bg-white text-[#75B8FA] shadow-sm'
+                  : item.isHighlight
+                    ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white hover:from-blue-700 hover:to-purple-700 shadow-sm'
+                    : 'text-white hover:bg-white/15 hover:text-white'
+              }`}
+            >
+              <span className="text-base">{item.icon}</span>
+              <span className="hidden lg:inline text-xs">{item.label}</span>
+              <span className="lg:hidden text-xs">{item.label.split(' ')[0]}</span>
+              {item.badge && (
+                <Badge 
+                  variant="secondary" 
+                  className="bg-yellow-400 text-black text-xs px-1 py-0.5 font-semibold border-0"
+                >
+                  {item.badge}
+                </Badge>
+              )}
+            </Link>
+          ))}
         
         {/* Buy Airtime & Data Tab - Compact Design */}
         {isHomePage && (
