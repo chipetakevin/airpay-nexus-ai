@@ -75,7 +75,7 @@ const AdminControlCenterFixed: React.FC<AdminControlCenterProps> = ({
       id: 'hub',
       label: 'Addex Hub',
       icon: Activity,
-      title: 'Addex Hub Platform',
+      title: activeAdminTab === 'overview' ? 'Agentic AI Driven Workflow' : 'Addex Hub Platform',
       description: 'Telecom Infrastructure Central Command - Neural Admin Portal',
       color: {
         border: 'border-l-blue-500',
@@ -356,7 +356,7 @@ const AdminControlCenterFixed: React.FC<AdminControlCenterProps> = ({
                   ? 'bg-white animate-pulse shadow-lg shadow-white/30' 
                   : 'bg-purple-500 group-hover:animate-pulse group-hover:bg-purple-600'
               }`} />
-              <span className="font-medium tracking-wide">Addex Hub Platform</span>
+              <span className="font-medium tracking-wide">{activeAdminTab === 'overview' ? 'Agentic AI Driven Workflow' : 'Addex Hub Platform'}</span>
               {activeAdminTab === 'hub' && (
                 <div className="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-12 h-1 bg-white rounded-full shadow-lg" />
               )}
