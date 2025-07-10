@@ -66,30 +66,29 @@ const DesktopNavigation = ({ isHomePage, handleQuickShopClick }: DesktopNavigati
           </Link>
         ))}
         
-        {/* Buy Airtime & Data Tab - Clean Design */}
+        {/* Buy Airtime & Data Tab - Compact Design */}
         {isHomePage && (
           <button
             onClick={handleQuickShopClick}
-            className="relative px-3 lg:px-4 py-2 rounded-lg transition-all duration-200 flex items-center gap-2 text-sm font-medium whitespace-nowrap bg-gradient-to-r from-emerald-500 to-green-600 text-white hover:from-emerald-600 hover:to-green-700 shadow-sm border-0"
+            className="relative px-2 py-2 rounded-lg transition-all duration-200 flex items-center gap-1 text-sm font-medium bg-gradient-to-r from-emerald-500 to-green-600 text-white hover:from-emerald-600 hover:to-green-700 shadow-sm"
           >
             <CreditCard className="w-4 h-4" />
-            <span className="hidden lg:inline">Buy Airtime & Data</span>
-            <span className="lg:hidden">Buy Now</span>
-            <Badge className="bg-white text-emerald-600 text-xs px-1.5 py-0.5 font-semibold border-0 ml-1">
+            <span className="hidden xl:inline text-xs">Buy Airtime</span>
+            <Badge className="bg-white text-emerald-600 text-xs px-1 py-0.5 font-semibold border-0">
               Quick
             </Badge>
           </button>
         )}
       </nav>
 
-      {/* Authentication Status & WhatsApp Support */}
-      <div className="hidden md:flex items-center space-x-3">
+      {/* Authentication Status & WhatsApp Support - Compact */}
+      <div className="hidden md:flex items-center space-x-1">
         {/* Login/Logout Status */}
         {isAuthenticated ? (
-          <div className="flex items-center space-x-2">
-            <div className="flex items-center gap-2 bg-white/10 text-white px-3 py-2 rounded-lg">
+          <div className="flex items-center space-x-1">
+            <div className="flex items-center gap-1 bg-white/10 text-white px-2 py-1.5 rounded-lg">
               <User className="w-4 h-4" />
-              <span className="text-sm font-medium">
+              <span className="text-xs font-medium hidden lg:inline">
                 {currentUser?.firstName || 'User'}
               </span>
             </div>
@@ -97,11 +96,10 @@ const DesktopNavigation = ({ isHomePage, handleQuickShopClick }: DesktopNavigati
               onClick={handleLogout}
               variant="outline"
               size="sm"
-              className="bg-red-500/10 text-white border-red-300/30 hover:bg-red-500 hover:text-white transition-all duration-200 font-medium px-3"
+              className="bg-red-500/10 text-white border-red-300/30 hover:bg-red-500 hover:text-white transition-all duration-200 font-medium px-2 py-1.5"
             >
-              <LogOut className="w-4 h-4 mr-2" />
-              <span className="hidden lg:inline">Logout</span>
-              <span className="lg:hidden">Out</span>
+              <LogOut className="w-4 h-4" />
+              <span className="hidden xl:inline ml-1 text-xs">Logout</span>
             </Button>
           </div>
         ) : (
@@ -109,24 +107,23 @@ const DesktopNavigation = ({ isHomePage, handleQuickShopClick }: DesktopNavigati
             onClick={() => setShowLoginModal(true)}
             variant="outline"
             size="sm"
-            className="bg-white/10 text-white border-white/30 hover:bg-white hover:text-[#75B8FA] transition-all duration-200 font-medium px-3"
+            className="bg-white/10 text-white border-white/30 hover:bg-white hover:text-[#75B8FA] transition-all duration-200 font-medium px-2 py-1.5"
           >
-            <LogIn className="w-4 h-4 mr-2" />
-            <span className="hidden lg:inline">Login</span>
-            <span className="lg:hidden">Login</span>
+            <LogIn className="w-4 h-4" />
+            <span className="hidden xl:inline ml-1 text-xs">Login</span>
           </Button>
         )}
 
-        {/* WhatsApp Support */}
+        {/* WhatsApp Support - Icon Only */}
         <Button
           onClick={() => window.open('https://wa.me/27832466539', '_blank')}
           variant="outline"
           size="sm"
-          className="bg-white/10 text-white border-white/30 hover:bg-white hover:text-[#75B8FA] transition-all duration-200 font-medium px-3 shadow-sm"
+          className="bg-white/10 text-white border-white/30 hover:bg-white hover:text-[#75B8FA] transition-all duration-200 font-medium px-2 py-1.5 shadow-sm"
+          title="WhatsApp Support"
         >
-          <MessageCircle className="w-4 h-4 mr-2" />
-          <span className="hidden lg:inline text-white font-semibold">WhatsApp Support</span>
-          <span className="lg:hidden text-white font-semibold">Support</span>
+          <MessageCircle className="w-4 h-4" />
+          <span className="hidden xl:inline ml-1 text-xs font-semibold">Support</span>
         </Button>
       </div>
 
