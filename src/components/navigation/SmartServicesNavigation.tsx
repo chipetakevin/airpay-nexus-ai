@@ -100,7 +100,7 @@ const SmartServicesNavigation: React.FC<SmartServicesNavigationProps> = ({
       </Card>
 
       <Tabs defaultValue="customer" className="w-full">
-        <TabsList className="grid w-full grid-cols-3 bg-white/10 backdrop-blur-lg border border-white/20 rounded-2xl p-1">
+        <TabsList className="grid w-full grid-cols-4 bg-white/10 backdrop-blur-lg border border-white/20 rounded-2xl p-1">
           <TabsTrigger 
             value="customer" 
             className="data-[state=active]:bg-white/20 data-[state=active]:text-white text-white/70 rounded-xl py-2 text-sm font-medium"
@@ -122,6 +122,13 @@ const SmartServicesNavigation: React.FC<SmartServicesNavigationProps> = ({
             <img src="/lovable-uploads/788fddcb-574c-4f1d-9c73-54cc003a95d1.png" alt="Divine Mobile" className="w-4 h-4 mr-1" />
             Admin
           </TabsTrigger>
+          <TabsTrigger 
+            value="field-worker" 
+            className="data-[state=active]:bg-white/20 data-[state=active]:text-white text-white/70 rounded-xl py-2 text-sm font-medium"
+          >
+            <Phone className="w-4 h-4 mr-1" />
+            Field Worker
+          </TabsTrigger>
         </TabsList>
 
         <TabsContent value="customer" className="mt-4">
@@ -139,6 +146,23 @@ const SmartServicesNavigation: React.FC<SmartServicesNavigationProps> = ({
         <TabsContent value="admin" className="mt-4">
           <div className="bg-white/5 backdrop-blur-sm rounded-2xl overflow-hidden border border-white/10">
             <AdminRegistration />
+          </div>
+        </TabsContent>
+
+        <TabsContent value="field-worker" className="mt-4">
+          <div className="bg-white/5 backdrop-blur-sm rounded-2xl overflow-hidden border border-white/10">
+            <Card className="bg-white/20 backdrop-blur-lg border-white/30">
+              <CardContent className="p-6 text-center">
+                <Phone className="w-12 h-12 text-white mx-auto mb-4" />
+                <h3 className="text-xl font-bold text-white mb-2">Field Worker Registration</h3>
+                <p className="text-white/80 mb-4">
+                  Register as a field worker to manage SIM activations and customer support
+                </p>
+                <p className="text-white/60 text-sm">
+                  Field worker registration is coming soon. Please contact your administrator for access.
+                </p>
+              </CardContent>
+            </Card>
           </div>
         </TabsContent>
       </Tabs>
