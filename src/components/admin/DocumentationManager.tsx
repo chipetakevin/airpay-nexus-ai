@@ -7,6 +7,7 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
 import { useDocumentationAutoUpdater } from '@/hooks/useDocumentationAutoUpdater';
+import { useVersion } from '@/contexts/VersionContext';
 import { 
   FileText, 
   Download, 
@@ -29,7 +30,13 @@ const DocumentationManager = () => {
   const [isSendingEmail, setIsSendingEmail] = useState(false);
   const [emailAddress, setEmailAddress] = useState('');
   const [emailMessage, setEmailMessage] = useState('Please find attached the MVNE Platform Version 3.0 documentation.');
-  const [selectedVersion, setSelectedVersion] = useState('v4.0.0');
+  const { currentVersion, updateVersion } = useVersion();
+  const [selectedVersion, setSelectedVersion] = useState(currentVersion);
+  
+  // Sync selectedVersion with currentVersion when context updates
+  React.useEffect(() => {
+    setSelectedVersion(currentVersion);
+  }, [currentVersion]);
   const [availableVersions, setAvailableVersions] = useState<any[]>([]);
   const [codeMetrics, setCodeMetrics] = useState({ totalLines: 20075796, lastMeasurement: 20000000 });
   const { toast } = useToast();
@@ -938,7 +945,10 @@ Last Updated: ${new Date().toLocaleDateString()} - Intelligent versioning system
                         ? 'border-blue-500 bg-blue-50' 
                         : 'border-gray-200 hover:border-blue-300'
                     }`}
-                    onClick={() => setSelectedVersion(version.id)}
+                    onClick={() => {
+                      setSelectedVersion(version.id);
+                      updateVersion(version.id); // Update global version context
+                    }}
                   >
                     <div className="flex items-center justify-between">
                       <div>

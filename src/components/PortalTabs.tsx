@@ -1,6 +1,7 @@
 
 import React from 'react';
 import { Tabs, TabsContent } from '@/components/ui/tabs';
+import { useVersion } from '@/contexts/VersionContext';
 import CustomerRegistration from './CustomerRegistration';
 import VendorRegistration from './VendorRegistration';
 import AdminRegistration from './AdminRegistration';
@@ -40,6 +41,7 @@ const PortalTabs = ({
   isAuthenticated = false,
   showAdminBanner = false
 }: PortalTabsProps) => {
+  const { displayVersion } = useVersion();
   
   // Get user data for tab switcher
   const getUserData = () => {
@@ -198,7 +200,7 @@ const PortalTabs = ({
       value: 'documentation',
       label: 'Docs',
       icon: '📋',
-      description: 'MVNE v4.0',
+      description: `MVNE ${displayVersion}`,
       color: 'blue',
       adminOnly: true
     },

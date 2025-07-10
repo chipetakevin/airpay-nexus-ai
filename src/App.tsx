@@ -7,6 +7,7 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { PersistentAuthProvider } from "@/components/auth/PersistentAuthProvider";
+import { VersionProvider } from "@/contexts/VersionContext";
 import Index from "./pages/Index";
 import Portal from "./pages/Portal";
 import WhatsAppAssistant from "./pages/WhatsAppAssistant";
@@ -44,8 +45,9 @@ import NotFound from "./pages/NotFound";
 const queryClient = new QueryClient();
 
 const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <PersistentAuthProvider>
+  <VersionProvider>
+    <QueryClientProvider client={queryClient}>
+      <PersistentAuthProvider>
       <TooltipProvider>
         <Toaster />
         <Sonner />
@@ -84,6 +86,7 @@ const App = () => (
       </TooltipProvider>
     </PersistentAuthProvider>
   </QueryClientProvider>
+  </VersionProvider>
 );
 
 export default App;
