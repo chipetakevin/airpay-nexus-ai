@@ -332,14 +332,12 @@ const PortalTabs = ({
             <AdminRegistration />
           </TabsContent>
           
-          {(isAdmin || showAdminTab) && (
-            <TabsContent value="admin" className="p-1 sm:p-2 md:p-4 lg:p-6 animate-fade-in">
-              <AdminPortal 
-                onAuthSuccess={() => setIsAdminAuthenticated(true)} 
-                showAdminBanner={showAdminBanner}
-              />
-            </TabsContent>
-          )}
+          <TabsContent value="admin" className="p-1 sm:p-2 md:p-4 lg:p-6 animate-fade-in">
+            <AdminPortal 
+              onAuthSuccess={() => setIsAdminAuthenticated(true)} 
+              showAdminBanner={showAdminBanner}
+            />
+          </TabsContent>
         </div>
       </Tabs>
     </div>

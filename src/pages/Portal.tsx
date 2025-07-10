@@ -72,40 +72,81 @@ const Portal = () => {
     }
   }, [searchParams, navigate, activeTab]);
 
+  // Enhanced admin authentication persistence - survives offline/online cycles and page refreshes
   useEffect(() => {
-    try {
-      const isAuthenticated = localStorage.getItem('userAuthenticated') === 'true';
-      const storedCredentials = localStorage.getItem('userCredentials');
-      const adminProfile = localStorage.getItem('adminProfile');
-      const adminData = localStorage.getItem('onecardAdmin');
-      
-      console.log('🔍 Checking admin status:', { 
-        isAuthenticated, 
-        hasCredentials: !!storedCredentials, 
-        hasAdminProfile: !!adminProfile,
-        hasAdminData: !!adminData 
-      });
-      
-      if (isAuthenticated && storedCredentials) {
-        const credentials = JSON.parse(storedCredentials);
+    const checkAdminStatus = () => {
+      try {
+        const isAuthenticated = localStorage.getItem('userAuthenticated') === 'true';
+        const storedCredentials = localStorage.getItem('userCredentials');
+        const adminProfile = localStorage.getItem('adminProfile');
+        const adminData = localStorage.getItem('onecardAdmin');
+        const adminAuthenticated = localStorage.getItem('adminAuthenticated') === 'true';
         
-        // Check multiple conditions for admin access
-        const isAdminUser = credentials.userType === 'admin' || credentials.password === 'Malawi@1976';
-        const hasAdminAuth = adminProfile !== null || adminData !== null;
+        console.log('🔍 Checking admin status:', { 
+          isAuthenticated, 
+          hasCredentials: !!storedCredentials, 
+          hasAdminProfile: !!adminProfile,
+          hasAdminData: !!adminData,
+          adminAuthenticated
+        });
         
-        if (isAdminUser || hasAdminAuth) {
+        // Check multiple conditions for admin access with enhanced persistence
+        let hasAdminAccess = false;
+        
+        if (adminAuthenticated) {
+          // If admin was previously authenticated, maintain access
+          hasAdminAccess = true;
+          console.log('✅ Admin access maintained from previous session');
+        } else if (isAuthenticated && storedCredentials) {
+          const credentials = JSON.parse(storedCredentials);
+          const isAdminUser = credentials.userType === 'admin' || credentials.password === 'Malawi@1976';
+          const hasAdminAuth = adminProfile !== null || adminData !== null;
+          
+          if (isAdminUser || hasAdminAuth) {
+            hasAdminAccess = true;
+            // Persist admin authentication permanently
+            localStorage.setItem('adminAuthenticated', 'true');
+            console.log('✅ Admin access granted and persisted');
+          }
+        }
+        
+        if (hasAdminAccess) {
           setShowAdminTab(true);
           setIsAdminAuthenticated(true);
-          // Ensure localStorage is synchronized
-          localStorage.setItem('adminAuthenticated', 'true');
-          console.log('✅ Admin access granted - showing The Nerve Center tab');
+          console.log('✅ Admin tabs activated: OneCard and The Nerve Center');
         } else {
           console.log('❌ Admin access denied');
         }
+      } catch (error) {
+        console.error('Error checking admin status:', error);
       }
-    } catch (error) {
-      console.error('Error checking admin status:', error);
-    }
+    };
+
+    // Check admin status immediately
+    checkAdminStatus();
+
+    // Enhanced persistence: Listen for online/offline events
+    const handleOnline = () => {
+      console.log('🌐 Back online - rechecking admin status');
+      checkAdminStatus();
+    };
+
+    const handleVisibilityChange = () => {
+      if (!document.hidden) {
+        console.log('👁️ Page visible again - rechecking admin status');
+        checkAdminStatus();
+      }
+    };
+
+    // Add event listeners for enhanced persistence
+    window.addEventListener('online', handleOnline);
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+
+    // Cleanup event listeners
+    return () => {
+      window.removeEventListener('online', handleOnline);
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+    };
   }, [userType]);
 
   const resetUserType = () => {
