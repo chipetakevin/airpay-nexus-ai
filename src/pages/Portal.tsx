@@ -141,7 +141,7 @@ const Portal = () => {
         })() : false;
 
         // Admin-only tabs require admin authentication
-        if (['unified-reports', 'documentation', 'version-manager', 'addex-pay'].includes(tabValue)) {
+        if (['unified-reports', 'documentation', 'version-manager', 'addex-pay', 'api-toolkit', 'mvne-platform'].includes(tabValue)) {
           const hasAdminAccess = isRegisteredAdmin || 
                                 isAuthenticated && (adminProfile !== null || adminAuthenticated || 
                                 (storedCredentials && JSON.parse(storedCredentials).password === 'Malawi@1976'));
@@ -228,10 +228,10 @@ const Portal = () => {
         console.log(`❌ Tab access denied: ${value}`);
         
         // Provide specific feedback for admin-only tabs
-        if (['unified-reports', 'documentation', 'version-manager', 'addex-pay'].includes(value)) {
+        if (['unified-reports', 'documentation', 'version-manager', 'addex-pay', 'api-toolkit', 'mvne-platform'].includes(value)) {
           toast({
             title: "Admin Access Required",
-            description: "Complete admin registration to access Reports, Documentation, Versions, and Payroll features.",
+            description: "Complete admin registration to access Reports, Documentation, Versions, API Toolkit, and MVNE Platform features.",
             variant: "default"
           });
         } else {
