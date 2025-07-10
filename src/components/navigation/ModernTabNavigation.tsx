@@ -201,59 +201,86 @@ const ModernTabNavigation = ({
         ))}
       </div>
 
-      {/* Desktop: Single row with enhanced spacing and visibility */}
-      <div className="hidden lg:flex gap-6 justify-center flex-wrap">
-        {tabs.map((tab) => (
-          <Card 
-            key={tab.value}
-            className={`
-              ${getTabStyles(tab)}
-              transition-all duration-300 cursor-pointer
-              min-h-[120px] w-[160px] flex flex-col items-center justify-center p-6
-              hover:shadow-xl hover:-translate-y-2
-              overflow-hidden rounded-lg
-            `}
-            onClick={() => handleTabClick(tab)}
+      {/* Desktop: Intelligent Scrollable Navigation for All 13 Tabs */}
+      <div className="hidden lg:block">
+        <div className="relative max-w-full overflow-hidden">
+          {/* Scroll Container */}
+          <div 
+            className="flex gap-4 overflow-x-auto scrollbar-hide pb-4 px-2"
+            style={{
+              scrollbarWidth: 'none',
+              msOverflowStyle: 'none'
+            }}
           >
-            <div className="text-3xl mb-3 flex items-center gap-2">
-              {tab.icon}
-              {tab.adminOnly && !isTabAllowed(tab.value) && (
-                <span className="text-lg">🔒</span>
-              )}
-            </div>
-            <div className="text-center max-w-full px-2">
-              <div className={`text-base font-bold leading-snug mb-2 max-w-full overflow-hidden flex items-center justify-center gap-2 ${
-                tab.value === 'admin' ? 'text-shadow' : ''
-              }`}>
-                {tab.label}
-                {tab.value === 'admin' && (
-                  <Badge className="text-xs px-2 py-1 h-5 bg-white/20 text-current border-white/30 font-bold backdrop-blur-sm">
-                    NEURAL
-                  </Badge>
+            {tabs.map((tab) => (
+              <Card 
+                key={tab.value}
+                className={`
+                  ${getTabStyles(tab)}
+                  transition-all duration-300 cursor-pointer
+                  min-h-[120px] min-w-[140px] max-w-[160px] flex-shrink-0
+                  flex flex-col items-center justify-center p-4
+                  hover:shadow-xl hover:-translate-y-2
+                  overflow-hidden rounded-lg
+                  ${tab.value === activeTab ? 'ring-2 ring-primary ring-offset-2' : ''}
+                `}
+                onClick={() => handleTabClick(tab)}
+                role="button"
+                tabIndex={0}
+                aria-label={`${tab.label} - ${tab.description}`}
+              >
+                <div className="text-2xl mb-2 flex items-center gap-1">
+                  {tab.icon}
+                  {tab.adminOnly && !isTabAllowed(tab.value) && (
+                    <span className="text-sm">🔒</span>
+                  )}
+                </div>
+                <div className="text-center w-full px-2">
+                  <div className={`text-sm font-bold leading-tight mb-1 w-full overflow-hidden flex items-center justify-center gap-1 ${
+                    tab.value === 'admin' ? 'text-shadow' : ''
+                  }`}>
+                    <span className="truncate max-w-full">{tab.label}</span>
+                    {tab.value === 'admin' && (
+                      <Badge className="text-[9px] px-1 py-0.5 h-4 bg-white/20 text-current border-white/30 font-bold backdrop-blur-sm whitespace-nowrap">
+                        NEURAL
+                      </Badge>
+                    )}
+                    {tab.adminOnly && isTabAllowed(tab.value) && tab.value !== 'admin' && (
+                      <Badge className="text-[9px] px-1 py-0.5 h-4 bg-yellow-100 text-yellow-800 border-yellow-200 font-semibold whitespace-nowrap">
+                        ADMIN
+                      </Badge>
+                    )}
+                  </div>
+                  <div className={`text-xs leading-tight mt-1 w-full overflow-hidden ${
+                    tab.value === 'admin' 
+                      ? (activeTab === tab.value ? 'text-blue-100' : 'text-blue-700') 
+                      : 'text-muted-foreground'
+                  }`}>
+                    <span className="truncate block">{tab.description}</span>
+                  </div>
+                </div>
+                {activeTab === tab.value && (
+                  <div className="flex items-center gap-1 mt-2">
+                    <div className="w-2 h-0.5 bg-current rounded-full"></div>
+                    <div className="w-4 h-0.5 bg-current rounded-full"></div>
+                    <div className="w-2 h-0.5 bg-current rounded-full"></div>
+                  </div>
                 )}
-                {tab.adminOnly && isTabAllowed(tab.value) && tab.value !== 'admin' && (
-                  <Badge className="text-xs px-2 py-1 h-5 bg-yellow-100 text-yellow-800 border-yellow-200 font-semibold">
-                    ADMIN
-                  </Badge>
-                )}
-              </div>
-              <div className={`text-sm leading-snug mt-1 max-w-full overflow-hidden ${
-                tab.value === 'admin' 
-                  ? (activeTab === tab.value ? 'text-blue-100' : 'text-blue-700') 
-                  : 'text-muted-foreground'
-              }`}>
-                {tab.description}
-              </div>
-            </div>
-            {activeTab === tab.value && (
-              <div className="flex items-center gap-1 mt-2">
-                <div className="w-2 h-0.5 bg-current rounded-full"></div>
-                <div className="w-4 h-0.5 bg-current rounded-full"></div>
-                <div className="w-2 h-0.5 bg-current rounded-full"></div>
-              </div>
-            )}
-          </Card>
-        ))}
+              </Card>
+            ))}
+          </div>
+          
+          {/* Scroll Indicators */}
+          <div className="absolute inset-y-0 left-0 w-8 bg-gradient-to-r from-gray-50 to-transparent pointer-events-none"></div>
+          <div className="absolute inset-y-0 right-0 w-8 bg-gradient-to-l from-gray-50 to-transparent pointer-events-none"></div>
+        </div>
+        
+        {/* Tab Navigation Hint */}
+        <div className="text-center mt-2">
+          <p className="text-xs text-muted-foreground">
+            ← Scroll horizontally to view all {tabs.length} tabs →
+          </p>
+        </div>
       </div>
     </div>
   );

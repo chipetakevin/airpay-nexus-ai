@@ -125,6 +125,13 @@ export default {
 				},
 				'.safe-area-pr': {
 					'padding-right': 'env(safe-area-inset-right)'
+				},
+				'.scrollbar-hide': {
+					'-ms-overflow-style': 'none',
+					'scrollbar-width': 'none',
+					'&::-webkit-scrollbar': {
+						display: 'none'
+					}
 				}
 			})
 		}
