@@ -223,64 +223,15 @@ const AdminControlCenterFixed: React.FC<AdminControlCenterProps> = ({
     });
   };
 
-  // If hub section is active, render the full AddexHubNerveCenter
-  if (activeAdminTab === 'hub') {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-background to-muted/20">
-        {/* Enhanced Mobile/Desktop Header */}
-        <div className="sticky top-0 z-50 bg-white/95 backdrop-blur-sm border-b shadow-sm">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 sm:py-4">
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4">
-              <div className="flex items-center gap-3 sm:gap-4">
-                <Button 
-                  variant="outline" 
-                  onClick={() => setActiveAdminTab('overview')}
-                  className="bg-white hover:bg-gray-50 flex-shrink-0"
-                  size="sm"
-                >
-                  ← Back to Nerve Center
-                </Button>
-                <div className="hidden sm:block">
-                  <AdminPlatformBranding size="small" showSubtitle={false} />
-                </div>
-              </div>
-              
-              {/* Mobile/Desktop Action Buttons */}
-              <div className="flex items-center gap-2 sm:gap-3">
-                <Button variant="outline" size="sm" className="text-xs sm:text-sm">
-                  <Bell className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
-                  <span className="hidden sm:inline">Alerts</span>
-                  <Badge className="ml-1 sm:ml-2 bg-red-500 text-white text-xs px-1.5 py-0.5">
-                    {systemStats.alertsCount}
-                  </Badge>
-                </Button>
-                <Button variant="outline" size="sm" className="text-blue-600 border-blue-200 hover:bg-blue-50">
-                  <Eye className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
-                  <span className="hidden sm:inline">Monitor</span>
-                </Button>
-                <Button size="sm" className="bg-red-600 hover:bg-red-700 text-white">
-                  <span className="text-xs sm:text-sm">Logout</span>
-                </Button>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Mobile Platform Branding */}
-        <div className="sm:hidden bg-gradient-to-r from-blue-50 to-purple-50 px-4 py-3 border-b">
-          <AdminPlatformBranding size="small" showSubtitle={false} />
-        </div>
-
-        {/* Main Content */}
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4 sm:py-6">
-          <AddexHubNerveCenter 
-            activeTab={hubActiveTab}
-            setActiveTab={setHubActiveTab}
-          />
-        </div>
-      </div>
-    );
-  }
+  // Enhanced click handler that doesn't switch to hub view entirely
+  const handleHubAccess = () => {
+    console.log('🚀 Accessing Addex Hub Platform');
+    setActiveAdminTab('hub');
+    toast({
+      title: "Addex Hub Platform Activated",
+      description: "Telecom Infrastructure Central Command is now active",
+    });
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background to-muted/20">
@@ -488,6 +439,23 @@ const AdminControlCenterFixed: React.FC<AdminControlCenterProps> = ({
                   <BarChart3 className="w-5 h-5 sm:w-6 sm:h-6" />
                   <span className="text-xs sm:text-sm font-medium">Analytics</span>
                 </Button>
+              </div>
+            </div>
+          </TabsContent>
+
+          <TabsContent value="hub" className="space-y-4 sm:space-y-6 pb-20">
+            {/* Addex Hub Platform Full Interface */}
+            <div className="bg-white rounded-xl shadow-md border border-gray-100">
+              <div className="bg-gradient-to-r from-blue-50 to-purple-50 px-4 sm:px-6 py-3 sm:py-4 border-b rounded-t-xl">
+                <AdminPlatformBranding size="small" showSubtitle={true} />
+              </div>
+              
+              {/* Hub Content Container */}
+              <div className="p-4 sm:p-6">
+                <AddexHubNerveCenter 
+                  activeTab={hubActiveTab}
+                  setActiveTab={setHubActiveTab}
+                />
               </div>
             </div>
           </TabsContent>
