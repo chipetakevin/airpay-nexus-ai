@@ -42,12 +42,13 @@ const DesktopNavigation = ({ isHomePage, handleQuickShopClick }: DesktopNavigati
     <>
       {/* Desktop Navigation - Enhanced Spacing & Appeal */}
       <nav className="hidden md:flex items-center justify-center flex-1 mx-8">
-        <div className={`flex items-center ${isHomePage ? 'space-x-8 lg:space-x-12 xl:space-x-16' : 'space-x-4 lg:space-x-6'}`}>
+        <div className={`flex items-center ${isHomePage ? 'space-x-12 lg:space-x-16 xl:space-x-20' : 'space-x-6 lg:space-x-8'}`}>
           {navigationItems
             .filter(item => {
-              // On homepage, only show essential navigation items
+              // Remove Home tab on desktop, keep essential items on homepage
+              if (item.path === '/') return false;
               if (isHomePage) {
-                return ['/', '/portal?tab=deals', '/whatsapp-assistant'].includes(item.path);
+                return ['/portal?tab=deals', '/whatsapp-assistant'].includes(item.path);
               }
               return true;
             })
@@ -55,21 +56,21 @@ const DesktopNavigation = ({ isHomePage, handleQuickShopClick }: DesktopNavigati
               <Link
                 key={item.path}
                 to={item.path}
-                className={`group relative px-4 lg:px-6 py-3 rounded-xl transition-all duration-300 flex items-center gap-2 text-sm font-medium whitespace-nowrap hover:scale-105 ${
+                className={`group relative px-6 lg:px-8 py-4 rounded-2xl transition-all duration-300 flex items-center gap-3 text-sm font-medium whitespace-nowrap hover:scale-105 transform ${
                   isActive(item.path)
-                    ? 'bg-white text-[#75B8FA] shadow-lg shadow-white/20'
+                    ? 'bg-white text-[#75B8FA] shadow-xl shadow-white/30 border border-white/20'
                     : item.isHighlight
-                      ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white hover:from-blue-700 hover:to-purple-700 shadow-lg hover:shadow-xl'
-                      : 'text-white hover:bg-white/20 hover:text-white hover:shadow-lg hover:shadow-white/10'
+                      ? 'bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 text-white hover:from-blue-700 hover:via-purple-700 hover:to-indigo-700 shadow-xl hover:shadow-2xl border border-white/10'
+                      : 'text-white hover:bg-white/25 hover:text-white hover:shadow-xl hover:shadow-white/15 border border-transparent hover:border-white/20'
                 }`}
               >
-                <span className="text-lg group-hover:scale-110 transition-transform duration-200">{item.icon}</span>
-                <span className="hidden lg:inline text-sm font-semibold">{item.label}</span>
-                <span className="lg:hidden text-sm font-semibold">{item.label.split(' ')[0]}</span>
+                <span className="text-xl group-hover:scale-125 transition-all duration-300">{item.icon}</span>
+                <span className="hidden lg:inline text-base font-bold tracking-wide">{item.label}</span>
+                <span className="lg:hidden text-base font-bold">{item.label.split(' ')[0]}</span>
                 {item.badge && (
                   <Badge 
                     variant="secondary" 
-                    className="bg-yellow-400 text-black text-[10px] px-2 py-1 font-bold border-0 animate-pulse"
+                    className="bg-gradient-to-r from-yellow-400 to-orange-400 text-black text-[11px] px-3 py-1.5 font-black border-0 animate-pulse shadow-lg"
                   >
                     {item.badge}
                   </Badge>
