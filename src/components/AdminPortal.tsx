@@ -262,29 +262,48 @@ const AdminPortal: React.FC<AdminPortalProps> = ({ onAuthSuccess, showAdminBanne
     );
   }
 
-  // Show collapsed state - only the three buttons like in the second image
+  // Show collapsed state - header collapsed but tabs still visible
   if (isAuthenticated && isCollapsed) {
     return (
-      <div className="flex justify-center items-center gap-4 sm:gap-6 py-4">
-        <Button 
-          size="sm"
-          variant="outline"
-          onClick={() => setIsCollapsed(false)}
-          className="px-4 sm:px-6 py-2 sm:py-3 text-sm font-medium text-blue-600 border-2 border-blue-200 hover:bg-blue-50 hover:border-blue-300 transition-all duration-200 rounded-xl shadow-sm hover:shadow-md transform hover:scale-[1.02] active:scale-[0.98]"
-        >
-          Close
-        </Button>
-        <Button 
-          size="sm"
-          variant="outline"
-          onClick={handleLogout}
-          className="px-4 sm:px-6 py-2 sm:py-3 text-sm font-medium text-red-600 border-2 border-red-200 hover:bg-red-50 hover:border-red-300 transition-all duration-200 rounded-xl shadow-sm hover:shadow-md transform hover:scale-[1.02] active:scale-[0.98]"
-        >
-          Logout
-        </Button>
-        <div className="px-4 sm:px-6 py-2 sm:py-3 bg-gradient-to-r from-orange-400 to-orange-500 text-white text-sm font-bold rounded-xl shadow-md animate-pulse">
-          ADMIN
+      <div className="space-y-6 pb-20">
+        {/* Collapsed Header - Only the three buttons */}
+        <div className="bg-gradient-to-r from-blue-50/80 via-white to-purple-50/80 rounded-2xl shadow-lg border border-gray-200/60 backdrop-blur-sm p-4">
+          <div className="flex justify-center items-center gap-4 sm:gap-6">
+            <Button 
+              size="sm"
+              variant="outline"
+              onClick={() => setIsCollapsed(false)}
+              className="px-4 sm:px-6 py-2 sm:py-3 text-sm font-medium text-blue-600 border-2 border-blue-200 hover:bg-blue-50 hover:border-blue-300 transition-all duration-200 rounded-xl shadow-sm hover:shadow-md transform hover:scale-[1.02] active:scale-[0.98]"
+            >
+              Close
+            </Button>
+            <Button 
+              size="sm"
+              variant="outline"
+              onClick={handleLogout}
+              className="px-4 sm:px-6 py-2 sm:py-3 text-sm font-medium text-red-600 border-2 border-red-200 hover:bg-red-50 hover:border-red-300 transition-all duration-200 rounded-xl shadow-sm hover:shadow-md transform hover:scale-[1.02] active:scale-[0.98]"
+            >
+              Logout
+            </Button>
+            <div className="px-4 sm:px-6 py-2 sm:py-3 bg-gradient-to-r from-orange-400 to-orange-500 text-white text-sm font-bold rounded-xl shadow-md animate-pulse">
+              ADMIN
+            </div>
+          </div>
         </div>
+
+        {/* Enhanced admin control center with proper state management - ALWAYS VISIBLE */}
+        <AdminControlCenterFixed 
+          activeAdminTab={activeAdminTab}
+          setActiveAdminTab={(tab: string) => {
+            console.log(`🔄 Admin tab switched to: ${tab}`);
+            setActiveAdminTab(tab);
+            toast({
+              title: "Tab Switched",
+              description: `Switched to ${tab === 'overview' ? 'The Nerve Center' : 'Addex Hub Platform'}`,
+              duration: 2000,
+            });
+          }}
+        />
       </div>
     );
   }
