@@ -48,6 +48,13 @@ const ModernTabNavigation = ({
     if (!isAllowed) {
       return "opacity-50 cursor-not-allowed bg-muted border-border text-muted-foreground";
     }
+
+    // Force Field Workers tab to show as active when it's the current tab
+    if (tab.value === 'field-workers') {
+      return isActive 
+        ? "tab-active tab-teal-active border-2 shadow-lg transform hover:shadow-xl !bg-teal-600 !text-white !border-teal-600" 
+        : "tab-inactive tab-teal-inactive border hover:tab-teal-hover !bg-teal-50 !text-teal-700 !border-teal-200";
+    }
     
     // Special styling for The Nerve Center
     if (isNerveCenter) {

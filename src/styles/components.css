@@ -153,22 +153,22 @@
     border-color: hsl(var(--tab-yellow));
   }
 
-  /* Teal tab styles */
+  /* Teal tab styles - Field Workers */
   .tab-teal-active {
-    background: hsl(var(--tab-teal));
-    color: white;
-    border-color: hsl(var(--tab-teal));
+    background: hsl(172.5, 66%, 36.9%) !important;
+    color: white !important;
+    border-color: hsl(172.5, 66%, 36.9%) !important;
   }
   
   .tab-teal-inactive {
-    background: hsl(var(--tab-teal-light));
-    color: hsl(var(--tab-teal));
-    border-color: hsl(var(--tab-teal-muted));
+    background: hsl(172.5, 66%, 97%) !important;
+    color: hsl(172.5, 66%, 36.9%) !important;
+    border-color: hsl(172.5, 66%, 85%) !important;
   }
   
   .tab-teal-hover:hover {
-    background: hsl(var(--tab-teal-muted));
-    border-color: hsl(var(--tab-teal));
+    background: hsl(172.5, 66%, 85%) !important;
+    border-color: hsl(172.5, 66%, 36.9%) !important;
   }
 
   /* Gray tab styles for fallback */
