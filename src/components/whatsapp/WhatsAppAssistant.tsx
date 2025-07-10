@@ -10,6 +10,7 @@ import WhatsAppCart from './WhatsAppCart';
 import WhatsAppLanguageSelector from './WhatsAppLanguageSelector';
 import WhatsAppPaymentProcessor from './WhatsAppPaymentProcessor';
 import WhatsAppReceiptGenerator from './WhatsAppReceiptGenerator';
+import { ScrollArea } from '@/components/ui/scroll-area';
 import { CreditCard, X, Minimize2 } from 'lucide-react';
 
 const WhatsAppAssistant = () => {
@@ -189,7 +190,7 @@ const WhatsAppAssistant = () => {
   };
 
   return (
-    <div className="bg-white rounded-t-3xl overflow-hidden flex flex-col h-[600px] relative">
+    <div className="bg-white rounded-t-3xl overflow-hidden flex flex-col h-[calc(100vh-140px)] min-h-[600px] max-h-[700px] relative">
       <div className="sticky top-0 z-10 bg-white border-b border-gray-100">
         <WhatsAppShoppingHeader 
           isAuthenticated={isAuthenticated}
@@ -209,60 +210,62 @@ const WhatsAppAssistant = () => {
       </div>
       
       {!isMinimized && (
-        <div className="flex-1 overflow-y-auto">
-          {activeTab === 'shop' && (
-            <ServiceAccessGate
-              serviceName="WhatsApp shopping services"
-              onNavigateToRegistration={handleNavigateToRegistration}
-              isAuthenticated={isAuthenticated}
-            >
-              <WhatsAppCategoryGrid 
-                activeCategory={activeCategory} 
-                onCategoryChange={setActiveCategory} 
-              />
-              <WhatsAppProductsList 
-                products={products} 
-                activeCategory={activeCategory} 
-                onAddToCart={protectedAddToCart} 
-              />
-            </ServiceAccessGate>
-          )}
-
-          {activeTab === 'cart' && (
-            <div className="p-4">
-              {isAuthenticated ? (
-                <WhatsAppCart 
-                  items={cart}
-                  onUpdateQuantity={updateQuantity}
-                  onRemoveItem={removeFromCart}
-                  onCheckout={handleCheckout}
-                  onBackToShopping={() => setActiveTab('shop')}
-                  isProcessing={isProcessing}
+        <ScrollArea className="flex-1">
+          <div className="h-full">
+            {activeTab === 'shop' && (
+              <ServiceAccessGate
+                serviceName="WhatsApp shopping services"
+                onNavigateToRegistration={handleNavigateToRegistration}
+                isAuthenticated={isAuthenticated}
+              >
+                <WhatsAppCategoryGrid 
+                  activeCategory={activeCategory} 
+                  onCategoryChange={setActiveCategory} 
                 />
-              ) : (
-                <ServiceAccessGate
-                  serviceName="shopping cart"
-                  onNavigateToRegistration={handleNavigateToRegistration}
-                  isAuthenticated={false}
-                >
-                  <div className="text-center p-8">
-                    <p>Your cart is empty</p>
-                  </div>
-                </ServiceAccessGate>
-              )}
-            </div>
-          )}
+                <WhatsAppProductsList 
+                  products={products} 
+                  activeCategory={activeCategory} 
+                  onAddToCart={protectedAddToCart} 
+                />
+              </ServiceAccessGate>
+            )}
 
-          {activeTab === 'chat' && (
-            <div className="p-4 text-center">
-              <div className="text-6xl mb-4">💬</div>
-              <h3 className="text-lg font-medium text-gray-900 mb-2">Chat Support</h3>
-              <p className="text-gray-600">
-                Chat support coming soon! For now, use our shopping interface to make purchases.
-              </p>
-            </div>
-          )}
-        </div>
+            {activeTab === 'cart' && (
+              <div className="p-4">
+                {isAuthenticated ? (
+                  <WhatsAppCart 
+                    items={cart}
+                    onUpdateQuantity={updateQuantity}
+                    onRemoveItem={removeFromCart}
+                    onCheckout={handleCheckout}
+                    onBackToShopping={() => setActiveTab('shop')}
+                    isProcessing={isProcessing}
+                  />
+                ) : (
+                  <ServiceAccessGate
+                    serviceName="shopping cart"
+                    onNavigateToRegistration={handleNavigateToRegistration}
+                    isAuthenticated={false}
+                  >
+                    <div className="text-center p-8">
+                      <p>Your cart is empty</p>
+                    </div>
+                  </ServiceAccessGate>
+                )}
+              </div>
+            )}
+
+            {activeTab === 'chat' && (
+              <div className="p-4 text-center">
+                <div className="text-6xl mb-4">💬</div>
+                <h3 className="text-lg font-medium text-gray-900 mb-2">Chat Support</h3>
+                <p className="text-gray-600">
+                  Chat support coming soon! For now, use our shopping interface to make purchases.
+                </p>
+              </div>
+            )}
+          </div>
+        </ScrollArea>
       )}
     </div>
   );
