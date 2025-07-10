@@ -27,16 +27,11 @@ const AdminPortal: React.FC<AdminPortalProps> = ({ onAuthSuccess, showAdminBanne
   const { toast } = useToast();
   const navigate = useNavigate();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  // Initialize collapsed state from localStorage for persistence
-  const [isCollapsed, setIsCollapsed] = useState(() => {
-    const saved = localStorage.getItem('adminHeaderCollapsed');
-    return saved === 'true'; // Default to false if not set
-  });
   const [authCode, setAuthCode] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [autofillCount, setAutofillCount] = useState(0);
-  const [sessionChecked, setSessionChecked] = useState(false); // Prevent multiple checks
-  const [activeAdminTab, setActiveAdminTab] = useState('overview'); // Add state for active tab
+  const [sessionChecked, setSessionChecked] = useState(false);
+  const [activeAdminTab, setActiveAdminTab] = useState('overview');
 
   const adminEmail = 'kev***@divinemobile.co.za';
   const fullAdminEmail = 'kevin@divinemobile.co.za';
@@ -85,7 +80,6 @@ const AdminPortal: React.FC<AdminPortalProps> = ({ onAuthSuccess, showAdminBanne
       
       if (hasValidAdminSession) {
         setIsAuthenticated(true);
-        setIsCollapsed(false);
         onAuthSuccess?.();
         
         // Only show toast for actual session restoration, not initial load
@@ -107,11 +101,6 @@ const AdminPortal: React.FC<AdminPortalProps> = ({ onAuthSuccess, showAdminBanne
     checkAdminSession();
   }, []); // Empty dependency array - run only once on mount
 
-  // Save collapse state to localStorage whenever it changes for persistence
-  useEffect(() => {
-    localStorage.setItem('adminHeaderCollapsed', isCollapsed.toString());
-    console.log(`💾 Admin header collapse state saved: ${isCollapsed}`);
-  }, [isCollapsed]);
 
   const handleSendCode = () => {
     // Check if we've reached the 50-time limit
@@ -149,7 +138,7 @@ const AdminPortal: React.FC<AdminPortalProps> = ({ onAuthSuccess, showAdminBanne
     if (authCode.toUpperCase() === storedCode) {
       setIsAuthenticated(true);
       // Keep panel expanded after authentication so features are visible
-      setIsCollapsed(false);
+      // Authentication successful
       localStorage.setItem('adminAuthenticated', 'true');
       
       const adminCardNumber = 'ADM' + Math.random().toString(36).substr(2, 8).toUpperCase();
@@ -182,40 +171,19 @@ const AdminPortal: React.FC<AdminPortalProps> = ({ onAuthSuccess, showAdminBanne
     }
   };
 
+  // Logout function - kept for potential future use
   const handleLogout = () => {
     setIsAuthenticated(false);
-    setIsCollapsed(false);
     setAuthCode('');
-    setSessionChecked(false); // Reset session check for next login
+    setSessionChecked(false);
     localStorage.removeItem('adminAuthenticated');
     localStorage.removeItem('adminAuthCode');
     localStorage.removeItem('adminProfile');
-    localStorage.removeItem('adminSessionToastShown'); // Clear toast flag
-    
-    // Navigate away from admin tab after logout
+    localStorage.removeItem('adminSessionToastShown');
     navigate('/portal?tab=deals', { replace: true });
-    
     toast({
       title: "Logged Out",
       description: "Admin session ended. Redirected to Smart Deals.",
-    });
-  };
-
-  const handleToggleCollapse = () => {
-    setIsCollapsed(!isCollapsed);
-    toast({
-      title: isCollapsed ? "Admin Panel Expanded" : "Admin Panel Collapsed",
-      description: isCollapsed ? "Full admin interface restored" : "Header minimized to save space",
-      duration: 2000,
-    });
-  };
-
-  const handleCloseAdminPanel = () => {
-    // Navigate to deals tab and show toast
-    navigate('/portal?tab=deals', { replace: true });
-    toast({
-      title: "Admin Panel Closed",
-      description: "Returned to Smart Deals tab.",
     });
   };
 
@@ -281,17 +249,8 @@ const AdminPortal: React.FC<AdminPortalProps> = ({ onAuthSuccess, showAdminBanne
     );
   }
 
-  // Show collapsed state - elements completely removed per user request
-  if (isAuthenticated && isCollapsed) {
-    return (
-      <div className="flex justify-center items-center py-8">
-        {/* Elements completely removed as requested */}
-      </div>
-    );
-  }
-
-  // Show full admin dashboard when authenticated and expanded
-  if (isAuthenticated && !isCollapsed) {
+  // Show admin dashboard when authenticated
+  if (isAuthenticated) {
     return (
       <div className="space-y-6 pb-20">
         {/* Enhanced Admin Header with intelligent spacing and visual consistency */}
@@ -301,9 +260,6 @@ const AdminPortal: React.FC<AdminPortalProps> = ({ onAuthSuccess, showAdminBanne
             <div className="text-center sm:text-left flex-1 min-w-0">
               <h2 className="text-xl sm:text-2xl font-bold mb-2 text-gray-800 flex items-center justify-center sm:justify-start gap-2">
                 🛡️ Admin The Nerve Center
-                <div className="px-3 py-1 bg-gradient-to-r from-orange-400 to-orange-500 text-white text-xs font-bold rounded-full shadow-md animate-pulse">
-                  ADMIN
-                </div>
               </h2>
               <p className="text-gray-600 text-sm sm:text-base">Complete system administration and oversight</p>
             </div>
