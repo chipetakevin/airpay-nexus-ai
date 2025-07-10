@@ -12,7 +12,7 @@ import AdminPhoneSection from '@/components/forms/AdminPhoneSection';
 import EnhancedSouthAfricanBankAutocomplete from '@/components/banking/EnhancedSouthAfricanBankAutocomplete';
 import { useToast } from '@/hooks/use-toast';
 import { validateBankingSystem, listAllBanksWithBranchCodes } from '@/utils/bankingSystemValidation';
-import EnhancedPasswordInput from '@/components/password/EnhancedPasswordInput';
+// import EnhancedPasswordInput from '@/components/password/EnhancedPasswordInput';
 
 const AdminRegistrationForm = () => {
   const { formData, errors, handleInputChange, handleBankSelect, handleSubmit } = useAdminRegistration();
@@ -230,24 +230,78 @@ const AdminRegistrationForm = () => {
             </p>
           </CardHeader>
           <CardContent>
-            <EnhancedPasswordInput
-              value={formData.password || ''}
-              confirmValue={formData.confirmPassword || ''}
-              onChange={(value) => handleInputChange('password', value)}
-              onConfirmChange={(value) => handleInputChange('confirmPassword', value)}
-              userRole="admin"
-              userId={formData.email}
-              label="Administrator Password"
-              confirmLabel="Confirm Administrator Password"
-              showConfirm={true}
-              enableAutofill={true}
-              enableGeneration={true}
-              enableStorage={true}
-              showRequirements={true}
-              showMetrics={true}
-              error={errors.password}
-              confirmError={errors.confirmPassword}
-            />
+            <div className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="password">Administrator Password *</Label>
+                <div className="relative">
+                  <Input
+                    id="password"
+                    type={showPassword ? 'text' : 'password'}
+                    value={formData.password || ''}
+                    onChange={(e) => handleInputChange('password', e.target.value)}
+                    placeholder="Enter a strong password"
+                    className={errors.password ? 'border-red-500 pr-10' : 'pr-10'}
+                  />
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
+                    onClick={togglePasswordVisibility}
+                  >
+                    {showPassword ? (
+                      <EyeOff className="h-4 w-4" />
+                    ) : (
+                      <Eye className="h-4 w-4" />
+                    )}
+                  </Button>
+                </div>
+                {errors.password && <p className="text-red-500 text-sm">{errors.password}</p>}
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="confirmPassword">Confirm Administrator Password *</Label>
+                <div className="relative">
+                  <Input
+                    id="confirmPassword"
+                    type={showPassword ? 'text' : 'password'}
+                    value={formData.confirmPassword || ''}
+                    onChange={(e) => handleInputChange('confirmPassword', e.target.value)}
+                    placeholder="Confirm your password"
+                    className={errors.confirmPassword ? 'border-red-500 pr-10' : 'pr-10'}
+                  />
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
+                    onClick={togglePasswordVisibility}
+                  >
+                    {showPassword ? (
+                      <EyeOff className="h-4 w-4" />
+                    ) : (
+                      <Eye className="h-4 w-4" />
+                    )}
+                  </Button>
+                </div>
+                {errors.confirmPassword && <p className="text-red-500 text-sm">{errors.confirmPassword}</p>}
+              </div>
+
+              {/* Password Security Notice */}
+              <div className="bg-red-50 p-3 rounded-lg border border-red-200">
+                <div className="flex items-start gap-2 text-sm text-red-700">
+                  <Shield className="w-4 h-4 mt-0.5" />
+                  <div>
+                    <p className="font-medium mb-1">Enterprise Security Requirements:</p>
+                    <ul className="text-xs space-y-1">
+                      <li>• Minimum 8 characters with uppercase, lowercase, numbers, and symbols</li>
+                      <li>• Password will be encrypted and securely stored</li>
+                      <li>• Multi-factor authentication will be enabled for admin accounts</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
           </CardContent>
         </Card>
 
