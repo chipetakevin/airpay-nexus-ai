@@ -190,7 +190,7 @@ const WhatsAppAssistant = () => {
   };
 
   return (
-    <div className="bg-white rounded-t-3xl overflow-hidden flex flex-col h-[calc(100vh-220px)] min-h-[500px] max-h-[600px] relative">
+    <div className="bg-white rounded-t-3xl overflow-hidden flex flex-col h-[calc(100vh-160px)] min-h-[450px] max-h-[550px] relative">
       <div className="sticky top-0 z-10 bg-white border-b border-gray-100">
         <WhatsAppShoppingHeader 
           isAuthenticated={isAuthenticated}

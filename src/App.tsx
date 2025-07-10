@@ -74,7 +74,6 @@ const App = () => (
             <Route path="/porting-system" element={<PortingSystem />} />
             <Route path="/rica-registration" element={<RICARegistration />} />
             <Route path="/registration-hub" element={<RegistrationHub />} />
-            <Route path="/registration" element={<RegistrationHub />} />
             <Route path="/admin-mvne" element={<AdminMVNEDashboard />} />
             <Route path="/mobile-dashboard" element={<MobileDashboard />} />
             <Route path="/customer-auth" element={<CustomerAuth />} />
