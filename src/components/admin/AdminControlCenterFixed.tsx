@@ -294,7 +294,10 @@ const AdminControlCenterFixed: React.FC<AdminControlCenterProps> = ({
 
       {/* Main Content Container with Tabs */}
       <div className="max-w-7xl mx-auto px-3 sm:px-6 py-4 sm:py-6">
-        <Tabs value={activeAdminTab || 'overview'} onValueChange={setActiveAdminTab} className="w-full">
+        <Tabs value={activeAdminTab || 'overview'} onValueChange={(value) => {
+          console.log('🔄 Tab changed to:', value);
+          setActiveAdminTab(value);
+        }} className="w-full">
           <TabsList className="grid grid-cols-2 mb-6 h-auto p-1 bg-gradient-to-r from-gray-50 to-gray-100 rounded-xl shadow-lg border border-gray-200/50">
             <TabsTrigger 
               value="overview" 
