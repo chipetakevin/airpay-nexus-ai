@@ -72,17 +72,18 @@ const AdminControlCenterFixed: React.FC<AdminControlCenterProps> = ({
   const adminSections = [
     {
       id: 'hub',
-      label: 'Hub',
+      label: 'Addex Hub',
       icon: Activity,
-      title: 'Addex Hub Nerve Center',
-      description: 'System Central Command Portal - All Systems',
+      title: 'Addex Hub Platform',
+      description: 'Telecom Infrastructure Central Command - Neural Admin Portal',
       color: {
         border: 'border-l-blue-500',
-        bg: 'from-blue-50 to-white',
-        iconBg: 'bg-blue-100',
+        bg: 'from-blue-50 to-purple-50',
+        iconBg: 'bg-gradient-to-br from-blue-100 to-purple-100',
         icon: 'text-blue-600',
-        button: 'bg-blue-600 hover:bg-blue-700 text-white'
-      }
+        button: 'bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white'
+      },
+      badge: { text: "NEURAL", variant: "default", className: "bg-purple-500 text-white animate-pulse" }
     },
     {
       id: 'database',
@@ -231,9 +232,20 @@ const AdminControlCenterFixed: React.FC<AdminControlCenterProps> = ({
             onClick={() => setActiveAdminTab('')}
             className="bg-white hover:bg-gray-50"
           >
-            ← Back to Admin Control
+            ← Back to Nerve Center
           </Button>
-          <h2 className="text-2xl font-bold text-gray-900">Addex Hub Nerve Center</h2>
+          <div className="flex items-center gap-3">
+            <div className="p-2 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg shadow-lg">
+              <img 
+                src="/lovable-uploads/788fddcb-574c-4f1d-9c73-54cc003a95d1.png" 
+                alt="Addex Hub"
+                className="w-6 h-6 object-contain"
+              />
+            </div>
+            <h2 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+              Addex Hub Platform
+            </h2>
+          </div>
         </div>
         <AddexHubNerveCenter 
           activeTab={hubActiveTab}
@@ -245,17 +257,34 @@ const AdminControlCenterFixed: React.FC<AdminControlCenterProps> = ({
 
   return (
     <div className="space-y-8 pb-20">
-      {/* Enhanced Header Section */}
+      {/* Enhanced Header Section with Addex Hub Integration */}
       <div className="text-center space-y-4">
-        <div className="flex items-center justify-center gap-3 mb-4">
-          <div className="p-3 bg-gradient-to-br from-red-500 to-orange-500 rounded-xl shadow-lg">
-            <Shield className="w-8 h-8 text-white" />
+        <div className="flex flex-col items-center justify-center gap-4 mb-6">
+          {/* Satellite Dish Icon with ADMIN Badge */}
+          <div className="relative">
+            <div className="p-4 bg-gradient-to-br from-blue-500 to-purple-600 rounded-2xl shadow-xl">
+              <img 
+                src="/lovable-uploads/788fddcb-574c-4f1d-9c73-54cc003a95d1.png" 
+                alt="Addex Hub Satellite"
+                className="w-12 h-12 object-contain"
+              />
+            </div>
+            <Badge className="absolute -top-2 -right-2 bg-yellow-400 text-yellow-900 font-bold px-3 py-1 shadow-lg animate-pulse">
+              ADMIN
+            </Badge>
           </div>
-          <div>
-             <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent">
-               The Nerve Center
-             </h1>
-            <p className="text-muted-foreground">Complete system administration and oversight</p>
+          
+          {/* Platform Title */}
+          <div className="space-y-2">
+            <h1 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+              Addex Hub Platform
+            </h1>
+            <h2 className="text-2xl font-bold bg-gradient-to-r from-purple-600 to-blue-800 bg-clip-text text-transparent">
+              The Nerve Center
+            </h2>
+            <p className="text-muted-foreground text-lg">
+              Telecom Infrastructure • Admin Portal
+            </p>
           </div>
         </div>
 
@@ -301,7 +330,7 @@ const AdminControlCenterFixed: React.FC<AdminControlCenterProps> = ({
             description={section.description}
             icon={section.icon}
             color={section.color}
-            badge={{ text: "ACTIVE", variant: "default", className: "bg-green-500 text-white" }}
+            badge={section.badge || { text: "ACTIVE", variant: "default", className: "bg-green-500 text-white" }}
             onClick={() => handleSectionClick(section.id)}
           />
         ))}
