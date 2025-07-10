@@ -19,6 +19,7 @@ import MobileLayout from '@/components/navigation/MobileLayout';
 import IntelligentCollapsibleSections from '@/components/home/IntelligentCollapsibleSections';
 import { useMobileAuth } from '@/hooks/useMobileAuth';
 import StaticWhatsAppAssistant from '@/components/whatsapp/StaticWhatsAppAssistant';
+import ValidatedWhatsAppRedirect from '@/components/whatsapp/ValidatedWhatsAppRedirect';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { ArrowRight, MessageCircle } from 'lucide-react';
@@ -108,6 +109,24 @@ const Index = () => {
           {/* Community Benefits Section */}
           <CommunityBenefitsSection />
           
+          {/* WhatsApp Express Shop Section */}
+          <section className="py-12 bg-gradient-to-br from-green-50 via-white to-blue-50">
+            <div className="container mx-auto px-4">
+              <div className="text-center mb-8">
+                <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4">
+                  📱 Quick Shopping
+                </h2>
+                <p className="text-gray-600 max-w-2xl mx-auto">
+                  Get instant access to airtime, data, and mobile services through WhatsApp
+                </p>
+              </div>
+              
+              <div className="max-w-2xl mx-auto">
+                <ValidatedWhatsAppRedirect variant="express" />
+              </div>
+            </div>
+          </section>
+
           {/* WhatsApp Shopping Section */}
           <WhatsAppShoppingSection />
           
