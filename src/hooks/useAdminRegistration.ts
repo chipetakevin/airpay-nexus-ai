@@ -1,5 +1,5 @@
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { useEnhancedAuth } from './useEnhancedAuth';
 import { usePhoneValidation } from '@/hooks/usePhoneValidation';
@@ -43,7 +43,37 @@ export const useAdminRegistration = () => {
   const { toast } = useToast();
   const { createPersistentSession } = useEnhancedAuth();
   const { validateSouthAfricanMobile } = usePhoneValidation();
-  const { savePermanently, loadPermanentData, autoSave } = usePermanentFormStorage('admin');
+  const { savePermanently, loadPermanentData, autoSave, autoFillForm } = usePermanentFormStorage('admin');
+
+  // Enhanced initialization with auto-fill
+  useEffect(() => {
+    const initializeForm = () => {
+      try {
+        const savedData = loadPermanentData();
+        if (savedData && Object.keys(savedData).length > 0) {
+          console.log('🔄 Auto-filling admin form with saved data...', savedData);
+          
+          // Merge saved data with current form data
+          setFormData(prev => ({
+            ...prev,
+            ...savedData
+          }));
+          
+          toast({
+            title: "📝 Admin Form Auto-Filled!",
+            description: "Your previously saved admin information has been restored.",
+            duration: 3000
+          });
+        } else {
+          console.log('ℹ️ No saved admin data found - starting with clean form');
+        }
+      } catch (error) {
+        console.error('Error initializing admin form:', error);
+      }
+    };
+
+    initializeForm();
+  }, []); // Only run once on mount
 
   const handleInputChange = (field: keyof AdminFormData, value: any) => {
     const updatedFormData = {
@@ -60,7 +90,8 @@ export const useAdminRegistration = () => {
       }));
     }
 
-    autoSave(updatedFormData, 1500);
+    // Enhanced auto-save with optimized debouncing
+    autoSave(updatedFormData, 800);
   };
 
   const handleBankSelect = (bankName: string, routing: string, branchCode: string) => {

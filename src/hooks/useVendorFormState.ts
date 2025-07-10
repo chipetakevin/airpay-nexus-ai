@@ -6,7 +6,7 @@ import { usePermanentFormStorage } from './usePermanentFormStorage';
 
 export const useVendorFormState = () => {
   const { toast } = useToast();
-  const { savePermanently, loadPermanentData, autoSave } = usePermanentFormStorage('vendor');
+  const { savePermanently, loadPermanentData, autoSave, autoFillForm } = usePermanentFormStorage('vendor');
   
   const [formData, setFormData] = useState<VendorFormData>({
     firstName: '',
@@ -31,17 +31,22 @@ export const useVendorFormState = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [isInitialized, setIsInitialized] = useState(false);
 
-  // Load saved data on component mount with stability
+  // Enhanced initialization with auto-fill
   useEffect(() => {
     if (!isInitialized) {
       const savedData = loadPermanentData();
-      if (savedData) {
+      if (savedData && Object.keys(savedData).length > 0) {
+        console.log('🔄 Auto-filling vendor form with saved data...', savedData);
+        
         setFormData(prev => ({ ...prev, ...savedData }));
+        
         toast({
-          title: "Vendor Form Auto-filled! ✨",
-          description: "Your previously saved information has been restored.",
-          duration: 2000
+          title: "📝 Vendor Form Auto-Filled!",
+          description: "Your previously saved vendor information has been restored.",
+          duration: 3000
         });
+      } else {
+        console.log('ℹ️ No saved vendor data found - starting with clean form');
       }
       setIsInitialized(true);
     }
@@ -80,8 +85,8 @@ export const useVendorFormState = () => {
         rememberPassword: true
       };
       
-      // Auto-save with debouncing
-      autoSave(updatedFormData, 2000);
+      // Enhanced auto-save with optimized debouncing
+      autoSave(updatedFormData, 800);
       
       return updatedFormData;
     });

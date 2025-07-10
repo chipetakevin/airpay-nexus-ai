@@ -1,5 +1,5 @@
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { usePermanentAuth } from './usePermanentAuth';
 import { usePhoneValidation } from '@/hooks/usePhoneValidation';
@@ -31,28 +31,47 @@ export const useCustomerRegistration = () => {
   const { savePermanently, loadPermanentData, autoSave } = usePermanentFormStorage('customer');
   const { savePhoneNumber, autoFillPhone } = usePhoneStorage();
 
-  // Load saved data on mount
-  useState(() => {
-    const savedData = loadPermanentData();
-    if (savedData) {
-      setFormData(prev => ({ ...prev, ...savedData }));
-      toast({
-        title: "Form Auto-filled! 📝",
-        description: "Your previously saved information has been restored.",
-        duration: 2000
-      });
-    } else {
-      // Try to auto-fill phone if no saved data
-      const autoFilled = autoFillPhone('customer');
-      if (autoFilled) {
-        setFormData(prev => ({
-          ...prev,
-          phoneNumber: autoFilled.phoneNumber,
-          countryCode: autoFilled.countryCode
-        }));
+  // Enhanced initialization with auto-fill
+  useEffect(() => {
+    const initializeForm = () => {
+      try {
+        const savedData = loadPermanentData();
+        if (savedData && Object.keys(savedData).length > 0) {
+          console.log('🔄 Auto-filling customer form with saved data...', savedData);
+          
+          // Merge saved data with default form data
+          const mergedData = {
+            ...formData,
+            ...savedData
+          };
+          
+          setFormData(mergedData);
+          
+          toast({
+            title: "📝 Form Auto-Filled!",
+            description: "Your previously saved customer information has been restored.",
+            duration: 3000
+          });
+        } else {
+          // Try to auto-fill phone if no complete saved data
+          const autoFilled = autoFillPhone('customer');
+          if (autoFilled) {
+            setFormData(prev => ({
+              ...prev,
+              phoneNumber: autoFilled.phoneNumber,
+              countryCode: autoFilled.countryCode
+            }));
+            
+            console.log('📱 Auto-filled phone number for customer:', autoFilled.phoneNumber);
+          }
+        }
+      } catch (error) {
+        console.error('Error initializing customer form:', error);
       }
-    }
-  });
+    };
+
+    initializeForm();
+  }, []); // Only run once on mount
 
   const handleInputChange = (field: keyof CustomerFormData, value: any) => {
     // Special handling for phone numbers to ensure 9-digit preservation
@@ -108,8 +127,8 @@ export const useCustomerRegistration = () => {
       savePhoneNumber(value, formData.countryCode, 'customer');
     }
 
-    // Auto-save permanently with debouncing
-    autoSave(updatedFormData, 1500);
+    // Enhanced auto-save with optimized debouncing (faster response)
+    autoSave(updatedFormData, 800); // Reduced from 1500ms to 800ms for better responsiveness
   };
 
   const validateForm = (): boolean => {

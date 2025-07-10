@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -12,6 +12,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { User, Phone, Mail, MapPin, Building, CreditCard, Settings, Upload, CheckCircle, X, Eye, EyeOff, Loader2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useBranchCodeAutoAssign } from '@/hooks/useBranchCodeAutoAssign';
+import { usePermanentFormStorage } from '@/hooks/usePermanentFormStorage';
 
 interface FormData {
   // Personal Information
@@ -73,8 +74,35 @@ const FieldWorkerRegistration = () => {
   const [currentStep, setCurrentStep] = useState(1);
   const { toast } = useToast();
   const { SOUTH_AFRICAN_BANK_BRANCHES, autoAssignBranchCode } = useBranchCodeAutoAssign();
+  const { savePermanently, loadPermanentData, autoSave, autoFillForm } = usePermanentFormStorage('fieldworker');
   const [showBankDropdown, setShowBankDropdown] = useState(false);
   const [bankQuery, setBankQuery] = useState(formData.bankName || '');
+
+  // Enhanced initialization with auto-fill
+  useEffect(() => {
+    const initializeForm = () => {
+      try {
+        const savedData = loadPermanentData();
+        if (savedData && Object.keys(savedData).length > 0) {
+          console.log('🔄 Auto-filling field worker form with saved data...', savedData);
+          
+          setFormData(prev => ({ ...prev, ...savedData }));
+          
+          toast({
+            title: "📝 Field Worker Form Auto-Filled!",
+            description: "Your previously saved information has been restored.",
+            duration: 3000
+          });
+        } else {
+          console.log('ℹ️ No saved field worker data found - starting with clean form');
+        }
+      } catch (error) {
+        console.error('Error initializing field worker form:', error);
+      }
+    };
+
+    initializeForm();
+  }, []); // Only run once on mount
 
   const provinces = [
     'Eastern Cape', 'Free State', 'Gauteng', 'KwaZulu-Natal',
@@ -91,12 +119,16 @@ const FieldWorkerRegistration = () => {
   ];
 
   const handleInputChange = (field: string, value: string) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
+    const updatedFormData = { ...formData, [field]: value };
+    setFormData(updatedFormData);
     
     // Clear specific field errors when user starts typing
     if (errors[field]) {
       setErrors(prev => ({ ...prev, [field]: '' }));
     }
+
+    // Enhanced auto-save with optimized debouncing
+    autoSave(updatedFormData, 800);
   };
 
   const handleBankSelect = (bankName: string) => {
