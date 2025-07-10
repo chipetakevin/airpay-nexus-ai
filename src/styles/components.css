@@ -53,4 +53,22 @@
     font-weight: 900;
     letter-spacing: -0.02em;
   }
+
+  /* Teal tab styles */
+  .tab-teal-active {
+    background: hsl(var(--tab-teal));
+    color: white;
+    border-color: hsl(var(--tab-teal));
+  }
+  
+  .tab-teal-inactive {
+    background: hsl(var(--tab-teal-light));
+    color: hsl(var(--tab-teal));
+    border-color: hsl(var(--tab-teal-muted));
+  }
+  
+  .tab-teal-hover:hover {
+    background: hsl(var(--tab-teal-muted));
+    border-color: hsl(var(--tab-teal));
+  }
 }

@@ -64,6 +64,9 @@ const ModernTabNavigation = ({
       red: isActive 
         ? "bg-red-600 text-white border-red-700 shadow-lg transform hover:shadow-xl" 
         : "bg-red-50 text-red-700 border-red-200 hover:bg-red-100 hover:border-red-300",
+      teal: isActive 
+        ? "tab-active tab-teal-active border-2 shadow-lg transform hover:shadow-xl" 
+        : "tab-inactive tab-teal-inactive border hover:tab-teal-hover",
       gray: isActive 
         ? "tab-active tab-gray-active border-2 shadow-lg transform hover:shadow-xl" 
         : "tab-inactive tab-gray-inactive border hover:tab-gray-hover"

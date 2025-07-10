@@ -52,6 +52,10 @@
     --tab-gray: 215.4 16.3% 46.9%;
     --tab-gray-light: 215.4 16.3% 97%;
     --tab-gray-muted: 215.4 16.3% 85%;
+
+    --tab-teal: 172.5 66% 36.9%;
+    --tab-teal-light: 172.5 66% 97%;
+    --tab-teal-muted: 172.5 66% 85%;
   }
 
   .dark {
@@ -99,6 +103,10 @@
     --tab-gray: 215.4 16.3% 46.9%;
     --tab-gray-light: 215.4 16.3% 8%;
     --tab-gray-muted: 215.4 16.3% 15%;
+
+    --tab-teal: 172.5 66% 36.9%;
+    --tab-teal-light: 172.5 66% 8%;
+    --tab-teal-muted: 172.5 66% 15%;
   }
 }
 
