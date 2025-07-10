@@ -361,7 +361,7 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
                 Cancel
               </Button>
               <Button
-                onClick={mode === 'login' ? handleLogin : () => {}} // Keep existing handleSignup logic
+                onClick={mode === 'login' ? handleLogin : handleSignup}
                 disabled={isSubmitting}
                 className={`flex-1 ${mode === 'login' ? 'bg-blue-600 hover:bg-blue-700' : 'bg-green-600 hover:bg-green-700'}`}
               >
