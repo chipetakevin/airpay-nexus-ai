@@ -6,6 +6,7 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useToast } from '@/hooks/use-toast';
 import AddexHubNerveCenter from '../addex-hub/AddexHubNerveCenter';
+import AdminPlatformBranding from './AdminPlatformBranding';
 import { 
   Shield, 
   TrendingUp, 
@@ -234,18 +235,7 @@ const AdminControlCenterFixed: React.FC<AdminControlCenterProps> = ({
           >
             ← Back to Nerve Center
           </Button>
-          <div className="flex items-center gap-3">
-            <div className="p-2 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg shadow-lg">
-              <img 
-                src="/lovable-uploads/788fddcb-574c-4f1d-9c73-54cc003a95d1.png" 
-                alt="Addex Hub"
-                className="w-6 h-6 object-contain"
-              />
-            </div>
-            <h2 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-              Addex Hub Platform
-            </h2>
-          </div>
+          <AdminPlatformBranding size="small" showSubtitle={false} />
         </div>
         <AddexHubNerveCenter 
           activeTab={hubActiveTab}
@@ -259,34 +249,7 @@ const AdminControlCenterFixed: React.FC<AdminControlCenterProps> = ({
     <div className="space-y-8 pb-20">
       {/* Enhanced Header Section with Addex Hub Integration */}
       <div className="text-center space-y-4">
-        <div className="flex flex-col items-center justify-center gap-4 mb-6">
-          {/* Satellite Dish Icon with ADMIN Badge */}
-          <div className="relative">
-            <div className="p-4 bg-gradient-to-br from-blue-500 to-purple-600 rounded-2xl shadow-xl">
-              <img 
-                src="/lovable-uploads/788fddcb-574c-4f1d-9c73-54cc003a95d1.png" 
-                alt="Addex Hub Satellite"
-                className="w-12 h-12 object-contain"
-              />
-            </div>
-            <Badge className="absolute -top-2 -right-2 bg-yellow-400 text-yellow-900 font-bold px-3 py-1 shadow-lg animate-pulse">
-              ADMIN
-            </Badge>
-          </div>
-          
-          {/* Platform Title */}
-          <div className="space-y-2">
-            <h1 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-              Addex Hub Platform
-            </h1>
-            <h2 className="text-2xl font-bold bg-gradient-to-r from-purple-600 to-blue-800 bg-clip-text text-transparent">
-              The Nerve Center
-            </h2>
-            <p className="text-muted-foreground text-lg">
-              Telecom Infrastructure • Admin Portal
-            </p>
-          </div>
-        </div>
+        <AdminPlatformBranding size="medium" showSubtitle={true} />
 
         {/* Live System Status Indicators */}
         <div className="grid grid-cols-3 gap-4 max-w-md mx-auto">
