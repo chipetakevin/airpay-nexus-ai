@@ -493,25 +493,27 @@ const AdminControlCenterFixed: React.FC<AdminControlCenterProps> = ({
           </TabsContent>
 
           <TabsContent value="addex-platform" className="space-y-4 sm:space-y-6 pb-20">
-            {/* Addex Hub Platform Standalone Card */}
+            {/* Addex Hub Platform Header Card with Entry Button */}
             <div className="bg-white rounded-2xl shadow-xl border border-gray-100 p-6 sm:p-8 text-center">
               <div className="flex flex-col items-center space-y-4 sm:space-y-6">
-                {/* Satellite Icon */}
-                <div className="p-4 bg-gradient-to-br from-blue-100 to-purple-100 rounded-2xl shadow-lg">
-                  <svg className="w-16 h-16 sm:w-20 sm:h-20 text-gray-600" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M19.5 6.3l-3.1-3.1c-.4-.4-1-.4-1.4 0L3.4 14.8c-.4.4-.4 1 0 1.4l3.1 3.1c.4.4 1 .4 1.4 0L19.5 7.7c.4-.4.4-1 0-1.4zm-4.9 1.4L12 10.3 9.4 7.7l2.6-2.6 2.6 2.6z"/>
-                  </svg>
+                {/* Enhanced Icon with Admin Badge */}
+                <div className="relative">
+                  <div className="p-4 bg-gradient-to-br from-blue-100 to-purple-100 rounded-2xl shadow-lg">
+                    <svg className="w-16 h-16 sm:w-20 sm:h-20 text-gray-600" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M19.5 6.3l-3.1-3.1c-.4-.4-1-.4-1.4 0L3.4 14.8c-.4.4-.4 1 0 1.4l3.1 3.1c.4.4 1 .4 1.4 0L19.5 7.7c.4-.4.4-1 0-1.4zm-4.9 1.4L12 10.3 9.4 7.7l2.6-2.6 2.6 2.6z"/>
+                    </svg>
+                  </div>
+                  <div className="absolute -top-2 -right-2 px-2 py-1 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full shadow-lg">
+                    <span className="text-xs font-bold text-yellow-900">ADMIN</span>
+                  </div>
                 </div>
                 
-                {/* Title with Badge */}
+                {/* Title and Description */}
                 <div className="space-y-2">
-                  <div className="flex items-center justify-center gap-3">
-                    <h2 className="text-2xl sm:text-3xl font-bold text-gray-800">Addex Hub Platform</h2>
-                    <div className="px-3 py-1 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full shadow-lg">
-                      <span className="text-xs sm:text-sm font-bold text-yellow-900">ADMIN</span>
-                    </div>
-                  </div>
-                  <p className="text-sm sm:text-base text-gray-600">Telecom Infrastructure</p>
+                  <h2 className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                    Addex Hub Platform
+                  </h2>
+                  <p className="text-sm sm:text-base text-muted-foreground">Telecom Infrastructure Central Command</p>
                 </div>
 
                 {/* Status Indicators */}
@@ -530,30 +532,85 @@ const AdminControlCenterFixed: React.FC<AdminControlCenterProps> = ({
                   </div>
                 </div>
 
-                {/* Upload Section */}
-                <div className="w-full max-w-md mx-auto mt-8">
-                  <div className="bg-gradient-to-br from-green-50 to-emerald-50 rounded-xl p-6 border border-green-200 shadow-lg">
-                    <div className="flex items-center gap-4 mb-4">
-                      <div className="p-3 bg-green-500 rounded-xl shadow-lg">
-                        <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
-                        </svg>
-                      </div>
-                      <div className="text-left">
-                        <h3 className="text-lg font-bold text-green-800">Upload New Bulk Operation</h3>
-                      </div>
-                    </div>
-                    <p className="text-sm text-green-700 mb-4 leading-relaxed">
-                      Upload CSV files to process bulk service operations and configure their behavior
-                    </p>
-                    <Button className="w-full bg-green-600 hover:bg-green-700 text-white font-medium py-3 rounded-lg shadow-lg">
-                      <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
-                      </svg>
-                      Upload File
-                    </Button>
+                {/* Action Button - Made Clickable and Functional */}
+                <div className="w-full max-w-md mx-auto mt-6">
+                  <Button 
+                    onClick={() => handleSectionClick('hub')}
+                    className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-medium py-4 px-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
+                  >
+                    <Activity className="w-5 h-5 mr-3" />
+                    Enter Addex Hub Platform
+                    <ChevronRight className="w-5 h-5 ml-3" />
+                  </Button>
+                </div>
+              </div>
+            </div>
+
+            {/* Enhanced Mobile-Friendly Feature Cards */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+              {/* Bulk Upload Card */}
+              <div className="bg-white rounded-xl shadow-md border border-gray-100 p-4 sm:p-6 hover:shadow-lg transition-shadow duration-300">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="p-3 bg-green-100 rounded-xl">
+                    <svg className="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                    </svg>
+                  </div>
+                  <div>
+                    <h3 className="text-base sm:text-lg font-semibold text-gray-800">Bulk Operations</h3>
+                    <p className="text-xs sm:text-sm text-muted-foreground">Upload & Process</p>
                   </div>
                 </div>
+                <p className="text-sm text-gray-600 mb-4">Upload CSV files for bulk service operations and configuration management.</p>
+                <Button 
+                  variant="outline" 
+                  className="w-full border-green-200 text-green-700 hover:bg-green-50"
+                  onClick={() => handleSectionClick('hub')}
+                >
+                  Access Upload
+                </Button>
+              </div>
+
+              {/* System Monitor Card */}
+              <div className="bg-white rounded-xl shadow-md border border-gray-100 p-4 sm:p-6 hover:shadow-lg transition-shadow duration-300">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="p-3 bg-blue-100 rounded-xl">
+                    <Activity className="w-6 h-6 text-blue-600" />
+                  </div>
+                  <div>
+                    <h3 className="text-base sm:text-lg font-semibold text-gray-800">System Monitor</h3>
+                    <p className="text-xs sm:text-sm text-muted-foreground">Real-time Status</p>
+                  </div>
+                </div>
+                <p className="text-sm text-gray-600 mb-4">Monitor system health, performance metrics, and operational status in real-time.</p>
+                <Button 
+                  variant="outline" 
+                  className="w-full border-blue-200 text-blue-700 hover:bg-blue-50"
+                  onClick={() => handleSectionClick('hub')}
+                >
+                  View Monitor
+                </Button>
+              </div>
+
+              {/* Configuration Card */}
+              <div className="bg-white rounded-xl shadow-md border border-gray-100 p-4 sm:p-6 hover:shadow-lg transition-shadow duration-300 sm:col-span-2 lg:col-span-1">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="p-3 bg-purple-100 rounded-xl">
+                    <Settings className="w-6 h-6 text-purple-600" />
+                  </div>
+                  <div>
+                    <h3 className="text-base sm:text-lg font-semibold text-gray-800">Configuration</h3>
+                    <p className="text-xs sm:text-sm text-muted-foreground">System Settings</p>
+                  </div>
+                </div>
+                <p className="text-sm text-gray-600 mb-4">Configure system parameters, admin settings, and platform preferences.</p>
+                <Button 
+                  variant="outline" 
+                  className="w-full border-purple-200 text-purple-700 hover:bg-purple-50"
+                  onClick={() => handleSectionClick('hub')}
+                >
+                  Configure
+                </Button>
               </div>
             </div>
           </TabsContent>
