@@ -66,11 +66,11 @@ const PortalHeader = ({
                 </div>
               )}
 
-              {/* Home Button - Much Bigger */}
+              {/* Home Button - Much Bigger & More Visible */}
               <Link to="/">
-                <div className="bg-blue-50 hover:bg-blue-100 text-blue-600 px-5 sm:px-6 py-3 sm:py-4 rounded-full flex items-center gap-2 sm:gap-3 transition-all duration-200 shadow-sm hover:shadow-lg hover:scale-105 group">
-                  <Home className="w-6 h-6 sm:w-8 sm:h-8 group-hover:scale-110 transition-transform duration-200" />
-                  <span className="text-sm sm:text-base font-medium hidden sm:inline">Home</span>
+                <div className="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white px-6 sm:px-8 py-4 sm:py-5 rounded-xl flex items-center gap-3 sm:gap-4 transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-110 group border-2 border-blue-400">
+                  <Home className="w-8 h-8 sm:w-10 sm:h-10 group-hover:scale-125 transition-transform duration-300" />
+                  <span className="text-base sm:text-lg font-semibold hidden sm:inline">Home</span>
                 </div>
               </Link>
 
