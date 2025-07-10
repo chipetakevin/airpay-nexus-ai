@@ -299,7 +299,7 @@ const AdminControlCenterFixed: React.FC<AdminControlCenterProps> = ({
           <div 
             role="tablist" 
             aria-label="Admin Portal Navigation"
-            className="grid grid-cols-2 mb-6 h-auto p-1 bg-gradient-to-r from-gray-50 to-gray-100 rounded-xl shadow-lg border border-gray-200/50"
+            className="flex justify-center gap-6 sm:gap-8 mb-8 p-4 sm:p-6 bg-gradient-to-r from-blue-50/80 via-white to-purple-50/80 rounded-2xl shadow-lg border border-gray-200/60 backdrop-blur-sm"
             onKeyDown={(e) => {
               const tabs = ['overview', 'hub'];
               const currentIndex = tabs.indexOf(activeAdminTab || 'overview');
@@ -335,10 +335,12 @@ const AdminControlCenterFixed: React.FC<AdminControlCenterProps> = ({
               id="tab-overview"
               tabIndex={activeAdminTab === 'overview' || !activeAdminTab ? 0 : -1}
               className={`
-                rounded-lg px-4 py-3 font-medium transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 hover-scale
+                group relative flex items-center justify-center gap-3 px-6 sm:px-8 py-4 sm:py-5 font-semibold text-sm sm:text-base
+                rounded-xl transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2
+                min-w-[160px] sm:min-w-[200px] shadow-md hover:shadow-lg transform hover:scale-[1.02] active:scale-[0.98]
                 ${(activeAdminTab === 'overview' || !activeAdminTab) 
-                  ? 'bg-white shadow-lg border border-blue-200/30 text-blue-700 animate-scale-in' 
-                  : 'hover:bg-white/70 text-gray-600 hover:text-blue-600'
+                  ? 'bg-gradient-to-r from-blue-600 to-blue-700 text-white shadow-blue-200/50 scale-105 border-2 border-blue-300/30' 
+                  : 'bg-white/90 hover:bg-white text-gray-700 hover:text-blue-600 border-2 border-gray-200/80 hover:border-blue-300/50'
                 }
               `}
               onClick={() => {
@@ -346,11 +348,17 @@ const AdminControlCenterFixed: React.FC<AdminControlCenterProps> = ({
                 setActiveAdminTab('overview');
               }}
             >
-              <span className="flex items-center gap-2">
-                <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse" />
-                The Nerve Center
-              </span>
+              <div className={`w-3 h-3 rounded-full transition-all duration-300 ${
+                (activeAdminTab === 'overview' || !activeAdminTab) 
+                  ? 'bg-white animate-pulse shadow-lg shadow-white/30' 
+                  : 'bg-blue-500 group-hover:animate-pulse group-hover:bg-blue-600'
+              }`} />
+              <span className="font-medium tracking-wide">The Nerve Center</span>
+              {(activeAdminTab === 'overview' || !activeAdminTab) && (
+                <div className="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-12 h-1 bg-white rounded-full shadow-lg" />
+              )}
             </button>
+            
             <button 
               role="tab"
               aria-selected={activeAdminTab === 'hub'}
@@ -358,10 +366,12 @@ const AdminControlCenterFixed: React.FC<AdminControlCenterProps> = ({
               id="tab-hub"
               tabIndex={activeAdminTab === 'hub' ? 0 : -1}
               className={`
-                rounded-lg px-4 py-3 font-medium transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 hover-scale
+                group relative flex items-center justify-center gap-3 px-6 sm:px-8 py-4 sm:py-5 font-semibold text-sm sm:text-base
+                rounded-xl transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2
+                min-w-[160px] sm:min-w-[200px] shadow-md hover:shadow-lg transform hover:scale-[1.02] active:scale-[0.98]
                 ${activeAdminTab === 'hub' 
-                  ? 'bg-white shadow-lg border border-blue-200/30 text-blue-700 animate-scale-in' 
-                  : 'hover:bg-white/70 text-gray-600 hover:text-blue-600'
+                  ? 'bg-gradient-to-r from-purple-600 to-purple-700 text-white shadow-purple-200/50 scale-105 border-2 border-purple-300/30' 
+                  : 'bg-white/90 hover:bg-white text-gray-700 hover:text-purple-600 border-2 border-gray-200/80 hover:border-purple-300/50'
                 }
               `}
               onClick={() => {
@@ -369,10 +379,15 @@ const AdminControlCenterFixed: React.FC<AdminControlCenterProps> = ({
                 setActiveAdminTab('hub');
               }}
             >
-              <span className="flex items-center gap-2">
-                <div className="w-2 h-2 bg-purple-500 rounded-full animate-pulse" />
-                Addex Hub Platform
-              </span>
+              <div className={`w-3 h-3 rounded-full transition-all duration-300 ${
+                activeAdminTab === 'hub' 
+                  ? 'bg-white animate-pulse shadow-lg shadow-white/30' 
+                  : 'bg-purple-500 group-hover:animate-pulse group-hover:bg-purple-600'
+              }`} />
+              <span className="font-medium tracking-wide">Addex Hub Platform</span>
+              {activeAdminTab === 'hub' && (
+                <div className="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-12 h-1 bg-white rounded-full shadow-lg" />
+              )}
             </button>
           </div>
 
