@@ -5457,6 +5457,66 @@ export type Database = {
         }
         Relationships: []
       }
+      uploaded_documents: {
+        Row: {
+          classification: string | null
+          compliance_status: string | null
+          created_at: string
+          extracted_data: Json | null
+          file_name: string
+          file_path: string
+          file_size: number
+          file_type: string
+          id: string
+          metadata: Json | null
+          processed_at: string | null
+          processing_status: string | null
+          security_scan_status: string | null
+          updated_at: string
+          upload_status: string
+          uploaded_at: string
+          user_id: string
+        }
+        Insert: {
+          classification?: string | null
+          compliance_status?: string | null
+          created_at?: string
+          extracted_data?: Json | null
+          file_name: string
+          file_path: string
+          file_size: number
+          file_type: string
+          id?: string
+          metadata?: Json | null
+          processed_at?: string | null
+          processing_status?: string | null
+          security_scan_status?: string | null
+          updated_at?: string
+          upload_status?: string
+          uploaded_at?: string
+          user_id: string
+        }
+        Update: {
+          classification?: string | null
+          compliance_status?: string | null
+          created_at?: string
+          extracted_data?: Json | null
+          file_name?: string
+          file_path?: string
+          file_size?: number
+          file_type?: string
+          id?: string
+          metadata?: Json | null
+          processed_at?: string | null
+          processing_status?: string | null
+          security_scan_status?: string | null
+          updated_at?: string
+          upload_status?: string
+          uploaded_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           assigned_at: string
