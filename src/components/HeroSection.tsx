@@ -198,16 +198,29 @@ const HeroSection = () => {
               {/* Secondary depth layer */}
               <div className="absolute inset-2 bg-gradient-to-br from-white/5 to-transparent rounded-[2rem] transform -rotate-1 group-hover:rotate-0 transition-all duration-500"></div>
               
-              {/* Phone mockup with enhanced effects */}
+              {/* Phone mockup with seamless edge fading and gradient blending */}
               <div className="relative z-20 transform group-hover:scale-105 transition-all duration-700 ease-out">
-                <img
-                  src="/lovable-uploads/813385b3-918b-4473-806c-5aaf935282f5.png"
-                  alt="Divine Mobile app on smartphone showcasing AI-powered deals interface"
-                  className="max-w-[280px] sm:max-w-[320px] lg:max-w-[360px] xl:max-w-[420px] w-full h-auto filter drop-shadow-2xl"
-                  style={{
-                    filter: 'drop-shadow(0 25px 50px rgba(0, 0, 0, 0.3)) drop-shadow(0 10px 30px rgba(147, 51, 234, 0.2))'
-                  }}
-                />
+                <div className="relative">
+                  {/* Gradient mask overlay for seamless blending */}
+                  <div className="absolute inset-0 bg-gradient-radial from-transparent 60% to-blue-600/80 z-10 rounded-[2.5rem] pointer-events-none"></div>
+                  
+                  {/* Secondary feathering layer */}
+                  <div className="absolute inset-0 bg-gradient-radial from-transparent 45% via-transparent 70% to-purple-600/60 z-10 rounded-[2.5rem] pointer-events-none"></div>
+                  
+                  {/* Outer edge blur for smooth transition */}
+                  <div className="absolute inset-0 bg-gradient-radial from-transparent 50% to-teal-500/40 blur-sm z-10 rounded-[2.5rem] pointer-events-none"></div>
+                  
+                  <img
+                    src="/lovable-uploads/813385b3-918b-4473-806c-5aaf935282f5.png"
+                    alt="Divine Mobile app on smartphone showcasing AI-powered deals interface"
+                    className="max-w-[280px] sm:max-w-[320px] lg:max-w-[360px] xl:max-w-[420px] w-full h-auto relative z-0"
+                    style={{
+                      filter: 'drop-shadow(0 25px 50px rgba(0, 0, 0, 0.3)) drop-shadow(0 10px 30px rgba(147, 51, 234, 0.2))',
+                      maskImage: 'radial-gradient(circle at center, black 30%, black 50%, transparent 85%)',
+                      WebkitMaskImage: 'radial-gradient(circle at center, black 30%, black 50%, transparent 85%)'
+                    }}
+                  />
+                </div>
               </div>
               
               {/* Ambient glow effects */}
