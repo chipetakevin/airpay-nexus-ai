@@ -4,7 +4,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { MessageCircle, CreditCard, LogIn, LogOut, User } from 'lucide-react';
-import { navigationItems } from './NavigationConfig';
+import { navigationItems, getNavigationItems } from './NavigationConfig';
 import { useMobileAuth } from '@/hooks/useMobileAuth';
 import LoginModal from '../auth/LoginModal';
 import { useToast } from '@/hooks/use-toast';
@@ -16,10 +16,13 @@ interface DesktopNavigationProps {
 
 const DesktopNavigation = ({ isHomePage, handleQuickShopClick }: DesktopNavigationProps) => {
   const location = useLocation();
-  const { isAuthenticated, currentUser } = useMobileAuth();
+  const { isAuthenticated, currentUser, userType } = useMobileAuth();
   const [showLoginModal, setShowLoginModal] = useState(false);
   const { toast } = useToast();
   const isActive = (path: string) => location.pathname === path;
+  
+  // Get navigation items based on authentication and user type
+  const availableNavigationItems = getNavigationItems(isAuthenticated, userType);
 
   const handleLogout = () => {
     localStorage.removeItem('userAuthenticated');
@@ -45,7 +48,7 @@ const DesktopNavigation = ({ isHomePage, handleQuickShopClick }: DesktopNavigati
         
         {/* Main Navigation */}
         <nav className="flex items-center space-x-4 lg:space-x-6 xl:space-x-8 2xl:space-x-12">
-          {navigationItems
+          {availableNavigationItems
             .filter(item => {
               // Remove Home tab on desktop, keep essential items on homepage
               if (item.path === '/') return false;

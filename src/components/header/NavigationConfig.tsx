@@ -1,7 +1,17 @@
 
-import { Home, ShoppingCart, MessageCircle, Star, Phone, Store, Server, Rocket } from 'lucide-react';
+import { Home, ShoppingCart, MessageCircle, Star, Phone, Store, Server, Rocket, Satellite, Zap, Brain, CreditCard as Card } from 'lucide-react';
 
-export const navigationItems = [
+export interface NavigationItem {
+  path: string;
+  label: string;
+  icon: JSX.Element;
+  badge?: string;
+  isHighlight?: boolean;
+  requiresAuth?: boolean;
+  userTypes?: string[];
+}
+
+export const navigationItems: NavigationItem[] = [
   { 
     path: '/', 
     label: 'Home', 
@@ -42,3 +52,51 @@ export const navigationItems = [
     isHighlight: true
   }
 ];
+
+// Admin-specific navigation items
+export const adminNavigationItems: NavigationItem[] = [
+  { 
+    path: '/admin/addex-hub', 
+    label: 'Addex Hub Platform', 
+    icon: <Satellite className="w-4 h-4" />,
+    badge: 'TELECOM',
+    requiresAuth: true,
+    userTypes: ['admin']
+  },
+  { 
+    path: '/admin/api-toolkit', 
+    label: 'API Toolkit', 
+    icon: <Zap className="w-4 h-4" />,
+    badge: 'MNO',
+    requiresAuth: true,
+    userTypes: ['admin']
+  },
+  { 
+    path: '/admin/nerve-center', 
+    label: 'The Nerve Center', 
+    icon: <Brain className="w-4 h-4" />,
+    badge: 'NEURAL',
+    requiresAuth: true,
+    userTypes: ['admin']
+  },
+  { 
+    path: '/admin/onecard', 
+    label: 'OneCard Management', 
+    icon: <Card className="w-4 h-4" />,
+    badge: 'ADMIN',
+    requiresAuth: true,
+    userTypes: ['admin']
+  }
+];
+
+// Function to get navigation items based on user authentication and type
+export const getNavigationItems = (isAuthenticated: boolean, userType?: string): NavigationItem[] => {
+  let items = [...navigationItems];
+  
+  if (isAuthenticated && userType === 'admin') {
+    // Add admin-specific items after the regular navigation
+    items = [...items, ...adminNavigationItems];
+  }
+  
+  return items;
+};

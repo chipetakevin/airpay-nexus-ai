@@ -16,7 +16,10 @@ import MasterDashboard from "./pages/MasterDashboard";
 import USSDSystem from "./pages/USSDSystem";
 import DealsHub from "./pages/DealsHub";
 import DealsRedirect from "./pages/DealsRedirect";
-import NotFound from "./pages/NotFound";
+import AddexHub from "./pages/admin/AddexHub";
+import ApiToolkit from "./pages/admin/ApiToolkit";
+import NerveCenter from "./pages/admin/NerveCenter";
+import OneCardManagement from "./pages/admin/OneCardManagement";
 import DevineBaaS from "./pages/DevineBaaS";
 import DivineBaaS from "./pages/DivineBaaS";
 import BaaSPlatform from "./pages/BaaSPlatform";
@@ -35,6 +38,7 @@ import CustomerAuth from "./pages/CustomerAuth";
 import CustomerPortal from "./pages/CustomerPortal";
 import AdminDashboard from "./pages/AdminDashboard";
 import EnhancedVersionManagerPage from "./pages/EnhancedVersionManager";
+import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
 

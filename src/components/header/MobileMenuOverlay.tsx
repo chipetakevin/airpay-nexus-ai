@@ -4,7 +4,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { CreditCard, LogIn, LogOut, User } from 'lucide-react';
-import { navigationItems } from './NavigationConfig';
+import { navigationItems, getNavigationItems } from './NavigationConfig';
 import { useMobileAuth } from '@/hooks/useMobileAuth';
 import LoginModal from '../auth/LoginModal';
 import { useToast } from '@/hooks/use-toast';
@@ -18,10 +18,13 @@ interface MobileMenuOverlayProps {
 
 const MobileMenuOverlay = ({ isMenuOpen, closeMenu, isHomePage, handleQuickShopClick }: MobileMenuOverlayProps) => {
   const location = useLocation();
-  const { isAuthenticated, currentUser } = useMobileAuth();
+  const { isAuthenticated, currentUser, userType } = useMobileAuth();
   const [showLoginModal, setShowLoginModal] = useState(false);
   const { toast } = useToast();
   const isActive = (path: string) => location.pathname === path;
+
+  // Get navigation items based on authentication and user type
+  const availableNavigationItems = getNavigationItems(isAuthenticated, userType);
 
   const handleLogout = () => {
     localStorage.removeItem('userAuthenticated');
@@ -102,7 +105,7 @@ const MobileMenuOverlay = ({ isMenuOpen, closeMenu, isHomePage, handleQuickShopC
           </div>
 
           {/* Navigation Items */}
-          {navigationItems.map((item) => (
+          {availableNavigationItems.map((item) => (
             <Link
               key={item.path}
               to={item.path}
@@ -110,7 +113,9 @@ const MobileMenuOverlay = ({ isMenuOpen, closeMenu, isHomePage, handleQuickShopC
               className={`flex items-center gap-4 px-6 py-4 rounded-2xl transition-all duration-200 text-lg font-medium ${
                 isActive(item.path)
                   ? 'bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-lg transform scale-[1.02]'
-                  : 'text-blue-600 hover:bg-blue-50 border-2 border-transparent hover:border-blue-100'
+                  : item.requiresAuth && item.userTypes?.includes('admin') && userType === 'admin'
+                    ? 'text-purple-600 hover:bg-purple-50 border-2 border-transparent hover:border-purple-100 bg-gradient-to-r from-purple-50 to-indigo-50'
+                    : 'text-blue-600 hover:bg-blue-50 border-2 border-transparent hover:border-blue-100'
               }`}
             >
               <div className="flex items-center justify-center w-8 h-8">
@@ -120,8 +125,10 @@ const MobileMenuOverlay = ({ isMenuOpen, closeMenu, isHomePage, handleQuickShopC
               {item.badge && (
                 <Badge className={`text-xs px-3 py-1 ${
                   isActive(item.path) 
-                    ? 'bg-white/20 text-white border-white/30' 
-                    : 'bg-blue-100 text-blue-700'
+                    ? 'bg-white/20 text-white border-white/30'
+                    : item.requiresAuth && item.userTypes?.includes('admin') && userType === 'admin'
+                      ? 'bg-purple-100 text-purple-700'
+                      : 'bg-blue-100 text-blue-700'
                 }`}>
                   {item.badge}
                 </Badge>
