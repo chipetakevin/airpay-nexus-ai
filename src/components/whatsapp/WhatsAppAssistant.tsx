@@ -189,23 +189,27 @@ const WhatsAppAssistant = () => {
   };
 
   return (
-    <div className="bg-white rounded-t-3xl overflow-hidden flex flex-col h-[600px]">
-      <WhatsAppShoppingHeader 
-        isAuthenticated={isAuthenticated}
-        onExit={handleExitToHome}
-        onMinimize={handleMinimize}
-        onClose={handleClose}
-        isMinimized={isMinimized}
-      />
-      
-      {!isMinimized && (
-        <>
+    <div className="bg-white rounded-t-3xl overflow-hidden flex flex-col h-[600px] relative">
+      <div className="sticky top-0 z-10 bg-white border-b border-gray-100">
+        <WhatsAppShoppingHeader 
+          isAuthenticated={isAuthenticated}
+          onExit={handleExitToHome}
+          onMinimize={handleMinimize}
+          onClose={handleClose}
+          isMinimized={isMinimized}
+        />
+        
+        {!isMinimized && (
           <WhatsAppTabNavigation
             activeTab={activeTab}
             onTabChange={setActiveTab}
             cartCount={getCartCount()}
           />
-
+        )}
+      </div>
+      
+      {!isMinimized && (
+        <div className="flex-1 overflow-y-auto">
           {activeTab === 'shop' && (
             <ServiceAccessGate
               serviceName="WhatsApp shopping services"
@@ -225,7 +229,7 @@ const WhatsAppAssistant = () => {
           )}
 
           {activeTab === 'cart' && (
-            <div className="flex-1">
+            <div className="p-4">
               {isAuthenticated ? (
                 <WhatsAppCart 
                   items={cart}
@@ -250,7 +254,7 @@ const WhatsAppAssistant = () => {
           )}
 
           {activeTab === 'chat' && (
-            <div className="flex-1 p-4 text-center">
+            <div className="p-4 text-center">
               <div className="text-6xl mb-4">💬</div>
               <h3 className="text-lg font-medium text-gray-900 mb-2">Chat Support</h3>
               <p className="text-gray-600">
@@ -258,7 +262,7 @@ const WhatsAppAssistant = () => {
               </p>
             </div>
           )}
-        </>
+        </div>
       )}
     </div>
   );
