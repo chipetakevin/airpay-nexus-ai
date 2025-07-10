@@ -335,10 +335,10 @@ const AdminControlCenterFixed: React.FC<AdminControlCenterProps> = ({
               id="tab-overview"
               tabIndex={activeAdminTab === 'overview' || !activeAdminTab ? 0 : -1}
               className={`
-                rounded-lg px-4 py-3 font-medium transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2
+                rounded-lg px-4 py-3 font-medium transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 hover-scale
                 ${(activeAdminTab === 'overview' || !activeAdminTab) 
-                  ? 'bg-white shadow-lg border border-blue-200/30 text-blue-700' 
-                  : 'hover:bg-white/70 text-gray-600'
+                  ? 'bg-white shadow-lg border border-blue-200/30 text-blue-700 animate-scale-in' 
+                  : 'hover:bg-white/70 text-gray-600 hover:text-blue-600'
                 }
               `}
               onClick={() => {
@@ -346,7 +346,10 @@ const AdminControlCenterFixed: React.FC<AdminControlCenterProps> = ({
                 setActiveAdminTab('overview');
               }}
             >
-              The Nerve Center
+              <span className="flex items-center gap-2">
+                <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse" />
+                The Nerve Center
+              </span>
             </button>
             <button 
               role="tab"
@@ -355,10 +358,10 @@ const AdminControlCenterFixed: React.FC<AdminControlCenterProps> = ({
               id="tab-hub"
               tabIndex={activeAdminTab === 'hub' ? 0 : -1}
               className={`
-                rounded-lg px-4 py-3 font-medium transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2
+                rounded-lg px-4 py-3 font-medium transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 hover-scale
                 ${activeAdminTab === 'hub' 
-                  ? 'bg-white shadow-lg border border-blue-200/30 text-blue-700' 
-                  : 'hover:bg-white/70 text-gray-600'
+                  ? 'bg-white shadow-lg border border-blue-200/30 text-blue-700 animate-scale-in' 
+                  : 'hover:bg-white/70 text-gray-600 hover:text-blue-600'
                 }
               `}
               onClick={() => {
@@ -366,7 +369,10 @@ const AdminControlCenterFixed: React.FC<AdminControlCenterProps> = ({
                 setActiveAdminTab('hub');
               }}
             >
-              Addex Hub Platform
+              <span className="flex items-center gap-2">
+                <div className="w-2 h-2 bg-purple-500 rounded-full animate-pulse" />
+                Addex Hub Platform
+              </span>
             </button>
           </div>
 
@@ -374,7 +380,11 @@ const AdminControlCenterFixed: React.FC<AdminControlCenterProps> = ({
             role="tabpanel"
             id="tabpanel-overview"
             aria-labelledby="tab-overview"
-            className={`space-y-4 sm:space-y-6 pb-20 ${activeAdminTab === 'overview' || !activeAdminTab ? 'block' : 'hidden'}`}
+            className={`space-y-4 sm:space-y-6 pb-20 transition-all duration-300 ${
+              activeAdminTab === 'overview' || !activeAdminTab 
+                ? 'block animate-fade-in' 
+                : 'hidden'
+            }`}
           >
             {/* Addex Hub Platform Card - Mobile Optimized */}
             <div className="bg-white rounded-2xl shadow-xl border border-gray-100 p-4 sm:p-6">
@@ -512,7 +522,11 @@ const AdminControlCenterFixed: React.FC<AdminControlCenterProps> = ({
             role="tabpanel"
             id="tabpanel-hub"
             aria-labelledby="tab-hub"
-            className={`space-y-4 sm:space-y-6 pb-20 ${activeAdminTab === 'hub' ? 'block' : 'hidden'}`}
+            className={`space-y-4 sm:space-y-6 pb-20 transition-all duration-300 ${
+              activeAdminTab === 'hub' 
+                ? 'block animate-fade-in' 
+                : 'hidden'
+            }`}
           >
             {/* Addex Hub Platform Full Interface */}
             <div className="bg-white rounded-xl shadow-md border border-gray-100">

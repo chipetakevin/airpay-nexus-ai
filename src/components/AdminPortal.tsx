@@ -32,6 +32,7 @@ const AdminPortal: React.FC<AdminPortalProps> = ({ onAuthSuccess, showAdminBanne
   const [isLoading, setIsLoading] = useState(false);
   const [autofillCount, setAutofillCount] = useState(0);
   const [sessionChecked, setSessionChecked] = useState(false); // Prevent multiple checks
+  const [activeAdminTab, setActiveAdminTab] = useState('overview'); // Add state for active tab
 
   const adminEmail = 'kev***@divinemobile.co.za';
   const fullAdminEmail = 'kevin@divinemobile.co.za';
@@ -296,10 +297,18 @@ const AdminPortal: React.FC<AdminPortalProps> = ({ onAuthSuccess, showAdminBanne
           </div>
         </div>
 
-        {/* Replace complex tabs with simplified admin control center */}
+        {/* Enhanced admin control center with proper state management */}
         <AdminControlCenterFixed 
-          activeAdminTab="hub"
-          setActiveAdminTab={(tab: string) => console.log(`Admin tab switched to: ${tab}`)}
+          activeAdminTab={activeAdminTab}
+          setActiveAdminTab={(tab: string) => {
+            console.log(`🔄 Admin tab switched to: ${tab}`);
+            setActiveAdminTab(tab);
+            toast({
+              title: "Tab Switched",
+              description: `Switched to ${tab === 'overview' ? 'The Nerve Center' : 'Addex Hub Platform'}`,
+              duration: 2000,
+            });
+          }}
         />
       </div>
     );
