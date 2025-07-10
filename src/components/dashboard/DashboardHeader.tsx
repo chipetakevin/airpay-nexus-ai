@@ -48,11 +48,14 @@ const DashboardHeader = () => {
                 </div>
               )}
 
-              {/* Home Button */}
+              {/* Home Button - Consistent with Portal */}
               <Link to="/">
-                <div className="bg-blue-50 hover:bg-blue-100 text-blue-600 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full flex items-center gap-1.5 sm:gap-2 transition-all duration-200 shadow-sm hover:shadow-md">
-                  <Home className="w-4 h-4" />
-                  <span className="text-xs sm:text-sm font-medium hidden sm:inline">Home</span>
+                <div className="w-12 h-12 sm:w-14 sm:h-14 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300 group">
+                  <img 
+                    src="/lovable-uploads/788fddcb-574c-4f1d-9c73-54cc003a95d1.png" 
+                    alt="Divine Mobile Home"
+                    className="w-7 h-7 sm:w-8 sm:h-8 object-contain group-hover:scale-110 transition-transform duration-300"
+                  />
                 </div>
               </Link>
 

@@ -115,10 +115,13 @@ const DGXStation = () => {
             </div>
           </div>
           <Link to="/">
-            <Button variant="outline" className="flex items-center gap-2 text-sm">
-              <Home className="w-4 h-4" />
-              Home
-            </Button>
+            <div className="w-12 h-12 sm:w-14 sm:h-14 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300 group">
+              <img 
+                src="/lovable-uploads/788fddcb-574c-4f1d-9c73-54cc003a95d1.png" 
+                alt="Divine Mobile Home"
+                className="w-7 h-7 sm:w-8 sm:h-8 object-contain group-hover:scale-110 transition-transform duration-300"
+              />
+            </div>
           </Link>
         </div>
 
