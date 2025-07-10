@@ -58,18 +58,18 @@ const ModernAdminTabs: React.FC<ModernAdminTabsProps> = ({
       {/* Desktop: Horizontal tabs */}
       <div className="hidden md:block">
         <div className={cn(
-          "inline-flex h-auto items-center justify-center rounded-xl p-1.5 shadow-lg border backdrop-blur-sm",
+          "w-full flex items-center justify-center rounded-xl p-1.5 shadow-lg border backdrop-blur-sm overflow-hidden",
           variant === 'primary'
             ? "bg-gradient-to-r from-primary/5 to-primary/10 border-primary/20"
             : "bg-gradient-to-r from-muted/50 to-muted/70 border-border/50"
         )}>
-          <div className="flex flex-wrap gap-1">
+          <div className="flex items-center justify-center gap-0.5 w-full max-w-full overflow-x-auto scrollbar-hide">
             {tabs.map((tab) => (
               <button
                 key={tab.id}
                 onClick={() => onTabChange(tab.id)}
                 className={cn(
-                  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-lg px-4 py-3 text-sm font-medium transition-all duration-300 cursor-pointer",
+                  "inline-flex items-center justify-center gap-1.5 whitespace-nowrap rounded-lg px-3 py-2.5 text-xs lg:text-sm font-medium transition-all duration-300 cursor-pointer flex-shrink-0 min-w-fit",
                   activeTab === tab.id
                     ? variant === 'primary'
                       ? "bg-primary text-primary-foreground shadow-lg shadow-primary/20 border border-primary/30"
@@ -77,10 +77,10 @@ const ModernAdminTabs: React.FC<ModernAdminTabsProps> = ({
                     : "hover:bg-background/70 hover:shadow-md text-muted-foreground hover:text-foreground"
                 )}
               >
-                <span>{tab.label}</span>
+                <span className="truncate">{tab.label}</span>
                 {tab.count && (
                   <span className={cn(
-                    "px-2 py-1 rounded-full text-xs font-medium",
+                    "px-1.5 py-0.5 rounded-full text-xs font-medium flex-shrink-0",
                     activeTab === tab.id
                       ? variant === 'primary'
                         ? "bg-primary-foreground/20 text-primary-foreground"
