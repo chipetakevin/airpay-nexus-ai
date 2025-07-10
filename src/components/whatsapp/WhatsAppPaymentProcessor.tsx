@@ -4,6 +4,8 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Shield, CreditCard, Smartphone, CheckCircle, Lock, Globe } from 'lucide-react';
 import { CartItem } from '@/hooks/useWhatsAppShopping';
+import { supabase } from '@/integrations/supabase/client';
+import EnhancedReceiptManager from './EnhancedReceiptManager';
 
 interface WhatsAppPaymentProcessorProps {
   items: CartItem[];
@@ -24,7 +26,8 @@ const WhatsAppPaymentProcessor: React.FC<WhatsAppPaymentProcessorProps> = ({
 }) => {
   const [selectedMethod, setSelectedMethod] = useState<string>('whatsapp-pay');
   const [isProcessing, setIsProcessing] = useState(false);
-  const [step, setStep] = useState<'select' | 'verify' | 'complete'>('select');
+  const [step, setStep] = useState<'select' | 'verify' | 'complete' | 'receipt'>('select');
+  const [finalReceiptData, setFinalReceiptData] = useState<any>(null);
 
   const translations = {
     en: {
@@ -124,11 +127,123 @@ const WhatsAppPaymentProcessor: React.FC<WhatsAppPaymentProcessorProps> = ({
       amount: total,
       currency: 'ZAR',
       timestamp: new Date().toISOString(),
-      securityVerified: true
+      securityVerified: true,
+      status: 'completed', // Ensure receipt generation triggers
+      items
     };
 
+    // Generate receipt data and show enhanced receipt manager
+    const receiptData = await generateReceiptData(paymentData);
+    setFinalReceiptData(receiptData);
+    setStep('receipt');
+    
     onPaymentComplete(paymentData);
     setIsProcessing(false);
+  };
+
+  const generateReceiptData = async (paymentData: any) => {
+    try {
+      // Extract recipient info from customer data or fallback to sample data
+      const recipientPhone = customerData?.phone || '+27832466539';
+      const recipientName = customerData?.name || 'Kevin Chipeta';
+      
+      // Generate receipt data
+      const receiptData = {
+        transactionId: paymentData.transactionId,
+        customerName: recipientName,
+        customerPhone: recipientPhone,
+        items: items.map(item => ({
+          name: item.name,
+          quantity: item.quantity,
+          price: item.price,
+          network: item.network || 'Addex-Hub',
+          type: item.type || 'airtime',
+          amount: item.amount || item.price
+        })),
+        total: paymentData.amount,
+        timestamp: paymentData.timestamp,
+        paymentMethod: paymentData.method,
+        status: 'Completed'
+      };
+
+      return receiptData;
+      
+    } catch (error) {
+      console.error('Auto receipt generation failed:', error);
+    }
+  };
+
+  const generateWhatsAppReceiptMessage = (data: any) => {
+    const itemsList = data.items.map((item: any) => 
+      `${item.name} (${item.quantity}x) - R${item.price * item.quantity}`
+    ).join('\n');
+
+    return `🌟 SECURE TRANSACTION COMPLETED 📱
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+✅ RECEIPT CONFIRMATION
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Transaction ID: ${data.transactionId}
+Customer: ${data.customerName}
+Phone: ${data.customerPhone}
+Date: ${new Date(data.timestamp).toLocaleString('en-ZA', { timeZone: 'Africa/Johannesburg' })} SAST
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🛒 ITEMS PURCHASED
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+${itemsList}
+
+Total: R${data.total}
+Payment Method: ${data.paymentMethod}
+Status: ${data.status} ✅
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📞 SUPPORT
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Support: +27 100 2827
+Website: www.addex-hub.co.za
+
+🌟 Thank you for your purchase! 🌟
+⚡ Fast • 🔒 Secure • 🎯 Reliable`;
+  };
+
+  const autoSaveReceipt = async (receiptData: any) => {
+    try {
+      // Save to device storage (localStorage)
+      const savedReceipts = JSON.parse(localStorage.getItem('receipts') || '[]');
+      savedReceipts.push({
+        ...receiptData,
+        savedAt: new Date().toISOString(),
+        id: `receipt_${Date.now()}`
+      });
+      localStorage.setItem('receipts', JSON.stringify(savedReceipts));
+
+      // Save to Supabase storage if connected
+      try {
+        // Generate PDF-like text content
+        const receiptContent = generateWhatsAppReceiptMessage(receiptData);
+        const blob = new Blob([receiptContent], { type: 'text/plain' });
+        
+        // Upload to storage
+        const fileName = `receipt_${receiptData.transactionId}_${Date.now()}.txt`;
+        const { data, error } = await supabase.storage
+          .from('documents')
+          .upload(`receipts/${fileName}`, blob);
+
+        if (!error) {
+          console.log('Receipt saved to Supabase storage:', data);
+        }
+      } catch (storageError) {
+        console.log('Supabase storage save failed, local save successful');
+      }
+
+      console.log('Receipt auto-saved successfully');
+    } catch (error) {
+      console.error('Receipt auto-save failed:', error);
+    }
   };
 
   if (step === 'complete') {
@@ -137,9 +252,18 @@ const WhatsAppPaymentProcessor: React.FC<WhatsAppPaymentProcessorProps> = ({
         <CardContent className="text-center p-6">
           <CheckCircle className="w-16 h-16 text-green-600 mx-auto mb-4" />
           <h3 className="text-xl font-bold text-green-600 mb-2">{t.paymentSuccess}</h3>
-          <p className="text-gray-600">Your receipt has been sent to WhatsApp</p>
+          <p className="text-gray-600">Preparing your receipt...</p>
         </CardContent>
       </Card>
+    );
+  }
+
+  if (step === 'receipt' && finalReceiptData) {
+    return (
+      <EnhancedReceiptManager
+        receiptData={finalReceiptData}
+        onClose={onBack}
+      />
     );
   }
 
