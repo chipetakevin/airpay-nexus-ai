@@ -1,5 +1,5 @@
 
-import { Home, ShoppingCart, MessageCircle, Star, Phone } from 'lucide-react';
+import { Home, ShoppingCart, MessageCircle, Star, Phone, Store, Server, Rocket } from 'lucide-react';
 
 export const navigationItems = [
   { 
@@ -29,5 +29,16 @@ export const navigationItems = [
     path: '/portal', 
     label: 'Portal', 
     icon: <Star className="w-4 h-4" />
+  },
+  { 
+    path: '/dgx-station', 
+    label: 'DGX Station', 
+    icon: <Server className="w-4 h-4" />
+  },
+  { 
+    path: '/portal?tab=registration', 
+    label: 'Get Started', 
+    icon: <Rocket className="w-4 h-4" />,
+    isHighlight: true
   }
 ];
