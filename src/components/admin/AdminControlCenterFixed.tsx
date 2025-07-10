@@ -298,26 +298,87 @@ const AdminControlCenterFixed: React.FC<AdminControlCenterProps> = ({
           console.log('🔄 Tab changed to:', value);
           setActiveAdminTab(value);
         }} className="w-full">
-          <TabsList className="grid grid-cols-2 mb-6 h-auto p-1 bg-gradient-to-r from-gray-50 to-gray-100 rounded-xl shadow-lg border border-gray-200/50">
-            <TabsTrigger 
-              value="overview" 
-              className="data-[state=active]:bg-white data-[state=active]:shadow-lg data-[state=active]:border data-[state=active]:border-blue-200/30 rounded-lg px-4 py-3 font-medium transition-all duration-300"
+          {/* Production-Ready Accessible Tabs */}
+          <div 
+            role="tablist" 
+            aria-label="Admin Portal Navigation"
+            className="grid grid-cols-2 mb-6 h-auto p-1 bg-gradient-to-r from-gray-50 to-gray-100 rounded-xl shadow-lg border border-gray-200/50"
+            onKeyDown={(e) => {
+              const tabs = ['overview', 'hub'];
+              const currentIndex = tabs.indexOf(activeAdminTab || 'overview');
+              
+              switch (e.key) {
+                case 'ArrowRight':
+                case 'ArrowDown':
+                  e.preventDefault();
+                  const nextIndex = (currentIndex + 1) % tabs.length;
+                  setActiveAdminTab(tabs[nextIndex]);
+                  break;
+                case 'ArrowLeft':
+                case 'ArrowUp':
+                  e.preventDefault();
+                  const prevIndex = currentIndex === 0 ? tabs.length - 1 : currentIndex - 1;
+                  setActiveAdminTab(tabs[prevIndex]);
+                  break;
+                case 'Home':
+                  e.preventDefault();
+                  setActiveAdminTab(tabs[0]);
+                  break;
+                case 'End':
+                  e.preventDefault();
+                  setActiveAdminTab(tabs[tabs.length - 1]);
+                  break;
+              }
+            }}
+          >
+            <button 
+              role="tab"
+              aria-selected={activeAdminTab === 'overview' || !activeAdminTab}
+              aria-controls="tabpanel-overview"
+              id="tab-overview"
+              tabIndex={activeAdminTab === 'overview' || !activeAdminTab ? 0 : -1}
+              className={`
+                rounded-lg px-4 py-3 font-medium transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2
+                ${(activeAdminTab === 'overview' || !activeAdminTab) 
+                  ? 'bg-white shadow-lg border border-blue-200/30 text-blue-700' 
+                  : 'hover:bg-white/70 text-gray-600'
+                }
+              `}
+              onClick={() => {
+                console.log('🧠 The Nerve Center tab clicked');
+                setActiveAdminTab('overview');
+              }}
             >
               The Nerve Center
-            </TabsTrigger>
-            <TabsTrigger 
-              value="hub" 
-              className="data-[state=active]:bg-white data-[state=active]:shadow-lg data-[state=active]:border data-[state=active]:border-blue-200/30 rounded-lg px-4 py-3 font-medium transition-all duration-300 cursor-pointer hover:bg-white/70"
+            </button>
+            <button 
+              role="tab"
+              aria-selected={activeAdminTab === 'hub'}
+              aria-controls="tabpanel-hub"
+              id="tab-hub"
+              tabIndex={activeAdminTab === 'hub' ? 0 : -1}
+              className={`
+                rounded-lg px-4 py-3 font-medium transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2
+                ${activeAdminTab === 'hub' 
+                  ? 'bg-white shadow-lg border border-blue-200/30 text-blue-700' 
+                  : 'hover:bg-white/70 text-gray-600'
+                }
+              `}
               onClick={() => {
-                console.log('🚀 Addex Hub Platform tab clicked directly');
+                console.log('🚀 Addex Hub Platform tab clicked');
                 setActiveAdminTab('hub');
               }}
             >
               Addex Hub Platform
-            </TabsTrigger>
-          </TabsList>
+            </button>
+          </div>
 
-          <TabsContent value="overview" className="space-y-4 sm:space-y-6 pb-20">
+          <div 
+            role="tabpanel"
+            id="tabpanel-overview"
+            aria-labelledby="tab-overview"
+            className={`space-y-4 sm:space-y-6 pb-20 ${activeAdminTab === 'overview' || !activeAdminTab ? 'block' : 'hidden'}`}
+          >
             {/* Addex Hub Platform Card - Mobile Optimized */}
             <div className="bg-white rounded-2xl shadow-xl border border-gray-100 p-4 sm:p-6">
               <AdminPlatformBranding size="medium" showSubtitle={true} />
@@ -448,9 +509,14 @@ const AdminControlCenterFixed: React.FC<AdminControlCenterProps> = ({
                 </Button>
               </div>
             </div>
-          </TabsContent>
+          </div>
 
-          <TabsContent value="hub" className="space-y-4 sm:space-y-6 pb-20">
+          <div 
+            role="tabpanel"
+            id="tabpanel-hub"
+            aria-labelledby="tab-hub"
+            className={`space-y-4 sm:space-y-6 pb-20 ${activeAdminTab === 'hub' ? 'block' : 'hidden'}`}
+          >
             {/* Addex Hub Platform Full Interface */}
             <div className="bg-white rounded-xl shadow-md border border-gray-100">
               <div className="bg-gradient-to-r from-blue-50 to-purple-50 px-4 sm:px-6 py-3 sm:py-4 border-b rounded-t-xl">
@@ -465,7 +531,7 @@ const AdminControlCenterFixed: React.FC<AdminControlCenterProps> = ({
                 />
               </div>
             </div>
-          </TabsContent>
+          </div>
 
         </Tabs>
       </div>
