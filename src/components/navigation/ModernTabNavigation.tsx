@@ -85,14 +85,14 @@ const ModernTabNavigation = ({
     <div className="w-full max-w-7xl mx-auto px-3 sm:px-4 lg:px-6 mb-6 sm:mb-8">
       {/* Enhanced Header Section */}
       <div className="text-center mb-6 sm:mb-8">
-        <div className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-primary/10 to-secondary/10 rounded-full border border-border/50 mb-3">
-          <div className="w-2 h-2 bg-primary rounded-full animate-pulse"></div>
-          <span className="text-sm font-medium text-foreground">Platform Navigation</span>
+        <div className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-50 to-purple-50 rounded-full border border-gray-200 mb-3">
+          <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
+          <span className="text-sm font-medium text-gray-700">Platform Navigation</span>
         </div>
-        <p className="text-muted-foreground text-sm">Select a service to continue</p>
+        <p className="text-gray-500 text-sm">Select a service to continue</p>
       </div>
 
-      {/* Enhanced Mobile: Dynamic Grid with improved spacing and visual hierarchy */}
+      {/* Mobile: Enhanced 2-column grid */}
       <div className="grid grid-cols-2 gap-3 sm:hidden">
         {tabs.map((tab) => {
           const isActive = activeTab === tab.value;
@@ -102,21 +102,21 @@ const ModernTabNavigation = ({
           return (
             <Card 
               key={tab.value}
-              className={cn(
-                "transition-all duration-300 cursor-pointer min-h-[110px] flex flex-col items-center justify-center p-3 relative overflow-hidden rounded-xl",
-                "hover:shadow-lg hover:-translate-y-0.5 mobile-touch-target",
-                "focus:outline-none focus:ring-2 focus:ring-primary/50 focus:ring-offset-2",
-                getTabStyles(tab),
-                !isAllowed && "opacity-60 cursor-not-allowed",
-                isActive && "ring-2 ring-primary/30 ring-offset-1 shadow-lg",
-                tab.value === 'admin-reg' && 'ring-1 ring-red-200 border-red-200'
-              )}
+              className={`
+                transition-all duration-300 cursor-pointer min-h-[110px] 
+                flex flex-col items-center justify-center p-3 relative overflow-hidden 
+                rounded-xl border-2 shadow-sm hover:shadow-lg hover:-translate-y-1
+                ${!isAllowed ? 'opacity-60 cursor-not-allowed' : ''}
+                ${isActive ? 'ring-2 ring-blue-400 ring-offset-1 shadow-lg scale-[1.02]' : ''}
+                ${getTabStyles(tab)}
+                ${tab.value === 'admin-reg' ? 'ring-1 ring-red-200 border-red-200' : ''}
+              `}
               onClick={() => handleTabClick(tab)}
               role="button"
               tabIndex={0}
               aria-label={`${tab.label} - ${tab.description}`}
             >
-              {/* Background Gradient Effect */}
+              {/* Active indicator overlay */}
               {isActive && (
                 <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent pointer-events-none" />
               )}
@@ -128,11 +128,10 @@ const ModernTabNavigation = ({
                 )}
               </div>
               
-              <div className="text-center w-full max-w-full px-1 relative z-10">
-                <div className={cn(
-                  "text-sm font-bold leading-tight mb-1 flex items-center justify-center gap-1",
-                  isNerveCenter && "text-shadow"
-                )}>
+              <div className="text-center w-full px-1 relative z-10">
+                <div className={`text-sm font-bold leading-tight mb-1 flex items-center justify-center gap-1 ${
+                  isNerveCenter ? 'text-shadow' : ''
+                }`}>
                   <span className="truncate">{tab.label}</span>
                   {isNerveCenter && (
                     <Badge className="text-[9px] px-1.5 py-0.5 h-4 bg-white/20 text-current border-white/30 font-bold backdrop-blur-sm">
@@ -145,11 +144,10 @@ const ModernTabNavigation = ({
                     </Badge>
                   )}
                 </div>
-                <div className={cn(
-                  "text-xs leading-tight opacity-80",
+                <div className={`text-xs leading-tight opacity-80 ${
                   isNerveCenter && isActive ? 'text-blue-100' : 
-                  isNerveCenter ? 'text-blue-700' : 'text-muted-foreground'
-                )}>
+                  isNerveCenter ? 'text-blue-700' : 'text-gray-500'
+                }`}>
                   {tab.description}
                 </div>
               </div>
@@ -166,7 +164,7 @@ const ModernTabNavigation = ({
         })}
       </div>
 
-      {/* Enhanced Tablet: 3 columns with improved visual design */}
+      {/* Tablet: Enhanced 3-column grid */}
       <div className="hidden sm:grid lg:hidden grid-cols-3 gap-4">
         {tabs.map((tab) => {
           const isActive = activeTab === tab.value;
@@ -176,20 +174,20 @@ const ModernTabNavigation = ({
           return (
             <Card 
               key={tab.value}
-              className={cn(
-                "transition-all duration-300 cursor-pointer min-h-[120px] flex flex-col items-center justify-center p-5 relative overflow-hidden rounded-xl",
-                "hover:shadow-xl hover:-translate-y-1",
-                "focus:outline-none focus:ring-2 focus:ring-primary/50 focus:ring-offset-2",
-                getTabStyles(tab),
-                !isAllowed && "opacity-60 cursor-not-allowed",
-                isActive && "ring-2 ring-primary/30 ring-offset-2 shadow-xl"
-              )}
+              className={`
+                transition-all duration-300 cursor-pointer min-h-[120px] 
+                flex flex-col items-center justify-center p-5 relative overflow-hidden 
+                rounded-xl border-2 shadow-md hover:shadow-xl hover:-translate-y-1
+                ${!isAllowed ? 'opacity-60 cursor-not-allowed' : ''}
+                ${isActive ? 'ring-2 ring-blue-400 ring-offset-2 shadow-xl transform scale-[1.02]' : ''}
+                ${getTabStyles(tab)}
+              `}
               onClick={() => handleTabClick(tab)}
               role="button"
               tabIndex={0}
               aria-label={`${tab.label} - ${tab.description}`}
             >
-              {/* Background Gradient Effect */}
+              {/* Active indicator overlay */}
               {isActive && (
                 <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent pointer-events-none" />
               )}
@@ -202,10 +200,9 @@ const ModernTabNavigation = ({
               </div>
               
               <div className="text-center max-w-full px-2 relative z-10">
-                <div className={cn(
-                  "text-base font-bold leading-tight mb-2 flex items-center justify-center gap-2",
-                  isNerveCenter && "text-shadow"
-                )}>
+                <div className={`text-base font-bold leading-tight mb-2 flex items-center justify-center gap-2 ${
+                  isNerveCenter ? 'text-shadow' : ''
+                }`}>
                   <span className="truncate">{tab.label}</span>
                   {isNerveCenter && (
                     <Badge className="text-xs px-2 py-1 h-5 bg-white/20 text-current border-white/30 font-bold backdrop-blur-sm">
@@ -218,11 +215,10 @@ const ModernTabNavigation = ({
                     </Badge>
                   )}
                 </div>
-                <div className={cn(
-                  "text-sm leading-tight opacity-80",
+                <div className={`text-sm leading-tight opacity-80 ${
                   isNerveCenter && isActive ? 'text-blue-100' : 
-                  isNerveCenter ? 'text-blue-700' : 'text-muted-foreground'
-                )}>
+                  isNerveCenter ? 'text-blue-700' : 'text-gray-500'
+                }`}>
                   {tab.description}
                 </div>
               </div>
@@ -239,16 +235,15 @@ const ModernTabNavigation = ({
         })}
       </div>
 
-      {/* Desktop: Intelligent Grid Layout for Optimal Space Usage */}
+      {/* Desktop: Intelligent grid layout */}
       <div className="hidden lg:block">
         <div className="relative max-w-full">
-          {/* Adaptive Grid Container */}
-          <div className={cn(
-            "grid gap-4 max-h-[75vh] overflow-y-auto scrollbar-thin scrollbar-track-transparent scrollbar-thumb-gray-300 hover:scrollbar-thumb-gray-400 pr-2",
-            tabs.length <= 8 ? "grid-cols-4" :
-            tabs.length <= 12 ? "grid-cols-4 xl:grid-cols-6" :
-            "grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6"
-          )}>
+          <div className={`
+            grid gap-4 max-h-[75vh] overflow-y-auto pr-2
+            ${tabs.length <= 8 ? "grid-cols-4" :
+              tabs.length <= 12 ? "grid-cols-4 xl:grid-cols-6" :
+              "grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6"}
+          `}>
             {tabs.map((tab) => {
               const isActive = activeTab === tab.value;
               const isAllowed = isTabAllowed(tab.value);
@@ -257,25 +252,25 @@ const ModernTabNavigation = ({
               return (
                 <Card 
                   key={tab.value}
-                  className={cn(
-                    "transition-all duration-300 cursor-pointer min-h-[110px] w-full flex flex-col items-center justify-center p-4 relative overflow-hidden rounded-xl",
-                    "hover:shadow-xl hover:-translate-y-1 group",
-                    "focus:outline-none focus:ring-2 focus:ring-primary/50 focus:ring-offset-2",
-                    getTabStyles(tab),
-                    !isAllowed && "opacity-60 cursor-not-allowed",
-                    isActive && "ring-2 ring-primary/30 ring-offset-2 shadow-xl transform scale-[1.02]"
-                  )}
+                  className={`
+                    transition-all duration-300 cursor-pointer min-h-[110px] w-full
+                    flex flex-col items-center justify-center p-4 relative overflow-hidden 
+                    rounded-xl border-2 shadow-md hover:shadow-xl hover:-translate-y-1 group
+                    ${!isAllowed ? 'opacity-60 cursor-not-allowed' : ''}
+                    ${isActive ? 'ring-2 ring-blue-400 ring-offset-2 shadow-xl transform scale-[1.02]' : ''}
+                    ${getTabStyles(tab)}
+                  `}
                   onClick={() => handleTabClick(tab)}
                   role="button"
                   tabIndex={0}
                   aria-label={`${tab.label} - ${tab.description}`}
                 >
-                  {/* Background Gradient Effect */}
+                  {/* Active indicator overlay */}
                   {isActive && (
                     <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent pointer-events-none" />
                   )}
                   
-                  {/* Hover Effect Overlay */}
+                  {/* Hover effect overlay */}
                   <div className="absolute inset-0 bg-gradient-to-t from-black/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
                   
                   <div className="text-2xl mb-2 flex items-center gap-1 relative z-10">
@@ -286,10 +281,9 @@ const ModernTabNavigation = ({
                   </div>
                   
                   <div className="text-center w-full px-2 relative z-10">
-                    <div className={cn(
-                      "text-sm font-bold leading-tight mb-1 w-full flex items-center justify-center gap-1",
-                      isNerveCenter && "text-shadow"
-                    )}>
+                    <div className={`text-sm font-bold leading-tight mb-1 w-full flex items-center justify-center gap-1 ${
+                      isNerveCenter ? 'text-shadow' : ''
+                    }`}>
                       <span className="truncate max-w-full">{tab.label}</span>
                       {isNerveCenter && (
                         <Badge className="text-[9px] px-1 py-0.5 h-4 bg-white/20 text-current border-white/30 font-bold backdrop-blur-sm whitespace-nowrap">
@@ -302,11 +296,10 @@ const ModernTabNavigation = ({
                         </Badge>
                       )}
                     </div>
-                    <div className={cn(
-                      "text-xs leading-tight w-full opacity-80",
+                    <div className={`text-xs leading-tight w-full opacity-80 ${
                       isNerveCenter && isActive ? 'text-blue-100' : 
-                      isNerveCenter ? 'text-blue-700' : 'text-muted-foreground'
-                    )}>
+                      isNerveCenter ? 'text-blue-700' : 'text-gray-500'
+                    }`}>
                       <span className="block truncate">{tab.description}</span>
                     </div>
                   </div>
@@ -326,17 +319,17 @@ const ModernTabNavigation = ({
           {/* Scroll Indicators */}
           {tabs.length > 12 && (
             <>
-              <div className="absolute top-0 left-0 right-0 h-6 bg-gradient-to-b from-background to-transparent pointer-events-none z-10"></div>
-              <div className="absolute bottom-0 left-0 right-0 h-6 bg-gradient-to-t from-background to-transparent pointer-events-none z-10"></div>
+              <div className="absolute top-0 left-0 right-0 h-6 bg-gradient-to-b from-white to-transparent pointer-events-none z-10"></div>
+              <div className="absolute bottom-0 left-0 right-0 h-6 bg-gradient-to-t from-white to-transparent pointer-events-none z-10"></div>
             </>
           )}
         </div>
         
         {/* Enhanced Tab Status Display */}
         <div className="text-center mt-4">
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-muted/50 rounded-full border">
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-gray-50 rounded-full border border-gray-200">
             <div className="w-1.5 h-1.5 bg-green-500 rounded-full"></div>
-            <p className="text-xs text-muted-foreground font-medium">
+            <p className="text-xs text-gray-600 font-medium">
               {tabs.filter(tab => isTabAllowed(tab.value)).length} of {tabs.length} services available
             </p>
           </div>
