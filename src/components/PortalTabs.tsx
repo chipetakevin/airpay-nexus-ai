@@ -198,7 +198,7 @@ const PortalTabs = ({
       value: 'documentation',
       label: 'Docs',
       icon: '📋',
-      description: 'MVNE v3.0',
+      description: 'MVNE v4.0',
       color: 'blue',
       adminOnly: true
     },
