@@ -63,6 +63,96 @@
     /* Base styles for inactive tabs */
   }
 
+  /* Orange tab styles */
+  .tab-orange-active {
+    background: hsl(var(--tab-orange));
+    color: white;
+    border-color: hsl(var(--tab-orange));
+  }
+  
+  .tab-orange-inactive {
+    background: hsl(var(--tab-orange-light));
+    color: hsl(var(--tab-orange));
+    border-color: hsl(var(--tab-orange-muted));
+  }
+  
+  .tab-orange-hover:hover {
+    background: hsl(var(--tab-orange-muted));
+    border-color: hsl(var(--tab-orange));
+  }
+
+  /* Purple tab styles */
+  .tab-purple-active {
+    background: hsl(var(--tab-purple));
+    color: white;
+    border-color: hsl(var(--tab-purple));
+  }
+  
+  .tab-purple-inactive {
+    background: hsl(var(--tab-purple-light));
+    color: hsl(var(--tab-purple));
+    border-color: hsl(var(--tab-purple-muted));
+  }
+  
+  .tab-purple-hover:hover {
+    background: hsl(var(--tab-purple-muted));
+    border-color: hsl(var(--tab-purple));
+  }
+
+  /* Green tab styles */
+  .tab-green-active {
+    background: hsl(var(--tab-green));
+    color: white;
+    border-color: hsl(var(--tab-green));
+  }
+  
+  .tab-green-inactive {
+    background: hsl(var(--tab-green-light));
+    color: hsl(var(--tab-green));
+    border-color: hsl(var(--tab-green-muted));
+  }
+  
+  .tab-green-hover:hover {
+    background: hsl(var(--tab-green-muted));
+    border-color: hsl(var(--tab-green));
+  }
+
+  /* Blue tab styles */
+  .tab-blue-active {
+    background: hsl(var(--tab-blue));
+    color: white;
+    border-color: hsl(var(--tab-blue));
+  }
+  
+  .tab-blue-inactive {
+    background: hsl(var(--tab-blue-light));
+    color: hsl(var(--tab-blue));
+    border-color: hsl(var(--tab-blue-muted));
+  }
+  
+  .tab-blue-hover:hover {
+    background: hsl(var(--tab-blue-muted));
+    border-color: hsl(var(--tab-blue));
+  }
+
+  /* Yellow tab styles */
+  .tab-yellow-active {
+    background: hsl(var(--tab-yellow));
+    color: white;
+    border-color: hsl(var(--tab-yellow));
+  }
+  
+  .tab-yellow-inactive {
+    background: hsl(var(--tab-yellow-light));
+    color: hsl(var(--tab-yellow));
+    border-color: hsl(var(--tab-yellow-muted));
+  }
+  
+  .tab-yellow-hover:hover {
+    background: hsl(var(--tab-yellow-muted));
+    border-color: hsl(var(--tab-yellow));
+  }
+
   /* Teal tab styles */
   .tab-teal-active {
     background: hsl(var(--tab-teal));

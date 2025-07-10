@@ -87,7 +87,12 @@ const ModernTabNavigation = ({
     
     // Debug logging for Field Workers tab styling
     if (tab.value === 'field-workers') {
-      console.log(`🎨 Field Workers final style:`, selectedStyle);
+      console.log(`🎨 Field Workers final style:`, {
+        color: tab.color,
+        selectedStyle,
+        colorMapHasTeal: !!colorMap.teal,
+        fallbackToGray: !colorMap[tab.color]
+      });
     }
     
     return selectedStyle;
