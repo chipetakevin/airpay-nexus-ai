@@ -2,6 +2,7 @@
 import React from 'react';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { cn } from '@/lib/utils';
 
 interface TabItem {
   value: string;
@@ -81,203 +82,264 @@ const ModernTabNavigation = ({
   };
 
   return (
-    <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 mb-8 sm:mb-10">
-      {/* Enhanced Mobile: Dynamic Grid with improved spacing and visibility */}
-      <div className="grid grid-cols-2 gap-4 sm:hidden">
-        {tabs.map((tab) => (
-          <Card 
-            key={tab.value}
-            className={`
-              ${getTabStyles(tab)}
-              transition-all duration-300 cursor-pointer
-              min-h-[120px] flex flex-col items-center justify-center p-4
-              hover:shadow-xl hover:-translate-y-1 mobile-touch-target
-              focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2
-              overflow-hidden rounded-lg
-              ${tab.value === 'admin-reg' ? 'ring-2 ring-red-200 border-red-300' : ''}
-            `}
-            onClick={() => handleTabClick(tab)}
-            role="button"
-            tabIndex={0}
-            aria-label={`${tab.label} - ${tab.description}`}
-          >
-            <div className="text-2xl mb-2 flex items-center gap-2">
-              {tab.icon}
-              {tab.adminOnly && !isTabAllowed(tab.value) && (
-                <span className="text-sm">🔒</span>
-              )}
-            </div>
-            <div className="text-center w-full max-w-full px-2">
-              <div className={`text-sm font-bold leading-snug mb-1 max-w-full overflow-hidden flex items-center justify-center gap-1 ${
-                tab.value === 'admin' ? 'text-shadow' : ''
-              }`}>
-                {tab.label}
-                {tab.value === 'admin' && (
-                  <Badge className="text-xs px-1.5 py-0.5 h-5 bg-white/20 text-current border-white/30 font-bold backdrop-blur-sm">
-                    NEURAL
-                  </Badge>
-                )}
-                {tab.adminOnly && isTabAllowed(tab.value) && tab.value !== 'admin' && (
-                  <Badge className="text-xs px-1.5 py-0.5 h-5 bg-yellow-100 text-yellow-800 border-yellow-200 font-semibold">
-                    ADMIN
-                  </Badge>
-                )}
-              </div>
-              <div className={`text-xs leading-snug mt-1 max-w-full overflow-hidden ${
-                tab.value === 'admin' 
-                  ? (activeTab === tab.value ? 'text-blue-100' : 'text-blue-700') 
-                  : 'text-muted-foreground'
-              }`}>
-                {tab.description}
-              </div>
-            </div>
-            {activeTab === tab.value && (
-              <div className="flex items-center gap-1 mt-1.5">
-                <div className="w-1.5 h-1.5 bg-current rounded-full animate-pulse"></div>
-                <div className="w-1.5 h-1.5 bg-current rounded-full animate-pulse" style={{ animationDelay: '0.2s' }}></div>
-                <div className="w-1.5 h-1.5 bg-current rounded-full animate-pulse" style={{ animationDelay: '0.4s' }}></div>
-              </div>
-            )}
-          </Card>
-        ))}
+    <div className="w-full max-w-7xl mx-auto px-3 sm:px-4 lg:px-6 mb-6 sm:mb-8">
+      {/* Enhanced Header Section */}
+      <div className="text-center mb-6 sm:mb-8">
+        <div className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-primary/10 to-secondary/10 rounded-full border border-border/50 mb-3">
+          <div className="w-2 h-2 bg-primary rounded-full animate-pulse"></div>
+          <span className="text-sm font-medium text-foreground">Platform Navigation</span>
+        </div>
+        <p className="text-muted-foreground text-sm">Select a service to continue</p>
       </div>
 
-      {/* Enhanced Tablet: 3 columns with improved spacing and touch targets */}
-      <div className="hidden sm:grid lg:hidden grid-cols-3 gap-6">
-        {tabs.map((tab) => (
-          <Card 
-            key={tab.value}
-            className={`
-              ${getTabStyles(tab)}
-              transition-all duration-300 cursor-pointer
-              min-h-[130px] flex flex-col items-center justify-center p-6
-              hover:shadow-xl hover:-translate-y-1
-              focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2
-              overflow-hidden rounded-lg
-            `}
-            onClick={() => handleTabClick(tab)}
-            role="button"
-            tabIndex={0}
-            aria-label={`${tab.label} - ${tab.description}`}
-          >
-            <div className="text-3xl mb-3 flex items-center gap-2">
-              {tab.icon}
-              {tab.adminOnly && !isTabAllowed(tab.value) && (
-                <span className="text-lg">🔒</span>
+      {/* Enhanced Mobile: Dynamic Grid with improved spacing and visual hierarchy */}
+      <div className="grid grid-cols-2 gap-3 sm:hidden">
+        {tabs.map((tab) => {
+          const isActive = activeTab === tab.value;
+          const isAllowed = isTabAllowed(tab.value);
+          const isNerveCenter = tab.value === 'admin';
+          
+          return (
+            <Card 
+              key={tab.value}
+              className={cn(
+                "transition-all duration-300 cursor-pointer min-h-[110px] flex flex-col items-center justify-center p-3 relative overflow-hidden rounded-xl",
+                "hover:shadow-lg hover:-translate-y-0.5 mobile-touch-target",
+                "focus:outline-none focus:ring-2 focus:ring-primary/50 focus:ring-offset-2",
+                getTabStyles(tab),
+                !isAllowed && "opacity-60 cursor-not-allowed",
+                isActive && "ring-2 ring-primary/30 ring-offset-1 shadow-lg",
+                tab.value === 'admin-reg' && 'ring-1 ring-red-200 border-red-200'
               )}
-            </div>
-            <div className="text-center max-w-full px-2">
-              <div className={`text-base font-bold leading-snug mb-2 max-w-full overflow-hidden flex items-center justify-center gap-2 ${
-                tab.value === 'admin' ? 'text-shadow' : ''
-              }`}>
-                {tab.label}
-                {tab.value === 'admin' && (
-                  <Badge className="text-xs px-2 py-1 h-5 bg-white/20 text-current border-white/30 font-bold backdrop-blur-sm">
-                    NEURAL
-                  </Badge>
+              onClick={() => handleTabClick(tab)}
+              role="button"
+              tabIndex={0}
+              aria-label={`${tab.label} - ${tab.description}`}
+            >
+              {/* Background Gradient Effect */}
+              {isActive && (
+                <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent pointer-events-none" />
+              )}
+              
+              <div className="text-2xl mb-2 flex items-center gap-2 relative z-10">
+                {tab.icon}
+                {tab.adminOnly && !isAllowed && (
+                  <span className="text-sm opacity-70">🔒</span>
                 )}
-                {tab.adminOnly && isTabAllowed(tab.value) && tab.value !== 'admin' && (
-                  <Badge className="text-xs px-2 py-1 h-5 bg-yellow-100 text-yellow-800 border-yellow-200 font-semibold">
-                    ADMIN
-                  </Badge>
-                )}
               </div>
-              <div className={`text-sm leading-snug mt-1 max-w-full overflow-hidden ${
-                tab.value === 'admin' 
-                  ? (activeTab === tab.value ? 'text-blue-100' : 'text-blue-700') 
-                  : 'text-muted-foreground'
-              }`}>
-                {tab.description}
-              </div>
-            </div>
-            {activeTab === tab.value && (
-              <div className="flex items-center gap-1 mt-2">
-                <div className="w-1.5 h-1.5 bg-current rounded-full animate-pulse"></div>
-                <div className="w-1.5 h-1.5 bg-current rounded-full animate-pulse" style={{ animationDelay: '0.2s' }}></div>
-                <div className="w-1.5 h-1.5 bg-current rounded-full animate-pulse" style={{ animationDelay: '0.4s' }}></div>
-              </div>
-            )}
-          </Card>
-        ))}
-      </div>
-
-      {/* Desktop: Intelligent Vertical Navigation for All 13 Tabs */}
-      <div className="hidden lg:block">
-        <div className="relative max-w-full">
-          {/* Vertical Grid Container */}
-          <div className="grid grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-4 max-h-[70vh] overflow-y-auto scrollbar-thin scrollbar-track-transparent scrollbar-thumb-gray-300 hover:scrollbar-thumb-gray-400 pr-2">
-            {tabs.map((tab) => (
-              <Card 
-                key={tab.value}
-                className={`
-                  ${getTabStyles(tab)}
-                  transition-all duration-300 cursor-pointer
-                  min-h-[120px] w-full
-                  flex flex-col items-center justify-center p-4
-                  hover:shadow-xl hover:-translate-y-1
-                  overflow-hidden rounded-lg
-                  ${tab.value === activeTab ? 'ring-2 ring-primary ring-offset-2' : ''}
-                `}
-                onClick={() => handleTabClick(tab)}
-                role="button"
-                tabIndex={0}
-                aria-label={`${tab.label} - ${tab.description}`}
-              >
-                <div className="text-2xl mb-2 flex items-center gap-1">
-                  {tab.icon}
-                  {tab.adminOnly && !isTabAllowed(tab.value) && (
-                    <span className="text-sm">🔒</span>
+              
+              <div className="text-center w-full max-w-full px-1 relative z-10">
+                <div className={cn(
+                  "text-sm font-bold leading-tight mb-1 flex items-center justify-center gap-1",
+                  isNerveCenter && "text-shadow"
+                )}>
+                  <span className="truncate">{tab.label}</span>
+                  {isNerveCenter && (
+                    <Badge className="text-[9px] px-1.5 py-0.5 h-4 bg-white/20 text-current border-white/30 font-bold backdrop-blur-sm">
+                      AI
+                    </Badge>
+                  )}
+                  {tab.adminOnly && isAllowed && tab.value !== 'admin' && (
+                    <Badge className="text-[9px] px-1.5 py-0.5 h-4 bg-yellow-100 text-yellow-800 border-yellow-200 font-semibold">
+                      ADMIN
+                    </Badge>
                   )}
                 </div>
-                <div className="text-center w-full px-2">
-                  <div className={`text-sm font-bold leading-tight mb-1 w-full overflow-hidden flex items-center justify-center gap-1 ${
-                    tab.value === 'admin' ? 'text-shadow' : ''
-                  }`}>
-                    <span className="truncate max-w-full">{tab.label}</span>
-                    {tab.value === 'admin' && (
-                      <Badge className="text-[9px] px-1 py-0.5 h-4 bg-white/20 text-current border-white/30 font-bold backdrop-blur-sm whitespace-nowrap">
-                        NEURAL
-                      </Badge>
-                    )}
-                    {tab.adminOnly && isTabAllowed(tab.value) && tab.value !== 'admin' && (
-                      <Badge className="text-[9px] px-1 py-0.5 h-4 bg-yellow-100 text-yellow-800 border-yellow-200 font-semibold whitespace-nowrap">
-                        ADMIN
-                      </Badge>
-                    )}
-                  </div>
-                  <div className={`text-xs leading-tight mt-1 w-full overflow-hidden ${
-                    tab.value === 'admin' 
-                      ? (activeTab === tab.value ? 'text-blue-100' : 'text-blue-700') 
-                      : 'text-muted-foreground'
-                  }`}>
-                    <span className="truncate block">{tab.description}</span>
-                  </div>
+                <div className={cn(
+                  "text-xs leading-tight opacity-80",
+                  isNerveCenter && isActive ? 'text-blue-100' : 
+                  isNerveCenter ? 'text-blue-700' : 'text-muted-foreground'
+                )}>
+                  {tab.description}
                 </div>
-                {activeTab === tab.value && (
-                  <div className="flex items-center gap-1 mt-2">
-                    <div className="w-2 h-0.5 bg-current rounded-full"></div>
-                    <div className="w-4 h-0.5 bg-current rounded-full"></div>
-                    <div className="w-2 h-0.5 bg-current rounded-full"></div>
-                  </div>
+              </div>
+              
+              {isActive && (
+                <div className="flex items-center gap-1 mt-2 relative z-10">
+                  <div className="w-1 h-1 bg-current rounded-full animate-pulse"></div>
+                  <div className="w-1 h-1 bg-current rounded-full animate-pulse" style={{ animationDelay: '0.2s' }}></div>
+                  <div className="w-1 h-1 bg-current rounded-full animate-pulse" style={{ animationDelay: '0.4s' }}></div>
+                </div>
+              )}
+            </Card>
+          );
+        })}
+      </div>
+
+      {/* Enhanced Tablet: 3 columns with improved visual design */}
+      <div className="hidden sm:grid lg:hidden grid-cols-3 gap-4">
+        {tabs.map((tab) => {
+          const isActive = activeTab === tab.value;
+          const isAllowed = isTabAllowed(tab.value);
+          const isNerveCenter = tab.value === 'admin';
+          
+          return (
+            <Card 
+              key={tab.value}
+              className={cn(
+                "transition-all duration-300 cursor-pointer min-h-[120px] flex flex-col items-center justify-center p-5 relative overflow-hidden rounded-xl",
+                "hover:shadow-xl hover:-translate-y-1",
+                "focus:outline-none focus:ring-2 focus:ring-primary/50 focus:ring-offset-2",
+                getTabStyles(tab),
+                !isAllowed && "opacity-60 cursor-not-allowed",
+                isActive && "ring-2 ring-primary/30 ring-offset-2 shadow-xl"
+              )}
+              onClick={() => handleTabClick(tab)}
+              role="button"
+              tabIndex={0}
+              aria-label={`${tab.label} - ${tab.description}`}
+            >
+              {/* Background Gradient Effect */}
+              {isActive && (
+                <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent pointer-events-none" />
+              )}
+              
+              <div className="text-3xl mb-3 flex items-center gap-2 relative z-10">
+                {tab.icon}
+                {tab.adminOnly && !isAllowed && (
+                  <span className="text-lg opacity-70">🔒</span>
                 )}
-              </Card>
-            ))}
+              </div>
+              
+              <div className="text-center max-w-full px-2 relative z-10">
+                <div className={cn(
+                  "text-base font-bold leading-tight mb-2 flex items-center justify-center gap-2",
+                  isNerveCenter && "text-shadow"
+                )}>
+                  <span className="truncate">{tab.label}</span>
+                  {isNerveCenter && (
+                    <Badge className="text-xs px-2 py-1 h-5 bg-white/20 text-current border-white/30 font-bold backdrop-blur-sm">
+                      AI
+                    </Badge>
+                  )}
+                  {tab.adminOnly && isAllowed && tab.value !== 'admin' && (
+                    <Badge className="text-xs px-2 py-1 h-5 bg-yellow-100 text-yellow-800 border-yellow-200 font-semibold">
+                      ADMIN
+                    </Badge>
+                  )}
+                </div>
+                <div className={cn(
+                  "text-sm leading-tight opacity-80",
+                  isNerveCenter && isActive ? 'text-blue-100' : 
+                  isNerveCenter ? 'text-blue-700' : 'text-muted-foreground'
+                )}>
+                  {tab.description}
+                </div>
+              </div>
+              
+              {isActive && (
+                <div className="flex items-center gap-1 mt-3 relative z-10">
+                  <div className="w-1.5 h-1.5 bg-current rounded-full animate-pulse"></div>
+                  <div className="w-1.5 h-1.5 bg-current rounded-full animate-pulse" style={{ animationDelay: '0.2s' }}></div>
+                  <div className="w-1.5 h-1.5 bg-current rounded-full animate-pulse" style={{ animationDelay: '0.4s' }}></div>
+                </div>
+              )}
+            </Card>
+          );
+        })}
+      </div>
+
+      {/* Desktop: Intelligent Grid Layout for Optimal Space Usage */}
+      <div className="hidden lg:block">
+        <div className="relative max-w-full">
+          {/* Adaptive Grid Container */}
+          <div className={cn(
+            "grid gap-4 max-h-[75vh] overflow-y-auto scrollbar-thin scrollbar-track-transparent scrollbar-thumb-gray-300 hover:scrollbar-thumb-gray-400 pr-2",
+            tabs.length <= 8 ? "grid-cols-4" :
+            tabs.length <= 12 ? "grid-cols-4 xl:grid-cols-6" :
+            "grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6"
+          )}>
+            {tabs.map((tab) => {
+              const isActive = activeTab === tab.value;
+              const isAllowed = isTabAllowed(tab.value);
+              const isNerveCenter = tab.value === 'admin';
+              
+              return (
+                <Card 
+                  key={tab.value}
+                  className={cn(
+                    "transition-all duration-300 cursor-pointer min-h-[110px] w-full flex flex-col items-center justify-center p-4 relative overflow-hidden rounded-xl",
+                    "hover:shadow-xl hover:-translate-y-1 group",
+                    "focus:outline-none focus:ring-2 focus:ring-primary/50 focus:ring-offset-2",
+                    getTabStyles(tab),
+                    !isAllowed && "opacity-60 cursor-not-allowed",
+                    isActive && "ring-2 ring-primary/30 ring-offset-2 shadow-xl transform scale-[1.02]"
+                  )}
+                  onClick={() => handleTabClick(tab)}
+                  role="button"
+                  tabIndex={0}
+                  aria-label={`${tab.label} - ${tab.description}`}
+                >
+                  {/* Background Gradient Effect */}
+                  {isActive && (
+                    <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent pointer-events-none" />
+                  )}
+                  
+                  {/* Hover Effect Overlay */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
+                  
+                  <div className="text-2xl mb-2 flex items-center gap-1 relative z-10">
+                    {tab.icon}
+                    {tab.adminOnly && !isAllowed && (
+                      <span className="text-sm opacity-70">🔒</span>
+                    )}
+                  </div>
+                  
+                  <div className="text-center w-full px-2 relative z-10">
+                    <div className={cn(
+                      "text-sm font-bold leading-tight mb-1 w-full flex items-center justify-center gap-1",
+                      isNerveCenter && "text-shadow"
+                    )}>
+                      <span className="truncate max-w-full">{tab.label}</span>
+                      {isNerveCenter && (
+                        <Badge className="text-[9px] px-1 py-0.5 h-4 bg-white/20 text-current border-white/30 font-bold backdrop-blur-sm whitespace-nowrap">
+                          AI
+                        </Badge>
+                      )}
+                      {tab.adminOnly && isAllowed && tab.value !== 'admin' && (
+                        <Badge className="text-[9px] px-1 py-0.5 h-4 bg-yellow-100 text-yellow-800 border-yellow-200 font-semibold whitespace-nowrap">
+                          ADMIN
+                        </Badge>
+                      )}
+                    </div>
+                    <div className={cn(
+                      "text-xs leading-tight w-full opacity-80",
+                      isNerveCenter && isActive ? 'text-blue-100' : 
+                      isNerveCenter ? 'text-blue-700' : 'text-muted-foreground'
+                    )}>
+                      <span className="block truncate">{tab.description}</span>
+                    </div>
+                  </div>
+                  
+                  {isActive && (
+                    <div className="flex items-center gap-1 mt-2 relative z-10">
+                      <div className="w-2 h-0.5 bg-current rounded-full"></div>
+                      <div className="w-4 h-0.5 bg-current rounded-full"></div>
+                      <div className="w-2 h-0.5 bg-current rounded-full"></div>
+                    </div>
+                  )}
+                </Card>
+              );
+            })}
           </div>
           
-          {/* Scroll Indicators for vertical scroll */}
+          {/* Scroll Indicators */}
           {tabs.length > 12 && (
             <>
-              <div className="absolute top-0 left-0 right-0 h-4 bg-gradient-to-b from-gray-50 to-transparent pointer-events-none"></div>
-              <div className="absolute bottom-0 left-0 right-0 h-4 bg-gradient-to-t from-gray-50 to-transparent pointer-events-none"></div>
+              <div className="absolute top-0 left-0 right-0 h-6 bg-gradient-to-b from-background to-transparent pointer-events-none z-10"></div>
+              <div className="absolute bottom-0 left-0 right-0 h-6 bg-gradient-to-t from-background to-transparent pointer-events-none z-10"></div>
             </>
           )}
         </div>
         
-        {/* Tab Navigation Hint */}
-        <div className="text-center mt-2">
-          <p className="text-xs text-muted-foreground">
-            {tabs.length} admin tabs available
-          </p>
+        {/* Enhanced Tab Status Display */}
+        <div className="text-center mt-4">
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-muted/50 rounded-full border">
+            <div className="w-1.5 h-1.5 bg-green-500 rounded-full"></div>
+            <p className="text-xs text-muted-foreground font-medium">
+              {tabs.filter(tab => isTabAllowed(tab.value)).length} of {tabs.length} services available
+            </p>
+          </div>
         </div>
       </div>
     </div>
