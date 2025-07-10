@@ -2,8 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { CheckCircle, Phone, MessageCircle, User, Clock, Receipt } from 'lucide-react';
+import { CheckCircle, Phone, MessageCircle, User, Clock, Receipt, Download, FileText } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { openReceiptPDFInNewTab, downloadReceiptPDF } from '@/utils/receiptPDFGenerator';
 
 interface ReceiptData {
   transactionId: string;
@@ -43,18 +44,32 @@ const WhatsAppReceiptDeliveryFlow: React.FC<WhatsAppReceiptDeliveryFlowProps> = 
     }
   }, [step]);
 
-  const handleRegisteredNumber = () => {
+  const handleRegisteredNumber = async () => {
     setSelectedOption('registered');
     setStep('sending');
     
-    // Simulate sending process
-    setTimeout(() => {
-      setStep('completed');
+    try {
+      // Generate and open PDF receipt automatically
+      await openReceiptPDFInNewTab(receiptData);
+      
+      // Show completion after PDF generation
+      setTimeout(() => {
+        setStep('completed');
+        toast({
+          title: "Receipt Generated! 📄",
+          description: "PDF receipt opened in new tab. WhatsApp message also prepared.",
+        });
+      }, 1500);
+    } catch (error) {
       toast({
-        title: "Receipt Delivered! 📱",
-        description: `Receipt sent to ${receiptData.customerPhone}`,
+        title: "PDF Generation Failed",
+        description: "WhatsApp receipt will be sent instead.",
+        variant: "destructive"
       });
-    }, 1500);
+      setTimeout(() => {
+        setStep('completed');
+      }, 1500);
+    }
   };
 
   const handleAlternateNumber = () => {
@@ -62,7 +77,7 @@ const WhatsAppReceiptDeliveryFlow: React.FC<WhatsAppReceiptDeliveryFlowProps> = 
     setStep('alternate-number');
   };
 
-  const handleSendToAlternate = () => {
+  const handleSendToAlternate = async () => {
     if (!alternateNumber.trim()) {
       toast({
         title: "Please enter a valid WhatsApp number",
@@ -73,14 +88,28 @@ const WhatsAppReceiptDeliveryFlow: React.FC<WhatsAppReceiptDeliveryFlowProps> = 
 
     setStep('sending');
     
-    // Simulate sending process
-    setTimeout(() => {
-      setStep('completed');
+    try {
+      // Generate and open PDF receipt automatically
+      await openReceiptPDFInNewTab(receiptData);
+      
+      // Show completion after PDF generation
+      setTimeout(() => {
+        setStep('completed');
+        toast({
+          title: "Receipt Generated! 📄",
+          description: "PDF receipt opened in new tab. WhatsApp message also prepared.",
+        });
+      }, 1500);
+    } catch (error) {
       toast({
-        title: "Receipt Delivered! 📱",
-        description: `Receipt sent to ${alternateNumber}`,
+        title: "PDF Generation Failed",
+        description: "WhatsApp receipt will be sent instead.",
+        variant: "destructive"
       });
-    }, 1500);
+      setTimeout(() => {
+        setStep('completed');
+      }, 1500);
+    }
   };
 
   const generateWhatsAppUrl = (phoneNumber: string) => {
@@ -246,10 +275,11 @@ Thanks for choosing Divine Mobile! 🚀`;
           </div>
           
           <div className="text-center space-y-2">
-            <h2 className="text-xl font-bold text-gray-900">Sending Receipt...</h2>
+            <h2 className="text-xl font-bold text-gray-900">Generating PDF Receipt...</h2>
             <p className="text-gray-600">
-              Delivering to {selectedOption === 'registered' ? receiptData.customerPhone : alternateNumber}
+              Creating professional receipt for {selectedOption === 'registered' ? receiptData.customerPhone : alternateNumber}
             </p>
+            <p className="text-sm text-gray-500">This will open automatically in a new tab</p>
           </div>
 
           <div className="flex space-x-2">
@@ -322,17 +352,64 @@ Thanks for choosing Divine Mobile! 🚀`;
 
           <div className="space-y-3">
             <Button
-              onClick={() => openWhatsApp(finalPhoneNumber)}
+              onClick={async () => {
+                try {
+                  await openReceiptPDFInNewTab(receiptData);
+                  toast({
+                    title: "PDF Receipt Opened! 📄",
+                    description: "Professional receipt opened in new tab",
+                  });
+                } catch (error) {
+                  toast({
+                    title: "Failed to open PDF",
+                    description: "Please try downloading instead",
+                    variant: "destructive"
+                  });
+                }
+              }}
               className="w-full bg-green-600 hover:bg-green-700 text-white py-4 rounded-2xl flex items-center justify-center space-x-3"
             >
-              <MessageCircle className="w-5 h-5" />
-              <span>Open WhatsApp Receipt</span>
+              <FileText className="w-5 h-5" />
+              <span>View PDF Receipt</span>
             </Button>
+
+            <div className="grid grid-cols-2 gap-3">
+              <Button
+                onClick={async () => {
+                  try {
+                    await downloadReceiptPDF(receiptData);
+                    toast({
+                      title: "PDF Downloaded! 📄",
+                      description: "Receipt saved to your device",
+                    });
+                  } catch (error) {
+                    toast({
+                      title: "Download failed",
+                      variant: "destructive"
+                    });
+                  }
+                }}
+                variant="outline"
+                className="border-2 border-green-200 text-green-700 hover:bg-green-50 py-3 rounded-2xl flex items-center justify-center space-x-2"
+              >
+                <Download className="w-4 h-4" />
+                <span>Download PDF</span>
+              </Button>
+
+              <Button
+                onClick={() => openWhatsApp(finalPhoneNumber)}
+                variant="outline"
+                className="border-2 border-blue-200 text-blue-700 hover:bg-blue-50 py-3 rounded-2xl flex items-center justify-center space-x-2"
+              >
+                <MessageCircle className="w-4 h-4" />
+                <span>WhatsApp</span>
+              </Button>
+            </div>
 
             <Button
               onClick={onComplete}
-              variant="outline"
-              className="w-full border-2 border-gray-200 text-gray-700 hover:bg-gray-50 py-4 rounded-2xl"
+              variant="ghost"
+              className="w-full text-gray-500 hover:text-gray-700 py-3"
             >
               Continue Shopping
             </Button>
