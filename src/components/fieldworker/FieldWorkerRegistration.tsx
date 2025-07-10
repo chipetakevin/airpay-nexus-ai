@@ -242,6 +242,103 @@ const FieldWorkerRegistration = () => {
         return;
       }
 
+      // Upload documents first
+      let documentUrls: {
+        contract_url?: string;
+        id_document_url?: string;
+        proof_of_address_url?: string;
+        qualification_certificate_url?: string;
+      } = {};
+      
+      try {
+        if (documents.contract) {
+          documentUrls.contract_url = await uploadFileToStorage(documents.contract, 'contracts');
+        }
+        if (documents.idDocument) {
+          documentUrls.id_document_url = await uploadFileToStorage(documents.idDocument, 'id-documents');
+        }
+        if (documents.proofOfAddress) {
+          documentUrls.proof_of_address_url = await uploadFileToStorage(documents.proofOfAddress, 'proof-of-address');
+        }
+        if (documents.qualificationCertificate) {
+          documentUrls.qualification_certificate_url = await uploadFileToStorage(documents.qualificationCertificate, 'qualifications');
+        }
+      } catch (uploadError) {
+        console.error('Document upload error:', uploadError);
+        toast({
+          title: "Upload Failed",
+          description: "Failed to upload documents. Please try again.",
+          variant: "destructive"
+        });
+        return;
+      }
+
+      // Check if field worker already exists
+      const { data: existingWorker } = await supabase
+        .from('field_workers')
+        .select('id')
+        .eq('user_id', user.id)
+        .single();
+
+      if (existingWorker) {
+        // Update existing record
+        const { error: updateError } = await supabase
+          .from('field_workers')
+          .update({
+            full_name: formData.fullName,
+            id_number: formData.idNumber,
+            email: formData.email,
+            phone: formData.phone,
+            physical_address: formData.physicalAddress,
+            postal_address: formData.postalAddress,
+            province: formData.province,
+            city: formData.city,
+            qualification: formData.qualification,
+            skills: formData.skills,
+            region_assignment: formData.regionAssignment,
+            bank_name: formData.bankName,
+            account_number: formData.accountNumber,
+            branch_code: formData.branchCode,
+            account_type: formData.accountType,
+            popia_consent: formData.popiaConsent,
+            terms_accepted: formData.termsAccepted,
+            registration_status: 'pending',
+            updated_at: new Date().toISOString(),
+            ...documentUrls
+          })
+          .eq('id', existingWorker.id);
+
+        if (updateError) throw updateError;
+      } else {
+        // Create new record
+        const { error: insertError } = await supabase
+          .from('field_workers')
+          .insert({
+            user_id: user.id,
+            full_name: formData.fullName,
+            id_number: formData.idNumber,
+            email: formData.email,
+            phone: formData.phone,
+            physical_address: formData.physicalAddress,
+            postal_address: formData.postalAddress,
+            province: formData.province,
+            city: formData.city,
+            qualification: formData.qualification,
+            skills: formData.skills,
+            region_assignment: formData.regionAssignment,
+            bank_name: formData.bankName,
+            account_number: formData.accountNumber,
+            branch_code: formData.branchCode,
+            account_type: formData.accountType,
+            popia_consent: formData.popiaConsent,
+            terms_accepted: formData.termsAccepted,
+            registration_status: 'pending',
+            ...documentUrls
+          });
+
+        if (insertError) throw insertError;
+      }
+
       toast({
         title: "Registration Submitted! 🎉",
         description: "Your application is pending admin approval. You'll receive an email notification once processed.",
