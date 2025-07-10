@@ -201,26 +201,20 @@ const ModernTabNavigation = ({
         ))}
       </div>
 
-      {/* Desktop: Intelligent Scrollable Navigation for All 13 Tabs */}
+      {/* Desktop: Intelligent Vertical Navigation for All 13 Tabs */}
       <div className="hidden lg:block">
-        <div className="relative max-w-full overflow-hidden">
-          {/* Scroll Container */}
-          <div 
-            className="flex gap-4 overflow-x-auto scrollbar-hide pb-4 px-2"
-            style={{
-              scrollbarWidth: 'none',
-              msOverflowStyle: 'none'
-            }}
-          >
+        <div className="relative max-w-full">
+          {/* Vertical Grid Container */}
+          <div className="grid grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-4 max-h-[70vh] overflow-y-auto scrollbar-thin scrollbar-track-transparent scrollbar-thumb-gray-300 hover:scrollbar-thumb-gray-400 pr-2">
             {tabs.map((tab) => (
               <Card 
                 key={tab.value}
                 className={`
                   ${getTabStyles(tab)}
                   transition-all duration-300 cursor-pointer
-                  min-h-[120px] min-w-[140px] max-w-[160px] flex-shrink-0
+                  min-h-[120px] w-full
                   flex flex-col items-center justify-center p-4
-                  hover:shadow-xl hover:-translate-y-2
+                  hover:shadow-xl hover:-translate-y-1
                   overflow-hidden rounded-lg
                   ${tab.value === activeTab ? 'ring-2 ring-primary ring-offset-2' : ''}
                 `}
@@ -270,15 +264,19 @@ const ModernTabNavigation = ({
             ))}
           </div>
           
-          {/* Scroll Indicators */}
-          <div className="absolute inset-y-0 left-0 w-8 bg-gradient-to-r from-gray-50 to-transparent pointer-events-none"></div>
-          <div className="absolute inset-y-0 right-0 w-8 bg-gradient-to-l from-gray-50 to-transparent pointer-events-none"></div>
+          {/* Scroll Indicators for vertical scroll */}
+          {tabs.length > 12 && (
+            <>
+              <div className="absolute top-0 left-0 right-0 h-4 bg-gradient-to-b from-gray-50 to-transparent pointer-events-none"></div>
+              <div className="absolute bottom-0 left-0 right-0 h-4 bg-gradient-to-t from-gray-50 to-transparent pointer-events-none"></div>
+            </>
+          )}
         </div>
         
         {/* Tab Navigation Hint */}
         <div className="text-center mt-2">
           <p className="text-xs text-muted-foreground">
-            ← Scroll horizontally to view all {tabs.length} tabs →
+            {tabs.length} admin tabs available
           </p>
         </div>
       </div>
