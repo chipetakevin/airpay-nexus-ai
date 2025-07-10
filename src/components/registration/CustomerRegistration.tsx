@@ -16,6 +16,7 @@ import { useUniversalBankingStorage } from '@/hooks/useUniversalBankingStorage';
 import { useIntelligentReporting } from '@/hooks/useIntelligentReporting';
 import IntelligentReporting from '@/components/feedback/IntelligentReporting';
 import EnhancedPhoneInput from '@/components/forms/EnhancedPhoneInput';
+import EnhancedPasswordInput from '@/components/password/EnhancedPasswordInput';
 
 const CustomerRegistration = () => {
   const { toast } = useToast();

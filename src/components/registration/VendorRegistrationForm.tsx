@@ -9,6 +9,7 @@ import { Eye, EyeOff, User, Building, Phone, Mail, MapPin, Shield } from 'lucide
 import VendorPhoneSection from '@/components/forms/VendorPhoneSection';
 import UniversalCardDetailsForm from '@/components/banking/UniversalCardDetailsForm';
 import { useToast } from '@/hooks/use-toast';
+import EnhancedPasswordInput from '@/components/password/EnhancedPasswordInput';
 
 interface VendorRegistrationFormProps {
   formData: any;
@@ -190,55 +191,36 @@ const VendorRegistrationForm: React.FC<VendorRegistrationFormProps> = ({
         )}
       </div>
 
-      {/* Password Section */}
+      {/* Enhanced Password Management Section */}
       <Card className="border-red-200 bg-red-50/30">
         <CardHeader className="pb-3">
           <CardTitle className="text-lg flex items-center gap-2 text-red-800">
             <Shield className="w-5 h-5" />
-            Account Security
+            Business Account Security
           </CardTitle>
+          <p className="text-sm text-red-600 mt-2">
+            Professional password management with advanced security features
+          </p>
         </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="space-y-2">
-            <Label htmlFor="password" className="text-sm font-medium text-gray-700">
-              Password *
-            </Label>
-            <div className="relative">
-              <Input
-                id="password"
-                type={showPassword ? 'text' : 'password'}
-                value={formData.password || ''}
-                onChange={(e) => handleInputChange('password', e.target.value)}
-                placeholder="Create a strong password"
-                className={errors.password ? 'border-red-500' : ''}
-              />
-              <Button
-                type="button"
-                variant="ghost"
-                size="sm"
-                onClick={togglePasswordVisibility}
-                className="absolute right-2 top-1/2 transform -translate-y-1/2 h-6 w-6 p-0"
-              >
-                {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-              </Button>
-            </div>
-            {errors.password && <p className="text-red-500 text-sm">{errors.password}</p>}
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="confirmPassword" className="text-sm font-medium text-gray-700">
-              Confirm Password *
-            </Label>
-            <Input
-              id="confirmPassword"
-              type="password"
-              value={formData.confirmPassword || ''}
-              onChange={(e) => handleInputChange('confirmPassword', e.target.value)}
-              placeholder="Confirm your password"
-              className={errors.confirmPassword ? 'border-red-500' : ''}
-            />
-            {errors.confirmPassword && <p className="text-red-500 text-sm">{errors.confirmPassword}</p>}
-          </div>
+        <CardContent>
+          <EnhancedPasswordInput
+            value={formData.password || ''}
+            confirmValue={formData.confirmPassword || ''}
+            onChange={(value) => handleInputChange('password', value)}
+            onConfirmChange={(value) => handleInputChange('confirmPassword', value)}
+            userRole="vendor"
+            userId={formData.email}
+            label="Business Password"
+            confirmLabel="Confirm Business Password"
+            showConfirm={true}
+            enableAutofill={true}
+            enableGeneration={true}
+            enableStorage={true}
+            showRequirements={true}
+            showMetrics={true}
+            error={errors.password}
+            confirmError={errors.confirmPassword}
+          />
         </CardContent>
       </Card>
     </div>

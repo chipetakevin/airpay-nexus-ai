@@ -12,6 +12,7 @@ import AdminPhoneSection from '@/components/forms/AdminPhoneSection';
 import EnhancedSouthAfricanBankAutocomplete from '@/components/banking/EnhancedSouthAfricanBankAutocomplete';
 import { useToast } from '@/hooks/use-toast';
 import { validateBankingSystem, listAllBanksWithBranchCodes } from '@/utils/bankingSystemValidation';
+import EnhancedPasswordInput from '@/components/password/EnhancedPasswordInput';
 
 const AdminRegistrationForm = () => {
   const { formData, errors, handleInputChange, handleBankSelect, handleSubmit } = useAdminRegistration();
@@ -217,51 +218,36 @@ const AdminRegistrationForm = () => {
           </CardContent>
         </Card>
 
-        {/* Password Section */}
+        {/* Enhanced Password Management Section */}
         <Card className="border-red-200 bg-red-50/30">
           <CardHeader className="pb-3">
             <CardTitle className="text-lg flex items-center gap-2 text-red-800">
               <Shield className="w-5 h-5" />
-              Account Security
+              Enterprise Password Security
             </CardTitle>
+            <p className="text-sm text-red-600 mt-2">
+              Enhanced password management with enterprise-grade security features
+            </p>
           </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="password">Admin Password *</Label>
-              <div className="relative">
-                <Input
-                  id="password"
-                  type={showPassword ? 'text' : 'password'}
-                  value={formData.password || ''}
-                  onChange={(e) => handleInputChange('password', e.target.value)}
-                  placeholder="Enter admin password"
-                  className={errors.password ? 'border-red-500' : ''}
-                />
-                <Button
-                  type="button"
-                  variant="ghost"
-                  size="sm"
-                  onClick={togglePasswordVisibility}
-                  className="absolute right-2 top-1/2 transform -translate-y-1/2 h-6 w-6 p-0"
-                >
-                  {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                </Button>
-              </div>
-              {errors.password && <p className="text-red-500 text-sm">{errors.password}</p>}
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="confirmPassword">Confirm Password *</Label>
-              <Input
-                id="confirmPassword"
-                type="password"
-                value={formData.confirmPassword || ''}
-                onChange={(e) => handleInputChange('confirmPassword', e.target.value)}
-                placeholder="Confirm your password"
-                className={errors.confirmPassword ? 'border-red-500' : ''}
-              />
-              {errors.confirmPassword && <p className="text-red-500 text-sm">{errors.confirmPassword}</p>}
-            </div>
+          <CardContent>
+            <EnhancedPasswordInput
+              value={formData.password || ''}
+              confirmValue={formData.confirmPassword || ''}
+              onChange={(value) => handleInputChange('password', value)}
+              onConfirmChange={(value) => handleInputChange('confirmPassword', value)}
+              userRole="admin"
+              userId={formData.email}
+              label="Administrator Password"
+              confirmLabel="Confirm Administrator Password"
+              showConfirm={true}
+              enableAutofill={true}
+              enableGeneration={true}
+              enableStorage={true}
+              showRequirements={true}
+              showMetrics={true}
+              error={errors.password}
+              confirmError={errors.confirmPassword}
+            />
           </CardContent>
         </Card>
 
