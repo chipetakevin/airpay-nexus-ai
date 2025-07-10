@@ -575,24 +575,84 @@ const AdminControlCenter: React.FC<AdminControlCenterProps> = ({
         </TabsContent>
 
         <TabsContent value="orders" className="mt-6">
-          <OrdersSection />
+          <div className="space-y-6">
+            <Card className="border-l-4 border-l-orange-500 bg-gradient-to-br from-orange-50 to-white">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Settings className="w-6 h-6 text-orange-600" />
+                  Order Management System
+                </CardTitle>
+                <p className="text-muted-foreground">Comprehensive order processing and management dashboard</p>
+              </CardHeader>
+              <CardContent>
+                <OrdersSection />
+              </CardContent>
+            </Card>
+          </div>
         </TabsContent>
 
         <TabsContent value="system" className="mt-6">
-          <ActionCard
-            title="System Configuration"
-            description="Configure system settings, parameters, and operational preferences"
-            icon={Settings}
-            badge={{ text: "CONFIG", variant: "outline", className: "bg-gray-100 text-gray-800" }}
-            color={{
-              border: 'border-l-gray-500',
-              bg: 'from-gray-50 to-white',
-              iconBg: 'bg-gray-100',
-              icon: 'text-gray-600',
-              button: 'bg-gray-600 hover:bg-gray-700 text-white'
-            }}
-            onClick={() => {}}
-          />
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <ActionCard
+              title="System Configuration"
+              description="Configure system settings, parameters, and operational preferences"
+              icon={Settings}
+              badge={{ text: "CONFIG", variant: "outline", className: "bg-gray-100 text-gray-800" }}
+              color={{
+                border: 'border-l-gray-500',
+                bg: 'from-gray-50 to-white',
+                iconBg: 'bg-gray-100',
+                icon: 'text-gray-600',
+                button: 'bg-gray-600 hover:bg-gray-700 text-white'
+              }}
+              onClick={() => {}}
+            />
+            
+            <ActionCard
+              title="System Performance"
+              description="Monitor system performance, health metrics, and resource utilization"
+              icon={Activity}
+              badge={{ text: "LIVE", variant: "default", className: "bg-green-500 text-white animate-pulse" }}
+              color={{
+                border: 'border-l-green-500',
+                bg: 'from-green-50 to-white',
+                iconBg: 'bg-green-100',
+                icon: 'text-green-600',
+                button: 'bg-green-600 hover:bg-green-700 text-white'
+              }}
+              onClick={() => {}}
+            />
+            
+            <ActionCard
+              title="Database Management"
+              description="Database administration, backups, and optimization tools"
+              icon={Shield}
+              badge={{ text: "SECURE", variant: "secondary", className: "bg-blue-100 text-blue-800" }}
+              color={{
+                border: 'border-l-blue-500',
+                bg: 'from-blue-50 to-white',
+                iconBg: 'bg-blue-100',
+                icon: 'text-blue-600',
+                button: 'bg-blue-600 hover:bg-blue-700 text-white'
+              }}
+              onClick={() => {}}
+            />
+            
+            <ActionCard
+              title="API Management"
+              description="API endpoint configuration, rate limiting, and integration monitoring"
+              icon={Zap}
+              badge={{ text: "API", variant: "outline", className: "bg-purple-100 text-purple-800" }}
+              color={{
+                border: 'border-l-purple-500',
+                bg: 'from-purple-50 to-white',
+                iconBg: 'bg-purple-100',
+                icon: 'text-purple-600',
+                button: 'bg-purple-600 hover:bg-purple-700 text-white'
+              }}
+              onClick={() => {}}
+            />
+          </div>
         </TabsContent>
 
         <TabsContent value="version-control" className="mt-6">
