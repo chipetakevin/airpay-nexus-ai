@@ -112,6 +112,7 @@ const PortalTabs = ({
   const isAdmin = isRegisteredAdmin();
 
   // Enhanced tabs with admin access control
+  // Define exactly 13 tabs as requested
   const baseTabs = [
     {
       value: 'deals',
@@ -146,20 +147,20 @@ const PortalTabs = ({
       adminOnly: false
     },
     {
-      value: 'addex-pay',
-      label: 'Addex Pay',
-      icon: '💰',
-      description: 'Payroll System',
-      color: 'indigo',
-      adminOnly: true
-    },
-    {
       value: 'ussd-manager',
       label: 'USSD Manager',
       icon: '📱',
       description: 'GSM Onboarding',
       color: 'emerald',
       adminOnly: false
+    },
+    {
+      value: 'addex-pay',
+      label: 'Addex Pay',
+      icon: '💰',
+      description: 'Payroll System',
+      color: 'indigo',
+      adminOnly: true
     },
     {
       value: 'field-workers',
@@ -184,40 +185,15 @@ const PortalTabs = ({
       description: 'Telecom Infrastructure',
       color: 'cyan',
       adminOnly: true
-    }
-  ];
-
-  // Build tabs array with conditional admin content
-  const tabs = [...baseTabs];
-  
-  // Always add The Nerve Center tab for admins (highest priority)
-  if (isAdmin || showAdminTab) {
-    console.log('🔍 Adding The Nerve Center tab for admin user');
-    tabs.push({
+    },
+    {
       value: 'admin',
       label: 'The Nerve Center',
       icon: '🧠',
       description: 'Admin Portal',
       color: 'blue',
       adminOnly: true
-    });
-  }
-  
-  // Add admin registration tab for non-admins (positioned prominently)
-  if (!isAdmin) {
-    console.log('🔍 Adding Admin Registration tab for non-admin user');
-    tabs.push({
-      value: 'admin-reg',
-      label: 'Admin Reg',
-      icon: '🔐',
-      description: 'Register',
-      color: 'red',
-      adminOnly: false
-    });
-  }
-
-  // Add admin-only tabs
-  tabs.push(
+    },
     {
       value: 'unified-reports',
       label: 'Reports',
@@ -242,10 +218,28 @@ const PortalTabs = ({
       color: 'purple',
       adminOnly: true
     }
-  );
+  ];
+
+  // Build tabs array - always show all 13 tabs for admin users
+  let tabs = [...baseTabs];
+  
+  // For non-admin users, filter to show only non-admin tabs plus admin registration
+  if (!isAdmin && !showAdminTab) {
+    tabs = baseTabs.filter(tab => !tab.adminOnly);
+    // Add admin registration tab for non-admins
+    tabs.push({
+      value: 'admin-reg',
+      label: 'Admin Reg',
+      icon: '🔐',
+      description: 'Register',
+      color: 'red',
+      adminOnly: false
+    });
+  }
 
   console.log('🔍 Final tabs array:', tabs.map(t => `${t.label} (${t.value})`));
-  console.log('🔍 The Nerve Center tab included:', tabs.some(t => t.value === 'admin'));
+  console.log('🔍 Total tabs count:', tabs.length);
+  console.log('🔍 Admin authenticated:', isAdmin || showAdminTab);
 
   // Enhanced tab change handler with debugging
   const enhancedHandleTabChange = (value: string) => {
