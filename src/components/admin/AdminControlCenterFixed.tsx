@@ -341,137 +341,223 @@ const AdminControlCenterFixed: React.FC<AdminControlCenterProps> = ({
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-3 sm:px-6 py-4 sm:py-6 space-y-4 sm:space-y-6 pb-20">
-        {/* Addex Hub Platform Card - Mobile Optimized */}
-        <div className="bg-white rounded-2xl shadow-xl border border-gray-100 p-4 sm:p-6">
-          <AdminPlatformBranding size="medium" showSubtitle={true} />
-        </div>
+      {/* Main Content Container with Tabs */}
+      <div className="max-w-7xl mx-auto px-3 sm:px-6 py-4 sm:py-6">
+        <Tabs value={activeAdminTab || 'overview'} onValueChange={setActiveAdminTab} className="w-full">
+          <TabsList className="grid grid-cols-2 mb-6 h-auto p-1 bg-gradient-to-r from-gray-50 to-gray-100 rounded-xl shadow-lg border border-gray-200/50">
+            <TabsTrigger 
+              value="overview" 
+              className="data-[state=active]:bg-white data-[state=active]:shadow-lg data-[state=active]:border data-[state=active]:border-blue-200/30 rounded-lg px-4 py-3 font-medium transition-all duration-300"
+            >
+              The Nerve Center
+            </TabsTrigger>
+            <TabsTrigger 
+              value="addex-platform" 
+              className="data-[state=active]:bg-white data-[state=active]:shadow-lg data-[state=active]:border data-[state=active]:border-blue-200/30 rounded-lg px-4 py-3 font-medium transition-all duration-300"
+            >
+              Addex Hub Platform
+            </TabsTrigger>
+          </TabsList>
 
-        {/* Live System Status Indicators - Mobile Optimized */}
-        <div className="bg-white rounded-xl shadow-md border border-gray-100 p-4 sm:p-6">
-          <h3 className="text-sm sm:text-base font-semibold text-gray-800 mb-3 sm:mb-4 text-center">System Status</h3>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-            <div className="flex items-center gap-2 p-3 bg-green-50 rounded-lg border border-green-200">
-              <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse flex-shrink-0" />
-              <span className="text-xs sm:text-sm font-medium text-green-700">Network Online</span>
+          <TabsContent value="overview" className="space-y-4 sm:space-y-6 pb-20">
+            {/* Addex Hub Platform Card - Mobile Optimized */}
+            <div className="bg-white rounded-2xl shadow-xl border border-gray-100 p-4 sm:p-6">
+              <AdminPlatformBranding size="medium" showSubtitle={true} />
             </div>
-            <div className="flex items-center gap-2 p-3 bg-blue-50 rounded-lg border border-blue-200">
-              <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse flex-shrink-0" />
-              <span className="text-xs sm:text-sm font-medium text-blue-700">Deals Active</span>
-            </div>
-            <div className="flex items-center gap-2 p-3 bg-emerald-50 rounded-lg border border-emerald-200">
-              <div className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse flex-shrink-0" />
-              <span className="text-xs sm:text-sm font-medium text-emerald-700">System Optimal</span>
-            </div>
-          </div>
-        </div>
 
-        {/* Alert Section - Mobile Optimized */}
-        {systemStats.alertsCount > 0 && (
-          <div className="bg-white rounded-xl shadow-md border border-red-200">
-            <Alert className="border-l-4 border-l-red-500 bg-gradient-to-r from-red-50 to-orange-50 m-0 rounded-xl">
-              <AlertTriangle className="h-4 w-4 text-red-600 flex-shrink-0" />
-              <AlertDescription className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-                <span className="text-red-800 font-medium text-sm">
-                  {systemStats.alertsCount} system alerts require immediate attention
-                </span>
-                <Button size="sm" variant="outline" className="border-red-300 text-red-700 hover:bg-red-100 w-full sm:w-auto flex-shrink-0">
-                  <Bell className="w-4 h-4 mr-2" />
-                  View Alerts
+            {/* Live System Status Indicators - Mobile Optimized */}
+            <div className="bg-white rounded-xl shadow-md border border-gray-100 p-4 sm:p-6">
+              <h3 className="text-sm sm:text-base font-semibold text-gray-800 mb-3 sm:mb-4 text-center">System Status</h3>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <div className="flex items-center gap-2 p-3 bg-green-50 rounded-lg border border-green-200">
+                  <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse flex-shrink-0" />
+                  <span className="text-xs sm:text-sm font-medium text-green-700">Network Online</span>
+                </div>
+                <div className="flex items-center gap-2 p-3 bg-blue-50 rounded-lg border border-blue-200">
+                  <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse flex-shrink-0" />
+                  <span className="text-xs sm:text-sm font-medium text-blue-700">Deals Active</span>
+                </div>
+                <div className="flex items-center gap-2 p-3 bg-emerald-50 rounded-lg border border-emerald-200">
+                  <div className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse flex-shrink-0" />
+                  <span className="text-xs sm:text-sm font-medium text-emerald-700">System Optimal</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Alert Section - Mobile Optimized */}
+            {systemStats.alertsCount > 0 && (
+              <div className="bg-white rounded-xl shadow-md border border-red-200">
+                <Alert className="border-l-4 border-l-red-500 bg-gradient-to-r from-red-50 to-orange-50 m-0 rounded-xl">
+                  <AlertTriangle className="h-4 w-4 text-red-600 flex-shrink-0" />
+                  <AlertDescription className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                    <span className="text-red-800 font-medium text-sm">
+                      {systemStats.alertsCount} system alerts require immediate attention
+                    </span>
+                    <Button size="sm" variant="outline" className="border-red-300 text-red-700 hover:bg-red-100 w-full sm:w-auto flex-shrink-0">
+                      <Bell className="w-4 h-4 mr-2" />
+                      View Alerts
+                    </Button>
+                  </AlertDescription>
+                </Alert>
+              </div>
+            )}
+
+            {/* Admin Control Grid - Enhanced Mobile Layout */}
+            <div className="bg-white rounded-xl shadow-md border border-gray-100 p-4 sm:p-6">
+              <h3 className="text-lg sm:text-xl font-bold text-gray-800 mb-4 sm:mb-6 text-center">Admin Control Center</h3>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4">
+                {adminSections.map((section) => (
+                  <ActionCard
+                    key={section.id}
+                    title={section.title}
+                    description={section.description}
+                    icon={section.icon}
+                    color={section.color}
+                    badge={section.badge || { text: "ACTIVE", variant: "default", className: "bg-green-500 text-white" }}
+                    onClick={() => handleSectionClick(section.id)}
+                  />
+                ))}
+              </div>
+            </div>
+
+            {/* Quick Actions - Mobile Optimized */}
+            <div className="bg-white rounded-xl shadow-md border border-gray-100 p-4 sm:p-6">
+              <div className="flex items-center gap-2 mb-4 sm:mb-6">
+                <Zap className="w-5 h-5 text-blue-600" />
+                <h3 className="text-lg sm:text-xl font-bold text-gray-800">Quick Actions</h3>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+                <Button 
+                  variant="outline" 
+                  className="h-16 sm:h-20 flex flex-col items-center justify-center space-y-2 transition-all duration-300 hover:scale-105 bg-gradient-to-br from-blue-50 to-blue-100 hover:from-blue-100 hover:to-blue-200 border-blue-200 text-blue-700"
+                  onClick={() => {
+                    toast({
+                      title: "System Refresh Initiated",
+                      description: "Refreshing system state and updating data...",
+                    });
+                    setTimeout(() => {
+                      window.location.reload();
+                    }, 1000);
+                  }}
+                >
+                  <RefreshCw className="w-5 h-5 sm:w-6 sm:h-6" />
+                  <span className="text-xs sm:text-sm font-medium">Refresh System</span>
                 </Button>
-              </AlertDescription>
-            </Alert>
-          </div>
-        )}
+                
+                <Button 
+                  variant="outline" 
+                  className="h-16 sm:h-20 flex flex-col items-center justify-center space-y-2 transition-all duration-300 hover:scale-105 bg-gradient-to-br from-green-50 to-green-100 hover:from-green-100 hover:to-green-200 border-green-200 text-green-700"
+                  onClick={() => {
+                    toast({
+                      title: "User Management",
+                      description: "Opening user management interface...",
+                    });
+                    handleSectionClick('access');
+                  }}
+                >
+                  <Users className="w-5 h-5 sm:w-6 sm:h-6" />
+                  <span className="text-xs sm:text-sm font-medium">User Management</span>
+                </Button>
+                
+                <Button 
+                  variant="outline" 
+                  className="h-16 sm:h-20 flex flex-col items-center justify-center space-y-2 transition-all duration-300 hover:scale-105 bg-gradient-to-br from-purple-50 to-purple-100 hover:from-purple-100 hover:to-purple-200 border-purple-200 text-purple-700"
+                  onClick={() => {
+                    toast({
+                      title: "System Settings",
+                      description: "Accessing system configuration panel...",
+                    });
+                    handleSectionClick('hub');
+                  }}
+                >
+                  <Settings className="w-5 h-5 sm:w-6 sm:h-6" />
+                  <span className="text-xs sm:text-sm font-medium">System Settings</span>
+                </Button>
+                
+                <Button 
+                  variant="outline" 
+                  className="h-16 sm:h-20 flex flex-col items-center justify-center space-y-2 transition-all duration-300 hover:scale-105 bg-gradient-to-br from-orange-50 to-orange-100 hover:from-orange-100 hover:to-orange-200 border-orange-200 text-orange-700"
+                  onClick={() => {
+                    toast({
+                      title: "Analytics Dashboard",
+                      description: "Loading analytics and reporting interface...",
+                    });
+                    handleSectionClick('dashboard');
+                  }}
+                >
+                  <BarChart3 className="w-5 h-5 sm:w-6 sm:h-6" />
+                  <span className="text-xs sm:text-sm font-medium">Analytics</span>
+                </Button>
+              </div>
+            </div>
+          </TabsContent>
 
-        {/* Admin Control Grid - Enhanced Mobile Layout */}
-        <div className="bg-white rounded-xl shadow-md border border-gray-100 p-4 sm:p-6">
-          <h3 className="text-lg sm:text-xl font-bold text-gray-800 mb-4 sm:mb-6 text-center">Admin Control Center</h3>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4">
-            {adminSections.map((section) => (
-              <ActionCard
-                key={section.id}
-                title={section.title}
-                description={section.description}
-                icon={section.icon}
-                color={section.color}
-                badge={section.badge || { text: "ACTIVE", variant: "default", className: "bg-green-500 text-white" }}
-                onClick={() => handleSectionClick(section.id)}
-              />
-            ))}
-          </div>
-        </div>
+          <TabsContent value="addex-platform" className="space-y-4 sm:space-y-6 pb-20">
+            {/* Addex Hub Platform Standalone Card */}
+            <div className="bg-white rounded-2xl shadow-xl border border-gray-100 p-6 sm:p-8 text-center">
+              <div className="flex flex-col items-center space-y-4 sm:space-y-6">
+                {/* Satellite Icon */}
+                <div className="p-4 bg-gradient-to-br from-blue-100 to-purple-100 rounded-2xl shadow-lg">
+                  <svg className="w-16 h-16 sm:w-20 sm:h-20 text-gray-600" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M19.5 6.3l-3.1-3.1c-.4-.4-1-.4-1.4 0L3.4 14.8c-.4.4-.4 1 0 1.4l3.1 3.1c.4.4 1 .4 1.4 0L19.5 7.7c.4-.4.4-1 0-1.4zm-4.9 1.4L12 10.3 9.4 7.7l2.6-2.6 2.6 2.6z"/>
+                  </svg>
+                </div>
+                
+                {/* Title with Badge */}
+                <div className="space-y-2">
+                  <div className="flex items-center justify-center gap-3">
+                    <h2 className="text-2xl sm:text-3xl font-bold text-gray-800">Addex Hub Platform</h2>
+                    <div className="px-3 py-1 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full shadow-lg">
+                      <span className="text-xs sm:text-sm font-bold text-yellow-900">ADMIN</span>
+                    </div>
+                  </div>
+                  <p className="text-sm sm:text-base text-gray-600">Telecom Infrastructure</p>
+                </div>
 
-        {/* Quick Actions - Mobile Optimized */}
-        <div className="bg-white rounded-xl shadow-md border border-gray-100 p-4 sm:p-6">
-          <div className="flex items-center gap-2 mb-4 sm:mb-6">
-            <Zap className="w-5 h-5 text-blue-600" />
-            <h3 className="text-lg sm:text-xl font-bold text-gray-800">Quick Actions</h3>
-          </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-            <Button 
-              variant="outline" 
-              className="h-16 sm:h-20 flex flex-col items-center justify-center space-y-2 transition-all duration-300 hover:scale-105 bg-gradient-to-br from-blue-50 to-blue-100 hover:from-blue-100 hover:to-blue-200 border-blue-200 text-blue-700"
-              onClick={() => {
-                toast({
-                  title: "System Refresh Initiated",
-                  description: "Refreshing system state and updating data...",
-                });
-                setTimeout(() => {
-                  window.location.reload();
-                }, 1000);
-              }}
-            >
-              <RefreshCw className="w-5 h-5 sm:w-6 sm:h-6" />
-              <span className="text-xs sm:text-sm font-medium">Refresh System</span>
-            </Button>
-            
-            <Button 
-              variant="outline" 
-              className="h-16 sm:h-20 flex flex-col items-center justify-center space-y-2 transition-all duration-300 hover:scale-105 bg-gradient-to-br from-green-50 to-green-100 hover:from-green-100 hover:to-green-200 border-green-200 text-green-700"
-              onClick={() => {
-                toast({
-                  title: "User Management",
-                  description: "Opening user management interface...",
-                });
-                handleSectionClick('access');
-              }}
-            >
-              <Users className="w-5 h-5 sm:w-6 sm:h-6" />
-              <span className="text-xs sm:text-sm font-medium">User Management</span>
-            </Button>
-            
-            <Button 
-              variant="outline" 
-              className="h-16 sm:h-20 flex flex-col items-center justify-center space-y-2 transition-all duration-300 hover:scale-105 bg-gradient-to-br from-purple-50 to-purple-100 hover:from-purple-100 hover:to-purple-200 border-purple-200 text-purple-700"
-              onClick={() => {
-                toast({
-                  title: "System Settings",
-                  description: "Accessing system configuration panel...",
-                });
-                handleSectionClick('hub');
-              }}
-            >
-              <Settings className="w-5 h-5 sm:w-6 sm:h-6" />
-              <span className="text-xs sm:text-sm font-medium">System Settings</span>
-            </Button>
-            
-            <Button 
-              variant="outline" 
-              className="h-16 sm:h-20 flex flex-col items-center justify-center space-y-2 transition-all duration-300 hover:scale-105 bg-gradient-to-br from-orange-50 to-orange-100 hover:from-orange-100 hover:to-orange-200 border-orange-200 text-orange-700"
-              onClick={() => {
-                toast({
-                  title: "Analytics Dashboard",
-                  description: "Loading analytics and reporting interface...",
-                });
-                handleSectionClick('dashboard');
-              }}
-            >
-              <BarChart3 className="w-5 h-5 sm:w-6 sm:h-6" />
-              <span className="text-xs sm:text-sm font-medium">Analytics</span>
-            </Button>
-          </div>
-        </div>
+                {/* Status Indicators */}
+                <div className="flex flex-wrap justify-center gap-3 sm:gap-4">
+                  <div className="flex items-center gap-2 px-3 py-2 bg-green-100 rounded-full border border-green-200">
+                    <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
+                    <span className="text-xs sm:text-sm font-medium text-green-700">NEURAL</span>
+                  </div>
+                  <div className="flex items-center gap-2 px-3 py-2 bg-blue-100 rounded-full border border-blue-200">
+                    <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse" />
+                    <span className="text-xs sm:text-sm font-medium text-blue-700">ADMIN</span>
+                  </div>
+                  <div className="flex items-center gap-2 px-3 py-2 bg-purple-100 rounded-full border border-purple-200">
+                    <div className="w-2 h-2 bg-purple-500 rounded-full animate-pulse" />
+                    <span className="text-xs sm:text-sm font-medium text-purple-700">SECURE</span>
+                  </div>
+                </div>
+
+                {/* Upload Section */}
+                <div className="w-full max-w-md mx-auto mt-8">
+                  <div className="bg-gradient-to-br from-green-50 to-emerald-50 rounded-xl p-6 border border-green-200 shadow-lg">
+                    <div className="flex items-center gap-4 mb-4">
+                      <div className="p-3 bg-green-500 rounded-xl shadow-lg">
+                        <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                        </svg>
+                      </div>
+                      <div className="text-left">
+                        <h3 className="text-lg font-bold text-green-800">Upload New Bulk Operation</h3>
+                      </div>
+                    </div>
+                    <p className="text-sm text-green-700 mb-4 leading-relaxed">
+                      Upload CSV files to process bulk service operations and configure their behavior
+                    </p>
+                    <Button className="w-full bg-green-600 hover:bg-green-700 text-white font-medium py-3 rounded-lg shadow-lg">
+                      <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                      </svg>
+                      Upload File
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </TabsContent>
+        </Tabs>
       </div>
     </div>
   );
