@@ -18,6 +18,7 @@ import {
   Activity
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { SecureUploadManager } from '@/components/addex-hub/upload/SecureUploadManager';
 
 interface BulkOperation {
   id: string;
@@ -310,31 +311,7 @@ const BulkOperationsManager = () => {
         </TabsContent>
 
         <TabsContent value="upload" className="space-y-4">
-          <Card className="bg-gradient-to-br from-green-50 to-emerald-100 border-green-200">
-            <CardHeader>
-              <CardTitle className="text-green-800">Upload New Bulk Operation</CardTitle>
-              <CardDescription className="text-green-600">
-                Upload CSV files for processing large-scale operations
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="border-2 border-dashed border-green-300 rounded-lg p-8 text-center bg-white/50">
-                <div className="space-y-4">
-                  <div className="mx-auto w-16 h-16 bg-green-100 rounded-full flex items-center justify-center">
-                    <Upload className="h-8 w-8 text-green-600" />
-                  </div>
-                  <div>
-                    <p className="text-lg font-semibold text-green-800">Upload Bulk Operation File</p>
-                    <p className="text-sm text-green-600">Drag and drop CSV files here, or click to browse</p>
-                  </div>
-                  <Button className="bg-green-600 hover:bg-green-700">
-                    <Upload className="h-4 w-4 mr-2" />
-                    Select File
-                  </Button>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+          <SecureUploadManager />
         </TabsContent>
 
         <TabsContent value="history" className="space-y-4">
