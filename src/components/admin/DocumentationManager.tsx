@@ -7,7 +7,6 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
 import { useDocumentationAutoUpdater } from '@/hooks/useDocumentationAutoUpdater';
-import { useVersion } from '@/contexts/VersionContext';
 import { 
   FileText, 
   Download, 
@@ -30,13 +29,17 @@ const DocumentationManager = () => {
   const [isSendingEmail, setIsSendingEmail] = useState(false);
   const [emailAddress, setEmailAddress] = useState('');
   const [emailMessage, setEmailMessage] = useState('Please find attached the MVNE Platform Version 3.0 documentation.');
-  const { currentVersion, updateVersion } = useVersion();
-  const [selectedVersion, setSelectedVersion] = useState(currentVersion);
+  // Get current version from localStorage with fallback
+  const getCurrentVersion = () => {
+    try {
+      const savedVersion = localStorage.getItem('mvne-current-version');
+      return savedVersion || 'v4.0.0';
+    } catch (error) {
+      return 'v4.0.0';
+    }
+  };
   
-  // Sync selectedVersion with currentVersion when context updates
-  React.useEffect(() => {
-    setSelectedVersion(currentVersion);
-  }, [currentVersion]);
+  const [selectedVersion, setSelectedVersion] = useState(getCurrentVersion());
   const [availableVersions, setAvailableVersions] = useState<any[]>([]);
   const [codeMetrics, setCodeMetrics] = useState({ totalLines: 20075796, lastMeasurement: 20000000 });
   const { toast } = useToast();
@@ -947,7 +950,8 @@ Last Updated: ${new Date().toLocaleDateString()} - Intelligent versioning system
                     }`}
                     onClick={() => {
                       setSelectedVersion(version.id);
-                      updateVersion(version.id); // Update global version context
+                      // Update localStorage to sync with tab display
+                      localStorage.setItem('mvne-current-version', version.id);
                     }}
                   >
                     <div className="flex items-center justify-between">

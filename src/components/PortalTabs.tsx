@@ -1,7 +1,6 @@
 
 import React from 'react';
 import { Tabs, TabsContent } from '@/components/ui/tabs';
-import { useVersion } from '@/contexts/VersionContext';
 import CustomerRegistration from './CustomerRegistration';
 import VendorRegistration from './VendorRegistration';
 import AdminRegistration from './AdminRegistration';
@@ -41,7 +40,27 @@ const PortalTabs = ({
   isAuthenticated = false,
   showAdminBanner = false
 }: PortalTabsProps) => {
-  const { displayVersion } = useVersion();
+  // Get current version - with fallback to v4.0 if context unavailable
+  const getCurrentVersion = () => {
+    try {
+      const savedVersion = localStorage.getItem('mvne-current-version');
+      if (savedVersion) {
+        // Convert version to display format (e.g., "v4.0.0" -> "v4.0")
+        if (savedVersion.startsWith('v')) {
+          const versionParts = savedVersion.substring(1).split('.');
+          if (versionParts.length >= 2) {
+            return `v${versionParts[0]}.${versionParts[1]}`;
+          }
+        }
+        return savedVersion;
+      }
+    } catch (error) {
+      console.log('Could not read version from localStorage');
+    }
+    return 'v4.0'; // Default fallback
+  };
+  
+  const displayVersion = getCurrentVersion();
   
   // Get user data for tab switcher
   const getUserData = () => {
