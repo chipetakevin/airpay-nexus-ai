@@ -386,9 +386,19 @@ const AdminControlCenterFixed: React.FC<AdminControlCenterProps> = ({
                 : 'hidden'
             }`}
           >
-            {/* Addex Hub Platform Card - Mobile Optimized */}
-            <div className="bg-white rounded-2xl shadow-xl border border-gray-100 p-4 sm:p-6">
-              <AdminPlatformBranding size="medium" showSubtitle={true} />
+            {/* Consistent AdminPlatformBranding for The Nerve Center */}
+            <div className="bg-white rounded-xl shadow-md border border-gray-100">
+              <div className="bg-gradient-to-r from-blue-50 to-purple-50 px-4 sm:px-6 py-3 sm:py-4 border-b rounded-t-xl">
+                <AdminPlatformBranding size="small" showSubtitle={true} />
+              </div>
+              
+              {/* Nerve Center Content Container with consistent spacing */}
+              <div className="p-4 sm:p-6">
+                <div className="text-center space-y-4">
+                  <h3 className="text-xl font-bold text-gray-800">The Nerve Center Overview</h3>
+                  <p className="text-muted-foreground">Central command and control interface</p>
+                </div>
+              </div>
             </div>
 
             {/* Live System Status Indicators - Mobile Optimized */}
