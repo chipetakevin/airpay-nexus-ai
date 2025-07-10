@@ -38,6 +38,7 @@ import CustomerAuth from "./pages/CustomerAuth";
 import CustomerPortal from "./pages/CustomerPortal";
 import AdminDashboard from "./pages/AdminDashboard";
 import EnhancedVersionManagerPage from "./pages/EnhancedVersionManager";
+import TestUploadSystem from "./pages/TestUploadSystem";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -76,6 +77,7 @@ const App = () => (
             <Route path="/customer-auth" element={<CustomerAuth />} />
             <Route path="/customer-portal" element={<CustomerPortal />} />
             <Route path="/enhanced-version-manager" element={<EnhancedVersionManagerPage />} />
+            <Route path="/test-upload-system" element={<TestUploadSystem />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>

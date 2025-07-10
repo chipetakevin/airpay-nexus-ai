@@ -18,7 +18,7 @@ import {
   Activity
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-import { RealUploadManager } from '@/components/addex-hub/upload/RealUploadManager';
+import { IntelligentUploadSystem } from '@/components/addex-hub/upload/IntelligentUploadSystem';
 
 interface BulkOperation {
   id: string;
@@ -311,7 +311,7 @@ const BulkOperationsManager = () => {
         </TabsContent>
 
         <TabsContent value="upload" className="space-y-4">
-          <RealUploadManager />
+          <IntelligentUploadSystem />
         </TabsContent>
 
         <TabsContent value="history" className="space-y-4">
