@@ -179,14 +179,6 @@ const PortalTabs = ({
       adminOnly: true
     },
     {
-      value: 'mvne-platform',
-      label: 'Addex Hub Platform',
-      icon: '📡',
-      description: 'Telecom Infrastructure',
-      color: 'cyan',
-      adminOnly: true
-    },
-    {
       value: 'admin',
       label: 'The Nerve Center',
       icon: '🧠',
@@ -322,10 +314,6 @@ const PortalTabs = ({
           
           <TabsContent value="api-toolkit" className="mobile-section-spacing p-2 sm:p-3 md:p-4 lg:p-6 animate-fade-in">
             <APIToolkit />
-          </TabsContent>
-          
-          <TabsContent value="mvne-platform" className="mobile-section-spacing p-1 sm:p-2 animate-fade-in">
-            <MVNEPortal />
           </TabsContent>
           
           <TabsContent value="admin-reg" className="mobile-section-spacing p-2 sm:p-3 md:p-4 lg:p-6 animate-fade-in">
