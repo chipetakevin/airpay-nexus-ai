@@ -1,7 +1,7 @@
 
 import { useState } from 'react';
 import { useToast } from '@/hooks/use-toast';
-import { usePermanentAuth } from './usePermanentAuth';
+import { useEnhancedAuth } from './useEnhancedAuth';
 import { usePhoneValidation } from '@/hooks/usePhoneValidation';
 import { usePermanentFormStorage } from './usePermanentFormStorage';
 import { validateSouthAfricanBankAccount } from '@/utils/bankingValidation';
@@ -41,7 +41,7 @@ export const useAdminRegistration = () => {
 
   const [errors, setErrors] = useState<Partial<Record<keyof AdminFormData, string>>>({});
   const { toast } = useToast();
-  const { createPermanentSession } = usePermanentAuth();
+  const { createPersistentSession } = useEnhancedAuth();
   const { validateSouthAfricanMobile } = usePhoneValidation();
   const { savePermanently, loadPermanentData, autoSave } = usePermanentFormStorage('admin');
 
@@ -127,7 +127,7 @@ export const useAdminRegistration = () => {
         finalPhone = normalizedPhone.substring(1);
       }
       
-      // Create user credentials with permanent session flag
+      // Create user credentials with 15-day session for admin
       const userCredentials = {
         email: formData.email,
         password: formData.password,
@@ -136,8 +136,7 @@ export const useAdminRegistration = () => {
         lastName: formData.lastName,
         phone: finalPhone,
         registeredPhone: `+27${finalPhone}`,
-        phoneNumber: finalPhone,
-        permanentSession: true // Flag for permanent session
+        phoneNumber: finalPhone
       };
 
       const adminData = {
@@ -155,20 +154,18 @@ export const useAdminRegistration = () => {
         registrationDate: new Date().toISOString()
       };
 
-      // Store permanent session flags
-      localStorage.setItem('userCredentials', JSON.stringify(userCredentials));
-      localStorage.setItem('onecardAdmin', JSON.stringify(adminData));
-      localStorage.setItem('userAuthenticated', 'true');
-      localStorage.setItem('adminAuthenticated', 'true');
+      // Create 15-day admin session using enhanced auth
+      createPersistentSession(adminData, userCredentials);
+      
+      console.log('✅ Admin registration completed with 15-day session expiry');
+
+      
+      // Store registration completion flags
       localStorage.setItem('registrationCompleted', 'true');
-      localStorage.setItem('permanentSession', 'true');
-      localStorage.setItem('sessionType', 'permanent');
-
-      // Create permanent session that NEVER expires
-      createPermanentSession(userCredentials, adminData);
+      localStorage.setItem('adminAuthenticated', 'true');
+      
+      // Save form data permanently
       await savePermanently(formData);
-
-      console.log('✅ Admin registration completed with PERMANENT session - never expires');
 
       // Trigger automatic collapse by dispatching storage event
       window.dispatchEvent(new StorageEvent('storage', {
