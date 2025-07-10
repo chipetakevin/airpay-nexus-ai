@@ -40,9 +40,9 @@ const DesktopNavigation = ({ isHomePage, handleQuickShopClick }: DesktopNavigati
 
   return (
     <>
-      {/* Desktop Navigation - Enhanced Spacing & Appeal */}
+      {/* Desktop Navigation - Consistent Spacing & Sizing */}
       <nav className="hidden md:flex items-center justify-center flex-1 mx-8">
-        <div className={`flex items-center ${isHomePage ? 'space-x-12 lg:space-x-16 xl:space-x-20' : 'space-x-6 lg:space-x-8'}`}>
+        <div className="flex items-center space-x-8 lg:space-x-10 xl:space-x-12">
           {navigationItems
             .filter(item => {
               // Remove Home tab on desktop, keep essential items on homepage
@@ -56,7 +56,7 @@ const DesktopNavigation = ({ isHomePage, handleQuickShopClick }: DesktopNavigati
               <Link
                 key={item.path}
                 to={item.path}
-                className={`group relative px-6 lg:px-8 py-4 rounded-2xl transition-all duration-300 flex items-center gap-3 text-sm font-medium whitespace-nowrap hover:scale-105 transform ${
+                className={`group relative px-6 py-3 rounded-xl transition-all duration-300 flex items-center justify-center gap-2 font-medium whitespace-nowrap hover:scale-105 transform min-w-[140px] lg:min-w-[160px] ${
                   isActive(item.path)
                     ? 'bg-white text-[#75B8FA] shadow-xl shadow-white/30 border border-white/20'
                     : item.isHighlight
@@ -64,13 +64,12 @@ const DesktopNavigation = ({ isHomePage, handleQuickShopClick }: DesktopNavigati
                       : 'text-white hover:bg-white/25 hover:text-white hover:shadow-xl hover:shadow-white/15 border border-transparent hover:border-white/20'
                 }`}
               >
-                <span className="text-xl group-hover:scale-125 transition-all duration-300">{item.icon}</span>
-                <span className="hidden lg:inline text-base font-bold tracking-wide">{item.label}</span>
-                <span className="lg:hidden text-base font-bold">{item.label.split(' ')[0]}</span>
+                <span className="text-lg group-hover:scale-110 transition-all duration-300">{item.icon}</span>
+                <span className="text-sm lg:text-base font-semibold">{item.label}</span>
                 {item.badge && (
                   <Badge 
                     variant="secondary" 
-                    className="bg-gradient-to-r from-yellow-400 to-orange-400 text-black text-[11px] px-3 py-1.5 font-black border-0 animate-pulse shadow-lg"
+                    className="bg-gradient-to-r from-yellow-400 to-orange-400 text-black text-[10px] px-2 py-1 font-bold border-0 animate-pulse shadow-lg"
                   >
                     {item.badge}
                   </Badge>
