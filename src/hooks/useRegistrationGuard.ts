@@ -94,8 +94,18 @@ export const useRegistrationGuard = () => {
     const isAllowedPath = allowedPaths.some(path => currentPath.includes(path));
     
     if (!isAllowedPath && !isRegistered && !isChecking) {
-      // Silent redirect without toast notification
-      navigate('/registration');
+      toast({
+        title: "Registration Required",
+        description: "Please complete your registration to access this service.",
+        variant: "destructive",
+        duration: 4000,
+      });
+      
+      // Redirect to registration
+      setTimeout(() => {
+        navigate('/portal?tab=registration');
+      }, 1500);
+      
       return false;
     }
     

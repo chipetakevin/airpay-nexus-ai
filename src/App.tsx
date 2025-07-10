@@ -73,7 +73,6 @@ const App = () => (
             <Route path="/ai-powered-deals" element={<AIPoweredDeals />} />
             <Route path="/porting-system" element={<PortingSystem />} />
             <Route path="/rica-registration" element={<RICARegistration />} />
-            <Route path="/registration" element={<RegistrationHub />} />
             <Route path="/registration-hub" element={<RegistrationHub />} />
             <Route path="/admin-mvne" element={<AdminMVNEDashboard />} />
             <Route path="/mobile-dashboard" element={<MobileDashboard />} />

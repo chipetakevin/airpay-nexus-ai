@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { ScrollArea } from '@/components/ui/scroll-area';
 import { Shield, CreditCard, Smartphone, CheckCircle, Lock, Globe } from 'lucide-react';
 import { CartItem } from '@/hooks/useWhatsAppShopping';
 import { supabase } from '@/integrations/supabase/client';
@@ -269,8 +268,7 @@ Website: www.addex-hub.co.za
   }
 
   return (
-    <ScrollArea className="max-h-[400px]">
-      <div className="space-y-6">
+    <div className="space-y-6">
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
@@ -293,25 +291,18 @@ Website: www.addex-hub.co.za
                         : 'border-gray-200 hover:border-gray-300'
                     }`}
                   >
-                     <div className="flex items-center gap-3">
-                       {method.icon}
-                       <div className="flex-1">
-                         <div className="flex items-center gap-2">
-                           {method.id === 'whatsapp-pay' ? (
-                             <div className="flex flex-col">
-                               <span className="font-semibold text-base leading-tight">Divine Pay,</span>
-                               <span className="text-sm text-gray-600 leading-tight">Powered By OneCard</span>
-                             </div>
-                           ) : (
-                             <span className="font-medium">{method.name}</span>
-                           )}
-                           {method.recommended && (
-                             <Badge className="bg-green-600 text-white text-xs">Recommended</Badge>
-                           )}
-                         </div>
-                         <p className="text-sm text-gray-600 mt-1">{method.description}</p>
-                       </div>
-                     </div>
+                    <div className="flex items-center gap-3">
+                      {method.icon}
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2">
+                          <span className="font-medium">{method.name}</span>
+                          {method.recommended && (
+                            <Badge className="bg-green-600 text-white">Recommended</Badge>
+                          )}
+                        </div>
+                        <p className="text-sm text-gray-600">{method.description}</p>
+                      </div>
+                    </div>
                   </div>
                 ))}
               </div>
@@ -376,8 +367,7 @@ Website: www.addex-hub.co.za
       <Button variant="outline" onClick={onBack} className="w-full">
         Back to Cart
       </Button>
-      </div>
-    </ScrollArea>
+    </div>
   );
 };
 
