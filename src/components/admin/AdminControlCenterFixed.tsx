@@ -253,40 +253,12 @@ const AdminControlCenterFixed: React.FC<AdminControlCenterProps> = ({
                 </div>
               </div>
               
-              {/* Desktop Action Buttons */}
-              <div className="hidden sm:flex items-center gap-2 sm:gap-3 flex-shrink-0">
-                <Button variant="outline" size="sm" className="text-blue-600 border-blue-200 hover:bg-blue-50">
-                  Close
-                </Button>
-                <Button size="sm" className="bg-red-600 hover:bg-red-700 text-white">
-                  Logout
-                </Button>
-                <div className="p-2 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-lg shadow-lg">
-                  <Badge className="bg-yellow-400 text-yellow-900 font-bold text-xs px-2 py-1">
-                    ADMIN
-                  </Badge>
-                </div>
-              </div>
+              {/* Action buttons removed per user request */}
             </div>
 
-            {/* Mobile Description and Actions */}
+            {/* Mobile Description */}
             <div className="sm:hidden">
-              <p className="text-xs text-muted-foreground mb-3">Complete system administration and oversight</p>
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <Button variant="outline" size="sm" className="text-blue-600 border-blue-200 hover:bg-blue-50 text-xs px-3">
-                    Close
-                  </Button>
-                  <Button size="sm" className="bg-red-600 hover:bg-red-700 text-white text-xs px-3">
-                    Logout
-                  </Button>
-                </div>
-                <div className="p-1.5 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-lg shadow-lg">
-                  <Badge className="bg-yellow-400 text-yellow-900 font-bold text-xs px-2 py-0.5">
-                    ADMIN
-                  </Badge>
-                </div>
-              </div>
+              <p className="text-xs text-muted-foreground">Complete system administration and oversight</p>
             </div>
           </div>
         </div>
