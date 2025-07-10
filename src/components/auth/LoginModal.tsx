@@ -112,11 +112,49 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
             });
           }
         } else {
-          toast({
-            title: "Account Not Found",
-            description: "No account found. Please sign up first or check if you registered on this device.",
-            variant: "destructive"
-          });
+          // Auto-create account for demo credentials
+          if (email === 'chipetakevin@gmail.com' && password === 'Malawi@1976') {
+            const userData = {
+              firstName: 'Kevin',
+              lastName: 'Chipeta',
+              email: email,
+              cardNumber: `OC${Math.random().toString().substr(2, 8)}`,
+              registeredPhone: '+27832466539',
+              balance: 150.50
+            };
+            
+            const userCredentials = {
+              email,
+              password,
+              userType: 'customer',
+              firstName: 'Kevin',
+              lastName: 'Chipeta'
+            };
+            
+            localStorage.setItem('userCredentials', JSON.stringify(userCredentials));
+            localStorage.setItem('onecardUser', JSON.stringify(userData));
+            localStorage.setItem('userAuthenticated', 'true');
+
+            // Create persistent session
+            createPersistentSession(userData, userCredentials);
+            
+            toast({
+              title: "Login Successful! 🎉",
+              description: "Welcome Kevin! Your session will persist for 24 hours.",
+            });
+            
+            setTimeout(() => {
+              window.location.href = '/portal?tab=onecard';
+            }, 1000);
+            
+            onClose();
+          } else {
+            toast({
+              title: "Account Not Found",
+              description: "No account found. Please sign up first or use the demo credentials (chipetakevin@gmail.com / Malawi@1976).",
+              variant: "destructive"
+            });
+          }
         }
       }
       
