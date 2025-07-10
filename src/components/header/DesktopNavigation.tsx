@@ -40,59 +40,61 @@ const DesktopNavigation = ({ isHomePage, handleQuickShopClick }: DesktopNavigati
 
   return (
     <>
-      {/* Desktop Navigation - Cleaner Layout */}
-      <nav className="hidden md:flex items-center space-x-2 lg:space-x-3">
-        {navigationItems
-          .filter(item => {
-            // On homepage, only show essential navigation items
-            if (isHomePage) {
-              return ['/', '/portal?tab=deals', '/whatsapp-assistant'].includes(item.path);
-            }
-            return true;
-          })
-          .map((item) => (
-            <Link
-              key={item.path}
-              to={item.path}
-              className={`relative px-2 py-2 rounded-lg transition-all duration-200 flex items-center gap-1 text-sm font-medium whitespace-nowrap ${
-                isActive(item.path)
-                  ? 'bg-white text-[#75B8FA] shadow-sm'
-                  : item.isHighlight
-                    ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white hover:from-blue-700 hover:to-purple-700 shadow-sm'
-                    : 'text-white hover:bg-white/15 hover:text-white'
-              }`}
-            >
-              <span className="text-base">{item.icon}</span>
-              <span className="hidden lg:inline text-xs">{item.label}</span>
-              <span className="lg:hidden text-xs">{item.label.split(' ')[0]}</span>
-              {item.badge && (
-                <Badge 
-                  variant="secondary" 
-                  className="bg-yellow-400 text-black text-xs px-1 py-0.5 font-semibold border-0"
-                >
-                  {item.badge}
-                </Badge>
-              )}
-            </Link>
-          ))}
-        
-        {/* Buy Airtime & Data Tab - Compact Design */}
-        {isHomePage && (
-          <button
-            onClick={handleQuickShopClick}
-            className="relative px-2 py-2 rounded-lg transition-all duration-200 flex items-center gap-1 text-sm font-medium bg-gradient-to-r from-emerald-500 to-green-600 text-white hover:from-emerald-600 hover:to-green-700 shadow-sm"
-          >
-            <CreditCard className="w-4 h-4" />
-            <span className="hidden xl:inline text-xs">Buy Airtime</span>
-            <Badge className="bg-white text-emerald-600 text-xs px-1 py-0.5 font-semibold border-0">
-              Quick
-            </Badge>
-          </button>
-        )}
+      {/* Desktop Navigation - Enhanced Spacing & Appeal */}
+      <nav className="hidden md:flex items-center justify-center flex-1 mx-8">
+        <div className={`flex items-center ${isHomePage ? 'space-x-8 lg:space-x-12 xl:space-x-16' : 'space-x-4 lg:space-x-6'}`}>
+          {navigationItems
+            .filter(item => {
+              // On homepage, only show essential navigation items
+              if (isHomePage) {
+                return ['/', '/portal?tab=deals', '/whatsapp-assistant'].includes(item.path);
+              }
+              return true;
+            })
+            .map((item) => (
+              <Link
+                key={item.path}
+                to={item.path}
+                className={`group relative px-4 lg:px-6 py-3 rounded-xl transition-all duration-300 flex items-center gap-2 text-sm font-medium whitespace-nowrap hover:scale-105 ${
+                  isActive(item.path)
+                    ? 'bg-white text-[#75B8FA] shadow-lg shadow-white/20'
+                    : item.isHighlight
+                      ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white hover:from-blue-700 hover:to-purple-700 shadow-lg hover:shadow-xl'
+                      : 'text-white hover:bg-white/20 hover:text-white hover:shadow-lg hover:shadow-white/10'
+                }`}
+              >
+                <span className="text-lg group-hover:scale-110 transition-transform duration-200">{item.icon}</span>
+                <span className="hidden lg:inline text-sm font-semibold">{item.label}</span>
+                <span className="lg:hidden text-sm font-semibold">{item.label.split(' ')[0]}</span>
+                {item.badge && (
+                  <Badge 
+                    variant="secondary" 
+                    className="bg-yellow-400 text-black text-[10px] px-2 py-1 font-bold border-0 animate-pulse"
+                  >
+                    {item.badge}
+                  </Badge>
+                )}
+              </Link>
+            ))}
+        </div>
       </nav>
+        
+      {/* Buy Airtime & Data Tab - Compact Design */}
+      {isHomePage && (
+        <button
+          onClick={handleQuickShopClick}
+          className="hidden md:flex relative px-3 py-2.5 rounded-xl transition-all duration-300 items-center gap-2 text-sm font-medium bg-gradient-to-r from-emerald-500 to-green-600 text-white hover:from-emerald-600 hover:to-green-700 shadow-lg hover:scale-105"
+        >
+          <CreditCard className="w-5 h-5" />
+          <span className="hidden lg:inline text-sm font-semibold">Buy Airtime</span>
+          <Badge className="bg-white text-emerald-600 text-[10px] px-2 py-1 font-bold border-0">
+            Quick
+          </Badge>
+        </button>
+      )}
 
       {/* Authentication Status & WhatsApp Support - Compact */}
-      <div className="hidden md:flex items-center space-x-1">
+      <div className="hidden md:flex items-center space-x-3">
         {/* Login/Logout Status */}
         {isAuthenticated ? (
           <div className="flex items-center space-x-1">
