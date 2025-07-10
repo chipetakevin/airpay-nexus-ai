@@ -1,6 +1,43 @@
 
 import { ReceiptData } from './types.ts';
 
+export const generateWhatsAppUrl = (phoneNumber: string, message: string): string => {
+  const cleanNumber = phoneNumber.replace(/[^\d+]/g, '');
+  const encodedMessage = encodeURIComponent(message);
+  return `https://wa.me/${cleanNumber.replace('+', '')}?text=${encodedMessage}`;
+};
+
+export const detectRecipientType = (data: ReceiptData): 'self' | 'sender' | 'recipient' => {
+  if (data.recipientPhone === data.customerPhone) {
+    return 'self';
+  }
+  if (data.recipientName || data.recipientPhone !== data.customerPhone) {
+    return 'recipient';
+  }
+  return 'sender';
+};
+
+export const createAdaptiveMessage = (data: ReceiptData): string => {
+  const recipientType = detectRecipientType(data);
+  const baseMessage = formatWhatsAppMessage(data);
+  
+  let adaptiveIntro = '';
+  
+  switch (recipientType) {
+    case 'self':
+      adaptiveIntro = `Hi ${data.customerName || 'there'}! 👋\n\n`;
+      break;
+    case 'recipient':
+      adaptiveIntro = `Hi ${data.recipientName || 'there'}! 👋\n\nYou've received a gift from ${data.customerName || 'a friend'}!\n\n`;
+      break;
+    case 'sender':
+      adaptiveIntro = `Hi ${data.customerName || 'there'}! 👋\n\nHere's your purchase receipt:\n\n`;
+      break;
+  }
+  
+  return adaptiveIntro + baseMessage;
+};
+
 export const formatWhatsAppMessage = (data: ReceiptData): string => {
   const loyaltyPoints = Math.round(data.total * 2);
 

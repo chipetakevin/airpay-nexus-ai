@@ -118,16 +118,22 @@ export const useWhatsAppShopping = () => {
         quantity: item.quantity
       }));
 
-      // Create receipt data with enhanced security info
+      // Create enhanced receipt data for seamless WhatsApp delivery
       const receiptData = {
         transactionId,
         customerName: `${currentUser?.firstName} ${currentUser?.lastName}`,
         customerPhone,
+        customerEmail: currentUser?.email,
+        recipientPhone: customerPhone, // Default to customer phone
+        recipientName: `${currentUser?.firstName} ${currentUser?.lastName}`,
         items: serializableItems,
         total,
         timestamp: new Date().toISOString(),
-        paymentMethod: paymentData.method || 'WhatsApp Payment',
+        paymentMethod: paymentData.method || 'Divine Pay',
         language: selectedLanguage,
+        status: 'Completed',
+        purchaseType: 'self',
+        isUnknownRecipient: false,
         securityVerified: paymentData.securityVerified || true,
         encryptionLevel: 'AES-256',
         twoFactorAuth: true

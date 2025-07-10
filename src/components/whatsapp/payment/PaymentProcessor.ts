@@ -24,16 +24,15 @@ export const processPayment = async (formData: any, saveCard: boolean, toast: an
       
       toast({
         title: "Payment Successful! ✅",
-        description: `Transaction ID: ${transactionId}. Your order will be processed shortly.`,
+        description: `Transaction ID: ${transactionId}. Preparing your receipt...`,
       });
       
-      // Simulate email and WhatsApp confirmation
-      setTimeout(() => {
-        toast({
-          title: "Confirmation Sent 📧",
-          description: "Check your email and WhatsApp for order confirmation",
-        });
-      }, 1000);
+      // Return success with transaction data for receipt generation
+      return {
+        success: true,
+        transactionId,
+        customerData: formData
+      };
       
       // Redirect back after success
       setTimeout(() => {

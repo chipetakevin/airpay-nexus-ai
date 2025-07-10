@@ -6,7 +6,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Shield, CreditCard, Smartphone, CheckCircle, Lock, Globe } from 'lucide-react';
 import { CartItem } from '@/hooks/useWhatsAppShopping';
 import { supabase } from '@/integrations/supabase/client';
-import EnhancedReceiptManager from './EnhancedReceiptManager';
+import WhatsAppReceiptDeliveryFlow from './WhatsAppReceiptDeliveryFlow';
 
 interface WhatsAppPaymentProcessorProps {
   items: CartItem[];
@@ -261,9 +261,9 @@ Website: www.addex-hub.co.za
 
   if (step === 'receipt' && finalReceiptData) {
     return (
-      <EnhancedReceiptManager
+      <WhatsAppReceiptDeliveryFlow
         receiptData={finalReceiptData}
-        onClose={onBack}
+        onComplete={onBack}
       />
     );
   }
