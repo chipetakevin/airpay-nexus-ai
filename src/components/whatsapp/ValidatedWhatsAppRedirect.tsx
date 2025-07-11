@@ -195,40 +195,49 @@ const ValidatedWhatsAppRedirect = ({
   if (variant === 'floating') {
     return (
       <div className={`relative overflow-hidden rounded-2xl border-2 shadow-lg transition-all duration-300 ${className}`}>
-        {/* Enhanced Header with Gradient Background */}
-        <div className="bg-gradient-to-r from-green-400 via-emerald-500 to-green-600 p-4">
-          <div className="flex items-center justify-between">
+        {/* Enhanced Header with Gradient Background and Centered Logo */}
+        <div className="bg-gradient-to-r from-green-400 via-emerald-500 to-green-600 p-6">
+          {/* Divine Mobile Logo - Centered */}
+          <div className="flex justify-center mb-4">
+            <img 
+              src="/lovable-uploads/37a64dec-5abd-43e4-b895-e4ad1610d555.png" 
+              alt="Divine Mobile Logo"
+              className="h-12 w-auto object-contain drop-shadow-lg"
+            />
+          </div>
+          
+          <div className="flex items-center justify-between gap-4">
             {/* Left Tab - Quick Shopping */}
             <div 
-              className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-all duration-300 ${
+              className={`flex items-center gap-2 px-6 py-3 rounded-xl transition-all duration-300 flex-1 ${
                 isAuthenticated 
-                  ? 'bg-white/20 backdrop-blur-sm border border-white/30 cursor-pointer hover:bg-white/30' 
-                  : 'bg-gray-400/30 cursor-not-allowed opacity-60'
+                  ? 'bg-white/25 backdrop-blur-sm border border-white/40 cursor-pointer hover:bg-white/35 shadow-lg' 
+                  : 'bg-white/10 cursor-not-allowed opacity-50 border border-white/20'
               }`}
               onClick={isAuthenticated ? () => {/* Quick shop action */} : undefined}
             >
-              <MessageCircle className={`w-4 h-4 ${isAuthenticated ? 'text-white' : 'text-gray-300'}`} />
-              <span className={`text-sm font-medium ${isAuthenticated ? 'text-white' : 'text-gray-300'}`}>
+              <MessageCircle className={`w-5 h-5 ${isAuthenticated ? 'text-white drop-shadow-sm' : 'text-white/60'}`} />
+              <span className={`text-sm font-semibold ${isAuthenticated ? 'text-white drop-shadow-sm' : 'text-white/60'}`}>
                 Quick Shopping?
               </span>
-              {!isAuthenticated && <Lock className="w-3 h-3 text-gray-300 ml-1" />}
+              {!isAuthenticated && <Lock className="w-4 h-4 text-white/60 ml-2" />}
             </div>
 
             {/* Right Tab - WhatsApp Chat */}
             <div 
-              className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-all duration-300 ${
+              className={`flex items-center gap-2 px-6 py-3 rounded-xl transition-all duration-300 flex-1 ${
                 isAuthenticated 
-                  ? 'bg-white text-green-700 cursor-pointer hover:bg-green-50 border border-green-200 shadow-sm' 
-                  : 'bg-gray-400/30 cursor-not-allowed opacity-60'
+                  ? 'bg-white text-green-700 cursor-pointer hover:bg-green-50 border border-green-200 shadow-lg' 
+                  : 'bg-white/10 cursor-not-allowed opacity-50 border border-white/20'
               }`}
               onClick={isAuthenticated ? handleWhatsAppRedirect : undefined}
             >
-              <MessageCircle className={`w-4 h-4 ${isAuthenticated ? 'text-green-700' : 'text-gray-300'}`} />
-              <span className={`text-sm font-medium ${isAuthenticated ? 'text-green-700' : 'text-gray-300'}`}>
+              <MessageCircle className={`w-5 h-5 ${isAuthenticated ? 'text-green-700' : 'text-white/60'}`} />
+              <span className={`text-sm font-semibold ${isAuthenticated ? 'text-green-700' : 'text-white/60'}`}>
                 WhatsApp Chat
               </span>
-              <ArrowRight className={`w-3 h-3 ${isAuthenticated ? 'text-green-700' : 'text-gray-300'} ml-1`} />
-              {!isAuthenticated && <Lock className="w-3 h-3 text-gray-300 ml-1" />}
+              <ArrowRight className={`w-4 h-4 ${isAuthenticated ? 'text-green-700' : 'text-white/60'} ml-2`} />
+              {!isAuthenticated && <Lock className="w-4 h-4 text-white/60 ml-2" />}
             </div>
           </div>
         </div>
