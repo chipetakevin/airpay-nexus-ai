@@ -195,17 +195,8 @@ const ValidatedWhatsAppRedirect = ({
   if (variant === 'floating') {
     return (
       <div className={`relative overflow-hidden rounded-2xl border-2 shadow-lg transition-all duration-300 ${className}`}>
-        {/* Enhanced Header with Gradient Background and Centered Logo */}
-        <div className="bg-gradient-to-r from-green-400 via-emerald-500 to-green-600 p-6">
-          {/* Divine Mobile Logo - Centered */}
-          <div className="flex justify-center mb-4">
-            <img 
-              src="/lovable-uploads/37a64dec-5abd-43e4-b895-e4ad1610d555.png" 
-              alt="Divine Mobile Logo"
-              className="h-12 w-auto object-contain drop-shadow-lg"
-            />
-          </div>
-          
+        {/* Enhanced Header with Gradient Background */}
+        <div className="bg-gradient-to-r from-green-400 via-emerald-500 to-green-600 p-4">
           <div className="flex items-center justify-between gap-4">
             {/* Left Tab - Quick Shopping */}
             <div 
@@ -313,15 +304,7 @@ const ValidatedWhatsAppRedirect = ({
           ) : (
             /* Multilingual Registration Notice for Unregistered Users */
             <div className="space-y-4">
-              {/* Divine Mobile Logo Header */}
-              <div className="text-center space-y-3">
-                <div className="flex justify-center mb-4">
-                  <img 
-                    src="/lovable-uploads/37a64dec-5abd-43e4-b895-e4ad1610d555.png" 
-                    alt="Divine Mobile Logo"
-                    className="h-16 w-auto object-contain"
-                  />
-                </div>
+              <div className="text-center space-y-2">
                 <div className="w-16 h-16 bg-gradient-to-br from-gray-400 to-gray-500 rounded-full flex items-center justify-center mx-auto opacity-60">
                   <Lock className="w-8 h-8 text-white" />
                 </div>
