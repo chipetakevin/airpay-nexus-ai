@@ -25,9 +25,13 @@ export const useWhatsAppRedirect = () => {
     if (!isAuthenticated || !currentUser) {
       toast({
         title: "Registration Required",
-        description: "Please register first to access WhatsApp shopping experience.",
-        variant: "destructive",
+        description: "Redirecting to registration to access WhatsApp shopping experience.",
+        duration: 2000,
       });
+      // Redirect to RICA registration page
+      setTimeout(() => {
+        window.location.href = '/rica-registration';
+      }, 500);
       return false;
     }
 
