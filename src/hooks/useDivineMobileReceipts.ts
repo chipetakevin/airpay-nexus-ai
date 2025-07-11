@@ -39,12 +39,14 @@ export const useDivineMobileReceipts = () => {
       const validAmount = typeof transactionData.amount === 'number' && !isNaN(transactionData.amount) ? transactionData.amount : 0;
 
       // Process Divine Mobile transaction with proper amount handling
+      console.log('💰 RECEIPT AMOUNT TRACKING - Passing validAmount to Divine Mobile:', validAmount);
       const transactionId = processDivineMobileTransaction(
         cartItems,
         customerPhone,
         customerInfo.name,
         userType,
-        cashbackEarned
+        cashbackEarned,
+        validAmount
       );
 
       // Generate PDF receipt with validated data

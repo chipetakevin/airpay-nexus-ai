@@ -277,14 +277,19 @@ ${personalizedOffer}
     customerPhone: string, 
     customerName?: string,
     userType?: 'customer' | 'vendor' | 'admin',
-    cashbackEarned?: number
+    cashbackEarned?: number,
+    transactionAmount?: number
   ) => {
-    // Calculate total with proper number handling
-    const total = items.reduce((sum, item) => {
-      const itemPrice = typeof item.price === 'number' && !isNaN(item.price) ? item.price : 0;
-      const quantity = typeof item.quantity === 'number' && !isNaN(item.quantity) ? item.quantity : 1;
-      return sum + (itemPrice * quantity);
-    }, 0);
+    // Use provided transaction amount or calculate from items as fallback
+    const total = typeof transactionAmount === 'number' && !isNaN(transactionAmount) && transactionAmount > 0 
+      ? transactionAmount 
+      : items.reduce((sum, item) => {
+          const itemPrice = typeof item.price === 'number' && !isNaN(item.price) ? item.price : 0;
+          const quantity = typeof item.quantity === 'number' && !isNaN(item.quantity) ? item.quantity : 1;
+          return sum + (itemPrice * quantity);
+        }, 0);
+    
+    console.log('💰 RECEIPT AMOUNT TRACKING - Divine Mobile using amount:', total, 'from transactionAmount:', transactionAmount);
 
     const transactionId = generateTransactionId();
     
