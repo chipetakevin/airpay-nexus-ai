@@ -194,41 +194,64 @@ const ValidatedWhatsAppRedirect = ({
 
   if (variant === 'floating') {
     return (
-      <div className={`relative overflow-hidden rounded-2xl border-2 shadow-lg transition-all duration-300 ${className}`}>
-        {/* Enhanced Header with Gradient Background */}
-        <div className="bg-gradient-to-r from-green-400 via-emerald-500 to-green-600 p-4">
-          <div className="flex items-center justify-between gap-4">
+      <div className={`relative overflow-hidden rounded-2xl border-2 shadow-xl transition-all duration-300 ${className}`}>
+        {/* Enhanced Header with Better Text Visibility */}
+        <div className="bg-gradient-to-r from-green-400 via-emerald-500 to-green-600 p-6 relative">
+          {/* Subtle overlay for better text contrast */}
+          <div className="absolute inset-0 bg-black/10"></div>
+          
+          <div className="relative flex items-center justify-between gap-6">
             {/* Left Tab - Quick Shopping */}
             <div 
-              className={`flex items-center gap-2 px-6 py-3 rounded-xl transition-all duration-300 flex-1 ${
+              className={`flex items-center gap-3 px-8 py-4 rounded-2xl transition-all duration-300 flex-1 relative ${
                 isAuthenticated 
-                  ? 'bg-white/25 backdrop-blur-sm border border-white/40 cursor-pointer hover:bg-white/35 shadow-lg' 
-                  : 'bg-white/10 cursor-not-allowed opacity-50 border border-white/20'
+                  ? 'bg-white/30 backdrop-blur-md border-2 border-white/50 cursor-pointer hover:bg-white/40 shadow-2xl hover:scale-[1.02]' 
+                  : 'bg-black/20 cursor-not-allowed opacity-60 border-2 border-white/20'
               }`}
               onClick={isAuthenticated ? () => {/* Quick shop action */} : undefined}
             >
-              <MessageCircle className={`w-5 h-5 ${isAuthenticated ? 'text-white drop-shadow-sm' : 'text-white/60'}`} />
-              <span className={`text-sm font-semibold ${isAuthenticated ? 'text-white drop-shadow-sm' : 'text-white/60'}`}>
-                Quick Shopping?
-              </span>
-              {!isAuthenticated && <Lock className="w-4 h-4 text-white/60 ml-2" />}
+              <MessageCircle className={`w-6 h-6 ${isAuthenticated ? 'text-white drop-shadow-lg' : 'text-white/50'}`} />
+              <div className="flex-1">
+                <span className={`text-base font-bold tracking-wide ${isAuthenticated ? 'text-white drop-shadow-lg' : 'text-white/50'}`}>
+                  Quick
+                </span>
+                <br />
+                <span className={`text-base font-bold tracking-wide ${isAuthenticated ? 'text-white drop-shadow-lg' : 'text-white/50'}`}>
+                  Shopping?
+                </span>
+              </div>
+              {!isAuthenticated && (
+                <div className="absolute top-2 right-2">
+                  <Lock className="w-5 h-5 text-white/70 drop-shadow-lg" />
+                </div>
+              )}
             </div>
 
             {/* Right Tab - WhatsApp Chat */}
             <div 
-              className={`flex items-center gap-2 px-6 py-3 rounded-xl transition-all duration-300 flex-1 ${
+              className={`flex items-center gap-3 px-8 py-4 rounded-2xl transition-all duration-300 flex-1 relative ${
                 isAuthenticated 
-                  ? 'bg-white text-green-700 cursor-pointer hover:bg-green-50 border border-green-200 shadow-lg' 
-                  : 'bg-white/10 cursor-not-allowed opacity-50 border border-white/20'
+                  ? 'bg-white text-green-700 cursor-pointer hover:bg-green-50 border-2 border-green-200 shadow-2xl hover:scale-[1.02]' 
+                  : 'bg-black/20 cursor-not-allowed opacity-60 border-2 border-white/20'
               }`}
               onClick={isAuthenticated ? handleWhatsAppRedirect : undefined}
             >
-              <MessageCircle className={`w-5 h-5 ${isAuthenticated ? 'text-green-700' : 'text-white/60'}`} />
-              <span className={`text-sm font-semibold ${isAuthenticated ? 'text-green-700' : 'text-white/60'}`}>
-                WhatsApp Chat
-              </span>
-              <ArrowRight className={`w-4 h-4 ${isAuthenticated ? 'text-green-700' : 'text-white/60'} ml-2`} />
-              {!isAuthenticated && <Lock className="w-4 h-4 text-white/60 ml-2" />}
+              <MessageCircle className={`w-6 h-6 ${isAuthenticated ? 'text-green-700' : 'text-white/50'}`} />
+              <div className="flex-1">
+                <span className={`text-base font-bold tracking-wide ${isAuthenticated ? 'text-green-700' : 'text-white/50'}`}>
+                  WhatsApp
+                </span>
+                <br />
+                <span className={`text-base font-bold tracking-wide ${isAuthenticated ? 'text-green-700' : 'text-white/50'}`}>
+                  Chat
+                </span>
+              </div>
+              <ArrowRight className={`w-5 h-5 ${isAuthenticated ? 'text-green-700' : 'text-white/50'}`} />
+              {!isAuthenticated && (
+                <div className="absolute top-2 right-2">
+                  <Lock className="w-5 h-5 text-white/70 drop-shadow-lg" />
+                </div>
+              )}
             </div>
           </div>
         </div>
