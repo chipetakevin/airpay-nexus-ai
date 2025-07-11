@@ -31,7 +31,8 @@ export const processPayment = async (formData: any, saveCard: boolean, toast: an
       return {
         success: true,
         transactionId,
-        customerData: formData
+        customerData: formData,
+        amount: formData.amount || formData.totalAmount || 0
       };
       
       // Redirect back after success
