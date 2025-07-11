@@ -195,62 +195,56 @@ const ValidatedWhatsAppRedirect = ({
   if (variant === 'floating') {
     return (
       <div className={`relative overflow-hidden rounded-2xl border-2 shadow-xl transition-all duration-300 ${className}`}>
-        {/* Enhanced Header with Better Text Visibility */}
-        <div className="bg-gradient-to-r from-green-400 via-emerald-500 to-green-600 p-6 relative">
-          {/* Subtle overlay for better text contrast */}
-          <div className="absolute inset-0 bg-black/10"></div>
+        {/* Mobile-Optimized Header with High Contrast Text */}
+        <div className="bg-gradient-to-r from-green-500 via-emerald-600 to-green-700 p-3 sm:p-6 relative">
+          {/* Dark overlay for maximum text contrast */}
+          <div className="absolute inset-0 bg-black/20"></div>
           
-          <div className="relative flex items-center justify-between gap-6">
+          <div className="relative flex flex-col sm:flex-row items-stretch gap-3 sm:gap-6">
             {/* Left Tab - Quick Shopping */}
             <div 
-              className={`flex items-center gap-3 px-8 py-4 rounded-2xl transition-all duration-300 flex-1 relative ${
+              className={`flex items-center gap-2 sm:gap-3 px-4 sm:px-6 py-3 sm:py-4 rounded-xl sm:rounded-2xl transition-all duration-300 flex-1 relative min-h-[60px] sm:min-h-[80px] ${
                 isAuthenticated 
-                  ? 'bg-white/30 backdrop-blur-md border-2 border-white/50 cursor-pointer hover:bg-white/40 shadow-2xl hover:scale-[1.02]' 
-                  : 'bg-black/20 cursor-not-allowed opacity-60 border-2 border-white/20'
+                  ? 'bg-white/90 backdrop-blur-md border-2 border-white cursor-pointer hover:bg-white shadow-2xl hover:scale-[1.02] active:scale-[0.98]' 
+                  : 'bg-gray-800/80 cursor-not-allowed border-2 border-gray-600'
               }`}
               onClick={isAuthenticated ? () => {/* Quick shop action */} : undefined}
             >
-              <MessageCircle className={`w-6 h-6 ${isAuthenticated ? 'text-white drop-shadow-lg' : 'text-white/50'}`} />
-              <div className="flex-1">
-                <span className={`text-base font-bold tracking-wide ${isAuthenticated ? 'text-white drop-shadow-lg' : 'text-white/50'}`}>
+              <MessageCircle className={`w-5 h-5 sm:w-6 sm:h-6 flex-shrink-0 ${isAuthenticated ? 'text-green-700' : 'text-gray-400'}`} />
+              <div className="flex-1 text-left">
+                <div className={`text-sm sm:text-base font-bold leading-tight ${isAuthenticated ? 'text-green-800' : 'text-gray-400'}`}>
                   Quick
-                </span>
-                <br />
-                <span className={`text-base font-bold tracking-wide ${isAuthenticated ? 'text-white drop-shadow-lg' : 'text-white/50'}`}>
+                </div>
+                <div className={`text-sm sm:text-base font-bold leading-tight ${isAuthenticated ? 'text-green-800' : 'text-gray-400'}`}>
                   Shopping?
-                </span>
+                </div>
               </div>
               {!isAuthenticated && (
-                <div className="absolute top-2 right-2">
-                  <Lock className="w-5 h-5 text-white/70 drop-shadow-lg" />
-                </div>
+                <Lock className="w-4 h-4 sm:w-5 sm:h-5 text-gray-400 flex-shrink-0" />
               )}
             </div>
 
             {/* Right Tab - WhatsApp Chat */}
             <div 
-              className={`flex items-center gap-3 px-8 py-4 rounded-2xl transition-all duration-300 flex-1 relative ${
+              className={`flex items-center gap-2 sm:gap-3 px-4 sm:px-6 py-3 sm:py-4 rounded-xl sm:rounded-2xl transition-all duration-300 flex-1 relative min-h-[60px] sm:min-h-[80px] ${
                 isAuthenticated 
-                  ? 'bg-white text-green-700 cursor-pointer hover:bg-green-50 border-2 border-green-200 shadow-2xl hover:scale-[1.02]' 
-                  : 'bg-black/20 cursor-not-allowed opacity-60 border-2 border-white/20'
+                  ? 'bg-white/90 backdrop-blur-md border-2 border-white cursor-pointer hover:bg-white shadow-2xl hover:scale-[1.02] active:scale-[0.98]' 
+                  : 'bg-gray-800/80 cursor-not-allowed border-2 border-gray-600'
               }`}
               onClick={isAuthenticated ? handleWhatsAppRedirect : undefined}
             >
-              <MessageCircle className={`w-6 h-6 ${isAuthenticated ? 'text-green-700' : 'text-white/50'}`} />
-              <div className="flex-1">
-                <span className={`text-base font-bold tracking-wide ${isAuthenticated ? 'text-green-700' : 'text-white/50'}`}>
+              <MessageCircle className={`w-5 h-5 sm:w-6 sm:h-6 flex-shrink-0 ${isAuthenticated ? 'text-green-700' : 'text-gray-400'}`} />
+              <div className="flex-1 text-left">
+                <div className={`text-sm sm:text-base font-bold leading-tight ${isAuthenticated ? 'text-green-800' : 'text-gray-400'}`}>
                   WhatsApp
-                </span>
-                <br />
-                <span className={`text-base font-bold tracking-wide ${isAuthenticated ? 'text-green-700' : 'text-white/50'}`}>
-                  Chat
-                </span>
-              </div>
-              <ArrowRight className={`w-5 h-5 ${isAuthenticated ? 'text-green-700' : 'text-white/50'}`} />
-              {!isAuthenticated && (
-                <div className="absolute top-2 right-2">
-                  <Lock className="w-5 h-5 text-white/70 drop-shadow-lg" />
                 </div>
+                <div className={`text-sm sm:text-base font-bold leading-tight ${isAuthenticated ? 'text-green-800' : 'text-gray-400'}`}>
+                  Chat
+                </div>
+              </div>
+              <ArrowRight className={`w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0 ${isAuthenticated ? 'text-green-700' : 'text-gray-400'}`} />
+              {!isAuthenticated && (
+                <Lock className="w-4 h-4 sm:w-5 sm:h-5 text-gray-400 flex-shrink-0" />
               )}
             </div>
           </div>
