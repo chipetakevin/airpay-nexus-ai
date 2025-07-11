@@ -199,7 +199,9 @@ const EnhancedPaymentProcessor = ({ product, cartItems, onBack }: PaymentProcess
       address,
       city,
       postalCode,
-      cardType
+      cardType,
+      amount: total, // Add the total amount to form data
+      totalAmount: total // Also add as totalAmount for compatibility
     };
     
     const validationErrors = validatePaymentForm(formData, currentStep);
