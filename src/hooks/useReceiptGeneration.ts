@@ -101,9 +101,9 @@ export const useReceiptGeneration = () => {
             price: item.discountedPrice,
             type: item.dealType || 'airtime'
           })),
-          total: transactionData.amount,
-          timestamp: transactionData.timestamp,
-          recipientPhone: purchaseMode === 'self' ? customerPhone : recipientData.phone,
+           total: transactionData.amount,
+           timestamp: transactionData.timestamp,
+           recipientPhone: purchaseMode === 'self' ? customerPhone : recipientData.phone,
           recipientName: purchaseMode === 'self' ? 'Self' : capitalizeWords(recipientData.name),
           cashbackEarned: profitSharing.registeredCustomerReward || profitSharing.customerCashback || profitSharing.adminCashback || 0,
           purchaseType: purchaseMode === 'self' ? 'self' : 'sender',
@@ -215,7 +215,7 @@ export const useReceiptGeneration = () => {
 
 ${items}
 
-**Total Paid**: R${receiptData.total}
+**Total Paid**: R${receiptData.total.toFixed(2)}
 **Payment**: OneCard Mobile
 **Status**: Payment Successful ✅
 
@@ -272,9 +272,9 @@ ${items}
           price: item.discountedPrice,
           type: item.dealType || 'airtime'
         })),
-        total: transactionData.amount,
-        timestamp: transactionData.timestamp,
-        userType
+         total: transactionData.amount,
+         timestamp: transactionData.timestamp,
+         userType
       };
 
       // Force delivery regardless of registration status

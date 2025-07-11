@@ -28,6 +28,7 @@ export const processPayment = async (formData: any, saveCard: boolean, toast: an
       });
       
       // Return success with transaction data for receipt generation
+      console.log('💰 PaymentProcessor - Payment successful with amount:', formData.amount || formData.totalAmount || 0);
       return {
         success: true,
         transactionId,

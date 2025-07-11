@@ -30,6 +30,7 @@ export const useTransactionProcessing = () => {
         customerPrice,
         userType
       });
+      console.log('💰 AMOUNT TRACKING - Customer price being used for transaction:', customerPrice);
 
       const recipientPhone = purchaseMode === 'self' ? customerPhone : recipientData.phone;
       const recipientName = purchaseMode === 'self' ? 'Self' : recipientData.name;
@@ -56,7 +57,7 @@ export const useTransactionProcessing = () => {
         recipient_phone: recipientPhone,
         recipient_name: recipientName,
         recipient_relationship: purchaseMode === 'other' ? recipientData.relationship : null,
-        amount: customerPrice,
+         amount: customerPrice,
         original_price: networkCost,
         discounted_price: customerPrice,
         network: cartItems[0]?.network || detectedNetwork,
@@ -69,7 +70,8 @@ export const useTransactionProcessing = () => {
         timestamp: new Date().toISOString(),
         payment_method: 'stripe_checkout',
         phone_number: customerPhone
-      };
+       };
+       console.log('💰 AMOUNT TRACKING - Transaction data created with amount:', transactionData.amount);
 
       // Store transaction in appropriate storage based on user type
       const storageKey = userType === 'vendor' ? 'vendorTransactions' : userType === 'admin' ? 'adminTransactions' : 'userTransactions';
