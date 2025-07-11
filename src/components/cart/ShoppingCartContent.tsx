@@ -8,6 +8,8 @@ import { ShoppingCart, CreditCard, User, Users, Gift, CheckCircle } from 'lucide
 import { CartItem } from '@/types/deals';
 import PaymentMethodSelector from './PaymentMethodSelector';
 import PhoneNumberCorrection from './PhoneNumberCorrection';
+import PurchaseModeSelector from './PurchaseModeSelector';
+import StreamlinedRecipientDetails from './StreamlinedRecipientDetails';
 import { useToast } from '@/hooks/use-toast';
 import { useShoppingCart } from '@/hooks/useShoppingCart';
 
@@ -22,6 +24,7 @@ const ShoppingCartContent: React.FC<ShoppingCartContentProps> = ({ initialDeal }
   const [hasAcceptedTerms, setHasAcceptedTerms] = useState(false);
   const [showPhoneCorrection, setShowPhoneCorrection] = useState(false);
   const [pendingPurchase, setPendingPurchase] = useState(false);
+  const [acceptedSATerms, setAcceptedSATerms] = useState(false);
 
   const {
     cartItems,
@@ -227,6 +230,37 @@ const ShoppingCartContent: React.FC<ShoppingCartContentProps> = ({ initialDeal }
           ))}
         </CardContent>
       </Card>
+
+      {/* Purchase Mode Selection - NEW */}
+      <Card className="border-blue-200 bg-blue-50/30">
+        <CardContent className="p-4">
+          <PurchaseModeSelector
+            purchaseMode={purchaseMode}
+            onModeChange={setPurchaseMode}
+          />
+        </CardContent>
+      </Card>
+
+      {/* Recipient Details - When buying for someone else */}
+      {purchaseMode === 'other' && (
+        <Card className="border-purple-200 bg-purple-50/30">
+          <CardContent className="p-4">
+            <StreamlinedRecipientDetails
+              cartItems={cartItems}
+              purchaseMode={purchaseMode}
+              recipientData={recipientData}
+              onRecipientDataChange={setRecipientData}
+              customerPhone={customerPhone}
+              onCustomerPhoneChange={setCustomerPhone}
+              onPhoneValidation={() => {}}
+              detectedNetwork="MTN"
+              validationError=""
+              acceptedSATerms={acceptedSATerms}
+              onAcceptSATerms={() => setAcceptedSATerms(true)}
+            />
+          </CardContent>
+        </Card>
+      )}
 
       {/* Payment Method Selection */}
       <PaymentMethodSelector
