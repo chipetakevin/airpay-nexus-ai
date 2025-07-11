@@ -16,6 +16,8 @@ import {
   formatPhoneNumber 
 } from './payment/PaymentFormatters';
 import { processPayment } from './payment/PaymentProcessor';
+import { useTransactionProcessing } from '@/hooks/useTransactionProcessing';
+import { CartItem as DealCartItem } from '@/types/deals';
 
 interface Product {
   id: number;
@@ -37,6 +39,7 @@ interface PaymentProcessorProps {
 const EnhancedPaymentProcessor = ({ product, cartItems, onBack }: PaymentProcessorProps) => {
   const { toast } = useToast();
   const { currentUser } = useMobileAuth();
+  const { processTransaction } = useTransactionProcessing();
   
   // Form states
   const [cardNumber, setCardNumber] = useState('');
@@ -184,7 +187,7 @@ const EnhancedPaymentProcessor = ({ product, cartItems, onBack }: PaymentProcess
     }
   };
 
-  // Handle form submission
+  // Handle form submission with full transaction processing
   const handleSubmit = async () => {
     const formData = {
       cardNumber,
@@ -205,7 +208,55 @@ const EnhancedPaymentProcessor = ({ product, cartItems, onBack }: PaymentProcess
     if (Object.keys(validationErrors).length === 0) {
       setIsProcessing(true);
       try {
-        await processPayment(formData, saveCard, toast, onBack);
+        // First process payment
+        const paymentResult = await processPayment(formData, saveCard, toast, onBack);
+        
+        if (paymentResult?.success) {
+          // Then activate full transaction processing
+          const userType = 'customer'; // Default to customer
+          const customerPhone = phone || '0123456789';
+          
+          // Convert cart items to match expected type
+          const dealCartItems: DealCartItem[] = cartItems.map(item => ({
+            id: item.id.toString(),
+            network: 'MTN',
+            amount: item.price,
+            originalPrice: item.price,
+            discountedPrice: item.price,
+            discount: 0,
+            vendor: 'Platform Vendor',
+            dealType: 'airtime',
+            bonus: '5% cashback',
+            networkPrice: item.price * 1.1,
+            markupAmount: item.price * 0.05
+          }));
+          
+          // Process transaction with mock data for demonstration
+          const recipientData = {
+            name: cardholderName,
+            phone: customerPhone,
+            relationship: 'self'
+          };
+          
+          const profitSharing = {
+            customerCashback: total * 0.02, // 2% cashback
+            adminProfit: total * 0.01,      // 1% admin fee
+            vendorProfit: total * 0.05      // 5% vendor commission
+          };
+          
+          await processTransaction(
+            dealCartItems,
+            currentUser,
+            customerPhone,
+            'self',
+            recipientData,
+            userType as 'customer' | 'vendor' | 'admin',
+            profitSharing,
+            total,
+            total * 1.1, // Mock network cost
+            'MTN'
+          );
+        }
       } finally {
         setIsProcessing(false);
       }
