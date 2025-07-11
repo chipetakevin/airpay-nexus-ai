@@ -119,7 +119,7 @@ const ValidatedWhatsAppRedirect = ({
       });
       
       // Redirect to registration/profile completion
-      navigate('/registration');
+      navigate('/portal?tab=registration');
       return;
     }
 
@@ -366,7 +366,7 @@ const ValidatedWhatsAppRedirect = ({
                 </p>
                 
                 <Button
-                  onClick={() => navigate('/registration')}
+                  onClick={() => navigate('/portal?tab=registration')}
                   className="w-full bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white font-semibold rounded-lg"
                 >
                   <Crown className="w-4 h-4 mr-2" />
