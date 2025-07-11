@@ -7,6 +7,8 @@ import ReportsTabContent from './ReportsTabContent';
 import UserReceiptsTab from './UserReceiptsTab';
 import { AgenticAICashbackDashboard } from './reporting/AgenticAICashbackDashboard';
 import { PremiumMasterReport } from './reporting/PremiumMasterReport';
+import CashbackDashboard from './CashbackDashboard';
+import EnhancedReportsTab from './EnhancedReportsTab';
 
 interface OneCardTabsLayoutProps {
   userData: any;
@@ -75,9 +77,12 @@ const OneCardTabsLayout = ({
   return (
     <div className="w-full max-w-4xl mx-auto">
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <TabsList className="grid w-full grid-cols-2 md:grid-cols-6 mb-6">
+        <TabsList className="grid w-full grid-cols-2 md:grid-cols-7 mb-6">
           <TabsTrigger value="overview" className="text-xs sm:text-sm">
             💳 Overview
+          </TabsTrigger>
+          <TabsTrigger value="cashback-dashboard" className="text-xs sm:text-sm">
+            💰 Cashback
           </TabsTrigger>
           <TabsTrigger value="ai-analytics" className="text-xs sm:text-sm">
             🧠 AI Analytics
@@ -105,6 +110,10 @@ const OneCardTabsLayout = ({
             onToggleCardVisibility={onToggleCardVisibility}
             onAccessRewards={onAccessRewards}
           />
+        </TabsContent>
+
+        <TabsContent value="cashback-dashboard">
+          <CashbackDashboard />
         </TabsContent>
 
         <TabsContent value="ai-analytics">
@@ -135,7 +144,7 @@ const OneCardTabsLayout = ({
         </TabsContent>
 
         <TabsContent value="reports">
-          <ReportsTabContent />
+          <EnhancedReportsTab />
         </TabsContent>
       </Tabs>
     </div>
