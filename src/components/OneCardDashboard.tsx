@@ -11,18 +11,32 @@ const OneCardDashboard = () => {
   const [isAdminView, setIsAdminView] = useState(false);
 
   useEffect(() => {
-    const storedUser = localStorage.getItem('onecardUser');
-    if (storedUser) {
-      setUserData(JSON.parse(storedUser));
-    }
-
-    // Check if current user is admin and authenticated
+    // Check authentication first
     const isAuthenticated = localStorage.getItem('userAuthenticated') === 'true';
     const credentials = localStorage.getItem('userCredentials');
     
     if (isAuthenticated && credentials) {
       try {
         const parsedCredentials = JSON.parse(credentials);
+        
+        // Create default userData if authenticated
+        const defaultUserData = {
+          cardNumber: 'OC' + Math.random().toString().substr(2, 8),
+          name: parsedCredentials.name || 'OneCard User',
+          userType: parsedCredentials.userType,
+          cashbackBalance: 0,
+          totalEarned: 0
+        };
+        
+        // Check for stored OneCard user data, otherwise use default
+        const storedUser = localStorage.getItem('onecardUser');
+        if (storedUser) {
+          setUserData(JSON.parse(storedUser));
+        } else {
+          setUserData(defaultUserData);
+          localStorage.setItem('onecardUser', JSON.stringify(defaultUserData));
+        }
+        
         if (parsedCredentials.userType === 'admin') {
           setIsAdminView(true);
         }

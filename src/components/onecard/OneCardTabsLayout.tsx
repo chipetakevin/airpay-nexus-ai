@@ -9,6 +9,7 @@ import { AgenticAICashbackDashboard } from './reporting/AgenticAICashbackDashboa
 import { PremiumMasterReport } from './reporting/PremiumMasterReport';
 import CashbackDashboard from './CashbackDashboard';
 import EnhancedReportsTab from './EnhancedReportsTab';
+import IntelligentSettingsTab from './IntelligentSettingsTab';
 
 interface OneCardTabsLayoutProps {
   userData: any;
@@ -77,7 +78,7 @@ const OneCardTabsLayout = ({
   return (
     <div className="w-full max-w-4xl mx-auto">
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <TabsList className="grid w-full grid-cols-2 md:grid-cols-7 mb-6">
+        <TabsList className="grid w-full grid-cols-2 md:grid-cols-8 mb-6">
           <TabsTrigger value="overview" className="text-xs sm:text-sm">
             💳 Overview
           </TabsTrigger>
@@ -89,6 +90,9 @@ const OneCardTabsLayout = ({
           </TabsTrigger>
           <TabsTrigger value="premium-report" className="text-xs sm:text-sm">
             👑 Premium
+          </TabsTrigger>
+          <TabsTrigger value="settings" className="text-xs sm:text-sm">
+            ⚙️ Settings
           </TabsTrigger>
           <TabsTrigger value="history" className="text-xs sm:text-sm">
             📊 History
@@ -141,6 +145,10 @@ const OneCardTabsLayout = ({
             userType={userInfo.userType}
             onNavigateToTab={setActiveTab}
           />
+        </TabsContent>
+
+        <TabsContent value="settings">
+          <IntelligentSettingsTab />
         </TabsContent>
 
         <TabsContent value="reports">
