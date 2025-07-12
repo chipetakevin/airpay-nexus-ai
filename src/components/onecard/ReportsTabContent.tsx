@@ -16,11 +16,15 @@ import {
   Building,
   Shield,
   Sparkles,
-  CheckCircle
+  CheckCircle,
+  Activity,
+  BarChart3,
+  Eye
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { generateEnhancedMasterReport } from './utils/enhancedPdfGenerator';
 import { UnifiedCardSwitcher } from './UnifiedCardSwitcher';
+import ComprehensiveCashbackReports from './ComprehensiveCashbackReports';
 
 interface UnifiedProfile {
   userType: 'customer' | 'vendor' | 'admin';
@@ -37,11 +41,36 @@ const ReportsTabContent = () => {
   const [totalLifetimeEarnings, setTotalLifetimeEarnings] = useState(0);
   const [unifiedAccountNumber, setUnifiedAccountNumber] = useState('');
   const [isUnifiedUser, setIsUnifiedUser] = useState(false);
+  const [isGeneratingReport, setIsGeneratingReport] = useState(false);
   const { toast } = useToast();
 
   useEffect(() => {
     loadUnifiedProfileData();
   }, []);
+
+  // Demo data for cashback system
+  const demoReportData = {
+    systemOverview: {
+      totalCashbackDistributed: 156742.30,
+      activeUsers: 8432,
+      totalTransactions: 45689,
+      averageCashback: 18.72
+    },
+    userTypeBreakdown: [
+      { type: 'Vendors', count: 847, totalEarnings: 89534.20, avgRate: 8.5 },
+      { type: 'Admin Users', count: 23, totalEarnings: 25106.75, avgRate: 3.75 },
+      { type: 'Field Workers', count: 156, totalEarnings: 18945.60, avgRate: 12.0 },
+      { type: 'Premium Customers', count: 234, totalEarnings: 12847.35, avgRate: 5.0 },
+      { type: 'Standard Customers', count: 7172, totalEarnings: 10308.40, avgRate: 2.5 }
+    ],
+    topEarners: [
+      { name: 'Kevin (Admin)', balance: 3145.75, totalEarned: 15739.50, type: 'admin' },
+      { name: 'Sarah Mokwena', balance: 850.75, totalEarned: 2125.25, type: 'vendor' },
+      { name: 'Michael Van der Merwe', balance: 420.00, totalEarned: 1078.90, type: 'customer' },
+      { name: 'Thabo Mthembu', balance: 675.30, totalEarned: 1456.80, type: 'field_worker' },
+      { name: 'Jennifer Smith', balance: 290.45, totalEarned: 892.15, type: 'customer' }
+    ]
+  };
 
   const loadUnifiedProfileData = () => {
     const credentials = localStorage.getItem('userCredentials');
@@ -257,7 +286,12 @@ const ReportsTabContent = () => {
     });
   };
 
-  if (!isUnifiedUser) {
+  // Check if admin access (admins get full access, others need unified profile)
+  const isAuthenticated = localStorage.getItem('userAuthenticated') === 'true';
+  const adminAuthenticated = localStorage.getItem('adminAuthenticated') === 'true';
+  const hasAdminAccess = adminAuthenticated || isUnifiedUser;
+
+  if (!hasAdminAccess && !isUnifiedUser) {
     return (
       <div className="flex items-center justify-center min-h-[60vh] p-4">
         <Card className="max-w-md w-full text-center shadow-xl border-2 border-dashed border-gray-200">
@@ -274,6 +308,11 @@ const ReportsTabContent = () => {
         </Card>
       </div>
     );
+  }
+
+  // If admin is authenticated, show comprehensive cashback reports
+  if (adminAuthenticated) {
+    return <ComprehensiveCashbackReports />;
   }
 
   return (

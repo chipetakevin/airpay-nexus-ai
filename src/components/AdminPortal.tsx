@@ -36,16 +36,21 @@ const AdminPortal: React.FC<AdminPortalProps> = ({ onAuthSuccess, showAdminBanne
   const adminEmail = 'kev***@divinemobile.co.za';
   const fullAdminEmail = 'kevin@divinemobile.co.za';
 
-  // Check for existing admin session on component mount - ONLY ONCE
+  // Check for existing admin session on component mount - 24 HOUR SESSION
   useEffect(() => {
     if (sessionChecked) return; // Prevent multiple checks
     const checkAdminSession = () => {
       const adminAuthenticated = localStorage.getItem('adminAuthenticated') === 'true';
+      const adminAuthTime = localStorage.getItem('adminAuthTime');
       const adminProfile = localStorage.getItem('adminProfile');
       const userCredentials = localStorage.getItem('userCredentials');
       
+      // Check if admin session is still valid (24 hours)
+      const now = Date.now();
+      const sessionValid = adminAuthTime && (now - parseInt(adminAuthTime)) < (24 * 60 * 60 * 1000);
+      
       // Check if admin has valid session from enhanced auth
-      let hasValidAdminSession: boolean = adminAuthenticated && !!adminProfile;
+      let hasValidAdminSession: boolean = adminAuthenticated && !!adminProfile && sessionValid;
       
       // Also check if user has admin credentials with Malawi@1976 password
       if (!hasValidAdminSession && userCredentials) {
@@ -85,9 +90,10 @@ const AdminPortal: React.FC<AdminPortalProps> = ({ onAuthSuccess, showAdminBanne
         // Only show toast for actual session restoration, not initial load
         const isInitialLoad = !localStorage.getItem('adminSessionToastShown');
         if (!isInitialLoad) {
+          const timeLeft = Math.round((24 * 60 * 60 * 1000 - (now - parseInt(adminAuthTime))) / (60 * 60 * 1000));
           toast({
             title: "Admin Session Restored 🔑",
-            description: "Welcome back Kevin! 15-day session active.",
+            description: `Welcome back Kevin! ${timeLeft} hours remaining.`,
             duration: 3000,
           });
         } else {
@@ -138,8 +144,9 @@ const AdminPortal: React.FC<AdminPortalProps> = ({ onAuthSuccess, showAdminBanne
     if (authCode.toUpperCase() === storedCode) {
       setIsAuthenticated(true);
       // Keep panel expanded after authentication so features are visible
-      // Authentication successful
+      // Authentication successful - 24 hour session
       localStorage.setItem('adminAuthenticated', 'true');
+      localStorage.setItem('adminAuthTime', Date.now().toString());
       
       const adminCardNumber = 'ADM' + Math.random().toString(36).substr(2, 8).toUpperCase();
       const adminData = {
@@ -158,7 +165,7 @@ const AdminPortal: React.FC<AdminPortalProps> = ({ onAuthSuccess, showAdminBanne
       
       toast({
         title: "Admin Access Granted 🔑",
-        description: `Welcome Kevin! OneCard Platinum: ****${adminCardNumber.slice(-4)}`,
+        description: `Welcome Kevin! 24-hour session active. OneCard Platinum: ****${adminCardNumber.slice(-4)}`,
       });
       
       onAuthSuccess?.();
@@ -177,6 +184,7 @@ const AdminPortal: React.FC<AdminPortalProps> = ({ onAuthSuccess, showAdminBanne
     setAuthCode('');
     setSessionChecked(false);
     localStorage.removeItem('adminAuthenticated');
+    localStorage.removeItem('adminAuthTime');
     localStorage.removeItem('adminAuthCode');
     localStorage.removeItem('adminProfile');
     localStorage.removeItem('adminSessionToastShown');

@@ -104,8 +104,9 @@ const Portal = () => {
           
           if (isAdminUser || hasAdminAuth) {
             hasAdminAccess = true;
-            // Persist admin authentication permanently
+            // Persist admin authentication for 24 hours
             localStorage.setItem('adminAuthenticated', 'true');
+            localStorage.setItem('adminAuthTime', Date.now().toString());
             console.log('✅ Admin access granted and persisted');
           }
         }
@@ -170,10 +171,15 @@ const Portal = () => {
       const adminData = localStorage.getItem('onecardAdmin');
       const adminProfile = localStorage.getItem('adminProfile');
       const adminAuthenticated = localStorage.getItem('adminAuthenticated') === 'true';
+      const adminAuthTime = localStorage.getItem('adminAuthTime');
+      
+      // Check if admin session is still valid (24 hours)
+      const now = Date.now();
+      const sessionValid = adminAuthTime ? (now - parseInt(adminAuthTime)) < (24 * 60 * 60 * 1000) : false;
       
       // Check if user is registered admin with enhanced checks
       const isRegisteredAdmin = () => {
-        if (adminAuthenticated) return true; // Persistent admin auth
+        if (adminAuthenticated && sessionValid) return true; // 24-hour admin auth
         
         if (storedCredentials) {
           try {
@@ -321,6 +327,7 @@ const Portal = () => {
                           setShowAdminBanner(false);
                           setIsAdminAuthenticated(false);
                           localStorage.removeItem('adminAuthenticated');
+                          localStorage.removeItem('adminAuthTime');
                           localStorage.removeItem('adminAuthCode');
                           localStorage.removeItem('adminProfile');
                         }}
