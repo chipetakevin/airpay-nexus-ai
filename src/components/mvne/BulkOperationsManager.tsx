@@ -143,61 +143,61 @@ const BulkOperationsManager = () => {
   const stats = calculateStats();
 
   return (
-    <div className="space-y-6 max-w-7xl mx-auto p-4">
+    <div className="mobile-content-padding max-w-7xl mx-auto">
       {/* Header */}
-      <div className="text-center space-y-4">
-        <h1 className="text-4xl font-bold text-primary bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent">
+      <div className="text-center mobile-section-spacing">
+        <h1 className="text-2xl md:text-4xl font-bold text-primary bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent">
           Bulk Operations Manager
         </h1>
-        <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+        <p className="text-sm md:text-lg text-muted-foreground max-w-2xl mx-auto">
           Monitor and manage bulk service operations, track progress, and handle large-scale telecommunications processes
         </p>
       </div>
 
       {/* Stats Overview */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <Card>
-          <CardContent className="pt-6">
-            <div className="flex items-center gap-2">
-              <FileText className="h-5 w-5 text-blue-500" />
+      <div className="mobile-stats-grid md:grid-cols-4 gap-3 md:gap-4">
+        <Card className="mobile-stat-card">
+          <CardContent className="pt-4 md:pt-6">
+            <div className="mobile-stat-content">
+              <FileText className="h-4 w-4 md:h-5 md:w-5 text-blue-500" />
               <div>
-                <p className="text-2xl font-bold">{stats.totalOperations}</p>
+                <p className="text-lg md:text-2xl font-bold">{stats.totalOperations}</p>
                 <p className="text-xs text-muted-foreground">Total Operations</p>
               </div>
             </div>
           </CardContent>
         </Card>
         
-        <Card>
-          <CardContent className="pt-6">
-            <div className="flex items-center gap-2">
-              <Activity className="h-5 w-5 text-blue-500 animate-pulse" />
+        <Card className="mobile-stat-card">
+          <CardContent className="pt-4 md:pt-6">
+            <div className="mobile-stat-content">
+              <Activity className="h-4 w-4 md:h-5 md:w-5 text-blue-500 animate-pulse" />
               <div>
-                <p className="text-2xl font-bold">{stats.processingOperations}</p>
+                <p className="text-lg md:text-2xl font-bold">{stats.processingOperations}</p>
                 <p className="text-xs text-muted-foreground">Processing</p>
               </div>
             </div>
           </CardContent>
         </Card>
         
-        <Card>
-          <CardContent className="pt-6">
-            <div className="flex items-center gap-2">
-              <CheckCircle className="h-5 w-5 text-green-500" />
+        <Card className="mobile-stat-card">
+          <CardContent className="pt-4 md:pt-6">
+            <div className="mobile-stat-content">
+              <CheckCircle className="h-4 w-4 md:h-5 md:w-5 text-green-500" />
               <div>
-                <p className="text-2xl font-bold">{stats.completedOperations}</p>
+                <p className="text-lg md:text-2xl font-bold">{stats.completedOperations}</p>
                 <p className="text-xs text-muted-foreground">Completed</p>
               </div>
             </div>
           </CardContent>
         </Card>
         
-        <Card>
-          <CardContent className="pt-6">
-            <div className="flex items-center gap-2">
-              <XCircle className="h-5 w-5 text-red-500" />
+        <Card className="mobile-stat-card">
+          <CardContent className="pt-4 md:pt-6">
+            <div className="mobile-stat-content">
+              <XCircle className="h-4 w-4 md:h-5 md:w-5 text-red-500" />
               <div>
-                <p className="text-2xl font-bold">{stats.failedOperations}</p>
+                <p className="text-lg md:text-2xl font-bold">{stats.failedOperations}</p>
                 <p className="text-xs text-muted-foreground">Failed</p>
               </div>
             </div>
@@ -207,10 +207,28 @@ const BulkOperationsManager = () => {
 
       {/* Main Content */}
       <Tabs defaultValue="operations" className="w-full">
-        <TabsList className="grid w-full grid-cols-3">
-          <TabsTrigger value="operations">Active Operations</TabsTrigger>
-          <TabsTrigger value="upload">Upload New</TabsTrigger>
-          <TabsTrigger value="history">History</TabsTrigger>
+        <TabsList className="grid w-full grid-cols-3 h-auto">
+          <TabsTrigger value="operations" className="text-xs md:text-sm py-2 md:py-3">
+            <div className="flex flex-col items-center gap-1">
+              <Activity className="h-4 w-4" />
+              <span className="hidden sm:inline">Active Operations</span>
+              <span className="sm:hidden">Active</span>
+            </div>
+          </TabsTrigger>
+          <TabsTrigger value="upload" className="text-xs md:text-sm py-2 md:py-3">
+            <div className="flex flex-col items-center gap-1">
+              <Upload className="h-4 w-4" />
+              <span className="hidden sm:inline">Upload New</span>
+              <span className="sm:hidden">Upload</span>
+            </div>
+          </TabsTrigger>
+          <TabsTrigger value="history" className="text-xs md:text-sm py-2 md:py-3">
+            <div className="flex flex-col items-center gap-1">
+              <Clock className="h-4 w-4" />
+              <span className="hidden sm:inline">History</span>
+              <span className="sm:hidden">History</span>
+            </div>
+          </TabsTrigger>
         </TabsList>
 
         <TabsContent value="operations" className="space-y-4">

@@ -833,69 +833,65 @@ export const IntelligentUploadSystem: React.FC = () => {
           )}
         </TabsList>
 
-        <TabsContent value="upload" className={isMobile ? 'space-y-4' : 'space-y-6'}>
+        <TabsContent value="upload" className={isMobile ? 'mobile-section-spacing' : 'space-y-6'}>
           {/* Main Upload Section */}
-          <Card className="bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-blue-900/20 dark:to-indigo-900/20 border-blue-200 dark:border-blue-800">
-            <CardHeader>
-              <CardTitle className="text-blue-800 dark:text-blue-200 flex items-center gap-2">
-                <Brain className="h-5 w-5" />
-                Intelligent Document Upload System
+          <Card className="bg-gradient-to-br from-green-50 to-emerald-100 dark:from-green-900/20 dark:to-emerald-900/20 border-green-200 dark:border-green-800">
+            <CardHeader className={isMobile ? 'p-4' : ''}>
+              <CardTitle className="text-green-800 dark:text-green-200 flex items-center gap-2 text-lg md:text-xl">
+                <Upload className="h-5 w-5 md:h-6 md:w-6" />
+                Upload New Bulk Operation
               </CardTitle>
-              <CardDescription className="text-blue-600 dark:text-blue-300">
-                AI-powered upload with document detection, fraud prevention, and resumable transfers
+              <CardDescription className="text-green-600 dark:text-green-300 text-sm">
+                Upload CSV files to process bulk service operations and configure their behavior
               </CardDescription>
             </CardHeader>
-            <CardContent>
+            <CardContent className={isMobile ? 'p-4 pt-0' : ''}>
               <div 
-                className={`border-2 border-dashed rounded-lg p-8 text-center transition-all ${
+                className={`border-2 border-dashed rounded-lg ${isMobile ? 'p-4' : 'p-8'} text-center transition-all mobile-touch-target ${
                   dragActive 
-                    ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/20' 
-                    : 'border-blue-300 dark:border-blue-700 bg-white/50 dark:bg-gray-800/50'
+                    ? 'border-green-500 bg-green-50 dark:bg-green-900/20' 
+                    : 'border-green-300 dark:border-green-700 bg-white/50 dark:bg-gray-800/50'
                 }`}
                 onDragEnter={handleDrag}
                 onDragLeave={handleDrag}
                 onDragOver={handleDrag}
                 onDrop={handleDrop}
               >
-                <div className="space-y-4">
-                  <div className="mx-auto w-16 h-16 bg-blue-100 dark:bg-blue-900 rounded-full flex items-center justify-center">
-                    <Brain className="h-8 w-8 text-blue-600 dark:text-blue-300" />
+                <div className={isMobile ? 'space-y-3' : 'space-y-4'}>
+                  <div className={`mx-auto ${isMobile ? 'w-12 h-12' : 'w-16 h-16'} bg-green-100 dark:bg-green-900 rounded-full flex items-center justify-center`}>
+                    <Upload className={`${isMobile ? 'h-6 w-6' : 'h-8 w-8'} text-green-600 dark:text-green-300`} />
                   </div>
                   <div>
-                    <p className="text-lg font-semibold text-blue-800 dark:text-blue-200">
-                      Intelligent Cloud Upload
+                    <p className={`${isMobile ? 'text-base' : 'text-lg'} font-semibold text-green-800 dark:text-green-200`}>
+                      Upload CSV Files
                     </p>
-                    <p className="text-sm text-blue-600 dark:text-blue-300">
-                      AI document detection • Fraud prevention • Resumable uploads • Max {SECURITY_CONFIG.maxFileSize}MB
+                    <p className={`${isMobile ? 'text-xs' : 'text-sm'} text-green-600 dark:text-green-300`}>
+                      Upload CSV files to process bulk service operations and configure their behavior
                     </p>
                   </div>
-                  <div className="flex items-center justify-center gap-2 flex-wrap">
-                    <Badge variant="outline" className="text-blue-700 dark:text-blue-300 border-blue-300 dark:border-blue-700">
-                      <Bot className="h-3 w-3 mr-1" />
-                      AI Detection
+                  <div className="flex items-center justify-center gap-1 md:gap-2 flex-wrap">
+                    <Badge variant="outline" className="text-green-700 dark:text-green-300 border-green-300 dark:border-green-700 text-xs">
+                      <FileText className="h-3 w-3 mr-1" />
+                      CSV Files
                     </Badge>
-                    <Badge variant="outline" className="text-blue-700 dark:text-blue-300 border-blue-300 dark:border-blue-700">
+                    <Badge variant="outline" className="text-green-700 dark:text-green-300 border-green-300 dark:border-green-700 text-xs">
                       <Shield className="h-3 w-3 mr-1" />
-                      Fraud Protection
+                      Secure Upload
                     </Badge>
-                    <Badge variant="outline" className="text-blue-700 dark:text-blue-300 border-blue-300 dark:border-blue-700">
-                      <Zap className="h-3 w-3 mr-1" />
-                      Resumable
-                    </Badge>
-                    <Badge variant="outline" className="text-blue-700 dark:text-blue-300 border-blue-300 dark:border-blue-700">
-                      <Database className="h-3 w-3 mr-1" />
-                      Cloud Storage
+                    <Badge variant="outline" className="text-green-700 dark:text-green-300 border-green-300 dark:border-green-700 text-xs">
+                      <Activity className="h-3 w-3 mr-1" />
+                      Bulk Processing
                     </Badge>
                   </div>
-                  <div className="flex gap-2 justify-center">
+                  <div className="flex flex-col sm:flex-row gap-2 justify-center items-center">
                     <Button 
-                      className="bg-blue-600 hover:bg-blue-700 text-white"
+                      className="w-full sm:w-auto bg-green-600 hover:bg-green-700 text-white mobile-button"
                       onClick={handleUploadClick}
                       disabled={isUploading}
                       type="button"
                     >
                       <Upload className="h-4 w-4 mr-2" />
-                      {isUploading ? 'Processing...' : 'Upload Files'}
+                      {isUploading ? 'Processing...' : 'Upload File'}
                     </Button>
                     <Button 
                       variant="outline"
@@ -964,37 +960,52 @@ export const IntelligentUploadSystem: React.FC = () => {
             </CardContent>
           </Card>
 
-          {/* Document Library */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Search className="h-5 w-5" />
-                Intelligent Document Library ({documents.length} files)
+          {/* Search & Filter Operations */}
+          <Card className="bg-gradient-to-br from-slate-50 to-gray-100 dark:from-slate-900/20 dark:to-gray-900/20 border-slate-200 dark:border-slate-700">
+            <CardHeader className={isMobile ? 'p-4' : ''}>
+              <CardTitle className="text-slate-800 dark:text-slate-200 flex items-center gap-2 text-lg md:text-xl">
+                <Search className="h-5 w-5 md:h-6 md:w-6" />
+                Search & Filter Operations
               </CardTitle>
+              <CardDescription className="text-slate-600 dark:text-slate-300 text-sm">
+                Search and filter uploaded bulk operations
+              </CardDescription>
             </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="flex gap-4">
+            <CardContent className={isMobile ? 'p-4 pt-0' : ''}>
+              <div className={`flex ${isMobile ? 'flex-col' : 'flex-row'} gap-3 md:gap-4`}>
                 <div className="flex-1">
                   <Input
-                    placeholder="Search documents by name, type, or AI classification..."
+                    placeholder="Search by MSISDN, Customer ID, etc..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    className="w-full"
+                    className="w-full mobile-form-input"
                   />
                 </div>
                 <Select value={statusFilter} onValueChange={setStatusFilter}>
-                  <SelectTrigger className="w-48">
-                    <SelectValue placeholder="Filter by status" />
+                  <SelectTrigger className={`${isMobile ? 'w-full' : 'w-48'} mobile-form-select`}>
+                    <SelectValue placeholder="All Operations" />
                   </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">All Status</SelectItem>
-                    <SelectItem value="uploading">Uploading</SelectItem>
+                  <SelectContent className="z-50 bg-background border shadow-lg">
+                    <SelectItem value="all">All Operations</SelectItem>
+                    <SelectItem value="pending">Pending</SelectItem>
                     <SelectItem value="processing">Processing</SelectItem>
                     <SelectItem value="completed">Completed</SelectItem>
                     <SelectItem value="failed">Failed</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
+            </CardContent>
+          </Card>
+
+          {/* Document Library */}
+          <Card>
+            <CardHeader className={isMobile ? 'p-4' : ''}>
+              <CardTitle className="flex items-center gap-2 text-lg md:text-xl">
+                <FileText className="h-5 w-5" />
+                Uploaded Files ({documents.length})
+              </CardTitle>
+            </CardHeader>
+            <CardContent className={`${isMobile ? 'p-4 pt-0' : ''} mobile-section-spacing`}>
 
               {/* Documents Grid */}
               <div className="grid gap-4">
