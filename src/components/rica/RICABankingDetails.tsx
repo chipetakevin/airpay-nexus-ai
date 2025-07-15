@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { ChevronRight, ChevronLeft, Shield, CheckCircle } from 'lucide-react';
-import SmartBankingFormWrapper from '@/components/banking/SmartBankingFormWrapper';
+import ModernBankingForm from '@/components/banking/ModernBankingForm';
 
 interface RICABankingDetailsProps {
   formData: any;
@@ -73,13 +73,16 @@ const RICABankingDetails: React.FC<RICABankingDetailsProps> = ({
       </Card>
 
       {/* Modern Banking Form */}
-      <SmartBankingFormWrapper
+      <ModernBankingForm
         onBankingComplete={handleBankingComplete}
-        onFormValidation={handleFormValidation}
-        title=""
-        subtitle=""
+        onValidationChange={handleFormValidation}
+        defaultValues={{
+          bankName: formData.bankName,
+          accountNumber: formData.accountNumber,
+          branchCode: formData.branchCode,
+          accountType: formData.accountType
+        }}
         autoSave={true}
-        showStorageControls={true}
         className="space-y-4"
       />
 
