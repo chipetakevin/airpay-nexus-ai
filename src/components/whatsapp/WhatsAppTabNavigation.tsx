@@ -22,30 +22,30 @@ const WhatsAppTabNavigation: React.FC<WhatsAppTabNavigationProps> = ({
   ];
 
   return (
-    <div className="flex bg-gray-50 p-1 mx-4 rounded-xl mb-4">
+    <div className="mobile-tab-container">
       {tabs.map((tab) => {
         const Icon = tab.icon;
         return (
-          <Button
-            key={tab.id}
-            onClick={() => onTabChange(tab.id)}
-            variant={activeTab === tab.id ? "default" : "ghost"}
-            className={`flex-1 relative ${
-              activeTab === tab.id 
-                ? 'bg-black text-white hover:bg-gray-800' 
-                : 'text-gray-600 hover:text-gray-900'
-            }`}
-          >
-            <Icon className="w-4 h-4 mr-2" />
-            {tab.label}
-            {tab.id === 'cart' && cartCount > 0 && (
-              <Badge 
-                className="absolute -top-2 -right-2 bg-red-500 text-white text-xs h-5 w-5 rounded-full flex items-center justify-center p-0"
-              >
-                {cartCount}
-              </Badge>
-            )}
-          </Button>
+          <div key={tab.id} className="mobile-tab-item">
+            <button
+              onClick={() => onTabChange(tab.id)}
+              className={`mobile-tab-trigger ${
+                activeTab === tab.id ? 'active' : 'inactive'
+              }`}
+              aria-label={`Switch to ${tab.label} tab`}
+            >
+              <Icon className="w-5 h-5" />
+              <span className="mobile-text-sm font-medium">{tab.label}</span>
+              {tab.id === 'cart' && cartCount > 0 && (
+                <Badge 
+                  className="absolute -top-1 -right-1 bg-destructive text-destructive-foreground text-xs h-5 w-5 rounded-full flex items-center justify-center p-0 border-2 border-background"
+                  aria-label={`${cartCount} items in cart`}
+                >
+                  {cartCount}
+                </Badge>
+              )}
+            </button>
+          </div>
         );
       })}
     </div>

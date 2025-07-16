@@ -116,7 +116,7 @@
     border-color: hsl(var(--tab-gray));
   }
 
-  /* Mobile-friendly tab styles */
+  /* Enhanced Mobile-first Tab Navigation */
   .mobile-tab-container {
     display: flex;
     overflow-x: auto;
@@ -124,8 +124,12 @@
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
     -ms-overflow-style: none;
-    padding: 0 20px 0 16px;
+    padding: 8px 16px;
     margin: 0 -4px;
+    gap: 8px;
+    background: hsl(var(--background));
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
   }
 
   .mobile-tab-container::-webkit-scrollbar {
@@ -135,8 +139,112 @@
   .mobile-tab-item {
     flex: 0 0 auto;
     scroll-snap-align: start;
-    min-width: fit-content;
+    min-width: 120px;
+    min-height: 48px; /* Touch-friendly minimum */
     padding: 0 4px;
+  }
+
+  /* Enhanced mobile tab styles - thumb-friendly */
+  .mobile-tab-trigger {
+    min-height: 48px;
+    min-width: 120px;
+    padding: 12px 16px;
+    font-size: 14px;
+    font-weight: 600;
+    border-radius: 8px;
+    border: none;
+    transition: all 0.2s ease;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    white-space: nowrap;
+    text-align: center;
+    box-sizing: border-box;
+  }
+
+  .mobile-tab-trigger:active {
+    transform: scale(0.98);
+  }
+
+  .mobile-tab-trigger.active {
+    background: hsl(var(--primary));
+    color: hsl(var(--primary-foreground));
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  .mobile-tab-trigger.inactive {
+    background: hsl(var(--muted));
+    color: hsl(var(--muted-foreground));
+  }
+
+  .mobile-tab-trigger.inactive:hover {
+    background: hsl(var(--accent));
+    color: hsl(var(--accent-foreground));
+  }
+
+  /* Bottom navigation for mobile */
+  .mobile-bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: hsl(var(--background));
+    border-top: 1px solid hsl(var(--border));
+    padding: 8px 0 max(8px, env(safe-area-inset-bottom));
+    z-index: 50;
+    backdrop-filter: blur(8px);
+    box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.1);
+  }
+
+  .mobile-bottom-nav-container {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    max-width: 768px;
+    margin: 0 auto;
+    padding: 0 16px;
+  }
+
+  .mobile-bottom-nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 8px 12px;
+    min-width: 64px;
+    min-height: 48px;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+    cursor: pointer;
+    text-decoration: none;
+    color: hsl(var(--muted-foreground));
+  }
+
+  .mobile-bottom-nav-item:active {
+    transform: scale(0.95);
+  }
+
+  .mobile-bottom-nav-item.active {
+    color: hsl(var(--primary));
+    background: hsl(var(--primary))/10%;
+  }
+
+  .mobile-bottom-nav-item:hover {
+    background: hsl(var(--muted));
+  }
+
+  .mobile-bottom-nav-icon {
+    width: 20px;
+    height: 20px;
+    margin-bottom: 4px;
+  }
+
+  .mobile-bottom-nav-label {
+    font-size: 10px;
+    font-weight: 500;
+    text-align: center;
+    line-height: 1;
   }
 
   /* Enhanced mobile-first service cards */

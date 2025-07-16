@@ -187,14 +187,18 @@ const ModernBankingForm: React.FC<ModernBankingFormProps> = ({
   );
 
   return (
-    <div className={cn("w-full max-w-md mx-auto space-y-4", className)}>
+    <div className={cn("w-full max-w-md mx-auto mobile-form-container", className)}>
       {/* Bank Selection */}
-      <div className="space-y-2" ref={dropdownRef}>
-        <Label className="text-sm font-medium">Select Your Bank</Label>
+      <div className="mobile-form-field" ref={dropdownRef}>
+        <Label className="mobile-input-label">Select Your Bank</Label>
         <div className="relative">
-          <div
-            className="w-full p-3 border border-input rounded-lg bg-background cursor-pointer flex items-center justify-between"
+          <button
+            type="button"
+            className="mobile-input w-full text-left flex items-center justify-between mobile-focus-ring"
             onClick={() => setShowBankDropdown(!showBankDropdown)}
+            aria-expanded={showBankDropdown}
+            aria-haspopup="listbox"
+            aria-label="Select your bank"
           >
             <span className={selectedBank ? "text-foreground" : "text-muted-foreground"}>
               {selectedBank ? selectedBank.name : "Choose your bank"}
@@ -203,7 +207,7 @@ const ModernBankingForm: React.FC<ModernBankingFormProps> = ({
               "w-4 h-4 transition-transform duration-200",
               showBankDropdown && "rotate-180"
             )} />
-          </div>
+          </button>
           
           {showBankDropdown && (
             <Card className="absolute top-full left-0 right-0 z-50 mt-1 border shadow-lg">
@@ -244,23 +248,26 @@ const ModernBankingForm: React.FC<ModernBankingFormProps> = ({
       )}
 
       {/* Account Number */}
-      <div className="space-y-2">
-        <Label className="text-sm font-medium">Account Number</Label>
-        <div className="relative">
+      <div className="mobile-form-field">
+        <Label className="mobile-input-label">Account Number</Label>
+        <div className="mobile-input-wrapper">
           <Input
             type={showAccountNumber ? "text" : "password"}
             value={accountNumber}
             onChange={(e) => handleAccountNumberChange(e.target.value)}
             placeholder="Enter your account number"
-            className="pr-12 font-mono text-base"
+            className="mobile-input pr-12 font-mono"
             maxLength={15}
+            autoComplete="off"
+            inputMode="numeric"
           />
           <Button
             type="button"
             variant="ghost"
             size="icon"
-            className="absolute right-2 top-1/2 -translate-y-1/2 h-8 w-8"
+            className="absolute right-2 top-1/2 -translate-y-1/2 h-8 w-8 mobile-focus-ring"
             onClick={() => setShowAccountNumber(!showAccountNumber)}
+            aria-label={showAccountNumber ? "Hide account number" : "Show account number"}
           >
             {showAccountNumber ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
           </Button>
@@ -269,18 +276,18 @@ const ModernBankingForm: React.FC<ModernBankingFormProps> = ({
 
       {/* Branch Code - Auto-filled */}
       {selectedBank && (
-        <div className="space-y-2">
-          <Label className="text-sm font-medium">Branch Code</Label>
-          <div className="relative">
+        <div className="mobile-form-field">
+          <Label className="mobile-input-label">Branch Code</Label>
+          <div className="mobile-input-wrapper">
             <Input
               value={branchCode}
               readOnly
               placeholder="Auto-filled from bank selection"
-              className="bg-muted/50 text-muted-foreground font-mono"
+              className="mobile-input bg-muted/50 text-muted-foreground font-mono"
             />
             <Check className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-primary" />
           </div>
-          <div className="flex items-center gap-2 text-xs text-primary">
+          <div className="mobile-input-helper flex items-center gap-2 text-primary">
             <Info className="w-3 h-3" />
             <span>Branch code automatically detected from your bank selection</span>
           </div>
@@ -303,15 +310,15 @@ const ModernBankingForm: React.FC<ModernBankingFormProps> = ({
       )}
 
       {/* Remember Details Option */}
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-3 mobile-spacing-sm">
         <input
           type="checkbox"
           id="remember"
           checked={rememberDetails}
           onChange={(e) => setRememberDetails(e.target.checked)}
-          className="rounded border-input"
+          className="w-5 h-5 rounded border-input mobile-focus-ring"
         />
-        <Label htmlFor="remember" className="text-sm cursor-pointer">
+        <Label htmlFor="remember" className="mobile-text-base cursor-pointer flex-1">
           Remember my bank details for next time
         </Label>
       </div>
